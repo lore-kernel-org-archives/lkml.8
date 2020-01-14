@@ -2,136 +2,122 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA80EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3C7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C694207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m9FJTcRd"
+	by mail.kernel.org (Postfix) with ESMTP id DF67424676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgANLAb (ORCPT
+        id S1729221AbgANLCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:00:31 -0500
-Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:63450
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725842AbgANLAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:00:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHP8i26fIaLitpC4PNREbFXqnFUx5/vceNIWcWksT9LTSq2fXPQ+lLXGf0RuTJqyn0rzZHZaWaOo/G5QmRohnIlCTKRgMg1za2eMvVn9sHavbVNkWWvhsW0+LBB9IuGTpZJ5qpezcrK7lQAH85O3NZTQC9gFqX9Zqszjpg+hPjGJB4zz06do2uPHF2GrXj+W6Qg56KPDYtsLn1JkJoUoYrxZ09S7EvI4CPrex3GYI9laNuNGfLC/HGz7UZt4jUJ8rse4U5saUcKUIyExlBul1YbC2vfCFeIGddM8MezpxZVQFWJV0HX7+XbBmDyTc3ibIgtJgy9jBkox6pChoXVGKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dz9sjZ5m6jN+vIIopKZdcjL1Bo1aDqrFWwtDUdDA1gI=;
- b=IMaoot7mESNza6rt0Y0q6Tg2tP2INXMMKWbPRASXcZRhsamLDsMYmIsosrR8be2DSjRt8OpfJ4IpDXTOB1Yq70zU3CNxWrTMCY445jPTD8pqENruJeTJMm3vgqLSG3l5EmYVEdNWrvb+lwZmRi//HBgfs6hQ1SuTGzC0GK0kRXRrCaLZ+jmJ9zZNGw0LZkECZLwAoP6wsAu8E+r9YheWun2GdQCO9FbwNLvjWfNf0ZkyI3IxfHf9mtAFKuybPPobTR/oD+QSOE36EwNH0SpIgfdq8f4g/U1cvN88V7O7MVOg6y+uhsE42Hm/CG5tDWfj+5xnAPfS+HHoO7oWj5AJhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dz9sjZ5m6jN+vIIopKZdcjL1Bo1aDqrFWwtDUdDA1gI=;
- b=m9FJTcRdcB5grvHewYHzM4H5/xljd9dvYqcxIaqlBxvCMhDbWC9Yiie0pX5lfZPAWhuTu7+woTd08u8PwdVKtAo6O5Kwu0JPozSNMy5ODIJ11NBbz3VxZSui3F+sHFEd/SfrtjoDVUmYFeCewt+lp3GumwINGh5svx0/Yo6v/mk=
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
- AM6PR04MB4808.eurprd04.prod.outlook.com (20.177.33.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 11:00:25 +0000
-Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::932:9fab:97d3:1a82]) by AM6PR04MB5878.eurprd04.prod.outlook.com
- ([fe80::932:9fab:97d3:1a82%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 11:00:25 +0000
-Received: from fsr-ub1864-101.ea.freescale.net (89.37.124.34) by LO2P123CA0019.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:a6::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Tue, 14 Jan 2020 11:00:24 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "swood@redhat.com" <swood@redhat.com>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH] MAINTAINERS: Add myself as maintainer of ehv_bytechan tty
- driver
-Thread-Topic: [PATCH] MAINTAINERS: Add myself as maintainer of ehv_bytechan
- tty driver
-Thread-Index: AQHVysnTMfstR3XjwkGcaoGASJ/wzg==
-Date:   Tue, 14 Jan 2020 11:00:25 +0000
-Message-ID: <20200114110012.17351-1-laurentiu.tudor@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P123CA0019.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::31) To AM6PR04MB5878.eurprd04.prod.outlook.com
- (2603:10a6:20b:a2::25)
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3391090d-9c55-445e-817c-08d798e0f586
-x-ms-traffictypediagnostic: AM6PR04MB4808:|AM6PR04MB4808:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4808EAC74BB35F628528B987EC340@AM6PR04MB4808.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1265;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(189003)(199004)(186003)(6506007)(8676002)(26005)(54906003)(44832011)(6512007)(8936002)(66446008)(64756008)(16526019)(66476007)(66556008)(81166006)(36756003)(81156014)(2906002)(71200400001)(66946007)(86362001)(52116002)(4744005)(6486002)(2616005)(956004)(316002)(1076003)(110136005)(5660300002)(478600001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4808;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WS0vPEcW1cP3JCTF+8sjIunXC8KfzEKb1nVcbQD9MM9kn8IpcaMz/zSjVWB6AhhDqHNOKQ9Y2/vzFAhkRpNCO9dxN37Ay9STnRPwttqjkiWuhRFJYpf5fCXLA6r7QldwbzJonJVMPl+iSxbE6DE+tPN1/A8cllBS5CBQj8klvE0ZqW9O09QSkT0H8QyReiUJdQty3Fk/P61DhWo7KeKh0JWYHXte2tXyh7XZZpb662bnIJNqCYnT3B5MCJnIeAD98j9aK7x0CxgJUknrDyjNN1CGDOGSxVuOK9o6Nkan66lyiDYXwqeBCnsDExbMunYAh4OiKnRPjd/2fjkjYwoBul+dMkhahIhb9Gke/Fj/HrW5domcni8lTexvP2u22lwoT8GPXiUZ0yqm0qVvBf104Qm25u6A4pXDTZtCY+2xDNMk6bZXv54OMjsTzEazRFbw
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C7E7CEF18CC55443BFE0A621F43FF567@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jan 2020 06:02:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:50706 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbgANLCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:02:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E787B142F;
+        Tue, 14 Jan 2020 03:02:05 -0800 (PST)
+Received: from [10.163.1.192] (unknown [10.163.1.192])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A9A23F6C4;
+        Tue, 14 Jan 2020 03:02:01 -0800 (PST)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>, Qian Cai <cai@lca.pw>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>
+References: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
+ <6A58E80B-7A5F-4CAD-ACF1-89BCCBE4D3B1@lca.pw>
+ <a0bfcebe-a0f4-95ef-0973-8edd3780d013@redhat.com>
+ <f6487dc1-c962-67aa-131e-2eec4f6ca686@arm.com>
+ <20200114091013.GD19428@dhcp22.suse.cz>
+ <1f3ff7fc-2f6b-d8e5-85a5-078f0e1a0daf@suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <a0564db6-2e5f-6490-9b09-c3505cc514d0@arm.com>
+Date:   Tue, 14 Jan 2020 16:33:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3391090d-9c55-445e-817c-08d798e0f586
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 11:00:25.7332
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eorwiOtcbboatseT7jYniqPzUAxr52CMlG1T58ROZxmz1KME80q79/Mm3ZHMl7tsU+lLvrPkCjSyJt2rDk7dMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4808
+In-Reply-To: <1f3ff7fc-2f6b-d8e5-85a5-078f0e1a0daf@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman made a call for volunteers from NXP to maintain
-this driver and I offered myself.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4017e6b760be..62082e5f7101 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6155,6 +6155,12 @@ M:	Maxim Levitsky <maximlevitsky@gmail.com>
- S:	Maintained
- F:	drivers/media/rc/ene_ir.*
-=20
-+EPAPR HYPERVISOR BYTE CHANNEL DEVICE DRIVER
-+M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
-+L:	linuxppc-dev@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/tty/ehv_bytechan.c
-+
- EPSON S1D13XXX FRAMEBUFFER DRIVER
- M:	Kristoffer Ericson <kristoffer.ericson@gmail.com>
- S:	Maintained
---=20
-2.17.1
+On 01/14/2020 03:53 PM, Vlastimil Babka wrote:
+> On 1/14/20 10:10 AM, Michal Hocko wrote:
+>> [Cc Ralph]
+>>> The reason is dump_page() does not print page->flags universally
+>>> and only does so for KSM, Anon and File pages while excluding
+>>> reserved pages at boot. Wondering should not we make printing
+>>> page->flags universal ?
+>>
+>> We used to do that and this caught me as a surprise when looking again.
+>> This is a result of 76a1850e4572 ("mm/debug.c: __dump_page() prints an
+>> extra line") which is a cleanup patch and I suspect this result was not
+>> anticipated.
+>>
+>> The following will do the trick but I cannot really say I like the code
+>> duplication. pr_cont in this case sounds like a much cleaner solution to
+>> me.
+> 
+> How about this then?
 
+This looks better than what we have right now though my initial thought
+was similar to what Michal had suggested earlier.
+
+> 
+> diff --git mm/debug.c mm/debug.c
+> index 0461df1207cb..6a52316af839 100644
+> --- mm/debug.c
+> +++ mm/debug.c
+> @@ -47,6 +47,7 @@ void __dump_page(struct page *page, const char *reason)
+>  	struct address_space *mapping;
+>  	bool page_poisoned = PagePoisoned(page);
+>  	int mapcount;
+> +	char *type = "";
+>  
+>  	/*
+>  	 * If struct page is poisoned don't access Page*() functions as that
+> @@ -78,9 +79,9 @@ void __dump_page(struct page *page, const char *reason)
+>  			page, page_ref_count(page), mapcount,
+>  			page->mapping, page_to_pgoff(page));
+>  	if (PageKsm(page))
+> -		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
+> +		type = "ksm ";
+>  	else if (PageAnon(page))
+> -		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
+> +		type = "anon ";
+>  	else if (mapping) {
+>  		if (mapping->host && mapping->host->i_dentry.first) {
+>  			struct dentry *dentry;
+> @@ -88,10 +89,11 @@ void __dump_page(struct page *page, const char *reason)
+>  			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
+>  		} else
+>  			pr_warn("%ps\n", mapping->a_ops);
+> -		pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+>  	}
+>  	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
+>  
+> +	pr_warn("%sflags: %#lx(%pGp)\n", type, page->flags, &page->flags);
+> +
+>  hex_only:
+>  	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+>  			sizeof(unsigned long), page,
+> 
+> 
