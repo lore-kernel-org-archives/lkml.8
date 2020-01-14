@@ -2,129 +2,209 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB81C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA31C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01648217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0092A214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:13:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ek/Nqwhz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgANDL2 (ORCPT
+        id S1729652AbgANDNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 22:11:28 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:47518 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbgANDL1 (ORCPT
+        Mon, 13 Jan 2020 22:13:21 -0500
+Received: from mail-m972.mail.163.com ([123.126.97.2]:53584 "EHLO
+        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgANDNU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 22:11:27 -0500
-Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 14 Jan
- 2020 11:11:52 +0800
-Subject: Re: [PATCH v5 1/4] dt-bindings: power: add Amlogic secure power
- domains bindings
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com>
- <1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com>
- <7ha76rdj35.fsf@baylibre.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <61dcfe1a-e987-aa40-34da-71150554f708@amlogic.com>
-Date:   Tue, 14 Jan 2020 11:11:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 13 Jan 2020 22:13:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=sthfG
+        cXx9SjArwQm3b4jw5yBTOD47j551bJkJ+Qm1Zo=; b=ek/NqwhzNK4T/UVf8HOfX
+        srpCwW1haOsocXrwDE9CFulPVLw8NIJxvkvUn1d5I8phReHp4u27deTGLSvRkFGV
+        dBCnL7DrEV+RF/YEHhpipvNoiCvaXIKREiy8Yac/xdxldReBqxIaVbp3/ujiw1Lg
+        UzKUoq8bl8ygb5ipsv14gM=
+Received: from xilei-TM1604.mioffice.cn (unknown [106.37.187.207])
+        by smtp2 (Coremail) with SMTP id GtxpCgCnOBGeMR1eFuUiAA--.5247S4;
+        Tue, 14 Jan 2020 11:12:31 +0800 (CST)
+From:   Niu Xilei <niu_xilei@163.com>
+To:     davem@davemloft.net
+Cc:     tglx@linutronix.de, fw@strlen.de, peterz@infradead.org,
+        steffen.klassert@secunet.com, bigeasy@linutronix.de,
+        jonathan.lemon@gmail.com, pabeni@redhat.com,
+        anshuman.khandual@arm.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Niu Xilei <niu_xilei@163.com>
+Subject: [v4] pktgen: Allow configuration of IPv6 source address range
+Date:   Tue, 14 Jan 2020 11:12:29 +0800
+Message-Id: <20200114031229.8569-1-niu_xilei@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <7ha76rdj35.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.29.227]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: GtxpCgCnOBGeMR1eFuUiAA--.5247S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxur47Zr17uF4DAF47CryxAFb_yoWruryUpa
+        y3Ja43XrW3Aw43tanxJr9Fvr43uw4v9345XFW7A3sY9F1DWry0yay8G3W7KFWjgry0krWq
+        qr4UKr4qgF4qqFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jztC7UUUUU=
+X-Originating-IP: [106.37.187.207]
+X-CM-SenderInfo: pqlxs5plohxqqrwthudrp/1tbiTh+qgFUDB6rnvwAAsY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Kevin,
+Pktgen can use only one IPv6 source address from output device or src6
+command setting. In pressure test we need create lots of sessions more
+than 65535. So add src6_min and src6_max command to set the range.
 
-Thanks for your review, I will put pwrc under secure-monitor node.
+Signed-off-by: Niu Xilei <niu_xilei@163.com>
 
-On 2020/1/14 7:37, Kevin Hilman wrote:
-> Jianxin Pan <jianxin.pan@amlogic.com> writes:
-> 
->> Add the bindings for the Amlogic Secure power domains, controlling the
->> secure power domains.
->>
->> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
->> power domain registers are in secure world.
->>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> ---
->>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 37 ++++++++++++++++++++++
->>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++++
->>  2 files changed, 69 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
->>
->> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> new file mode 100644
->> index 00000000..2ed269f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->> @@ -0,0 +1,37 @@
->> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +# Copyright (c) 2019 Amlogic, Inc
->> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic Meson Secure Power Domains
->> +
->> +maintainers:
->> +  - Jianxin Pan <jianxin.pan@amlogic.com>
->> +
->> +description: |+
->> +  Meson Secure Power Domains used in A1/C1 SoCs.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - amlogic,meson-a1-pwrc
->> +
->> +  "#power-domain-cells":
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - "#power-domain-cells"
->> +
->> +examples:
->> +  - |
->> +    pwrc: power-controller {
->> +          compatible = "amlogic,meson-a1-pwrc";
->> +          #power-domain-cells = <1>;
->> +          secure-monitor = <&sm>;
-> 
-> As requested by Rob, please put this under the secure-monitor node.
-> 
-> Kevin
-> 
-> .
-> 
+Changes since v3:
+ - function set_src_in6_addr use static instead of static inline
+ - precompute min_in6_l,min_in6_h,max_in6_h,max_in6_l in setup time
+Changes since v2:
+ - reword subject line
+Changes since v1:
+ - only create IPv6 source address over least significant 64 bit range
+---
+ net/core/pktgen.c | 98 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index 294bfcf0ce0e..890be1b4877e 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -323,6 +323,10 @@ struct pktgen_dev {
+ 	struct in6_addr max_in6_daddr;
+ 	struct in6_addr min_in6_saddr;
+ 	struct in6_addr max_in6_saddr;
++	u64  max_in6_h;
++	u64  max_in6_l;
++	u64  min_in6_h;
++	u64  min_in6_l;
+ 
+ 	/* If we're doing ranges, random or incremental, then this
+ 	 * defines the min/max for those ranges.
+@@ -1355,6 +1359,59 @@ static ssize_t pktgen_if_write(struct file *file,
+ 		sprintf(pg_result, "OK: dst6_max=%s", buf);
+ 		return count;
+ 	}
++	if (!strcmp(name, "src6_min")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->min_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->min_in6_saddr);
++
++		memcpy(&pkt_dev->min_in6_h, pkt_dev->min_in6_saddr.s6_addr, 8);
++		memcpy(&pkt_dev->min_in6_l, pkt_dev->min_in6_saddr.s6_addr + 8, 8);
++		pkt_dev->min_in6_h = be64_to_cpu(pkt_dev->min_in6_h);
++		pkt_dev->min_in6_l = be64_to_cpu(pkt_dev->min_in6_l);
++
++		pkt_dev->cur_in6_saddr = pkt_dev->min_in6_saddr;
++		if (debug)
++			pr_debug("src6_min set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: src6_min=%s", buf);
++		return count;
++	}
++	if (!strcmp(name, "src6_max")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->max_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->max_in6_saddr);
++
++		memcpy(&pkt_dev->max_in6_h, pkt_dev->max_in6_saddr.s6_addr, 8);
++		memcpy(&pkt_dev->max_in6_l, pkt_dev->max_in6_saddr.s6_addr + 8, 8);
++		pkt_dev->max_in6_h = be64_to_cpu(pkt_dev->max_in6_h);
++		pkt_dev->max_in6_l = be64_to_cpu(pkt_dev->max_in6_l);
++
++		if (debug)
++			pr_debug("src6_max set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: src6_max=%s", buf);
++		return count;
++	}
+ 	if (!strcmp(name, "src6")) {
+ 		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
+ 		if (len < 0)
+@@ -2286,6 +2343,45 @@ static void set_cur_queue_map(struct pktgen_dev *pkt_dev)
+ 	pkt_dev->cur_queue_map  = pkt_dev->cur_queue_map % pkt_dev->odev->real_num_tx_queues;
+ }
+ 
++/* generate ipv6 source addr */
++static void set_src_in6_addr(struct pktgen_dev *pkt_dev)
++{
++	u64 min6, max6, rand, i;
++	struct in6_addr addr6;
++	__be64 addr_l, *t;
++
++	min6 = pkt_dev->min_in6_l;
++	max6 = pkt_dev->max_in6_l;
++
++	/* only generate source address in least significant 64 bits range
++	 * most significant 64 bits must be equal
++	 */
++	if (pkt_dev->max_in6_h != pkt_dev->min_in6_h || min6 >= max6)
++		return;
++
++	addr6 = pkt_dev->min_in6_saddr;
++	t = (__be64 *)addr6.s6_addr + 1;
++
++	if (pkt_dev->flags & F_IPSRC_RND) {
++		do {
++			prandom_bytes(&rand, sizeof(rand));
++			rand = rand % (max6 - min6) + min6;
++			addr_l = cpu_to_be64(rand);
++			memcpy(t, &addr_l, 8);
++		} while (ipv6_addr_loopback(&addr6) ||
++			 ipv6_addr_v4mapped(&addr6) ||
++			 ipv6_addr_is_multicast(&addr6));
++	} else {
++		addr6 = pkt_dev->cur_in6_saddr;
++		i = be64_to_cpu(*t);
++		if (++i > max6)
++			i = min6;
++		addr_l = cpu_to_be64(i);
++		memcpy(t, &addr_l, 8);
++	}
++	pkt_dev->cur_in6_saddr = addr6;
++}
++
+ /* Increment/randomize headers according to flags and current values
+  * for IP src/dest, UDP src/dst port, MAC-Addr src/dst
+  */
+@@ -2454,6 +2550,8 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
+ 		}
+ 	} else {		/* IPV6 * */
+ 
++		set_src_in6_addr(pkt_dev);
++
+ 		if (!ipv6_addr_any(&pkt_dev->min_in6_daddr)) {
+ 			int i;
+ 
+-- 
+2.20.1
 
