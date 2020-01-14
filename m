@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55600C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCA224683
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2959324672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996201;
-	bh=z+j12MR7yYmLLELtA9jkABUaAXHiSBqS2s/W2w96+MI=;
+	s=default; t=1578996208;
+	bh=pvOufZuphj6VLZXcaZb7RAaxRfAvsWGCvqjOw747ZXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zThQlNCzrOZuTcwRJkf4tW8TnQkK9bghM1PACE8AMUPbADWj6+IMbE4QshLDuKIp2
-	 GLhpIx70UQKJAkta2or3mFqlMapEId1twZCNhutJexgIhezCqe/kcrdOLYWkfrUtIP
-	 J+4enKauGGS5Mbm1qWnli4RyIAJD7v37xpeESXYE=
+	b=DyHT/khT0B286w/HCu+4vLIeElWklRaNI2/vPrOTUUrhYXIR+I1FMPqUr7dEWxflX
+	 O/+Y4AqiZROxyeeabRrywiLoubyNo+YdM3MfduhQTaFpVkSYY4hQ54L6M5gCxs3N/j
+	 u8BjbJAmoxjON1btvWgtX2sEbjLNjRSsGJ4IKOjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgANKDT (ORCPT
+        id S1729550AbgANKD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:03:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgANKDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:17 -0500
+        id S1729175AbgANKDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6922B2465B;
-        Tue, 14 Jan 2020 10:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 594B02467D;
+        Tue, 14 Jan 2020 10:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996197;
-        bh=z+j12MR7yYmLLELtA9jkABUaAXHiSBqS2s/W2w96+MI=;
+        s=default; t=1578996202;
+        bh=pvOufZuphj6VLZXcaZb7RAaxRfAvsWGCvqjOw747ZXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+8+edrPj0y2xsTxxHMJvEXwmz+iJopnwCrSJnepYx+Bz/b3OUBiUyEo55JVqjXaY
-         7HLvp0Jw0XYZeBxIrflFK8JbPROl3WYbFWAgL2ktAIjWH0qCEqTgxhL9dEGRyqclP6
-         pPoI3B6QIrPe2e8y3SgwZVqHns9bAEHDWMBjjqhE=
+        b=SkqXaa7jDp6MRUvV2tjlLcVi60qJm5nDyH05m5JnHA5e3WWVad66fkO8eU8+SMRLw
+         pgiRGAT5kWGC2gKPl4fDWA4OcvmBOIpy1wvjaNdTMA4bc8VtgV3oQbW3OnrPp9xHbW
+         mz2zQC1ac26Cs8XSqrM6cKkForayv+qGlb/SBajQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.4 02/78] i2c: fix bus recovery stop mode timing
-Date:   Tue, 14 Jan 2020 11:00:36 +0100
-Message-Id: <20200114094352.828392087@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Peter Chen <peter.chen@freescale.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 04/78] usb: chipidea: host: Disable port power only if previously enabled
+Date:   Tue, 14 Jan 2020 11:00:38 +0100
+Message-Id: <20200114094353.105298870@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,63 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit cf8ce8b80f8bf9669f6ec4e71e16668430febdac upstream.
+commit c1ffba305dbcf3fb9ca969c20a97acbddc38f8e9 upstream.
 
-The I2C specification states that tsu:sto for standard mode timing must
-be at minimum 4us. Pictographically, this is:
+On shutdown, ehci_power_off() is called unconditionally to power off
+each port, even if it was never called to power on the port.
+For chipidea, this results in a call to ehci_ci_portpower() with a request
+to power off ports even if the port was never powered on.
+This results in the following warning from the regulator code.
 
-SCL: ____/~~~~~~~~~
-SDA: _________/~~~~
-       ->|    |<- 4us minimum
+WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
+unbalanced disables for usb_otg2_vbus
+Modules linked in:
+CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
+Hardware name: Freescale i.MX7 Dual (Device Tree)
+[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
+[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
+[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
+[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
+[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
+[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
+[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
+[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
+[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
+[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
+[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
+[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
+[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
+...
 
-We are currently waiting 2.5us between asserting SCL and SDA, which is
-in violation of the standard. Adjust the timings to ensure that we meet
-what is stipulated as the minimum timings to ensure that all devices
-correctly interpret the STOP bus transition.
+Keeping track of the power enable state avoids the warning and traceback.
 
-This is more important than trying to generate a square wave with even
-duty cycle.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: Peter Chen <peter.chen@freescale.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191226155754.25451-1-linux@roeck-us.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/i2c-core-base.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/host.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -186,10 +186,11 @@ int i2c_generic_scl_recovery(struct i2c_
- 	 * If we can set SDA, we will always create a STOP to ensure additional
- 	 * pulses will do no harm. This is achieved by letting SDA follow SCL
- 	 * half a cycle later. Check the 'incomplete_write_byte' fault injector
--	 * for details.
-+	 * for details. Note that we must honour tsu:sto, 4us, but lets use 5us
-+	 * here for simplicity.
- 	 */
- 	bri->set_scl(adap, scl);
--	ndelay(RECOVERY_NDELAY / 2);
-+	ndelay(RECOVERY_NDELAY);
- 	if (bri->set_sda)
- 		bri->set_sda(adap, scl);
- 	ndelay(RECOVERY_NDELAY / 2);
-@@ -211,7 +212,13 @@ int i2c_generic_scl_recovery(struct i2c_
- 		scl = !scl;
- 		bri->set_scl(adap, scl);
- 		/* Creating STOP again, see above */
--		ndelay(RECOVERY_NDELAY / 2);
-+		if (scl)  {
-+			/* Honour minimum tsu:sto */
-+			ndelay(RECOVERY_NDELAY);
-+		} else {
-+			/* Honour minimum tf and thd:dat */
-+			ndelay(RECOVERY_NDELAY / 2);
-+		}
- 		if (bri->set_sda)
- 			bri->set_sda(adap, scl);
- 		ndelay(RECOVERY_NDELAY / 2);
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -26,6 +26,7 @@ static int (*orig_bus_suspend)(struct us
+ 
+ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
++	bool enabled;
+ };
+ 
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+@@ -37,7 +38,7 @@ static int ehci_ci_portpower(struct usb_
+ 	int ret = 0;
+ 	int port = HCS_N_PORTS(ehci->hcs_params);
+ 
+-	if (priv->reg_vbus) {
++	if (priv->reg_vbus && enable != priv->enabled) {
+ 		if (port > 1) {
+ 			dev_warn(dev,
+ 				"Not support multi-port regulator control\n");
+@@ -53,6 +54,7 @@ static int ehci_ci_portpower(struct usb_
+ 				enable ? "enable" : "disable", ret);
+ 			return ret;
+ 		}
++		priv->enabled = enable;
+ 	}
+ 
+ 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
 
 
