@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF46C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09674C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4541A24690
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86B824690
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgANVDu (ORCPT
+        id S1729110AbgANVDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:03:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50822 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 16:03:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728961AbgANVDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729010AbgANVDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 16:03:40 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5979724684;
-        Tue, 14 Jan 2020 21:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C74C42469B;
+        Tue, 14 Jan 2020 21:03:39 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1irTLd-000D4I-9X; Tue, 14 Jan 2020 16:03:37 -0500
-Message-Id: <20200114210337.173522962@goodmis.org>
+        id 1irTLe-000D9S-Nv; Tue, 14 Jan 2020 16:03:38 -0500
+Message-Id: <20200114210338.632619739@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 16:03:26 -0500
+Date:   Tue, 14 Jan 2020 16:03:36 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 10/26] bootconfig: init: Allow admin to use bootconfig for kernel command
- line
+Subject: [for-next][PATCH 20/26] tracing/boot Add kprobe event support
 References: <20200114210316.450821675@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -47,185 +46,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Since the current kernel command line is too short to describe
-many options which supported by kernel, allow user to use boot
-config to setup (add) the command line options.
+Add kprobe event support on event node to boot-time tracing.
+If the group name of event is "kprobes", the boot-time tracing
+defines new probe event according to "probes" values.
 
-All kernel parameters under "kernel." keywords will be used
-for setting up extra kernel command line.
+ - ftrace.event.kprobes.EVENT.probes = PROBE[, PROBE2...]
+   Defines new kprobe event based on PROBEs. It is able to define
+   multiple probes on one event, but those must have same type of
+   arguments.
 
 For example,
 
-kernel {
-	audit = on
-	audit_backlog_limit = 256
-}
+ ftrace.events.kprobes.myevent {
+	probes = "vfs_read $arg1 $arg2";
+	enable;
+ }
 
-Note that you can not specify some early parameters
-(like console etc.) by this method, since it is
-loaded after early parameters parsed.
+This will add kprobes:myevent on vfs_read with the 1st and the 2nd
+arguments.
 
-Link: http://lkml.kernel.org/r/157867228333.17873.11962796367032622466.stgit@devnote2
+Link: http://lkml.kernel.org/r/157867240104.17873.9712052065426433111.stgit@devnote2
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- init/main.c | 106 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 101 insertions(+), 5 deletions(-)
+ kernel/trace/trace_boot.c   | 46 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_kprobe.c |  5 ++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/init/main.c b/init/main.c
-index 0b4e0c8ccf16..c0017d9d16e7 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -137,6 +137,8 @@ char __initdata boot_command_line[COMMAND_LINE_SIZE];
- char *saved_command_line;
- /* Command line for parameter parsing */
- static char *static_command_line;
-+/* Untouched extra command line */
-+static char *extra_command_line;
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 37524031533e..a11dc60299fb 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -76,6 +76,48 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+ 	}
+ }
  
- static char *execute_command;
- static char *ramdisk_execute_command;
-@@ -245,6 +247,83 @@ static int __init loglevel(char *str)
- early_param("loglevel", loglevel);
- 
- #ifdef CONFIG_BOOT_CONFIG
++#ifdef CONFIG_KPROBE_EVENTS
++extern int trace_kprobe_run_command(const char *command);
 +
-+char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
-+
-+#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
-+
-+static int __init xbc_snprint_cmdline(char *buf, size_t size,
-+				      struct xbc_node *root)
++static int __init
++trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
 +{
-+	struct xbc_node *knode, *vnode;
-+	char *end = buf + size;
-+	char c = '\"';
++	struct xbc_node *anode;
++	char buf[MAX_BUF_LEN];
 +	const char *val;
-+	int ret;
++	char *p;
++	int len;
 +
-+	xbc_node_for_each_key_value(root, knode, val) {
-+		ret = xbc_node_compose_key_after(root, knode,
-+					xbc_namebuf, XBC_KEYLEN_MAX);
-+		if (ret < 0)
-+			return ret;
++	len = snprintf(buf, ARRAY_SIZE(buf) - 1, "p:kprobes/%s ", event);
++	if (len >= ARRAY_SIZE(buf)) {
++		pr_err("Event name is too long: %s\n", event);
++		return -E2BIG;
++	}
++	p = buf + len;
++	len = ARRAY_SIZE(buf) - len;
 +
-+		vnode = xbc_node_get_child(knode);
-+		ret = snprintf(buf, rest(buf, end), "%s%c", xbc_namebuf,
-+				vnode ? '=' : ' ');
-+		if (ret < 0)
-+			return ret;
-+		buf += ret;
-+		if (!vnode)
-+			continue;
-+
-+		c = '\"';
-+		xbc_array_for_each_value(vnode, val) {
-+			ret = snprintf(buf, rest(buf, end), "%c%s", c, val);
-+			if (ret < 0)
-+				return ret;
-+			buf += ret;
-+			c = ',';
++	xbc_node_for_each_array_value(node, "probes", anode, val) {
++		if (strlcpy(p, val, len) >= len) {
++			pr_err("Probe definition is too long: %s\n", val);
++			return -E2BIG;
 +		}
-+		if (rest(buf, end) > 2)
-+			strcpy(buf, "\" ");
-+		buf += 2;
++		if (trace_kprobe_run_command(buf) < 0) {
++			pr_err("Failed to add probe: %s\n", buf);
++			return -EINVAL;
++		}
 +	}
 +
-+	return buf - (end - size);
++	return 0;
 +}
-+#undef rest
-+
-+/* Make an extra command line under given key word */
-+static char * __init xbc_make_cmdline(const char *key)
++#else
++static inline int __init
++trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
 +{
-+	struct xbc_node *root;
-+	char *new_cmdline;
-+	int ret, len = 0;
++	pr_err("Kprobe event is not supported.\n");
++	return -ENOTSUPP;
++}
++#endif
 +
-+	root = xbc_find_node(key);
-+	if (!root)
-+		return NULL;
+ static void __init
+ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 			  struct xbc_node *enode)
+@@ -88,6 +130,10 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 	group = xbc_node_get_data(gnode);
+ 	event = xbc_node_get_data(enode);
+ 
++	if (!strcmp(group, "kprobes"))
++		if (trace_boot_add_kprobe_event(enode, event) < 0)
++			return;
 +
-+	/* Count required buffer size */
-+	len = xbc_snprint_cmdline(NULL, 0, root);
-+	if (len <= 0)
-+		return NULL;
-+
-+	new_cmdline = memblock_alloc(len + 1, SMP_CACHE_BYTES);
-+	if (!new_cmdline) {
-+		pr_err("Failed to allocate memory for extra kernel cmdline.\n");
-+		return NULL;
-+	}
-+
-+	ret = xbc_snprint_cmdline(new_cmdline, len + 1, root);
-+	if (ret < 0 || ret > len) {
-+		pr_err("Failed to print extra kernel cmdline.\n");
-+		return NULL;
-+	}
-+
-+	return new_cmdline;
+ 	mutex_lock(&event_mutex);
+ 	file = find_event_file(tr, group, event);
+ 	if (!file) {
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 8113d6aa7bc5..283b7c437440 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -902,6 +902,11 @@ static int create_or_delete_trace_kprobe(int argc, char **argv)
+ 	return ret == -ECANCELED ? -EINVAL : ret;
+ }
+ 
++int trace_kprobe_run_command(const char *command)
++{
++	return trace_run_command(command, create_or_delete_trace_kprobe);
 +}
 +
- u32 boot_config_checksum(unsigned char *p, u32 size)
+ static int trace_kprobe_release(struct dyn_event *ev)
  {
- 	u32 ret = 0;
-@@ -289,8 +368,11 @@ static void __init setup_boot_config(void)
- 
- 	if (xbc_init(copy) < 0)
- 		pr_err("Failed to parse boot config\n");
--	else
-+	else {
- 		pr_info("Load boot config: %d bytes\n", size);
-+		/* keys starting with "kernel." are passed via cmdline */
-+		extra_command_line = xbc_make_cmdline("kernel");
-+	}
- }
- #else
- #define setup_boot_config()	do { } while (0)
-@@ -425,7 +507,12 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
-  */
- static void __init setup_command_line(char *command_line)
- {
--	size_t len = strlen(boot_command_line) + 1;
-+	size_t len, xlen = 0;
-+
-+	if (extra_command_line)
-+		xlen = strlen(extra_command_line);
-+
-+	len = xlen + strlen(boot_command_line) + 1;
- 
- 	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
- 	if (!saved_command_line)
-@@ -435,8 +522,17 @@ static void __init setup_command_line(char *command_line)
- 	if (!static_command_line)
- 		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
- 
--	strcpy(saved_command_line, boot_command_line);
--	strcpy(static_command_line, command_line);
-+	if (xlen) {
-+		/*
-+		 * We have to put extra_command_line before boot command
-+		 * lines because there could be dashes (separator of init
-+		 * command line) in the command lines.
-+		 */
-+		strcpy(saved_command_line, extra_command_line);
-+		strcpy(static_command_line, extra_command_line);
-+	}
-+	strcpy(saved_command_line + xlen, boot_command_line);
-+	strcpy(static_command_line + xlen, command_line);
- }
- 
- /*
-@@ -652,7 +748,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	build_all_zonelists(NULL);
- 	page_alloc_init();
- 
--	pr_notice("Kernel command line: %s\n", boot_command_line);
-+	pr_notice("Kernel command line: %s\n", saved_command_line);
- 	/* parameters may set static keys */
- 	jump_label_init();
- 	parse_early_param();
+ 	struct trace_kprobe *tk = to_trace_kprobe(ev);
 -- 
 2.24.1
 
