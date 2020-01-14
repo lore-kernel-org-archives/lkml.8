@@ -2,78 +2,152 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D481DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CB1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A692D24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579028029;
-	bh=8x3wjLAViI8vNS8ODIBLSznPokBqhlkRXzzyLftmXts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JRLxTKK+jm8HcdVbLeavpzsE/kvdXVGZ+t1Pvh0ewdcqlSY9cQmC3qg1VCiyKZIgH
-	 zEXkeeJIe6KtI9KTxX0aQ9NOesKGvFTFxydSt1bwNUCEnK12yGzVO1FZKH7IbQQjw1
-	 UbprMwR3JadRoiQIBZIQ3N15hEAw9dCs4860PN00=
+	by mail.kernel.org (Postfix) with ESMTP id E2FB824672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sWhN4A1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANSxs (ORCPT
+        id S1728787AbgANSyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:53:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANSxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:53:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 577D02084D;
-        Tue, 14 Jan 2020 18:53:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579028027;
-        bh=8x3wjLAViI8vNS8ODIBLSznPokBqhlkRXzzyLftmXts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jA1wlZPAj9+Q1LuQ3z38wx7Ebb88+G3sTdfoTzuk7pFfcwXOjboWQTE1eaa1PDSi5
-         jkL04YqMJ6ge49HYiFIBSNZt6USkQgLrBhNyrhu7ImMquE6cf/XoscQJIf+yZSZgyY
-         IvXjZPKEWeh3rs7MfFQz0I06JZZDL1yBPuON3yq4=
-Date:   Tue, 14 Jan 2020 19:53:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
-Message-ID: <20200114185344.GA2079595@kroah.com>
-References: <20200114094352.428808181@linuxfoundation.org>
- <20200114181745.GD18872@roeck-us.net>
+        Tue, 14 Jan 2020 13:54:01 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45828 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANSyB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:54:01 -0500
+Received: by mail-qk1-f194.google.com with SMTP id x1so13109547qkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:54:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FR9lhCYEbw12H0zeobUybUOQGm2CoSvzvFRxTVTYgPU=;
+        b=sWhN4A1jJF4zgCnuuE5MvnlwpdRSGb5ico9T3aDZ5KVbTDha/ZNXBr4OzGPVv1W4u4
+         tPz+4LZCRuC6dGCMw/qdT5wxChox1sGnbGmwwTuiFG3KCWEf+YaHUwD/1PI5a3HlFCeK
+         dvl/mvQmsKoIpfv803qf8biN8MP72s0uuFWGQzKc1cIo/52Mi1EhgtZjOSY0IqwtVETi
+         Z0HU5wvFqcUxXEaOHTQoqOU9fZis1x2p3ayPvgs4iN8elUrp9k7n8eCn4BpmRnA/z7wb
+         0vXLk0ZbZwDBTr4NrkKE83d4lE1ythYkAgjmMIw17D/rAwUOk26JkBQL+c0+czvy79Xw
+         1FNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FR9lhCYEbw12H0zeobUybUOQGm2CoSvzvFRxTVTYgPU=;
+        b=g55J/9uDskRSrTohKstJOH455e17ESFbFvOlNL8qYRzDWaV5O5lgqrhFds3XnpUmo3
+         o2h+P8EvihxRyRXeE69ixF/MVejBx4b0QCqrmT3/oCGm4AYgC73TqZ/QYfzFoctvzhfm
+         eG5nYp8ZnmQwUItLoLps/z3PC+WgMBqr2h3PlBFoA8NL9pV+pLVaFkCRgLMrd4ssSWAq
+         oosHA5DKwPPzwMJGw+8mzCuwwRdq+0lSjw78ylnGP2p75gsMufYtSxnsbSz20MTyGKm3
+         do6UgAF6Yhxo2/CgG4ljQMKXFAEk6kgpEd67azBiMPkByoL15D0FENS4ipfeuFEYJlXR
+         rk7g==
+X-Gm-Message-State: APjAAAXB8rL1JhU5+vQVd+ONKc3rd9xgiihDWMcHGQTqPNKaoz4EWEia
+        b0fU1oY8TeHMxh+WqDX+FV4j3/RvRq/cky0B8FkVuQ==
+X-Google-Smtp-Source: APXvYqx/CCE+s/Di7ck1wYwWrImCMzsEIMAjT6dwMMAl1rCV2+iOYzwsERCylc5qObPwRLK5zC8zX+ClZqlVCoWu7os=
+X-Received: by 2002:a05:620a:997:: with SMTP id x23mr18899493qkx.143.1579028040132;
+ Tue, 14 Jan 2020 10:54:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114181745.GD18872@roeck-us.net>
+References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
+ <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
+In-Reply-To: <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
+From:   Brian Vazquez <brianvv@google.com>
+Date:   Tue, 14 Jan 2020 10:53:48 -0800
+Message-ID: <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:17:45AM -0800, Guenter Roeck wrote:
-> On Tue, Jan 14, 2020 at 11:00:34AM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.12 release.
-> > There are 78 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 158 pass: 158 fail: 0
-> Qemu test results:
-> 	total: 389 pass: 389 fail: 0
+On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
+> >
+> > From: Yonghong Song <yhs@fb.com>
+> >
+> > Added four libbpf API functions to support map batch operations:
+> >   . int bpf_map_delete_batch( ... )
+> >   . int bpf_map_lookup_batch( ... )
+> >   . int bpf_map_lookup_and_delete_batch( ... )
+> >   . int bpf_map_update_batch( ... )
+> >
+> > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > ---
+> >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
+> >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
+> >  tools/lib/bpf/libbpf.map |  4 +++
+> >  3 files changed, 86 insertions(+)
+> >
+> > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> > index 500afe478e94a..12ce8d275f7dc 100644
+> > --- a/tools/lib/bpf/bpf.c
+> > +++ b/tools/lib/bpf/bpf.c
+> > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
+> >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
+> >  }
+> >
+> > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
+> > +                               void *out_batch, void *keys, void *values,
+> > +                               __u32 *count,
+> > +                               const struct bpf_map_batch_opts *opts)
+> > +{
+> > +       union bpf_attr attr = {};
+> > +       int ret;
+> > +
+> > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
+> > +               return -EINVAL;
+> > +
+> > +       memset(&attr, 0, sizeof(attr));
+> > +       attr.batch.map_fd = fd;
+> > +       attr.batch.in_batch = ptr_to_u64(in_batch);
+> > +       attr.batch.out_batch = ptr_to_u64(out_batch);
+> > +       attr.batch.keys = ptr_to_u64(keys);
+> > +       attr.batch.values = ptr_to_u64(values);
+> > +       if (count)
+> > +               attr.batch.count = *count;
+> > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
+> > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
+> > +
+> > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
+> > +       if (count)
+> > +               *count = attr.batch.count;
+>
+> what if syscall failed, do you still want to assign *count then?
 
-Wonderful, thanks for testing all of these and letting me know.
+Hi Andrii, thanks for taking a look.
 
-greg k-h
+attr.batch.count should report the number of entries correctly
+processed before finding and error, an example could be when you
+provided a buffer for 3 entries and the map only has 1, ret is going
+to be -ENOENT meaning that you traversed the map and you still want to
+assign *count.
+
+That being said, the condition 'if (count)' is wrong and I think it
+should be removed.
+
+>
+> > +
+> > +       return ret;
+> > +}
+> > +
+>
+> [...]
