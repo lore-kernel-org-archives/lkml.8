@@ -2,44 +2,43 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8EFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C80CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4814624658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E86F24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CBcoxjqI"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fm/TVH0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgANUJH (ORCPT
+        id S1728914AbgANUJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:09:07 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53206 "EHLO
+        Tue, 14 Jan 2020 15:09:08 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:53226 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727285AbgANUI5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727556AbgANUI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 15:08:57 -0500
 Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D144B406F7;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C556C4049B;
         Tue, 14 Jan 2020 20:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579032536; bh=pnuNzowJEgDqFBcmPzhqodh5b56v6RmG8ENp9KF/2mQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBcoxjqItxVjnTN0eYL3kI5Re7OGfz1Wr/fEHGi/KZQSeWVEV4Y6lKo+YXfps9tUb
-         +OiepL3APR61mf5HiqQQu3gcE6J+pDR2nkZ7DTCT04x+UYI3LJQ3JdS+1qUmG3KNcq
-         M9ZR0dwNXKMThv+OivrSN9MRIeloVrhg60DOUKQLDEN8lx/7vcGDQPVI78x4J62nM5
-         XfriUwN4yomOGCl2oTAqolFokcsc9QZHUdcLB8Ahmsyf2vwxzCNA47RfRByRL8x1H4
-         Z9nVQ7//YTY82LmYfl+NRSYMWxCqAa42QwIT1cd3ExRleiMENTWfXTl+zfjcRK9hYQ
-         SJtLUn/iHDKBw==
+        t=1579032536; bh=f5GlxhH1g7W0d3zEgvx81jnLwcqIiTTmh3wCeGRzGW0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fm/TVH0mNkG5VblJWaqvz2mdAEeXboKh6uXtqrQv8g6K4lppyWbpONWze6HfTGsuk
+         D2nlY9m6Pj5TuT/CDkL/5sqZREDt6Zglbeh2zl2SeWZnT2t8hTzfTfGOBNL6qjn2ze
+         l+6kT7uCoaj6sPfP0fVQF0cAeyMFvxfLBseZ3fZnwnYBiRxvXI19qO5Z2DoBJKZnwh
+         OXJ0kTUQXr9X/Q6zhLzEm7kiJ+wGcLkYjxUHfkIx8UvjwO7rnNCDjoGqDi9kudoPcV
+         4I1HXDCoIfP3aTmCGr+u+jl1aLHOa6jxn1p9w8TUZ6nT7hprCvrRNupN9xnlctaqnw
+         IHOf0LtcpCi1A==
 Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.25])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8090AA00AD;
-        Tue, 14 Jan 2020 20:08:55 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 88973A0096;
+        Tue, 14 Jan 2020 20:08:51 +0000 (UTC)
 From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
 To:     Arnd Bergmann <arnd@arndb.de>,
         Khalid Aziz <khalid.aziz@oracle.com>,
@@ -54,12 +53,10 @@ To:     Arnd Bergmann <arnd@arndb.de>,
 Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [RFC 4/4] ARC: uaccess: use optimized generic __strnlen_user/__strncpy_from_user
-Date:   Tue, 14 Jan 2020 12:08:46 -0800
-Message-Id: <20200114200846.29434-5-vgupta@synopsys.com>
+Subject: [RFC 0/4] Switching ARC to optimized generic strncpy_from_user
+Date:   Tue, 14 Jan 2020 12:08:42 -0800
+Message-Id: <20200114200846.29434-1-vgupta@synopsys.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200114200846.29434-1-vgupta@synopsys.com>
-References: <20200114200846.29434-1-vgupta@synopsys.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,195 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These rely on word access rather than byte loop
+Hi,
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
+This came up when trying to move ARC over to generic word-at-a-time
+interface.
+
+ - 1/4 is a trivial fix (and needed for ARC switch)
+ - 2/4 is mucking with internals hence the RFC. I could very likely be
+   overlooking some possible DoS / exploit issues and apologies in advance
+   if thats the case but I felt like sharing it anyways to see what
+   others think.
+ - 3/4, 4/4 are ARC changes to remove the existing ARC version and
+   switch to generic (needs 1/4).
+
+Thx,
+-Vineet
+
+Vineet Gupta (4):
+  asm-generic/uaccess: don't define inline functions if noinline lib/*
+    in use
+  lib/strncpy_from_user: Remove redundant user space pointer range check
+  ARC: uaccess: remove noinline variants of __strncpy_from_user() and
+    friends
+  ARC: uaccess: use optimized generic __strnlen_user/__strncpy_from_user
+
  arch/arc/Kconfig                      |  2 +
  arch/arc/include/asm/Kbuild           |  1 -
- arch/arc/include/asm/uaccess.h        | 71 ++-------------------------
- arch/arc/include/asm/word-at-a-time.h | 49 ++++++++++++++++++
- 4 files changed, 56 insertions(+), 67 deletions(-)
+ arch/arc/include/asm/uaccess.h        | 87 ++-------------------------
+ arch/arc/include/asm/word-at-a-time.h | 49 +++++++++++++++
+ arch/arc/mm/extable.c                 | 23 -------
+ include/asm-generic/uaccess.h         |  4 ++
+ lib/strncpy_from_user.c               | 36 ++++-------
+ lib/strnlen_user.c                    | 28 +++------
+ 8 files changed, 79 insertions(+), 151 deletions(-)
  create mode 100644 arch/arc/include/asm/word-at-a-time.h
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index 26108ea785c2..3b074c4d31fb 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -26,6 +26,8 @@ config ARC
- 	select GENERIC_PENDING_IRQ if SMP
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
-+	select GENERIC_STRNCPY_FROM_USER if MMU
-+	select GENERIC_STRNLEN_USER if MMU
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_DEBUG_STACKOVERFLOW
-diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
-index 1b505694691e..cb8d459b7f56 100644
---- a/arch/arc/include/asm/Kbuild
-+++ b/arch/arc/include/asm/Kbuild
-@@ -24,5 +24,4 @@ generic-y += topology.h
- generic-y += trace_clock.h
- generic-y += user.h
- generic-y += vga.h
--generic-y += word-at-a-time.h
- generic-y += xor.h
-diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
-index 0b34c152086f..f579e06447a9 100644
---- a/arch/arc/include/asm/uaccess.h
-+++ b/arch/arc/include/asm/uaccess.h
-@@ -23,7 +23,6 @@
- 
- #include <linux/string.h>	/* for generic string functions */
- 
--
- #define __kernel_ok		(uaccess_kernel())
- 
- /*
-@@ -52,6 +51,8 @@
- #define __access_ok(addr, sz)	(unlikely(__kernel_ok) || \
- 				 likely(__user_ok((addr), (sz))))
- 
-+#define user_addr_max() 	(uaccess_kernel() ? ~0UL : get_fs())
-+
- /*********** Single byte/hword/word copies ******************/
- 
- #define __get_user_fn(sz, u, k)					\
-@@ -655,75 +656,13 @@ static inline unsigned long __clear_user(void __user *to, unsigned long n)
- 	return res;
- }
- 
--static inline long
--__strncpy_from_user(char *dst, const char __user *src, long count)
--{
--	long res = 0;
--	char val;
--
--	if (count == 0)
--		return 0;
--
--	__asm__ __volatile__(
--	"	mov	lp_count, %5		\n"
--	"	lp	3f			\n"
--	"1:	ldb.ab  %3, [%2, 1]		\n"
--	"	breq.d	%3, 0, 3f               \n"
--	"	stb.ab  %3, [%1, 1]		\n"
--	"	add	%0, %0, 1	# Num of NON NULL bytes copied	\n"
--	"3:								\n"
--	"	.section .fixup, \"ax\"		\n"
--	"	.align 4			\n"
--	"4:	mov %0, %4		# sets @res as -EFAULT	\n"
--	"	j   3b				\n"
--	"	.previous			\n"
--	"	.section __ex_table, \"a\"	\n"
--	"	.align 4			\n"
--	"	.word   1b, 4b			\n"
--	"	.previous			\n"
--	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
--	: "g"(-EFAULT), "r"(count)
--	: "lp_count", "memory");
--
--	return res;
--}
--
--static inline long __strnlen_user(const char __user *s, long n)
--{
--	long res, tmp1, cnt;
--	char val;
--
--	__asm__ __volatile__(
--	"	mov %2, %1			\n"
--	"1:	ldb.ab  %3, [%0, 1]		\n"
--	"	breq.d  %3, 0, 2f		\n"
--	"	sub.f   %2, %2, 1		\n"
--	"	bnz 1b				\n"
--	"	sub %2, %2, 1			\n"
--	"2:	sub %0, %1, %2			\n"
--	"3:	;nop				\n"
--	"	.section .fixup, \"ax\"		\n"
--	"	.align 4			\n"
--	"4:	mov %0, 0			\n"
--	"	j   3b				\n"
--	"	.previous			\n"
--	"	.section __ex_table, \"a\"	\n"
--	"	.align 4			\n"
--	"	.word 1b, 4b			\n"
--	"	.previous			\n"
--	: "=r"(res), "=r"(tmp1), "=r"(cnt), "=r"(val)
--	: "0"(s), "1"(n)
--	: "memory");
--
--	return res;
--}
--
- #define INLINE_COPY_TO_USER
- #define INLINE_COPY_FROM_USER
- 
- #define __clear_user		__clear_user
--#define __strncpy_from_user	__strncpy_from_user
--#define __strnlen_user		__strnlen_user
-+
-+extern long strncpy_from_user(char *dest, const char __user *src, long count);
-+extern __must_check long strnlen_user(const char __user *str, long n);
- 
- #include <asm/segment.h>
- #include <asm-generic/uaccess.h>
-diff --git a/arch/arc/include/asm/word-at-a-time.h b/arch/arc/include/asm/word-at-a-time.h
-new file mode 100644
-index 000000000000..00e92be70987
---- /dev/null
-+++ b/arch/arc/include/asm/word-at-a-time.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2020 Synopsys Inc.
-+ */
-+#ifndef __ASM_ARC_WORD_AT_A_TIME_H
-+#define __ASM_ARC_WORD_AT_A_TIME_H
-+
-+#ifdef __LITTLE_ENDIAN__
-+
-+#include <linux/kernel.h>
-+
-+struct word_at_a_time {
-+	const unsigned long one_bits, high_bits;
-+};
-+
-+#define WORD_AT_A_TIME_CONSTANTS { REPEAT_BYTE(0x01), REPEAT_BYTE(0x80) }
-+
-+static inline unsigned long has_zero(unsigned long a, unsigned long *bits,
-+				     const struct word_at_a_time *c)
-+{
-+	unsigned long mask = ((a - c->one_bits) & ~a) & c->high_bits;
-+	*bits = mask;
-+	return mask;
-+}
-+
-+#define prep_zero_mask(a, bits, c) (bits)
-+
-+static inline unsigned long create_zero_mask(unsigned long bits)
-+{
-+	bits = (bits - 1) & ~bits;
-+	return bits >> 7;
-+}
-+
-+static inline unsigned long find_zero(unsigned long mask)
-+{
-+#ifdef CONFIG_64BIT
-+	return fls64(mask) >> 3;
-+#else
-+	return fls(mask) >> 3;
-+#endif
-+}
-+
-+#define zero_bytemask(mask) (mask)
-+
-+#else	/* __BIG_ENDIAN__ */
-+#include <asm-generic/word-at-a-time.h>
-+#endif
-+
-+#endif /* __ASM_WORD_AT_A_TIME_H */
 -- 
 2.20.1
 
