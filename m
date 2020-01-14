@@ -2,39 +2,46 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37C7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007B3C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CB724680
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEB624658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgANWn4 (ORCPT
+        id S1728844AbgANWqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:43:56 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54463 "EHLO
+        Tue, 14 Jan 2020 17:46:21 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42652 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgANWnz (ORCPT
+        with ESMTP id S1727073AbgANWqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:43:55 -0500
+        Tue, 14 Jan 2020 17:46:20 -0500
 Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 4d21a5c1f3213161; Tue, 14 Jan 2020 23:43:54 +0100
+ id 83a96a032f232429; Tue, 14 Jan 2020 23:46:18 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Alan Maguire <alan.maguire@oracle.com>
-Cc:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
-        dmitry.torokhov@gmail.com, sfr@canb.auug.org.au,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
-Subject: Re: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
-Date:   Tue, 14 Jan 2020 23:43:53 +0100
-Message-ID: <1973062.CA44Rh9njY@kreacher>
-In-Reply-To: <51d7d427-2ef6-b0cd-ad23-2fb75b06b763@infradead.org>
-References: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com> <alpine.LRH.2.20.2001141639240.15464@dhcp-10-175-171-251.vpn.oracle.com> <51d7d427-2ef6-b0cd-ad23-2fb75b06b763@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
+        len.brown@intel.com, thomas.lendacky@amd.com
+Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
+Date:   Tue, 14 Jan 2020 23:46:18 +0100
+Message-ID: <1868711.0LYWRWiNKV@kreacher>
+In-Reply-To: <20200113122911.GE2827@hirez.programming.kicks-ass.net>
+References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com> <2579281.NS3xOKR7ft@kreacher> <20200113122911.GE2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -43,59 +50,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, January 14, 2020 5:45:56 PM CET Randy Dunlap wrote:
-> On 1/14/20 8:42 AM, Alan Maguire wrote:
-> > On Tue, 14 Jan 2020, Randy Dunlap wrote:
-> > 
-> >> Hi Alan,
-> >>
-> >> On 1/14/20 8:09 AM, Alan Maguire wrote:
-> >>> currently the property entry kunit tests are built if CONFIG_KUNIT=y.
-> >>> This will cause warnings when merged with the kunit tree that now
-> >>> supports tristate CONFIG_KUNIT.  While the tests appear to compile
-> >>> as a module, we get a warning about missing module license.
-> >>>
-> >>> It's better to have a per-test suite CONFIG variable so that
-> >>> we can do selective building of kunit-based suites, and can
-> >>> also avoid merge issues like this.
-> >>>
-> >>> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> >>
-> >> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> >>
-> > 
-> > Apologies for missing you out here.
-> >  
-> >>> Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-> >>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> >>> ---
-> >>>  drivers/base/test/Kconfig  | 3 +++
-> >>>  drivers/base/test/Makefile | 2 +-
-> >>>  2 files changed, 4 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
-> >>> index 86e85da..d29ae95 100644
-> >>> --- a/drivers/base/test/Kconfig
-> >>> +++ b/drivers/base/test/Kconfig
-> >>> @@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
-> >>>  	  The module name will be test_async_driver_probe.ko
-> >>>  
-> >>>  	  If unsure say N.
-> >>> +config KUNIT_DRIVER_PE_TEST
-> >>> +	bool "KUnit Tests for property entry API"
-> >>> +	depends on KUNIT
-> >>
-> >> Why is this bool instead of tristate?
-> >>
-> > 
-> > The support for building kunit and kunit tests as modules has not merged 
-> > into linux-next yet, so if we set the option to tristate the build would
-> > fail for allmodconfig builds.   Once it's merged we can revisit though; I 
-> > should have mentioned this, thanks for reminding me!
+On Monday, January 13, 2020 1:29:11 PM CET Peter Zijlstra wrote:
+> On Mon, Jan 13, 2020 at 12:18:46PM +0100, Rafael J. Wysocki wrote:
+> > On Monday, January 13, 2020 11:43:14 AM CET Peter Zijlstra wrote:
 > 
-> Oh. I see.  Thanks.
+> > > Anyone, what will it take to get MPERF/TSC 'working' ?
+> > 
+> > The same thing that intel_pstate does.
+> 
+> But intel_pstate cheats, it has a FMS listing and possible 'interesting'
+> chips are excluded. For instance, Core2 has APERF/MPERF, but
+> intel_pstate does not support Core2.
+> 
+> Simlarly, intel_pstate does (obviously) not support AMD chips, even tho
+> those have APERF/MPERF.
+> 
+> Although I suppose Core2 doesn't have VMX and is therefore less
+> interesting, but then we'd need to gate the logic with something like:
+> 
+> 	static_cpu_has(X86_FEATURE_APERFMPERF) &&
+> 	(static_cpu_has(X86_FEATURE_VMX) || static_cpu_has(X86_FEATURE_SVM)
+> 
+> > Generally speaking, it shifts the mperf values by a number of positions
+> > depending on the CPU model, but that is 1 except for KNL.
+> > 
+> > See get_target_pstate().
+> 
+> I'm going to go out on a limb and guess that's the same KNL hack as
+> TurboStat has.
+> 
+> Is that really the only known case?
 
-Patch applied, thanks!
+I'm not aware of any other at least as far as Intel chips go.
 
 
 
