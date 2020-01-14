@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BDEC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A4EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF042467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D7320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996454;
-	bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
+	s=default; t=1578996457;
+	bh=uUrA3Z+l+qzdLYCP9M082e6po9DoD8BgNE22uN5SkBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZSCLU2GzfVny21cHTfwzMMK9P/NTISj2FH1rYN9icIZ6LH2YQejcIfJT4oXjK3NH
-	 XX4KgxcQtdI+kJPlrUesGLn9xPaWPg3ZF7i5VYbcjWn6HZN/7vLT4bSqrtJlc1EbIW
-	 en3tAq2NHiJA1ItNRptDSCY+RHvhPo+Mko6BEyHc=
+	b=k/g67TP+xz3PzCHgqBTF/2FG2xTwrScWYKSnfdPWA1BDMU0cTQ54hA3mZPgJr+AdC
+	 qvzHupaHd82vFXXfRKVKWqsK74wa7jUIiAnmni9g24m+3V1izgbD4JhEE8phzcW0yz
+	 jkow2D/mj6N7/Uv+4YS1ng3fUHmFk10jBPRHQHm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgANKHd (ORCPT
+        id S1730704AbgANKHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37854 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:07:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729499AbgANKHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:31 -0500
+        id S1728779AbgANKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:07:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17BC20678;
-        Tue, 14 Jan 2020 10:07:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DDD24685;
+        Tue, 14 Jan 2020 10:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996450;
-        bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
+        s=default; t=1578996447;
+        bh=uUrA3Z+l+qzdLYCP9M082e6po9DoD8BgNE22uN5SkBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0ixdT7HT4ko6ZUnq1qxLhLWR3IddHdJ7h2EvRe38FRNmyE5L8gCFv+6nLYN6zgwH
-         dAW7ig350Yu8zjX1IWoDh0wxiFInm3fFTLj+d+/rxkNQLApIcaFXlE6Slmu6Ijn7B4
-         YsLJy9M68MxFRy/RReorky/OCXKSjyHTxaNcGOoQ=
+        b=DDIJ8QuydOB8hM4mPePSwiQn/jPwYVsC+GGZHUW+WIiWSp0ZdFs1YL/eh0vvsG8h+
+         9+i4sO7yB8d80/IYNwqQI8scsjimOrE7aWyS2EjSUyut81P7TJ18KQh72QkwdOYOVP
+         sYipMIL8DVTEqC/iYsrGHb0fBlWUiffmPPs8GVls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Faber <faber@faberman.de>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 21/46] can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
-Date:   Tue, 14 Jan 2020 11:01:38 +0100
-Message-Id: <20200114094344.766503208@linuxfoundation.org>
+Subject: [PATCH 4.19 20/46] can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
+Date:   Tue, 14 Jan 2020 11:01:37 +0100
+Message-Id: <20200114094344.577360795@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -59,75 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Faber <faber@faberman.de>
+From: Johan Hovold <johan@kernel.org>
 
-commit 2d77bd61a2927be8f4e00d9478fe6996c47e8d45 upstream.
+commit 2f361cd9474ab2c4ab9ac8db20faf81e66c6279b upstream.
 
-Under load, the RX side of the mscan driver can get stuck while TX still
-works. Restarting the interface locks up the system. This behaviour
-could be reproduced reliably on a MPC5121e based system.
+Make sure to always use the descriptors of the current alternate setting
+to avoid future issues when accessing fields that may differ between
+settings.
 
-The patch fixes the return value of the NAPI polling function (should be
-the number of processed packets, not constant 1) and the condition under
-which IRQs are enabled again after polling is finished.
-
-With this patch, no more lockups were observed over a test period of ten
-days.
-
-Fixes: afa17a500a36 ("net/can: add driver for mscan family & mpc52xx_mscan")
-Signed-off-by: Florian Faber <faber@faberman.de>
-Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/mscan/mscan.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/net/can/usb/gs_usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/mscan/mscan.c
-+++ b/drivers/net/can/mscan/mscan.c
-@@ -392,13 +392,12 @@ static int mscan_rx_poll(struct napi_str
- 	struct net_device *dev = napi->dev;
- 	struct mscan_regs __iomem *regs = priv->reg_base;
- 	struct net_device_stats *stats = &dev->stats;
--	int npackets = 0;
--	int ret = 1;
-+	int work_done = 0;
- 	struct sk_buff *skb;
- 	struct can_frame *frame;
- 	u8 canrflg;
- 
--	while (npackets < quota) {
-+	while (work_done < quota) {
- 		canrflg = in_8(&regs->canrflg);
- 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
- 			break;
-@@ -419,18 +418,18 @@ static int mscan_rx_poll(struct napi_str
- 
- 		stats->rx_packets++;
- 		stats->rx_bytes += frame->can_dlc;
--		npackets++;
-+		work_done++;
- 		netif_receive_skb(skb);
- 	}
- 
--	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
--		napi_complete(&priv->napi);
--		clear_bit(F_RX_PROGRESS, &priv->flags);
--		if (priv->can.state < CAN_STATE_BUS_OFF)
--			out_8(&regs->canrier, priv->shadow_canrier);
--		ret = 0;
-+	if (work_done < quota) {
-+		if (likely(napi_complete_done(&priv->napi, work_done))) {
-+			clear_bit(F_RX_PROGRESS, &priv->flags);
-+			if (priv->can.state < CAN_STATE_BUS_OFF)
-+				out_8(&regs->canrier, priv->shadow_canrier);
-+		}
- 	}
--	return ret;
-+	return work_done;
- }
- 
- static irqreturn_t mscan_isr(int irq, void *dev_id)
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -926,7 +926,7 @@ static int gs_usb_probe(struct usb_inter
+ 			     GS_USB_BREQ_HOST_FORMAT,
+ 			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     hconf,
+ 			     sizeof(*hconf),
+ 			     1000);
+@@ -949,7 +949,7 @@ static int gs_usb_probe(struct usb_inter
+ 			     GS_USB_BREQ_DEVICE_CONFIG,
+ 			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     dconf,
+ 			     sizeof(*dconf),
+ 			     1000);
 
 
