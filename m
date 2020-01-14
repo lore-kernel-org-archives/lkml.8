@@ -2,176 +2,123 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F37C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2430AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D21F24673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579023993;
-	bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qcN3xrn4pzANAuQrLH4nwd/dtpwagPWL0AUYl0D+7SnZjBfBinrd365LEiVaCHRzA
-	 cYTa+xGp7p84JLUZew0Z0GNInQc6xuRbXAFWBpEC7+W81jfa6U+MvFUFX+JpUsqH6F
-	 89DKH8/JsIwILdDlRbhWihNWIErCWOVeCx6OoEtA=
+	by mail.kernel.org (Postfix) with ESMTP id 0268F24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="TKUHo+Aj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgANRqc (ORCPT
+        id S1728778AbgANRrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:46:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANRqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:46:31 -0500
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D123C24681;
-        Tue, 14 Jan 2020 17:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579023991;
-        bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jO2fxggsWM5N6fDuJsQiwOrF47A7M0Zj6PjohQnWobjCR2xHQjoywTjQap5QCKX8p
-         iEHdg2y8Kch7ICsK2mTl/kaCOS2AZf0wjHLqfkXREssRjYVgcCkJO3lxmKlNWts9AG
-         dRkXSvn9hiTVctu5Dd87ETssj41Oqiq2Rxjbt8u4=
-Received: by mail-qv1-f52.google.com with SMTP id dc14so6037980qvb.9;
-        Tue, 14 Jan 2020 09:46:30 -0800 (PST)
-X-Gm-Message-State: APjAAAXkpB4KgiaGNEqeW/iP84Opo/o+5MG/ssKz862MTnAqtXW4W8eB
-        aiReoBGJYseiQ3afaSaf84gLbjvUqHw+uSHZrw==
-X-Google-Smtp-Source: APXvYqyzXMJ62ahYNuL6VK1Cf8ZGH/+06Kwo7FdWPAvSiMHBuwB7fFnCgD4KmcvFWnoyxKzjiFXuvKUl+MLXk2qpQcg=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr17346460qvn.79.1579023989888;
- Tue, 14 Jan 2020 09:46:29 -0800 (PST)
+        Tue, 14 Jan 2020 12:47:45 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37472 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728670AbgANRro (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:47:44 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so6928497pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:47:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z9aCEz62eIPqWkYEPAzhYqTb9kjUCL1iJhBD8cNYmdQ=;
+        b=TKUHo+Aj+kjlb0uBHNvMRHf96HpPIqHIz1NEDF6qdrcFrQpab8pKYemOjkp7TDEg4r
+         bhRcb2VIyazAzu91LL2ZXAsDfHqKJIH6uEH+pEZmIe+CPLagKF9sT0MFv5Xiq9etS718
+         Ix4PuSdqA+XARcCW+Ltu8W5IwF15C601fs5w0Yn5cjAC33IVyD4RugQDCEatuFz/XqKK
+         qdwy5o32UB42RYMHTYOa+a5U7kLKdpizAaTHJsFt9gYyOi71GmImsusXBEylF9YNaUnJ
+         c//8GsFVK31Sy9zMCUc413rEcn1+7CqWMEAwCEtu6pLF0+4gWFi4Mc61bu8UJbjer+4p
+         KvqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z9aCEz62eIPqWkYEPAzhYqTb9kjUCL1iJhBD8cNYmdQ=;
+        b=pW/8Gmsq0c2ls204DYEug+0myAd8MxxKf/zcwrV8QmnWvmM2RUhWi4cKL9a/rM/Mlz
+         sggtnD24seU0vFG1asK4fOxYDLHp/3nGJ4QW3mH+KkewZbq47y3nMh9bSrWM2GBO2s+3
+         BOuy8ELf/hYamPqAIc9BJNr/VbtFw8nJtVPTllLdMHsBtQYcBJW6kEPEVhzftFcZbzi0
+         fm4G5FLVtX6iXvJGUX3OBfzzFVjX7IZVKaPDzQroM18adHfkB3g6vXWLdBAv3dqbtyoP
+         9RasNMn9mGldqBo7aQF3b2zGML4f9pnwPw/GsyrvQY2nTOrzELCFMZor9/B8xi+IHeFZ
+         fkzw==
+X-Gm-Message-State: APjAAAWzPe6vI2Q/hi+8nee3wDIKKmzWKN8yk2zwdvR+bWPeq482zLJ9
+        tGZ9xqWnlRAQPzjebFMZCD85ug==
+X-Google-Smtp-Source: APXvYqwnchpKqWx5Af5jtLb3j7AjRAMRcr8Fe+OyyZ4zNhY7wOSoZMhRY/MAJG4BvswFYaXVQSLMbg==
+X-Received: by 2002:aa7:9ab6:: with SMTP id x22mr26088212pfi.260.1579024064093;
+        Tue, 14 Jan 2020 09:47:44 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id a185sm18511401pge.15.2020.01.14.09.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 09:47:43 -0800 (PST)
+Subject: Re: [PATCHv2-next 3/3] serial_core: Remove unused member in uart_port
+To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+References: <20200114171912.261787-1-dima@arista.com>
+ <20200114171912.261787-4-dima@arista.com>
+ <e1b3cccb0814ba4b0c99592715776ed48f343795.camel@perches.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <8f11e2fa-495d-fe25-f5e4-52c9580240d7@arista.com>
+Date:   Tue, 14 Jan 2020 17:47:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
- <20191127105522.31445-5-miquel.raynal@bootlin.com> <20191209113506.41341ed4@collabora.com>
-In-Reply-To: <20191209113506.41341ed4@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 14 Jan 2020 11:46:18 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
-Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e1b3cccb0814ba4b0c99592715776ed48f343795.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 4:35 AM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
->
-> On Wed, 27 Nov 2019 11:55:22 +0100
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> > Introduce a generic way to define concatenated MTD devices. This may
-> > be very useful in the case of ie. stacked SPI-NOR. Partitions to
-> > concatenate are described in an additional property of the partitions
-> > subnode:
-> >
-> >         flash0 {
-> >                 partitions {
-> >                         compatible = "fixed-partitions";
-> >                         part-concat = <&flash0_part1>, <&flash1_part0>;
-> >
-> >                       part0@0 {
-> >                               label = "part0_0";
-> >                               reg = <0x0 0x800000>;
-> >                       };
-> >
-> >                       flash0_part1: part1@800000 {
-> >                               label = "part0_1";
-> >                               reg = <0x800000 0x800000>;
->
-> So, flash0_part1 and flash0_part2 will be created even though the user
-> probably doesn't need them?
+On 1/14/20 5:36 PM, Joe Perches wrote:
+> On Tue, 2020-01-14 at 17:19 +0000, Dmitry Safonov wrote:
+>> It should remove the align-padding before @name.
+> []
+>> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> []
+>> @@ -247,7 +247,6 @@ struct uart_port {
+>>  
+>>  	unsigned char		hub6;			/* this should be in the 8250 driver */
+>>  	unsigned char		suspended;
+>> -	unsigned char		unused;
+> 
+> I suggest this not be applied as this is just to let
+> readers know that there is an unused 1 byte alignment
+> hole here that could be used for something else.
 
-I don't follow?
+Heh, 2/3 adds another `unsigned char`, so the neighbours look like:
 
->
-> >                       };
-> >                 };
-> >         };
-> >
-> >         flash1 {
-> >                 partitions {
-> >                         compatible = "fixed-partitions";
-> >
-> >                       flash0_part1: part1@0 {
-> >                               label = "part1_0";
-> >                               reg = <0x0 0x800000>;
-> >                       };
-> >
-> >                       part0@800000 {
-> >                               label = "part1_1";
-> >                               reg = <0x800000 0x800000>;
-> >                       };
-> >                 };
-> >         };
->
-> IMHO this representation is far from intuitive. At first glance it's not
-> obvious which partitions are linked together and what's the name of the
-> resulting concatenated part. I definitely prefer the solution where we
-> have a virtual device describing the concatenation. I also understand
-> that this goes against the #1 DT rule: "DT only decribes HW blocks, not
-> how they should be used/configured", but maybe we can find a compromise
-> here, like moving this description to the /chosen node?
->
-> chosen {
->         flash-arrays {
->                 /*
->                  * my-flash-array is the MTD name if label is
->                  * not present.
->                  */
->                 my-flash-array {
->                         /*
->                          * We could have
->                          * compatible = "flash-array";
->                          * but we can also do without it.
->                          */
->                         label = "foo";
->                         flashes = <&flash1 &flash2 ...>;
->                         partitions {
->                                 /* usual partition description. */
->                                 ...
->                         };
->                 };
->         };
-> };
->
-> Rob, what do you think?
+: unsigned long sysrq;		/* sysrq timeout */
+: unsigned int	sysrq_ch;	/* char for sysrq */
+: unsigned char	has_sysrq;
+: unsigned char	sysrq_seq;	/* index in sysrq_toggle_seq */
+:
+: unsigned char	hub6;		/* this should be in the 8250 driver */
+: unsigned char	suspended;
+: unsigned char	unused;
+: const char	*name;		/* port name */
 
-I don't think chosen is the right place to put all the partition
-information. It's not something the bootloader configures.
+So the hole became 4 bytes on 64-bit.
 
-This suffers from the same issue I have with the original proposal. It
-will not work for existing s/w. There's only 1 logical partition that
-concatenated. The rest of the partitions shouldn't need any special
-handling. So we really only need some way to say 'link these 2
-partitions into 1 logical partition'. Though perhaps one could want to
-combine any number of physical partitions into logical partitions, but
-then none of the proposals could support that. Then again, maybe
-that's a userspace problem like with disks.
+I can make it unused[4], but..
 
-To throw out another option, what if the first device contains the
-complete partitions for both devices with some property in one or both
-devices pointing to the other device? That would make the partitions
-in the 1st device still accessible to existing s/w (unless it bounds
-checks the partitions).
+Separated the patch per Greg's review and I think it makes sense to have
+it separately from 2/3 because last time I've touched it, it actually
+was in use by drivers (regardless the name).
 
-Rob
+Thanks,
+          Dmitry
