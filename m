@@ -2,97 +2,104 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02400C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B549C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD4D217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2141B207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578991212;
+	bh=MXqdw4MTso3cXAd4+1sT9xEPuKYM/LCL2K4R2PuY9fk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HsS+BjbcQAAFvZGVbiqVVC7+xrOSDb93/mwI58HoPgWIb9P7vIqGjXyn6ESpWmdaG
+	 1zNyzMrioN0vYuBBzQh6Q9twVJ1J3rxPo5s6jug3Wg8ipY3a9DnBJyegtR8KV8qwpi
+	 ODEXxMPpQBstbN5auGx7jvAo2QD2mgVoa7M1wLbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgANIkB (ORCPT
+        id S1728808AbgANIkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:40:01 -0500
-Received: from relay.sw.ru ([185.231.240.75]:53820 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgANIkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:40:00 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1irHjU-0005aa-Ob; Tue, 14 Jan 2020 11:39:29 +0300
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <3eec2097-75a3-1e1d-06d9-44ee5eaf1312@virtuozzo.com>
-Date:   Tue, 14 Jan 2020 11:39:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 14 Jan 2020 03:40:10 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40007 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgANIkK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:40:10 -0500
+Received: by mail-lj1-f193.google.com with SMTP id u1so13337663ljk.7;
+        Tue, 14 Jan 2020 00:40:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zm6dxfwwxxsUgoQx/Ixs6f65hoaWz7f2fI6es/3Ijns=;
+        b=I1uARPBp9OUDNT5/Yyt0sZC7WOngXlM96UryfU3EkWeN8o8jJBFRAWrYi36UMdfyt7
+         gvEm+f9Eu3K7KDuJw7+5dmQpaA54K2oj9bg04iFcMMbDZOoQqvLmaIelS0KeGc19ZTVA
+         OCJiV3wsL54ha95oB3fsc03FgcfhegKON+JfLuJa8t4kMxZ0KYNHqzyxS8IwzN/vwBCe
+         c+S7DkpIkx+ziLX78jaY97LDAUsTc85fVBXVqQMWwqAYEhSl7uqH4oRWbfttaPZiJfGN
+         bPMYkowbMBRAGJRNKkXZPeMDZLOZr8dMBvaIRZy1BwyLWMf/J3z1f7696ZSvD2hE3Ayi
+         ch3g==
+X-Gm-Message-State: APjAAAW0vFxEXSfpD/T/HiPcFcS/4uKpsVZAmoQ/TFot5r2UIu0SOze4
+        zLHUZV9bddkQjdhMpOVYZ/u4LocO
+X-Google-Smtp-Source: APXvYqxK2dS7w47TFeRL1ZrMAWZXamRgxsgmqFsDFdxveqSAiv1L06WR5SP8UeZYWuXxDExwsvy0yQ==
+X-Received: by 2002:a2e:910b:: with SMTP id m11mr12819480ljg.213.1578991208043;
+        Tue, 14 Jan 2020 00:40:08 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id b14sm6840893lff.68.2020.01.14.00.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 00:40:07 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1irHk7-0000Ia-26; Tue, 14 Jan 2020 09:40:07 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH] ALSA: usb-audio: fix sync-ep altsetting sanity check
+Date:   Tue, 14 Jan 2020 09:39:53 +0100
+Message-Id: <20200114083953.1106-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.01.2020 22:18, Daniel Colascione wrote:
-> On Mon, Jan 13, 2020, 12:47 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>> +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
->>> +             size_t, len_in, int, behavior, unsigned long, flags)
->>
->> I don't like the interface. The fact we have pidfd does not mean,
->> we have to use it for new syscalls always. A user may want to set
->> madvise for specific pid from console and pass pid as argument.
->> pidfd would be an overkill in this case.
->> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
->> allow this?
-> 
-> All new APIs should use pidfds: they're better than numeric PIDs
+The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
+checking for there to be at least one altsetting but then went on to
+access the second one, which may not exist.
 
-Yes
+This could lead to random slab data being used to initialise the sync
+endpoint in snd_usb_add_endpoint().
 
-> in every way.
+Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
+Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
+Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
+Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
+Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
+Cc: stable <stable@vger.kernel.org>     # 3.5
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ sound/usb/pcm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-No
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index a11c8150af58..0e4eab96e23e 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -370,7 +370,7 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
+ add_sync_ep_from_ifnum:
+ 	iface = usb_ifnum_to_if(dev, ifnum);
+ 
+-	if (!iface || iface->num_altsetting == 0)
++	if (!iface || iface->num_altsetting < 2)
+ 		return -EINVAL;
+ 
+ 	alts = &iface->altsetting[1];
+-- 
+2.24.1
 
-> If a program wants to allow users to specify processes by
-> numeric PID, it can parse that numeric PID, open the corresponding
-> pidfd, and then use that pidfd with whatever system call it wants.
-> It's not necessary to support numeric PIDs at the system call level to
-> allow a console program to identify a process by numeric PID.
-
-No. It is overkill. Ordinary pid interfaces also should be available.
-There are a lot of cases, when they are more comfortable. Say, a calling
-of process_madvise() from tracer, when a tracee is stopped. In this moment
-the tracer knows everything about tracee state, and pidfd brackets
-pidfd_open() and close() around actual action look just stupid, and this
-is cpu time wasting.
-
-Another example is a parent task, which manages parameters of its children.
-It knows everything about them, whether they are alive or not. Pidfd interface
-will just utilize additional cpu time here.
-
-So, no. Both interfaces should be available.
