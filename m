@@ -2,192 +2,119 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8452BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CDDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4C9222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:10:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579018223;
-	bh=8crW1OAi6MSweKEuuQl46Dary7LFxeaOKeVvRa1JGUw=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PgvU9mEinHtHQnouteptiTrtMBIjZ/NlS/YhPMEbnkWroRFeU1iHgP0YneSZYoK4S
-	 4H1aI2RWsVxXf7sfEn4yp7CpivRqHhJIpH8X61viH3c/tkEFVvzMflSr0zYnY2yvqL
-	 rQqeKQNfTF/4CNvEzaRxRCCpEPY3xvfBq22zGT1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1E531222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZI3C7yuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgANQKW (ORCPT
+        id S1728924AbgANQKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:10:22 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37472 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728924AbgANQJW (ORCPT
+        Tue, 14 Jan 2020 11:10:39 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:46722 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgANQKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:09:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sUkVs/vQmUNKNub3sETR9FpuLNm+g8pTLv6JEXdmdpw=; b=Kmh+aKkTxGXP
-        QYYESH5uaK9Qx7CymklJ8A4pxAEhOc0akcBYjDAzrs8hhhZxPHphgu/Or2z/ApepdPg/XboCnOTYP
-        QZUUmaSOzKQ8Gtfrm+LslPR2LGl3Fb/+NB5ssu4gf5AMG4zzNcHDFbyxNGrkWMq8FzLuY4tGCLCG0
-        Os36k=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irOkp-0001YX-Uj; Tue, 14 Jan 2020 16:09:19 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id A497AD02C7C; Tue, 14 Jan 2020 16:09:19 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: Applied "regulator: mpq7920: Remove unneeded fields from struct mpq7920_regulator_info" to the regulator tree
-In-Reply-To: <20200114124449.28408-1-axel.lin@ingics.com>
-Message-Id: <applied-20200114124449.28408-1-axel.lin@ingics.com>
-X-Patchwork-Hint: ignore
-Date:   Tue, 14 Jan 2020 16:09:19 +0000 (GMT)
+        Tue, 14 Jan 2020 11:10:38 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EG8DBH069867;
+        Tue, 14 Jan 2020 16:10:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=DXGEyr5ta0XlqUrJRWrExFRIxM3FCYNIxMhvm8kVLdE=;
+ b=ZI3C7yuVyQIPUg9GH91miMNTre/ToCR/HIiHa97eUXdjlFjn/9nZU30Sb1RwVufHnRyv
+ 0HwOKjY0uFb7isZPVyzuCOXXlMoMmOiDVKnNfUTey6jXtv1B2Hr8tytKkpWhZZLjvm25
+ oFdoDNbaOlKXKkK15Kzm9skxBszekYmb+9U4dMAnwRI/JRY7+j7Y+jWGsWWUesJ9MIoc
+ w2FPPEIuZNwiHq+aIauj3Yu4OmyPUwkJ3/di+G6ZwjIaIgdqeO76Q2AkS8oCcBpCl0kz
+ f3f5uYAG1k58SZTz45Ja+Qgf59QUsP4k9Qo7G0hI4PDpQHWEgBlTOLBGB0svdoCVbVin Ug== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xf74s6yb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 16:10:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EG9QRW168893;
+        Tue, 14 Jan 2020 16:10:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xh8esas4m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 16:10:08 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00EG9umn004555;
+        Tue, 14 Jan 2020 16:09:56 GMT
+Received: from dhcp-10-175-171-251.vpn.oracle.com (/10.175.171.251)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jan 2020 08:09:55 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
+        rjw@rjwysocki.net, dmitry.torokhov@gmail.com
+Cc:     sfr@canb.auug.org.au, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
+Subject: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
+Date:   Tue, 14 Jan 2020 16:09:43 +0000
+Message-Id: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001140137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+currently the property entry kunit tests are built if CONFIG_KUNIT=y.
+This will cause warnings when merged with the kunit tree that now
+supports tristate CONFIG_KUNIT.  While the tests appear to compile
+as a module, we get a warning about missing module license.
 
-   regulator: mpq7920: Remove unneeded fields from struct mpq7920_regulator_info
+It's better to have a per-test suite CONFIG variable so that
+we can do selective building of kunit-based suites, and can
+also avoid merge issues like this.
 
-has been applied to the regulator tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 489d6954acabe71d22ba0033fe85822742364915 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 14 Jan 2020 20:44:48 +0800
-Subject: [PATCH] regulator: mpq7920: Remove unneeded fields from struct
- mpq7920_regulator_info
-
-Both *dev and *rdev are only used in .probe, so use local variable instead.
-Also remove mpq7920_regulator_register() because it is so trivial and
-there is only one caller.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Link: https://lore.kernel.org/r/20200114124449.28408-1-axel.lin@ingics.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: c032ace71c29 ("software node: add basic tests for property entries")
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 ---
- drivers/regulator/mpq7920.c | 41 ++++++++++++-------------------------
- 1 file changed, 13 insertions(+), 28 deletions(-)
+ drivers/base/test/Kconfig  | 3 +++
+ drivers/base/test/Makefile | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mpq7920.c b/drivers/regulator/mpq7920.c
-index 80f3131f0d1b..b133bab514a9 100644
---- a/drivers/regulator/mpq7920.c
-+++ b/drivers/regulator/mpq7920.c
-@@ -92,9 +92,7 @@ enum mpq7920_regulators {
- };
+diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+index 86e85da..d29ae95 100644
+--- a/drivers/base/test/Kconfig
++++ b/drivers/base/test/Kconfig
+@@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
+ 	  The module name will be test_async_driver_probe.ko
  
- struct mpq7920_regulator_info {
--	struct device *dev;
- 	struct regmap *regmap;
--	struct regulator_dev *rdev[MPQ7920_MAX_REGULATORS];
- 	struct regulator_desc *rdesc;
- };
+ 	  If unsure say N.
++config KUNIT_DRIVER_PE_TEST
++	bool "KUnit Tests for property entry API"
++	depends on KUNIT
+diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+index 2214310..3ca5636 100644
+--- a/drivers/base/test/Makefile
++++ b/drivers/base/test/Makefile
+@@ -1,4 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
  
-@@ -262,40 +260,21 @@ static void mpq7920_parse_dt(struct device *dev,
- 	of_node_put(np);
- }
- 
--static inline int mpq7920_regulator_register(
--				struct mpq7920_regulator_info *info,
--				struct regulator_config *config)
--{
--	int i;
--	struct regulator_desc *rdesc;
--
--	for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
--		rdesc = &info->rdesc[i];
--
--		info->rdev[i] = devm_regulator_register(info->dev, rdesc,
--					 config);
--		if (IS_ERR(info->rdev[i]))
--			return PTR_ERR(info->rdev[i]);
--	}
--
--	return 0;
--}
--
- static int mpq7920_i2c_probe(struct i2c_client *client,
- 				    const struct i2c_device_id *id)
- {
- 	struct device *dev = &client->dev;
- 	struct mpq7920_regulator_info *info;
- 	struct regulator_config config = { NULL, };
-+	struct regulator_dev *rdev;
- 	struct regmap *regmap;
--	int ret;
-+	int i;
- 
- 	info = devm_kzalloc(dev, sizeof(struct mpq7920_regulator_info),
- 				GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
- 
--	info->dev = dev;
- 	info->rdesc = mpq7920_regulators_desc;
- 	regmap = devm_regmap_init_i2c(client, &mpq7920_regmap_config);
- 	if (IS_ERR(regmap)) {
-@@ -308,15 +287,21 @@ static int mpq7920_i2c_probe(struct i2c_client *client,
- 	if (client->dev.of_node)
- 		mpq7920_parse_dt(&client->dev, info);
- 
--	config.dev = info->dev;
-+	config.dev = dev;
- 	config.regmap = regmap;
- 	config.driver_data = info;
- 
--	ret = mpq7920_regulator_register(info, &config);
--	if (ret < 0)
--		dev_err(dev, "Failed to register regulator!\n");
-+	for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
-+		rdev = devm_regulator_register(dev,
-+					       &mpq7920_regulators_desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(dev, "Failed to register regulator!\n");
-+			return PTR_ERR(rdev);
-+		}
-+	}
- 
--	return ret;
-+	return 0;
- }
- 
- static const struct of_device_id mpq7920_of_match[] = {
+-obj-$(CONFIG_KUNIT) += property-entry-test.o
++obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
 -- 
-2.20.1
+1.8.3.1
 
