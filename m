@@ -2,148 +2,102 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F86CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DFDC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDA92084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A3E2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579025954;
+	bh=AeOVIkNpbm2tsZ8/ftSJ1K4kP9i8N1kh8a1Ay1NUwwU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SXtGzhZWFJ6bxi5BqBhnfnm7qHpgZc4wK23IrJqubKcCsBKTPB864iwhaa/HCOFcz
+	 Bsb8V3UYTptctINtdoFgbIwclEMyxi9lYeMfUG1kwHSJBsrSrvkYi1+AxlrYRJ7DPk
+	 uQEoXkysnD1Rn1x6APXOd7YeCy940J+tU2SwfXvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgANSSv (ORCPT
+        id S1728767AbgANSTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:18:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42980 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANSSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:18:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9CB5AAC5C;
-        Tue, 14 Jan 2020 18:18:48 +0000 (UTC)
-Message-ID: <8a7057fe1aaf415272d28f4e690313984c3a148d.camel@suse.de>
-Subject: Re: [PATCH v5 3/6] PCI: brcmstb: Add Broadcom STB PCIe host
- controller driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        mbrugger@suse.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 14 Jan 2020 19:18:46 +0100
-In-Reply-To: <20200114171101.GA11177@e121166-lin.cambridge.arm.com>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-         <20191216110113.30436-4-nsaenzjulienne@suse.de>
-         <20200114171101.GA11177@e121166-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-aT8Qvga/f/1E/yJbYhHH"
-User-Agent: Evolution 3.34.3 
+        Tue, 14 Jan 2020 13:19:12 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32945 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANSTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:19:12 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so15508762lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UYh55Sg8qhe64vzw10Xs0Y/Zd3wTg54bWk/UWSeYbnY=;
+        b=d/GHg+X0gq3ZImNmkm3hZh2dmcsvz39ztreS/na9FahzZpNzXIDMf7CFb+uW7GY48+
+         +uw53PyGcGxkY0BmbiEV10ds3EQW0kyFPSJy2PJ10ejU4UPZND4yg/447uAgFkinp80c
+         oHdzFtH+ekaZwyFPMQhrJx45AvqoNTK5wBJjg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UYh55Sg8qhe64vzw10Xs0Y/Zd3wTg54bWk/UWSeYbnY=;
+        b=MAM3+I93DDv8v2iL61XdBXy12N3LsCWJADkPisbi7f8bZuaLfTTkNqrO6DrA9tK4sR
+         dcULUSX/uaRY/Uf7rwNee7itzSGuuomV9AwAXxnNBxSCpseOZO7o+Qkeh7E5N36+OTdk
+         qt3OW85f4vn6615VfqyPcGZLKoqZCuPxVlH4o/pABVkxLqm+F59bpTXqDA+Bp/3KM6Dd
+         ChncYJ1zSNjUZjTAXObvpPnvmMVTbROtLzKJXbVZi7BgUjlF0wlJfGhfNIf/wLXgGFqC
+         5wjZqauu41A9VuZNO0HgtjmI62HQZdaP+TelZ+BrzY6/IcIAj4NFCnG7C9JWspXtPRMK
+         qXaQ==
+X-Gm-Message-State: APjAAAXwRokLI+DY6p9x0F+vpwWQIPqkcApK16DRKDgSkWaIY7DlPzrg
+        I+gxBN2W2ZxBAey/tPHwSQSPamu3R9M=
+X-Google-Smtp-Source: APXvYqwfV5tKFN1ZGbEzgH3kVUj/kMHqxa9crMKkw3ZepZzRkaSUZIpd0oKa8/grrjxWJ3UHddfEfg==
+X-Received: by 2002:a2e:96c4:: with SMTP id d4mr15392370ljj.225.1579025949809;
+        Tue, 14 Jan 2020 10:19:09 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id k23sm8064490ljj.85.2020.01.14.10.19.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 10:19:09 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id j26so15451298ljc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:19:08 -0800 (PST)
+X-Received: by 2002:a2e:800b:: with SMTP id j11mr15222463ljg.126.1579025948652;
+ Tue, 14 Jan 2020 10:19:08 -0800 (PST)
 MIME-Version: 1.0
+References: <CAK8P3a3wHmr3hgb5H69V68ZA3KCDSFeOekAKmR80MWxgQ7JK=w@mail.gmail.com>
+In-Reply-To: <CAK8P3a3wHmr3hgb5H69V68ZA3KCDSFeOekAKmR80MWxgQ7JK=w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 14 Jan 2020 10:18:52 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjwSC9H1bkEg-0t0cCU0mO+e0gBH8VQn5LG0XL2rpKnfg@mail.gmail.com>
+Message-ID: <CAHk-=wjwSC9H1bkEg-0t0cCU0mO+e0gBH8VQn5LG0XL2rpKnfg@mail.gmail.com>
+Subject: Re: asm-generic: fixes for v5.5
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 14, 2020 at 8:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
+> tags/asm-generic-5.5
 
---=-aT8Qvga/f/1E/yJbYhHH
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Pulled.
 
-Hi Lorenzo,
+However, I noticed that your email doesn't match my usual git pull
+search terms (which are "git" and "pull" - shocking, I know), so had
+this been during the merge window or some other very busy time for me,
+I might not have noticed the email in a timely manner..
 
-On Tue, 2020-01-14 at 17:11 +0000, Lorenzo Pieralisi wrote:
-> On Mon, Dec 16, 2019 at 12:01:09PM +0100, Nicolas Saenz Julienne wrote:
-> > From: Jim Quinlan <james.quinlan@broadcom.com>
-> >=20
-> > This adds a basic driver for Broadcom's STB PCIe controller, for now
-> > aimed at Raspberry Pi 4's SoC, bcm2711.
-> >=20
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
-> >=20
-> > ---
-> >=20
-> > Changes since v3:
-> >   - Update commit message
-> >   - rollback roundup_pow_two usage, it'll be updated later down the lin=
-e
-> >   - Remove comment in register definition
-> >=20
-> > Changes since v2:
-> >   - Correct rc_bar2_offset sign
->=20
-> In relation to this change.
->=20
-> [...]
->=20
-> > +static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pc=
-ie
-> > *pcie,
-> > +							u64 *rc_bar2_size,
-> > +							u64 *rc_bar2_offset)
-> > +{
-> > +	struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie);
-> > +	struct device *dev =3D pcie->dev;
-> > +	struct resource_entry *entry;
-> > +
-> > +	entry =3D resource_list_first_type(&bridge->dma_ranges, IORESOURCE_ME=
-M);
-> > +	if (!entry)
-> > +		return -ENODEV;
-> > +
-> > +	*rc_bar2_offset =3D -entry->offset;
->=20
-> I think this deserves a comment - I guess it has to do with how the
-> controller expects CPU<->PCI offsets to be expressed compared to how it
-> is computed in dma_ranges entries.
+Mind adding "git pull" somewhere? Preferably perhaps to the subject
+line itself, ie a "[GIT PULL]" prefix, because that's also what the
+pr-tracking-bot looks for (well, it's _one_ of the things the bot
+looks for, it might have noticed your email even without it because of
+the pull-request patterns in the body).
 
-You're right, OF code calculates it by doing:
-
-	offset =3D cpu_start_addr - pci_start_addr (see
-devm_of_pci_get_host_bridge_resources())
-
-While the RC_BAR2_CONFIG register expects the opposite subtraction. I'll ad=
-d a
-comment on the next revision.
-
-> I will try to complete the review shortly and try to apply it given
-> that it has already been reviewed by others.
-
-Thanks!
-
-Regards,
-Nicolas
-
-> Lorenzo
->=20
-
-
---=-aT8Qvga/f/1E/yJbYhHH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4eBgYACgkQlfZmHno8
-x/5eqQf9E0hAW+zHpUgu0m0lqOFYwXeP3hO0XVERD2rmERkNOwvehWM7LhMdsfRA
-jtDJJSpC5itlAY7Oz8bi0SfTTRzt8XjaF7eSR6EfkCgwPpvMlw2pJIFlGEKYhv0k
-+NEwi+dOPllYZXC656nAKXI0c5CAt7B4P373ByV7fNjw9ULWv04O58QWh3mTAyBO
-x9nWW6d8ZGwD8SQcsGY9RRjpr/XaZ85LDxxbvYCKC7JXCuW1CfyetICSveZ1R22v
-ysutXh0PlbPP8+jvTFfYrkPnc6SIytq0tdqr+Rma/BBF/lGvvi1uF2rUc5HYXZ+g
-gAkFA1hv1HEEr2m4IXDi96GBnimNnw==
-=EJpg
------END PGP SIGNATURE-----
-
---=-aT8Qvga/f/1E/yJbYhHH--
-
+                    Linus
