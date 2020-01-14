@@ -2,169 +2,138 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A12C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F16C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0E824670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A301024670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IYJqCcsm"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oPrqQqSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgANTYd (ORCPT
+        id S1728883AbgANT1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:24:33 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45579 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgANTYc (ORCPT
+        Tue, 14 Jan 2020 14:27:03 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43216 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbgANT1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:24:32 -0500
-Received: by mail-qk1-f196.google.com with SMTP id x1so13217360qkl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:24:32 -0800 (PST)
+        Tue, 14 Jan 2020 14:27:03 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so13488722qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:27:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SvPYpJ3+ZQRE3RpgnFrfhCFn0sFFgxXkJCxLs6MF/eU=;
-        b=IYJqCcsmY3UmyL4J7VlHj6X+04mwAifaJQcJmyH55kxjQnz3O0kpjx8n3NJEJmBsTF
-         A6z+04dTxFro/fimq/5FHbbV84ey+mcNMCB8tz5qWQh1qJyrf2xLzq9GP7b2sFYDk/JH
-         5WJuvUhKNCJWersYWsu23xIXLTyj4ZyRXMOk87R91DDIR/ji9sOCXBdqrQmVLaI8+39M
-         t8zZCGrUS8BRPouK5+RaZ2pJfpYG2NQODy7vGPeq2+144RmVjTr1zBiAGvLzCbEF8Spl
-         k+lNSL1rFhITVxZxNXOpZYX+mAfMp+pEalwX1tf8/BDvOqgUdiBfuDWADyxvAIJdsA7M
-         24PA==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aJt6sr02+cPWFTf++BZXppcl8L9Qc4Zp51cj05VTask=;
+        b=oPrqQqSe/ADv8qbMh9YJz6dG8lmq0i8sYcGqcKoHUevTV/iKnZZdCh1Zl9pqk7gfjy
+         HYWWbwQp7/zq8Xif8qLlCBaRykT7I0Y20XZR9d4vI4H4yUa7ZQkaOSXqOTIdw5Pd4GLx
+         2dqFBW3x3atoix9XhEkom81Zh6wsgnl/EYNywLM+dy1DLUlEoIrR9ivzk6iqGM+4uTg1
+         C6NHzcU46ysDJZGjUMoBIDGO8XcK6I6OB8oBQkmcj5JopfmgztE7lYRFpjGRyn1WZKhx
+         6ykQT1i82ZStGLCZpydQ1Hjf7Fnf+GIPYnsiIs7k3sxdVnOXQdqhg2FuLSeaYtalcKYV
+         iE3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SvPYpJ3+ZQRE3RpgnFrfhCFn0sFFgxXkJCxLs6MF/eU=;
-        b=uhxl6M2tHnjKl7cBZ/q5GGKyzbfpwvZNv14i+P0zTHL+kXecbJQUZoEShEf+TYeUVj
-         GD0Hd/C/rovKlXFGXtjBHr3oQBNR0aOIxdsHSZC5WT+p+Ey4olZv6gvjEIbgaoMNRAxq
-         fhvEd5LliMqWKTP546jGJC6UOOlFWenPbVdTIlb8/mq30Bn6tY1u/igXOVFbHYe53hh6
-         JFotvWvLM8FBz6QCxlU4+mbYobc8PabbiioyIxmM4XEhkU3Skd3Lm8nSOjukD3YyXaH4
-         rWbyA032Q9v1zLrUn7kc51Jg4pSDf5mMw+n6TAJEihISiVztdD/JovlXKIDkS+kPyMEB
-         Z2KQ==
-X-Gm-Message-State: APjAAAUaRqsihZzFzM4uQKemAYDRrKDvm0Ec/Krl4ANxJ4nth99KrBkU
-        I10qCH9ImHzEveiiXyEV1GcLun3wvNG7YkE6Y5wvYA==
-X-Google-Smtp-Source: APXvYqxoDWcLzvT0ADhs2MR76vNNs6QJsCex2oYZpKenCQQZGtkUzGotvNyOaTJOW9MjbW+61wHJoDBOo787DUOhabc=
-X-Received: by 2002:a05:620a:1010:: with SMTP id z16mr19021899qkj.237.1579029871343;
- Tue, 14 Jan 2020 11:24:31 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aJt6sr02+cPWFTf++BZXppcl8L9Qc4Zp51cj05VTask=;
+        b=dBUFq4gb+jPI8BKWSdizqG1tvXFT7sToMtIJJYGobQWS4w9w9RkutQR+80p8SMm/8P
+         JhSDx6fS5bJPbWgvTcsTe79Ho8sKc8uif6HRo3gVxeBG9L53YMvap49UVzbXbTanIxZh
+         OjyS+4eK0SbAXH0Z01QjEVqgcDR0PJAW1CWG35dT99++YI5ViNH0HBjcBt1wQHRw418F
+         PIVzS/QnDDqb2U0FWjBh8SiyKDTJETz1Bs+MVPnBX62bYhrNi0ZqGUew7oig/6qUy86o
+         N3aZa/V6FIys4dGurEDlFAp9ua5yC9kPdk2xjQpMEjhy/tx9xraDr2iRnuYIJCcoCsmf
+         FuzQ==
+X-Gm-Message-State: APjAAAUnYnCqKQ9rNFznDjRlgNK2Ui4RRLnV2liknUEQQwsu8hvPg40o
+        QySdwH8De2L/uxE8/O/VJb/imA==
+X-Google-Smtp-Source: APXvYqySNCcNEO4FrkFCq2T3jATCYAK3ivaV1e2ZWAedX1tbYHW/XNiQzo5q+3L4u1x3cX9oTES0GA==
+X-Received: by 2002:aed:2465:: with SMTP id s34mr158395qtc.158.1579030021872;
+        Tue, 14 Jan 2020 11:27:01 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 17sm8063238qtz.85.2020.01.14.11.27.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 11:27:01 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1irRq8-0006GA-MO; Tue, 14 Jan 2020 15:27:00 -0400
+Date:   Tue, 14 Jan 2020 15:27:00 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200114192700.GC22037@ziepe.ca>
+References: <20200114161225.309792-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
- <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
- <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com> <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
-In-Reply-To: <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Tue, 14 Jan 2020 11:24:20 -0800
-Message-ID: <CAMzD94Tf0B9nm7GJOQJ9XCz+yEDWDA4JrP0wwNFyLx42jif7Dw@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114161225.309792-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:13 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Jan 14, 2020 at 10:54 AM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
-> > > >
-> > > > From: Yonghong Song <yhs@fb.com>
-> > > >
-> > > > Added four libbpf API functions to support map batch operations:
-> > > >   . int bpf_map_delete_batch( ... )
-> > > >   . int bpf_map_lookup_batch( ... )
-> > > >   . int bpf_map_lookup_and_delete_batch( ... )
-> > > >   . int bpf_map_update_batch( ... )
-> > > >
-> > > > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > > > ---
-> > > >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
-> > > >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
-> > > >  tools/lib/bpf/libbpf.map |  4 +++
-> > > >  3 files changed, 86 insertions(+)
-> > > >
-> > > > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> > > > index 500afe478e94a..12ce8d275f7dc 100644
-> > > > --- a/tools/lib/bpf/bpf.c
-> > > > +++ b/tools/lib/bpf/bpf.c
-> > > > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
-> > > >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
-> > > >  }
-> > > >
-> > > > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
-> > > > +                               void *out_batch, void *keys, void *values,
-> > > > +                               __u32 *count,
-> > > > +                               const struct bpf_map_batch_opts *opts)
-> > > > +{
-> > > > +       union bpf_attr attr = {};
-> > > > +       int ret;
-> > > > +
-> > > > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
-> > > > +               return -EINVAL;
-> > > > +
-> > > > +       memset(&attr, 0, sizeof(attr));
-> > > > +       attr.batch.map_fd = fd;
-> > > > +       attr.batch.in_batch = ptr_to_u64(in_batch);
-> > > > +       attr.batch.out_batch = ptr_to_u64(out_batch);
-> > > > +       attr.batch.keys = ptr_to_u64(keys);
-> > > > +       attr.batch.values = ptr_to_u64(values);
-> > > > +       if (count)
-> > > > +               attr.batch.count = *count;
-> > > > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
-> > > > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
-> > > > +
-> > > > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
-> > > > +       if (count)
-> > > > +               *count = attr.batch.count;
-> > >
-> > > what if syscall failed, do you still want to assign *count then?
-> >
-> > Hi Andrii, thanks for taking a look.
-> >
-> > attr.batch.count should report the number of entries correctly
-> > processed before finding and error, an example could be when you
-> > provided a buffer for 3 entries and the map only has 1, ret is going
-> > to be -ENOENT meaning that you traversed the map and you still want to
-> > assign *count.
->
-> ah, ok, tricky semantics :) if syscall failed before kernel got to
-> updating count, I'm guessing it is guaranteed to preserve old value?
->
-I think for correctness as a first step inside the syscall we should
-update count to 0 and copy back to user, so we never preserve the old
-value and we can trust what count is reporting. WDYT?
-> >
-> > That being said, the condition 'if (count)' is wrong and I think it
-> > should be removed.
->
-> So count is mandatory, right? In that case both `if (count)` checks are wrong.
-Yes, you are right. I'll remove them in next version.
->
-> >
-> > >
-> > > > +
-> > > > +       return ret;
-> > > > +}
-> > > > +
-> > >
-> > > [...]
+On Tue, Jan 14, 2020 at 05:12:13PM +0100, Christoph Hellwig wrote:
+> Hi all,
+> 
+> Asynchronous read/write operations currently use a rather magic locking
+> scheme, were access to file data is normally protected using a rw_semaphore,
+> but if we are doing aio where the syscall returns to userspace before the
+> I/O has completed we also use an atomic_t to track the outstanding aio
+> ops.  This scheme has lead to lots of subtle bugs in file systems where
+> didn't wait to the count to reach zero, and due to its adhoc nature also
+> means we have to serialize direct I/O writes that are smaller than the
+> file system block size.
+
+I've seen similar locking patterns quite a lot, enough I've thought
+about having a dedicated locking primitive to do it. It really wants
+to be a rwsem, but as here the rwsem rules don't allow it.
+
+The common pattern I'm looking at looks something like this:
+
+ 'try begin read'() // aka down_read_trylock()
+
+  /* The lockdep release hackery you describe,
+     the rwsem remains read locked */
+ 'exit reader'()
+
+ .. delegate unlock to work queue, timer, irq, etc ..
+
+in the new context:
+
+ 're_enter reader'() // Get our lockdep tracking back
+
+ 'end reader'() // aka up_read()
+
+vs a typical write side:
+
+ 'begin write'() // aka down_write()
+
+ /* There is no reason to unlock it before kfree of the rwsem memory.
+    Somehow the user prevents any new down_read_trylock()'s */
+ 'abandon writer'() // The object will be kfree'd with a locked writer
+ kfree()
+
+The typical goal is to provide an object destruction path that can
+serialize and fence all readers wherever they may be before proceeding
+to some synchronous destruction.
+
+Usually this gets open coded with some atomic/kref/refcount and a
+completion or wait queue. Often implemented wrongly, lacking the write
+favoring bias in the rwsem, and lacking any lockdep tracking on the
+naked completion.
+
+Not to discourage your patch, but to ask if we can make the solution
+more broadly applicable?
+
+Thanks,
+Jason
