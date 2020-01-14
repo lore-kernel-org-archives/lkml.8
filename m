@@ -2,85 +2,118 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E19CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2567FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405D424679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6D82467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579039587;
-	bh=ak2pDlNLJqO6I6B08zZGpFxARQfKyArhMmTzeALdBzg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uG5VQyVU1KIeATCBDTh9/P6dKXZ3ypKHKWIa5QJIEtVYs4tQB/CV0pva9JKoH39rN
-	 YSQ2+MTzr0mpKOcxvPiYgK68pEWtsIdfFUwSgeHEFoJfLEu8uwigF+w6cempmqWNZ+
-	 bRaHeCd4XIfj1P47blwTmolvCsgFmkQkZB/sNyX4=
+	s=default; t=1579039749;
+	bh=ECleuj4dTD+b2BCowdnKaPUSRFlF08Qh0VJWKgnNCmk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=cvPlSB5rbGP9faFuRuvPYF+ZQcf25VUHk9f13OmEQzhSrQ2MmQxWhy9ui4zcaLbqq
+	 09FsQDUPqcz1+/lqlD5m+vaQhVtx/aH8plZDAZP00gWCH1t7DX4gY09wfRSBcojoLk
+	 azAC4UTXynPaF7dzcbyxm2bjzgA6oqRmNlbJrKwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgANWG0 (ORCPT
+        id S1728834AbgANWJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:06:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 17:09:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgANWG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:06:26 -0500
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726491AbgANWJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:09:07 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6A42467A;
-        Tue, 14 Jan 2020 22:06:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E4324656;
+        Tue, 14 Jan 2020 22:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579039585;
-        bh=ak2pDlNLJqO6I6B08zZGpFxARQfKyArhMmTzeALdBzg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cCHYW6a6nJENELdOdK6d5nUAFMYQgVeYuz0JQ2jjuOWRxbT6HzRipISp8KrAwsE/u
-         F/vedVKRrWV1TGVEFP49MpODow/BWFG/HfxVyMOseoLizNfjTCK+IV0hg2gGnBtLiF
-         agiqjC7Y7MER9MoUJUEyXAw7L8s6/5hGa5SBtf1A=
-Received: by mail-qv1-f45.google.com with SMTP id dp13so6443169qvb.7;
-        Tue, 14 Jan 2020 14:06:25 -0800 (PST)
-X-Gm-Message-State: APjAAAUC0xIx0b9UnZe4i1mzE7Endwv1r8JAa+1+RwflJkU+aj0HmUmj
-        lqDi2M+8TCfSYopIYp2tZpI11scoEJ84BBKszw==
-X-Google-Smtp-Source: APXvYqzGWrbxNauf9xa5MkJ+ERHGXWd3WsUXlRzV0Dnb14EolrJehn1vVApCKSXYdX1ws1nunVbJjQJrO0ev1wSrlWM=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr21746759qvu.136.1579039584558;
- Tue, 14 Jan 2020 14:06:24 -0800 (PST)
+        s=default; t=1579039746;
+        bh=ECleuj4dTD+b2BCowdnKaPUSRFlF08Qh0VJWKgnNCmk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eHTtZBZKOoGJ5TnBdVzafZ9IqoFNKO1oyUzy7DkBMs5u7spsmQX66h41FXlba/RCj
+         fFKn8Z+WQsZgNBLOf31Xev+rUXAqnIZjrdygfiGaNerFjb2nayD5CpA9N2FqLiWSlt
+         4xKRdwLbAL8ghkcGFgHLf5OyEGHIfOqC//FDPdds=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6CBEA3522755; Tue, 14 Jan 2020 14:09:06 -0800 (PST)
+Date:   Tue, 14 Jan 2020 14:09:06 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Marco Elver <elver@google.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer
+ infrastructure
+Message-ID: <20200114220906.GZ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200114213405.GX2935@paulmck-ThinkPad-P72>
+ <9970E373-DF70-4FE4-A839-AAE641612EC5@lca.pw>
 MIME-Version: 1.0
-References: <20200114213809.27166-1-jbx6244@gmail.com>
-In-Reply-To: <20200114213809.27166-1-jbx6244@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 14 Jan 2020 16:06:13 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
-Message-ID: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/3] dt-bindings: mmc: combine common mmc and
- dw-mshc properties
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9970E373-DF70-4FE4-A839-AAE641612EC5@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Combine the common properties for mmc and dw-mshc in
-> mmc-controller-common.yaml
+On Tue, Jan 14, 2020 at 04:48:22PM -0500, Qian Cai wrote:
+> 
+> 
+> > On Jan 14, 2020, at 4:34 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > As an alternative, once the patches needed for your tests to pass
+> > reach mainline, you could announce that KCSAN was ready to be enabled
+> > in distros.
+> > 
+> > Though I confess that I don't know how that works.  Is there a separate
+> > testing kernel binary provided by the distros in question?
+> 
+> I don’t think I have powers to announce that. Once the feature hit the mainline, distro people could start to use in the debug kernel variant, and it is a shame to only find out it is broken. Anyway, I’ll try to edge out those corner cases. Stay tuned.
 
-Commit messages should explain the why, not what.
+Very good, thank you!
 
-AFAICT, the only reason is to not have a node name of 'mmc'. That's
-entirely the reason why it is defined. Fix your node names to use the
-standard name.
+And you do have the power to announce.  But just like most of the rest
+of use, myself included, you won't always have the power to make people
+actually pay attention to what you say.  ;-)
 
-
-
-Rob
+							Thanx, Paul
