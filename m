@@ -2,143 +2,88 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB311C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2651BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C63C24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGNveF/y"
+	by mail.kernel.org (Postfix) with ESMTP id E785524670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579033975;
+	bh=BvchwnWX9uvOtszORMeobzv/JaudnIkPV66R6bjuO/E=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=jzTdjbsevtqUFAJ9t4eJu6IHAIzZRVzdWNPmT49XwaJtuf8ffh1cRBMcv4xnzb+7Q
+	 5/83IYl2vbOjgg9QXjNEIYNZNljtx0X09lzTiXGzYC+jJlZvspflOcybwc24vzsU0U
+	 Tj8+3KHq45MMC8QAgs8L9KwRlKig6sNdGOXJlupc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgANUbu (ORCPT
+        id S1728769AbgANUcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:31:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58881 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727556AbgANUbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:31:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579033908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wtpq5coZ2n/ZQ8jUD3c2zBl1PMy/gRfERqCXjCgcqe0=;
-        b=aGNveF/y13pQdlpCrRHJjfk9+pVVd/SUw6ttc5hrkTGS5M8AQRVlR0Wm9wiay5zThIP3Hm
-        sLzYtrKp8VyouXQLl7b4F0i1CaInHDOAX77rLNv12H8L7peA4vuxyQzi8ZM72D3I4/WbuP
-        vZn01Pbf6O+PiLDpAfIOMg+n2Ifbem4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-8W0FTxhgPbSbgnwHyRaNiQ-1; Tue, 14 Jan 2020 15:31:45 -0500
-X-MC-Unique: 8W0FTxhgPbSbgnwHyRaNiQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Jan 2020 15:32:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgANUcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 15:32:53 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA35EDB62;
-        Tue, 14 Jan 2020 20:31:43 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D992760BE0;
-        Tue, 14 Jan 2020 20:31:38 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 6B78F220A24; Tue, 14 Jan 2020 15:31:38 -0500 (EST)
-Date:   Tue, 14 Jan 2020 15:31:38 -0500
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20200114203138.GA3145@redhat.com>
-References: <20200107125159.GA15745@infradead.org>
- <CAPcyv4jZE35sbDo6J4ihioEUFTuekJ3_h0=2Ra4PY+xn2xn1cQ@mail.gmail.com>
- <20200107170731.GA472641@magnolia>
- <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
- <20200107180101.GC15920@redhat.com>
- <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
- <20200107183307.GD15920@redhat.com>
- <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
- <20200109112447.GG27035@quack2.suse.cz>
- <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 65EEF24655;
+        Tue, 14 Jan 2020 20:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579033972;
+        bh=BvchwnWX9uvOtszORMeobzv/JaudnIkPV66R6bjuO/E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=By0zjO5g8GDo0SDNw+apeJlpiha3PhIq6P4bYSXMB5xDDpSSi/T3RcjdrWUNeUW9I
+         jmrafwpyjAuqMsbMC8nxVT97+CoqLH8TOFfjAQ3uGbnYKcZg0D5vGnMmvkB0ZmX955
+         4QKhxDLMslhDtmhLwsSmUl7J2y0DUZ6f11Z1v3Q4=
+Subject: Re: [PATCH 4.9 00/31] 4.9.210-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200114094334.725604663@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <11099c2f-d807-a784-87a8-0340459a1e84@kernel.org>
+Date:   Tue, 14 Jan 2020 13:32:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 12:03:01PM -0800, Dan Williams wrote:
-> On Thu, Jan 9, 2020 at 3:27 AM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Tue 07-01-20 10:49:55, Dan Williams wrote:
-> > > On Tue, Jan 7, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> > > > W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
-> > > > dax code refers back to block device to figure out partition offset in
-> > > > dax device. If we create a dax object corresponding to "struct block_device"
-> > > > and store sector offset in that, then we could pass that object to dax
-> > > > code and not worry about referring back to bdev. I have written some
-> > > > proof of concept code and called that object "dax_handle". I can post
-> > > > that code if there is interest.
-> > >
-> > > I don't think it's worth it in the end especially considering
-> > > filesystems are looking to operate on /dev/dax devices directly and
-> > > remove block entanglements entirely.
-> > >
-> > > > IMHO, it feels useful to be able to partition and use a dax capable
-> > > > block device in same way as non-dax block device. It will be really
-> > > > odd to think that if filesystem is on /dev/pmem0p1, then dax can't
-> > > > be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
-> > > > will work.
-> > >
-> > > That can already happen today. If you do not properly align the
-> > > partition then dax operations will be disabled. This proposal just
-> > > extends that existing failure domain to make all partitions fail to
-> > > support dax.
-> >
-> > Well, I have some sympathy with the sysadmin that has /dev/pmem0 device,
-> > decides to create partitions on it for whatever (possibly misguided)
-> > reason and then ponders why the hell DAX is not working? And PAGE_SIZE
-> > partition alignment is so obvious and widespread that I don't count it as a
-> > realistic error case sysadmins would be pondering about currently.
-> >
-> > So I'd find two options reasonably consistent:
-> > 1) Keep status quo where partitions are created and support DAX.
-> > 2) Stop partition creation altogether, if anyones wants to split pmem
-> > device further, he can use dm-linear for that (i.e., kpartx).
-> >
-> > But I'm not sure if the ship hasn't already sailed for option 2) to be
-> > feasible without angry users and Linus reverting the change.
+On 1/14/20 3:01 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.210 release.
+> There are 31 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Christoph? I feel myself leaning more and more to the "keep pmem
-> partitions" camp.
+> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> Anything received after that time might be too late.
 > 
-> I don't see "drop partition support" effort ending well given the long
-> standing "ext4 fails to mount when dax is not available" precedent.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.210-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
 > 
-> I think the next least bad option is to have a dax_get_by_host()
-> variant that passes an offset and length pair rather than requiring a
-> later bdev_dax_pgoff() to recall the offset. This also prevents
-> needing to add another dax-device object representation.
+> thanks,
+> 
+> greg k-h
+> 
 
-I am wondering what's the conclusion on this. I want to this to make
-progress in some direction so that I can make progress on virtiofs DAX
-support.
+Compiled and booted on my test system. No dmesg regressions.
 
-Thanks
-Vivek
+thanks,
+-- Shuah
 
