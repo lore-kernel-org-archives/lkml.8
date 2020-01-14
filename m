@@ -2,117 +2,98 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F11C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1979BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F3624672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9262467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AI49oSZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgANO5M (ORCPT
+        id S1729080AbgANO5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:57:12 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2486 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727092AbgANO5L (ORCPT
+        Tue, 14 Jan 2020 09:57:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27356 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727092AbgANO5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:57:11 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EEqqEV103289
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:57:11 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw04g1g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:57:09 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 14 Jan 2020 14:56:59 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Jan 2020 14:56:55 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00EEusPu65208380
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 14:56:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C0F552051;
-        Tue, 14 Jan 2020 14:56:54 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.223.52])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 47F0A5204F;
-        Tue, 14 Jan 2020 14:56:53 +0000 (GMT)
-Subject: Re: inconsistent lock state in ima_process_queued_keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Date:   Tue, 14 Jan 2020 09:56:52 -0500
-In-Reply-To: <CACT4Y+av-ipjsdtsXs4d55w=inNHJqho3s3XKfU0Jo7f98yi8w@mail.gmail.com>
-References: <000000000000486474059c19f4d7@google.com>
-         <CACT4Y+av-ipjsdtsXs4d55w=inNHJqho3s3XKfU0Jo7f98yi8w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20011414-0020-0000-0000-000003A09735
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011414-0021-0000-0000-000021F80C57
-Message-Id: <1579013812.12230.21.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_04:2020-01-14,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001140128
+        Tue, 14 Jan 2020 09:57:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579013840;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bRnkICnNJBIzJOH97eFHI4gLkkkXhQ+8DcPEdenNZ4Q=;
+        b=AI49oSZ5j/ILSJdXRBl6BlPC9gMf6FZte3/qmDo6+qi4KMcnaam8OYiuyJnhf0pPbvyOKV
+        H93iXuAnqOEqMY4LnTmJdBRi+K2L2C9cetFNSWLWk5dLzSe3wvGwJ0BHhyWrPtdGsVmSke
+        offpBobCMcT62owWzR1xwfbQLwM7y8w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-G_2eAZEZOOOvrcdG1DZZ9A-1; Tue, 14 Jan 2020 09:57:17 -0500
+X-MC-Unique: G_2eAZEZOOOvrcdG1DZZ9A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 117DA801E78;
+        Tue, 14 Jan 2020 14:57:15 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-124-77.rdu2.redhat.com [10.10.124.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A4ED75DA7D;
+        Tue, 14 Jan 2020 14:57:13 +0000 (UTC)
+Subject: Re: [mm/hugetlb] c77c0a8ac4: will-it-scale.per_process_ops 15.9%
+ improvement
+To:     Michal Hocko <mhocko@kernel.org>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200114085637.GA29297@shao2-debian>
+ <20200114091251.GE19428@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <bd474ca4-9f47-0ab1-f461-513789fc074d@redhat.com>
+Date:   Tue, 14 Jan 2020 09:57:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200114091251.GE19428@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-14 at 14:58 +0100, Dmitry Vyukov wrote:
-> On Tue, Jan 14, 2020 at 2:56 PM syzbot
-> <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    1b851f98 Add linux-next specific files for 20200114
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=12bcbb25e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3e7d9cf7ebfa08ad
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a4a503d7f37292ae1664
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
-> 
-> +Lakshmi, you seem to have submitted a number of changes to this file recently.
-> 
-> This completely breaks linux-next testing for us, every kernel crashes
-> a few minutes after boot.
-> 
-> 2020/01/14 14:45:00 vm-26: crash: inconsistent lock state in
-> ima_process_queued_keys
+On 1/14/20 4:12 AM, Michal Hocko wrote:
+> On Tue 14-01-20 16:56:37, kernel test robot wrote:
+>> Greeting,
+>>
+>> FYI, we noticed a 15.9% improvement of will-it-scale.per_process_ops due to commit:
+>>
+>>
+>> commit: c77c0a8ac4c522638a8242fcb9de9496e3cdbb2d ("mm/hugetlb: defer freeing of huge pages if in non-task context")
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> This is more than surprising because the patch has only changed the
+> behavior for hugetlb pages freed from the (soft)interrupt context and
+> that should be a very rare event. Does the test really generate a lot of
+> those?
+>
+Yes, I have the same question. I was not expecting to see any
+performance impact.
 
-Yikes!  Are you running with an IMA policy?  I assume this is being
-caused by commit 8f5d2d06f217 ("IMA: Defined timer to free queued
-keys".  Does reverting it prevent this from happening?
-
-Mimi
+Cheers,
+Longman
 
