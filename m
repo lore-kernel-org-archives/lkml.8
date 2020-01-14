@@ -2,193 +2,179 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D255CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08466C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A146217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C944B2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0S2Ddw8"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="glb7oCHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgANIYo (ORCPT
+        id S1726452AbgANI1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:24:44 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57344 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725820AbgANIYo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:24:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578990282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=cOasvFoyJdtoliuPoBZLUPCR+xkt9suiyO6szTrhbCM=;
-        b=g0S2Ddw89jT5KJPw6IdbPaH41Z13taO/tyC3WrjhjPPfwUZ/KtVtzOO94A9JjvoeBhDPBN
-        OyXyIwAI1gw5Jb0EXGyfDZPEacNBTEUr1kgUzsSbE8Ao62zcOkGbKtpReoYVfh//fHdo/w
-        kRdFO45CUMOsNoMRdJF4Z4zMMSDckwE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-obK1HWtaPES20OrfaQLktw-1; Tue, 14 Jan 2020 03:24:40 -0500
-X-MC-Unique: obK1HWtaPES20OrfaQLktw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B236A10054E3;
-        Tue, 14 Jan 2020 08:24:37 +0000 (UTC)
-Received: from [10.36.117.154] (ovpn-117-154.ams2.redhat.com [10.36.117.154])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2761980F62;
-        Tue, 14 Jan 2020 08:24:34 +0000 (UTC)
-Subject: Re: [PATCH v1 2/2] drivers/base/memory.c: get rid of
- find_memory_block()
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20200113113354.6341-1-david@redhat.com>
- <20200113113354.6341-3-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <ee2fb3a3-b715-7bf4-4681-ed6ed09faefd@redhat.com>
-Date:   Tue, 14 Jan 2020 09:24:34 +0100
+        Tue, 14 Jan 2020 03:27:46 -0500
+Received: from mout.gmx.net ([212.227.17.20]:58613 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbgANI1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:27:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1578990457;
+        bh=agbXGjEN5RjmocFU6SmJeQFrvw2tb5B4NDSesIjoEBs=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Date:In-Reply-To;
+        b=glb7oCHokxGPZIFAUq8hrynTDUjKajOtJslNrF6Phrgx5i4eEMHgQtT4LGRGf9yeY
+         wjX2QhOnYLWN1HLcu+5e8hBH0y9hHACi4YbllUVN1Ag13kv2xuS7MdWX8tjPa+QWCt
+         +JPL7aWsCDlyRVRqQh8V655KuB1GbbYqg9RAOHlc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.20.70.150] ([193.16.224.6]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MgvrB-1jIcXl42yj-00hRDA; Tue, 14
+ Jan 2020 09:27:37 +0100
+Subject: Re: [PATCH] parisc: Use proper printk format for resource_size_t
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200103163925.3967-1-krzk@kernel.org>
+From:   Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ mQINBF3Ia3MBEAD3nmWzMgQByYAWnb9cNqspnkb2GLVKzhoH2QD4eRpyDLA/3smlClbeKkWT
+ HLnjgkbPFDmcmCz5V0Wv1mKYRClAHPCIBIJgyICqqUZo2qGmKstUx3pFAiztlXBANpRECgwJ
+ r+8w6mkccOM9GhoPU0vMaD/UVJcJQzvrxVHO8EHS36aUkjKd6cOpdVbCt3qx8cEhCmaFEO6u
+ CL+k5AZQoABbFQEBocZE1/lSYzaHkcHrjn4cQjc3CffXnUVYwlo8EYOtAHgMDC39s9a7S90L
+ 69l6G73lYBD/Br5lnDPlG6dKfGFZZpQ1h8/x+Qz366Ojfq9MuuRJg7ZQpe6foiOtqwKym/zV
+ dVvSdOOc5sHSpfwu5+BVAAyBd6hw4NddlAQUjHSRs3zJ9OfrEx2d3mIfXZ7+pMhZ7qX0Axlq
+ Lq+B5cfLpzkPAgKn11tfXFxP+hcPHIts0bnDz4EEp+HraW+oRCH2m57Y9zhcJTOJaLw4YpTY
+ GRUlF076vZ2Hz/xMEvIJddRGId7UXZgH9a32NDf+BUjWEZvFt1wFSW1r7zb7oGCwZMy2LI/G
+ aHQv/N0NeFMd28z+deyxd0k1CGefHJuJcOJDVtcE1rGQ43aDhWSpXvXKDj42vFD2We6uIo9D
+ 1VNre2+uAxFzqqf026H6cH8hin9Vnx7p3uq3Dka/Y/qmRFnKVQARAQABtBxIZWxnZSBEZWxs
+ ZXIgPGRlbGxlckBnbXguZGU+iQJRBBMBCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheA
+ FiEERUSCKCzZENvvPSX4Pl89BKeiRgMFAl3J1zsCGQEACgkQPl89BKeiRgNK7xAAg6kJTPje
+ uBm9PJTUxXaoaLJFXbYdSPfXhqX/BI9Xi2VzhwC2nSmizdFbeobQBTtRIz5LPhjk95t11q0s
+ uP5htzNISPpwxiYZGKrNnXfcPlziI2bUtlz4ke34cLK6MIl1kbS0/kJBxhiXyvyTWk2JmkMi
+ REjR84lCMAoJd1OM9XGFOg94BT5aLlEKFcld9qj7B4UFpma8RbRUpUWdo0omAEgrnhaKJwV8
+ qt0ULaF/kyP5qbI8iA2PAvIjq73dA4LNKdMFPG7Rw8yITQ1Vi0DlDgDT2RLvKxEQC0o3C6O4
+ iQq7qamsThLK0JSDRdLDnq6Phv+Yahd7sDMYuk3gIdoyczRkXzncWAYq7XTWl7nZYBVXG1D8
+ gkdclsnHzEKpTQIzn/rGyZshsjL4pxVUIpw/vdfx8oNRLKj7iduf11g2kFP71e9v2PP94ik3
+ Xi9oszP+fP770J0B8QM8w745BrcQm41SsILjArK+5mMHrYhM4ZFN7aipK3UXDNs3vjN+t0zi
+ qErzlrxXtsX4J6nqjs/mF9frVkpv7OTAzj7pjFHv0Bu8pRm4AyW6Y5/H6jOup6nkJdP/AFDu
+ 5ImdlA0jhr3iLk9s9WnjBUHyMYu+HD7qR3yhX6uWxg2oB2FWVMRLXbPEt2hRGq09rVQS7DBy
+ dbZgPwou7pD8MTfQhGmDJFKm2ju5Ag0EXchrcwEQAOsDQjdtPeaRt8EP2pc8tG+g9eiiX9Sh
+ rX87SLSeKF6uHpEJ3VbhafIU6A7hy7RcIJnQz0hEUdXjH774B8YD3JKnAtfAyuIU2/rOGa/v
+ UN4BY6U6TVIOv9piVQByBthGQh4YHhePSKtPzK9Pv/6rd8H3IWnJK/dXiUDQllkedrENXrZp
+ eLUjhyp94ooo9XqRl44YqlsrSUh+BzW7wqwfmu26UjmAzIZYVCPCq5IjD96QrhLf6naY6En3
+ ++tqCAWPkqKvWfRdXPOz4GK08uhcBp3jZHTVkcbo5qahVpv8Y8mzOvSIAxnIjb+cklVxjyY9
+ dVlrhfKiK5L+zA2fWUreVBqLs1SjfHm5OGuQ2qqzVcMYJGH/uisJn22VXB1c48yYyGv2HUN5
+ lC1JHQUV9734I5cczA2Gfo27nTHy3zANj4hy+s/q1adzvn7hMokU7OehwKrNXafFfwWVK3OG
+ 1dSjWtgIv5KJi1XZk5TV6JlPZSqj4D8pUwIx3KSp0cD7xTEZATRfc47Yc+cyKcXG034tNEAc
+ xZNTR1kMi9njdxc1wzM9T6pspTtA0vuD3ee94Dg+nDrH1As24uwfFLguiILPzpl0kLaPYYgB
+ wumlL2nGcB6RVRRFMiAS5uOTEk+sJ/tRiQwO3K8vmaECaNJRfJC7weH+jww1Dzo0f1TP6rUa
+ fTBRABEBAAGJAjYEGAEIACAWIQRFRIIoLNkQ2+89Jfg+Xz0Ep6JGAwUCXchrcwIbDAAKCRA+
+ Xz0Ep6JGAxtdEAC54NQMBwjUNqBNCMsh6WrwQwbg9tkJw718QHPw43gKFSxFIYzdBzD/YMPH
+ l+2fFiefvmI4uNDjlyCITGSM+T6b8cA7YAKvZhzJyJSS7pRzsIKGjhk7zADL1+PJei9p9idy
+ RbmFKo0dAL+ac0t/EZULHGPuIiavWLgwYLVoUEBwz86ZtEtVmDmEsj8ryWw75ZIarNDhV74s
+ BdM2ffUJk3+vWe25BPcJiaZkTuFt+xt2CdbvpZv3IPrEkp9GAKof2hHdFCRKMtgxBo8Kao6p
+ Ws/Vv68FusAi94ySuZT3fp1xGWWf5+1jX4ylC//w0Rj85QihTpA2MylORUNFvH0MRJx4mlFk
+ XN6G+5jIIJhG46LUucQ28+VyEDNcGL3tarnkw8ngEhAbnvMJ2RTx8vGh7PssKaGzAUmNNZiG
+ MB4mPKqvDZ02j1wp7vthQcOEg08z1+XHXb8ZZKST7yTVa5P89JymGE8CBGdQaAXnqYK3/yWf
+ FwRDcGV6nxanxZGKEkSHHOm8jHwvQWvPP73pvuPBEPtKGLzbgd7OOcGZWtq2hNC6cRtsRdDx
+ 4TAGMCz4j238m+2mdbdhRh3iBnWT5yPFfnv/2IjFAk+sdix1Mrr+LIDF++kiekeq0yUpDdc4
+ ExBy2xf6dd+tuFFBp3/VDN4U0UfG4QJ2fg19zE5Z8dS4jGIbLrgzBF3IbakWCSsGAQQB2kcP
+ AQEHQNdEF2C6q5MwiI+3akqcRJWo5mN24V3vb3guRJHo8xbFiQKtBBgBCAAgFiEERUSCKCzZ
+ ENvvPSX4Pl89BKeiRgMFAl3IbakCGwIAgQkQPl89BKeiRgN2IAQZFggAHRYhBLzpEj4a0p8H
+ wEm73vcStRCiOg9fBQJdyG2pAAoJEPcStRCiOg9fto8A/3cti96iIyCLswnSntdzdYl72SjJ
+ HnsUYypLPeKEXwCqAQDB69QCjXHPmQ/340v6jONRMH6eLuGOdIBx8D+oBp8+BGLiD/9qu5H/
+ eGe0rrmE5lLFRlnm5QqKKi4gKt2WHMEdGi7fXggOTZbuKJA9+DzPxcf9ShuQMJRQDkgzv/VD
+ V1fvOdaIMlM1EjMxIS2fyyI+9KZD7WwFYK3VIOsC7PtjOLYHSr7o7vDHNqTle7JYGEPlxuE6
+ hjMU7Ew2Ni4SBio8PILVXE+dL/BELp5JzOcMPnOnVsQtNbllIYvXRyX0qkTD6XM2Jbh+xI9P
+ xajC+ojJ/cqPYBEALVfgdh6MbA8rx3EOCYj/n8cZ/xfo+wR/zSQ+m9wIhjxI4XfbNz8oGECm
+ xeg1uqcyxfHx+N/pdg5Rvw9g+rtlfmTCj8JhNksNr0NcsNXTkaOy++4Wb9lKDAUcRma7TgMk
+ Yq21O5RINec5Jo3xeEUfApVwbueBWCtq4bljeXG93iOWMk4cYqsRVsWsDxsplHQfh5xHk2Zf
+ GAUYbm/rX36cdDBbaX2+rgvcHDTx9fOXozugEqFQv9oNg3UnXDWyEeiDLTC/0Gei/Jd/YL1p
+ XzCscCr+pggvqX7kI33AQsxo1DT19sNYLU5dJ5Qxz1+zdNkB9kK9CcTVFXMYehKueBkk5MaU
+ ou0ZH9LCDjtnOKxPuUWstxTXWzsinSpLDIpkP//4fN6asmPo2cSXMXE0iA5WsWAXcK8uZ4jD
+ c2TFWAS8k6RLkk41ZUU8ENX8+qZx/Q==
+Message-ID: <82e79053-00bf-283e-458d-0b2711258585@gmx.de>
+Date:   Tue, 14 Jan 2020 09:27:35 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200113113354.6341-3-david@redhat.com>
+In-Reply-To: <20200103163925.3967-1-krzk@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KP2qJT0YQN40rceb2ADdFAxh1emiX6WqDxZMEliax+tMuPYV+0p
+ lA0BbYat/JVtCyihtprbmQ5stXrmikPi9XD8/ZOe/C7hrzBqbalIBTVFHID24ZiKlG8AX/Q
+ 38ek9dnYifRQgFqNI7D5BE7jP/782/45uw6Kkpk484rKs6QSm5h/5oYTZtzXjdZYelKbH0v
+ UbECsn1MqtldL2Yrv2hDQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5NEXodbfra4=:BIFmS7vXKAIJyPRUxIj14C
+ qYg9vyWMzeXK0ziSM6v3VbqMdxceQ+hv8gkncMHeeGz72bWx4e4Jrybjoj4MC/+r9NrBeCoie
+ g1Y7DpW23uQItXpkEfjkJCydansYsImJvvvY/0t4z4PBe5Rkj/MivoSSvUDX+YT9fto1RZbVD
+ kpi47QeO2IJCN4wc3cEpteAmu3RZewWMWqDarOUkCJvJrr/+2SHeqp60vFV9QFbfD4qofubRw
+ wqYAxGIcvBO+wZIXb668e6ssB0W90pTWRnt1yGB3KCU+xoe96JzdkSKjCguee5odwhIvcHKlM
+ zdWptIaXuVVcUr3mfFeOnNjovJMD7SR7w5yEvyGTSBQrVOmiyg2yywByvfMHB63YfqnQoHOSG
+ cC+4U9pHJD/RV0sbARtGIdzAxqwXFziHd9dBieSffctqlHnSBgv9TYYIG+UMUD+p1fsT53jgV
+ EbK4/j5B9rhq+vUhgT/OOfnkMgtnGllXDY0y6aKPYljG6Ie0alRYQQpxmjRpadn4CL1xdYco3
+ kfQMoJcdLw/DdhChxrM6DBohgkQFHCvN6hcTCIL8KLXozR0uOB3R/Xm84lXVgfKn/8AHt54gs
+ gzAtChzjUX4/QGvDJsQhUlbPmBYSAGUMtBc0oXUU8u2r6Q53entsZkLq+LSqP/G0Zd88efjpf
+ uqiySAFYLoGvMEnfxjRmJ1bkPiAA49Kpq6V3xBsbSx9ngm9PgKUSABHQrLZYjJ8rBMO/4Ua7h
+ Tlrpk91NVOy4zi4i/76j08qWy4h7StqkGoodnvvNJM9S0l71MTpoFmgeKsZ+amGPnFjt90aXT
+ xPN2I27nT5VvIPsbqeini+FVSaV2/7zu5G9RgDYeIWDxdX0UM5W0naentZajV/M2cB8Emk04E
+ uFAHUKLk2JRf3EuJ9MMGpbe9JQXKwwRsnaD4Wuhb8ndvKTMtPxLUYadMn2Ac4BSkFDljvme39
+ HrQpOeFcFPbkOA9lQfsHKrkrMwKuK+T/LDrA5pJwFN6d4q5B4eZAX+z4gPfYxt6w0Etr5idkt
+ GL8lmvzxnlrPqVVcqvaMNZNhuWWSnYurHxTOgvD0h6AAypYcy2vPkfzqQvE0qwb7Hlw7Pm9ks
+ ZdyRWqGijy/+WcIG5ewLiYrXB7zSSDqGfQajot36LJ+PSThUD0DzAWFthxH23QFd1qs7/pKbF
+ 8LJsNbBwR3ayGXb8y2vOIDDsotY3w2kt6ADPjyXuZbmDHjz8MGUWKRjWiiaDUkOh6FfKL5RXg
+ HEMf/PRgkkWr1hZdDOLEPZOXjnqDPCfmJAMqGjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.01.20 12:33, David Hildenbrand wrote:
-> No longer needed, remove it.
->=20
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On 03.01.20 17:39, Krzysztof Kozlowski wrote:
+> resource_size_t should be printed with its own size-independent format
+> to fix warnings when compiling on 64-bit platform (e.g. with
+> COMPILE_TEST):
+>
+>     arch/parisc/kernel/drivers.c: In function 'print_parisc_device':
+>     arch/parisc/kernel/drivers.c:892:9: warning:
+>         format '%p' expects argument of type 'void *',
+>         but argument 4 has type 'resource_size_t {aka unsigned int}' [-W=
+format=3D]
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/base/memory.c  | 9 +--------
->  include/linux/memory.h | 1 -
->  2 files changed, 1 insertion(+), 9 deletions(-)
->=20
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 2cf3542b04d0..8b3ab910b812 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -590,13 +590,6 @@ static struct memory_block *find_memory_block_by_i=
-d(unsigned long block_id)
->  	return mem;
->  }
-> =20
-> -struct memory_block *find_memory_block(struct mem_section *section)
-> -{
-> -	unsigned long block_id =3D base_memory_block_id(__section_nr(section)=
-);
-> -
-> -	return find_memory_block_by_id(block_id);
-> -}
-> -
->  static struct attribute *memory_memblk_attrs[] =3D {
->  	&dev_attr_phys_index.attr,
->  	&dev_attr_state.attr,
-> @@ -700,7 +693,7 @@ static void unregister_memory(struct memory_block *=
-memory)
-> =20
->  	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) =3D=3D NULL=
-);
-> =20
-> -	/* drop the ref. we got via find_memory_block() */
-> +	/* drop the ref. we got via find_memory_block_by_id() */
->  	put_device(&memory->dev);
->  	device_unregister(&memory->dev);
->  }
-> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index 3ab4aa2d67ae..0b0732a94972 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -113,7 +113,6 @@ void remove_memory_block_devices(unsigned long star=
-t, unsigned long size);
->  extern void memory_dev_init(void);
->  extern int memory_notify(unsigned long val, void *v);
->  extern int memory_isolate_notify(unsigned long val, void *v);
-> -extern struct memory_block *find_memory_block(struct mem_section *);
->  typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *=
-);
->  extern int walk_memory_blocks(unsigned long start, unsigned long size,
->  			      void *arg, walk_memory_blocks_func_t func);
->=20
+>  arch/parisc/kernel/drivers.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
+> index a6c9f49c6612..a154de424421 100644
+> --- a/arch/parisc/kernel/drivers.c
+> +++ b/arch/parisc/kernel/drivers.c
+> @@ -889,8 +889,8 @@ static void print_parisc_device(struct parisc_device=
+ *dev)
+>  	static int count;
+>
+>  	print_pa_hwpath(dev, hw_path);
+> -	pr_info("%d. %s at 0x%px [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
+> -		++count, dev->name, (void*) dev->hpa.start, hw_path, dev->id.hw_type,
+> +	pr_info("%d. %s at %pa[p] [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
 
-My git-grepping skills betrayed me :) There is one remaining user in ppc
-code. Let's drop this patch for now.
+It needs to be    %pap   instead of   %pa[p].
+The documentation in Documentation/core-api/printk-formats.rst is correct,=
+ but misleading.
+I corrected & applied it.
+Thanks!
 
---=20
-Thanks,
 
-David / dhildenb
+Helge
+
+
+> +		++count, dev->name, &(dev->hpa.start), hw_path, dev->id.hw_type,
+>  		dev->id.hversion_rev, dev->id.hversion, dev->id.sversion);
+>
+>  	if (dev->num_addrs) {
+>
 
