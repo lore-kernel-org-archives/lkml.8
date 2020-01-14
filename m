@@ -7,55 +7,70 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99B1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F01C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22F924656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B882465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgANRHZ (ORCPT
+        id S1728883AbgANRHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:07:25 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:60819 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgANRHZ (ORCPT
+        Tue, 14 Jan 2020 12:07:49 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42183 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANRHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:07:25 -0500
-Received: from xps13.lan (unknown [91.224.148.103])
+        Tue, 14 Jan 2020 12:07:49 -0500
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 7C8E020000C;
-        Tue, 14 Jan 2020 17:07:20 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7EDB420013;
+        Tue, 14 Jan 2020 17:07:46 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-mtd@lists.infradead.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM STB NAND FLASH DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] mtd: nand: brcmnand: Set appropriate DMA mask
-Date:   Tue, 14 Jan 2020 18:07:10 +0100
-Message-Id: <20200114170710.1980-1-miquel.raynal@bootlin.com>
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v3] mtd: onenand_base: Adjust indentation in onenand_read_ops_nolock
+Date:   Tue, 14 Jan 2020 18:07:27 +0100
+Message-Id: <20200114170727.2044-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191218005635.31636-1-f.fainelli@gmail.com>
+In-Reply-To: <20191209214422.53661-1-natechancellor@gmail.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 4b03d0412f4a039bb3769ecc3e8c5506a35431ee
+X-linux-mtd-patch-commit: 9ec8046363ac95bd10c1f96865f139c0e76902fd
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 00:56:35 UTC, Florian Fainelli wrote:
-> NAND controllers >= 7.0 with FLASH_DMA support physical addresses up to
-> 40-bit, set an appropriate DMA mask for that purpose.
+On Mon, 2019-12-09 at 21:44:23 UTC, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ../drivers/mtd/nand/onenand/onenand_base.c:1269:3: warning: misleading
+> indentation; statement is not part of the previous 'if'
+> [-Wmisleading-indentation]
+>         while (!ret) {
+>         ^
+> ../drivers/mtd/nand/onenand/onenand_base.c:1266:2: note: previous
+> statement is here
+>         if (column + thislen > writesize)
+>         ^
+> 1 warning generated.
+> 
+> This warning occurs because there is a space before the tab of the while
+> loop. There are spaces at the beginning of a lot of the lines in this
+> block, remove them so that the indentation is consistent with the Linux
+> kernel coding style and clang no longer warns.
+> 
+> Fixes: a8de85d55700 ("[MTD] OneNAND: Implement read-while-load")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/794
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
