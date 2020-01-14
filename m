@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E516FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C46C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC47924679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1EF2467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996347;
-	bh=sbl4UHn02AWHf0pfvvgwLZS/ij6DwQksVxXf3qeOdro=;
+	s=default; t=1578996353;
+	bh=G2rblNJm6y/GuU0Th2W/75bPHcMKgTBXWgh7UEy+AvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRfbvPKt5hhaDt536E6Pyq8/1E0phKMj887sC3EGAU/GNqkjBwWtdiixZRMzymi5J
-	 k6Xm0tjo3ZFClDz+NfJcgnLCQ1kZt5/E2k5A8GGwZXbfHfSFvvgfc8/F4kDROj/tKQ
-	 0vl0+NEXs/F3xKF4vmANOZDURW/uR509EEoZHwAo=
+	b=VXM9kESyNvxSyrMldhhB28zRkpHnvGONS8r+NXQiEhcT0zRaybAHlIFEiT1esJ6SC
+	 LbQTsVjPzqDzc63T5dUqM6mrrUz9YBZlYmS75jAeddHHk7tW+vpV2PUEaCKQrTGple
+	 4MwI6LfiBAlg5saDdX/lALluuAuerMTP/wk/4qtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbgANKFm (ORCPT
+        id S1730237AbgANKFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33980 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730161AbgANKFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:41 -0500
+        id S1730200AbgANKFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C6224683;
-        Tue, 14 Jan 2020 10:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3314B24685;
+        Tue, 14 Jan 2020 10:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996340;
-        bh=sbl4UHn02AWHf0pfvvgwLZS/ij6DwQksVxXf3qeOdro=;
+        s=default; t=1578996349;
+        bh=G2rblNJm6y/GuU0Th2W/75bPHcMKgTBXWgh7UEy+AvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsqLjwCryoFdXKVT013k/w7TF0NptzLam5LZ9snAFp4g5FZ/G9FklCrjL541zbo//
-         OzcqxqSXTf9x1+gF3+XHQkUj0gOLGYKfl/EG6fdp4vV4DtBoU+aVvlUrj3nxDKECDW
-         plg0FgWzRu60V86jtr9RMb+yN4bm9974FsOd+MQk=
+        b=d3hDRdvgb+oN+NJEBvUXa3udlujbVUVABGawO5cnRu0IqcQPycQvRdOahxAwaCLKf
+         MGviDtQpXQu3tV0nNgsMRqMNLSpyQlCxSgroH7ny+Dp8cE1fKbooXQ9K3UE57k2MOn
+         ShKdO+8B/OTbInaMUEvO3EQKOqZWkoubU0CkHY5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 39/78] pstore/ram: Regularize prz label allocation lifetime
-Date:   Tue, 14 Jan 2020 11:01:13 +0100
-Message-Id: <20200114094358.836312422@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 42/78] usb: cdns3: should not use the same dev_id for shared interrupt handler
+Date:   Tue, 14 Jan 2020 11:01:16 +0100
+Message-Id: <20200114094359.221775615@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,73 +58,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit e163fdb3f7f8c62dccf194f3f37a7bcb3c333aa8 upstream.
+commit af58e1fca9840192f14b6f03c59595d64bff9127 upstream.
 
-In my attempt to fix a memory leak, I introduced a double-free in the
-pstore error path. Instead of trying to manage the allocation lifetime
-between persistent_ram_new() and its callers, adjust the logic so
-persistent_ram_new() always takes a kstrdup() copy, and leaves the
-caller's allocation lifetime up to the caller. Therefore callers are
-_always_ responsible for freeing their label. Before, it only needed
-freeing when the prz itself failed to allocate, and not in any of the
-other prz failure cases, which callers would have no visibility into,
-which is the root design problem that lead to both the leak and now
-double-free bugs.
+Both drd and gadget interrupt handler use the struct cdns3 pointer as
+dev_id, it causes devm_free_irq at cdns3_gadget_exit doesn't free
+gadget's interrupt handler, it freed drd's handler. So, when the
+host interrupt occurs, the gadget's interrupt hanlder is still
+called, and causes below oops. To fix it, we use gadget's private
+data priv_dev as interrupt dev_id for gadget.
 
-Reported-by: Cengiz Can <cengiz@kernel.wtf>
-Link: https://lore.kernel.org/lkml/d4ec59002ede4aaf9928c7f7526da87c@kernel.wtf
-Fixes: 8df955a32a73 ("pstore/ram: Fix error-path memory leak in persistent_ram_new() callers")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000380
+Mem abort info:
+  ESR = 0x96000006
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000006
+  CM = 0, WnR = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=0000000971d79000
+[0000000000000380] pgd=0000000971d6f003, pud=0000000971d6e003, pmd=0000000000000000
+Internal error: Oops: 96000006 [#1] PREEMPT SMP
+Modules linked in: mxc_jpeg_encdec crct10dif_ce fsl_imx8_ddr_perf
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-03486-g69f4e7d9c54a-dirty #254
+Hardware name: Freescale i.MX8QM MEK (DT)
+pstate: 00000085 (nzcv daIf -PAN -UAO)
+pc : cdns3_device_irq_handler+0x1c/0xb8
+lr : __handle_irq_event_percpu+0x78/0x2c0
+sp : ffff800010003e30
+x29: ffff800010003e30 x28: ffff8000129bb000
+x27: ffff8000126e9000 x26: ffff0008f61b5600
+x25: ffff800011fe1018 x24: ffff8000126ea120
+x23: ffff800010003f04 x22: 0000000000000000
+x21: 0000000000000093 x20: ffff0008f61b5600
+x19: ffff0008f5061a80 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000000 x14: 003d090000000000
+x13: 00003d0900000000 x12: 0000000000000000
+x11: 00003d0900000000 x10: 0000000000000040
+x9 : ffff800012708cb8 x8 : ffff800012708cb0
+x7 : ffff0008f7c7a9d0 x6 : 0000000000000000
+x5 : ffff0008f7c7a910 x4 : ffff8008ed359000
+x3 : ffff800010003f40 x2 : 0000000000000000
+x1 : ffff0008f5061a80 x0 : ffff800010161a60
+Call trace:
+ cdns3_device_irq_handler+0x1c/0xb8
+ __handle_irq_event_percpu+0x78/0x2c0
+ handle_irq_event_percpu+0x40/0x98
+ handle_irq_event+0x4c/0xd0
+ handle_fasteoi_irq+0xbc/0x168
+ generic_handle_irq+0x34/0x50
+ __handle_domain_irq+0x6c/0xc0
+ gic_handle_irq+0xd4/0x174
+ el1_irq+0xb8/0x180
+ arch_cpu_idle+0x3c/0x230
+ default_idle_call+0x38/0x40
+ do_idle+0x20c/0x298
+ cpu_startup_entry+0x28/0x48
+ rest_init+0xdc/0xe8
+ arch_call_rest_init+0x14/0x1c
+ start_kernel+0x48c/0x4b8
+Code: aa0103f3 aa1e03e0 d503201f f9409662 (f941c040)
+---[ end trace 091dcf4dee011b0e ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x0002,2100600c
+Memory Limit: none
+---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+Cc: <stable@vger.kernel.org> #v5.4
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/1577437804-18146-1-git-send-email-peter.chen@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/pstore/ram.c      |    4 ++--
- fs/pstore/ram_core.c |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/cdns3/gadget.c |   14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -583,12 +583,12 @@ static int ramoops_init_przs(const char
- 		prz_ar[i] = persistent_ram_new(*paddr, zone_sz, sig,
- 					       &cxt->ecc_info,
- 					       cxt->memtype, flags, label);
-+		kfree(label);
- 		if (IS_ERR(prz_ar[i])) {
- 			err = PTR_ERR(prz_ar[i]);
- 			dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
- 				name, record_size,
- 				(unsigned long long)*paddr, err);
--			kfree(label);
+--- a/drivers/usb/cdns3/gadget.c
++++ b/drivers/usb/cdns3/gadget.c
+@@ -1375,13 +1375,10 @@ static void cdns3_check_usb_interrupt_pr
+  */
+ static irqreturn_t cdns3_device_irq_handler(int irq, void *data)
+ {
+-	struct cdns3_device *priv_dev;
+-	struct cdns3 *cdns = data;
++	struct cdns3_device *priv_dev = data;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	u32 reg;
  
- 			while (i > 0) {
- 				i--;
-@@ -629,12 +629,12 @@ static int ramoops_init_prz(const char *
- 	label = kasprintf(GFP_KERNEL, "ramoops:%s", name);
- 	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
- 				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
-+	kfree(label);
- 	if (IS_ERR(*prz)) {
- 		int err = PTR_ERR(*prz);
+-	priv_dev = cdns->gadget_dev;
+-
+ 	/* check USB device interrupt */
+ 	reg = readl(&priv_dev->regs->usb_ists);
+ 	if (reg) {
+@@ -1419,14 +1416,12 @@ static irqreturn_t cdns3_device_irq_hand
+  */
+ static irqreturn_t cdns3_device_thread_irq_handler(int irq, void *data)
+ {
+-	struct cdns3_device *priv_dev;
+-	struct cdns3 *cdns = data;
++	struct cdns3_device *priv_dev = data;
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned long flags;
+ 	int bit;
+ 	u32 reg;
  
- 		dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
- 			name, sz, (unsigned long long)*paddr, err);
--		kfree(label);
- 		return err;
- 	}
+-	priv_dev = cdns->gadget_dev;
+ 	spin_lock_irqsave(&priv_dev->lock, flags);
  
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -574,7 +574,7 @@ struct persistent_ram_zone *persistent_r
- 	/* Initialize general buffer state. */
- 	raw_spin_lock_init(&prz->buffer_lock);
- 	prz->flags = flags;
--	prz->label = label;
-+	prz->label = kstrdup(label, GFP_KERNEL);
+ 	reg = readl(&priv_dev->regs->usb_ists);
+@@ -2539,7 +2534,7 @@ void cdns3_gadget_exit(struct cdns3 *cdn
  
- 	ret = persistent_ram_buffer_map(start, size, prz, memtype);
+ 	priv_dev = cdns->gadget_dev;
+ 
+-	devm_free_irq(cdns->dev, cdns->dev_irq, cdns);
++	devm_free_irq(cdns->dev, cdns->dev_irq, priv_dev);
+ 
+ 	pm_runtime_mark_last_busy(cdns->dev);
+ 	pm_runtime_put_autosuspend(cdns->dev);
+@@ -2710,7 +2705,8 @@ static int __cdns3_gadget_init(struct cd
+ 	ret = devm_request_threaded_irq(cdns->dev, cdns->dev_irq,
+ 					cdns3_device_irq_handler,
+ 					cdns3_device_thread_irq_handler,
+-					IRQF_SHARED, dev_name(cdns->dev), cdns);
++					IRQF_SHARED, dev_name(cdns->dev),
++					cdns->gadget_dev);
+ 
  	if (ret)
+ 		goto err0;
 
 
