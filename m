@@ -2,301 +2,115 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8D2C33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547CCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D262084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A2B214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nQc8qxdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgANDsY (ORCPT
+        id S1729472AbgANDse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 22:48:24 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:56845 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729783AbgANDsY (ORCPT
+        Mon, 13 Jan 2020 22:48:34 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43477 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729366AbgANDse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 22:48:24 -0500
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 14 Jan 2020
- 11:45:59 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 4/5] watchdog: add meson secure watchdog driver
-Date:   Tue, 14 Jan 2020 11:45:26 +0800
-Message-ID: <1578973527-4759-5-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578973527-4759-1-git-send-email-xingyu.chen@amlogic.com>
-References: <1578973527-4759-1-git-send-email-xingyu.chen@amlogic.com>
+        Mon, 13 Jan 2020 22:48:34 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so10884172qke.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 19:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CTJ2coo4RHoH/lJGEL6/xkagWbBVDH7gBcZR8SjOkz8=;
+        b=nQc8qxdX/AeOVnGOFlRCgCYp1v+Q9S3HUvIYqgb2rMKCYn9H5NsgVRHIHo5c7toLey
+         TL4BEKQxXsuUYLj7+4+xMp3q50jmsSvEjvG+9J0yvLmS8T2iQrpzs2qY9wRhbRKmCJxn
+         qhL8WI1HWHG9fPkkH8HxV/eOlqTHBINXjp0kFBOeruRYTz/qagED/LKtJMr+FJECKcye
+         axHnG/a53UeioPdkcDOXPDm5WZygoCFWZYwZpEcMGe9FJhkcook5Z5qNfC7miQ2HUWte
+         nB5mIAF0jz0sjypPQprD8RerGyQAys+ZI5JkALp+Xx77+fFJp+XHYzq6w+NKG6SkW/jn
+         6+lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CTJ2coo4RHoH/lJGEL6/xkagWbBVDH7gBcZR8SjOkz8=;
+        b=IXbyat4n5aa4v4W3LDn2hBav3asH+POG2t11+1RDx6kLCUPGA5CokdCr4cdSXENxQY
+         45k3JT97dbeB1C7cTwn96kzVLawce/QkdfTjg1wQnHu9lb534KSbTaEwPuXJL9T9A1cx
+         9DPU+EhbsWEED33HUnMJFmS8B1keefjhIzMg0V3Pa/uLhu3Eki0bnZuQKppWGU/CVUC2
+         Adsm2+tX/pi83x7wn/mO2lUfgCcqKWdJXfNrVd/m8xIdXEhYduKcC59t/qLg1CPJgvfB
+         LkWcJM4+S42r+8G5CyPNAmt1xH1sofnEabF/AWUMaqWi7tHdd0Z2cjYWJqkYpIAQklrN
+         HJTw==
+X-Gm-Message-State: APjAAAWj25i9vD4vTdgAso4RtvG+kkjXokbjpptilSew2R9dkIP5DVw6
+        FpW25MVj6k+unmZg1uuZKcp5HZuT76C3uN+misYMmg==
+X-Google-Smtp-Source: APXvYqzDpb9Yyqx7bCFNZvCTSYvZ5WdMj+Wq11S0hKuv/ey3nRFiCF4ih93/7FilTGOzb44QaMjq/NvjhXCEP9VwNiA=
+X-Received: by 2002:ae9:c018:: with SMTP id u24mr19621044qkk.339.1578973713171;
+ Mon, 13 Jan 2020 19:48:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+References: <20200109031516.29639-1-greentime.hu@sifive.com>
+ <alpine.DEB.2.21.9999.2001091126480.135239@viisi.sifive.com> <alpine.DEB.2.21.9999.2001121011100.160130@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.2001121011100.160130@viisi.sifive.com>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Tue, 14 Jan 2020 11:48:21 +0800
+Message-ID: <CAHCEehKchrwd7TTmSrhtEPeCmkrYrx7TX_c6ogpCpSkCKnBQoQ@mail.gmail.com>
+Subject: Re: [PATCH v3] riscv: make sure the cores stay looping in .Lsecondary_park
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Gt <green.hu@gmail.com>, greentime@kernel.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The watchdog controller on the Meson-A/C series SoCs is moved to secure
-world, watchdog operation needs to be done in secure EL3 mode via ATF,
-Non-secure world can call SMC instruction to trap to AFT for watchdog
-operation.
+Hi Paul,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
----
- drivers/watchdog/Kconfig         |  16 ++++
- drivers/watchdog/Makefile        |   1 +
- drivers/watchdog/meson_sec_wdt.c | 185 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/watchdog/meson_sec_wdt.c
+On Mon, Jan 13, 2020 at 2:12 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> Hi Greentime,
+>
+> On Thu, 9 Jan 2020, Paul Walmsley wrote:
+>
+> > On Thu, 9 Jan 2020, Greentime Hu wrote:
+> >
+> > > The code in secondary_park is currently placed in the .init section.  The
+> > > kernel reclaims and clears this code when it finishes booting.  That
+> > > causes the cores parked in it to go to somewhere unpredictable, so we
+> > > move this function out of init to make sure the cores stay looping there.
+> > >
+> > > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > > Reviewed-by: Anup Patel <anup@brainfault.org>
+> >
+> > Thanks, the following is what's been queued for v5.5-rc.
+>
+> During final testing, when building the kernel with an initramfs, I hit
+> the following linker error:
+>
+>   LD      .tmp_vmlinux1
+> arch/riscv/kernel/head.o: in function `.L0 ':(.init.text+0x5c): relocation truncated to fit: R_RISCV_JAL against `.Lsecondary_park'
+> make[1]: *** [Makefile:1079: vmlinux] Error 1
+> make: *** [Makefile:326: __build_one_by_one] Error 2
+>
+> Could you take a look at this?
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 1679e0d..5f88325 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -826,6 +826,22 @@ config MESON_GXBB_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called meson_gxbb_wdt.
- 
-+config MESON_SEC_WATCHDOG
-+	tristate "Amlogic Meson Secure watchdog support"
-+	depends on MESON_SM
-+	select WATCHDOG_CORE
-+	help
-+	  The watchdog controller on the Meson-A/C series SoCs is moved to
-+	  secure world, watchdog operation needs to be done in secure EL3
-+	  mode via ATF, non-secure world can call SMC instruction to trap
-+	  to ATF for the watchdog operation.
-+
-+	  Say Y here if watchdog controller on Meson SoCs is located in
-+	  secure world.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called meson_sec_wdt.
-+
- config MESON_WATCHDOG
- 	tristate "Amlogic Meson SoCs watchdog support"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 2ee352b..5e6b73d 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
- obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
- obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
- obj-$(CONFIG_MESON_GXBB_WATCHDOG) += meson_gxbb_wdt.o
-+obj-$(CONFIG_MESON_SEC_WATCHDOG) += meson_sec_wdt.o
- obj-$(CONFIG_MESON_WATCHDOG) += meson_wdt.o
- obj-$(CONFIG_MEDIATEK_WATCHDOG) += mtk_wdt.o
- obj-$(CONFIG_DIGICOLOR_WATCHDOG) += digicolor_wdt.o
-diff --git a/drivers/watchdog/meson_sec_wdt.c b/drivers/watchdog/meson_sec_wdt.c
-new file mode 100644
-index 00000000..493cbe8
---- /dev/null
-+++ b/drivers/watchdog/meson_sec_wdt.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-+ *
-+ */
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/watchdog.h>
-+#include <linux/firmware/meson/meson_sm.h>
-+
-+#define MESON_SIP_WDT_DISABLE		0x1
-+#define MESON_SIP_WDT_ENABLE		0x2
-+#define MESON_SIP_WDT_PING		0x3
-+#define MESON_SIP_WDT_INIT		0x4
-+#define MESON_SIP_WDT_RESETNOW		0x5
-+#define MESON_SIP_WDT_SETTIMEOUT	0x6
-+#define MESON_SIP_WDT_GETTIMELEFT	0x7
-+
-+#define DEFAULT_TIMEOUT			30 /* seconds */
-+
-+/*
-+ * Watchdog timer tick is set to 1ms in secfw side, and tick count is
-+ * stored in the bit[16-31] of WATCHDOG_CNT register, so the maximum
-+ * timeout value is 0xffff ms.
-+ */
-+#define MAX_TIMEOUT_MS			0xFFFF
-+
-+struct meson_sec_wdt {
-+	struct watchdog_device wdt_dev;
-+	struct meson_sm_firmware *fw;
-+};
-+
-+static int meson_sec_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_ENABLE, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_DISABLE, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_ping(struct watchdog_device *wdt_dev)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_PING, 0, 0, 0, 0);
-+}
-+
-+static int meson_sec_wdt_set_timeout(struct watchdog_device *wdt_dev,
-+				     unsigned int timeout)
-+{
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	wdt_dev->timeout = timeout;
-+
-+	return meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			     MESON_SIP_WDT_SETTIMEOUT,
-+			     wdt_dev->timeout * 1000, 0, 0, 0);
-+}
-+
-+static unsigned int meson_sec_wdt_get_timeleft(struct watchdog_device *wdt_dev)
-+{
-+	int ret;
-+	unsigned int timeleft;
-+	struct meson_sec_wdt *data = watchdog_get_drvdata(wdt_dev);
-+
-+	ret = meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, &timeleft,
-+			    MESON_SIP_WDT_GETTIMELEFT, 0, 0, 0, 0);
-+
-+	if (ret)
-+		return 0;
-+
-+	return timeleft;
-+}
-+
-+static const struct watchdog_ops meson_sec_wdt_ops = {
-+	.start = meson_sec_wdt_start,
-+	.stop = meson_sec_wdt_stop,
-+	.ping = meson_sec_wdt_ping,
-+	.set_timeout = meson_sec_wdt_set_timeout,
-+	.get_timeleft = meson_sec_wdt_get_timeleft,
-+};
-+
-+static const struct watchdog_info meson_sec_wdt_info = {
-+	.identity = "Meson Secure Watchdog Timer",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static int __maybe_unused meson_sec_wdt_resume(struct device *dev)
-+{
-+	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(&data->wdt_dev))
-+		return meson_sec_wdt_start(&data->wdt_dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused meson_sec_wdt_suspend(struct device *dev)
-+{
-+	struct meson_sec_wdt *data = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(&data->wdt_dev))
-+		return meson_sec_wdt_stop(&data->wdt_dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops meson_sec_wdt_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(meson_sec_wdt_suspend, meson_sec_wdt_resume)
-+};
-+
-+static const struct of_device_id meson_sec_wdt_dt_ids[] = {
-+	 { .compatible = "amlogic,meson-sec-wdt", },
-+	 { /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, meson_sec_wdt_dt_ids);
-+
-+static int meson_sec_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct meson_sec_wdt *data;
-+	struct device_node *sm_np;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	sm_np = dev_of_node(dev->parent);
-+	if (!sm_np)
-+		return -EINVAL;
-+
-+	data->fw = meson_sm_get(sm_np);
-+	if (!data->fw)
-+		return -EPROBE_DEFER;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->wdt_dev.parent = dev;
-+	data->wdt_dev.info = &meson_sec_wdt_info;
-+	data->wdt_dev.ops = &meson_sec_wdt_ops;
-+	data->wdt_dev.max_hw_heartbeat_ms = MAX_TIMEOUT_MS;
-+	data->wdt_dev.min_timeout = 1;
-+	data->wdt_dev.timeout = DEFAULT_TIMEOUT;
-+	watchdog_set_drvdata(&data->wdt_dev, data);
-+	watchdog_init_timeout(&data->wdt_dev, 0, dev);
-+
-+	ret = meson_sm_call(data->fw, SM_A1_WATCHDOG_OPS, NULL,
-+			    MESON_SIP_WDT_INIT,
-+			    data->wdt_dev.timeout * 1000, 0, 0, 0);
-+	if (ret)
-+		return ret;
-+
-+	watchdog_stop_on_reboot(&data->wdt_dev);
-+
-+	return devm_watchdog_register_device(dev, &data->wdt_dev);
-+}
-+
-+static struct platform_driver meson_sec_wdt_driver = {
-+	.probe	= meson_sec_wdt_probe,
-+	.driver = {
-+		.name = "meson-sec-wdt",
-+		.pm = &meson_sec_wdt_pm_ops,
-+		.of_match_table	= meson_sec_wdt_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(meson_sec_wdt_driver);
-+
-+MODULE_AUTHOR("Xingyu Chen <xingyu.chen@amlogic.com>");
-+MODULE_DESCRIPTION("Amlogic Secure Watchdog Timer Driver");
-+MODULE_LICENSE("Dual MIT/GPL");
--- 
-2.7.4
+I think it is because the sections are too far for bqeu to jump and
+the config I used just small enough for it to jump so I didn't see
+this bug. Sorry about that.
+I tried this fix to boot in Unleashed board.
 
+ #ifdef CONFIG_SMP
+        li t0, CONFIG_NR_CPUS
+-       bgeu a0, t0, .Lsecondary_park
++       blt a0, t0, .Lgood_cores
++       tail .Lsecondary_park
++.Lgood_cores:
+ #endif
