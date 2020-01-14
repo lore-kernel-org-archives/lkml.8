@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CD8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385D7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580E52469F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1780C24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgANTtS (ORCPT
+        id S1729025AbgANTtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:49:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44841 "EHLO
+        Tue, 14 Jan 2020 14:49:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44790 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgANTtO (ORCPT
+        with ESMTP id S1728949AbgANTtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:49:14 -0500
+        Tue, 14 Jan 2020 14:49:12 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1irSBc-0005bs-NJ; Tue, 14 Jan 2020 20:49:12 +0100
-Message-Id: <20200114185948.088821198@linutronix.de>
+        id 1irSBa-0005ay-FC; Tue, 14 Jan 2020 20:49:10 +0100
+Message-Id: <20200114185947.890158673@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 19:52:52 +0100
+Date:   Tue, 14 Jan 2020 19:52:50 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Juergen Gross <jgross@suse.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [patch 15/15] lib/vdso: Move VCLOCK_TIMENS to vdso_clock_modes
+Subject: [patch 13/15] lib/vdso: Cleanup clock mode storage leftovers
 References: <20200114185237.273005683@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,136 +55,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the time namespace indicator clock mode to the other ones for
-consistency sake.
+Now that all architectures are converted to use the generic storage the
+helpers and conditionals can be removed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: James Hogan <jhogan@kernel.org>
 ---
- include/linux/clocksource.h |    3 +++
- include/vdso/datapage.h     |    2 --
- kernel/time/namespace.c     |    7 ++++---
- lib/vdso/gettimeofday.c     |   18 ++++++++++--------
- 4 files changed, 17 insertions(+), 13 deletions(-)
+ arch/arm/mm/Kconfig                 |    1 -
+ arch/arm64/Kconfig                  |    1 -
+ arch/mips/Kconfig                   |    1 -
+ arch/x86/Kconfig                    |    1 -
+ include/asm-generic/vdso/vsyscall.h |    7 -------
+ include/linux/clocksource.h         |    4 ++--
+ kernel/time/vsyscall.c              |    5 -----
+ lib/vdso/Kconfig                    |    3 ---
+ lib/vdso/gettimeofday.c             |   17 +++++------------
+ 9 files changed, 7 insertions(+), 33 deletions(-)
 
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -900,7 +900,6 @@ config VDSO
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_VDSO_32
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	help
+ 	  Place in the process address space an ELF shared object
+ 	  providing fast implementations of gettimeofday and
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -108,7 +108,6 @@ config ARM64
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HARDIRQS_SW_RESEND
+ 	select HAVE_PCI
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -35,7 +35,6 @@ config MIPS
+ 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HAVE_ARCH_COMPILER_H
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -123,7 +123,6 @@ config X86
+ 	select GENERIC_STRNLEN_USER
+ 	select GENERIC_TIME_VSYSCALL
+ 	select GENERIC_GETTIMEOFDAY
+-	select GENERIC_VDSO_CLOCK_MODE
+ 	select GENERIC_VDSO_TIME_NS
+ 	select GUP_GET_PTE_LOW_HIGH		if X86_PAE
+ 	select HARDLOCKUP_CHECK_TIMESTAMP	if X86_64
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -18,13 +18,6 @@ static __always_inline bool __arch_updat
+ }
+ #endif /* __arch_update_vdso_data */
+ 
+-#ifndef __arch_get_clock_mode
+-static __always_inline int __arch_get_clock_mode(struct timekeeper *tk)
+-{
+-	return 0;
+-}
+-#endif /* __arch_get_clock_mode */
+-
+ #ifndef __arch_update_vsyscall
+ static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
+ 						   struct timekeeper *tk)
 --- a/include/linux/clocksource.h
 +++ b/include/linux/clocksource.h
-@@ -34,6 +34,9 @@ enum vdso_clock_mode {
+@@ -24,13 +24,13 @@ struct clocksource;
+ struct module;
+ 
+ #if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
+-    defined(CONFIG_GENERIC_VDSO_CLOCK_MODE)
++    defined(CONFIG_GENERIC_GETTIMEOFDAY)
+ #include <asm/clocksource.h>
+ #endif
+ 
+ enum vdso_clock_mode {
+ 	VDSO_CLOCKMODE_NONE,
+-#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
++#ifdef CONFIG_GENERIC_GETTIMEOFDAY
  	VDSO_ARCH_CLOCKMODES,
  #endif
  	VDSO_CLOCKMODE_MAX,
-+
-+	/* Indicator for time namespace VDSO */
-+	VDSO_CLOCKMODE_TIMENS = INT_MAX
- };
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -77,14 +77,9 @@ void update_vsyscall(struct timekeeper *
+ 	/* copy vsyscall data */
+ 	vdso_write_begin(vdata);
  
- /**
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -21,8 +21,6 @@
- #define CS_RAW		1
- #define CS_BASES	(CS_RAW + 1)
+-#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+ 	mode = tk->tkr_mono.clock->vdso_clock_mode;
+ 	vdata[CS_HRES_COARSE].clock_mode	= mode;
+ 	vdata[CS_RAW].clock_mode		= mode;
+-#else
+-	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
+-	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
+-#endif
  
--#define VCLOCK_TIMENS	UINT_MAX
+ 	/* CLOCK_REALTIME also required for time() */
+ 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+--- a/lib/vdso/Kconfig
++++ b/lib/vdso/Kconfig
+@@ -30,7 +30,4 @@ config GENERIC_VDSO_TIME_NS
+ 	  Selected by architectures which support time namespaces in the
+ 	  VDSO
+ 
+-config GENERIC_VDSO_CLOCK_MODE
+-	bool
 -
- /**
-  * struct vdso_timestamp - basetime per clock_id
-  * @sec:	seconds
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -8,6 +8,7 @@
- #include <linux/user_namespace.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
-+#include <linux/clocksource.h>
- #include <linux/seq_file.h>
- #include <linux/proc_ns.h>
- #include <linux/export.h>
-@@ -172,8 +173,8 @@ static struct timens_offset offset_from_
-  * for vdso_data->clock_mode is a non-issue. The task is spin waiting for the
-  * update to finish and for 'seq' to become even anyway.
-  *
-- * Timens page has vdso_data->clock_mode set to VCLOCK_TIMENS which enforces
-- * the time namespace handling path.
-+ * Timens page has vdso_data->clock_mode set to VDSO_CLOCKMODE_TIMENS which
-+ * enforces the time namespace handling path.
-  */
- static void timens_setup_vdso_data(struct vdso_data *vdata,
- 				   struct time_namespace *ns)
-@@ -183,7 +184,7 @@ static void timens_setup_vdso_data(struc
- 	struct timens_offset boottime = offset_from_ts(ns->offsets.boottime);
- 
- 	vdata->seq			= 1;
--	vdata->clock_mode		= VCLOCK_TIMENS;
-+	vdata->clock_mode		= VDSO_CLOCKMODE_TIMENS;
- 	offset[CLOCK_MONOTONIC]		= monotonic;
- 	offset[CLOCK_MONOTONIC_RAW]	= monotonic;
- 	offset[CLOCK_MONOTONIC_COARSE]	= monotonic;
+ endif
 --- a/lib/vdso/gettimeofday.c
 +++ b/lib/vdso/gettimeofday.c
-@@ -116,10 +116,10 @@ static __always_inline int do_hres(const
+@@ -65,16 +65,13 @@ static int do_hres_timens(const struct v
  
  	do {
- 		/*
--		 * Open coded to handle VCLOCK_TIMENS. Time namespace
-+		 * Open coded to handle VDSO_CLOCKMODE_TIMENS. Time namespace
- 		 * enabled tasks have a special VVAR page installed which
- 		 * has vd->seq set to 1 and vd->clock_mode set to
--		 * VCLOCK_TIMENS. For non time namespace affected tasks
-+		 * VDSO_CLOCKMODE_TIMENS. For non time namespace affected tasks
- 		 * this does not affect performance because if vd->seq is
- 		 * odd, i.e. a concurrent update is in progress the extra
- 		 * check for vd->clock_mode is just a few extra
-@@ -128,7 +128,7 @@ static __always_inline int do_hres(const
- 		 */
- 		while (unlikely((seq = READ_ONCE(vd->seq)) & 1)) {
- 			if (IS_ENABLED(CONFIG_TIME_NS) &&
--			    vd->clock_mode == VCLOCK_TIMENS)
-+			    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 				return do_hres_timens(vd, clk, ts);
- 			cpu_relax();
+ 		seq = vdso_read_begin(vd);
+-		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++
++		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
+ 			return -1;
++
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    unlikely((s64)cycles < 0))
+-			return -1;
+-
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+ 		ns >>= vd->shift;
+ 		sec = vdso_ts->sec;
+@@ -137,16 +134,12 @@ static __always_inline int do_hres(const
  		}
-@@ -200,12 +200,12 @@ static __always_inline int do_coarse(con
+ 		smp_rmb();
  
- 	do {
- 		/*
--		 * Open coded to handle VCLOCK_TIMENS. See comment in
-+		 * Open coded to handle VDSO_CLOCK_TIMENS. See comment in
- 		 * do_hres().
- 		 */
- 		while ((seq = READ_ONCE(vd->seq)) & 1) {
- 			if (IS_ENABLED(CONFIG_TIME_NS) &&
--			    vd->clock_mode == VCLOCK_TIMENS)
-+			    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 				return do_coarse_timens(vd, clk, ts);
- 			cpu_relax();
- 		}
-@@ -292,7 +292,7 @@ static __maybe_unused int
- 
- 	if (unlikely(tz != NULL)) {
- 		if (IS_ENABLED(CONFIG_TIME_NS) &&
--		    vd->clock_mode == VCLOCK_TIMENS)
-+		    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 			vd = __arch_get_timens_vdso_data();
- 
- 		tz->tz_minuteswest = vd[CS_HRES_COARSE].tz_minuteswest;
-@@ -308,7 +308,8 @@ static __maybe_unused __kernel_old_time_
- 	const struct vdso_data *vd = __arch_get_vdso_data();
- 	__kernel_old_time_t t;
- 
--	if (IS_ENABLED(CONFIG_TIME_NS) && vd->clock_mode == VCLOCK_TIMENS)
-+	if (IS_ENABLED(CONFIG_TIME_NS) &&
-+	    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 		vd = __arch_get_timens_vdso_data();
- 
- 	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-@@ -333,7 +334,8 @@ int __cvdso_clock_getres_common(clockid_
- 	if (unlikely((u32) clock >= MAX_CLOCKS))
- 		return -1;
- 
--	if (IS_ENABLED(CONFIG_TIME_NS) && vd->clock_mode == VCLOCK_TIMENS)
-+	if (IS_ENABLED(CONFIG_TIME_NS) &&
-+	    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
- 		vd = __arch_get_timens_vdso_data();
- 
- 	hrtimer_res = READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res);
+-		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
++		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
+ 			return -1;
++
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+-		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+-		    unlikely((s64)cycles < 0))
+-			return -1;
+-
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+ 		ns >>= vd->shift;
+ 		sec = vdso_ts->sec;
 
