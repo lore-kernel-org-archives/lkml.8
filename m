@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B544EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2C4207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D7F24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996715;
-	bh=jMxOhpWReMdooUfFA0VgQedI3t3wXCKo7DdVSS9QIQU=;
+	s=default; t=1578996718;
+	bh=YK3CJYZemEg2rQGzQFkQQ62C9aHq0ZvdV48ceFQasXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXdad+OS+xWl3+W3aVPJPDUvTxDxopgcyUY0b1PjHPB77krPt9FKOYJKBwC4kNAI8
-	 VS6UQR3vTZ0seMc+Zq34qNqOiBAjEi/sxPvBcjPJaumwzDzrK++sRBmIBgRZURyIMG
-	 5Yj4FNVaMpB21xYcHvIio8V2FlJ8KAjojwuVLhgY=
+	b=f8WRMdBFNnxzzIkcS/rRLcrFZURiRMpfzvxBI/U3k4GGeT2RQDowY+jaGn98EfSBQ
+	 Y9+zPETTjp2Ti+Bn8E2KTIDVGOtfPYhPMRyQK1itWNDj5SL1WD9q7mwaSjm2z/jeDF
+	 AAeIsR1YyYBykuPmw4jEE0y6qbsgKliHR4xgcMNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgANKLz (ORCPT
+        id S1732847AbgANKL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731893AbgANKLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:53 -0500
+        id S1731893AbgANKLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA9A24679;
-        Tue, 14 Jan 2020 10:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B089824677;
+        Tue, 14 Jan 2020 10:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996712;
-        bh=jMxOhpWReMdooUfFA0VgQedI3t3wXCKo7DdVSS9QIQU=;
+        s=default; t=1578996715;
+        bh=YK3CJYZemEg2rQGzQFkQQ62C9aHq0ZvdV48ceFQasXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Veu0RE5KYNtCDrfNUC33Hbt+rNTE8AIAeee0LSerRyDBD5gS4UphsBXEQdN1FXoRk
-         0XwpT5KkIBN3uHi5wSkvXRQXbD3a2VPqQ1S94KSVYTtB17MOcZ65S6wK4SxIaWNm9E
-         KSAqsz/VSeO6bd44PQDB+jupn/9vjn2jzbHtHs38=
+        b=UPakVc7SLFt2M89OTRw4dq3UHjdTJH3ZsM7V97HfOg8SUPUBvJdHg947U3XYzJhpZ
+         5VNdDxO2iV7vab8xDvFsx3VuwNp9dc7ercXeXDP2c6MTe6bf5VwOWQDUfG0c6lM978
+         WhyzfRlIDMmBozZWrEPHqaEcQkrW2SJ63SizoqFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Roger Whittaker <Roger.Whittaker@suse.com>
-Subject: [PATCH 4.9 29/31] USB: Fix: Dont skip endpoint descriptors with maxpacket=0
-Date:   Tue, 14 Jan 2020 11:02:21 +0100
-Message-Id: <20200114094345.439636433@linuxfoundation.org>
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 08/31] HID: Fix slab-out-of-bounds read in hid_field_extract
+Date:   Tue, 14 Jan 2020 11:02:00 +0100
+Message-Id: <20200114094341.216462553@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -62,61 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 2548288b4fb059b2da9ceada172ef763077e8a59 upstream.
+commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
 
-It turns out that even though endpoints with a maxpacket length of 0
-aren't useful for data transfer, the descriptors do serve other
-purposes.  In particular, skipping them will also skip over other
-class-specific descriptors for classes such as UVC.  This unexpected
-side effect has caused some UVC cameras to stop working.
+The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
+handler.  The bug was caused by a report descriptor which included a
+field with size 12 bits and count 4899, for a total size of 7349
+bytes.
 
-In addition, the USB spec requires that when isochronous endpoint
-descriptors are present in an interface's altsetting 0 (which is true
-on some devices), the maxpacket size _must_ be set to 0.  Warning
-about such things seems like a bad idea.
+The usbhid driver uses at most a single-page 4-KB buffer for reports.
+In the test there wasn't any problem about overflowing the buffer,
+since only one byte was received from the device.  Rather, the bug
+occurred when the HID core tried to extract the data from the report
+fields, which caused it to try reading data beyond the end of the
+allocated buffer.
 
-This patch updates an earlier commit which would log a warning and
-skip these endpoint descriptors.  Now we only log a warning, and we
-don't even do that for isochronous endpoints in altsetting 0.
+This patch fixes the problem by rejecting any report whose total
+length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
+for a possible report index).  In theory a device could have a report
+longer than that, but if there was such a thing we wouldn't handle it
+correctly anyway.
 
-We don't need to worry about preventing endpoints with maxpacket = 0
-from ever being used for data transfers; usb_submit_urb() already
-checks for this.
-
-Reported-and-tested-by: Roger Whittaker <Roger.Whittaker@suse.com>
-Fixes: d482c7bb0541 ("USB: Skip endpoints with 0 maxpacket length")
+Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Link: https://marc.info/?l=linux-usb&m=157790377329882&w=2
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001061040270.1514-100000@iolanthe.rowland.org
+CC: <stable@vger.kernel.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hid/hid-core.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -387,12 +387,16 @@ static int usb_parse_endpoint(struct dev
- 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
- 	}
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -269,6 +269,12 @@ static int hid_add_field(struct hid_pars
+ 	offset = report->size;
+ 	report->size += parser->global.report_size * parser->global.report_count;
  
--	/* Validate the wMaxPacketSize field */
-+	/*
-+	 * Validate the wMaxPacketSize field.
-+	 * Some devices have isochronous endpoints in altsetting 0;
-+	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
-+	 * (see the end of section 5.6.3), so don't warn about them.
-+	 */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
--	if (maxp == 0) {
--		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
- 		    cfgno, inum, asnum, d->bEndpointAddress);
--		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
++	/* Total size check: Allow for possible report index byte */
++	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
++		hid_err(parser->device, "report is too long\n");
++		return -1;
++	}
++
+ 	if (!parser->local.usage_index) /* Ignore padding fields */
+ 		return 0;
  
- 	/* Find the highest legal maxpacket size for this endpoint */
 
 
