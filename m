@@ -2,86 +2,239 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007B3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFEB624658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A6624673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579042120;
+	bh=BTo+94oGmlvczeWFI8XW1gn0MmSS6cijy7Lt787VDxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ip13Y2UU+b84GqcjqQdxCSC5XEfcK5jwFusJ+emeIURztH1Z6BzNvvwkRvc51k07i
+	 Yp3zySfPQXRMUf3PXuI79oEazUxILyF/iXxxZ627v+rxceOQ/YXrw0aZxT+po1nfQe
+	 hnJkGu0SQJQtsPFmcxWwulTKr62qoqgQEOfNfGqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgANWqV (ORCPT
+        id S1728824AbgANWsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:46:21 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42652 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727073AbgANWqU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:46:20 -0500
-Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 83a96a032f232429; Tue, 14 Jan 2020 23:46:18 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Wanpeng Li <kernellwp@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        KarimAllah <karahmed@amazon.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ankur Arora <ankur.a.arora@oracle.com>,
-        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
-        len.brown@intel.com, thomas.lendacky@amd.com
-Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
-Date:   Tue, 14 Jan 2020 23:46:18 +0100
-Message-ID: <1868711.0LYWRWiNKV@kreacher>
-In-Reply-To: <20200113122911.GE2827@hirez.programming.kicks-ass.net>
-References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com> <2579281.NS3xOKR7ft@kreacher> <20200113122911.GE2827@hirez.programming.kicks-ass.net>
+        Tue, 14 Jan 2020 17:48:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbgANWsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:48:39 -0500
+Received: from localhost (unknown [104.132.0.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6746B24658;
+        Tue, 14 Jan 2020 22:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579042118;
+        bh=BTo+94oGmlvczeWFI8XW1gn0MmSS6cijy7Lt787VDxc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1wqhr/zvIyoptz3YKW4ycHTYco8ysZnxCeKZko3DdvqL4vQ67ayBHHvXgHUIax/As
+         KiiQfd+YeZc/P2rFIN6hAERYdTuGSap4Iy7OB44xQSXGQYlrwVFFtGWwJD6zLLepJM
+         5/URMDqqWf93k1OQb7FdhqTf3I471hlX2x/8Bh6Y=
+Date:   Tue, 14 Jan 2020 14:48:37 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
+Message-ID: <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
+ <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
+ <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
+ <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
+ <20200110235214.GA25700@jaegeuk-macbookpro.roam.corp.google.com>
+ <3776cb0b-4b18-ae0d-16a7-a591bec77a5e@huawei.com>
+ <20200111180200.GA36424@jaegeuk-macbookpro.roam.corp.google.com>
+ <72418aa5-7d2a-de26-f0b5-9c839f0c3404@huawei.com>
+ <20200113161120.GA49290@jaegeuk-macbookpro.roam.corp.google.com>
+ <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, January 13, 2020 1:29:11 PM CET Peter Zijlstra wrote:
-> On Mon, Jan 13, 2020 at 12:18:46PM +0100, Rafael J. Wysocki wrote:
-> > On Monday, January 13, 2020 11:43:14 AM CET Peter Zijlstra wrote:
-> 
-> > > Anyone, what will it take to get MPERF/TSC 'working' ?
+On 01/14, Chao Yu wrote:
+> On 2020/1/14 0:11, Jaegeuk Kim wrote:
+> > On 01/13, Chao Yu wrote:
+> >> On 2020/1/12 2:02, Jaegeuk Kim wrote:
+> >>> On 01/11, Chao Yu wrote:
+> >>>> On 2020/1/11 7:52, Jaegeuk Kim wrote:
+> >>>>> On 01/06, Jaegeuk Kim wrote:
+> >>>>>> On 01/06, Chao Yu wrote:
+> >>>>>>> On 2020/1/3 14:50, Chao Yu wrote:
+> >>>>>>>> This works to me. Could you run fsstress tests on compressed root directory?
+> >>>>>>>> It seems still there are some bugs.
+> >>>>>>>
+> >>>>>>> Jaegeuk,
+> >>>>>>>
+> >>>>>>> Did you mean running por_fsstress testcase?
+> >>>>>>>
+> >>>>>>> Now, at least I didn't hit any problem for normal fsstress case.
+> >>>>>>
+> >>>>>> Yup. por_fsstress
+> >>>>>
+> >>>>> Please check https://github.com/jaegeuk/f2fs/commits/g-dev-test.
+> >>>>> I've fixed
+> >>>>> - truncation offset
+> >>>>> - i_compressed_blocks and its lock coverage
+> >>>>> - error handling
+> >>>>> - etc
+> >>>>
+> >>>> I changed as below, and por_fsstress stops panic the system.
+> >>>>
+> >>>> Could you merge all these fixes into original patch?
+> >>>
+> >>> Yup, let m roll up some early patches first once test results become good.
+> >>
+> >> I didn't encounter issue any more, how about por_fsstress test result in your
+> >> enviornment? If there is, please share the call stack with me.
 > > 
-> > The same thing that intel_pstate does.
+> > Sure, will do, once I hit an issue. BTW, I'm hitting another unreacheable nat
+> > entry issue during por_stress without compression. :(
 > 
-> But intel_pstate cheats, it has a FMS listing and possible 'interesting'
-> chips are excluded. For instance, Core2 has APERF/MPERF, but
-> intel_pstate does not support Core2.
+> Did you enable any features during por_fsstress test?
 > 
-> Simlarly, intel_pstate does (obviously) not support AMD chips, even tho
-> those have APERF/MPERF.
+> I only hit below warning during por_fsstress test on image w/o compression.
 > 
-> Although I suppose Core2 doesn't have VMX and is therefore less
-> interesting, but then we'd need to gate the logic with something like:
+> ------------[ cut here ]------------
+> WARNING: CPU: 10 PID: 33483 at fs/fs-writeback.c:1448 __writeback_single_inode+0x28c/0x340
+> Call Trace:
+>  writeback_single_inode+0xad/0x120
+>  sync_inode_metadata+0x3d/0x60
+>  f2fs_sync_inode_meta+0x90/0xe0 [f2fs]
+>  block_operations+0x17c/0x360 [f2fs]
+>  f2fs_write_checkpoint+0x101/0xff0 [f2fs]
+>  f2fs_sync_fs+0xa8/0x130 [f2fs]
+>  f2fs_do_sync_file+0x19c/0x880 [f2fs]
+>  do_fsync+0x38/0x60
+>  __x64_sys_fsync+0x10/0x20
+>  do_syscall_64+0x5f/0x220
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Does gc_mutex patch fix this?
+
 > 
-> 	static_cpu_has(X86_FEATURE_APERFMPERF) &&
-> 	(static_cpu_has(X86_FEATURE_VMX) || static_cpu_has(X86_FEATURE_SVM)
+> Thanks,
 > 
-> > Generally speaking, it shifts the mperf values by a number of positions
-> > depending on the CPU model, but that is 1 except for KNL.
 > > 
-> > See get_target_pstate().
-> 
-> I'm going to go out on a limb and guess that's the same KNL hack as
-> TurboStat has.
-> 
-> Is that really the only known case?
-
-I'm not aware of any other at least as far as Intel chips go.
-
-
-
+> > Thanks,
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> >From bb17d7d77fe0b8a3e3632a7026550800ab9609e9 Mon Sep 17 00:00:00 2001
+> >>>> From: Chao Yu <yuchao0@huawei.com>
+> >>>> Date: Sat, 11 Jan 2020 16:58:20 +0800
+> >>>> Subject: [PATCH] f2fs: compress: fix f2fs_put_rpages_mapping()
+> >>>>
+> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>> ---
+> >>>>  fs/f2fs/compress.c | 30 +++++++++++++++---------------
+> >>>>  1 file changed, 15 insertions(+), 15 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> >>>> index 502cd0ddc2a7..5c6a31d84ce4 100644
+> >>>> --- a/fs/f2fs/compress.c
+> >>>> +++ b/fs/f2fs/compress.c
+> >>>> @@ -74,18 +74,10 @@ static void f2fs_put_compressed_page(struct page *page)
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_drop_rpages(struct compress_ctx *cc,
+> >>>> -		struct address_space *mapping, int len, bool unlock)
+> >>>> +					int len, bool unlock)
+> >>>>  {
+> >>>>  	unsigned int i;
+> >>>>  	for (i = 0; i < len; i++) {
+> >>>> -		if (mapping) {
+> >>>> -			pgoff_t start = start_idx_of_cluster(cc);
+> >>>> -			struct page *page = find_get_page(mapping, start + i);
+> >>>> -
+> >>>> -			put_page(page);
+> >>>> -			put_page(page);
+> >>>> -			cc->rpages[i] = NULL;
+> >>>> -		}
+> >>>>  		if (!cc->rpages[i])
+> >>>>  			continue;
+> >>>>  		if (unlock)
+> >>>> @@ -97,18 +89,25 @@ static void f2fs_drop_rpages(struct compress_ctx *cc,
+> >>>>
+> >>>>  static void f2fs_put_rpages(struct compress_ctx *cc)
+> >>>>  {
+> >>>> -	f2fs_drop_rpages(cc, NULL, cc->cluster_size, false);
+> >>>> +	f2fs_drop_rpages(cc, cc->cluster_size, false);
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_unlock_rpages(struct compress_ctx *cc, int len)
+> >>>>  {
+> >>>> -	f2fs_drop_rpages(cc, NULL, len, true);
+> >>>> +	f2fs_drop_rpages(cc, len, true);
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_put_rpages_mapping(struct compress_ctx *cc,
+> >>>> -				struct address_space *mapping, int len)
+> >>>> +				struct address_space *mapping,
+> >>>> +				pgoff_t start, int len)
+> >>>>  {
+> >>>> -	f2fs_drop_rpages(cc, mapping, len, false);
+> >>>> +	int i;
+> >>>> +	for (i = 0; i < len; i++) {
+> >>>> +		struct page *page = find_get_page(mapping, start + i);
+> >>>> +
+> >>>> +		put_page(page);
+> >>>> +		put_page(page);
+> >>>> +	}
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_put_rpages_wbc(struct compress_ctx *cc,
+> >>>> @@ -680,7 +679,8 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+> >>>>
+> >>>>  		if (!PageUptodate(page)) {
+> >>>>  			f2fs_unlock_rpages(cc, i + 1);
+> >>>> -			f2fs_put_rpages_mapping(cc, mapping, cc->cluster_size);
+> >>>> +			f2fs_put_rpages_mapping(cc, mapping, start_idx,
+> >>>> +					cc->cluster_size);
+> >>>>  			f2fs_destroy_compress_ctx(cc);
+> >>>>  			goto retry;
+> >>>>  		}
+> >>>> @@ -714,7 +714,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+> >>>>  unlock_pages:
+> >>>>  	f2fs_unlock_rpages(cc, i);
+> >>>>  release_pages:
+> >>>> -	f2fs_put_rpages_mapping(cc, mapping, i);
+> >>>> +	f2fs_put_rpages_mapping(cc, mapping, start_idx, i);
+> >>>>  	f2fs_destroy_compress_ctx(cc);
+> >>>>  	return ret;
+> >>>>  }
+> >>>> -- 
+> >>>> 2.18.0.rc1
+> >>>>
+> >>>>
+> >>>>
+> >>>>>
+> >>>>> One another fix in f2fs-tools as well.
+> >>>>> https://github.com/jaegeuk/f2fs-tools
+> >>>>>
+> >>>>>>
+> >>>>>>>
+> >>>>>>> Thanks,
+> >>>>> .
+> >>>>>
+> >>> .
+> >>>
+> > .
+> > 
