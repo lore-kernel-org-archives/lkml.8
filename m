@@ -2,108 +2,92 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7BC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B59AC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A804C207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E165207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTrsvdN8"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ReZikxMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgANGiR (ORCPT
+        id S1728813AbgANGio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:38:17 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:42205 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgANGiR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:38:17 -0500
-Received: by mail-qt1-f169.google.com with SMTP id j5so11517848qtq.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j27ycO1Qzm9iEV8CqIJq72NKE5/Ygqvss6mRjlLhUm4=;
-        b=TTrsvdN8TyCGo5Ytcl+c4OkA3eymLUCmdpMK3rgszmiy3/Ii+n+5zncBnIpXnV12pu
-         o/+wkof8owg8rSqg4wA28O6Vz0Z1dB3CLq/O1JkgLdrSohQ8WVc01M8GTw9gu17kBVbT
-         hr/6xWVnnt5XTUQbCZe8MDphN0KUmfHCEAIcHbFiznr6wkTtP152j8FuRamJ5HeFGf7y
-         wbKZwyaIE9RiGu4vsWfjTiL/XxyeuWPIYKmFvwg3HngJ1HeSY812ZynY9RFgDKXYWmhR
-         KaH9qMMeunbNG3frv9QSjXt61k/9WEh91ko5+lvL/7STHNg8vPt/AwGlVKZ4oyxKt2oJ
-         YQMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j27ycO1Qzm9iEV8CqIJq72NKE5/Ygqvss6mRjlLhUm4=;
-        b=hJeRCifNkYxwzbpfUoDbVrHD1K8KTgmArgvf2WknWrAxGxHPpFBab512fMeQTrjsUA
-         E5B/zyL1JJMndzme3zk2PbE1RPjcSQxj7T6oGJgoygCVdfm3rHawE6DvCt0bDoTz8qGd
-         65X7lGE3k8RIIwmWyA+PgMmCNZAok8KlKa0orCOL7tYEIKOulmv4luyka5/djtMAkbsN
-         cppc2yAOZhVxJkTPUpdoT1ECS7XUcxdZA1++xgv17K9c2Ev0ndeapYZMgH41AuCJ03Dt
-         3Qx9TD3xKb6E+nC6INl7FAP922VvVO6zj6BMcejaf6MLC6yjUVLzN+UCdQL6uy0E/qcZ
-         hp8Q==
-X-Gm-Message-State: APjAAAW0guEyuY86OnEX1UYtJOPOoVo4oAqBvWT6X374LVSrME3ucgpJ
-        t5DoWf9AdzaDdpI+wcjis9dqDh/Uv9WK7N1P9FLBxcBCdI0=
-X-Google-Smtp-Source: APXvYqywyrhyQlNSSAj//8mo08SVs7dFbe6uys8wVkYdCxpIOjc6M5fxoWTQts0Wqh0VLoP+pQp6rkOV+807JIijbvc=
-X-Received: by 2002:aed:2465:: with SMTP id s34mr2292049qtc.158.1578983896143;
- Mon, 13 Jan 2020 22:38:16 -0800 (PST)
+        Tue, 14 Jan 2020 01:38:44 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39479 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728682AbgANGin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:38:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47xglP3VjHz9sP6;
+        Tue, 14 Jan 2020 17:38:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1578983921;
+        bh=8Xd/62pEsfJImxqU2Q8fAGyIgUR8Q6dVQGOz7mkkj+0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ReZikxMRCgXPcN9LdjIiMWt82hBEotcBTQOdAbmt2qPC9Lrkg/f+Z+D/cEKkP6Amk
+         UFwMxtvq0GIdH4xoE44foW8horARE0i044FMZuEqBONDLczM/PNke2/o7+5J5mj0rt
+         JXd6kA5Jx4bwzQkdrwzgRBMYx0jT7uTcwlCTyH4JNJCtz1Dhd+XsUIN/2xRYrfD+UK
+         kEEZVwRPwS9j1efhcLoFCbj0njF0XumxKFnoZYCVNGS9ZOELAb44iGefQrK84QqoU+
+         nWsJRdDlQVzU8AHUz+bnysKK/cx6Gc8RiPwDiADwjdbW785iRb90jDv6PBztwR7GeB
+         Wz8ZmW5+MOwgA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        YueHaibing <yuehaibing@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        paulus@samba.org, benh@kernel.crashing.org
+Subject: Re: [PATCH -next] powerpc/pmac/smp: Fix old-style declaration
+In-Reply-To: <20191226222202.Horde.0xaecj7x1FoNwm4fHxlH0Q2@messagerie.si.c-s.fr>
+References: <20191226222202.Horde.0xaecj7x1FoNwm4fHxlH0Q2@messagerie.si.c-s.fr>
+Date:   Tue, 14 Jan 2020 16:38:44 +1000
+Message-ID: <87k15ua6ff.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <8645e64d639e9213bf68d0fdbee0c297.squirrel@imail.cse.ust.hk>
-In-Reply-To: <8645e64d639e9213bf68d0fdbee0c297.squirrel@imail.cse.ust.hk>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 14 Jan 2020 07:38:05 +0100
-Message-ID: <CACT4Y+a4LPFvu6Dx6PoS-5efmSqKCuXQTK+F9SP+X8U8VdeOFQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in screen_glyph_unicode
-To:     wchenbt@cse.ust.hk
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> YueHaibing <yuehaibing@huawei.com> a =C3=A9crit=C2=A0:
+>
+>> There expect the 'static' keyword to come first in a declaration
+>>
+>> arch/powerpc/platforms/powermac/smp.c:664:1: warning: static is not=20=20
+>> at beginning of declaration [-Wold-style-declaration]
+>> arch/powerpc/platforms/powermac/smp.c:665:1: warning: static is not=20=20
+>> at beginning of declaration [-Wold-style-declaration]
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  arch/powerpc/platforms/powermac/smp.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powermac/smp.c=20=20
+>> b/arch/powerpc/platforms/powermac/smp.c
+>> index f95fbde..7233b85 100644
+>> --- a/arch/powerpc/platforms/powermac/smp.c
+>> +++ b/arch/powerpc/platforms/powermac/smp.c
+>> @@ -661,8 +661,8 @@ static void smp_core99_gpio_tb_freeze(int freeze)
+>>  #endif /* !CONFIG_PPC64 */
+>>
+>>  /* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
+>> -volatile static long int core99_l2_cache;
+>> -volatile static long int core99_l3_cache;
+>> +static volatile long int core99_l2_cache;
+>> +static volatile long int core99_l3_cache;
+>
+> Is it correct to declare it as volatile ?
 
-You should add relevant kernel maintainers to CC list when reporting
-kernel bugs, nobody is generally reading LKML mailing list. Please
-see:
-https://github.com/google/syzkaller/blob/master/docs/linux/reporting_kernel=
-_bugs.md
-or any other kernel bug reporting guide.
+I don't see any reason why it needs to be volatile, so I think we can
+just remove that?
 
-
-
-On Tue, Jan 14, 2020 at 7:33 AM <wchenbt@cse.ust.hk> wrote:
->
-> Dear Linux kernel developers,
->
-> I found the crash =E2=80=9CKASAN: use-after-free Read in screen_glyph_uni=
-code=E2=80=9D
-> when running syzkaller, hope it=E2=80=99s unknown:
->
-> Linux version: 1c163f4c7b3f Linux 5.0
-> Branch: KASAN: use-after-free in screen_glyph drivers/tty/vt/vt.c:4566
->
-> Please get rhe C repo and crash log generated by syzkaller from google
-> drive https://drive.google.com/drive/folders/1zolqAlgnweSbr2-OzFFH2Neot4R=
-GMBiV?usp=3Dsharing,
-> as well as the .config I used for linux kernel from the attachment.
-> Thanks.
->
-> Thanks,
-> Wei
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller/8645e64d639e9213bf68d0fdbee0c297.squirrel%40imail.cse.ust.hk.
+cheers
