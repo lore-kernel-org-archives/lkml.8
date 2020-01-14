@@ -2,105 +2,85 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41F3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D53C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C2D24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF14C24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:13:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S74dWuBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgANWLd (ORCPT
+        id S1728774AbgANWNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:11:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANWLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:11:33 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EECB24656;
-        Tue, 14 Jan 2020 22:11:32 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 17:11:31 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 26/26] tracing: trigger: Replace unneeded
- RCU-list traversals
-Message-ID: <20200114171131.04eff860@gandalf.local.home>
-In-Reply-To: <20200114210339.492724604@goodmis.org>
-References: <20200114210316.450821675@goodmis.org>
-        <20200114210339.492724604@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Jan 2020 17:13:42 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44726 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANWNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:13:42 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u71so16148461lje.11;
+        Tue, 14 Jan 2020 14:13:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cm+CoTM0+jhOXDNc30YUOsZAT6IC0O3DFYyTQEFb64Y=;
+        b=S74dWuBqv3AbnCdv3dgeQq/lxdwYTrhinVamWcvPdDyekZU35ibKEMhjrC5G+zJU/a
+         HLvEGMR5spesjlGfGtswHQrvcUedM/E0QwkgCcGHEz5tdVmcQvuChLd+2a1uB3ZFZaJW
+         wu9dVz6659OdbEOu7cFkes2SeGnaufGc476swME+HHtu5yMszvN/se0TdjWTLtbIRXxo
+         HgvgZchckDeg53Slmdr+KNMjHzu0z9iJOeSn5l8f/c/UjvfHf6G574NbUIwE/Yqj2KTV
+         msXk+SbQGsqdU9RD04fTTdIPguj48HAMKM7EtqeVav72zAg3A+kizc66ghVrGcwRJAu9
+         OXVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cm+CoTM0+jhOXDNc30YUOsZAT6IC0O3DFYyTQEFb64Y=;
+        b=CbLwrewlPjOlb2pFnaaut1c0Fei9ZTknlOpJaWbCa1483nakmiKSvacky5Y3ZofHDv
+         jYWmPpSaZ1VwdIoFnV1DjX+m8G7LHS0CbgNZ1S7vNvf8B7QqfIGmPTidBO+yu0Rc3u8K
+         n1xCZj4tGcak8dYa2zQYgw0v7pnXH2im/+qUa/eNWA3RE92C+KF2V4gUuwDwL5m7Iytd
+         SzljK98K0hrWBqAItM7xKpMuQSUQwqdaFTbhF1TBwxdsSFa/xiU2fIJFwa6KMG9Ihwj7
+         oYGGL1D++f0Dp4QO9sR29NmLFAUvPch5CT/UGYE4d7IGWuP4LVdFAiXa7BazU3xNXhfa
+         JAag==
+X-Gm-Message-State: APjAAAWifMSxqPSt+mhiX6iFHaXU1bq1DP5ehHrXcnP6McA3liUhiLhp
+        j1BkB6i2UkuthW22CWGctx1+PzgUZ+NSupNrXCQ=
+X-Google-Smtp-Source: APXvYqwN82PPY2p/a4NKRmOqyvi3rbYFvy/BLp5c2pkHMed/zTaGeP3v+iuRDWViPLXh0eZZNQcY0U7v9CZ+YZhZJXs=
+X-Received: by 2002:a2e:8197:: with SMTP id e23mr15595800ljg.250.1579040019756;
+ Tue, 14 Jan 2020 14:13:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com> <1579038243-28550-2-git-send-email-han.xu@nxp.com>
+In-Reply-To: <1579038243-28550-2-git-send-email-han.xu@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 14 Jan 2020 19:13:26 -0300
+Message-ID: <CAOMZO5D0LoE8-kJbJ+7AEHJ9PODmCD5Ttv3MUSk7=feWPrdN1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dmaengine: mxs: change the way to register probe function
+To:     Han Xu <han.xu@nxp.com>
+Cc:     Vinod <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Esben Haabendal <esben@geanix.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 16:03:42 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Jan 14, 2020 at 6:48 PM Han Xu <han.xu@nxp.com> wrote:
+>
+> change the way to register probe function for mxs-dma
 
-> From: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> With CONFIG_PROVE_RCU_LIST, I had many suspicious RCU warnings
-> when I ran ftracetest trigger testcases.
-> 
-> -----
->   # dmesg -c > /dev/null
->   # ./ftracetest test.d/trigger
->   ...
->   # dmesg | grep "RCU-list traversed" | cut -f 2 -d ] | cut -f 2 -d " "
->   kernel/trace/trace_events_hist.c:6070
->   kernel/trace/trace_events_hist.c:1760
->   kernel/trace/trace_events_hist.c:5911
->   kernel/trace/trace_events_trigger.c:504
->   kernel/trace/trace_events_hist.c:1810
->   kernel/trace/trace_events_hist.c:3158
->   kernel/trace/trace_events_hist.c:3105
->   kernel/trace/trace_events_hist.c:5518
->   kernel/trace/trace_events_hist.c:5998
->   kernel/trace/trace_events_hist.c:6019
->   kernel/trace/trace_events_hist.c:6044
->   kernel/trace/trace_events_trigger.c:1500
->   kernel/trace/trace_events_trigger.c:1540
->   kernel/trace/trace_events_trigger.c:539
->   kernel/trace/trace_events_trigger.c:584
-> -----
-> 
-> I investigated those warnings and found that the RCU-list
-> traversals in event trigger and hist didn't need to use
-> RCU version because those were called only under event_mutex.
-> 
-> I also checked other RCU-list traversals related to event
-> trigger list, and found that most of them were called from
-> event_hist_trigger_func() or hist_unregister_trigger() or
-> register/unregister functions except for a few cases.
-> 
-> Replace these unneeded RCU-list traversals with normal list
-> traversal macro and lockdep_assert_held() to check the
-> event_mutex is held.
-> 
-> Link: http://lkml.kernel.org/r/157680910305.11685.15110237954275915782.stgit@devnote2
-> 
-> Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_events_hist.c    | 41 +++++++++++++++++++++--------
->  kernel/trace/trace_events_trigger.c | 20 ++++++++++----
->  2 files changed, 45 insertions(+), 16 deletions(-)
-> 
-
-
-I think I may add this to my urgent branch and mark this for stable.
-
--- Steve
+Please provide the reasoning for such change in the commit log.
