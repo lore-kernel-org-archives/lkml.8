@@ -2,59 +2,114 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3969C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB5EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CFC24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19999222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqIDTum/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgANTDt (ORCPT
+        id S1728797AbgANTGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:03:49 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46612 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANTDt (ORCPT
+        Tue, 14 Jan 2020 14:06:25 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43562 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANTGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:03:49 -0500
-Received: from localhost (unknown [63.64.162.234])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8F93F1523E3C0;
-        Tue, 14 Jan 2020 11:03:48 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:03:48 -0800 (PST)
-Message-Id: <20200114.110348.814176165638046449.davem@davemloft.net>
-To:     geert+renesas@glider.be
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        p.zabel@pengutronix.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mdio_bus: Simplify reset handling and extend to non-DT
- systems
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200113130529.15372-1-geert+renesas@glider.be>
-References: <20200113130529.15372-1-geert+renesas@glider.be>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jan 2020 11:03:48 -0800 (PST)
+        Tue, 14 Jan 2020 14:06:24 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so6815728pga.10;
+        Tue, 14 Jan 2020 11:06:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+hPubKNXoscOquUFuUg8wCoFmK2UJGRL5czKa1SRJrg=;
+        b=pqIDTum/4xK6Gk4dpSXs6uOcELVtrOjobja0bYjtq+TW0v0ptivJ3PzVORm7lMjVl6
+         cwxPQlxjqgwWZdWyDfQDiAN+NbOYAq0r23n59uxmbTJsy1uezEWh6LpwwRg5vWLFjhHr
+         1GCadP27R7lpu2NAfVuTA67uqCFfUY+cFp8IPEPrEOLQS4PA4mbd3x20+HNP35r9GT+H
+         vqijWp83vVzIcfYCWdvQFKn47/tbHOs3BZEy2mBND12QS1sJcNyYb7Kuc8LZXBDxxrpz
+         n4sW/TxNr2Jxm3Zy8TA++Dn9MzmUWtfdUAlchgD3GdPLQMhnzpD8Of4de4iQSE5uuBY2
+         ALzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+hPubKNXoscOquUFuUg8wCoFmK2UJGRL5czKa1SRJrg=;
+        b=MlqXtolzu9xhnYN36vsKieyOVV1/6RyKhBDQjw0uf87xogYYGKCvaNP5Pmocc2zBKK
+         A7EWUnkesWYdVK76HN8afvBwWnYHo1becUX9nsAZ8HuBZP8oXMJ6dmtRJlCBl/zgeu2G
+         7x12pfri1PnJAGnFd0mTo+NOpcktPU3ct1ivPo2sgZq3PLUUdvRz/FAo9zU7zDtmC0vC
+         nDTimKXtVukioz0DBin1T7ny1ZFIoLypcQCDkTf/6fdgxFE1EM6CU70nymOlE+tph6h/
+         EF8l1cdLC43ScZCW7oLDndV/13zjwtuwNyY/8wl6m4moN2UZ1aq26QK5j+y/KkUIqMRI
+         7wkw==
+X-Gm-Message-State: APjAAAX0JnAAkbIUe8V7mKQ1Rtvms20Yv1UJPXTYDwtsyX6lJpDxuniT
+        XMehZ1aQSWsojS6GMlTYfUq6RlwO
+X-Google-Smtp-Source: APXvYqy+K/IGJGx+SwbNg1zLTYiArYpJ71V2j5GV9N0ZwFn68QJAk7EFMvUS3kFclpBAcrTbht+djw==
+X-Received: by 2002:a62:5343:: with SMTP id h64mr26058168pfb.171.1579028783171;
+        Tue, 14 Jan 2020 11:06:23 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a195sm19284528pfa.120.2020.01.14.11.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 11:06:22 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
+        DRIVER), Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH v3 0/6] brcmstb_thermal updates for new processes
+Date:   Tue, 14 Jan 2020 11:06:01 -0800
+Message-Id: <20200114190607.29339-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Mon, 13 Jan 2020 14:05:29 +0100
+Hi,
 
-> Convert mdiobus_register_reset() from open-coded DT-only optional reset
-> handling to reset_control_get_optional_exclusive().  This not only
-> simplifies the code, but also adds support for lookup-based resets on
-> non-DT systems.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This patch series contains a bug fix for the existing platforms and then
+paves the way for adding support for Broadcom STB's latest chips in 16nm
+processes, and finally updates the driver with pecularities introduced
+with the 16nm, like the lack of interrupt notification from the HW.
 
-Applied to net-next, thanks.
+Please queue up the first patch for -stable if you want, thanks!
+
+Changes in v3:
+- do not change AVS_TMON_TEMP_MAX with AVS_TMON_TEMP_MASK
+- use of of_device_get_match_data
+- maintain function pointers back to of_device_id::data
+
+Changes in v2:
+
+- kept defined constants in patch #1 and keep using them for subsequent
+  patches
+- add Reviewed-by tags to patches #3 through #6
+- rebase against v5.5.-rc1
+
+Florian Fainelli (6):
+  thermal: brcmstb_thermal: Do not use DT coefficients
+  thermal: brcmstb_thermal: Prepare to support a different process
+  dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+  thermal: brcmstb_thermal: Add 16nm process thermal parameters
+  thermal: brcmstb_thermal: Restructure interrupt registration
+  thermal: brcmstb_thermal: Register different ops per process
+
+ .../bindings/thermal/brcm,avs-tmon.txt        |  8 +-
+ drivers/thermal/broadcom/brcmstb_thermal.c    | 96 +++++++++++--------
+ 2 files changed, 64 insertions(+), 40 deletions(-)
+
+-- 
+2.17.1
+
