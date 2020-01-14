@@ -2,138 +2,68 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E02C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEF32467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6964024680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579012576;
+	bh=T5lOeOIfe5v4wDnzEMxF9gplXVnotDMCTQTvcv3UkIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zs/JAJvPFligMdLm6XVlEYSESybMLYXDpqfCbghYyv30FfL9F7eimf0qRBX1XfIGu
+	 8Q2bkPntMJCQOT1eIfnBLym3cm+HeBqakVy1HkwiYSNb5BE+7bd/Kz8vHTyE/T+PZP
+	 fd7Kakm8fJO1lfDDPpZKLR60t8KnumiIaVGNeLNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgANOdZ (ORCPT
+        id S1728879AbgANOgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:33:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49890 "EHLO mx2.suse.de"
+        Tue, 14 Jan 2020 09:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgANOdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:33:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1DC9CBAFA;
-        Tue, 14 Jan 2020 14:33:22 +0000 (UTC)
-From:   Richard Palethorpe <rpalethorpe@suse.com>
-To:     linux-can@vger.kernel.org
-Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
-        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tyler Hall <tylerwhall@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller@googlegroups.com
-Subject: [PATCH] can, slip: Protect tty->disc_data access with RCU
-Date:   Tue, 14 Jan 2020 15:32:44 +0100
-Message-Id: <20200114143244.20739-1-rpalethorpe@suse.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <0000000000002b81b70590a83ad7@google.com>
-References: <0000000000002b81b70590a83ad7@google.com>
+        id S1726115AbgANOgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:36:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F39D2467D;
+        Tue, 14 Jan 2020 14:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579012574;
+        bh=T5lOeOIfe5v4wDnzEMxF9gplXVnotDMCTQTvcv3UkIw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GXz2epT6wC7ZsyOZs/ugBW4T0VsMsBCOQoQFDnOoHjnlOUpdoQC+p7wjiofWz/J6B
+         bctwBbnsOHzjLSLLq/U1P+dO5rRZDZXnbrTVX8X4+ZtBY8KrkCISv10Acjq66tbgb3
+         lEq9yDFikViGKy/kc22oJA0G+0w4qpnd9UJdlQR8=
+Date:   Tue, 14 Jan 2020 15:36:11 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] Consolidate dummy_con initialization
+Message-ID: <20200114143611.GA1838274@kroah.com>
+References: <20191218211231.GA918900@kroah.com>
+ <20191218214506.49252-1-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218214506.49252-1-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-write_wakeup can happen in parallel with close where tty->disc_data is set
-to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
-is an atomic operation. Otherwise accessing tty->disc_data could result in
-a NULL pointer deref or access to some random location.
+On Wed, Dec 18, 2019 at 04:44:42PM -0500, Arvind Sankar wrote:
+> This series moves initialization of conswitchp to dummy_con into vt.c,
+> and configures DUMMY_CONSOLE unconditionally when CONFIG_VT is enabled.
+> 
+> The patches after the first two remove conswitchp = &dummy_con; from
+> the various architecture setup functions where it currently appears. If
+> the first two look ok, I was thinking of sending the others
+> individually.
 
-This problem was found by Syzkaller on slcan, but the same issue appears to
-exist in slip where slcan was copied from.
+Looks good, I've queued them all up now, thanks!
 
-A fix which didn't use RCU was posted by Hillf Danton.
-
-Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
-Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
-Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Tyler Hall <tylerwhall@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: syzkaller@googlegroups.com
----
-
-Note, that mabye RCU should also applied to receive_buf as that also happens
-in interrupt context. So if the pointer assignment is split by the compiler
-then sl may point somewhere unexpected?
-
- drivers/net/can/slcan.c | 11 +++++++++--
- drivers/net/slip/slip.c | 11 +++++++++--
- 2 files changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 2e57122f02fb..ee029aae69d4 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -344,7 +344,14 @@ static void slcan_transmit(struct work_struct *work)
-  */
- static void slcan_write_wakeup(struct tty_struct *tty)
- {
--	struct slcan *sl = tty->disc_data;
-+	struct slcan *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	rcu_read_unlock();
-+
-+	if (!sl)
-+		return;
- 
- 	schedule_work(&sl->tx_work);
- }
-@@ -644,7 +651,7 @@ static void slcan_close(struct tty_struct *tty)
- 		return;
- 
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
- 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index 2a91c192659f..dfed9f0b8646 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -452,7 +452,14 @@ static void slip_transmit(struct work_struct *work)
-  */
- static void slip_write_wakeup(struct tty_struct *tty)
- {
--	struct slip *sl = tty->disc_data;
-+	struct slip *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	rcu_read_unlock();
-+
-+	if (!sl)
-+		return;
- 
- 	schedule_work(&sl->tx_work);
- }
-@@ -882,7 +889,7 @@ static void slip_close(struct tty_struct *tty)
- 		return;
- 
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
- 
--- 
-2.24.0
-
+greg k-h
