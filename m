@@ -2,108 +2,65 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256D7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1453FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0521C207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71C8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgANIm0 (ORCPT
+        id S1728909AbgANImd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:42:26 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:45133 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANImZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:42:25 -0500
-Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5G1V-1jpXMb0r8X-011DMH; Tue, 14 Jan 2020 09:42:24 +0100
-Received: by mail-qv1-f47.google.com with SMTP id dp13so5288694qvb.7;
-        Tue, 14 Jan 2020 00:42:23 -0800 (PST)
-X-Gm-Message-State: APjAAAWlw9t3c2G9F62XI6aneaxBdeKfPLh9jknZL4cVsYbgtg2xEHKB
-        rjAK/PwouSN3VMVUDWLqKSV+1wnQaJNUfzhvKcU=
-X-Google-Smtp-Source: APXvYqzHlEAuow8J7sfEaKx0vXugFGGudqVBX74JnJkLjytKVNtvs5tT0fUcCXq4SrHOE5kJOWfUX/v75TtgCYRAp54=
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr15837659qvo.222.1578991342846;
- Tue, 14 Jan 2020 00:42:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20200110134337.1752000-1-arnd@arndb.de> <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
-In-Reply-To: <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jan 2020 09:42:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2YJuUvZnK4DEYoCrj=DZwvXKnN1Y2bLkAKd7gp1us3eQ@mail.gmail.com>
-Message-ID: <CAK8P3a2YJuUvZnK4DEYoCrj=DZwvXKnN1Y2bLkAKd7gp1us3eQ@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] kunit: move binary assertion out of line
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9547x2bVt3blggZ1UxBmuWeDc52ZrKwp9cZzwP3O+Z0QxT2vzbn
- p2YrZZllygUR5/yhEMbPoqz1Iv7dLM1SiMQPKZh/nXEk3gYzvEen2UqczXxNJKcOhbY8+cu
- PTNWMURzNUctheXmbrcQoJ0WzEMzpmNpkC+ERLgRCFSw0LBY9kj5qwWQs6Ps4MjYDTMljIH
- VCM7uy+67v6q/UhZQyyVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bHcbYbgWn2g=:McvsmWOR1P9y2FOt5ylA3t
- aPn2KuyOFoaeODWp/Xo3jzzX/04V92SO1itz1WaVpSajr+WVf1R8hc/qBGnfiM3Fexb0iipdH
- 1CkwsZRSC5VZHH3j8mG2gx00UTGYnUKjAHWjiWwcAYyY5sPcpRGIegwrDxUotVH+zZh3Vh+qT
- 0nGrqYzwdqQ0LeCqcNcg6Sz4zSajTffSt1SVSA+TAnPg3H4R80pLisDS6evjqOtS5kDXHfMtr
- FVLF/HRCL/3Xrf/qhj9tsxG9P5fuA/BIiBrTUZWyaRxpLGuZ64i6mhJv/BEHMlpB62EetxB9Z
- 01iR0NHzZ/VXCE3SfJKJUQAOEpPeOEKw/g6pcxicG/ugf6bmzIJt65XtLCMIUehy7q+DUQx9l
- luRl9m7i5yebqtDpb4WXGPVj3psACHEvviJ6tKAcb7KhXL584dQ6Gv8gp2xQOqyp5Vnwq0eHn
- idc36T6fRKV+0JBot6DasVUxmkmw831Ri3/NY1lSwr/GWD0rV/E4WPue7bJt/LwgSNtQQOiEb
- aFD9iCP06P8J4BuwrNnXfAD75YAOd+nEi4xo999HeqS8i8xUuglGfw5i0x84oiOfMR/wweAYE
- 12MzcBiBni5EBjGWVC12oyFumj7be9a3FRj3JXs7SHYQkqyijmbvAnlxVtHbg06emzKAUnkML
- b5EF2udYSCwYj23WYCkYizyh092x9o/WiOJ9RI6n1L+ev4jfmctTogTZ50Ff2FzQ6wFlU/jrs
- fUBdsNiNCwMtBhIRqt/zsJatUZahBJ2IQ+vOi7n2Twq8wxS8TidO2vPpieTr5AY8e234whtS+
- AuIyfLKkYQabVlHWQz5lvluV+ZVEIbLviOHf2itXIjFGeF7qp4EYw+bvJaEp/vdmP8Fycaf7n
- bf7s9rQ0wfGpLZITPuuw==
+        Tue, 14 Jan 2020 03:42:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34582 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbgANImc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:42:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E7998AF65;
+        Tue, 14 Jan 2020 08:42:30 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 09:42:30 +0100
+Message-ID: <s5hmuaqfmyx.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: usb-audio: fix sync-ep altsetting sanity check
+In-Reply-To: <20200114083953.1106-1-johan@kernel.org>
+References: <20200114083953.1106-1-johan@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 3:13 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Fri, Jan 10, 2020 at 5:43 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > In combination with the structleak gcc plugin, kunit can lead to excessive
-> > stack usage when each assertion adds another structure to the stack from
-> > of the calling function:
-> >
-> > base/test/property-entry-test.c:99:1: error: the frame size of 3032 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-> >
-> > As most assertions are binary, change those over to a direct function
-> > call that does not have this problem.  This can probably be improved
-> > further, I just went for a straightforward conversion, but a function
-> > call with 12 fixed arguments plus varargs it not great either.
->
-> Yeah, I am not exactly excited by maintaining such a set of functions.
+On Tue, 14 Jan 2020 09:39:53 +0100,
+Johan Hovold wrote:
+> 
+> The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
+> checking for there to be at least one altsetting but then went on to
+> access the second one, which may not exist.
+> 
+> This could lead to random slab data being used to initialise the sync
+> endpoint in snd_usb_add_endpoint().
+> 
+> Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
+> Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
+> Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
+> Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
+> Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
+> Cc: stable <stable@vger.kernel.org>     # 3.5
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-Ok.
+Thanks, applied now.
 
-> I don't think anyone wants to go with the heap allocation route.
->
-> Along the lines of the union/single copy idea[1]. What if we just put
-> a union of all the assertion types in the kunit struct? One is already
-> allocated for every test case and we only need one assertion object
-> for each test case at a time, so I imagine that sould work.
 
-Ah right, that should work fine, and may also lead to better object
-code if the compiler can avoid repeated assignments of the same
-values, e.g. ".file = __FILE__".
-
-          Arnd
+Takashi
