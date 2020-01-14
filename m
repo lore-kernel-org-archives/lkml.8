@@ -2,152 +2,119 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06BCC33CAD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0FDC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908DC20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9885020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgANGeM (ORCPT
+        id S1728708AbgANGfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:34:12 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55028 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgANGeL (ORCPT
+        Tue, 14 Jan 2020 01:35:40 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:56638 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726279AbgANGfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:34:11 -0500
-Received: by mail-io1-f72.google.com with SMTP id u6so7382501iog.21
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:34:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=aUpNlfAfsF8Uq95DOJXq3NqDwhlK0hlzVyA6UdfyE2g=;
-        b=YgbmeWK/LtuEUehZL0VX64bKn3Flizku2WKBKSp5/RnrRd6g0UqvA4daNyTfDetL3o
-         wtXnv7iLM4HD4U6zHxZWJdUw4vyaw3d95SOSuLzGoWq7QPjTTT5NjZ1FpGGgnEbp+s2H
-         kwECpbAh95diS1NqJQHCOJltHF3d6OldWLM72+21WuSbPpJBcPV6aFEWgR/9akn7h6Z4
-         lLN8Qf6tLKzSLTZ8ArsCC+zs9u5AaSbCDZovcXfgwKmN4IwtDo8cwWHwgLX0mJOAI4Y6
-         KMV6r5bPD+/yOjOVG+j/JPa2r6CuhNn9jDKvvyzBbb3UqoMbMw9KKHlJVHcqMAXqd+j+
-         MKKA==
-X-Gm-Message-State: APjAAAWkGv+OtpbfZx47wJFsGuj+Ppjvs4GtPtvpb0O1vx7MhvMjAaat
-        N33Vlz5PtZ5oMZERXECeMP2rmsS4b+Eb3gpW1+0IHQPI6c2j
-X-Google-Smtp-Source: APXvYqxqLG867GWQ2bc8GhQpnCHohKbJS9wa0VKjDStD0xUcyGa/AS2dAtJXr5gFskSYJhvgukGgOgzdznBcKKD8xcI86hCZLlH4
+        Tue, 14 Jan 2020 01:35:38 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TnhU9aL_1578983727;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnhU9aL_1578983727)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 Jan 2020 14:35:28 +0800
+Subject: Re: [PATCH v7 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, yang.shi@linux.alibaba.com,
+        willy@infradead.org, shakeelb@google.com, hannes@cmpxchg.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <677cb490-35a4-4186-0935-6d71305a3a3e@linux.alibaba.com>
+Date:   Tue, 14 Jan 2020 14:33:58 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:7086:: with SMTP id f128mr17035393jac.12.1578983650326;
- Mon, 13 Jan 2020 22:34:10 -0800 (PST)
-Date:   Mon, 13 Jan 2020 22:34:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009586b2059c13c7e1@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Write in i801_isr
-From:   syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
-To:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    040a3c33 Merge tag 'iommu-fixes-v5.5-rc5' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16e675e1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=ed71512d469895b5b34e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
-
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr_byte_done  
-drivers/i2c/busses/i2c-i801.c:592 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr  
-drivers/i2c/busses/i2c-i801.c:663 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr+0xbfd/0xcf0  
-drivers/i2c/busses/i2c-i801.c:644
-Write of size 1 at addr ffffc90002c07bc9 by task syz-executor.3/9465
-
-CPU: 3 PID: 9465 Comm: syz-executor.3 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
-rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_store1_noabort+0x17/0x20 mm/kasan/generic_report.c:137
-  i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:592 [inline]
-  i801_isr drivers/i2c/busses/i2c-i801.c:663 [inline]
-  i801_isr+0xbfd/0xcf0 drivers/i2c/busses/i2c-i801.c:644
-  __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
-  handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
-  handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
-  handle_fasteoi_irq+0x281/0x670 kernel/irq/chip.c:725
-  generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
-  do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
-  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
-  </IRQ>
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0xd/0x20 kernel/kcov.c:274
-Code: d6 0f b7 f7 bf 03 00 00 00 48 89 e5 48 8b 4d 08 e8 d8 fe ff ff 5d c3  
-66 0f 1f 44 00 00 55 89 f2 89 fe bf 05 00 00 00 48 89 e5 <48> 8b 4d 08 e8  
-ba fe ff ff 5d c3 0f 1f 84 00 00 00 00 00 55 48 89
-RSP: 0018:ffffc90001d4f860 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdc
-RAX: ffff88805df60100 RBX: 000000000000000c RCX: 000000000000000c
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: ffffc90001d4f860 R08: ffff88805df60100 R09: fffff520003a9f23
-R10: fffff520003a9f22 R11: 0000000000000000 R12: ffff88802057db00
-R13: 0000000000000030 R14: 00000000000002e6 R15: 0000000000000000
-  tomoyo_domain_quota_is_ok+0x312/0x540 security/tomoyo/util.c:1071
-  tomoyo_supervisor+0x2e8/0xef0 security/tomoyo/common.c:2089
-  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
-  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
-  tomoyo_path_permission+0x263/0x360 security/tomoyo/file.c:573
-  tomoyo_path_perm+0x318/0x430 security/tomoyo/file.c:838
-  tomoyo_path_unlink+0x9b/0xe0 security/tomoyo/tomoyo.c:156
-  security_path_unlink+0xfa/0x160 security/security.c:1044
-  do_unlinkat+0x3b7/0x6d0 fs/namei.c:4064
-  __do_sys_unlink fs/namei.c:4114 [inline]
-  __se_sys_unlink fs/namei.c:4112 [inline]
-  __x64_sys_unlink+0x42/0x50 fs/namei.c:4112
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45ad27
-Code: 00 66 90 b8 58 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 5d b4 fb ff c3  
-66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 57 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffebdeee5d8 EFLAGS: 00000206 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 00007ffebdeee6a0 RCX: 000000000045ad27
-RDX: 00007ffebdeee610 RSI: 00007ffebdeee610 RDI: 00007ffebdeee6a0
-RBP: 0000000000000000 R08: 000000000137b983 R09: 0000000000000011
-R10: ffffffffffffffff R11: 0000000000000206 R12: 00007ffebdeef730
-R13: 000000000137b940 R14: 0000000000390ffe R15: 00000000ffffffff
 
 
-Memory state around the buggy address:
-  ffffc90002c07a80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90002c07b00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> ffffc90002c07b80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                                               ^
-  ffffc90002c07c00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90002c07c80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-==================================================================
+ÔÚ 2020/1/13 ÏÂÎç11:41, Daniel Jordan Ð´µÀ:
+> Hi Alex,
+> 
+> On Wed, Dec 25, 2019 at 05:04:19PM +0800, Alex Shi wrote:
+>> @@ -900,6 +904,29 @@ static inline struct lruvec *mem_cgroup_page_lruvec(struct page *page,
+>>  {
+>>  	return &pgdat->__lruvec;
+>>  }
+>> +#define lock_page_lruvec_irq(page)			\
+>> +({							\
+>> +	struct pglist_data *pgdat = page_pgdat(page);	\
+>> +	spin_lock_irq(&pgdat->__lruvec.lru_lock);	\
+>> +	&pgdat->__lruvec;				\
+>> +})
+>> +
+>> +#define lock_page_lruvec_irqsave(page, flagsp)			\
+>> +({								\
+>> +	struct pglist_data *pgdat = page_pgdat(page);		\
+>> +	spin_lock_irqsave(&pgdat->__lruvec.lru_lock, *flagsp);	\
+>> +	&pgdat->__lruvec;					\
+>> +})
+>> +
+>> +#define unlock_page_lruvec_irq(lruvec)			\
+>> +({							\
+>> +	spin_unlock_irq(&lruvec->lru_lock);		\
+>> +})
+>> +
+>> +#define unlock_page_lruvec_irqrestore(lruvec, flags)		\
+>> +({								\
+>> +	spin_unlock_irqrestore(&lruvec->lru_lock, flags);	\
+>> +})
+> 
+> Noticed this while testing your series.  These are safe as inline functions, so
+> I think you may have gotten the wrong impression when Johannes made this point:
+> 
+> https://lore.kernel.org/linux-mm/20191119164448.GA396644@cmpxchg.org/
+> 
 
+Thanks for reminder! Daniel!
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I write them to macro, since I guess it's more favorite for some guys. It's do a bit more neat than function although cost a bit readablity. 
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks a lot! :)
+Alex
