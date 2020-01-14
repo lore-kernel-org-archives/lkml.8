@@ -2,86 +2,97 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7952C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913EE24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FC324658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtvOr6YF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgANQeJ (ORCPT
+        id S1728813AbgANQef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:34:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:54502 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbgANQeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:34:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F6321396;
-        Tue, 14 Jan 2020 08:34:08 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F7873F68E;
-        Tue, 14 Jan 2020 08:34:05 -0800 (PST)
-Date:   Tue, 14 Jan 2020 16:34:03 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v4 02/12] ELF: Add ELF program property parsing support
-Message-ID: <20200114163402.GH30444@arrakis.emea.arm.com>
-References: <20191211154206.46260-1-broonie@kernel.org>
- <20191211154206.46260-3-broonie@kernel.org>
+        Tue, 14 Jan 2020 11:34:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20350 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726121AbgANQef (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:34:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579019674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=A61MDN9On2l+D0CHOHwV8RQgKf/LW4H2brHB54z57mg=;
+        b=VtvOr6YF8lpN48BLT7s49eylbLLaKlhlyW3033dI4WxlWPBu95K82WcwvNQcWaJmsxkSRA
+        vL/pPAlLMWSVNUxfbyrjvWxE6mCtRW8zFRdRkG7KuoXMpe/dLzyjWnkStSY4HuAyCvwz5j
+        4O3HiPZbjkaUbvkiDF0BP4tf/gAjKM0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-0Z8kJG3eO2Csx02l0D7gRA-1; Tue, 14 Jan 2020 11:34:30 -0500
+X-MC-Unique: 0Z8kJG3eO2Csx02l0D7gRA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA5A0150153;
+        Tue, 14 Jan 2020 16:34:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 53BA780A48;
+        Tue, 14 Jan 2020 16:34:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, hch@lst.de,
+        tytso@mit.edu, adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+cc:     dhowells@redhat.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Making linkat() able to overwrite the target
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211154206.46260-3-broonie@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3325.1579019665.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 14 Jan 2020 16:34:25 +0000
+Message-ID: <3326.1579019665@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:41:56PM +0000, Mark Brown wrote:
-> From: Dave Martin <Dave.Martin@arm.com>
-> 
-> ELF program properties will be needed for detecting whether to
-> enable optional architecture or ABI features for a new ELF process.
-> 
-> For now, there are no generic properties that we care about, so do
-> nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> 
-> Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> phdrs entry (if any), and notify each property to the arch code.
-> 
-> For now, the added code is not used.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+With my rewrite of fscache and cachefiles:
 
-As with the previous patch, this should also go to linux-fsdevel.
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
+/?h=3Dfscache-iter
 
-The logic looks fine to me but I'm not sure the choice of returning -EIO
-is suitable in most cases. I think apart from kernel_read() returning an
-error, there rest look like malformed ELF notes, so rather -ENOEXEC.
+when a file gets invalidated by the server - and, under some circumstances=
+,
+modified locally - I have the cache create a temporary file with vfs_tmpfi=
+le()
+that I'd like to just link into place over the old one - but I can't becau=
+se
+vfs_link() doesn't allow you to do that.  Instead I have to either unlink =
+the
+old one and then link the new one in or create it elsewhere and rename acr=
+oss.
 
--- 
-Catalin
+Would it be possible to make linkat() take a flag, say AT_LINK_REPLACE, th=
+at
+causes the target to be replaced and not give EEXIST?  Or make it so that
+rename() can take a tmpfile as the source and replace the target with that=
+.  I
+presume that, either way, this would require journal changes on ext4, xfs =
+and
+btrfs.
+
+Thanks,
+David
+
