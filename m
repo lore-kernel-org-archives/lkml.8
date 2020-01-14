@@ -2,114 +2,53 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED58CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6412C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1F424670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="Tg6ZGATO"
+	by mail.kernel.org (Postfix) with ESMTP id B4BD824658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgANVM7 (ORCPT
+        id S1728885AbgANVVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:12:59 -0500
-Received: from mail-bn7nam10on2042.outbound.protection.outlook.com ([40.107.92.42]:3297
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727285AbgANVM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:12:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yw1j185vXAhBSi7mEKbGmoC/CKlQ0vAk7DI2TlB7Cx/8hBFpBsn/c7ppxQb5IVFdOUnjInGOeoTeSDhYtGH9Shta+lm3t0146rtRjtYZ6bF8Budduk4bzEpzKAemM3uZjeqGovLhyr2VxALklkOuAE06J+5felwUez8RMXhFQZz574Q11qnh+UK/fXNW95N0J+qxJadYZsUzGlc5xrTlBbGJTnfj0Jvit9A0khrDT6rRZJNKALQOkeJ1Tjpp4zt7BZ4l+yZF8SdLMj4WG8LvYyZ236bpFfUDa6wIZ7sULg/++jgamVIo1GrL6l6O5UFuLj7oNXDITKpwApJdM/sYQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yub2Zdnl1Af/j6vo7pPrfth3s4Inj0UPjQ1YC4WrmWE=;
- b=nstTfmcj3DkkraE/q81XjCF69tQ2GrgJGTKTnbjAEkNIiwZYncSXK0dtBWalI4aZNHDiftAg/SebtpKXbV4SX3ArZeKYTCR7427MhErDxWkU/6m3b0y3WnkAsyGhs53gW8Qxi9FxYxDhibNuzkCbt2bE1W7PLPagTLS1bOAtwMjn6tAfqpe5uGCbFqsafjK1UlaUt2ZTVTzhxIuXnv1/Zqt4BzbjOfQkJhDdlKOKRannWJX0bFyJ6so4YIpCu8so2PIN2nofUezORNjzhDGC82UqjJXpSRik/i+1f47EH98/YTiv5VonZUOOt8L38c1gFB6tuTQ47RDDhdeIupcJag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yub2Zdnl1Af/j6vo7pPrfth3s4Inj0UPjQ1YC4WrmWE=;
- b=Tg6ZGATOvRuwcDnaoeJ9V+NL7yTtv1l2iwrNpkXQaN9IuYJMjY5Vzx8kPvQ5QFinNzNqPQf7eFw6meFA5TlbK23xv98rQufTx+Q90WbceYUPQnyhSuDJc5nt1LRdLTk1WwZ1P6g8TmXDwjVDEutT1kvQW4Ss8HCLdatm0LbbRaI=
-Received: from BL0PR06MB4370.namprd06.prod.outlook.com (10.167.241.142) by
- BL0PR06MB5010.namprd06.prod.outlook.com (10.167.240.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Tue, 14 Jan 2020 21:12:56 +0000
-Received: from BL0PR06MB4370.namprd06.prod.outlook.com
- ([fe80::dd54:50fb:1e98:46a1]) by BL0PR06MB4370.namprd06.prod.outlook.com
- ([fe80::dd54:50fb:1e98:46a1%6]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 21:12:56 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS over RDMA fixes for 5.5-rc7
-Thread-Topic: [GIT PULL] Please pull NFS over RDMA fixes for 5.5-rc7
-Thread-Index: AQHVyx9kMsm4XdMa3kWezrCFNNhLcA==
-Date:   Tue, 14 Jan 2020 21:12:56 +0000
-Message-ID: <e85791e49b772b5641b65c09b75fad4cee62218b.camel@netapp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.3 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [68.32.74.190]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5addf27b-c2f5-41bf-ae4d-08d799368696
-x-ms-traffictypediagnostic: BL0PR06MB5010:
-x-microsoft-antispam-prvs: <BL0PR06MB50100C846AAEC52118D2F3B4F8340@BL0PR06MB5010.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:923;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(199004)(189003)(81166006)(26005)(54906003)(186003)(6916009)(4326008)(316002)(2616005)(2906002)(6486002)(86362001)(4744005)(6512007)(66446008)(71200400001)(36756003)(5660300002)(81156014)(64756008)(66476007)(66946007)(8936002)(66556008)(91956017)(76116006)(6506007)(478600001)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR06MB5010;H:BL0PR06MB4370.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YaYBpeRNWxBypLAefavrkLTYwm+M3T++6IKEQ677hWX84gaadEeGg6j+ENOj/Rd6IYDQrQ5dYTGajc1vhg57dJI/A67nKCovVMYFYOz5Ubc04ZDQjaDUkDlv+fpRex9a0911kj5TBSBrAPv2dSrozRfPTjfkPgnb8Ohg93kermsz4ae58H6/AegLkul6xJvOkokqF7oemFzHc95pKUSQnq+2zGYRRtfC0hez4IG2+Zuj8RwZGqFkQExO4eYfr6zc4aMqImxBR3uKyqgShi+hx8aQTXYT0wT8+ON9C0suc9gDPBXbvv8C2egmPgKPCannH7pCifCjK0sghop7A0zH2kjx51RbmG8HFRNoNfcXVvjvcUX2xQmeiffbSi0ymZYAY3NDxwCnwTfKRjkoftjezY1hsVxrjGq5Gpyy3qbrMexPZySkqNkhc0cLL5b4BZ2z
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4D78F84E06986B44967E565A8448A97B@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 Jan 2020 16:21:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50632 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728748AbgANVVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:21:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B3AA5AE5E;
+        Tue, 14 Jan 2020 21:21:21 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 39208DA795; Tue, 14 Jan 2020 22:21:08 +0100 (CET)
+Date:   Tue, 14 Jan 2020 22:21:07 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Kusanagi Kouichi <slash@ac.auone-net.jp>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Implement lazytime
+Message-ID: <20200114212107.GM3929@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5addf27b-c2f5-41bf-ae4d-08d799368696
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 21:12:56.0780
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IllcVQw/AIkyVuysAxxglHcJTA4yXV/Nq5I/sH5d55cul0IpQbaad6VoKdsmjH3mes1XE7FVJzxPgKVFaIWDUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR06MB5010
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgYjNhOTg3YjAy
-NjRkM2RkYmIyNDI5M2ViZmYxMGVkZGZjNDcyZjY1MzoNCg0KICBMaW51eCA1LjUtcmM2ICgyMDIw
-LTAxLTEyIDE2OjU1OjA4IC0wODAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4
-LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNS0yDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1
-cCB0byA2NzFjNDUwYjZmZTA2ODBlYTFjYjFjZjE1MjZkNzY0ZmRkNWEzZDNmOg0KDQogIHhwcnRy
-ZG1hOiBGaXggb29wcyBpbiBSZWNlaXZlIGhhbmRsZXIgYWZ0ZXIgZGV2aWNlIHJlbW92YWwgKDIw
-MjAtMDEtMTQNCjEzOjMwOjI0IC0wNTAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUaGVzZSBhcmUgdGhyZWUgTkZT
-IG92ZXIgUkRNQSBmaXhlcyBmb3IgYnVncyBDaHVjayBmb3VuZCB0aGF0IGNhbg0KYmUgaGl0IGR1
-cmluZyBkZXZpY2UgcmVtb3ZhbC4NCg0KVGhhbmtzLA0KQW5uYQ0KDQotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpDaHVjayBM
-ZXZlciAoMyk6DQogICAgICB4cHJ0cmRtYTogRml4IGNyZWF0ZV9xcCBjcmFzaCBvbiBkZXZpY2Ug
-dW5sb2FkDQogICAgICB4cHJ0cmRtYTogRml4IGNvbXBsZXRpb24gd2FpdCBkdXJpbmcgZGV2aWNl
-IHJlbW92YWwNCiAgICAgIHhwcnRyZG1hOiBGaXggb29wcyBpbiBSZWNlaXZlIGhhbmRsZXIgYWZ0
-ZXIgZGV2aWNlIHJlbW92YWwNCg0KIG5ldC9zdW5ycGMveHBydHJkbWEvdmVyYnMuYyAgICAgfCAy
-OSArKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KIG5ldC9zdW5ycGMveHBydHJkbWEveHBy
-dF9yZG1hLmggfCAgMiArKw0KIDIgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgNyBk
-ZWxldGlvbnMoLSkNCg==
+On Tue, Jan 14, 2020 at 05:53:24PM +0900, Kusanagi Kouichi wrote:
+> I tested with xfstests and lazytime didn't cause any new failures.
+
+The changelog should describe what the patch does (the 'why' part too,
+but this is obvious from the subject in this case). That fstests pass
+without new failures is nice but there should be a specific test for
+that or instructions in the changelog how to test.
