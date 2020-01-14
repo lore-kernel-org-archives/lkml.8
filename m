@@ -2,115 +2,105 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E61C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3F9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03B524656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B724670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NY2FUl3v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LboOsZjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgANQaJ (ORCPT
+        id S1728346AbgANQdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:30:09 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48408 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgANQaI (ORCPT
+        Tue, 14 Jan 2020 11:33:01 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44433 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgANQdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:30:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nus/i78kK3SpGp2U2Esf2bTqwzBG98LRZpZBiWVKPiw=; b=NY2FUl3vLOtb2XkzeXGzvfcdD
-        wtXkCRAhj01IpPwNLvBWCdHKSi8O/O5hU3EK364oV+TvbT3AIfOHbU4KslE8M/+dDnRABVZJP5f5B
-        nVvTsa8LWYGSOM4Oe7kfhNQEltOWrhWo+7kRk9Llr41SG9QswSNS3DxpJl/yUQI1nebSvFALhUcIS
-        vJ+ZOUgj+FHvTLHw1fjZZePBqe9BkaeHhw9VUw8c9Wk96Y7kLx4tcHHpbYSy6IGE0XgHVfRiu20CZ
-        qMG7VTxBe4ODOw9Z0TzIDX77HXwwVphYKSsiA08DUnJaFhEkYlDZI5z9AAdC6jAzZ5WSOFcgXLb8r
-        TCDe/lYqw==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irP4x-00072m-VB; Tue, 14 Jan 2020 16:30:08 +0000
-Subject: Re: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
-To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        dmitry.torokhov@gmail.com
-Cc:     sfr@canb.auug.org.au, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        skhan@linuxfoundation.org
-References: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2242e184-93a5-147d-d603-4017ca86eba9@infradead.org>
-Date:   Tue, 14 Jan 2020 08:30:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 14 Jan 2020 11:33:01 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so5927769qvg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g6fxF8GcJvzXVnTymdEpZbZyrCD6fVNCdWttfN1Q1PA=;
+        b=LboOsZjJh3qyXMw4ezcr7+Gcjk0nh5gvAh1IikaRFjm5LbJsBpt5gC1k9NsjuoB+Zw
+         TUitngO2txc3a/rvAgpoWIqZY0IpLk3u2mQLvF3V2VhrWpNp+NZFPQZanyBZ+lrIZwkX
+         JGG/3Pb9mR7iKfMLbmlehKAz8a0cGCxesMsqeupMdwgD1fipv59VpA/oml8Wi0aVlt5C
+         dJ05WGpsR1pjkVMbIYDmx986n225GLP3JOnLaV9is3+obQxXHrKJYpi5WWQCgqB1KN5p
+         u116hcZoYXD6xAA1otsHsTEaIriwF4et7kMjodVancO6u9Wc2QZbG5CXmsh2sZCEQPNz
+         u/bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g6fxF8GcJvzXVnTymdEpZbZyrCD6fVNCdWttfN1Q1PA=;
+        b=lJxIdw6dNFBpHKWqWXzzGT3PgUVqJJEDPoYGCxz/rilMEYIT1MEBe6r6FCEEbkHEKr
+         gGWutxTUkRyJV4KuMeRM0X3RAlYhjODQXn4kUK7KDRvMW4ic2nzVSmUV/8Sf2O0suMEk
+         3+ywyBomvvY/6g7ZeNtE4Qh1OiC6IPWRl/001nZH04S5LALUNrz8TpwWebimarOQbVKg
+         QVAMgRhu4JRAZjvYbCsmM6PPq0/Yr6D8N5y54nMzGI79/Ig2otArh2u7BQ13sg7UQMnT
+         msJe2RR6/s4BFiz3ocPpLI346BRc9adP4IFiaea41Dk2YrALivtFz04n88qnHEM8DDZd
+         aP2A==
+X-Gm-Message-State: APjAAAURmkrWLmXwTN8T7ppdsDaz7CqyK+KuKDrUEnbMT0Hwz1ypUXVn
+        bQ1jP3PoAnaCI/cqyfLmkTY=
+X-Google-Smtp-Source: APXvYqz0SaJa/I+hQg57kUX9faH1cUw48iFvDQr/D9QKlY34UYkM+4BtFw/IlWmBwaPauSechrF0dA==
+X-Received: by 2002:a0c:ecc6:: with SMTP id o6mr21766905qvq.220.1579019580251;
+        Tue, 14 Jan 2020 08:33:00 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d143sm6932515qke.123.2020.01.14.08.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 08:32:59 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 Jan 2020 11:32:58 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200114163257.GD2536335@rani.riverdale.lan>
+References: <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
+ <20200111172047.GA2688392@rani.riverdale.lan>
+ <20200113134306.GF13310@zn.tnic>
+ <20200113161310.GA191743@rani.riverdale.lan>
+ <20200113163855.GK13310@zn.tnic>
+ <20200113175937.GA428553@rani.riverdale.lan>
+ <20200113180826.GN13310@zn.tnic>
+ <20200114041725.GC2536335@rani.riverdale.lan>
+ <20200114112538.GD31032@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200114112538.GD31032@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
-
-On 1/14/20 8:09 AM, Alan Maguire wrote:
-> currently the property entry kunit tests are built if CONFIG_KUNIT=y.
-> This will cause warnings when merged with the kunit tree that now
-> supports tristate CONFIG_KUNIT.  While the tests appear to compile
-> as a module, we get a warning about missing module license.
+On Tue, Jan 14, 2020 at 12:25:38PM +0100, Borislav Petkov wrote:
 > 
-> It's better to have a per-test suite CONFIG variable so that
-> we can do selective building of kunit-based suites, and can
-> also avoid merge issues like this.
+> FFS you're still missing the point: the question is whether this
+> is a widespread issue - a distro shipping this funky binutils and
+> therefore it being a problem on potentially more than one environment -
+> or something people can only trigger by *specially* building themselves
+> and thus a lot more seldom occurrence.
 > 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> And I've answered the question myself by booting openSUSE 12.1 - i.e.,
+> at least one distro has it.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-
-> Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
->  drivers/base/test/Kconfig  | 3 +++
->  drivers/base/test/Makefile | 2 +-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
-> index 86e85da..d29ae95 100644
-> --- a/drivers/base/test/Kconfig
-> +++ b/drivers/base/test/Kconfig
-> @@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
->  	  The module name will be test_async_driver_probe.ko
->  
->  	  If unsure say N.
-> +config KUNIT_DRIVER_PE_TEST
-> +	bool "KUnit Tests for property entry API"
-> +	depends on KUNIT
-
-Why is this bool instead of tristate?
-
-> diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
-> index 2214310..3ca5636 100644
-> --- a/drivers/base/test/Makefile
-> +++ b/drivers/base/test/Makefile
-> @@ -1,4 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
->  
-> -obj-$(CONFIG_KUNIT) += property-entry-test.o
-> +obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
-> 
-
-thanks.
--- 
-~Randy
-
+This is just a misunderstanding on what you were asking to be added
+then. I have no objections to noting that popular distros have shipped
+with those problematic binutils versions, so keeping them in mind is
+important.
