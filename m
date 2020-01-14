@@ -2,137 +2,80 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B694C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D23C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E175A24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eS83FUjg"
+	by mail.kernel.org (Postfix) with ESMTP id 4391E2468F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579011679;
+	bh=WmHeyYbk+acKt1B7uRipvxWcM5jtLkT/HkGrHvbVIP8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1JuwcYj2/yHQoZXwthUy/C4MC0seXQmxKW5kIVQCIb1WkHANeZbIBzrBfIWcXH6qe
+	 5iEh0TN9BQ38dMc4rD0r0iSSwXIA6qG70C+laVWox6e0bgmZD1lLvPUPZW7UtIW48H
+	 0zYxgagRK5/z4VBs2TVBABlkK8EFnJcYD2qrHf1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgANOUa (ORCPT
+        id S1728951AbgANOVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:20:30 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1365 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726115AbgANOUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:20:30 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EEDJ9I002429;
-        Tue, 14 Jan 2020 15:20:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=WTFGUCLWTDzRKhLgs2q+UxAA1l4yHovIjS8c0XHL7Ts=;
- b=eS83FUjgp0iLFkBIkXcu/qIBlD3rdf4FW+3ea+xyHP71BDP3H/ICWz+eX+s0YAz4mjud
- 05NJ1HvOgeFPWKYBkhAJPzKGvLgupHTzn4oNqI6Ek828o7VbY3b9irWi52Qlp3ht3l7E
- NUaiCPJP+S8gsOXJsQuW6TBv5UWBZPpKuQlGNr85eIiaLxj5LmISYQKpDpCjSieW+Eb8
- YTy1AG6LziF/fPIlLY+u40e7qx7lxbKPgPgh41Iq/77PDfENGSFwYR92Socl3SNKCEOo
- 6bUkNG+adXmauv4zw4tfeaRPnSriPMCkzSu3h04bZvmzY5J7brDM49uJU360Lzh9UVBO AA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf78s5xb5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 15:20:19 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CBD02100034;
-        Tue, 14 Jan 2020 15:20:14 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 85D832BC7AB;
-        Tue, 14 Jan 2020 15:20:14 +0100 (CET)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 14 Jan 2020 15:20:14
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] drm: fix parameters documentation style
-Date:   Tue, 14 Jan 2020 15:20:12 +0100
-Message-ID: <20200114142012.14389-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Tue, 14 Jan 2020 09:21:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgANOVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:21:18 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813BE24680;
+        Tue, 14 Jan 2020 14:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579011677;
+        bh=WmHeyYbk+acKt1B7uRipvxWcM5jtLkT/HkGrHvbVIP8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ji9j4uOda263DrA/LDjuL6qxua/nBrkhGwVwGA7hk8qZ0l3FdL5klSIaZODJf0WpL
+         /aOzL6OqNpekm/p7OW0oXe5UOB+fHMfm3ECmgBn03MsCb5M2qqsGt6hDmON1qq3Zdr
+         eG4YSlaFRlkMHDD3go2/gCCJAZdsytViiyrX7/EM=
+Received: by mail-qk1-f182.google.com with SMTP id z14so12197289qkg.9;
+        Tue, 14 Jan 2020 06:21:17 -0800 (PST)
+X-Gm-Message-State: APjAAAV3hL1JUyZPNhUGuNhlxHAX9Il4OqaPWzmONwvN9JwlgYrp35Kb
+        cdCytKtWb8R0sxKJJtyHJGu49HApQdebbQzZ8w==
+X-Google-Smtp-Source: APXvYqyarUPegS8e0tl/XhZj/arNTBzvcSHjfnyTYDdgMeRZpDE/s8eo6yPV9T/54VtGg/qkkv3akPQIfx0E+NfympE=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr22688107qkn.254.1579011676689;
+ Tue, 14 Jan 2020 06:21:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_04:2020-01-13,2020-01-14 signatures=0
+References: <1578985692-20309-1-git-send-email-sthella@codeaurora.org>
+In-Reply-To: <1578985692-20309-1-git-send-email-sthella@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 14 Jan 2020 08:21:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL3RxFa+3kN1vV1uJcUM-QKBLCYhWWYeLFUiZZY9_PCnw@mail.gmail.com>
+Message-ID: <CAL_JsqL3RxFa+3kN1vV1uJcUM-QKBLCYhWWYeLFUiZZY9_PCnw@mail.gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+To:     Shyam Kumar Thella <sthella@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove old documentation style and use new one to avoid warnings when
-compiling with W=1
+On Tue, Jan 14, 2020 at 1:08 AM Shyam Kumar Thella
+<sthella@codeaurora.org> wrote:
+>
+> QTI SDAM allows PMIC peripherals to access the shared memory that is
+> available on QTI PMICs. Add documentation for it.
+>
+> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+> ---
+>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/gpu/drm/drm_dma.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
-index e45b07890c5a..f90bdd4ac69d 100644
---- a/drivers/gpu/drm/drm_dma.c
-+++ b/drivers/gpu/drm/drm_dma.c
-@@ -42,10 +42,10 @@
- #include "drm_legacy.h"
- 
- /**
-- * Initialize the DMA data.
-+ * drm_legacy_dma_setup() - Initialize the DMA data.
-  *
-- * \param dev DRM device.
-- * \return zero on success or a negative value on failure.
-+ * @dev: DRM device.
-+ * return zero on success or a negative value on failure.
-  *
-  * Allocate and initialize a drm_device_dma structure.
-  */
-@@ -71,9 +71,9 @@ int drm_legacy_dma_setup(struct drm_device *dev)
- }
- 
- /**
-- * Cleanup the DMA resources.
-+ * drm_legacy_dma_takedown() - Cleanup the DMA resources.
-  *
-- * \param dev DRM device.
-+ * @dev: DRM device.
-  *
-  * Free all pages associated with DMA buffers, the buffers and pages lists, and
-  * finally the drm_device::dma structure itself.
-@@ -120,10 +120,10 @@ void drm_legacy_dma_takedown(struct drm_device *dev)
- }
- 
- /**
-- * Free a buffer.
-+ * drm_legacy_free_buffer() - Free a buffer.
-  *
-- * \param dev DRM device.
-- * \param buf buffer to free.
-+ * @dev: DRM device.
-+ * @buf: buffer to free.
-  *
-  * Resets the fields of \p buf.
-  */
-@@ -139,9 +139,10 @@ void drm_legacy_free_buffer(struct drm_device *dev, struct drm_buf * buf)
- }
- 
- /**
-- * Reclaim the buffers.
-+ * drm_legacy_reclaim_buffers() - Reclaim the buffers.
-  *
-- * \param file_priv DRM file private.
-+ * @dev: DRM device.
-+ * @file_priv: DRM file private.
-  *
-  * Frees each buffer associated with \p file_priv not already on the hardware.
-  */
--- 
-2.15.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
