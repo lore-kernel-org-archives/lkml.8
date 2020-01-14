@@ -2,282 +2,118 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9756EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33565C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63ACC2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qpn+Nc+h"
+	by mail.kernel.org (Postfix) with ESMTP id 02813222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578989113;
+	bh=2diFQn4Dktu50MTH6ogyrDMKAJfguOrhvVoyu0g5tJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QA8v1ZghtwwSHlg/ox17XYXcyCpDAUIGaLp4ydrsVV2J687cVzBnbyXmqyT3gUhX3
+	 a3fLzInJAkK4jeON4j/HU5i/X07SoNOwC5PYGjburK/M5SKtaK7RdxGJ6T/hpA4BBq
+	 XjVY7A/NZ+1jfwtvF08W3OoHE6appvynVe6qjabM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgANIEb (ORCPT
+        id S1729219AbgANIFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:04:31 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36926 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgANIEb (ORCPT
+        Tue, 14 Jan 2020 03:05:11 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:61739 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbgANIFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:04:31 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00E84Nnt023901;
-        Tue, 14 Jan 2020 02:04:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578989063;
-        bh=cbHr/XtYl1ScNrcV2l/fytPkg8e7XLp+hKaJC5xcA5M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Qpn+Nc+hZAYmCuYJmhvuT3utn0oZSLH5/pT4T5QQK5Ayyz7T6IG9dp6ab1FPifyMI
-         ixt3kOM9ESJNfQNxUskldwRJnaEK5yb2UhAofqAE5qW4UHGJHMZKCs9T486LB4PUOc
-         qyjHJRdvdVB44GMF7i9b51YzGkKLKVaSHNgg5CqQ=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00E84Nmo048181
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jan 2020 02:04:23 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
- Jan 2020 02:04:23 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 14 Jan 2020 02:04:23 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00E84JKi050975;
-        Tue, 14 Jan 2020 02:04:21 -0600
-Subject: Re: [PATCH v5 13/14] dt-bindings: phy: Document WIZ (SERDES wrapper)
- bindings
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191216095712.13266-14-kishon@ti.com>
- <20200102095631.1165-1-kishon@ti.com>
- <CAL_JsqJVmyXirczaWJb4hCsnVjXYt6ki22sBLe5D0240x4Xtzw@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <41a76196-827b-52dc-5d72-46b8e21f2107@ti.com>
-Date:   Tue, 14 Jan 2020 13:36:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 14 Jan 2020 03:05:11 -0500
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 00E84k4r023665;
+        Tue, 14 Jan 2020 17:04:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 00E84k4r023665
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578989086;
+        bh=zqtq7IkCW0id1F79otkq2+3zhL0Fqy1TdiL18Qrl+go=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PGMJ4GR8yXY0XFl7WeuL8GsoMC9mwzswUAhGBUp03qVUOut1FPZT38sH4zKo0m1Ta
+         Q/6OKFqhSlG91gvqrQxtkmMativVX78yjntMkR2FSkuvdJq+tjaKsboRowajPTZ3aY
+         eKLd0i8bf4i/dmnzE6LGyqe5mDVEuxwnBI5gweaLpu9Df/weFOLWLv71VoMFLTa4Z8
+         LNIgICa0C/DaHLG8Bn27+j6hrrMVoLIUi3WwjivDdX0Xvg93Ro/q9lUXzDwwM1eS/4
+         MDYm5kzLK4ZCDaFNcsuFM+z+Yyv8aCA563qvVwQg5dcp+IL1LY2c5CbsDpf0/tBUyD
+         UeIE0VvsfVLwQ==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id y23so4436379ual.2;
+        Tue, 14 Jan 2020 00:04:46 -0800 (PST)
+X-Gm-Message-State: APjAAAUdg9v5S3EZKt8HBI6ODLMWjCTeCP697WXp3JA8UQfgpnda+Jdj
+        NT0XfIRfhp0OSIJlRCKv461EOLbFyKRa+HufGx8=
+X-Google-Smtp-Source: APXvYqxACHfBMoAc+LfpdScWVrlt7n/Wtwl7tQFYgbXxfF+CTJmEFF/P0ykqAGDjiJK626yMtn+wvRqVclE4WoYQdIY=
+X-Received: by 2002:ab0:2ea6:: with SMTP id y6mr9924613uay.25.1578989085420;
+ Tue, 14 Jan 2020 00:04:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJVmyXirczaWJb4hCsnVjXYt6ki22sBLe5D0240x4Xtzw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200113064841.3946-1-masahiroy@kernel.org> <20200113064841.3946-4-masahiroy@kernel.org>
+ <7da5750c40489dcb6cd8eef0307ee8d8df2e134e.camel@decadent.org.uk>
+In-Reply-To: <7da5750c40489dcb6cd8eef0307ee8d8df2e134e.camel@decadent.org.uk>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 14 Jan 2020 17:04:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR3fL-RQM412LJmJD6v81JTJ+s0A5vcS4O=Y_=kNO4DUA@mail.gmail.com>
+Message-ID: <CAK7LNAR3fL-RQM412LJmJD6v81JTJ+s0A5vcS4O=Y_=kNO4DUA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] builddeb: avoid invoking sub-shells where possible
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Riku Voipio <riku.voipio@linaro.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Ben,
 
-On 13/01/20 11:29 PM, Rob Herring wrote:
-> On Thu, Jan 2, 2020 at 3:54 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Add DT binding documentation for WIZ (SERDES wrapper). WIZ is *NOT* a
->> PHY but a wrapper used to configure some of the input signals to the
->> SERDES. It is used with both Sierra(16G) and Torrent(10G) serdes.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> [jsarha@ti.com: Add separate compatible for Sierra(16G) and Torrent(10G)
->>  SERDES]
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> ---
->> Changes from v4:
->> *) Fixed the indentation as suggested by Rob v4
->>
->>  .../bindings/phy/ti,phy-j721e-wiz.yaml        | 204 ++++++++++++++++++
->>  1 file changed, 204 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->> new file mode 100644
->> index 000000000000..e010ea46b88d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->> @@ -0,0 +1,204 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/ti,phy-j721e-wiz.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI J721E WIZ (SERDES Wrapper)
->> +
->> +maintainers:
->> +  - Kishon Vijay Abraham I <kishon@ti.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,j721e-wiz-16g
->> +      - ti,j721e-wiz-10g
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 3
->> +    description: clock-specifier to represent input to the WIZ
->> +
->> +  clock-names:
->> +    items:
->> +      - const: fck
->> +      - const: core_ref_clk
->> +      - const: ext_ref_clk
->> +
->> +  num-lanes:
->> +    minimum: 1
->> +    maximum: 4
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 1
->> +
->> +  "#reset-cells":
->> +    const: 1
->> +
->> +  ranges: true
->> +
->> +  assigned-clocks:
->> +    maxItems: 2
->> +
->> +  assigned-clock-parents:
->> +    maxItems: 2
->> +
->> +patternProperties:
->> +  "^pll[0|1]-refclk$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have subnodes for each of the PLLs present in
->> +      the SERDES.
->> +    properties:
->> +      clocks:
->> +        maxItems: 2
->> +        description: Phandle to clock nodes representing the two inputs to PLL.
->> +
->> +      "#clock-cells":
->> +        const: 0
->> +
->> +      assigned-clocks:
->> +        maxItems: 1
->> +
->> +      assigned-clock-parents:
->> +        maxItems: 1
->> +
->> +    required:
->> +      - clocks
->> +      - "#clock-cells"
->> +      - assigned-clocks
->> +      - assigned-clock-parents
->> +
->> +  "^cmn-refclk1?-dig-div$":
->> +    type: object
->> +    description:
->> +      WIZ node should have subnodes for each of the PMA common refclock
->> +      provided by the SERDES.
->> +    properties:
->> +      clocks:
->> +        maxItems: 1
->> +        description: Phandle to the clock node representing the input to the
->> +          divider clock.
->> +
->> +      "#clock-cells":
->> +        const: 0
->> +
->> +    required:
->> +      - clocks
->> +      - "#clock-cells"
->> +
->> +  "^refclk-dig$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have subnode for refclk_dig to select the reference
->> +      clock source for the reference clock used in the PHY and PMA digital
->> +      logic.
->> +    properties:
->> +      clocks:
->> +        maxItems: 4
->> +        description: Phandle to four clock nodes representing the inputs to
->> +          refclk_dig
->> +
->> +      "#clock-cells":
->> +        const: 0
->> +
->> +      assigned-clocks:
->> +        maxItems: 1
->> +
->> +      assigned-clock-parents:
->> +        maxItems: 1
->> +
->> +    required:
->> +      - clocks
->> +      - "#clock-cells"
->> +      - assigned-clocks
->> +      - assigned-clock-parents
->> +
->> +  "^serdes@[0-9a-f]+$":
->> +    type: object
->> +    description: |
->> +      WIZ node should have '1' subnode for the SERDES. It could be either
->> +      Sierra SERDES or Torrent SERDES. Sierra SERDES should follow the
->> +      bindings specified in
->> +      Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt
->> +      Torrent SERDES should follow the bindings specified in
->> +      Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
->> +
->> +required:
->> +  - compatible
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +  - num-lanes
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - "#reset-cells"
->> +  - ranges
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->> +
->> +    wiz@5000000 {
->> +           compatible = "ti,j721e-wiz-16g";
->> +           #address-cells = <1>;
->> +           #size-cells = <1>;
->> +           power-domains = <&k3_pds 292 TI_SCI_PD_EXCLUSIVE>;
->> +           clocks = <&k3_clks 292 5>, <&k3_clks 292 11>, <&dummy_cmn_refclk>;
->> +           clock-names = "fck", "core_ref_clk", "ext_ref_clk";
->> +           assigned-clocks = <&k3_clks 292 11>, <&k3_clks 292 0>;
->> +           assigned-clock-parents = <&k3_clks 292 15>, <&k3_clks 292 4>;
->> +           num-lanes = <2>;
->> +           #reset-cells = <1>;
->> +           ranges = <0x5000000 0x0 0x5000000 0x10000>;
-> 
-> This fails in linux-next:
-> 
-> Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.example.dts:30.16-59:
-> Warning (ranges_format): /example-0/wiz@50
-> 00000:ranges: "ranges" property has invalid length (16 bytes) (parent
-> #address-cells == 1, child #address-cells == 1, #
-> size-cells == 1)
-> 
-> Please fix.
+On Tue, Jan 14, 2020 at 2:21 AM Ben Hutchings <ben@decadent.org.uk> wrote:
+> > +(
+> > +     cd $srctree
+> > +     find . arch/$SRCARCH -maxdepth 1 -name Makefile\*
+> > +     find include scripts -type f -o -type l
+> > +     find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform
+> > +     find arch/$SRCARCH -name include -type f
+>
+> This command is wrong.  We currently find all files under all
+> directories named "include" under arch/$SRCARCH.  (arc, arm and xtensa
+> have some per-platform include directories in additional to the per-
+> architecture include directory.)
+>
+> > +
+> > +     if [ -d arch/$SRCARCH/scripts ]; then
+> > +             find arch/$SRCARCH/scripts -type f
+> > +     fi
+> > +) > debian/hdrsrcfiles
+> > +
+> > +{
+> > +     if is_enabled CONFIG_STACK_VALIDATION; then
+> > +             find tools/objtool -type f -executable
+> > +     fi
+> > +
+> > +     find arch/$SRCARCH/include Module.symvers include scripts -type f
+> > +
+> > +     if is_enabled CONFIG_GCC_PLUGINS; then
+> > +             find scripts/gcc-plugins -name \*.so -o -name gcc-common.h
+> > +     fi
+>
+> This is reverting patch 1.
+>
+> Ben.
 
-Fixed and pushed.
+Thank you for catching these.
 
-Thanks
-Kishon
-> 
-> Rob
-> 
+I made a mistake somehow
+when I inserted the patch 1, and then
+rebased the others on top of it.
+
+I will fix it in v2.
+
+
+-- 
+Best Regards
+Masahiro Yamada
