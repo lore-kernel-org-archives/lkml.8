@@ -2,81 +2,114 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB58C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91225C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07EEE2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dmWY2t71"
+	by mail.kernel.org (Postfix) with ESMTP id 72F3124676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbgANLin (ORCPT
+        id S1729626AbgANLjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:38:43 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40912 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgANLin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:38:43 -0500
-Received: from zn.tnic (p200300EC2F0C770060129B71B11B0F90.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:6012:9b71:b11b:f90])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AFC731EC0BEA;
-        Tue, 14 Jan 2020 12:38:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579001921;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=MUxEvzo2qOemIqNZH2imAAMYdLRr9L+RyhB34mILxjs=;
-        b=dmWY2t71WvR+w3m6aakJhQ2w+9wqoNGUKdGQT53gxHyRk50vwDiH9vjYFjS9wUkBZnrRZk
-        h+zdx6nwfhpiiom8pDqjrhWrzwTVkR1cEnFH1dVAAf7qs1+BUMICayIAIRnMjxhnlJubqx
-        xCgtREbsMHspWtdukCfdDAhVIFIkBW4=
-Date:   Tue, 14 Jan 2020 12:38:34 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode/amd: fix uninitalized structure cp
-Message-ID: <20200114113834.GE31032@zn.tnic>
-References: <20200114111505.320186-1-colin.king@canonical.com>
+        Tue, 14 Jan 2020 06:39:10 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9171 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbgANLjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:39:10 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A2D74577847DCCF09A04;
+        Tue, 14 Jan 2020 19:39:07 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
+ 19:38:57 +0800
+Subject: Re: [PATCH V2] brd: check parameter validation before register_blkdev
+ func
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+References: <8b32ff09-74aa-3b92-38e4-aab12f47597b@huawei.com>
+ <20200114091456.GA22268@ming.t460p> <20200114094550.GA18268@ming.t460p>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <1b0e6cc5-784b-e8fa-bb00-2f0a016c37fd@huawei.com>
+Date:   Tue, 14 Jan 2020 19:38:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200114111505.320186-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114094550.GA18268@ming.t460p>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:15:05AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 2020/1/14 17:45, Ming Lei wrote:
+> On Tue, Jan 14, 2020 at 05:16:57PM +0800, Ming Lei wrote:
+>> On Mon, Jan 13, 2020 at 09:43:23PM +0800, Zhiqiang Liu wrote:
+>>> In brd_init func, rd_nr num of brd_device are firstly allocated
+>>> and add in brd_devices, then brd_devices are traversed to add each
+>>> brd_device by calling add_disk func. When allocating brd_device,
+>>> the disk->first_minor is set to i * max_part, if rd_nr * max_part
+>>> is larger than MINORMASK, two different brd_device may have the same
+>>> devt, then only one of them can be successfully added.
+>>
+>> It is just because disk->first_minor is >= 0x100000, then same dev_t
+>> can be allocated in blk_alloc_devt().
+>>
+>> 	MKDEV(disk->major, disk->first_minor + part->partno)
+>>
+>> But block layer does support extended dynamic devt allocation, and brd
+>> sets flag of GENHD_FL_EXT_DEVT too.
+>>
+>> So I think the correct fix is to fallback to extended dynamic allocation
+>> when running out of consecutive minor space.
+>>
+>> How about the following approach?
+>>
+>> And of course, ext devt allocation may fail too, but that is another
+>> generic un-solved issue: error handling isn't done for adding disk.
+>>
+>> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+>> index a8730cc4db10..9aa7ce7c9abf 100644
+>> --- a/drivers/block/brd.c
+>> +++ b/drivers/block/brd.c
+>> @@ -398,7 +398,16 @@ static struct brd_device *brd_alloc(int i)
+>>  	if (!disk)
+>>  		goto out_free_queue;
+>>  	disk->major		= RAMDISK_MAJOR;
+>> -	disk->first_minor	= i * max_part;
+>> +
+>> +	/*
+>> +	 * Clear .minors when running out of consecutive minor space since
+>> +	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt
+>> +	 */
+>> +	if ((i * disk->minors) & ~MINORMASK)
+>> +		disk->minors = 0;
+>> +	else
+>> +		disk->first_minor	= i * disk->minors;
+>> +
+>>  	disk->fops		= &brd_fops;
+>>  	disk->private_data	= brd;
+>>  	disk->flags		= GENHD_FL_EXT_DEVT;
 > 
-> In the case where cp is not assigned to the return from
-> the call to find_microcode_in_initrd
-
-Where does this happen? I don't see it.
-
-> cp is uninitialized when
-> it is assigned to *ret.   Functions that call __load_ucode_amd
-> such as load_ucode_amd_bsp can therefore end up checking bogus
-> values cp.data and cp.size.  Fix this by ensuring cp is
-> initialized as all zero and remove the redundant initialization
-> of cp in load_ucode_amd_bsp.
+> But still suggest to limit 'max_part' <= 256, and the name is actually
+> misleading, which just reserves consecutive minors.
 > 
-> Addresses-Coverity: ("Uninitialized scalar variable")
+> However, I don't think it is a good idea to add limit on device number.
+> 
 
-I already asked about those: either document what those tags mean or
-remove them.
+Thanks for your patient replyI will resend the v3 patch as your suggestion.
+Changes in v3:
+	1)clear .minors when running out of consecutive minor space in brd_alloc.
+	2)remove limit of rd_nr
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
