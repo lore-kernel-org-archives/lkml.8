@@ -2,238 +2,102 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA239C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8305DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E09424679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5641A24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0Lncu1ef"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="I8z6hFJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgANMeF (ORCPT
+        id S1728795AbgANMeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:34:05 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35992 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727044AbgANMd7 (ORCPT
+        Tue, 14 Jan 2020 07:34:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43094 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgANMeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:33:59 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ECWbZi023934;
-        Tue, 14 Jan 2020 13:33:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=4Zw+r/mcuIQdGav3Gfbbdj8AtLqPaIWXCkURYNpxfY4=;
- b=0Lncu1efiEmSixKOeiOFmG4NByddmwwfZngVxnuNYqWjU7aPH7j0P1iCQpdDpYsbqdNj
- je/J2b1vm99dJ5ug1ZBQUETdhFe8abMWibYKr/zXL5DPdgRpBky41NGh/p8ZzBDIRMD9
- N2Ds3/0YRoPrAYYrWS/A6ebAYp4CgjitvWEpqnUcNRg44oJz+9nxRFJH28blG8dNLjaw
- mtnXzT4KQIBYU1GfVM9ngo3dFHFQhs4mCH9RSlpJEAoz/EE8Y7/jsdEdi9S3xEWouGWp
- NQCQSvWgsV8XTCVqA/1AE4ySCYbmwM+2buLLr4v52k6EYzlclFL/rg4z8KMQut8Ttj3C aQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf7jpddg4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 13:33:39 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9A8B010003B;
-        Tue, 14 Jan 2020 13:33:34 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8D7292AD9EB;
-        Tue, 14 Jan 2020 13:33:34 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 14 Jan 2020 13:33:34
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>
-CC:     <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <fabrice.gasnier@st.com>,
-        <erwan.leray@st.com>, Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 2/2] dt-bindings: serial: Convert STM32 UART to json-schema
-Date:   Tue, 14 Jan 2020 13:33:29 +0100
-Message-ID: <20200114123329.3792-3-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200114123329.3792-1-benjamin.gaignard@st.com>
-References: <20200114123329.3792-1-benjamin.gaignard@st.com>
+        Tue, 14 Jan 2020 07:34:21 -0500
+Received: by mail-wr1-f67.google.com with SMTP id d16so11983932wre.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 04:34:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EqOL31gUqSpkjJR99Wdt9hlwWgIJHXjyD65jCY2UG6I=;
+        b=I8z6hFJX4LIjq3Kd/pcQ91dfqmtM9Q+wHLsRuR+Kxs3Rslsphk4lW1UCDWBkBH+Cwq
+         vcWp3vY5Ias3siQLz7FaqdYLCcXAh7xdzRGBKYPWubjUn8sMiW6j30cvX3/h9SVks243
+         fQs66w++BdbMhKe2xb9Xnq74SWdjbMmZ2/FucTMMwFxLpBIRp4VaqItGpZ2PSbslVnc1
+         NU207MB7LPiEM+JchPnp+lhntRbtUAt7KPoI5MQj6Tjr0f2Lea7LJ4OW/tK0t+jGIiFc
+         K1pEkiqs6VPYzXWgRSa2YFmYAJSWG9DtdcnXUlaz4VTRGLw0meFOz0rGwI7pR8frEG9g
+         CiUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=EqOL31gUqSpkjJR99Wdt9hlwWgIJHXjyD65jCY2UG6I=;
+        b=aOBs+QYQLNioTL7X78gP/O6nyfzzMIhZa6Qy1Zoz6ljYAB5CTUNt4yqNiBtnQJ8HXW
+         4Fiuk4FEBoatCFbdhLe6knXPlYCT7zotZ0ED0PrStOLg8D1clZg0zpRCqQtY/PLyCJ+4
+         jcQOXfP8oklkw9/1jxahShe/i4P+WspJIiuCRatFKa7bjwkSbxFqm9uBBcDy0+GeWbo2
+         5s6dXGoy8jJ0+TlidNb/gKlBTkiRBjExLO/ILBbo5B0ofahkzzXqcjU7syaLf39TLlDV
+         WHG7BO6l43Y7XjIc9wCnJJt8Yiy51pQUDA+FaPqU1YMRDpw8ZPRbnY30UnCWxG2AyPtT
+         Q9fg==
+X-Gm-Message-State: APjAAAX24CVXVKIUetL1r/wGfd1izxnlIn4octg2zJkhDC8TnQPiYWBk
+        grX5oRxy1uSB8IrIwhJDySTuLplUvlICqg==
+X-Google-Smtp-Source: APXvYqwhAE59j9QvH8R9v0nc/8jwO50OuDlzH2yuKTj7GEVBCsvOUF3b6p8cW69xerKoHYVDk/XUHQ==
+X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr25467331wru.150.1579005259226;
+        Tue, 14 Jan 2020 04:34:19 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id x11sm18604583wmg.46.2020.01.14.04.34.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 04:34:18 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH] microblaze: Prevent the overflow of the start
+Date:   Tue, 14 Jan 2020 13:34:17 +0100
+Message-Id: <e24752dd9ea739c86bca9cfe79f7f29b0afa0182.1579005255.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_03:2020-01-13,2020-01-14 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert STM32 UART bindings to json-schema.
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+In case the start + cache size is more than the max int the
+start overflows.
+Prevent the same.
+
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- .../devicetree/bindings/serial/st,stm32-uart.yaml  | 80 ++++++++++++++++++++++
- .../devicetree/bindings/serial/st,stm32-usart.txt  | 57 ---------------
- 2 files changed, 80 insertions(+), 57 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/st,stm32-usart.txt
 
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-new file mode 100644
-index 000000000000..238c44192d31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/st,stm32-uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+maintainers:
-+  - Erwan Le Ray <erwan.leray@st.com>
-+
-+title: STMicroelectronics STM32 USART bindings
-+
-+allOf:
-+  - $ref: rs485.yaml
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32-uart
-+      - st,stm32f7-uart
-+      - st,stm32h7-uart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  label:
-+    description: label associated with this uart
-+
-+  st,hw-flow-ctrl:
-+    description: enable hardware flow control
-+    $ref: /schemas/types.yaml#/definitions/flag
-+
-+  dmas:
-+    minItems: 1
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      enum: [ rx, tx ]
-+    minItems: 1
-+    maxItems: 2
-+
-+  wakeup-source: true
-+
-+  rs485-rts-delay: true
-+  rs485-rts-active-low: true
-+  linux,rs485-enabled-at-boot-time: true
-+  rs485-rx-during-tx: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    usart1: serial@40011000 {
-+      compatible = "st,stm32-uart";
-+      reg = <0x40011000 0x400>;
-+      interrupts = <37>;
-+      clocks = <&rcc 0 164>;
-+      dmas = <&dma2 2 4 0x414 0x0>,
-+             <&dma2 7 4 0x414 0x0>;
-+      dma-names = "rx", "tx";
-+      rs485-rts-active-low;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-deleted file mode 100644
-index 8620f7fcbd50..000000000000
---- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
-+++ /dev/null
-@@ -1,57 +0,0 @@
--* STMicroelectronics STM32 USART
--
--Required properties:
--- compatible: can be either:
--  - "st,stm32-uart",
--  - "st,stm32f7-uart",
--  - "st,stm32h7-uart".
--  depending is compatible with stm32(f4), stm32f7 or stm32h7.
--- reg: The address and length of the peripheral registers space
--- interrupts:
--  - The interrupt line for the USART instance,
--  - An optional wake-up interrupt.
--- clocks: The input clock of the USART instance
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- pinctrl: The reference on the pins configuration
--- st,hw-flow-ctrl: bool flag to enable hardware flow control.
--- rs485-rts-delay, rs485-rx-during-tx, rs485-rts-active-low,
--  linux,rs485-enabled-at-boot-time: see rs485.txt.
--- dmas: phandle(s) to DMA controller node(s). Refer to stm32-dma.txt
--- dma-names: "rx" and/or "tx"
--- wakeup-source: bool flag to indicate this device has wakeup capabilities
--- interrupt-names, if optional wake-up interrupt is used, should be:
--  - "event": the name for the interrupt line of the USART instance
--  - "wakeup" the name for the optional wake-up interrupt
--
--
--Examples:
--usart4: serial@40004c00 {
--	compatible = "st,stm32-uart";
--	reg = <0x40004c00 0x400>;
--	interrupts = <52>;
--	clocks = <&clk_pclk1>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usart4>;
--};
--
--usart2: serial@40004400 {
--	compatible = "st,stm32-uart";
--	reg = <0x40004400 0x400>;
--	interrupts = <38>;
--	clocks = <&clk_pclk1>;
--	st,hw-flow-ctrl;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rtscts>;
--};
--
--usart1: serial@40011000 {
--	compatible = "st,stm32-uart";
--	reg = <0x40011000 0x400>;
--	interrupts = <37>;
--	clocks = <&rcc 0 164>;
--	dmas = <&dma2 2 4 0x414 0x0>,
--	       <&dma2 7 4 0x414 0x0>;
--	dma-names = "rx", "tx";
--};
+ arch/microblaze/kernel/cpu/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/microblaze/kernel/cpu/cache.c b/arch/microblaze/kernel/cpu/cache.c
+index 0bde47e4fa69..dcba53803fa5 100644
+--- a/arch/microblaze/kernel/cpu/cache.c
++++ b/arch/microblaze/kernel/cpu/cache.c
+@@ -92,7 +92,8 @@ static inline void __disable_dcache_nomsr(void)
+ #define CACHE_LOOP_LIMITS(start, end, cache_line_length, cache_size)	\
+ do {									\
+ 	int align = ~(cache_line_length - 1);				\
+-	end = min(start + cache_size, end);				\
++	if (start <  UINT_MAX - cache_size)				\
++		end = min(start + cache_size, end);			\
+ 	start &= align;							\
+ } while (0)
+ 
 -- 
-2.15.0
+2.24.0
 
