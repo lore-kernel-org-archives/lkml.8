@@ -2,203 +2,226 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B03AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC5CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E772465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="if1gfKSg"
+	by mail.kernel.org (Postfix) with ESMTP id C208524680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgANNAI (ORCPT
+        id S1727034AbgANNCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:00:08 -0500
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:23886
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbgANNAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:00:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SHSPiGZHIPq2zEnMP9OxbQZz1Cl+whcFuAIIEKH9EpNwdw2s+l6C/OCqfrxfhf97j/8LbAY76nA7lGzM5VHSQEsvALV4C+r27oAlHX82+bWK/H162zUQjcZJ5S6XTS7qs85hJnAWQec2etaJcY/qroUNzzEvS4QYzAobtzeq4Jx0UcSVDRCurt2fbgKc/KhCZpDmChNfISqQuJYSYELP1jAwQ9F+ivvMyjGov2lQNmm6uPz4Lw3L/md9Qo+IcHZJr3MH0GCGGuPGVdgA61CTP2/VdJt1Zu8dBo+KVmplA6XBgHqpA44ujoz1iiONr9+ky6HZvLPFgjEvKtAVx4pagQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M/gWNLTm0Bg99BL11bnO/stYz+/1JchO/jTy+XL2VJs=;
- b=BtVZb8BlBjAFb2iGDppOjb2BvyUqSlU/qBFTNuOFz2doqBalNJ/NSXiW9QZBaYr0mlLAYj4NRTKjXeqxMcylTlxPm5bgPTHcINwKR6AVj+NPXHB4k6UNqQ1z48V7sOhXxyt2p+XF/31FoSqOFEgzJCOaQpDhtvcPdh4fKNyjiTQWlnKKIP5h2iCgmtveELSUnUg2tvbIobK8QYZjEUBmYhbuuxIGcpdMW0kkp24aI4A9ytgTcQn5Pp7KU5bzqQcomzb+qFALKP8zmh9lZ2heqq7jFs2iB0nu6R22h7ORXCeRp525spdZ6/aZo8B1M0ljLq8Z5QS6476p2x/TeqdueQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M/gWNLTm0Bg99BL11bnO/stYz+/1JchO/jTy+XL2VJs=;
- b=if1gfKSgXEYHIB4V3+xZeYB6aXr3OKNiJ7MAZX+r5cFY+KAOHFo47BZ2foUjSkJUP4Ga5CkF4m55Evi1PaG4fs4liNJktotYZiQGfxMkEBhSbd4/69bBnqIjZxjI0bf90iJlautREHA2npfcp4UF2ll/Rxpsuxk6Vkv109fMSYI=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5246.eurprd05.prod.outlook.com (20.178.11.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Tue, 14 Jan 2020 13:00:01 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 13:00:01 +0000
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR0102CA0052.prod.exchangelabs.com (2603:10b6:208:25::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.17 via Frontend Transport; Tue, 14 Jan 2020 13:00:01 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1irLnZ-00061U-Ue; Tue, 14 Jan 2020 08:59:57 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-Thread-Topic: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-Thread-Index: AQHVymNqjXzbt52uukWssUL4CQa1/qfqIESA
-Date:   Tue, 14 Jan 2020 13:00:01 +0000
-Message-ID: <20200114125957.GO20978@mellanox.com>
-References: <20200113224703.5917-1-rcampbell@nvidia.com>
- <20200113224703.5917-6-rcampbell@nvidia.com>
-In-Reply-To: <20200113224703.5917-6-rcampbell@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR0102CA0052.prod.exchangelabs.com
- (2603:10b6:208:25::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.68.57.212]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f2a0244a-8d2b-4f80-b5a9-08d798f1aaa9
-x-ms-traffictypediagnostic: VI1PR05MB5246:
-x-microsoft-antispam-prvs: <VI1PR05MB524695D5EF6B0B597A6AE086CF340@VI1PR05MB5246.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(189003)(199004)(2906002)(33656002)(86362001)(54906003)(478600001)(4326008)(7416002)(52116002)(316002)(6916009)(81166006)(81156014)(8676002)(26005)(186003)(9746002)(9786002)(8936002)(5660300002)(36756003)(6666004)(1076003)(66556008)(71200400001)(66946007)(66446008)(64756008)(2616005)(66476007)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5246;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RvQQtZPUiG4bclNH9Tt7x0sTU1Md1Diy5tHVQ53oHLnPDXkLocETyPDmGIIuQnXQbY3VkcLfA4pbAHMaRimrXwKreOEtAqVBa+imikN6idDutMBCP5+s2YgAyiMgsp+HrPWVmnnDAi0sPI6kccbFTYru3+F+QOK5tUPdAxkO59Ha8Z260pa+JaWqIGeV7OXUEem/3+WpkJTDLI9Zt5gA5gJ+oEJGiV/DIj+da0u9+YyeS3iqHxtN6GYKo1QtDF1iIdIrNaesSIq7EKxAwM/x21qVSRRBp8nPHuKcR5XB97spO3H5LOUVQoYn4wF9E65t/f0nbu+AMmFTD0qbkAyTSCodRhE0Q/mOEcne4at8HVju20ND2rLGXWbTQMO2NjC66KhDx6X0wxyGOOkPQydXnHYfC8yfHAHsMw5TtqicForY3b/jKloBT6a7sfQ/4v8liDqZjpITiaeNrE82B9OPrBwcJm6XWFgdbugYNvNWk6grxPKNonSdH9bTxYe0EmgJ
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A033709EA4F95043BAEBE4C09070BEF0@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jan 2020 08:02:16 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43081 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgANNCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:02:16 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1irLpl-0004Zs-E0; Tue, 14 Jan 2020 14:02:13 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 094491C07F3;
+        Tue, 14 Jan 2020 14:02:13 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:12 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] selftests/timens: Add a simple perf test for
+ clock_gettime()
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191112012724.250792-34-dima@arista.com>
+References: <20191112012724.250792-34-dima@arista.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2a0244a-8d2b-4f80-b5a9-08d798f1aaa9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 13:00:01.5682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Bgh9Ew85x3ulatcEDnJxq6DbeJBFsw52GEPyw5r25gZSv9ntsBsXlm82uov131gKVpglN2vIpdtGn0kgatz43A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5246
+Message-ID: <157900693280.396.15736904775758092971.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:47:02PM -0800, Ralph Campbell wrote:
->  void
->  nouveau_svmm_fini(struct nouveau_svmm **psvmm)
->  {
->  	struct nouveau_svmm *svmm =3D *psvmm;
-> +	struct mmu_interval_notifier *mni;
-> +
->  	if (svmm) {
->  		mutex_lock(&svmm->mutex);
-> +		while (true) {
-> +			mni =3D mmu_interval_notifier_find(svmm->mm,
-> +					&nouveau_svm_mni_ops, 0UL, ~0UL);
-> +			if (!mni)
-> +				break;
-> +			mmu_interval_notifier_put(mni);
+The following commit has been merged into the timers/core branch of tip:
 
-Oh, now I really don't like the name 'put'. It looks like mni is
-refcounted here, and it isn't. put should be called 'remove_deferred'
+Commit-ID:     1854b97e4fa6a476d5cdc3dc30c42e1528699f87
+Gitweb:        https://git.kernel.org/tip/1854b97e4fa6a476d5cdc3dc30c42e1528699f87
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:22 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 14 Jan 2020 12:21:02 +01:00
 
-And then you also need a way to barrier this scheme on driver unload.
+selftests/timens: Add a simple perf test for clock_gettime()
 
-> +		}
->  		svmm->vmm =3D NULL;
->  		mutex_unlock(&svmm->mutex);
-> -		mmu_notifier_put(&svmm->notifier);
+Output on success:
+1..4
+ ok 1 host:	clock:  monotonic	cycles:	 148323947
+ ok 2 host:	clock:   boottime	cycles:	 148577503
+ ok 3 ns:	clock:  monotonic	cycles:	 137659217
+ ok 4 ns:	clock:   boottime	cycles:	 137959154
+ # Pass 4 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
 
-While here it was actually a refcount.
+Output with lack of permissions:
+ 1..4
+ ok 1 host:	clock:  monotonic	cycles:	 145671139
+ ok 2 host:	clock:   boottime	cycles:	 146958357
+ not ok 3 # SKIP need to run as root
 
-> +static void nouveau_svmm_do_unmap(struct mmu_interval_notifier *mni,
-> +				 const struct mmu_notifier_range *range)
-> +{
-> +	struct svmm_interval *smi =3D
-> +		container_of(mni, struct svmm_interval, notifier);
-> +	struct nouveau_svmm *svmm =3D smi->svmm;
-> +	unsigned long start =3D mmu_interval_notifier_start(mni);
-> +	unsigned long last =3D mmu_interval_notifier_last(mni);
+Output without support of time namespaces:
+ 1..4
+ ok 1 host:	clock:  monotonic	cycles:	 145671139
+ ok 2 host:	clock:   boottime	cycles:	 146958357
+ not ok 3 # SKIP Time namespaces are not supported
 
-This whole algorithm only works if it is protected by the read side of
-the interval tree lock. Deserves at least a comment if not an
-assertion too.
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20191112012724.250792-34-dima@arista.com
 
->  static int nouveau_range_fault(struct nouveau_svmm *svmm,
->  			       struct nouveau_drm *drm, void *data, u32 size,
-> -			       u64 *pfns, struct svm_notifier *notifier)
-> +			       u64 *pfns, u64 start, u64 end)
->  {
->  	unsigned long timeout =3D
->  		jiffies + msecs_to_jiffies(HMM_RANGE_DEFAULT_TIMEOUT);
->  	/* Have HMM fault pages within the fault window to the GPU. */
->  	struct hmm_range range =3D {
-> -		.notifier =3D &notifier->notifier,
-> -		.start =3D notifier->notifier.interval_tree.start,
-> -		.end =3D notifier->notifier.interval_tree.last + 1,
-> +		.start =3D start,
-> +		.end =3D end,
->  		.pfns =3D pfns,
->  		.flags =3D nouveau_svm_pfn_flags,
->  		.values =3D nouveau_svm_pfn_values,
-> +		.default_flags =3D 0,
-> +		.pfn_flags_mask =3D ~0UL,
->  		.pfn_shift =3D NVIF_VMM_PFNMAP_V0_ADDR_SHIFT,
->  	};
-> -	struct mm_struct *mm =3D notifier->notifier.mm;
-> +	struct mm_struct *mm =3D svmm->mm;
->  	long ret;
-> =20
->  	while (true) {
->  		if (time_after(jiffies, timeout))
->  			return -EBUSY;
-> =20
-> -		range.notifier_seq =3D mmu_interval_read_begin(range.notifier);
-> -		range.default_flags =3D 0;
-> -		range.pfn_flags_mask =3D -1UL;
->  		down_read(&mm->mmap_sem);
 
-mmap sem doesn't have to be held for the interval search, and again we
-have lifetime issues with the membership here.
+---
+ tools/testing/selftests/timens/.gitignore     |  2 +-
+ tools/testing/selftests/timens/Makefile       |  3 +-
+ tools/testing/selftests/timens/gettime_perf.c | 95 ++++++++++++++++++-
+ 3 files changed, 99 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/timens/gettime_perf.c
 
-> +		ret =3D nouveau_svmm_interval_find(svmm, &range);
-> +		if (ret) {
-> +			up_read(&mm->mmap_sem);
-> +			return ret;
-> +		}
-> +		range.notifier_seq =3D mmu_interval_read_begin(range.notifier);
->  		ret =3D hmm_range_fault(&range, 0);
->  		up_read(&mm->mmap_sem);
->  		if (ret <=3D 0) {
-
-I'm still not sure this is a better approach than what ODP does. It
-looks very expensive on the fault path..
-
-Jason
+diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
+index 3b7eda8..16292e4 100644
+--- a/tools/testing/selftests/timens/.gitignore
++++ b/tools/testing/selftests/timens/.gitignore
+@@ -1,4 +1,6 @@
+ clock_nanosleep
++gettime_perf
++gettime_perf_cold
+ procfs
+ timens
+ timer
+diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
+index 0816454..6aefcac 100644
+--- a/tools/testing/selftests/timens/Makefile
++++ b/tools/testing/selftests/timens/Makefile
+@@ -1,6 +1,7 @@
+ TEST_GEN_PROGS := timens timerfd timer clock_nanosleep procfs
++TEST_GEN_PROGS_EXTENDED := gettime_perf
+ 
+ CFLAGS := -Wall -Werror -pthread
+-LDFLAGS := -lrt
++LDFLAGS := -lrt -ldl
+ 
+ include ../lib.mk
+diff --git a/tools/testing/selftests/timens/gettime_perf.c b/tools/testing/selftests/timens/gettime_perf.c
+new file mode 100644
+index 0000000..7bf841a
+--- /dev/null
++++ b/tools/testing/selftests/timens/gettime_perf.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <sched.h>
++#include <time.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/syscall.h>
++#include <dlfcn.h>
++
++#include "log.h"
++#include "timens.h"
++
++typedef int (*vgettime_t)(clockid_t, struct timespec *);
++
++vgettime_t vdso_clock_gettime;
++
++static void fill_function_pointers(void)
++{
++	void *vdso = dlopen("linux-vdso.so.1",
++			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
++	if (!vdso)
++		vdso = dlopen("linux-gate.so.1",
++			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
++	if (!vdso) {
++		pr_err("[WARN]\tfailed to find vDSO\n");
++		return;
++	}
++
++	vdso_clock_gettime = (vgettime_t)dlsym(vdso, "__vdso_clock_gettime");
++	if (!vdso_clock_gettime)
++		pr_err("Warning: failed to find clock_gettime in vDSO\n");
++
++}
++
++static void test(clock_t clockid, char *clockstr, bool in_ns)
++{
++	struct timespec tp, start;
++	long i = 0;
++	const int timeout = 3;
++
++	vdso_clock_gettime(clockid, &start);
++	tp = start;
++	for (tp = start; start.tv_sec + timeout > tp.tv_sec ||
++			 (start.tv_sec + timeout == tp.tv_sec &&
++			  start.tv_nsec > tp.tv_nsec); i++) {
++		vdso_clock_gettime(clockid, &tp);
++	}
++
++	ksft_test_result_pass("%s:\tclock: %10s\tcycles:\t%10ld\n",
++			      in_ns ? "ns" : "host", clockstr, i);
++}
++
++int main(int argc, char *argv[])
++{
++	time_t offset = 10;
++	int nsfd;
++
++	ksft_set_plan(8);
++
++	fill_function_pointers();
++
++	test(CLOCK_MONOTONIC, "monotonic", false);
++	test(CLOCK_MONOTONIC_COARSE, "monotonic-coarse", false);
++	test(CLOCK_MONOTONIC_RAW, "monotonic-raw", false);
++	test(CLOCK_BOOTTIME, "boottime", false);
++
++	nscheck();
++
++	if (unshare_timens())
++		return 1;
++
++	nsfd = open("/proc/self/ns/time_for_children", O_RDONLY);
++	if (nsfd < 0)
++		return pr_perror("Can't open a time namespace");
++
++	if (_settime(CLOCK_MONOTONIC, offset))
++		return 1;
++	if (_settime(CLOCK_BOOTTIME, offset))
++		return 1;
++
++	if (setns(nsfd, CLONE_NEWTIME))
++		return pr_perror("setns");
++
++	test(CLOCK_MONOTONIC, "monotonic", true);
++	test(CLOCK_MONOTONIC_COARSE, "monotonic-coarse", true);
++	test(CLOCK_MONOTONIC_RAW, "monotonic-raw", true);
++	test(CLOCK_BOOTTIME, "boottime", true);
++
++	ksft_exit_pass();
++	return 0;
++}
