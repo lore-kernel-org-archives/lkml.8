@@ -2,106 +2,100 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB27C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B15C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34BCB24658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="meEWzXz0"
+	by mail.kernel.org (Postfix) with ESMTP id CEC3E24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgANU50 (ORCPT
+        id S1728879AbgANU6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:57:26 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33772 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANU50 (ORCPT
+        Tue, 14 Jan 2020 15:58:01 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:43061 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANU6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:57:26 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so5720851plb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Yw4+mImP3xYemjNvEkTXmDMcGpXxaxAKM4GUBoCUQVE=;
-        b=meEWzXz0iIiGD+szilzJbFn93Ka67aSbLRJ9wne3w2YWA+jsC7qemaDkmGSUrhndjx
-         6LzOtL6Vvux8f8xKsXQz0p5sHQTf7/Z14qIDx7ZCfiRZLg11JY86JF48ZSFoSYisTPgD
-         Z3hyNfR+nHSLcmiWbGyA1E0X3mCdGHa1iLNwBOIXcLHS1cEhv5502Gjcp/H3L4bYi5VM
-         EhWQLy65l4h/wnaGDxqWu+Ve/UMFwaq3Cx79sI7wDGUNcwpMuwUnuJFvI5Z7bewxIlR9
-         7Ol2MY1JtdE0ZkhBTpaPEv+yR8x1MNHBaqg+G2fPLK1WiBBZ2VGvkUhAq2WVsHpdcF7A
-         JonQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Yw4+mImP3xYemjNvEkTXmDMcGpXxaxAKM4GUBoCUQVE=;
-        b=qNak3XkZozV7AyEfeKCa9UAjE8mJUP6yLxhJqKm/0yCRibL2REi1qv9s7KbaTn0ZNZ
-         egHirwOy6QrAsG2O72T5qcizq6qGymxpgxAjQVtXk9orMNP1ztMCHpSW+pIZp0q7P4io
-         67nsxTcY9/UqxXAhGiSUGkHj0MBfGXf9HapLUF1vcnUGgfheZU3kPavL1e9aoZ9qEAJN
-         1D3uo8dP5HnfxBv8D9jD6xvq72S7sXQvqw+7vRlXCpzTU7O0wUpn29dYOHtOw8VebwGW
-         6kf9LVeIH7Ah5+n7sgZ7GcrXqCdexisc8Kx+qNIGsQCadj+qa6rhuNKya0Ta0oR1GrSb
-         LN6g==
-X-Gm-Message-State: APjAAAWz2a+w2UF7MI8YMpFT7P8NhSSvGSAdHNWZlhdykMOfLiO6s+0D
-        9wiaG7G0OXuXilpXwlhGY62yNg==
-X-Google-Smtp-Source: APXvYqz7YJQ9CTCHO6hNIZZYM+ZTeUZfAdGByWSmm119Y5+Eq0RdJ4hmTUZWY3fJDjxiiqFGyvET8A==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr31206212pjn.60.1579035443905;
-        Tue, 14 Jan 2020 12:57:23 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id t63sm19315754pfb.70.2020.01.14.12.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 12:57:22 -0800 (PST)
-Date:   Tue, 14 Jan 2020 12:57:22 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-cc:     Michal Hocko <mhocko@kernel.org>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200114105921.eo2vdwikrvtt3gkb@box>
-Message-ID: <alpine.DEB.2.21.2001141254460.84781@chino.kir.corp.google.com>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com> <20200111000352.efy6krudecpshezh@box> <20200114093122.GH19428@dhcp22.suse.cz> <20200114103112.o6ozdbkfnzdsc2ke@box> <20200114105921.eo2vdwikrvtt3gkb@box>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 14 Jan 2020 15:58:00 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MpDa5-1jRbhI13iJ-00qlZL; Tue, 14 Jan 2020 21:57:59 +0100
+Received: by mail-qk1-f174.google.com with SMTP id j9so13607771qkk.1;
+        Tue, 14 Jan 2020 12:57:58 -0800 (PST)
+X-Gm-Message-State: APjAAAXcv/58nsBItD6xmmsBSbFGrgcAhJ2ogCVxYy6v/J+/treDGYjy
+        zFL33cjSTSOG0tHMx7z47onwA5LDgup/Ci5Go3o=
+X-Google-Smtp-Source: APXvYqwhg5lxdDG9hw24GdeXieaQIzqGf7tcgGAhb/t/luGZu0DMMqM2FGkeCDHJm3CEiDORiqOll/dN1rxk4xKyAcY=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr19031507qke.394.1579035478013;
+ Tue, 14 Jan 2020 12:57:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200114200846.29434-1-vgupta@synopsys.com> <20200114200846.29434-2-vgupta@synopsys.com>
+In-Reply-To: <20200114200846.29434-2-vgupta@synopsys.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Jan 2020 21:57:42 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3W0eLK+qypnPwq=PdcF7+ey8OZEhmOoA6Bg7hMGm5hqQ@mail.gmail.com>
+Message-ID: <CAK8P3a3W0eLK+qypnPwq=PdcF7+ey8OZEhmOoA6Bg7hMGm5hqQ@mail.gmail.com>
+Subject: Re: [RFC 1/4] asm-generic/uaccess: don't define inline functions if
+ noinline lib/* in use
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:kDnJNAh/DNMBSqFPq6pLI1Nlr9B0G9P4obBew/8vuXY0oVgXmJw
+ Nv/q1RAtYWHD7iaYn6uj3/GYEEUDxyIzlxtWfs3swS+9vrwM3Eh7taZQFUCI2mVelJDhCAE
+ wtNEg0QlQWgsWNv36ps92xCvtka8T7kKwUn3F5UcFCwdTahhU4Z6+pxS+X2fuB53MKKXo+j
+ rzj+G8gQMcz7vn066OrPA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S9alnY7jl0w=:QIO67bfjC+c2E4/f6+vfNp
+ sJ83S1el6CRwhZ7PhMdRGEQKcFOtDl5Y8+W9V7P8KOOz9VgGezLClXFxuaSS+bvKFBdVNPEg/
+ kPPr/qd2n3NlndzoFcyvs4MWwuNXWMXbrSFMig0xQFJy4caFeId5wlvbsK7BZoT23/BS6KK2R
+ s1LyXTw/NVTJ5qtsvci9u26OVjoZkWyXchDOJ5ZaC+qu1LWF8oZH16Y1x6mDvX4vwWqluSl2M
+ s80MQGJi+gZZgSU0T4nDXLhdUIlLrxbHzN6NHDhoGjeERHb4MvLwBjraNl+c2KZl5Mr7kijYa
+ qg05/GoIAohm41IKuCYpICH+rLpAmOJ9Qw5JLS63qdZ5jJGoSTwz4VaE1DmOuGbL0UVuEKYO8
+ WUiHKdqE5SfHz+qCdXuAi4Z3GLpbFoYrS+6n+mYQuRM4YGw/rV2ZVBmpHrRwyKyP/sWpaXtxL
+ PBsTzOsJEcYDGadFblz0vFkbrRRnFoLS8rDQAoNEWhL01lUgMMZXHWlAZ54k8dte4a7c7guTu
+ 4w1BtCUZDvB3HFhYG8cmrJAbJPjxSf5KRUwwsSZOi/wnS+wO4suzZ3BZNhfVVtvRheUtqmo9b
+ eNWQ/WvubyGsgJ7beGXOHWaZUrdxrCfur5ZekQer5UK9ttmZaSFAnDHJ9A6+Bfc6ffPtB+UO2
+ 0i3SLIHqs3OO1dSe1POh130jngV3WZny0LnDRnBALEtIcBugqY3vTu2FOJsQ7mfyJ2uxqSJj+
+ OlBA6QA/Nl046q4hXHZVjKM9HKtCfnAwZ2Ui0Cil1yw2FicMvQmH+CB5jT3NBp7mzxbxyEbXO
+ KjgSpY/RGYVGEeRdlEQ9SNfvLsmPUSELJRt0K5Xdu0aaWQWi3EpDDp/8DPewXZzzZ2FKOWaYb
+ WVk3Mc5AlfvNp5qwBhng==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Kirill A. Shutemov wrote:
+On Tue, Jan 14, 2020 at 9:08 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+>
+> There are 2 generic varaints of strncpy_from_user() / strnlen_user()
+>  (1). inline version in asm-generic/uaccess.h
+>  (2). optimized word-at-a-time version in lib/*
+>
+> This patch disables #1 if #2 selected. This allows arches to continue
+> reusing asm-generic/uaccess.h for rest of code
+>
+> This came up when switching ARC to generic word-at-a-time interface
+>
+> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 
-> split_huge_page_to_list() has page lock taken.
-> 
-> free_transhuge_page() is in the free path and doesn't susceptible to the
-> race.
-> 
-> deferred_split_scan() is trickier. list_move() should be safe against
-> list_empty() as it will not produce false-positive list_empty().
-> list_del_init() *should* (correct me if I'm wrong) be safe because the page
-> is freeing and memcg will not touch the page anymore.
-> 
-> deferred_split_huge_page() is a problematic one. It called from
-> page_remove_rmap() path witch does require page lock. I don't see any
-> obvious way to exclude race with mem_cgroup_move_account() here.
-> Anybody else?
-> 
-> Wei, could you rewrite the commit message with deferred_split_huge_page()
-> as a race source instead of split_huge_page_to_list()?
-> 
+This looks like a useful change, but I think we can do even better: It
+seems that
+there are no  callers of __strnlen_user or __strncpy_from_user  in the
+kernel today, so these should not be defined either when the Kconfig symbols
+are set. Also, I would suggest moving the 'extern' declaration for the two
+functions into the #else branch of the conditional so it does not need to be
+duplicated.
 
-I think describing the race in terms of deferred_split_huge_page() makes 
-the most sense and I'd prefer a cc to stable for 5.4+.  Even getting the 
-split_queue_len, which is unsigned long, to underflow because of a 
-list_empty(page_deferred_list()) check that is no longer accurate after 
-the lock is taken would be a significant issue for shrinkers.
+      Arnd
