@@ -2,96 +2,76 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D345BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05E32072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3252072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgANWvC (ORCPT
+        id S1728897AbgANWvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:51:02 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:33606 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728746AbgANWvB (ORCPT
+        Tue, 14 Jan 2020 17:51:08 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51809 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728746AbgANWvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:51:01 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-108.corp.google.com [104.133.0.108] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00EMnH2t015142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 17:49:18 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 441C34207DF; Tue, 14 Jan 2020 17:49:17 -0500 (EST)
-Date:   Tue, 14 Jan 2020 17:49:17 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, hch@lst.de,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Problems with determining data presence by examining extents?
-Message-ID: <20200114224917.GA165687@mit.edu>
-References: <4467.1579020509@warthog.procyon.org.uk>
+        Tue, 14 Jan 2020 17:51:06 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id c1cb78ac0f69600f; Tue, 14 Jan 2020 23:51:04 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH] cpuidle: arm: Enable compile testing for some of drivers
+Date:   Tue, 14 Jan 2020 23:51:03 +0100
+Message-ID: <4692219.51FEeoGIeG@kreacher>
+In-Reply-To: <92592736-fa55-8fe8-c893-e9e7129fe910@linaro.org>
+References: <20191229180912.17100-1-krzk@kernel.org> <a4fa3f89-e792-aeee-b9ea-9af244ace04a@linaro.org> <92592736-fa55-8fe8-c893-e9e7129fe910@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4467.1579020509@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 04:48:29PM +0000, David Howells wrote:
-> Again with regard to my rewrite of fscache and cachefiles:
+On Monday, January 13, 2020 1:24:00 PM CET Daniel Lezcano wrote:
+> On 13/01/2020 12:58, Daniel Lezcano wrote:
+> > On 13/01/2020 12:51, Rafael J. Wysocki wrote:
+> >> On Sunday, December 29, 2019 7:09:12 PM CET Krzysztof Kozlowski wrote:
+> >>> Some of cpuidle drivers for ARMv7 can be compile tested on this
+> >>> architecture because they do not depend on mach-specific bits.  Enable
+> >>> compile testing for big.LITTLE, Kirkwood, Zynq, AT91, Exynos and mvebu
+> >>> cpuidle drivers.
+> >>>
+> >>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >>> ---
 > 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+> [ ... ]
 > 
-> I've got rid of my use of bmap()!  Hooray!
+> >> Daniel, any concerns regarding this one?
+> > 
+> > Yes, I have a doubt about this patch. I'll double check before commenting.
 > 
-> However, I'm informed that I can't trust the extent map of a backing file to
-> tell me accurately whether content exists in a file because:
+> Actually it is fine.
 > 
->  (a) Not-quite-contiguous extents may be joined by insertion of blocks of
->      zeros by the filesystem optimising itself.  This would give me a false
->      positive when trying to detect the presence of data.
-> 
->  (b) Blocks of zeros that I write into the file may get punched out by
->      filesystem optimisation since a read back would be expected to read zeros
->      there anyway, provided it's below the EOF.  This would give me a false
->      negative.
-> 
-> Is there some setting I can use to prevent these scenarios on a file - or can
-> one be added?
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-I don't think there's any way to do this in a portable way, at least
-today.  There is a hack we could be use that would work for ext4
-today, at least with respect to (a), but I'm not sure we would want to
-make any guarantees with respect to (b).
+OK, patch applied.
 
-I suspect I understand why you want this; I've fielded some requests
-for people wanting to do something very like this at $WORK, for what I
-assume to be for the same reason you're seeking to do this; to create
-do incremental caching of files and letting the file system track what
-has and hasn't been cached yet.
+Thanks!
 
-If we were going to add such a facility, what we could perhaps do is
-to define a new flag indicating that a particular file should have no
-extent mapping optimization applied, such that FIEMAP would return a
-mapping if and only if userspace had written to a particular block, or
-had requested that a block be preallocated using fallocate().  The
-flag could only be set on a zero-length file, and this might disable
-certain advanced file system features, such as reflink, at the file
-system's discretion; and there might be unspecified performance
-impacts if this flag is set on a file.
 
-File systems which do not support this feature would not allow this
-flag to be set.
 
-				- Ted
