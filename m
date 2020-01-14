@@ -2,154 +2,113 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C147C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5CCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B007124655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB7A24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="fDtwT+lG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpxHgutx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgANUda (ORCPT
+        id S1729011AbgANUdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:33:30 -0500
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:38708 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728869AbgANUda (ORCPT
+        Tue, 14 Jan 2020 15:33:49 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39367 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgANUdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:33:30 -0500
-Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EKUG64025181;
-        Tue, 14 Jan 2020 15:33:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=YcVTsFVCk33wsAAbjgqR5UImqzVzyOEDm+5euXlYj4A=;
- b=fDtwT+lGLI+UBFyd7y22qRmTdwDQqJasOPo4ZGD6OrzRFqRYFOM88pU92Sw1KGJz+HkE
- ycEscT/piAr8isyVBn8TcmCj46wAxwESNxJy8rLEX6yg1l43Pry9yXw/WaZIuT2tByid
- eSZ/dGgslgmtNL6qpCoH5l2RRpsAl4+qvo9QihUxNO3JRsZ4Gjegyr7mmlhsJILFP116
- znzQhCs5Jjs3PkPDCajChsSs7r6pDTYWF4yKvasP7wEIlnNy8F+iqUQT73dJbCKkD1CQ
- 4PPyZRt3OwihASS/MFwc3zAAXdz/L4C0WhuGjyyvEWxMTRLfdpyftM7ZIJnW49I3qJip dA== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 2xfadfmnrj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 15:33:28 -0500
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EKWZtg178088;
-        Tue, 14 Jan 2020 15:33:27 -0500
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0b-00154901.pphosted.com with ESMTP id 2xgv7unf13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 15:33:27 -0500
-X-LoopCount0: from 10.166.132.128
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="445730065"
-From:   <Mario.Limonciello@dell.com>
-To:     <kai.heng.feng@canonical.com>, <davem@davemloft.net>,
-        <hayeswang@realtek.com>
-CC:     <jakub.kicinski@netronome.com>, <pmalani@chromium.org>,
-        <grundler@chromium.org>, <David.Chen7@Dell.com>,
-        <linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] r8152: Add MAC passthrough support to new device
-Thread-Topic: [PATCH] r8152: Add MAC passthrough support to new device
-Thread-Index: AQHVypTyXWy+UgfzBkaZbhNc/JuHNafqnTJA
-Date:   Tue, 14 Jan 2020 20:33:19 +0000
-Message-ID: <d8af34dbf4994b7b8b0bf48e81084dd0@AUSX13MPC101.AMER.DELL.COM>
-References: <20200114044127.20085-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20200114044127.20085-1-kai.heng.feng@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-01-14T20:33:18.1061397Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jan 2020 15:33:46 -0500
+Received: by mail-lj1-f196.google.com with SMTP id l2so15879167lja.6;
+        Tue, 14 Jan 2020 12:33:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sGJB+mL9w5RryZTl/aXG7CYZ8Jke0HmMH4InRACq8OQ=;
+        b=XpxHgutxnXiuktU6MDY4Ii7ImEf4scE6uZSEYYDygjbXcQDXFlVMTZith8xL/5fOYj
+         J/qGRYiHIWnrA+LQZ0GW7QyrXRe/yeYFaLlxx8T7LsIZIzSd4hgUx4z8rFfpehXTnXFI
+         gOsy/UrOMmHNZiP0luLmRlNpXk5TUT9KSgRYsILL04W4jBPz7M5FrDGu96aurikEQ/H0
+         axRxpFyl13G87BYb9bmWR0PditOQFBd5TzT15xpkwF5eelJv7dEN9fbmYghe4Ers0XSi
+         kl+zTl59Uy4P/mBP/NrzS6wHFgLQO6mHcST70SxFlsAWf4kvrr7xGOxejP4ymUyLJm+m
+         /eeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sGJB+mL9w5RryZTl/aXG7CYZ8Jke0HmMH4InRACq8OQ=;
+        b=NDcrK2yu+MT1jkUpiC8vIAGOERqjOso8p7ilO5/HCTN6jlkFW9EDEpUfO3h3Akr/vp
+         UIecQlXQtwRRi1eGscT1T0ZE4lsa62gTKWtWklZLc9p9KTTK1ifiH+faMg5lin8Ewiiv
+         2TbbhJdgqtInzyE3riVsUmIpgpKEnlL8062qeQtNCbM0mI1S02NO/0zv+83I2E2Mms5O
+         71QMJct+j4GXhODXRhxNfYgWLySIqep70+zCaMmdKm4qLzkuXnVNKRWnrEBWT2KakjSJ
+         KxdIjn1dw+IEx31ghnYZyLHZkiVQYbEEelBvcCob+qztdxBLmqsuZT3EhJjtaB0WPYAy
+         FhoQ==
+X-Gm-Message-State: APjAAAVOiUVpyA9zhq3nT6GNNbskz9RTpO/AIcWRx3fSorWRgca8J0SF
+        25geZwzp9K0VSGx36U/j0KXfpjW5
+X-Google-Smtp-Source: APXvYqxH/Mebti1Ak07y0xEyPS4es+5eW3EEwWSzz9HUExQUOqbePyZ5nZ1zyZpkDdMYhOWcnPv0xA==
+X-Received: by 2002:a2e:b61a:: with SMTP id r26mr15831520ljn.72.1579034022766;
+        Tue, 14 Jan 2020 12:33:42 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b1sm9278272ljp.72.2020.01.14.12.33.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 12:33:41 -0800 (PST)
+Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-2-digetx@gmail.com>
+ <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
+Date:   Tue, 14 Jan 2020 23:33:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_06:2020-01-14,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 phishscore=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 mlxlogscore=433 spamscore=0 bulkscore=0
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001140157
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 phishscore=0 mlxlogscore=550
- spamscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001140156
+In-Reply-To: <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+14.01.2020 18:09, Jon Hunter пишет:
+> 
+> On 12/01/2020 17:29, Dmitry Osipenko wrote:
+>> I was doing some experiments with I2C and noticed that Tegra APB DMA
+>> driver crashes sometime after I2C DMA transfer termination. The crash
+>> happens because tegra_dma_terminate_all() bails out immediately if pending
+>> list is empty, thus it doesn't release the half-completed descriptors
+>> which are getting re-used before ISR tasklet kicks-in.
+> 
+> Can you elaborate a bit more on how these are getting re-used? What is
+> the sequence of events which results in the panic? I believe that this
+> was also reported in the past [0] and so I don't doubt there is an issue
+> here, but would like to completely understand this.
+> 
+> Thanks!
+> Jon
+> 
+> [0] https://lore.kernel.org/patchwork/patch/675349/
+> 
 
-
-> -----Original Message-----
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Monday, January 13, 2020 10:41 PM
-> To: davem@davemloft.net; hayeswang@realtek.com
-> Cc: Kai-Heng Feng; Jakub Kicinski; Prashant Malani; Grant Grundler; Limon=
-ciello,
-> Mario; Chen7, David; open list:USB NETWORKING DRIVERS; open list:NETWORKI=
-NG
-> DRIVERS; open list
-> Subject: [PATCH] r8152: Add MAC passthrough support to new device
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> Device 0xa387 also supports MAC passthrough, therefore add it to the
-> whitelst.
-
-Have you confirmed whether this product ID is unique to the products that
-support this feature or if it's also re-used in other products?
-
-For Dell's devices there are very specific tests that make sure that this
-feature only applies on the products it is supposed to and nothing else
-(For example RTL8153-AD checks variant as well as effuse value)
-(Example two: RTL8153-BND is a Dell only part).
-
->=20
-> BugLink: https://bugs.launchpad.net/bugs/1827961/comments/30
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/net/usb/r8152.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index c5ebf35d2488..42dcf1442cc0 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -6657,7 +6657,8 @@ static int rtl8152_probe(struct usb_interface *intf=
-,
->  	}
->=20
->  	if (le16_to_cpu(udev->descriptor.idVendor) =3D=3D VENDOR_ID_LENOVO &&
-> -	    le16_to_cpu(udev->descriptor.idProduct) =3D=3D 0x3082)
-> +	    (le16_to_cpu(udev->descriptor.idProduct) =3D=3D 0x3082 ||
-> +	     le16_to_cpu(udev->descriptor.idProduct) =3D=3D 0xa387))
->  		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
->=20
->  	if (le16_to_cpu(udev->descriptor.bcdDevice) =3D=3D 0x3011 && udev->seri=
-al
-> &&
-> --
-> 2.17.1
-
+In my case it happens in the touchscreen driver during of the
+touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
+under load and there is other interrupts activity. So what happens here
+is that the TS driver issues one I2C transfer, which fails with
+(apparently bogus) timeout (because DMA descriptor is completed and
+removed from the pending list, but tasklet not executed yet), and then
+TS immediately issues another I2C transfer that re-uses the
+yet-incompleted descriptor. That's my understanding.
