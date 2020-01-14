@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA10C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33070C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0DF20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032A02080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeKvUXKu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRTPGsNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgANBhP (ORCPT
+        id S1729160AbgANBg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:37:15 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44715 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgANBhC (ORCPT
+        Mon, 13 Jan 2020 20:36:59 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37227 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728944AbgANBg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:37:02 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so8430593lfa.11;
-        Mon, 13 Jan 2020 17:37:00 -0800 (PST)
+        Mon, 13 Jan 2020 20:36:56 -0500
+Received: by mail-lj1-f193.google.com with SMTP id o13so12381736ljg.4;
+        Mon, 13 Jan 2020 17:36:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Tl7vtSi+PnhU8zv8cy8MKZTZZyU72nU5B2eEjZlckoM=;
-        b=UeKvUXKumE2bgthaRKD+h9XeZI2IVPFxvsubyfOZvKMOyrvGIQ3LpC778yrECkYGV3
-         LW8YERSx6NJsN0mx1YmM6QJhqOblsAgtopOjCwAHWK2q3ztwj1JyfcMbS/H3VA60ZRCC
-         WzmPSVC8iChut6dBjL9SfGaeqOp6cJNNx4tWaisd4LiOPZNKYd7GSJ/BGHKEfIrhaGOE
-         k+MFYe7By6718WSX5YloIwneCPBl4iD0IcJ8chPUCHz1NEgT0pswlBlVhOrDExEVL9cq
-         oJu/kbtyPFAvKeU8A+DDCEqGMPV/Bp0PXJSPHTw/hSmj3zcrhATKY0/3iayjAPewQOaX
-         c0vg==
+        bh=QVU0l94ZGKYq2v7mTNWPaJoWlqCeIiCLa/ETRf3XXY8=;
+        b=PRTPGsNcR6uDo2LcQlNAYMn4RrcFdLzb/GGSel85h3gujCai+G1NT97EckXsCIHCiN
+         t31iT1gC74nZ7PLkkTByZY14HZZl4/TcshWRDYYCbKTshv6UrGXFrRIV0F/tDomIZkdi
+         OMYqdj04mH9SoweRsnxdy2tuGTDwDzHJRIpLBTKNvDi7vxfOJTqWmrlRJIionEVqCh5G
+         GolwbM6Gl3/gS99iAeyDbyTn6A6HpcxzaRrr8Pob+G9kp3zQdoiO5PCRTVFnSfVVwbAj
+         UbZ144C+fnf5p2wQfBT4jifD6glikKmTjcjK1rYWCUb9xBVthj5CRYmi94y0k9HB756l
+         OIRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Tl7vtSi+PnhU8zv8cy8MKZTZZyU72nU5B2eEjZlckoM=;
-        b=tZ0R1SfQ4EDRFyL6VMWuKyBkzYww09W9K0A+3VLmpU78FGZqi1ILqaAjFdVErfBfwz
-         uHlA47FsXFPtaaBVZ7FJljNPGvTddTHQRJM9X8zCToz71q5tbtkbn3627zdEjGzD0Q19
-         dQ3h39wp3muXdEh4hMhcQy6DxC3k2syEkQ9l6nJ8YhujfJLqu6PlvzYZUQ2AAgn9rwAg
-         EYxuV/S8ZCHQFh20DgKk9hsgw3zNYBG+gJoEXUELHnujbCw/miJzedBPOYpVsfIn0Yd3
-         7kgdzWZhWFAEWbCUn1iS8d/qu3ZfvEHlhwm6NxCMWSmGhr3feXfKijr+73rVy4xau6Wz
-         El8A==
-X-Gm-Message-State: APjAAAVYwwt52UoqNZUXUuErarJz/U8uLA7LoYm6dzaOTqPxddYfHiCM
-        7HXqjHoXPNPR2AgfZ44fWGp7klOj
-X-Google-Smtp-Source: APXvYqxTzRO9jU6rYH9ZP5ltqn+SQQzNSyhPcGS0K3yOpg3rowGnBtNoeWSJ+y5qyCxFBALnNZsj2w==
-X-Received: by 2002:a19:f811:: with SMTP id a17mr188803lff.182.1578965820028;
-        Mon, 13 Jan 2020 17:37:00 -0800 (PST)
+        bh=QVU0l94ZGKYq2v7mTNWPaJoWlqCeIiCLa/ETRf3XXY8=;
+        b=Jg/NeJIQkUl/n1Dli4fsLFMh1RBOW4jYgWfQB/2U8CK4h/8INJMYvmA7kE9yZtzMET
+         x0LPDlo+98XlXmECdG+r3GMWTGLzsmzcBUMm58rVW7Rsi6eXHoNwOodE4/G3J0wzjanb
+         yYGW1Z7F6OcCPODPGjbRtBRy//kqpzMz5VVBuqNPWmr80pRACDKO/QokgN/f1Rq0WKx6
+         2USpjXE5Q2cdo+ZYfRoSLWET15couBe9+I9hzGebQrMB5sjfxBo2s7KrT89lgmuUZxF8
+         7F1Oi1gVsOqr9DJtJgIAAMmrPcBro/U8z6o12ijTpkWmvjJPfcNhe8rqdVVwSmH2Pgeu
+         49Bg==
+X-Gm-Message-State: APjAAAWz1Ytt+gNaQeg0K43HYZ0dRJXk1K5b0hV+SIIPPvlus/rUVB2S
+        jF0uBOau68b3mQ1UWJLactQ=
+X-Google-Smtp-Source: APXvYqz0s9Dhz3aUWokE6OYDxqroGU77U8O7NEtp1T+vldWsHUHgr0RRMeui43pxKagx9mETijB0fA==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr12756284lji.214.1578965814262;
+        Mon, 13 Jan 2020 17:36:54 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id m189sm6427627lfd.92.2020.01.13.17.36.59
+        by smtp.gmail.com with ESMTPSA id m189sm6427627lfd.92.2020.01.13.17.36.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 17:36:59 -0800 (PST)
+        Mon, 13 Jan 2020 17:36:53 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 7/8] i2c: tegra: Always terminate DMA transfer
-Date:   Tue, 14 Jan 2020 04:34:41 +0300
-Message-Id: <20200114013442.28448-8-digetx@gmail.com>
+Subject: [PATCH v5 1/8] i2c: tegra: Fix suspending in active runtime PM state
+Date:   Tue, 14 Jan 2020 04:34:35 +0300
+Message-Id: <20200114013442.28448-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200114013442.28448-1-digetx@gmail.com>
 References: <20200114013442.28448-1-digetx@gmail.com>
@@ -78,48 +78,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that I2C could error out in the middle of DMA transfer and
-in this case DMA channel needs to be reset, otherwise a follow up transfer
-will fail because DMA channel stays blocked.
+I noticed that sometime I2C clock is kept enabled during suspend-resume.
+This happens because runtime PM defers dynamic suspension and thus it may
+happen that runtime PM is in active state when system enters into suspend.
+In particular I2C controller that is used for CPU's DVFS is often kept ON
+during suspend because CPU's voltage scaling happens quite often.
 
+Fixes: 8ebf15e9c869 ("i2c: tegra: Move suspend handling to NOIRQ phase")
+Cc: <stable@vger.kernel.org> # v5.4+
 Tested-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1a390e1bff72..3c7c86d4b0e4 100644
+index a98bf31d0e5c..79d19f6ce94e 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1220,11 +1220,12 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		time_left = tegra_i2c_wait_completion_timeout(
- 				i2c_dev, &i2c_dev->dma_complete, xfer_time);
+@@ -1710,9 +1710,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+ {
+ 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
++	int err;
  
-+		dmaengine_terminate_sync(i2c_dev->msg_read ?
-+					 i2c_dev->rx_dma_chan :
-+					 i2c_dev->tx_dma_chan);
+ 	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+ 
++	err = pm_runtime_force_suspend(dev);
++	if (err < 0)
++		return err;
 +
- 		if (time_left == 0) {
- 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
--			dmaengine_terminate_sync(i2c_dev->msg_read ?
--						 i2c_dev->rx_dma_chan :
--						 i2c_dev->tx_dma_chan);
- 			tegra_i2c_init(i2c_dev, true);
- 			return -ETIMEDOUT;
- 		}
-@@ -1237,11 +1238,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 			memcpy(i2c_dev->msg_buf, i2c_dev->dma_buf,
- 			       msg->len);
- 		}
--
--		if (i2c_dev->msg_err != I2C_ERR_NONE)
--			dmaengine_synchronize(i2c_dev->msg_read ?
--					      i2c_dev->rx_dma_chan :
--					      i2c_dev->tx_dma_chan);
- 	}
+ 	return 0;
+ }
  
- 	time_left = tegra_i2c_wait_completion_timeout(
+@@ -1733,6 +1738,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+ 	if (err)
+ 		return err;
+ 
++	err = pm_runtime_force_resume(dev);
++	if (err < 0)
++		return err;
++
+ 	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+ 
+ 	return 0;
 -- 
 2.24.0
 
