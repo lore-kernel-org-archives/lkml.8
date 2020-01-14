@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDF9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED2A2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59E82465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996260;
-	bh=2ejj/U4kx70Rb1UpkbNqX1RW2WtsjFSzCDYZstS/hTk=;
+	s=default; t=1578996263;
+	bh=l8K21f1BSw03G59OGU4gmIVI6A4ckLt+MGapVwDypmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWNcAQq6W4bAx2IfwF4MKcQTh5SVIGt1a34BwQEkmirIWt0r0/w7q7P605urdikhX
-	 rLGFtw3eg6aEowMcUoUfCJ8r89obJcDHYcVW4vqd82RX9bti+sBmhIGOfoGEZ76lyT
-	 kklx8x5j3I2vA82RUaHKTArAOAMOla+jUO42pnrc=
+	b=Mr2b4J+GK9p/ztUctQVntVbOnaK0rPhX8dHr3VTIMGdIOtFriSCx2H9bkRcxmt/t9
+	 sIYF0gbhMS0hvvvj0IYbQG3phw5IJLXJ2qFCaF9pdrDWmZ/fDia0O+2wobBfyjTNh8
+	 654CPvuBtiUNwiKSnwE48/vunDFJRggM5+b4rprU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgANKET (ORCPT
+        id S1729861AbgANKEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbgANKES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:18 -0500
+        id S1729163AbgANKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B22924672;
-        Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 811502467C;
+        Tue, 14 Jan 2020 10:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996257;
-        bh=2ejj/U4kx70Rb1UpkbNqX1RW2WtsjFSzCDYZstS/hTk=;
+        s=default; t=1578996261;
+        bh=l8K21f1BSw03G59OGU4gmIVI6A4ckLt+MGapVwDypmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SbrycaYE8QUnX3XQpMrYD55uIVW0t6AkvSIORU3BKzARxvPH1VJ575PpVGrfKJFIh
-         Ftr41NDll+pIpOxVpO1vdL+e0zUUdXdbNSMx4M9CLoFoe9HSifQ84KPXPpEEEscwVB
-         onqYAX7Mhk+XiJ5GMy2Rka0rleS2ULUkbb40P9Co=
+        b=zQ5qxqRY29otZ++hw2xy+RN/pqHXXff2mUoNZmdhR3wUCQZen4V+u1Tx1AqfE+Edg
+         DVwr4UuBx4jmNzdmfWM9wisbgtEXvpEtpK9WhV7fBOQ9KtyBz8OHtGTesXWLMPwLG/
+         PnWyEGgIQ6mgjEns7P8wpZ2XLawOT+NFQxZdo+6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        David Sterba <dsterba@suse.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Antonio Borneo <antonio.borneo@st.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 16/78] tracing: Change offset type to s32 in preempt/irq tracepoints
-Date:   Tue, 14 Jan 2020 11:00:50 +0100
-Message-Id: <20200114094355.821961976@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 34/78] can: tcan4x5x: tcan4x5x_can_probe(): get the device out of standby before register access
+Date:   Tue, 14 Jan 2020 11:01:08 +0100
+Message-Id: <20200114094358.214072795@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -66,53 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Fernandes (Google) <joel@joelfernandes.org>
+From: Sean Nyekjaer <sean@geanix.com>
 
-commit bf44f488e168368cae4139b4b33c3d0aaa11679c upstream.
+commit 3069ce620daed85e4ef2b0c087dca2509f809470 upstream.
 
-Discussion in the below link reported that symbols in modules can appear
-to be before _stext on ARM architecture, causing wrapping with the
-offsets of this tracepoint. Change the offset type to s32 to fix this.
+The m_can tries to detect if Non ISO Operation is available while in
+standby mode, this function results in the following error:
 
-Link: http://lore.kernel.org/r/20191127154428.191095-1-antonio.borneo@st.com
-Link: http://lkml.kernel.org/r/20200102194625.226436-1-joel@joelfernandes.org
+| tcan4x5x spi2.0 (unnamed net_device) (uninitialized): Failed to init module
+| tcan4x5x spi2.0: m_can device registered (irq=84, version=32)
+| tcan4x5x spi2.0 can2: TCAN4X5X successfully initialized.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: David Sterba <dsterba@suse.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Antonio Borneo <antonio.borneo@st.com>
+When the tcan device comes out of reset it goes in standby mode. The
+m_can driver tries to access the control register but fails due to the
+device being in standby mode.
+
+So this patch will put the tcan device in normal mode before the m_can
+driver does the initialization.
+
+Fixes: 5443c226ba91 ("can: tcan4x5x: Add tcan4x5x driver to the kernel")
 Cc: stable@vger.kernel.org
-Fixes: d59158162e032 ("tracing: Add support for preempt and irq enable/disable events")
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Acked-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/trace/events/preemptirq.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/can/m_can/tcan4x5x.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/include/trace/events/preemptirq.h
-+++ b/include/trace/events/preemptirq.h
-@@ -18,13 +18,13 @@ DECLARE_EVENT_CLASS(preemptirq_template,
- 	TP_ARGS(ip, parent_ip),
+--- a/drivers/net/can/m_can/tcan4x5x.c
++++ b/drivers/net/can/m_can/tcan4x5x.c
+@@ -445,6 +445,10 @@ static int tcan4x5x_can_probe(struct spi
  
- 	TP_STRUCT__entry(
--		__field(u32, caller_offs)
--		__field(u32, parent_offs)
-+		__field(s32, caller_offs)
-+		__field(s32, parent_offs)
- 	),
+ 	tcan4x5x_power_enable(priv->power, 1);
  
- 	TP_fast_assign(
--		__entry->caller_offs = (u32)(ip - (unsigned long)_stext);
--		__entry->parent_offs = (u32)(parent_ip - (unsigned long)_stext);
-+		__entry->caller_offs = (s32)(ip - (unsigned long)_stext);
-+		__entry->parent_offs = (s32)(parent_ip - (unsigned long)_stext);
- 	),
- 
- 	TP_printk("caller=%pS parent=%pS",
++	ret = tcan4x5x_init(mcan_class);
++	if (ret)
++		goto out_power;
++
+ 	ret = m_can_class_register(mcan_class);
+ 	if (ret)
+ 		goto out_power;
 
 
