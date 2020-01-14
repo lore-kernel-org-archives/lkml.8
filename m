@@ -2,72 +2,108 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027B3C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F272187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578983877;
-	bh=d3TptTQMxcOQaiVXM++PdRKb60BDi4ryItpKb/Jtenw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pwlJgfiQIAK7BroSqO1zICFd2HOffPOoLLe4N/1vIw/yZ8+ubKRL4GhIUjYFtF6W9
-	 R5meCYxBs7KKrEK98zFYdVeGbk0x6WyWLY/4l1QDG5T5VVHQ/2Lxqjdu2R1lqENerC
-	 KcZ+sIWHk1oFgXRX8Egpf9r/0ZRxBmAWabKfC93c=
+	by mail.kernel.org (Postfix) with ESMTP id A804C207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:38:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTrsvdN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgANGh4 (ORCPT
+        id S1728794AbgANGiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:37:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgANGh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:37:56 -0500
-Received: from localhost (unknown [49.207.51.160])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC477207FD;
-        Tue, 14 Jan 2020 06:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578983875;
-        bh=d3TptTQMxcOQaiVXM++PdRKb60BDi4ryItpKb/Jtenw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sn/9uUIiMRtAUXrO57mkE70lQ2OvA5iO4sUEivrOwSlgOJkFnw1+6Atndni8cjfsQ
-         7NSgb5U6ZrVvHUXB5f2ZXVptE71t6dE6czVS0z6TkBqK1VV+c9zQ7mJ/cEf4t6xA02
-         kf+1bx6WncHdRfrOxRLJfptBNcUNA+FvoNAOE7UU=
-Date:   Tue, 14 Jan 2020 12:07:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH] soundwire: intel: fix factor of two in MCLK handling
-Message-ID: <20200114063751.GH2818@vkoul-mobl>
-References: <20200113231129.19049-1-pierre-louis.bossart@linux.intel.com>
+        Tue, 14 Jan 2020 01:38:17 -0500
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:42205 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgANGiR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:38:17 -0500
+Received: by mail-qt1-f169.google.com with SMTP id j5so11517848qtq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=j27ycO1Qzm9iEV8CqIJq72NKE5/Ygqvss6mRjlLhUm4=;
+        b=TTrsvdN8TyCGo5Ytcl+c4OkA3eymLUCmdpMK3rgszmiy3/Ii+n+5zncBnIpXnV12pu
+         o/+wkof8owg8rSqg4wA28O6Vz0Z1dB3CLq/O1JkgLdrSohQ8WVc01M8GTw9gu17kBVbT
+         hr/6xWVnnt5XTUQbCZe8MDphN0KUmfHCEAIcHbFiznr6wkTtP152j8FuRamJ5HeFGf7y
+         wbKZwyaIE9RiGu4vsWfjTiL/XxyeuWPIYKmFvwg3HngJ1HeSY812ZynY9RFgDKXYWmhR
+         KaH9qMMeunbNG3frv9QSjXt61k/9WEh91ko5+lvL/7STHNg8vPt/AwGlVKZ4oyxKt2oJ
+         YQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=j27ycO1Qzm9iEV8CqIJq72NKE5/Ygqvss6mRjlLhUm4=;
+        b=hJeRCifNkYxwzbpfUoDbVrHD1K8KTgmArgvf2WknWrAxGxHPpFBab512fMeQTrjsUA
+         E5B/zyL1JJMndzme3zk2PbE1RPjcSQxj7T6oGJgoygCVdfm3rHawE6DvCt0bDoTz8qGd
+         65X7lGE3k8RIIwmWyA+PgMmCNZAok8KlKa0orCOL7tYEIKOulmv4luyka5/djtMAkbsN
+         cppc2yAOZhVxJkTPUpdoT1ECS7XUcxdZA1++xgv17K9c2Ev0ndeapYZMgH41AuCJ03Dt
+         3Qx9TD3xKb6E+nC6INl7FAP922VvVO6zj6BMcejaf6MLC6yjUVLzN+UCdQL6uy0E/qcZ
+         hp8Q==
+X-Gm-Message-State: APjAAAW0guEyuY86OnEX1UYtJOPOoVo4oAqBvWT6X374LVSrME3ucgpJ
+        t5DoWf9AdzaDdpI+wcjis9dqDh/Uv9WK7N1P9FLBxcBCdI0=
+X-Google-Smtp-Source: APXvYqywyrhyQlNSSAj//8mo08SVs7dFbe6uys8wVkYdCxpIOjc6M5fxoWTQts0Wqh0VLoP+pQp6rkOV+807JIijbvc=
+X-Received: by 2002:aed:2465:: with SMTP id s34mr2292049qtc.158.1578983896143;
+ Mon, 13 Jan 2020 22:38:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113231129.19049-1-pierre-louis.bossart@linux.intel.com>
+References: <8645e64d639e9213bf68d0fdbee0c297.squirrel@imail.cse.ust.hk>
+In-Reply-To: <8645e64d639e9213bf68d0fdbee0c297.squirrel@imail.cse.ust.hk>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 14 Jan 2020 07:38:05 +0100
+Message-ID: <CACT4Y+a4LPFvu6Dx6PoS-5efmSqKCuXQTK+F9SP+X8U8VdeOFQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in screen_glyph_unicode
+To:     wchenbt@cse.ust.hk
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-01-20, 17:11, Pierre-Louis Bossart wrote:
-> From: Bard Liao <yung-chuan.liao@linux.intel.com>
-> 
-> Somehow Intel folks were confused, the property is 2x what the mclk
-> frequency actually is (checked the actual bus frequency with a scope)
+Hi Wei,
 
-Applied, thanks
+You should add relevant kernel maintainers to CC list when reporting
+kernel bugs, nobody is generally reading LKML mailing list. Please
+see:
+https://github.com/google/syzkaller/blob/master/docs/linux/reporting_kernel=
+_bugs.md
+or any other kernel bug reporting guide.
 
--- 
-~Vinod
+
+
+On Tue, Jan 14, 2020 at 7:33 AM <wchenbt@cse.ust.hk> wrote:
+>
+> Dear Linux kernel developers,
+>
+> I found the crash =E2=80=9CKASAN: use-after-free Read in screen_glyph_uni=
+code=E2=80=9D
+> when running syzkaller, hope it=E2=80=99s unknown:
+>
+> Linux version: 1c163f4c7b3f Linux 5.0
+> Branch: KASAN: use-after-free in screen_glyph drivers/tty/vt/vt.c:4566
+>
+> Please get rhe C repo and crash log generated by syzkaller from google
+> drive https://drive.google.com/drive/folders/1zolqAlgnweSbr2-OzFFH2Neot4R=
+GMBiV?usp=3Dsharing,
+> as well as the .config I used for linux kernel from the attachment.
+> Thanks.
+>
+> Thanks,
+> Wei
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/syzkaller/8645e64d639e9213bf68d0fdbee0c297.squirrel%40imail.cse.ust.hk.
