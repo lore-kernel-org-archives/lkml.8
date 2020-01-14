@@ -2,105 +2,119 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A0EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E0A24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579014463;
-	bh=qd/ROTA7HgErERfIJLjbvQDAHekzqqbLdzzKbR++O5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UmR2yVOzhaZGfGoyfIu7OXifY4x32DYDYNBCzTaRd+X1llkRgXk+314ZQ8hvSez4a
-	 2lZ5vnq2ixvr3S1W0oLj7xBA7Thc542AFphF3jYgSU/lUsT5iTtxBIAAa/BZHyHZBO
-	 /G21eA9WpG/ExgICichFNIV5Jx/qUI3paxwUYHXM=
+	by mail.kernel.org (Postfix) with ESMTP id DD64F222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kS4cMATD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgANPHm (ORCPT
+        id S1729122AbgANPIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:07:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbgANPHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:07:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A04C24680;
-        Tue, 14 Jan 2020 15:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579014461;
-        bh=qd/ROTA7HgErERfIJLjbvQDAHekzqqbLdzzKbR++O5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wzsRB0WDExSjFDMEvlMbtVQ1xiH16YjyVUuZmcnqnP4veGEErdzDmNXX68iaP+tSy
-         HACuHfH24A1wQJdKIDigFb8zHCkxX7LUIqQLfKjfPPnI05qHBsNXD8j4rHi6+9OK5h
-         ONPTlq/+nInlgBIYsoze2aLRjqgAMQQFcJnmipfY=
-Date:   Tue, 14 Jan 2020 16:07:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "saravanak@google.com" <saravanak@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1] driver core: Use list_del_init to replace list_del at
- device_links_purge()
-Message-ID: <20200114150739.GA1975985@kroah.com>
-References: <1578483244-50723-1-git-send-email-luojiaxing@huawei.com>
- <20200108122658.GA2365903@kroah.com>
- <73252c08-ac46-5d0d-23ec-16c209bd9b9a@huawei.com>
- <1578498695.3260.5.camel@linux.ibm.com>
- <20200108155700.GA2459586@kroah.com>
- <1578499287.3260.7.camel@linux.ibm.com>
- <4b185c9f-7fa2-349d-9f72-3c787ac30377@huawei.com>
- <3826a83d-a220-2f7d-59f6-efe8a4b995d7@huawei.com>
- <1578531860.3852.7.camel@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578531860.3852.7.camel@linux.ibm.com>
+        Tue, 14 Jan 2020 10:08:32 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42521 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANPIb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:08:31 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p9so5340906plk.9;
+        Tue, 14 Jan 2020 07:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8rpa2DTMKBUpU7PSeVZCOwWKjfcl4QZLI8268nb9OR8=;
+        b=kS4cMATDa920zQP8KA/lx981IvG+CXVpSkc3ZJlJ1Ks9JvZdBHh8aSSkFhVL0VUtTG
+         jsnSfIOqN3G3C2Fj2ZZ+Nntre/yPcKxof2GVsDNBEM1LxOny7J9SnLimP4mDegbVgw2f
+         LWfDSqXZSDCMbVlziyz4HooiolDkY0AX0F1y5dtlElraiXky49ppMZhim3Zy3fHgVkMm
+         zQ0JGPC7QpXsXmgGIJtXFINWGPLj193T0oci+P4j1ophKfUbhsWhUq9qsvOUBJ4XIExn
+         CRaRAIS4BEIIEeJ06r4Um4bfMQZJ3o3pIFy6pVyHgMzZ+ziXBm1tBEV0eHAUvh3rmIYG
+         V/5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8rpa2DTMKBUpU7PSeVZCOwWKjfcl4QZLI8268nb9OR8=;
+        b=RQZMEVn/QgullKlAzZwD0dEc5QOClMhoDOTfSbhck+x09QiyRj9c+1zxOLYmmnZS49
+         KQ66c2FSccbqjzjYbDGHCjkLuHMyMTgW8TCSpr0PQa5YCMzm4bUrA13UjUTD6ms9gkT9
+         6GEEFoInFUmzpiiXWJe/JjlTP/+gV2YNjSUSdt/RIisQZFJADvFkO5A/vWpT4Fm7TUss
+         NBrrHSFKu1y5ME5hi10k+z6P1vxfzj+lVFWpMvFqvKwhRaklB3XFAxN5E576izg302SG
+         XEY//R5tsrVnjTlJSWidVAr68ghbGU6uGBYAW7A1FRq4Bg4l/udjApT8vmFyM0rw2768
+         TemQ==
+X-Gm-Message-State: APjAAAUa1XsN3a4Al4N8VlJ0fHmeQHN9y9mCCQZlST7nthC78YJjVsip
+        M0OkFiF+f9Pub3lE9jhQtrcZ2WFa
+X-Google-Smtp-Source: APXvYqyDn+HL5CnYDQ8AsxYxY/88v+ejGsozlp0bvsuT6W2fd+zvkxwg2c1UX5ValvbuAnNoBO/GZw==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24mr20469473plp.312.1579014510423;
+        Tue, 14 Jan 2020 07:08:30 -0800 (PST)
+Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
+        by smtp.gmail.com with ESMTPSA id 100sm16964654pjo.17.2020.01.14.07.08.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 14 Jan 2020 07:08:29 -0800 (PST)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        linux-next@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>
+Subject: [PATCH v2 -mm] iwlegacy: fix build warnings with format string
+Date:   Wed, 15 Jan 2020 00:08:03 +0900
+Message-Id: <1579014483-9226-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 05:04:20PM -0800, James Bottomley wrote:
-> On Wed, 2020-01-08 at 17:10 +0000, John Garry wrote:
-> > On 08/01/2020 16:08, John Garry wrote:
-> > > On 08/01/2020 16:01, James Bottomley wrote:
-> > > > > > >     cdev->dev = NULL;
-> > > > > > >             return device_add(&cdev->cdev);
-> > > > > > >         }
-> > > > > > >     }
-> > > > > > >     return -ENODEV;
-> > > > > > > }
-> > > > > > 
-> > > > > > The design of the code is simply to remove the link to the
-> > > > > > inserted device which has been removed.
-> > > > > > 
-> > > > > > I*think*  this means the calls to device_del and device_add
-> > > > > > are unnecessary and should go.  enclosure_remove_links and
-> > > > > > the put of the enclosed device should be sufficient.
-> > > > > 
-> > > > > That would make more sense than trying to "reuse" the device
-> > > > > structure here by tearing it down and adding it back.
-> > > > 
-> > > > OK, let's try that.  This should be the patch if someone can try
-> > > > it (I've compile tested it, but the enclosure system is under a
-> > > > heap of stuff in the garage).
-> > > 
-> > > I can test it now.
-> > > 
-> > 
-> > Yeah, that looks to have worked ok. SES disk locate was also fine
-> > after losing and rediscovering the disk.
-> 
-> OK, I'll spin up a patch with fixes/reported and tested tags.
+This fixes build warnings introduced by commit "iwlegacy: use
+<linux/units.h> helpers" (iwlegacy-use-linux-unitsh-helpers.patch in -mm)
 
-Did this get sent?  I can't seem to find it :(
+The format '%d' has to be changed to '%ld' because the return type of
+kelvin_to_celsius() is 'long'.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/r/20200106171452.201c3b4c@canb.auug.org.au
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+* v2
+- fix subject line (s/iwlwifi/iwlegacy/)
+
+ drivers/net/wireless/intel/iwlegacy/4965.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965.c b/drivers/net/wireless/intel/iwlegacy/4965.c
+index 31b346c..34d0579 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965.c
+@@ -1611,7 +1611,7 @@ il4965_hw_get_temperature(struct il_priv *il)
+ 	temperature =
+ 	    (temperature * 97) / 100 + TEMPERATURE_CALIB_KELVIN_OFFSET;
+ 
+-	D_TEMP("Calibrated temperature: %dK, %dC\n", temperature,
++	D_TEMP("Calibrated temperature: %dK, %ldC\n", temperature,
+ 	       kelvin_to_celsius(temperature));
+ 
+ 	return temperature;
+@@ -1671,11 +1671,11 @@ il4965_temperature_calib(struct il_priv *il)
+ 
+ 	if (il->temperature != temp) {
+ 		if (il->temperature)
+-			D_TEMP("Temperature changed " "from %dC to %dC\n",
++			D_TEMP("Temperature changed " "from %ldC to %ldC\n",
+ 			       kelvin_to_celsius(il->temperature),
+ 			       kelvin_to_celsius(temp));
+ 		else
+-			D_TEMP("Temperature " "initialized to %dC\n",
++			D_TEMP("Temperature " "initialized to %ldC\n",
+ 			       kelvin_to_celsius(temp));
+ 	}
+ 
+-- 
+2.7.4
 
