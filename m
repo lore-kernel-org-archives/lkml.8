@@ -2,190 +2,164 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AE4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C449C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6F02467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307432072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XeCJbWOq"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="t6+6HO04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgANMtd (ORCPT
+        id S1726379AbgANMuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:49:33 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:54570 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgANMtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:49:32 -0500
-Received: by mail-pl1-f202.google.com with SMTP id f10so5061469plr.21
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 04:49:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=sVzqQ6fMFKvf6/qthqEQJR/jG26iiS1B70RE5p8wL2Q=;
-        b=XeCJbWOqSEczoE2tQGeAvmGiJmdv3zXmRDHm7cv2GSw1oo1q3ipd0z9QRe1tH91jkV
-         YoPkeAYKhKWsqL1IgLleBqozcJjZfD8JIwv3FfXULMfULCk5rD81GW5/qSJaH6GgGkkR
-         OZIE+O+YdkgHrJwAASQ2yvCBtaWzBGvKYvQUUu2HecwXmWcSNenYGRn+TPeLuIPH1ONy
-         FpJ56xA/LTwpvINV4q9weDS428a49ut0SzpJao2au5LX8OY/mQJJIiD6hn9zTxNUdz20
-         1FVklAQXkVcWxkDiqD4viiwiej1Gb+K+oLNWF4+a6eNlvIRFt6HuCK0FcD4SM1KPWmsi
-         mAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=sVzqQ6fMFKvf6/qthqEQJR/jG26iiS1B70RE5p8wL2Q=;
-        b=ZIhCIR4Kr9ER19XK1rGj8MToofg5GEoxAEvFc66QtGv2ka9UZW9Wo//HQ/U8flNvd6
-         kaELNbQAwafklpxgDQm4dQ/ll/f+yuPgVekAYRpnAE8EADEc0EYgMbcFeMbXs8YT8fVl
-         LKE/wT10XtwvUJeOM5ApIvwNR7Qup29aCj2utRDQ2rvwN4SoXFE+a06mvx5uZyENlOyV
-         xeAAfGNoS25tw/Q4DB0ttE+TWU8xu8x+r3OoUfyYVxFWPksob3Ov0xujHq10IIwS/GVi
-         gzScmJkrx+tnldkA+9dUdPBH0zFAoG5hEnI7XqJ00ze7ln/EYbzgt6Mt4v4SCzCaFeR1
-         Sn0Q==
-X-Gm-Message-State: APjAAAUOhWsKSUZB8tuccZ/uk6UPKnMSmimOm7oA/imv9yCMsmHOZA3x
-        CRjbuBpwfIaX80Aknnvgvnb8O4SgQw==
-X-Google-Smtp-Source: APXvYqyKtqX1dzLhnKhTlay39QcxJWkTJlPLPZOql44JeZt1IPifijPT/DiSLdDm2lWFZa1OFcI+KXDi+g==
-X-Received: by 2002:a67:1447:: with SMTP id 68mr1189159vsu.76.1579006170515;
- Tue, 14 Jan 2020 04:49:30 -0800 (PST)
-Date:   Tue, 14 Jan 2020 13:49:19 +0100
-Message-Id: <20200114124919.11891-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH -rcu] kcsan: Make KCSAN compatible with lockdep
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, will@kernel.org, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jan 2020 07:50:44 -0500
+Received: from mail-eopbgr60084.outbound.protection.outlook.com ([40.107.6.84]:63174
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbgANMun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:50:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C7XUEtCloHtSh0XzjJPY2iuHjI/dhgoU+50rOU+MjKhBL9YZedHQHh+bJyiy3WUBghtfYxWfH1Pd+/cmHrZ9Dw9R0WYS1mIatwjNssxU/FFeEz+ATUOubgnAzwR/ViMPZT98/qwLwCdYCkBj5277UQN+vFyiOFQQt4u2WytkN19awJT28OPg08a3HohZaHRefJQ5dhUpCPJctQg71b+sA6JyOOUcBQDhEy0YeY5U+BwFcBt3H2ndPQsdZ8LhNvnRS9YEBicy5tF8Q9fFgSThCC5hJL3licZW6nd2pPorXrE4p7K59+BW/6ttbZo8k+Cq049SROQdRmi/9p12SevsTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eTtqHBu2VdjbylevMt0AQNQF7yVbZgiL0JygfOIc/ow=;
+ b=EfjbB7pZ2aeSZaWxbzqJ0TH3k35TC/EnBq09wuA238o8efcU5hnLLdtLJLfwX0CdKnqI0HJUzsIrakb1IUHjvu2xoLBpkdoIE0JolaF58uAg4v2HZbg87jFR1HEwI8m0A4WIAVIc9JJyxpuQyn2A4WQ8RpRzhFHJ/gLvqkYr3n18BFLvmkT88fxDZ5nsJ1DCCMmIYntVR1fCnfMFqfysCzrXeReiXk1Slpw9jCwArBKROsq2G/cKU/OdcFvTNjMCy0vfUCyrfBSF4knikKgZg7OY0jltXMk6qFzT9awtPCizWIqhG65Up+QRBXiMp72PkDKBvmrmOCm1QPXxXONhrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eTtqHBu2VdjbylevMt0AQNQF7yVbZgiL0JygfOIc/ow=;
+ b=t6+6HO04qDyRQ5hwG+vtXMeXLVdbrqxyngOimnwCJqC7scs6CNqtkFVSzjbOPuVufrDY4u7/xIR0wpNhNeoMRwoRrA4228peXtk7o0sRcO2QCH5hBbIQ1cM3xXjGzWLC873yg+5MCuHGc5ux3GtkO7licSq0T27WUI+2OcjAt7Y=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5200.eurprd05.prod.outlook.com (20.178.12.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Tue, 14 Jan 2020 12:49:59 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 12:49:59 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0048.namprd02.prod.outlook.com (2603:10b6:207:3d::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.12 via Frontend Transport; Tue, 14 Jan 2020 12:49:58 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1irLds-0005sv-3m; Tue, 14 Jan 2020 08:49:56 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v6 4/6] mm/mmu_notifier: add mmu_interval_notifier_find()
+Thread-Topic: [PATCH v6 4/6] mm/mmu_notifier: add mmu_interval_notifier_find()
+Thread-Index: AQHVymNoKcMh6TMtf0C4WlvfajKIrqfqHXcA
+Date:   Tue, 14 Jan 2020 12:49:59 +0000
+Message-ID: <20200114124956.GN20978@mellanox.com>
+References: <20200113224703.5917-1-rcampbell@nvidia.com>
+ <20200113224703.5917-5-rcampbell@nvidia.com>
+In-Reply-To: <20200113224703.5917-5-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 816823df-e936-45cc-bc69-08d798f04399
+x-ms-traffictypediagnostic: VI1PR05MB5200:
+x-microsoft-antispam-prvs: <VI1PR05MB520031A04545558BB2990B67CF340@VI1PR05MB5200.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(189003)(199004)(2906002)(52116002)(33656002)(71200400001)(54906003)(316002)(5660300002)(86362001)(66476007)(66446008)(64756008)(6916009)(66946007)(478600001)(7416002)(186003)(66556008)(26005)(9746002)(9786002)(2616005)(36756003)(4326008)(81156014)(81166006)(8936002)(8676002)(1076003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5200;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 59XjDx6Fk2lghkk/xzKy94/rWyy6FmtFdNmhJkE0JsHJM0zNslQU1u2Q9wJD1tzEGd4EfKG/2nzBMV5XzmSdEPS2JW6sAjvystm8XyFcE9sD4BfpTz2LUqv8T0H59wCw6pW3MV1A3Sa+5t4VECBgXxSSSwWr3bVpYk3rHz+bG51nCJ/aLsRvAIhlEiW1Qlq+regYVj3KK5vkLW3YrS68yg6ke0LpgH1JM93Yd7WzDy0qNV1NIzGRAnaFqvk6qjDcW8DwFh+u/gUND1r6vXx7FGXNp4MQVctuzLhy9p29zI2Dof9bfgeDfw8vlWuW2v7/OBWyBoXE3dCv9vacV8O2A1E7zQ8yGHtmmYYfgbTNdoOkQmJ+xfLQBzCyEsPI+bteNi7jhVZCyOcse+r7RUtUzvYr1nKebilwgw+Z8G3fcXikJSZ4ppGbNBTvavA814bT0rEFodx/9jTisNwl4T0xPJkGd3GrH5/l87TlOvFK6VC+iRTMsLfaJ4WBeCUbU7p/
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A257C7D2E6E81A488462C5DDE02DD0C5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 816823df-e936-45cc-bc69-08d798f04399
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 12:49:59.2035
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DE0G0UmX7vB/BR4k73qcS1UNsyhjOIZdtt6cjRV+P72ONGUYS/pQ1P2LCptAAzf5z4mJVdeRGhfyBRIADWbCsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid unexpected reentry into lockdep's IRQ tracing code via KCSAN
-(if TRACE_IRQFLAGS is enabled), (1) use raw versions of
-local_irq_{save,restore} in kcsan_setup_watchpoint(), and (2) disable
-lockdep in kcsan_report() to avoid IRQ flags tracing upon generating the
-report.
+On Mon, Jan 13, 2020 at 02:47:01PM -0800, Ralph Campbell wrote:
+> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> index 47ad9cc89aab..4efecc0f13cb 100644
+> +++ b/mm/mmu_notifier.c
+> @@ -1171,6 +1171,39 @@ void mmu_interval_notifier_update(struct mmu_inter=
+val_notifier *mni,
+>  }
+>  EXPORT_SYMBOL_GPL(mmu_interval_notifier_update);
+> =20
+> +struct mmu_interval_notifier *mmu_interval_notifier_find(struct mm_struc=
+t *mm,
+> +				const struct mmu_interval_notifier_ops *ops,
+> +				unsigned long start, unsigned long last)
+> +{
+> +	struct mmu_notifier_mm *mmn_mm =3D mm->mmu_notifier_mm;
+> +	struct interval_tree_node *node;
+> +	struct mmu_interval_notifier *mni;
+> +	struct mmu_interval_notifier *res =3D NULL;
+> +
+> +	spin_lock(&mmn_mm->lock);
+> +	node =3D interval_tree_iter_first(&mmn_mm->itree, start, last);
+> +	if (node) {
+> +		mni =3D container_of(node, struct mmu_interval_notifier,
+> +				   interval_tree);
+> +		while (true) {
+> +			if (mni->ops =3D=3D ops) {
+> +				res =3D mni;
+> +				break;
+> +			}
+> +			node =3D interval_tree_iter_next(&mni->interval_tree,
+> +						       start, last);
+> +			if (!node)
+> +				break;
+> +			mni =3D container_of(node, struct mmu_interval_notifier,
+> +					   interval_tree);
+> +		}
+> +	}
+> +	spin_unlock(&mmn_mm->lock);
 
-Tested with:
+This doesn't seem safe at all, here we are returning a pointer to
+memory from the interval tree with out any kind of lifetime
+protection.
 
-  CONFIG_LOCKDEP=y
-  CONFIG_DEBUG_LOCKDEP=y
+If the interval tree is read it must be left in the read lock state
+until the caller is done with the pointer.
 
-Where previously, the following warning (and variants with different
-stack traces) was consistently generated, with the fix introduced in
-this patch, the warning cannot be reproduced.
+.. and this poses all sorts of questions about consistency with items
+on the deferred list. Should find return an item undergoing deletion?
 
-    WARNING: CPU: 0 PID: 2 at kernel/locking/lockdep.c:4406 check_flags.part.0+0x101/0x220
-    Modules linked in:
-    CPU: 0 PID: 2 Comm: kthreadd Not tainted 5.5.0-rc1+ #11
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-    RIP: 0010:check_flags.part.0+0x101/0x220
-    <snip>
-    Call Trace:
-     lock_is_held_type+0x69/0x150
-     freezer_fork+0x20b/0x370
-     cgroup_post_fork+0x2c9/0x5c0
-     copy_process+0x2675/0x3b40
-     _do_fork+0xbe/0xa30
-     ? _raw_spin_unlock_irqrestore+0x40/0x50
-     ? match_held_lock+0x56/0x250
-     ? kthread_park+0xf0/0xf0
-     kernel_thread+0xa6/0xd0
-     ? kthread_park+0xf0/0xf0
-     kthreadd+0x321/0x3d0
-     ? kthread_create_on_cpu+0x130/0x130
-     ret_from_fork+0x3a/0x50
-    irq event stamp: 64
-    hardirqs last  enabled at (63): [<ffffffff9a7995d0>] _raw_spin_unlock_irqrestore+0x40/0x50
-    hardirqs last disabled at (64): [<ffffffff992a96d2>] kcsan_setup_watchpoint+0x92/0x460
-    softirqs last  enabled at (32): [<ffffffff990489b8>] fpu__copy+0xe8/0x470
-    softirqs last disabled at (30): [<ffffffff99048939>] fpu__copy+0x69/0x470
+Should find return items using the old interval tree values or their
+new updated values?
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/kcsan/core.c     |  4 ++--
- kernel/kcsan/report.c   | 11 +++++++++++
- kernel/locking/Makefile |  3 +++
- 3 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 87bf857c8893..e75f3dbf627e 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -337,7 +337,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 *      detection point of view) to simply disable preemptions to ensure
- 	 *      as many tasks as possible run on other CPUs.
- 	 */
--	local_irq_save(irq_flags);
-+	raw_local_irq_save(irq_flags);
- 
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -429,7 +429,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
--	local_irq_restore(irq_flags);
-+	raw_local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index b5b4feea49de..57ab7ef9786c 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -2,6 +2,7 @@
- 
- #include <linux/jiffies.h>
- #include <linux/kernel.h>
-+#include <linux/lockdep.h>
- #include <linux/preempt.h>
- #include <linux/printk.h>
- #include <linux/sched.h>
-@@ -410,6 +411,14 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- {
- 	unsigned long flags = 0;
- 
-+	/*
-+	 * With TRACE_IRQFLAGS, lockdep's internal IRQ flags state becomes
-+	 * corrupted if we do not turn off lockdep. The likely cause is
-+	 * unexpected reentry into IRQ tracing code via KCSAN if we detect a
-+	 * data race.
-+	 */
-+	lockdep_off();
-+
- 	kcsan_disable_current();
- 	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
- 		if (print_report(ptr, size, access_type, value_change, cpu_id, type) && panic_on_warn)
-@@ -418,4 +427,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		release_report(&flags, type);
- 	}
- 	kcsan_enable_current();
-+
-+	lockdep_on();
- }
-diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
-index 45452facff3b..6d11cfb9b41f 100644
---- a/kernel/locking/Makefile
-+++ b/kernel/locking/Makefile
-@@ -5,6 +5,9 @@ KCOV_INSTRUMENT		:= n
- 
- obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
- 
-+# Avoid recursion lockdep -> KCSAN -> ... -> lockdep.
-+KCSAN_SANITIZE_lockdep.o := n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_lockdep.o = $(CC_FLAGS_FTRACE)
- CFLAGS_REMOVE_lockdep_proc.o = $(CC_FLAGS_FTRACE)
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
-
+Jason
