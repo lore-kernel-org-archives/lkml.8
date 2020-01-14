@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD230C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B24C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCAD24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F7624679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996512;
-	bh=cJ6wEibUShMousPc+02xkZVy1kRYitQYZDUUI9Aah7o=;
+	s=default; t=1578996514;
+	bh=D3VkGmMM0F+62RmYOJvCGnU+mkcmb+KmFgNnf0ojJhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrXX+2K87f3P1deyyDG1WnrbReVodvwznU9EhotR8WuqVJDhbGWFEcgglcyxsmdca
-	 +26SptXEIXdTS/uJzvnveCr9TPG1lq04GcBz8TIwrkQfCbTuVgXyEJZbaeHGd82PYw
-	 3mVCckcEuH4U0nrB4TFCINwORKymqSW2pnNcQI94=
+	b=F2MoHBtku0vGxBAUQJNoO973+RY9BLP5Lrl16boQnNlbTKB0um/SHdeeBh4XuMNVi
+	 azCcUNuEBKDgIXK8nGd+O48aCIS2FLrNkzjqtF1AxqVg7ojzga/kXogPbsOPI803W5
+	 mCat97b8BkiPhXFRCrzasGWsHbOy1yplRUAkXWyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgANKIb (ORCPT
+        id S1730346AbgANKId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbgANKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:29 -0500
+        id S1731005AbgANKIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E9F207FF;
-        Tue, 14 Jan 2020 10:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1BE020678;
+        Tue, 14 Jan 2020 10:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996508;
-        bh=cJ6wEibUShMousPc+02xkZVy1kRYitQYZDUUI9Aah7o=;
+        s=default; t=1578996511;
+        bh=D3VkGmMM0F+62RmYOJvCGnU+mkcmb+KmFgNnf0ojJhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHFbVyUcpAy/QCVZG9n6y6FjiVqJ3MKEtWH8RlGvgYpOy1Ht0iv2AuuHZPytWtoqa
-         CYcy7pGX4WKvC/7LzmKiNzG8lkt223JzrGuGwCEQb47OR1/A20TevU3nBbAavWZMwM
-         18+nmPvjJT6EPjm5JygSRpObpxkTcH32J1GO1ShI=
+        b=yfl2ikiQo8SCt+QbpboaqzO8fTK2hAS1HJYrT8z6Iiy1gtwYRO2AUYewcvhT2n42E
+         0lvAteHBAO2pt3GqQyUKicNrczAauyF0i9LQ4C+sqiCFH6QClwZjdIcbNIeh4EfX+j
+         Oqp5pJlgL2lGq60PCQl3oHVrWt0FXprBSndY4cXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 4.19 33/46] tty: link tty and port before configuring it as console
-Date:   Tue, 14 Jan 2020 11:01:50 +0100
-Message-Id: <20200114094346.995735914@linuxfoundation.org>
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.19 42/46] phy: cpcap-usb: Fix error path when no host driver is loaded
+Date:   Tue, 14 Jan 2020 11:01:59 +0100
+Message-Id: <20200114094348.395107803@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -59,69 +62,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
+commit 4acb0200ab2b07843e3ef5599add3454c7440f03 upstream.
 
-There seems to be a race condition in tty drivers and I could see on
-many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-do 'tty->port->itty = tty' even though tty->port is NULL.
-'tty->port' will be set by the driver and if the driver has not yet done
-it before we open the tty device we can get to this situation. By adding
-some extra debug prints, I noticed that:
+If musb_mailbox() returns an error, we must still continue to finish
+configuring the phy.
 
-6.650130: uart_add_one_port
-6.663849: register_console
-6.664846: tty_open
-6.674391: tty_init_dev
-6.675456: tty_port_link_device
+Otherwise the phy state may end up only half initialized, and this can
+cause the debug serial console to stop working. And this will happen if the
+usb driver musb controller is not loaded.
 
-uart_add_one_port() registers the console, as soon as it registers, the
-userspace tries to use it and that leads to tty_open() but
-uart_add_one_port() has not yet done tty_port_link_device() and so
-tty->port is not yet configured when control reaches tty_init_dev().
+Let's fix the issue by adding helper for cpcap_usb_try_musb_mailbox().
 
-Further look into the code and tty_port_link_device() is done by
-uart_add_one_port(). After registering the console uart_add_one_port()
-will call tty_port_register_device_attr_serdev() and
-tty_port_link_device() is called from this.
-
-Call add tty_port_link_device() before uart_configure_port() is done and
-add a check in tty_port_link_device() so that it only links the port if
-it has not been done yet.
-
-Suggested-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
+Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |    1 +
- drivers/tty/tty_port.c           |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/phy/motorola/phy-cpcap-usb.c |   33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2786,6 +2786,7 @@ int uart_add_one_port(struct uart_driver
- 	if (uport->cons && uport->dev)
- 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -207,6 +207,19 @@ static int cpcap_phy_get_ints_state(stru
+ static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata);
+ static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata);
  
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
- 
- 	port->console = uart_console(uport);
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_por
++static void cpcap_usb_try_musb_mailbox(struct cpcap_phy_ddata *ddata,
++				       enum musb_vbus_id_status status)
++{
++	int error;
++
++	error = musb_mailbox(status);
++	if (!error)
++		return;
++
++	dev_dbg(ddata->dev, "%s: musb_mailbox failed: %i\n",
++		__func__, error);
++}
++
+ static void cpcap_usb_detect(struct work_struct *work)
  {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
+ 	struct cpcap_phy_ddata *ddata;
+@@ -226,9 +239,7 @@ static void cpcap_usb_detect(struct work
+ 		if (error)
+ 			goto out_err;
  
+-		error = musb_mailbox(MUSB_ID_GROUND);
+-		if (error)
+-			goto out_err;
++		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
+ 
+ 		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
+ 					   CPCAP_BIT_VBUSSTBY_EN,
+@@ -255,9 +266,7 @@ static void cpcap_usb_detect(struct work
+ 			error = cpcap_usb_set_usb_mode(ddata);
+ 			if (error)
+ 				goto out_err;
+-			error = musb_mailbox(MUSB_ID_GROUND);
+-			if (error)
+-				goto out_err;
++			cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
+ 
+ 			return;
+ 		}
+@@ -267,9 +276,7 @@ static void cpcap_usb_detect(struct work
+ 		error = cpcap_usb_set_usb_mode(ddata);
+ 		if (error)
+ 			goto out_err;
+-		error = musb_mailbox(MUSB_VBUS_VALID);
+-		if (error)
+-			goto out_err;
++		cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_VALID);
+ 
+ 		return;
+ 	}
+@@ -279,9 +286,7 @@ static void cpcap_usb_detect(struct work
+ 	if (error)
+ 		goto out_err;
+ 
+-	error = musb_mailbox(MUSB_VBUS_OFF);
+-	if (error)
+-		goto out_err;
++	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
+ 
+ 	dev_dbg(ddata->dev, "set UART mode\n");
+ 
+@@ -647,9 +652,7 @@ static int cpcap_usb_phy_remove(struct p
+ 	if (error)
+ 		dev_err(ddata->dev, "could not set UART mode\n");
+ 
+-	error = musb_mailbox(MUSB_VBUS_OFF);
+-	if (error)
+-		dev_err(ddata->dev, "could not set mailbox\n");
++	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
+ 
+ 	usb_remove_phy(&ddata->phy);
+ 	cancel_delayed_work_sync(&ddata->detect_work);
 
 
