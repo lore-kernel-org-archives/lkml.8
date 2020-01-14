@@ -2,93 +2,103 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0211DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F18C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3519207FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C165207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579008903;
+	bh=0ghVVnTBZhNvg1AJ2oPToO73881dd/NHeITQTqTLWxI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=moYXaaTov74uMVKTL9W1UW1YrVbCKLFRPHH8YTbkP8WYwF+vyviIIyqh0rZXFwq1K
+	 b5JD4np3Zs8m9jkp9zd3f2xbjMWOXOzfMWsOewivFOtgkXtzH0h/KgZ+Dd0U/EnLG0
+	 stNSu0pSVEHxE582bQKl+ePbzTgxiFeD5L+JrJ2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgANNd5 (ORCPT
+        id S1728820AbgANNfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:33:57 -0500
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:43646
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726106AbgANNd4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:33:56 -0500
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-        by mail.dev.tdt.de (Postfix) with ESMTP id B0457207D2;
-        Tue, 14 Jan 2020 13:33:51 +0000 (UTC)
+        Tue, 14 Jan 2020 08:35:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgANNfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:35:02 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ED932467A;
+        Tue, 14 Jan 2020 13:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579008901;
+        bh=0ghVVnTBZhNvg1AJ2oPToO73881dd/NHeITQTqTLWxI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=G/lFZEhdHe3ydclV+TmtrDs9QjTdwW6bZ31l3IhVdfAOwOCVu2AfDi94vmifvYmm1
+         TXFehXUCRWmiGutK1ymNrnQtMUGERrIgLohMmfLFNu/px184/IyY6AmwqxILVhrygJ
+         NZBCIjp3FRCbLPTESuVqZfBtOrfNLGNjTHthFOkU=
+Received: by mail-qv1-f45.google.com with SMTP id x1so5636843qvr.8;
+        Tue, 14 Jan 2020 05:35:01 -0800 (PST)
+X-Gm-Message-State: APjAAAX3iZMikQme1ty+I5WM/+JNdqCxQT5z0fvp8630X2v06iUazYyO
+        R0eExvz+Jn60hL7tD78h5isdFBPTwaOvkmZWdtg=
+X-Google-Smtp-Source: APXvYqzOqlxC0uai1sE24Xuw2w8hBzEMT/71be1S1hw9KqGPL+bJoJZFBLpiVMGuBZvnEV9JeXw9j+9BEBZFKOwbSCs=
+X-Received: by 2002:ad4:4dc3:: with SMTP id cw3mr20423625qvb.130.1579008900416;
+ Tue, 14 Jan 2020 05:35:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jan 2020 14:33:51 +0100
-From:   Martin Schiller <ms@dev.tdt.de>
-To:     Jakub Kicinski <kubakici@wp.pl>
-Cc:     khc@pm.waw.pl, davem@davemloft.net, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] wan/hdlc_x25: make lapb params configurable
-Organization: TDT AG
-In-Reply-To: <20200114045149.4e97f0ac@cakuba>
-References: <20200113124551.2570-1-ms@dev.tdt.de>
- <20200113055316.4e811276@cakuba>
- <83f60f76a0cf602c73361ccdb34cc640@dev.tdt.de>
- <20200114045149.4e97f0ac@cakuba>
-Message-ID: <3b439730f93e29c9e823126b74c2fbd3@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.1.5
+References: <20200114091836.19403-1-gtk_ruiwang@mediatek.com>
+In-Reply-To: <20200114091836.19403-1-gtk_ruiwang@mediatek.com>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Tue, 14 Jan 2020 08:34:28 -0500
+X-Gmail-Original-Message-ID: <CA+5PVA5aD+8Zc-e39eUtE=vPA_Dm5Z5_iXhFoYwpKstUssUVWQ@mail.gmail.com>
+Message-ID: <CA+5PVA5aD+8Zc-e39eUtE=vPA_Dm5Z5_iXhFoYwpKstUssUVWQ@mail.gmail.com>
+Subject: Re: pull request: linux-firmware: Update Mediatek MT8173 VPU firmware
+To:     gtk_ruiwang@mediatek.com
+Cc:     Linux Firmware <linux-firmware@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        PoChun.Lin@mediatek.com, Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-14 13:51, Jakub Kicinski wrote:
-> On Tue, 14 Jan 2020 06:37:03 +0100, Martin Schiller wrote:
->> >> diff --git a/include/uapi/linux/hdlc/ioctl.h
->> >> b/include/uapi/linux/hdlc/ioctl.h
->> >> index 0fe4238e8246..3656ce8b8af0 100644
->> >> --- a/include/uapi/linux/hdlc/ioctl.h
->> >> +++ b/include/uapi/linux/hdlc/ioctl.h
->> >> @@ -3,7 +3,7 @@
->> >>  #define __HDLC_IOCTL_H__
->> >>
->> >>
->> >> -#define GENERIC_HDLC_VERSION 4	/* For synchronization with sethdlc
->> >> utility */
->> >> +#define GENERIC_HDLC_VERSION 5	/* For synchronization with sethdlc
->> >> utility */
->> >
->> > What's the backward compatibility story in this code?
->> 
->> Well, I thought I have to increment the version to keep the kernel 
->> code
->> and the sethdlc utility in sync (like the comment says).
-> 
-> Perhaps I chose the wrong place for asking this question, IOCTL code
-> was my real worry. I don't think this version number is validated so
-> I think bumping it shouldn't break anything?
+On Tue, Jan 14, 2020 at 4:18 AM <gtk_ruiwang@mediatek.com> wrote:
+>
+> Hi linux-firmware maintainers,
+>
+> The following changes since commit 67d4ff59bf3334895626cf165e508e9eb1846e24:
+>
+>   Mellanox: Add new mlxsw_spectrum firmware xx.2000.2714 (2020-01-07 09:08:25 -0500)
+>
+> are available in the Git repository at:
+>
+>   https://github.com/ruiwang-mtk/linux_fw_vpu_v1.1.3.git
+>
+> for you to fetch changes up to 7f3177d224ee7afdd6e36ed01a13f499d671e167:
+>
+>   mediatek: update MT8173 VPU firmware to v1.1.3 (2020-01-14 15:33:19 +0800)
+>
+> ----------------------------------------------------------------
+> gtk_ruiwang (1):
+>       mediatek: update MT8173 VPU firmware to v1.1.3
+>
+>  vpu_d.bin | Bin 2977008 -> 2977136 bytes
+>  vpu_p.bin | Bin 131180 -> 131180 bytes
+>  2 files changed, 0 insertions(+), 0 deletions(-)
 
-sethdlc validates the GENERIC_HDLC_VERSION at compile time.
+Pulled the v1.1.3 branch and pushed out.  I'm assuming the pull
+request is sufficient since it looks like the patch you sent
+separately is the only thing in the pull request.  Let me know if
+there is something else needed with the patch.
 
-https://mirrors.edge.kernel.org/pub/linux/utils/net/hdlc/
-
-Another question:
-Where do I have to send my patch for sethdlc to?
-
-> 
->> > The IOCTL handling at least looks like it may start returning errors
->> > to existing user space which could have expected the parameters to
->> > IF_PROTO_X25 (other than just ifr_settings.type) to be ignored.
->> 
->> I could also try to implement it without incrementing the version by
->> looking at ifr_settings.size and using the former defaults if the size
->> doesn't match.
-> 
-> Sounds good, thank you!
-
-OK, I will send a v2 of the patch.
+josh
