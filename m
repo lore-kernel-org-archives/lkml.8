@@ -2,125 +2,148 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AE8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6142BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CD12084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353792075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tgOcFVfA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XRomDGNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgANXgZ (ORCPT
+        id S1728879AbgANXic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:36:25 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34105 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728746AbgANXgY (ORCPT
+        Tue, 14 Jan 2020 18:38:32 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59062 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728759AbgANXib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:36:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579044983; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=7+8Ma8yfcl2diOB4I5famBBLS13KA3B5gNUsRjC85BE=; b=tgOcFVfA4qpnrmUsjd7xH5z4P2sUDqkFNJB4mR+hv2pzWC+6fi8zNMZkuZqgBPfnIxzU4bee
- /ANYff1hnVWZ6QliXsc4eTr8i9rYf/jcdkimnV358QQjZ/E5unIX9XUNjvHJ43QX+Xz4JgtE
- uqbe9mXmpmFjqEKe7aNS4zTo790=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1e5076.7fad57bb9960-smtp-out-n02;
- Tue, 14 Jan 2020 23:36:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A47C1C4479F; Tue, 14 Jan 2020 23:36:21 +0000 (UTC)
-Received: from [10.46.162.237] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 14 Jan 2020 18:38:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579045111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GUAdJUKTIjqZ8UnAr0WHyyOOhCddPy1gM8C7ltHr6Bc=;
+        b=XRomDGNa3xZKv3R/QV35Sx3NO0W54zG1L+h2xGDStdHLOqRoc0fJ5VAO+JFWeJalc+T4gI
+        xVRbvBg9mfMWx16mRVzpXdBYFioLD8KlcWoqNmHPix8Gti9FZxFMwDj9atPINNWixgEGsI
+        TCK8UjA2R/K+VksF7PnwngdsqpYwGgI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-1O9xelYaNtOOPnOOt9HTOw-1; Tue, 14 Jan 2020 18:38:30 -0500
+X-MC-Unique: 1O9xelYaNtOOPnOOt9HTOw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: daidavid1)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6722CC433CB;
-        Tue, 14 Jan 2020 23:36:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6722CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
-Subject: Re: [PATCH v1 0/4] Split SDM845 interconnect nodes and consolidate
- RPMh support
-To:     Evan Green <evgreen@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
-From:   David Dai <daidavid1@codeaurora.org>
-Message-ID: <df9e58ef-7b97-7456-09fb-c13f53207cbb@codeaurora.org>
-Date:   Tue, 14 Jan 2020 15:36:19 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EFE3801E7B;
+        Tue, 14 Jan 2020 23:38:29 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 308F67BA48;
+        Tue, 14 Jan 2020 23:38:18 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 07:38:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Xu <peterx@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Ming Lei <minlei@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org
+Subject: Re: Kernel-managed IRQ affinity (cont)
+Message-ID: <20200114233814.GA6281@ming.t460p>
+References: <20191216195712.GA161272@xz-x1>
+ <20191219082819.GB15731@ming.t460p>
+ <20191219143214.GA50561@xz-x1>
+ <20191219161115.GA18672@ming.t460p>
+ <87eew8l7oz.fsf@nanos.tec.linutronix.de>
+ <20200110012802.GA4501@ming.t460p>
+ <87v9pjrtbh.fsf@nanos.tec.linutronix.de>
+ <20200111024835.GA24575@ming.t460p>
+ <87r202b19f.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r202b19f.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evan,
+Hi Thomas,
 
-On 1/7/2020 3:45 PM, Evan Green wrote:
-> On Sun, Dec 15, 2019 at 9:59 PM David Dai <daidavid1@codeaurora.org> wrote:
->> While there are no current consumers of the SDM845 interconnect device in
->> devicetree, take this opportunity to redefine the interconnect device nodes
->> as the previous definitions of using a single child node under the apps_rsc
->> device did not accurately capture the description of the hardware.
->> The Network-On-Chip (NoC) interconnect devices should be represented in a
->> manner akin to QCS404 platforms[1] where there is a separation of NoC devices
->> and its RPM/RPMh counterparts.
->>
->> The bcm-voter devices are representing the RPMh devices that the interconnect
->> providers need to communicate with and there can be more than one instance of
->> the Bus Clock Manager (BCM) which can live under different instances of Resource
->> State Coordinators (RSC). There are display use cases where consumers may need
->> to target a different bcm-voter (Some display specific RSC) than the default,
->> and there needs to be a way to represent this connection in devicetree.
-> So for my own understanding, the problem here is that things want to
-> vote for interconnect bandwidth within a specific RSC context? Where
-> normally the RSC context is simply "Apps@EL1", we might also have
-> "Apps@EL3" for trustzone, or in the case we're coding for,
-> "display-specific RSC context". I guess this context might stay on
-> even if Apps@EL1 votes are entirely discounted or off?
-That's correct, the state of those votes are tied to the state of that 
-execution environment. So even if the Apps CPU goes into a low power 
-mode, other context specific vote will still stick.
->   So then would
-> there be an additional interconnect provider for "display context RSC"
-> next to apps_bcm_voter? Would that expose all the same nodes as
-> apps_bcm_voter, or a different set of nodes?
+On Tue, Jan 14, 2020 at 02:45:00PM +0100, Thomas Gleixner wrote:
+> Ming,
+> 
+> Ming Lei <ming.lei@redhat.com> writes:
+> > On Fri, Jan 10, 2020 at 08:43:14PM +0100, Thomas Gleixner wrote:
+> >> Ming Lei <ming.lei@redhat.com> writes:
+> >> > That is why I try to exclude isolated CPUs from interrupt effective affinity,
+> >> > turns out the approach is simple and doable.
+> >> 
+> >> Yes, it's doable. But it still is inconsistent behaviour. Assume the
+> >> following configuration:
+> >> 
+> >>   8 CPUs CPU0,1 assigned for housekeeping
+> >> 
+> >> With 8 queues the proposed change does nothing because each queue is
+> >> mapped to exactly one CPU.
+> >
+> > That is expected behavior for this RT case, given userspace won't submit
+> > IO from isolated CPUs.
+> 
+> What is _this_ RT case? We really don't implement policy for a specific
+> use case. If the kernel implements a policy then it has to be generally
+> useful and practical.
 
-We trim down the topology to what each execution environment needs, so 
-each EE really only "sees" a subset of the entire SoC's topology. In 
-this specific case, the display context RSC would only expose a small 
-subset of the topology that Apps@EL1 would see.
+Maybe the word of 'RT case' isn't accurate, I thought isolated CPUs is only
+used for realtime cases, at least that is Peter's usage, maybe I was
+wrong.
 
->
-> Assuming it's exposing some of the same nodes as apps_bcm_voter, the
-> other way to do this would be increasing #interconnect-cells, and
-> putting the RSC context there. Did you choose not to go that way
-> because nearly all the clients would end up specifying the same thing
-> of "Apps@EL1"?
-That's correct, the majority of the consumers will stay with default 
-Apps@EL1 context.
+But it can be generic for all isolated CPUs cases, in which users
+don't want managed interrupts to disturb the isolated CPU cores.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 
+> >> With 4 queues you get the following:
+> >> 
+> >>  CPU0,1       queue 0
+> >>  CPU2,3       queue 1
+> >>  CPU4,5       queue 2
+> >>  CPU6,7       queue 3
+> >> 
+> >> No effect on the isolated CPUs either.
+> >> 
+> >> With 2 queues you get the following:
+> >> 
+> >>  CPU0,1,2,3   queue 0
+> >>  CPU4,5,6,7   queue 1
+> >> 
+> >> So here the isolated CPUs 2 and 3 get the isolation, but 4-7
+> >> not. That's perhaps intended, but definitely not documented.
+> >
+> > That is intentional change, given no IO will be submitted from 4-7
+> > most of times in RT case, so it is fine to select effective CPU from
+> > isolated CPUs in this case. As peter mentioned, IO may just be submitted
+> > from isolated CPUs during booting. Once the system is setup, no IO
+> > comes from isolated CPUs, then no interrupt is delivered to isolated
+> > CPUs, then meet RT's requirement.
+> 
+> Again. This is a specific usecase. Is this generally applicable?
+
+As mentioned above, it can be applied for all isolated CPUs, when users
+don't want managed interrupts to disturb these CPU cores.
+
+> 
+> > We can document this change somewhere.
+> 
+> Yes, this needs to be documented very clearly with that command line
+> parameter.
+
+OK, will do that in formal post.
+
+Thanks, 
+Ming
+
