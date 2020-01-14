@@ -2,88 +2,106 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44516C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F2BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2AA2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52AD2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578992030;
+	bh=JCChi5iOgTBRcs5GhTEYg6YEX2HIuM2ZGqA5rtsGUrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YqjSwIZB9jmg0lbVT87PNhpBvlH+M0U0IEFXtEJzCx2xhEZlr1ssYPg4tA25MUHCB
+	 TAF/Wv31LuCPrPwqM9Y7BuEOOY3L3p+tvsArHk1AjoB+wif8xMMzJR4yhXQtzxd7gk
+	 NSwQH+Lnv0UfzpTbRzFuXt2vmz14Ef3n+5zqsMQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgANIv0 (ORCPT
+        id S1728656AbgANIxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:51:26 -0500
-Received: from mga02.intel.com ([134.134.136.20]:4333 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbgANIv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:51:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 00:51:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="225161401"
-Received: from unknown (HELO [10.238.129.140]) ([10.238.129.140])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jan 2020 00:51:23 -0800
-Subject: Re: [PATCH 1/4] x86/resctrl: Fix use-after-free when deleting
- resource groups
-To:     Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>
-References: <1578500886-21771-2-git-send-email-xiaochen.shen@intel.com>
- <20200109143629.C6C822077B@mail.kernel.org>
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-Message-ID: <33a88a00-56d3-3cd2-a0dc-0d97e5a7329a@intel.com>
-Date:   Tue, 14 Jan 2020 16:51:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        Tue, 14 Jan 2020 03:53:49 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39942 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANIxt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:53:49 -0500
+Received: by mail-ed1-f65.google.com with SMTP id b8so11184459edx.7;
+        Tue, 14 Jan 2020 00:53:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jF2tdIecki+DQ7lqcMG62cCuHUle8BdpmOn9fa7Pb5c=;
+        b=XgUxkIZf2/8IWtmEjm5X5/5HeW0rj3U1RIe3C+gr0bITBJrYjAwJA+s/V9I2xpe5zw
+         VWWECr/0YuXWPgpxgSqC/74wZ1TiPP4mSHISFICZ1v1Q92aHkVLUfClpPDOafyujvTIw
+         oaOJUcH7hhla2Y17E2vURRbQkvrB60Jt8FWdoffF9icIv/sLgHnKof0FKojYbfTk1Wba
+         QIpB/HADpek+a5uB8apJFwROnTSbuRG6/LWTpXCBJtHQMqqA/pryES1kHiea/5bY74o6
+         y8x4/UnIwSDdPtAEP9jV+djY+3Ytej7JwPr10sEK0LQ50ds7zDWbOcOC69vG2z/YN0rg
+         bgxA==
+X-Gm-Message-State: APjAAAWLNOEPJFgwmNDz+4l4572dijr2OAT+ZAS/sHzWMhiHlVNoaT45
+        fpBIWAZcrwx2yykhCi6wal5DeZxh
+X-Google-Smtp-Source: APXvYqygVkOwFasGwl9eMHv6ocMtP0ea95/KypoS9E6mF12yxzivVsRyX1xxQB3pZu4HC2c1cf3TkA==
+X-Received: by 2002:a17:906:489:: with SMTP id f9mr21472460eja.27.1578992027395;
+        Tue, 14 Jan 2020 00:53:47 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id qw15sm577405ejb.92.2020.01.14.00.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 00:53:46 -0800 (PST)
+Date:   Tue, 14 Jan 2020 09:53:44 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Helge Deller <deller@gmx.de>
+Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] parisc: Use proper printk format for resource_size_t
+Message-ID: <20200114085344.GA4976@pi3>
+References: <20200103163925.3967-1-krzk@kernel.org>
+ <82e79053-00bf-283e-458d-0b2711258585@gmx.de>
 MIME-Version: 1.0
-In-Reply-To: <20200109143629.C6C822077B@mail.kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <82e79053-00bf-283e-458d-0b2711258585@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+On Tue, Jan 14, 2020 at 09:27:35AM +0100, Helge Deller wrote:
+> On 03.01.20 17:39, Krzysztof Kozlowski wrote:
+> > resource_size_t should be printed with its own size-independent format
+> > to fix warnings when compiling on 64-bit platform (e.g. with
+> > COMPILE_TEST):
+> >
+> >     arch/parisc/kernel/drivers.c: In function 'print_parisc_device':
+> >     arch/parisc/kernel/drivers.c:892:9: warning:
+> >         format '%p' expects argument of type 'void *',
+> >         but argument 4 has type 'resource_size_t {aka unsigned int}' [-Wformat=]
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/parisc/kernel/drivers.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
+> > index a6c9f49c6612..a154de424421 100644
+> > --- a/arch/parisc/kernel/drivers.c
+> > +++ b/arch/parisc/kernel/drivers.c
+> > @@ -889,8 +889,8 @@ static void print_parisc_device(struct parisc_device *dev)
+> >  	static int count;
+> >
+> >  	print_pa_hwpath(dev, hw_path);
+> > -	pr_info("%d. %s at 0x%px [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
+> > -		++count, dev->name, (void*) dev->hpa.start, hw_path, dev->id.hw_type,
+> > +	pr_info("%d. %s at %pa[p] [%s] { %d, 0x%x, 0x%.3x, 0x%.5x }",
+> 
+> It needs to be    %pap   instead of   %pa[p].
+> The documentation in Documentation/core-api/printk-formats.rst is correct, but misleading.
+> I corrected & applied it.
+> Thanks!
 
-The backporting for v4.14.x and v4.19.x stable trees needs some manual
-tweaking due to difference code bases (since x86/resctrl rename/re-arrange
-in v5.0 upstream kernel).
+Damn it, you're right. Thanks for noticing!
 
-I will work on the backporting once this patch is merged into upstream.
-
-Thank you.
-
-On 1/9/2020 22:36, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: f3cbeacaa06e ("x86/intel_rdt/cqm: Add rmdir support").
-> 
-> The bot has tested the following trees: v5.4.8, v4.19.93, v4.14.162.
-> 
-> v5.4.8: Build OK!
-> v4.19.93: Failed to apply! Possible dependencies:
->      Unable to calculate
-> 
-> v4.14.162: Failed to apply! Possible dependencies:
->      Unable to calculate
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-> 
-
--- 
 Best regards,
-Xiaochen
+Krzysztof
+
