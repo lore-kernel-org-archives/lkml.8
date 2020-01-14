@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBEAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3149FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485A42467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F40B2467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgANNDP (ORCPT
+        id S1729316AbgANNDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:03:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43281 "EHLO
+        Tue, 14 Jan 2020 08:03:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43275 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729074AbgANNCp (ORCPT
+        with ESMTP id S1729061AbgANNCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 08:02:45 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLqB-0004qi-Il; Tue, 14 Jan 2020 14:02:39 +0100
+        id 1irLq9-0004oT-5i; Tue, 14 Jan 2020 14:02:38 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0505D1C085A;
-        Tue, 14 Jan 2020 14:02:24 +0100 (CET)
-Date:   Tue, 14 Jan 2020 13:02:23 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8D7311C0853;
+        Tue, 14 Jan 2020 14:02:22 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:22 -0000
+From:   "tip-bot2 for Christophe Leroy" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Build 32 bit specific functions in the
- right context
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: timers/core] lib/vdso: Let do_coarse() return 0 to simplify the
+ callsite
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20190830135902.20861-3-vincenzo.frascino@arm.com>
-References: <20190830135902.20861-3-vincenzo.frascino@arm.com>
+In-Reply-To: =?utf-8?q?=3C21e8afa38c02ca8672c2690307383507fe63b454=2E15771?=
+ =?utf-8?q?11367=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
+References: =?utf-8?q?=3C21e8afa38c02ca8672c2690307383507fe63b454=2E157711?=
+ =?utf-8?q?1367=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
 MIME-Version: 1.0
-Message-ID: <157900694383.396.6172623174438789034.tip-bot2@tip-bot2>
+Message-ID: <157900694240.396.11786627585944485091.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,61 +59,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     bf279849ad59538a1518c667c0795ec1fe9dbd66
-Gitweb:        https://git.kernel.org/tip/bf279849ad59538a1518c667c0795ec1fe9dbd66
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Fri, 30 Aug 2019 14:58:56 +01:00
+Commit-ID:     8463cf80529d0fd80b84cd5ab8b9b952b01c7eb9
+Gitweb:        https://git.kernel.org/tip/8463cf80529d0fd80b84cd5ab8b9b952b01c7eb9
+Author:        Christophe Leroy <christophe.leroy@c-s.fr>
+AuthorDate:    Mon, 23 Dec 2019 14:31:07 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Jan 2020 12:20:44 +01:00
+CommitterDate: Tue, 14 Jan 2020 12:20:46 +01:00
 
-lib/vdso: Build 32 bit specific functions in the right context
+lib/vdso: Let do_coarse() return 0 to simplify the callsite
 
-clock_gettime32 and clock_getres_time32 should be compiled only with a
-32 bit vdso library.
+do_coarse() is similar to do_hres() except that it never fails.
 
-Exclude these symbols when BUILD_VDSO32 is not defined.
+Change its type to int instead of void and let it always return success (0)
+to simplify the call site.
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lore.kernel.org/r/20190830135902.20861-3-vincenzo.frascino@arm.com
+Link: https://lore.kernel.org/r/21e8afa38c02ca8672c2690307383507fe63b454.1577111367.git.christophe.leroy@c-s.fr
 
 
 ---
- lib/vdso/gettimeofday.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/vdso/gettimeofday.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 42bd8ab..8e77071 100644
+index b676a98..5a5ec89 100644
 --- a/lib/vdso/gettimeofday.c
 +++ b/lib/vdso/gettimeofday.c
-@@ -117,6 +117,7 @@ __cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
+@@ -68,7 +68,7 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
  	return 0;
  }
  
-+#ifdef BUILD_VDSO32
- static __maybe_unused int
- __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+-static void do_coarse(const struct vdso_data *vd, clockid_t clk,
++static int do_coarse(const struct vdso_data *vd, clockid_t clk,
+ 		      struct __kernel_timespec *ts)
  {
-@@ -139,6 +140,7 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
- 	}
- 	return ret;
+ 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
+@@ -79,6 +79,8 @@ static void do_coarse(const struct vdso_data *vd, clockid_t clk,
+ 		ts->tv_sec = vdso_ts->sec;
+ 		ts->tv_nsec = vdso_ts->nsec;
+ 	} while (unlikely(vdso_read_retry(vd, seq)));
++
++	return 0;
  }
-+#endif /* BUILD_VDSO32 */
  
  static __maybe_unused int
- __cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
-@@ -231,6 +233,7 @@ int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
- 	return 0;
+@@ -96,14 +98,13 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
+ 	 * clocks are handled in the VDSO directly.
+ 	 */
+ 	msk = 1U << clock;
+-	if (likely(msk & VDSO_HRES)) {
++	if (likely(msk & VDSO_HRES))
+ 		return do_hres(&vd[CS_HRES_COARSE], clock, ts);
+-	} else if (msk & VDSO_COARSE) {
+-		do_coarse(&vd[CS_HRES_COARSE], clock, ts);
+-		return 0;
+-	} else if (msk & VDSO_RAW) {
++	else if (msk & VDSO_COARSE)
++		return do_coarse(&vd[CS_HRES_COARSE], clock, ts);
++	else if (msk & VDSO_RAW)
+ 		return do_hres(&vd[CS_RAW], clock, ts);
+-	}
++
+ 	return -1;
  }
  
-+#ifdef BUILD_VDSO32
- static __maybe_unused int
- __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
- {
-@@ -253,4 +256,5 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
- 	}
- 	return ret;
- }
-+#endif /* BUILD_VDSO32 */
- #endif /* VDSO_HAS_CLOCK_GETRES */
