@@ -2,144 +2,233 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C2BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFDCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7340024670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C9524670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ow6Bjq+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANSuo (ORCPT
+        id S1728769AbgANSvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:50:44 -0500
-Received: from mga07.intel.com ([134.134.136.100]:6457 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANSuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:50:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 10:50:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
-   d="scan'208";a="273398290"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2020 10:50:42 -0800
-Received: from [10.252.24.8] (abudanko-mobl.ccr.corp.intel.com [10.252.24.8])
-        by linux.intel.com (Postfix) with ESMTP id 48F6258040E;
-        Tue, 14 Jan 2020 10:50:34 -0800 (PST)
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
- <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
- <20200110140234.GO2844@hirez.programming.kicks-ass.net>
- <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
- <20200110164531.GA2598@kernel.org>
- <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
- <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
- <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
- <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
- <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
- <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
- <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
- <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
-Date:   Tue, 14 Jan 2020 21:50:33 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 14 Jan 2020 13:51:06 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36415 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANSvF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:51:05 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n59so6288731pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:51:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8RHb25MFJpPZhJdjI8xQKql5/uxFuwEOzuS1j12SrJk=;
+        b=Ow6Bjq+PMUgyYD4Z7oS58hmebH/2FCuoQLR5BmldOvhqhhrktMYHsU7MqISY/Qc4mR
+         ksHt82V82HrQHDybguDhh42mdUaf5i9sfnxS+IGXGYaPLFU4CxrQ68v65EapYscHtN2L
+         T4xvsI4/pL2FSbDcYfrS9dURi2fnRLTNNwjbk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8RHb25MFJpPZhJdjI8xQKql5/uxFuwEOzuS1j12SrJk=;
+        b=s/Cf7RXUbRHzB6TZW0LcjgnJmB0cs3VSt5dgTi4F6TDnUFnwJ0uZEknXDqN2/gYP/I
+         MtgseKeq7LtD28g5gNIAX7tWk7YSgQKdBr76Pw653Hc46HV6jfrCWoDA0gQ7eJeSn2Mj
+         JyMEnnwUZz+utmCEL/Qtz0s+/wTCxR+i3ENroQuzqWo8wZ+5EsnCg8+Fu2vOUOKECceP
+         MRPCvyv97WIqEad/WD2Asop3F/jFYG9ghnvUczf+fvXgdDPQYt3lWdCzcUQD3i5T7PyU
+         1N+Xd8XwC4zJwb1ceCQa8658fGgtXZ0cjmUpYs2zBQ44CotEZLl7SsQU63XSOjL2Kgt8
+         lChg==
+X-Gm-Message-State: APjAAAUDRSzKXGOTgdecbhCmThLLrExQAgcwZXQ7or32buAcsApr+1RM
+        s3Jd6y5LceEBxBomV+6uYbu/vK7h4J0=
+X-Google-Smtp-Source: APXvYqwyGpqR1K6wjcjKgJO0oKzp9z8mLoiE+SZlVD3ctdnXJ8HANMRK5I9mc5T6ayqXehxYp1DYKw==
+X-Received: by 2002:a17:90a:7781:: with SMTP id v1mr15038696pjk.108.1579027864707;
+        Tue, 14 Jan 2020 10:51:04 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id b185sm19678208pfa.102.2020.01.14.10.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 10:51:04 -0800 (PST)
+Date:   Tue, 14 Jan 2020 10:51:02 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] thermal: devfreq_cooling: Use PM QoS to set
+ frequency limits
+Message-ID: <20200114185102.GJ89495@google.com>
+References: <CGME20200110174931epcas1p49c79567945e125829188174293d99850@epcas1p4.samsung.com>
+ <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+ <bae154ef-cbe6-de24-26c7-a7d4338bd55e@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <bae154ef-cbe6-de24-26c7-a7d4338bd55e@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 14.01.2020 21:06, Alexei Starovoitov wrote:
-> On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
-> <alexey.budankov@linux.intel.com> wrote:
->>>>
->>>> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
->>>> to open it for enabling/disabling kprobes, not for creation.
->>>>
->>>> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
->>>> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
->>>> it should check the max number of probes to be created by something like
->>>> ulimit)
->>>> I think nowadays we have fixed all such kernel crash problems on x86,
->>>> but not sure for other archs, especially on the devices I can not reach.
->>>> I need more help to stabilize it.
->>>
->>> I don't see how enable/disable is any safer than creation.
->>> If there are kernel bugs in kprobes the kernel will crash anyway.
->>> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
->>> CAP_* is about delegation of root privileges to non-root.
->>> Delegating some of it is ok, but disallowing creation makes it useless
->>> for bpf tracing, so we would need to add another CAP later.
->>> Hence I suggest to do it right away instead of breaking
->>> sys_perf_even_open() access into two CAPs.
->>>
->>
->> Alexei, Masami,
->>
->> Thanks for your meaningful input.
->> If we know in advance that it still can crash the system in some cases and on
->> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
->> such delegation looks premature until the crashes are avoided. So it looks like
->> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
->> a separate patch set.
+On Mon, Jan 13, 2020 at 04:25:17PM +0900, Chanwoo Choi wrote:
+> Hi,
 > 
-> perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
-
-Sure, software cannot guarantee, but known software bugs could still be fixed,
-that's what I meant.
-
-> imo adding a cap just for pmc is pointless.
-> if you add a new cap it should cover all of sys_perf_event_open syscall.
-> subdividing it into sw vs hw counters, kprobe create vs enable, etc will
-> be the source of ongoing confusion. nack to such cap.
+> On 1/11/20 2:49 AM, Matthias Kaehlcke wrote:
+> > Now that devfreq supports limiting the frequency range of a device
+> > through PM QoS make use of it instead of disabling OPPs that should
+> > not be used.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > 
+> >  drivers/thermal/devfreq_cooling.c | 66 ++++++++++---------------------
+> >  1 file changed, 20 insertions(+), 46 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+> > index ef59256887ff..3a63603afcf2 100644
+> > --- a/drivers/thermal/devfreq_cooling.c
+> > +++ b/drivers/thermal/devfreq_cooling.c
+> > @@ -24,11 +24,13 @@
+> >  #include <linux/idr.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/pm_opp.h>
+> > +#include <linux/pm_qos.h>
+> >  #include <linux/thermal.h>
+> >  
+> >  #include <trace/events/thermal.h>
+> >  
+> > -#define SCALE_ERROR_MITIGATION 100
+> > +#define HZ_PER_KHZ		1000
+> > +#define SCALE_ERROR_MITIGATION	100
+> >  
+> >  static DEFINE_IDA(devfreq_ida);
+> >  
+> > @@ -65,49 +67,9 @@ struct devfreq_cooling_device {
+> >  	struct devfreq_cooling_power *power_ops;
+> >  	u32 res_util;
+> >  	int capped_state;
+> > +	struct dev_pm_qos_request req_max_freq;
 > 
+> Need to add the description of 'req_max_freq'.
 
-Well, as this patch set already covers complete perf_event_open functionality,
-and also eBPF related parts too, could you please review and comment on it?
-Does the patches 2/9 and 5/9 already bring all required extentions?
+will add the description
 
-Thanks,
-Alexey
+> >  };
+> >  
+> > -/**
+> > - * partition_enable_opps() - disable all opps above a given state
+> > - * @dfc:	Pointer to devfreq we are operating on
+> > - * @cdev_state:	cooling device state we're setting
+> > - *
+> > - * Go through the OPPs of the device, enabling all OPPs until
+> > - * @cdev_state and disabling those frequencies above it.
+> > - */
+> > -static int partition_enable_opps(struct devfreq_cooling_device *dfc,
+> > -				 unsigned long cdev_state)
+> > -{
+> > -	int i;
+> > -	struct device *dev = dfc->devfreq->dev.parent;
+> > -
+> > -	for (i = 0; i < dfc->freq_table_size; i++) {
+> > -		struct dev_pm_opp *opp;
+> > -		int ret = 0;
+> > -		unsigned int freq = dfc->freq_table[i];
+> > -		bool want_enable = i >= cdev_state ? true : false;
+> > -
+> > -		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
+> > -
+> > -		if (PTR_ERR(opp) == -ERANGE)
+> > -			continue;
+> > -		else if (IS_ERR(opp))
+> > -			return PTR_ERR(opp);
+> > -
+> > -		dev_pm_opp_put(opp);
+> > -
+> > -		if (want_enable)
+> > -			ret = dev_pm_opp_enable(dev, freq);
+> > -		else
+> > -			ret = dev_pm_opp_disable(dev, freq);
+> > -
+> > -		if (ret)
+> > -			return ret;
+> > -	}
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >  static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
+> >  					 unsigned long *state)
+> >  {
+> > @@ -134,7 +96,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+> >  	struct devfreq_cooling_device *dfc = cdev->devdata;
+> >  	struct devfreq *df = dfc->devfreq;
+> >  	struct device *dev = df->dev.parent;
+> > -	int ret;
+> > +	unsigned long freq;
+> >  
+> >  	if (state == dfc->cooling_state)
+> >  		return 0;
+> > @@ -144,9 +106,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+> >  	if (state >= dfc->freq_table_size)
+> >  		return -EINVAL;
+> >  
+> > -	ret = partition_enable_opps(dfc, state);
+> > -	if (ret)
+> > -		return ret;
+> > +	freq = dfc->freq_table[state];
+> > +
+> > +	dev_pm_qos_update_request(&dfc->req_max_freq,
+> > +				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
+> >  
+> >  	dfc->cooling_state = state;
+> >  
+> > @@ -529,6 +492,12 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+> >  	if (err)
+> >  		goto free_dfc;
+> >  
+> > +	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
+> > +				     DEV_PM_QOS_MAX_FREQUENCY,
+> > +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+> > +	if (err < 0)
+> > +		goto remove_qos_req;
+> 
+> Jump 'free_table' instead of 'remove_qos_req'.
+
+ack
+
+> > +
+> >  	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
+> >  	if (err < 0)
+> >  		goto free_tables;
+> 
+> Jump remove_qos_req.
+
+ack
+
+> > @@ -552,6 +521,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+> >  
+> >  release_ida:
+> >  	ida_simple_remove(&devfreq_ida, dfc->id);
+> > +
+> > +remove_qos_req:
+> > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
+> > +
+> >  free_tables:
+> >  	kfree(dfc->power_table);
+> >  	kfree(dfc->freq_table);
+> > @@ -600,6 +573,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
+> >  
+> >  	thermal_cooling_device_unregister(dfc->cdev);
+> >  	ida_simple_remove(&devfreq_ida, dfc->id);
+> > +	dev_pm_qos_remove_request(&dfc->req_max_freq);
+> >  	kfree(dfc->power_table);
+> >  	kfree(dfc->freq_table);
