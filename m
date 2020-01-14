@@ -2,152 +2,113 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BDCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D406BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570B0206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mA7N7Op7"
+	by mail.kernel.org (Postfix) with ESMTP id AD850206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgANHpE (ORCPT
+        id S1729106AbgANHrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:45:04 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36891 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729139AbgANHpE (ORCPT
+        Tue, 14 Jan 2020 02:47:21 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40995 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbgANHrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:45:04 -0500
-Received: by mail-io1-f68.google.com with SMTP id k24so12766440ioc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
-        b=mA7N7Op7kUYgfpqMfsIfTlX26LjxQVJpfur8Qz8Am9Fdl58faZZCbRNKYDT8QW+gu+
-         uFfp00SRawjC1/hrMV4gbk9M0o/fhjbTP60+MehfuI/f0xSBQeHCSaRsrldNW7IDQbHl
-         8ELO4afCsPg5Y6+uWRzqCWDGYWIFcU5guMdwaUZdCQq/45OnfNap2ex8+zlC+q3ejZIc
-         CqeoPo2QkT7v21V4x11CnD8ID1WNywo+1J6GM0uyi22KyTrMCAJvo5HPnNhP8KmhKHmg
-         e31nceuhNOrDr34Q7W98Dz+yllEak1r8Ge5/RC9/EcLNFz++oPcj7ZLOM/5PJPQa/mrp
-         F3wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
-        b=Mfs9H/GzDoMcEYW4bWvEC3WsdVbZsdsUhKVgqD7LX+KUztuNkIuUJjKw6+LKj8lUdv
-         TiZIhzx4pKajOUeZRMd4/DZf/+maYB87oRoWzy1X8vlOwb9cEa88fxmc5NE3+DERwnpA
-         CEDIpnLBPGwfzvxu6VP8tW/ZURwdEAc+NLCqsol7/mCtOwbC6zEonYPN9iO1O7+Qitxy
-         0RRslX9nohJJ2HqRor1HrYxw7VL6rtDs08jWNYzdUBy8WnyQ2RvlqKsqqBByPykjSSlW
-         Q9LvMpCzMYphme/OF/5rcq0lv3w31arKTQamnzRwgfyYvfu1FoU6iru83Gi/qxlxpBmV
-         cnvg==
-X-Gm-Message-State: APjAAAU+aERnP+R7XZvxjwnjHsDvyKOn8kWUPZ1+feZ5Wlj3eJZQh4BN
-        Ol5IrFIgNrVCD0k+x1haeYvZhL09QjpOgjZcVZdTHQ==
-X-Google-Smtp-Source: APXvYqzAh2T2cAKb3Cs79hOXveFHjbvjhUfIyQdCCAoBmuB7aXLxMczzgL7HSLXmWyrIPcGsg4iXgsEzHnFBDxb1JV4=
-X-Received: by 2002:a05:6602:220b:: with SMTP id n11mr16743494ion.6.1578987903228;
- Mon, 13 Jan 2020 23:45:03 -0800 (PST)
+        Tue, 14 Jan 2020 02:47:21 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1irGus-0001W3-P1; Tue, 14 Jan 2020 08:47:10 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1irGus-0006ad-6e; Tue, 14 Jan 2020 08:47:10 +0100
+Date:   Tue, 14 Jan 2020 08:47:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] pwm: Convert period and duty cycle to u64
+Message-ID: <20200114074710.kxkz4664oap3r752@pengutronix.de>
+References: <cover.1578959442.git.gurus@codeaurora.org>
+ <21a1431edfa86e061528b80021351c25c76976a9.1578959442.git.gurus@codeaurora.org>
 MIME-Version: 1.0
-References: <20200109115010.27814-1-brgl@bgdev.pl>
-In-Reply-To: <20200109115010.27814-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 14 Jan 2020 08:44:52 +0100
-Message-ID: <CAMRc=Mf34JTo-mCCb-ubdY9=YsGQp-YrkhQMp811_wXyVtW-=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line status changes
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <21a1431edfa86e061528b80021351c25c76976a9.1578959442.git.gurus@codeaurora.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 9 sty 2020 o 12:50 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> When discussing the recent user-space changes with Kent and while working
-> on dbus API for libgpiod I noticed that we really don't have any way of
-> keeping the line info synchronized between the kernel and user-space
-> processes. We can of course periodically re-read the line information or
-> even do it every time we want to read a property but this isn't optimal.
->
-> This series adds a new ioctl() that allows user-space to set up a watch o=
-n
-> the GPIO chardev file-descriptor which can then be polled for events
-> emitted by the kernel when the line is requested, released or its status
-> changed. This of course doesn't require the line to be requested. Multipl=
-e
-> user-space processes can watch the same lines.
->
-> This series also includes a variety of minor tweaks & fixes for problems
-> discovered during development. For instance it addresses a race-condition
-> in current line event fifo.
->
-> First two patches add new helpers to kfifo, that are used in the later
-> parts of the series.
->
-> v1: https://lkml.org/lkml/2019/11/27/327
->
-> v1 -> v2:
-> - rework the main patch of the series: re-use the existing file-descripto=
-r
->   associated with an open character device
-> - add a patch adding a debug message when the line event kfifo is full an=
-d
->   we're discarding another event
-> - rework the locking mechanism for lineevent kfifo: reuse the spinlock
->   from the waitqueue structure
-> - other minor changes
->
-> v2 -> v3:
-> - added patches providing new implementation for some kfifo macros
-> - fixed a regression in the patch reworking the line event fifo: reading
->   multiple events is now still possible
-> - reworked the structure for new ioctl: it's now padded such that there
->   be no alignment issues if running a 64-bit kernel on 32-bit userspace
-> - fixed a bug where one process could disable the status watch of another
-> - use kstrtoul() instead of atoi() in gpio-watch for string validation
->
-> v3 -> v4:
-> - removed a binary file checked in by mistake
-> - drop __func__ from debug messages
-> - restructure the code in the notifier call
-> - add comments about the alignment of the new uAPI structure
-> - remove a stray new line that doesn't belong in this series
-> - tested the series on 32-bit user-space with 64-bit kernel
->
-> v4 -> v5:
-> - dropped patches already merged upstream
-> - collected review tags
->
-> Bartosz Golaszewski (7):
->   kfifo: provide noirqsave variants of spinlocked in and out helpers
->   kfifo: provide kfifo_is_empty_spinlocked()
->   gpiolib: rework the locking mechanism for lineevent kfifo
->   gpiolib: emit a debug message when adding events to a full kfifo
->   gpiolib: provide a dedicated function for setting lineinfo
->   gpiolib: add new ioctl() for monitoring changes in line info
->   tools: gpio: implement gpio-watch
+On Mon, Jan 13, 2020 at 03:53:31PM -0800, Guru Das Srinagesh wrote:
+> Because period and duty cycle are defined as ints with units of
+> nanoseconds, the maximum time duration that can be set is limited to
+> ~2.147 seconds. Change their definitions to u64 in the structs of the
+> PWM framework so that higher durations may be set.
+> 
+> Also make the relevant fixes to those drivers that use the period and
+> duty_cycle struct members in division operations, viz. replacing the
+> division operations with 64-bit division macros as appropriate.
 
-Hi Andrew,
+I like the goal of this patch (i.e. expanding the domain of period and
+duty-cycle). I wonder however if we need a more sophisticated approach
+here. The problem I see is that if something breaks (and the fix isn't
+easy) we will have to revert the whole patch touching (now) 15 files.
 
-could you Ack the first two patches in this series if you're fine with
-them? The code they modify lives in lib/ and doesn't have an assigned
-maintainer, so I've been told to Cc you on this series. It would be
-great if we could get it in for v5.6 merge window.
+I didn't thought about that much, but it would be great if we could
+prepare the affected drivers to work with both, int and u64 and switch
+in a separate commit. Reverting would then become cheaper.
+The conversion to 64-bit division macros could be done even without
+actually converting period and duty cycle, couldn't it?
 
-Best regards,
-Bartosz Golaszewski
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+
+This Reported-by: looks wrong. It gave some hints about what had to be
+improved in an earlier revision of this patch, but usually this means
+that the patch is a fix for an earlier commit. So I would put this in
+the text, something like:
+
+	The kbuild test robot helped to improve this patch series to
+	(hopefully) catch all code sites having to be adapted.
+
+> [...]
+> diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> index 924d39a..ba9500a 100644
+> --- a/drivers/pwm/pwm-clps711x.c
+> +++ b/drivers/pwm/pwm-clps711x.c
+> @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+>  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+>  {
+>  	/* Duty cycle 0..15 max */
+> -	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> +	return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+>  }
+
+In ir-rx51.c you used DIV_ROUND_CLOSEST_ULL to replace
+DIV_ROUND_CLOSEST, here it is DIV64_U64_ROUND_CLOSEST. Maybe it is worth
+to describe the relevant difference shortly in the commit log.
+
+>  static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
