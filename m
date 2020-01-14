@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20920C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDB924685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0E524686
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996667;
-	bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
+	s=default; t=1578996669;
+	bh=E/QgGsKX187fm06fbc72l+VFzYNIk6fBCxejTqhkB1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYAUp77C7rTLOGDCsEygVYY4hLC8Aw6GlKKeTgWGc96EKSIdrFqk0qKjEC9L2U7wi
-	 MrwfQ5kQzyAALmkqFqhSMJBTOwPRDVCW+lfGk+NK/L/OPe32l4RmumCcOnZK9UlfL0
-	 +FBTL98iXXaKHyDvb1eejpmkTcZEOg9iDezxUsxE=
+	b=xqfsR1wOmgnO1so9ILVKuNSKhGFJns0CHuchgyObt5nz5pXknBcn4zGHARv0E4Wln
+	 SzqxlJEiixSN0HxlM5PksK3Q0apTNsVhjdU+Ytqb207RSYKsDTitMpHiUJNxNb5Hz9
+	 vl3HRY2keKg3RJ9fxS8PNa3wmsG2/yHFm8A/DC4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbgANKLF (ORCPT
+        id S1732386AbgANKLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbgANKLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:03 -0500
+        id S1732359AbgANKLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E90752467A;
-        Tue, 14 Jan 2020 10:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E82E24685;
+        Tue, 14 Jan 2020 10:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996662;
-        bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
+        s=default; t=1578996664;
+        bh=E/QgGsKX187fm06fbc72l+VFzYNIk6fBCxejTqhkB1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y+P9GnyMe7Qsk/DfYL5vTBaQDoM4uvALG4/cFOP06U/k8xrYvSYpEt8ZGo2dOyGBa
-         H9+qbZpaBfgZAot3m5AWdTVPl7mSXB0tKI8L4e6wta6FLo5d/6GJ1+YTREGXJVTKgl
-         CRpbhAS/XYFjVQZhQiLNKefg5YFC4hLAiZQXc7tQ=
+        b=IqlISAb3/OCKSciEy6yIGgHHKikISp+RmXWzdC74uLvWMm52aj7zUouvNGy3ADEXt
+         NThgIrbxzao7b6Jnu9z7xdLIgpCpa1L5ek6O+fC0XhLWI29sDrPxsn/dXIb/cMR81J
+         3IxK2EUKH7Fkn1BuqUAO7MKZ0QZtZJW2pmX6fdJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Peter Chen <peter.chen@freescale.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.9 03/31] usb: chipidea: host: Disable port power only if previously enabled
-Date:   Tue, 14 Jan 2020 11:01:55 +0100
-Message-Id: <20200114094337.955093296@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 04/31] ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
+Date:   Tue, 14 Jan 2020 11:01:56 +0100
+Message-Id: <20200114094340.082217722@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -62,77 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit c1ffba305dbcf3fb9ca969c20a97acbddc38f8e9 upstream.
+commit 51d4efab7865e6ea6a4ebcd25b3f03c019515c4c upstream.
 
-On shutdown, ehci_power_off() is called unconditionally to power off
-each port, even if it was never called to power on the port.
-For chipidea, this results in a call to ehci_ci_portpower() with a request
-to power off ports even if the port was never powered on.
-This results in the following warning from the regulator code.
+Bose Companion 5 (with USB ID 05a7:1020) doesn't seem supporting
+reading back the sample rate, so the existing quirk is needed.
 
-WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
-unbalanced disables for usb_otg2_vbus
-Modules linked in:
-CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
-Hardware name: Freescale i.MX7 Dual (Device Tree)
-[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
-[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
-[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
-[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
-[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
-[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
-[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
-[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
-[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
-[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
-[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
-[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
-[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
-...
-
-Keeping track of the power enable state avoids the warning and traceback.
-
-Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Peter Chen <peter.chen@freescale.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20191226155754.25451-1-linux@roeck-us.net
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206063
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200104110936.14288-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/chipidea/host.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/usb/quirks.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -37,6 +37,7 @@ static int (*orig_bus_suspend)(struct us
- 
- struct ehci_ci_priv {
- 	struct regulator *reg_vbus;
-+	bool enabled;
- };
- 
- static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
-@@ -48,7 +49,7 @@ static int ehci_ci_portpower(struct usb_
- 	int ret = 0;
- 	int port = HCS_N_PORTS(ehci->hcs_params);
- 
--	if (priv->reg_vbus) {
-+	if (priv->reg_vbus && enable != priv->enabled) {
- 		if (port > 1) {
- 			dev_warn(dev,
- 				"Not support multi-port regulator control\n");
-@@ -64,6 +65,7 @@ static int ehci_ci_portpower(struct usb_
- 				enable ? "enable" : "disable", ret);
- 			return ret;
- 		}
-+		priv->enabled = enable;
- 	}
- 
- 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1141,6 +1141,7 @@ bool snd_usb_get_sample_rate_quirk(struc
+ 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
+ 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
+ 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
++	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
+ 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
+ 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
+ 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
 
 
