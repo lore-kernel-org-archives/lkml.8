@@ -2,109 +2,116 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455CAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA5D24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AD424672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gOVFuwQl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="J1SA/EVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgANPDD (ORCPT
+        id S1729248AbgANPDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:03:03 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19879 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgANPDB (ORCPT
+        Tue, 14 Jan 2020 10:03:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45767 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbgANPDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:03:01 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1dd7ed0000>; Tue, 14 Jan 2020 07:02:05 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jan 2020 07:03:00 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:03:00 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 15:02:57 +0000
-Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200114094352.428808181@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <67098cc6-6b86-c441-065a-2cb7fe9a2be6@nvidia.com>
-Date:   Tue, 14 Jan 2020 15:02:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 10:03:00 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j42so12452745wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 07:02:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HIqjqYnUNYC6xaFfZJXPmBMgwbD3vdDEMlsV0H3SJ/M=;
+        b=J1SA/EVXpekAUyQtQL9GA9mqROIbfPpkW2dVRKXu7EoIolIojcPxdnUis5zZ2jjfkP
+         /iNE42kjv311m4HWlgCaIxzvQN+o2Ew56lWvyScq5D6nhkMXBctcLaKcJHTWkKCIhjWK
+         H4fVZlbDix9InRhQ8uWkjj4H/zo1B0mcxbJOV654w+KOxY4Jfr22ZLhdW9gw3CMESFgg
+         oYolVqoi5klUmBlN9VrzoodLh+i2kumyEfCaLam1pwS8nmwACNz9QzeahS8e2hzwm0ER
+         GjxnIKakA6oO0iymakRbrfWQ8772gAyf9HfGUwuwZo6kXrbNHU93lpI5ER7eyEcnhqQU
+         cjNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HIqjqYnUNYC6xaFfZJXPmBMgwbD3vdDEMlsV0H3SJ/M=;
+        b=FHhIqaj2cbT3kfJOUKgsfyKsbptJjWs3IswMTp7RoTHVn9xhnHi1zQNRWJz8tJf/iy
+         LW53B529MNPoubzjmlw9IM/6h0OO49ITTHVWI2xSfYGvVahCy3WZ7tgftJvA+uQjd4MY
+         5GA7N2CIqD/K3wFIl7/iWdA+GJkHti/Hr/XV1FibjdF/oeKy9F+Q8mpQtT0rbJ0anvnP
+         WppU+BessbX5KJO2X8AERm2RnpchmVymi3vLoUSvtjljhsmeh0GdbvTH9yu5w0CrDVy+
+         dLDD6AM+HoA5Fw4pklm5pLnlJqEO1OLn6MGwhWEUxFZJaGaEEjqCR3AeYm5cmNrqcA6W
+         IiUQ==
+X-Gm-Message-State: APjAAAXv8lqJhKaN9BA3t7vqUa3HQGAv4EEpH+d/Xycm6pEDjC2bMiWu
+        hzfZhPOGca36w9GrF3WquFsvNg==
+X-Google-Smtp-Source: APXvYqzQYZXZmnCuYM9hZZtxSNdRMUvX/Yf4k/r6u64zSyCjXNZDZGHB7BnEJM7mRRzhv8OqBBSLqw==
+X-Received: by 2002:adf:e6d2:: with SMTP id y18mr26535796wrm.262.1579014179025;
+        Tue, 14 Jan 2020 07:02:59 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id i10sm20311539wru.16.2020.01.14.07.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 07:02:58 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 2/2] gpio: mockup: sort headers alphabetically
+Date:   Tue, 14 Jan 2020 16:02:53 +0100
+Message-Id: <20200114150253.28716-3-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200114150253.28716-1-brgl@bgdev.pl>
+References: <20200114150253.28716-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579014125; bh=yzSPuWLBN2YvMW/0WwtrJdbVbpD4+Umhl9BNaZEckJ8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gOVFuwQl0SzM+tv7X82SM8I7IyiCKCeDVFh5Kw9nwcQwzZD4WMhdWVuuD6GDoSLwW
-         SuAN6AdIWlbbggCLICYJaRZjmgPhP/En0q0eBO1TgO07dtoKJ7U8sqktHKIS+pUXqq
-         sXSVGVEHRzCaPhpW+MF/39IvLzaYskuuKvftGCU7DiyQA71uLdr44nI5yyfewMwzh2
-         1dv/ca4QVnDjBQD8kyYvybpDcxai6VGgNOItos3Y1IKstfp9RNQSjeSQV32WHXE1u0
-         xEQ1h/qY3RLUrkq5GNemcum0WDNd5hW84HSVV5A6pImHHa1dvmesjIqPKaW1rSCpQt
-         yEScrFHP9RP1w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 14/01/2020 10:00, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.12 release.
-> There are 78 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+For consistency and easier maintenance: sort the headers alphabetically.
 
-All tests are passing for Tegra ...
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-mockup.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.4.12-rc1-g5c903e10834d
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 5f81f087103f..7d343bea784a 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -7,18 +7,18 @@
+  * Copyright (C) 2017 Bartosz Golaszewski <brgl@bgdev.pl>
+  */
+ 
+-#include <linux/init.h>
+-#include <linux/module.h>
+-#include <linux/gpio/driver.h>
++#include <linux/debugfs.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
++#include <linux/gpio/driver.h>
++#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irq_sim.h>
+-#include <linux/debugfs.h>
+-#include <linux/uaccess.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
+ #include <linux/property.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
+ 
+ #include "gpiolib.h"
+ 
 -- 
-nvpublic
+2.23.0
+
