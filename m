@@ -2,167 +2,179 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C10CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7886AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B0324672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996385;
-	bh=1FKyYkvHW1dICKbDWTLbwNgiJZfVa5rIxMBR2LSm5lg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqLzkIrbZTyxeiDuRA2HfWPYglpDS3PQ5Au66BhgRGJEiy6jvNACLTZD4tS54xP3a
-	 kYyFxmOSuvu6bCk6r+URj18T7z4oE4W9kvVXDCEllBra1X/J8LBqgdkB+MP1INFWtq
-	 Gjtjkl92pvBGGgb4bcC8C5pWKYaJZxRvZuGVmtZs=
+	by mail.kernel.org (Postfix) with ESMTP id 555E024676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgANKGX (ORCPT
+        id S1730384AbgANKGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgANKGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B5D824676;
-        Tue, 14 Jan 2020 10:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996373;
-        bh=1FKyYkvHW1dICKbDWTLbwNgiJZfVa5rIxMBR2LSm5lg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mx2f7sAzJiucQbn5aoKd+N57uYc1gT8XZCJXGpAK9w5cMRN5h/2nY2KvKhRgoSey0
-         KZ6Rivr2a67ZjU0N6cuaVz1tw2RvooYoEn3JShSJM4a1dV3UkKAo31+WaCt9aRily1
-         0rkFAaOfTum+9OrCnL9f2mO/MFEkuaQd2Wbx+Fjk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 74/78] phy: cpcap-usb: Fix error path when no host driver is loaded
-Date:   Tue, 14 Jan 2020 11:01:48 +0100
-Message-Id: <20200114094403.277987823@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-References: <20200114094352.428808181@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jan 2020 05:06:31 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:43012 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730350AbgANKG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:28 -0500
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1irJ5e-0002hw-M1
+        for linux-kernel@vger.kernel.org; Tue, 14 Jan 2020 10:06:26 +0000
+Received: by mail-pg1-f200.google.com with SMTP id d9so8178655pgd.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:06:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VN6q/GxJ7GOTvYmgVxwq5L3uVSb170dA2xY4o1EBnsg=;
+        b=rqZjBnqTGgj08ckGZA9D0OpwsWOtM6f+4c/KD4JrGWd4SeBWXNTV54XktwACYbp14f
+         4czdtwfKRwThjzODjIRlNxyPhMD+lWB0gi+pq0cNCZjfbxCJrpHZQ93DmN4LEMk4a+bt
+         KRiRAOaEtClnRB4UM1TPA1S1WavvnoytS1Vit8PGMiqvDAmPH+dFont6Tpo2eiZ+Ik6j
+         /gOJexKHEp3h8Nl0pQX+/bh9jOR6UbMJR3/4xkJcuzTRVHrsSH0lajDSGgpWikKQx57e
+         AbvheHGma/1tkzrcpvQAva8k3jWzMr7QJcBI7s+yBos5/5y0zxah/NfFZTW0+isoA84R
+         UWlw==
+X-Gm-Message-State: APjAAAWhFrO+/PvAEMEC4VsmDNk66SSUf5ugxc/7gQux+OdqSia/QlCY
+        gzkVzRdTFTIaiu3m+TTA0idY1NYzBznxnAm10QlErc9rZcXKobHNNRt9J45952XxsFqFC2cfi49
+        Vajz6av77M/FbEZZL30FKPP5vGD1/1E65TRDAexx8DQ==
+X-Received: by 2002:a63:5d03:: with SMTP id r3mr25979769pgb.306.1578996385078;
+        Tue, 14 Jan 2020 02:06:25 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxZHX+WNcTDIfSChzPivJEbgVYq5+c2W8ImUJW9Swv6JQHChlydKLp/72pvPwHHX3HMEHFxqA==
+X-Received: by 2002:a63:5d03:: with SMTP id r3mr25979746pgb.306.1578996384750;
+        Tue, 14 Jan 2020 02:06:24 -0800 (PST)
+Received: from 2001-b011-380f-35a3-5d99-e277-e07f-4d26.dynamic-ip6.hinet.net (2001-b011-380f-35a3-5d99-e277-e07f-4d26.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:5d99:e277:e07f:4d26])
+        by smtp.gmail.com with ESMTPSA id a12sm16002053pga.11.2020.01.14.02.06.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 02:06:24 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH 2/2] ethtool: Call begin() and complete() in
+ __ethtool_get_link_ksettings()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200113125129.GD25361@unicorn.suse.cz>
+Date:   Tue, 14 Jan 2020 18:06:21 +0800
+Cc:     "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <4AC365A3-3091-46A7-B938-F63A11115464@canonical.com>
+References: <20200110074159.18473-1-kai.heng.feng@canonical.com>
+ <20200110074159.18473-2-kai.heng.feng@canonical.com>
+ <20200113125129.GD25361@unicorn.suse.cz>
+To:     Michal Kubecek <mkubecek@suse.cz>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+Hi,
 
-commit 4acb0200ab2b07843e3ef5599add3454c7440f03 upstream.
+> On Jan 13, 2020, at 20:51, Michal Kubecek <mkubecek@suse.cz> wrote:
+> 
+> On Fri, Jan 10, 2020 at 03:41:59PM +0800, Kai-Heng Feng wrote:
+>> Device like igb gets runtime suspended when there's no link partner. We
+>> can't get correct speed under that state:
+>> $ cat /sys/class/net/enp3s0/speed
+>> 1000
+>> 
+>> In addition to that, an error can also be spotted in dmesg:
+>> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+>> 
+>> It's because the igb device doesn't get runtime resumed before calling
+>> get_link_ksettings().
+>> 
+>> So let's call begin() and complete() like what dev_ethtool() does, to
+>> runtime resume/suspend or power up/down the device properly.
+>> 
+>> Once this fix is in place, igb can show the speed correctly without link
+>> partner:
+>> $ cat /sys/class/net/enp3s0/speed
+>> -1
+> 
+> I agree that we definitely should make sure ->begin() and ->complete()
+> are always called around ethtool_ops calls. But even if nesting should
+> be safe now (for in-tree drivers, that is), I'm not really happy about
+> calling them even in places where we positively know we are always
+> inside a begin / complete block as e.g. vxlan or net_failover do. (And
+> also linkinfo.c and linkmodes.c but it may be easier to call
+> ->get_link_ksettings() directly there.)
 
-If musb_mailbox() returns an error, we must still continue to finish
-configuring the phy.
+Ok. Maybe use set_bit() to know it's inside of begin() and complete()?
 
-Otherwise the phy state may end up only half initialized, and this can
-cause the debug serial console to stop working. And this will happen if the
-usb driver musb controller is not loaded.
+> 
+> How about having two helpers: one simple for "ethtool context" where we
+> know we already are between ->begin() and ->complete() and one with the
+> begin/complete calls for the rest?
 
-Let's fix the issue by adding helper for cpcap_usb_try_musb_mailbox().
+Or I can rebase this patch on top of the refactoring work.
 
-Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Kai-Heng
 
----
- drivers/phy/motorola/phy-cpcap-usb.c |   33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+> Another interesting question is if
+> any of the callers which do not have their own begin()/complete() wrap
+> does actually need anything more than speed and duplex (I didn't do
+> a full check).
 
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -207,6 +207,19 @@ static int cpcap_phy_get_ints_state(stru
- static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata);
- static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata);
- 
-+static void cpcap_usb_try_musb_mailbox(struct cpcap_phy_ddata *ddata,
-+				       enum musb_vbus_id_status status)
-+{
-+	int error;
-+
-+	error = musb_mailbox(status);
-+	if (!error)
-+		return;
-+
-+	dev_dbg(ddata->dev, "%s: musb_mailbox failed: %i\n",
-+		__func__, error);
-+}
-+
- static void cpcap_usb_detect(struct work_struct *work)
- {
- 	struct cpcap_phy_ddata *ddata;
-@@ -226,9 +239,7 @@ static void cpcap_usb_detect(struct work
- 		if (error)
- 			goto out_err;
- 
--		error = musb_mailbox(MUSB_ID_GROUND);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
- 
- 		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
- 					   CPCAP_BIT_VBUSSTBY_EN |
-@@ -257,9 +268,7 @@ static void cpcap_usb_detect(struct work
- 			error = cpcap_usb_set_usb_mode(ddata);
- 			if (error)
- 				goto out_err;
--			error = musb_mailbox(MUSB_ID_GROUND);
--			if (error)
--				goto out_err;
-+			cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
- 
- 			return;
- 		}
-@@ -269,9 +278,7 @@ static void cpcap_usb_detect(struct work
- 		error = cpcap_usb_set_usb_mode(ddata);
- 		if (error)
- 			goto out_err;
--		error = musb_mailbox(MUSB_VBUS_VALID);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_VALID);
- 
- 		return;
- 	}
-@@ -281,9 +288,7 @@ static void cpcap_usb_detect(struct work
- 	if (error)
- 		goto out_err;
- 
--	error = musb_mailbox(MUSB_VBUS_OFF);
--	if (error)
--		goto out_err;
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
- 
- 	dev_dbg(ddata->dev, "set UART mode\n");
- 
-@@ -649,9 +654,7 @@ static int cpcap_usb_phy_remove(struct p
- 	if (error)
- 		dev_err(ddata->dev, "could not set UART mode\n");
- 
--	error = musb_mailbox(MUSB_VBUS_OFF);
--	if (error)
--		dev_err(ddata->dev, "could not set mailbox\n");
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
- 
- 	usb_remove_phy(&ddata->phy);
- 	cancel_delayed_work_sync(&ddata->detect_work);
+For sysfs yes, I am not sure about other cases though.
 
+Kai-Heng
+
+> 
+> Michal
+> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> net/ethtool/ioctl.c | 15 ++++++++++++++-
+>> 1 file changed, 14 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+>> index 182bffbffa78..c768dbf45fc4 100644
+>> --- a/net/ethtool/ioctl.c
+>> +++ b/net/ethtool/ioctl.c
+>> @@ -423,13 +423,26 @@ struct ethtool_link_usettings {
+>> int __ethtool_get_link_ksettings(struct net_device *dev,
+>> 				 struct ethtool_link_ksettings *link_ksettings)
+>> {
+>> +	int rc;
+>> +
+>> 	ASSERT_RTNL();
+>> 
+>> 	if (!dev->ethtool_ops->get_link_ksettings)
+>> 		return -EOPNOTSUPP;
+>> 
+>> +	if (dev->ethtool_ops->begin) {
+>> +		rc = dev->ethtool_ops->begin(dev);
+>> +		if (rc  < 0)
+>> +			return rc;
+>> +	}
+>> +
+>> 	memset(link_ksettings, 0, sizeof(*link_ksettings));
+>> -	return dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
+>> +	rc = dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
+>> +
+>> +	if (dev->ethtool_ops->complete)
+>> +		dev->ethtool_ops->complete(dev);
+>> +
+>> +	return rc;
+>> }
+>> EXPORT_SYMBOL(__ethtool_get_link_ksettings);
+>> 
+>> -- 
+>> 2.17.1
+>> 
 
