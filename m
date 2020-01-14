@@ -2,118 +2,151 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2567FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312ADC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6D82467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579039749;
-	bh=ECleuj4dTD+b2BCowdnKaPUSRFlF08Qh0VJWKgnNCmk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=cvPlSB5rbGP9faFuRuvPYF+ZQcf25VUHk9f13OmEQzhSrQ2MmQxWhy9ui4zcaLbqq
-	 09FsQDUPqcz1+/lqlD5m+vaQhVtx/aH8plZDAZP00gWCH1t7DX4gY09wfRSBcojoLk
-	 azAC4UTXynPaF7dzcbyxm2bjzgA6oqRmNlbJrKwk=
+	by mail.kernel.org (Postfix) with ESMTP id 081E124656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgANWJI (ORCPT
+        id S1728847AbgANWK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:09:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANWJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:09:07 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E4324656;
-        Tue, 14 Jan 2020 22:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579039746;
-        bh=ECleuj4dTD+b2BCowdnKaPUSRFlF08Qh0VJWKgnNCmk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eHTtZBZKOoGJ5TnBdVzafZ9IqoFNKO1oyUzy7DkBMs5u7spsmQX66h41FXlba/RCj
-         fFKn8Z+WQsZgNBLOf31Xev+rUXAqnIZjrdygfiGaNerFjb2nayD5CpA9N2FqLiWSlt
-         4xKRdwLbAL8ghkcGFgHLf5OyEGHIfOqC//FDPdds=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6CBEA3522755; Tue, 14 Jan 2020 14:09:06 -0800 (PST)
-Date:   Tue, 14 Jan 2020 14:09:06 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Marco Elver <elver@google.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20200114220906.GZ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200114213405.GX2935@paulmck-ThinkPad-P72>
- <9970E373-DF70-4FE4-A839-AAE641612EC5@lca.pw>
+        Tue, 14 Jan 2020 17:10:28 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:46066 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbgANWK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:10:28 -0500
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id C383772CC6C;
+        Wed, 15 Jan 2020 01:10:23 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id A58197CCE30; Wed, 15 Jan 2020 01:10:23 +0300 (MSK)
+Date:   Wed, 15 Jan 2020 01:10:23 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Sam Ravnborg <sam@ravnborg.org>, stable@vger.kernel.org,
+        Rich Felker <dalias@libc.org>, libc-alpha@sourceware.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sparc32: fix struct ipc64_perm type definition
+Message-ID: <20200114221023.GA8853@altlinux.org>
+References: <20200114132633.3694261-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9970E373-DF70-4FE4-A839-AAE641612EC5@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200114132633.3694261-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 04:48:22PM -0500, Qian Cai wrote:
-> 
-> 
-> > On Jan 14, 2020, at 4:34 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > As an alternative, once the patches needed for your tests to pass
-> > reach mainline, you could announce that KCSAN was ready to be enabled
-> > in distros.
-> > 
-> > Though I confess that I don't know how that works.  Is there a separate
-> > testing kernel binary provided by the distros in question?
-> 
-> I don’t think I have powers to announce that. Once the feature hit the mainline, distro people could start to use in the debug kernel variant, and it is a shame to only find out it is broken. Anyway, I’ll try to edge out those corner cases. Stay tuned.
 
-Very good, thank you!
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And you do have the power to announce.  But just like most of the rest
-of use, myself included, you won't always have the power to make people
-actually pay attention to what you say.  ;-)
+On Tue, Jan 14, 2020 at 02:26:14PM +0100, Arnd Bergmann wrote:
+> As discussed in the strace issue tracker, it appears that the sparc32
+> sysvipc support has been broken for the past 11 years. It was however
+> working in compat mode, which is how it must have escaped most of the
+> regular testing.
+>=20
+> The problem is that a cleanup patch inadvertently changed the uid/gid
+> fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
+> headers.
+>=20
+> Both glibc and uclibc-ng still use the original types, so they should
+> work fine with compat mode, but not natively.  Change the definitions
+> to use __kernel_uid32_t and __kernel_gid32_t again.
+>=20
+> Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
+> Link: https://github.com/strace/strace/issues/116
+> Cc: <stable@vger.kernel.org> # v2.6.29
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: "Dmitry V . Levin" <ldv@altlinux.org>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: libc-alpha@sourceware.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/sparc/include/uapi/asm/ipcbuf.h | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/arch/sparc/include/uapi/asm/ipcbuf.h b/arch/sparc/include/ua=
+pi/asm/ipcbuf.h
+> index 5b933a598a33..0ea1240d2ea1 100644
+> --- a/arch/sparc/include/uapi/asm/ipcbuf.h
+> +++ b/arch/sparc/include/uapi/asm/ipcbuf.h
+> @@ -17,19 +17,19 @@
+> =20
+>  struct ipc64_perm
+>  {
+> -	__kernel_key_t	key;
+> -	__kernel_uid_t	uid;
+> -	__kernel_gid_t	gid;
+> -	__kernel_uid_t	cuid;
+> -	__kernel_gid_t	cgid;
+> +	__kernel_key_t		key;
+> +	__kernel_uid32_t	uid;
+> +	__kernel_gid32_t	gid;
+> +	__kernel_uid32_t	cuid;
+> +	__kernel_gid32_t	cgid;
+>  #ifndef __arch64__
+> -	unsigned short	__pad0;
+> +	unsigned short		__pad0;
+>  #endif
+> -	__kernel_mode_t	mode;
+> -	unsigned short	__pad1;
+> -	unsigned short	seq;
+> -	unsigned long long __unused1;
+> -	unsigned long long __unused2;
+> +	__kernel_mode_t		mode;
+> +	unsigned short		__pad1;
+> +	unsigned short		seq;
+> +	unsigned long long	__unused1;
+> +	unsigned long long	__unused2;
+>  };
+> =20
+>  #endif /* __SPARC_IPCBUF_H */
 
-							Thanx, Paul
+I think the fix is correct, I also confirm that the part of strace
+test suite that checks tracing of 32-bit tracees on sparc64 turns green
+again when this patch is applied.
+
+Please add to the commit message that
+this bug was found by strace test suite.
+
+Feel free to add
+Reported-and-tested-by: Dmitry V. Levin <ldv@altlinux.org>
+
+
+--=20
+ldv
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJeHjxPAAoJEAVFT+BVnCUIGwIQANO/CcoeRKwRxH+405T1A7gr
+RiBoO4UCZ8EydDh9r9ELr3vBfWLdn6wvEhSxgeyjswCbu2ObO4euUrSTPS+JpmDK
+eDlu7ANPIek/3ZPkqzc0vI6Gc/joYawdldlkvw6qWwoya11Y2WfxmhvWNzXEhTrC
+jVyf3rf+DKyDJg3wGpa1/0MhkYWl0MT5daESMh3h+RjwAarky1AQb0PI++FHda9G
+WcXivT3U+KJHGiU1tr/FEGzb97tarjc3PBFPTnfEiq7D2S/7VhMb3b7JS+nh4r2p
+oG2c5Rv/m+B9oiG1x8fLk5kMHn+BUKBv1kqc7SQC7AfWHiMucYmiAAvjNOvT5LCG
+s1+Kh8d7dNZMT2apJVdLSA+gBiWtZ3udLqlYDQ4IudhEe20VOG9EGG+71FeA2yTH
+eemiVwrGxSHKdkK9SAAk5Z0ljrMxIBHg1AFT6sUc3eFT5s7oIN6Epdsw3ooccT08
+ysEBm2O/jPSiHVuQdPolcwsje9bpYrzZaK/tUWS7clBO8oEpA3ZCdTN60l7xLMJt
+aWLKSGWz2zjNtOTrkgbOJTYhDeGXqQg2KiJ2zy0Ga0p7ujcMRydQAjxzu5kH2Dlg
+UVG+7u8ctOdFB9738k2NBbAVFsYAZ84Y61F2MqzuIXZRG5Nbz//EqyNBATH2Bp0f
+Rh4ul08WC6JsYU5Gx+Gv
+=SfW4
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
