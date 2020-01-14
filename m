@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D35C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19098C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CCB24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E466A2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997190;
-	bh=YLLRxSU8TbjHH9MhIW8POwazjj39RFa0uNS6FY9gSTM=;
+	s=default; t=1578997195;
+	bh=MAlV+duEr8rc3TFIDMPW6PfMhcvKZUNZfrDrNpUsQj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvgiVrndkZJoQ6AvOnadL4+M1lOjjH9tn/COZhcyqe2X0X67GciNYm9sjzihQeUju
-	 QKY3q5DYVTZ8C1onDeOK10e4Pdb+OFfQhL4v6hUuFdlcqVf/oqZAJxfstzIjqV6AYO
-	 qk5vw43zY6vq4dVYmFUx7w54NikQ/mp3zPETjftI=
+	b=uF5myf+HFJluP3Mzjn+UHbG25zFaiyy9VVHsHk3F3cHUyM5QqccH3Cf9GsG9XFVYf
+	 pg/Xp/0hKdOn4XJq6azhJTTSIrJ6otMZbIx7esbE0Jj24sHYnX++LJ0vsaoBQSTFRD
+	 wwFaoujGQNfM++I0nUw1ZHTsnBD7j5cU4JAcFjyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgANKFC (ORCPT
+        id S1731034AbgANKTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:19:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbgANKE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:58 -0500
+        id S1729262AbgANKEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B172A24699;
-        Tue, 14 Jan 2020 10:04:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79E72467E;
+        Tue, 14 Jan 2020 10:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996298;
-        bh=YLLRxSU8TbjHH9MhIW8POwazjj39RFa0uNS6FY9gSTM=;
+        s=default; t=1578996295;
+        bh=MAlV+duEr8rc3TFIDMPW6PfMhcvKZUNZfrDrNpUsQj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJUm8qWI8ToHL/hnz2mMEZFKuSy8vmhsmFk0J3lRMMuwEb4/vZFgxuwJaR5Mv+Kqn
-         rbx9u2bdcV+XzI1DYA3dcEj/d8n48YTZaAZE+Yali/QssA6UxgPIALWXC8Uvdpnx8w
-         It2NGDMO891vRvwQPEXwbA7b+XOTklZqs84wV/TA=
+        b=CEJ+3Y64zyDKNUzBAeqPG/AqHeZwSVaFPgl6zL8yBR2Kl3BTPFGZ0aRWUnNwOTlZv
+         jGZIpj/OVmjCwrQ1v7DkAihktrBT9MeG/CEqAJFvt1/IcXnHojrNBm94qSpprZ6NDl
+         PTOoi6JdTlHHppqXw8o/RQkNygayzWORhkeVY7i0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Artur Rojek <contact@artur-rojek.eu>, Bin Liu <b-liu@ti.com>
-Subject: [PATCH 5.4 48/78] usb: musb: dma: Correct parameter passed to IRQ handler
-Date:   Tue, 14 Jan 2020 11:01:22 +0100
-Message-Id: <20200114094359.954908568@linuxfoundation.org>
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.4 47/78] usb: musb: Disable pullup at init
+Date:   Tue, 14 Jan 2020 11:01:21 +0100
+Message-Id: <20200114094359.836642366@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,33 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paul Cercueil <paul@crapouillou.net>
 
-commit c80d0f4426c7fdc7efd6ae8d8b021dcfc89b4254 upstream.
+commit 96a0c12843109e5c4d5eb1e09d915fdd0ce31d25 upstream.
 
-The IRQ handler was passed a pointer to a struct dma_controller, but the
-argument was then casted to a pointer to a struct musb_dma_controller.
+The pullup may be already enabled before the driver is initialized. This
+happens for instance on JZ4740.
 
-Fixes: 427c4f333474 ("usb: struct device - replace bus_id with dev_name(), dev_set_name()")
+It has to be disabled at init time, as we cannot guarantee that a gadget
+driver will be bound to the UDC.
+
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Suggested-by: Bin Liu <b-liu@ti.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20191216161844.772-2-b-liu@ti.com
+Link: https://lore.kernel.org/r/20200107152625.857-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/musb/musbhsdma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/musb/musb_core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/musb/musbhsdma.c
-+++ b/drivers/usb/musb/musbhsdma.c
-@@ -425,7 +425,7 @@ struct dma_controller *musbhs_dma_contro
- 	controller->controller.channel_abort = dma_channel_abort;
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2318,6 +2318,9 @@ musb_init_controller(struct device *dev,
+ 	musb_disable_interrupts(musb);
+ 	musb_writeb(musb->mregs, MUSB_DEVCTL, 0);
  
- 	if (request_irq(irq, dma_controller_irq, 0,
--			dev_name(musb->controller), &controller->controller)) {
-+			dev_name(musb->controller), controller)) {
- 		dev_err(dev, "request_irq %d failed!\n", irq);
- 		musb_dma_controller_destroy(&controller->controller);
- 
++	/* MUSB_POWER_SOFTCONN might be already set, JZ4740 does this. */
++	musb_writeb(musb->mregs, MUSB_POWER, 0);
++
+ 	/* Init IRQ workqueue before request_irq */
+ 	INIT_DELAYED_WORK(&musb->irq_work, musb_irq_work);
+ 	INIT_DELAYED_WORK(&musb->deassert_reset_work, musb_deassert_reset);
 
 
