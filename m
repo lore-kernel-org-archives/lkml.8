@@ -2,116 +2,283 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E1C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48293C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8304124672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579002848;
-	bh=5gv4rqr+ETxodMdG9qR822Ir48yIcBhQ3RsyKU/B3Bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tgzrgKikRxFDqlPr/+aOHRNuduO0Opqt+EiuqsKcCEFYjAB5aCogfYjB6z8tOiLq9
-	 vqGsw72c2cRv0EGBL8mvLKV9eEltWcDXLrZuY3WT2bL1Ty8UvrFR3fYc6sv9FDQ05D
-	 MjJF6T348kEpP/I7jAu+ucHJeXvsOKJ1i8zdwd/U=
+	by mail.kernel.org (Postfix) with ESMTP id 11FBF24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FxFJ9mdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgANLyH (ORCPT
+        id S1729543AbgANLzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:54:07 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59688 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgANLyH (ORCPT
+        Tue, 14 Jan 2020 06:55:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37446 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgANLzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:54:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lB6MZA50PMhE5+NlRK8xpuUi9p3Jd9Uo2guWBBEMUek=; b=Sxnje9gvx//7SQF2ycC46I8Z4
-        1z83g2m36A0efOCsgus46fAoDUDcMqopd+8gWFeIIJnMiOOpgI9XScTrMZHw9zroEofLrf3ZcMfJR
-        jNv8mBgiCZJx+9RtoQrDsMYzGEeWOrZhlm8MpkUFXklEdNVqFmduj5FEWt8a2uM9EY3Eo=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irKlg-0007fv-8p; Tue, 14 Jan 2020 11:53:56 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id A61B1D01965; Tue, 14 Jan 2020 11:53:55 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 11:53:55 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: Add an entry for Monolithic Power
- System, MPS
-Message-ID: <20200114115355.GR3897@sirena.org.uk>
-References: <20200109112548.23914-1-sravanhome@gmail.com>
- <20200109112548.23914-2-sravanhome@gmail.com>
- <CAL_Jsq+jyVzSfXr1txMUm7VTk-LFunaukQQ-LoQj4OMHgyzRHQ@mail.gmail.com>
+        Tue, 14 Jan 2020 06:55:05 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsije112647;
+        Tue, 14 Jan 2020 05:54:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579002884;
+        bh=fL4wb7qxhS863dp+nYgiM3uom70qjY56tgWdTfNmElg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FxFJ9mdiPIVGIbIDLrJz7hDEuRqZ3iR3bjrKVDg5mLN5u0ZIJxAw42IiJK6fEE1HM
+         FyL2/ptwaXIN2RCQ2+6ETu+UtqlxZkMxUOIvbihBeqyJKbz/ERdoil0NcvXVJ3OvY8
+         NfR0b96Ob22RWTw3k9UJcytOLS7jZTIpydKU5zdc=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsiwI000606;
+        Tue, 14 Jan 2020 05:54:44 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
+ Jan 2020 05:54:43 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 14 Jan 2020 05:54:44 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsft7013663;
+        Tue, 14 Jan 2020 05:54:41 -0600
+Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: Add documentation for
+ Toshiba tc358768
+To:     Rob Herring <robh@kernel.org>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <mark.rutland@arm.com>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@siol.net>
+References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
+ <20191217101506.18910-2-peter.ujfalusi@ti.com> <20191226222449.GA8816@bogus>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <7a7067ef-3c1c-ea20-8322-6d90c2c4c680@ti.com>
+Date:   Tue, 14 Jan 2020 13:55:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="A7FgPGrDEcSmmdo/"
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+jyVzSfXr1txMUm7VTk-LFunaukQQ-LoQj4OMHgyzRHQ@mail.gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191226222449.GA8816@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---A7FgPGrDEcSmmdo/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jan 13, 2020 at 11:14:39AM -0600, Rob Herring wrote:
-> On Thu, Jan 9, 2020 at 5:25 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> >
-> > Add an entry for Monolithic Power System, MPS
-> >
-> > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
+On 27/12/2019 0.24, Rob Herring wrote:
+> On Tue, Dec 17, 2019 at 12:15:05PM +0200, Peter Ujfalusi wrote:
+>> TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
+>>  1 file changed, 158 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>> new file mode 100644
+>> index 000000000000..8f96867caca0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>> @@ -0,0 +1,158 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
+>> +
+>> +maintainers:
+>> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> +
+>> +description: |
+>> +  The TC358768/TC358778 is bridge device which converts RGB to DSI.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - toshiba,tc358768
+>> +      - toshiba,tc358778
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: base I2C address of the device
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +    description: GPIO connected to active low RESX pin
+>> +
+>> +  vddc-supply:
+>> +    maxItems: 1
+> 
+> Drop this. Not an array. *-supply doesn't need further constraints.
 
-> Mark, And revert this too. It's a duplicate of what I already have in
-> my tree and this one is not alphabetized correctly.
+OK.
 
-OK...  I'm very surprised that you're asking me to revert a patch
-that you've acked though.
+> 
+>> +    description: Regulator for 1.2V internal core power.
+>> +
+>> +  vddmipi-supply:
+>> +    maxItems: 1
+>> +    description: Regulator for 1.2V for the MIPI.
+>> +
+>> +  vddio-supply:
+>> +    maxItems: 1
+>> +    description: Regulator for 1.8V - 3.3V IO power.
+> 
+> Blank line here.
 
---A7FgPGrDEcSmmdo/
-Content-Type: application/pgp-signature; name="signature.asc"
+Oops, I'll fix it.
 
------BEGIN PGP SIGNATURE-----
+> 
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    const: refclk
+>> +
+>> +  ports:
+>> +    type: object
+>> +
+>> +    properties:
+>> +      "#address-cells":
+>> +        const: 1
+>> +
+>> +      "#size-cells":
+>> +        const: 0
+>> +
+>> +      port@0:
+>> +        type: object
+>> +        additionalProperties: false
+>> +
+>> +        description: |
+>> +          Video port for RGB input
+>> +
+>> +        properties:
+>> +          reg:
+>> +            const: 0
+>> +
+>> +        patternProperties:
+>> +          endpoint:
+>> +            type: object
+>> +            additionalProperties: false
+>> +
+>> +            properties:
+>> +              data-lines:
+>> +                enum: [ 16, 18, 24 ]
+>> +
+>> +              remote-endpoint: true
+>> +
+>> +        required:
+>> +          - reg
+>> +
+>> +      port@1:
+>> +        type: object
+>> +        description: |
+>> +          Video port for DSI output (panel or connector).
+>> +
+>> +        properties:
+>> +          reg:
+>> +            const: 1
+>> +
+>> +        patternProperties:
+>> +          endpoint:
+>> +            type: object
+>> +            additionalProperties: false
+>> +
+>> +            properties:
+>> +              remote-endpoint: true
+>> +
+>> +        required:
+>> +          - reg
+> 
+> No additionalProperties on this one?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4dq9IACgkQJNaLcl1U
-h9DYmwf/XQmHGqavvYH49xk8K7JAEHtmllFR3shlMUPwgFy7xmOmcyihfeC4P7ze
-9d4F/5qJyr+NKHwSxCqXvZ6tVJe9MmiDKfdGGjVNKXGL7MzYnXKH2hXQPlkjSfb8
-snzswHCDQG/foE+ELH3QMTv8Idi6Vph9A/avf4eEGRbFB8AWvSwcVZief9ZOtbP4
-TsXT9wv7TLyGevADxxbtlaGvErhQmPwRDgkZ+vPZs6hJfZGaL2rXagX86UbaF9en
-PR3I8zzxjWUUQYBURnsygvdLHpsARHLwLXUpS1HQVw31aHv7clCpeUYw2q44F7XD
-7DFMbh9xme5M781gk6nfNeRCDCQUuQ==
-=A9Lt
------END PGP SIGNATURE-----
+Correct, I have missed the additionalProperties: false
 
---A7FgPGrDEcSmmdo/--
+I'll update the binding documents when I get comments for the driver.
+
+Thank you,
+- Péter
+
+> 
+>> +
+>> +    required:
+>> +      - "#address-cells"
+>> +      - "#size-cells"
+>> +      - port@0
+>> +      - port@1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - vddc-supply
+>> +  - vddmipi-supply
+>> +  - vddio-supply
+>> +  - ports
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c1 {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      dsi_bridge: tc358768@0e {
+>> +        compatible = "toshiba,tc358768";
+>> +        reg = <0x0e>;
+>> +
+>> +        clocks = <&tc358768_refclk>;
+>> +        clock-names = "refclk";
+>> +
+>> +        /* GPIO line is inverted before going to the bridge */
+>> +        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
+>> +
+>> +        vddc-supply = <&v1_2d>;
+>> +        vddmipi-supply = <&v1_2d>;
+>> +        vddio-supply = <&v3_3d>;
+>> +
+>> +        dsi_bridge_ports: ports {
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          port@0 {
+>> +            reg = <0>;
+>> +            rgb_in: endpoint {
+>> +              remote-endpoint = <&dpi_out>;
+>> +              data-lines = <24>;
+>> +            };
+>> +          };
+>> +
+>> +          port@1 {
+>> +            reg = <1>;
+>> +            dsi_out: endpoint {
+>> +              remote-endpoint = <&lcd_in>;
+>> +            };
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> +    
+>> -- 
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
