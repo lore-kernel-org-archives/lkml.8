@@ -2,54 +2,50 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAC9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4F7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C83207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9581207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997185;
-	bh=f+zasHaFZPGHYrBOj3ttLWGwZTdT81teXLi8J/9nfYI=;
+	s=default; t=1578997187;
+	bh=DLUMAB8sKpPd5p+SiSltdWxQrt78MGu3CgUvppVNDlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2rm51/IR/ndomTzWGD+NDXHGA+JbYkSPFufPgnn3VWQcHVJnl2VKZZAcSdJ688+r
-	 vzW7oPo/Up/meD+1UoczFT/GJoUSmjUFCz76kwuspcfSl+ZOPqHIOEE3osmO9cTUTa
-	 x4ekXlDbglDJEIgeEcJYkwvdTELHTVb8bHzsAT18=
+	b=r+P6SE4k2reazon/wQ6HjK3qAQKcyadIiWuW6GrrlA5n8S81YQw6lCcLOitKvC3wD
+	 i4TcXrC5nS+Ac70lR2h1ZqJYEkFLfaGrbSjbqu2m/HHxVv13qrLv200Xq+qQmjcuta
+	 QYF2dsnTsl5POgtdIZcwg/7DMXEtlstY0QaH6yjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgANKTo (ORCPT
+        id S1730107AbgANKFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:19:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33386 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729727AbgANKFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:22 -0500
+        id S1729638AbgANKFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AB224672;
-        Tue, 14 Jan 2020 10:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E7F12467A;
+        Tue, 14 Jan 2020 10:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996321;
-        bh=f+zasHaFZPGHYrBOj3ttLWGwZTdT81teXLi8J/9nfYI=;
+        s=default; t=1578996309;
+        bh=DLUMAB8sKpPd5p+SiSltdWxQrt78MGu3CgUvppVNDlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJL9b3MN4qfecomgMvphJNbqTooks3hM/XMgTV+ZYjeOY63DNgJpGInlbJ90hTA0R
-         yU01SRJyUzFEuYxG5grckDX/YjGVQ+Z7s6Bd5X3bUNq7Jsg2jc5aUXuXExtMFSHjuS
-         LhgADU208AtXQImxG+J22uPnpvOvqoIVAxchIcfo=
+        b=2J+2WXEQq7pON/uQPZ0TY484thOyNYqTR7jDtzqyZ47Sc5xXkb0o3snolVknMDUUi
+         /4ZOleY1uusjl++QmRq7f0W9l6bwug4MuDEdwNyZ/uQN//IUgjpmrw9iv/Ccm6QOIp
+         +AdXnEgmCJvn/VyOjykEG7qGLFPCGJ34SpJL0xSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 38/78] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
-Date:   Tue, 14 Jan 2020 11:01:12 +0100
-Message-Id: <20200114094358.716630382@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 5.4 52/78] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
+Date:   Tue, 14 Jan 2020 11:01:26 +0100
+Message-Id: <20200114094400.464699193@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -62,106 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Michael Straube <straube.linux@gmail.com>
 
-commit aa23ca3d98f756d5b1e503fb140665fb24a41a38 upstream.
+commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
 
-On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
-event handling causes spurious wakeups.
+This device was added to the stand-alone driver on github.
+Add it to the staging driver as well.
 
-This commit adds a new honor_wakeup option, defaulting to true (our current
-behavior), which can be used to disable wakeup on troublesome hardware
-to avoid these spurious wakeups.
-
-This is a workaround for an architectural problem with s2idle under Linux
-where we do not have any mechanism to immediately go back to sleep after
-wakeup events, other then for embedded-controller events using the standard
-ACPI EC interface, for details see:
-https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@redhat.com/
-
-One series of laptops which is not able to suspend without this workaround
-is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
-which makes sets honor_wakeup to false on these models.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200105160357.97154-3-hdegoede@redhat.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -22,12 +22,18 @@
- #include "gpiolib-acpi.h"
- 
- #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
-+#define QUIRK_NO_WAKEUP				0x02l
- 
- static int run_edge_events_on_boot = -1;
- module_param(run_edge_events_on_boot, int, 0444);
- MODULE_PARM_DESC(run_edge_events_on_boot,
- 		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
- 
-+static int honor_wakeup = -1;
-+module_param(honor_wakeup, int, 0444);
-+MODULE_PARM_DESC(honor_wakeup,
-+		 "Honor the ACPI wake-capable flag: 0=no, 1=yes, -1=auto");
-+
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -276,7 +282,7 @@ static acpi_status acpi_gpiochip_alloc_e
- 	event->handle = evt_handle;
- 	event->handler = handler;
- 	event->irq = irq;
--	event->irq_is_wake = agpio->wake_capable == ACPI_WAKE_CAPABLE;
-+	event->irq_is_wake = honor_wakeup && agpio->wake_capable == ACPI_WAKE_CAPABLE;
- 	event->pin = pin;
- 	event->desc = desc;
- 
-@@ -1330,6 +1336,23 @@ static const struct dmi_system_id gpioli
- 		},
- 		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
-+	{
-+		/*
-+		 * Various HP X2 10 Cherry Trail models use an external
-+		 * embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler. The embedded controller generates various
-+		 * spurious wakeup events when suspended. So disable wakeup
-+		 * for its handler (it uses the only ACPI GPIO event handler).
-+		 * This breaks wakeup when opening the lid, the user needs
-+		 * to press the power-button to wakeup the system. The
-+		 * alternative is suspend simply not working, which is worse.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
-+		},
-+		.driver_data = (void *)QUIRK_NO_WAKEUP,
-+	},
- 	{} /* Terminating entry */
- };
- 
-@@ -1349,6 +1372,13 @@ static int acpi_gpio_setup_params(void)
- 			run_edge_events_on_boot = 1;
- 	}
- 
-+	if (honor_wakeup < 0) {
-+		if (quirks & QUIRK_NO_WAKEUP)
-+			honor_wakeup = 0;
-+		else
-+			honor_wakeup = 1;
-+	}
-+
- 	return 0;
- }
- 
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -37,6 +37,7 @@ static const struct usb_device_id rtw_us
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
++	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
 
 
