@@ -2,143 +2,100 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558E6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A0C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C9C2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:00:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUO5m76U"
+	by mail.kernel.org (Postfix) with ESMTP id C5E3224685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579010429;
+	bh=H/51/5ZekFpSpHx8KB4PX8o7MbAINifRHPOl5iU9qxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=suCS8dSl+0yqHhMra7Fv39xVLvR9a3LpsKXg8Ol1Zn4d1tOhPZ/Nol8GYi5ojampI
+	 pTsP6ebIK+oQzeqK7Fh3cz4g1Iyqm+AkHWnwPg3xvFyvtowNIEVKxJJijbXR2NQ1qv
+	 f/U0twqY+X+XY2EkjZRktjWsXU6RegwsKRiftKGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgANOAY (ORCPT
+        id S1729144AbgANOA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:00:24 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34765 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgANN76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:59:58 -0500
-Received: by mail-wm1-f66.google.com with SMTP id w5so2378446wmi.1;
-        Tue, 14 Jan 2020 05:59:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xjPV4Ha5BYE0MCX17Wl6xnLI6QAy5DnWASz8VTCVvYQ=;
-        b=EUO5m76UvmdUwWtNzcIKhgu1b3wsytiLJXK+nCU8Jd+QLUFj3sjQ6tp4GDPLdz01Tk
-         CqD2W85UbyrcCOMSjLf/dFpOusOr7BW9TGliVE1RP6bXsB8Sxe8ahdtC2GAFpvVWPHtu
-         huctNx72GCsTAiGkF1SCKWPEXR1HgUR4pAxwdKl8372GYVvlcoKFEIjoubnexI0StKy6
-         x656qiDvIBYjjnHT10RUOQDzOjyDF4tIiOjDG3EtntrJNHGhnm/SU9hhc3qJmCNhKtuH
-         mUG4dI9ncJ9bO9nTWh1qxkJkNIl9HucXdHS5WgPs9si0eKsDk+9KCo/JNtoxvjSE9hva
-         LINg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xjPV4Ha5BYE0MCX17Wl6xnLI6QAy5DnWASz8VTCVvYQ=;
-        b=ZBE7vZM9HVNLRuZmt9dln8hZtzG/Us4DLZr+UkHN7nm4HMJvN4Gqrl2wRu119GoQfl
-         Eb9uRuejZQePAs8jFmSExHCdaC1xF+0h/NnubT9CY4tz+Vg/+CRtwOojC6ofk1Rh3Qpb
-         gp+MwiT9p5gNYN5OTWZlSG+39b9Z82sEeL/E+Ol8wu8L3pm9ybxY0G0E882c/ckB3f8c
-         WkMR5hRpDvFQT0n3QyrTKZ/joAK+VRre6nfAeHfGqVspHI3PcU5cDpZZJUUwOkppVJXN
-         nkSaz/NGPu8B0ZkewieLw5gRkchdcStg28nnGTeh/zqZDt4m075m6iRIlnwyBpy4mQO+
-         h2zQ==
-X-Gm-Message-State: APjAAAWxKCwXYbGOKXbGWrRqd1S8ymmvzKMRPXtfLPd4pzq/0psrM+MQ
-        MFPePSigY86y5dUpyx5ZBsY=
-X-Google-Smtp-Source: APXvYqzVCraPGaXbAoGqhP1ygDTY7R+QHVftrzEYOGKAwqSEbThaIsz0cQp5wFfFNd9DXBamDMmh5Q==
-X-Received: by 2002:a1c:62c1:: with SMTP id w184mr28138545wmb.150.1579010396021;
-        Tue, 14 Jan 2020 05:59:56 -0800 (PST)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id 4sm17854448wmg.22.2020.01.14.05.59.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 05:59:55 -0800 (PST)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     alexandre.torgue@st.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, mcoquelin.stm32@gmail.com,
-        mripard@kernel.org, wens@csie.org, iuliana.prodan@nxp.com,
-        horia.geanta@nxp.com, aymen.sghaier@nxp.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH RFC 04/10] crypto: sun8i-ce: introduce the slot number
-Date:   Tue, 14 Jan 2020 14:59:30 +0100
-Message-Id: <20200114135936.32422-5-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114135936.32422-1-clabbe.montjoie@gmail.com>
-References: <20200114135936.32422-1-clabbe.montjoie@gmail.com>
+        Tue, 14 Jan 2020 09:00:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728884AbgANOA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:00:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB17E2467A;
+        Tue, 14 Jan 2020 14:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579010426;
+        bh=H/51/5ZekFpSpHx8KB4PX8o7MbAINifRHPOl5iU9qxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tgsc0vIAH4ypovFs6+X7TCXJaixVEaZ3kmYgpSSQiuV9uX9j1TI4IytD7AN8c23NB
+         a/sUBOs7OcRou2dLRq6ElfACP80NU4L7BTkYxd5HdO5HAeUIjFbxy2G5qE293D2b+x
+         h/eNhyVub2cXQ85X/05WByxgbgQm6gAmL+A2hoj4=
+Date:   Tue, 14 Jan 2020 15:00:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v5 1/1] usb: gadget: add raw-gadget interface
+Message-ID: <20200114140023.GA1694074@kroah.com>
+References: <cover.1579007786.git.andreyknvl@google.com>
+ <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <461a787e63a9a01d83edc563575b8585bc138e8d.1579007786.git.andreyknvl@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the slot position, for choosing which task in the task
-list should be prepared/unprepared.
-The slot is for the moment is always 0 until the infrastructure will handle
-non 0 value.
+On Tue, Jan 14, 2020 at 02:24:43PM +0100, Andrey Konovalov wrote:
+> USB Raw Gadget is a kernel module that provides a userspace interface for
+> the USB Gadget subsystem. Essentially it allows to emulate USB devices
+> from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
+> currently a strictly debugging feature and shouldn't be used in
+> production.
+> 
+> Raw Gadget is similar to GadgetFS, but provides a more low-level and
+> direct access to the USB Gadget layer for the userspace. The key
+> differences are:
+> 
+> 1. Every USB request is passed to the userspace to get a response, while
+>    GadgetFS responds to some USB requests internally based on the provided
+>    descriptors. However note, that the UDC driver might respond to some
+>    requests on its own and never forward them to the Gadget layer.
+> 
+> 2. GadgetFS performs some sanity checks on the provided USB descriptors,
+>    while Raw Gadget allows you to provide arbitrary data as responses to
+>    USB requests.
+> 
+> 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
+>    while GadgetFS currently binds to the first available UDC.
+> 
+> 4. Raw Gadget uses predictable endpoint names (handles) across different
+>    UDCs (as long as UDCs have enough endpoints of each required transfer
+>    type).
+> 
+> 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
+> 
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+> 
+> Greg, I've assumed your LGTM meant that I can add a Reviewed-by from you.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 6 ++++--
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c   | 2 +-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Yes, I was about to give it a "real" one, but that is fine here, thanks.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-index 401f39f144ea..9c1f6c9eaaf9 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-@@ -96,6 +96,7 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
- 	int flow, i;
- 	int nr_sgs = 0;
- 	int nr_sgd = 0;
-+	int slot = 0;
- 	int err = 0;
- 
- 	algt = container_of(alg, struct sun8i_ce_alg_template, alg.skcipher);
-@@ -114,7 +115,7 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
- 
- 	chan = &ce->chanlist[flow];
- 
--	cet = chan->tl;
-+	cet = &chan->tl[slot];
- 	memset(cet, 0, sizeof(struct ce_task));
- 
- 	cet->t_id = cpu_to_le32(flow);
-@@ -301,11 +302,12 @@ static int sun8i_ce_cipher_unprepare(struct crypto_engine *engine, void *async_r
- 	unsigned int ivsize, offset;
- 	int nr_sgs = rctx->nr_sgs;
- 	int nr_sgd = rctx->nr_sgd;
-+	int slot = 0;
- 	int flow;
- 
- 	flow = rctx->flow;
- 	chan = &ce->chanlist[flow];
--	cet = chan->tl;
-+	cet = &chan->tl[slot];
- 	ivsize = crypto_skcipher_ivsize(tfm);
- 
- 	if (areq->src == areq->dst) {
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index e8bf7bf31061..bd355f4b95f3 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -120,7 +120,7 @@ int sun8i_ce_run_task(struct sun8i_ce_dev *ce, int flow, const char *name)
- 	/* Be sure all data is written before enabling the task */
- 	wmb();
- 
--	v = 1 | (ce->chanlist[flow].tl->t_common_ctl & 0x7F) << 8;
-+	v = 1 | (ce->chanlist[flow].tl[0].t_common_ctl & 0x7F) << 8;
- 	writel(v, ce->base + CE_TLR);
- 	mutex_unlock(&ce->mlock);
- 
--- 
-2.24.1
-
+greg k-h
