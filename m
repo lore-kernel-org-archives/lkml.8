@@ -2,99 +2,136 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0A9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01C8C47409
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BFA222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C6GepBz1"
+	by mail.kernel.org (Postfix) with ESMTP id D062E24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgANQGU (ORCPT
+        id S1729151AbgANQGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:06:20 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28124 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgANQGU (ORCPT
+        Tue, 14 Jan 2020 11:06:25 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:50728 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728943AbgANQGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:06:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579017979;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=zFvHM3AeFQ6gPIf7yqo2C1O21SKvnYRszvRgL2Vd76U=;
-        b=C6GepBz1zTxbsELxDCwQSJjiW30Zoo9ifcjgXplsSM7SGAJj+IZtv9KsD5VW8NXLkH6efk
-        ydslt5vyswYmM2jF0vZolp8s8xadPe8vFoVNlLugEEDp0Efst1HojC2tZ1t7iCenfDzzoI
-        Iixsje1kOmBXy1LWw7muU3REPgCYbAk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-IilqvlY_MQGKWipUHzyBQA-1; Tue, 14 Jan 2020 11:06:17 -0500
-X-MC-Unique: IilqvlY_MQGKWipUHzyBQA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94755593A1;
-        Tue, 14 Jan 2020 16:06:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D51460BE0;
-        Tue, 14 Jan 2020 16:06:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] keys: Fix request_key() cache
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 14 Jan 2020 16:06:14 +0000
-Message-ID: <157901797479.32540.1716642299317411940.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Tue, 14 Jan 2020 11:06:24 -0500
+Received: (qmail 4192 invoked by uid 2102); 14 Jan 2020 11:06:22 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 14 Jan 2020 11:06:22 -0500
+Date:   Tue, 14 Jan 2020 11:06:22 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     syzbot <syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com>,
+        <andreyknvl@google.com>, <benjamin.tissoires@redhat.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: use-after-free Write in hiddev_disconnect
+In-Reply-To: <20200114152414.GC3719@kadam>
+Message-ID: <Pine.LNX.4.44L0.2001141100290.1593-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the key cached by request_key() and co. is cleaned up on exit(), the
-code looks in the wrong task_struct, and so clears the wrong cache.  This
-leads to anomalies in key refcounting when doing, say, a kernel build on an
-afs volume, that then trigger kasan to report a use-after-free when the key
-is viewed in /proc/keys.
+On Tue, 14 Jan 2020, Dan Carpenter wrote:
 
-Fix this by making exit_creds() look in the passed-in task_struct rather
-than in current (the task_struct cleanup code is deferred by RCU and
-potentially run in another task).
+> I'm trying to take a stab at diagnosing these bugs.  (But I'm seldom
+> smart enough to actually fix anything).  These hiddev_disconnect() bugs
+> are a race condition:
+> 
+> devel/drivers/hid/usbhid/hiddev.c
+>    924  void hiddev_disconnect(struct hid_device *hid)
+>    925  {
+>    926          struct hiddev *hiddev = hid->hiddev;
+>    927          struct usbhid_device *usbhid = hid->driver_data;
+>    928  
+>    929          usb_deregister_dev(usbhid->intf, &hiddev_class);
+>    930  
+>    931          mutex_lock(&hiddev->existancelock);
+>    932          hiddev->exist = 0;
+>                 ^^^^^^^^^^^^^^^^^^
+> We set "exist = 0;"
+> 
+>    933  
+>    934          if (hiddev->open) {
+>    935                  mutex_unlock(&hiddev->existancelock);
+>                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Then we drop the lock.
+> 
+>    936                  hid_hw_close(hiddev->hid);
+>    937                  wake_up_interruptible(&hiddev->wait);
+>                                                ^^^^^^
+> The other thread frees hiddev and it crashes here.
+> 
+>    938          } else {
+>    939                  mutex_unlock(&hiddev->existancelock);
+>    940                  kfree(hiddev);
+>    941          }
+>    942  }
+> 
+> The other thread is doing:
+> 
+> drivers/hid/usbhid/hiddev.c
+>    216  static int hiddev_release(struct inode * inode, struct file * file)
+>    217  {
+>    218          struct hiddev_list *list = file->private_data;
+>    219          unsigned long flags;
+>    220  
+>    221          spin_lock_irqsave(&list->hiddev->list_lock, flags);
+>    222          list_del(&list->node);
+>    223          spin_unlock_irqrestore(&list->hiddev->list_lock, flags);
+>    224  
+>    225          mutex_lock(&list->hiddev->existancelock);
+>                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Takes the lock.
+> 
+>    226          if (!--list->hiddev->open) {
+>                      ^^^^^^^^^^^^^^^^^^^^
+> Decrements open.
+> 
+>    227                  if (list->hiddev->exist) {
+>                             ^^^^^^^^^^^^^^^^^^^
+> This is false.
+> 
+>    228                          hid_hw_close(list->hiddev->hid);
+>    229                          hid_hw_power(list->hiddev->hid, PM_HINT_NORMAL);
+>    230                  } else {
+>    231                          mutex_unlock(&list->hiddev->existancelock);
+>    232                          kfree(list->hiddev);
+>                                       ^^^^^^^^^^^^
+> Freed here.
+> 
+>    233                          vfree(list);
+>    234                          return 0;
+>    235                  }
+>    236          }
+>    237  
+>    238          mutex_unlock(&list->hiddev->existancelock);
+>    239          vfree(list);
+>    240  
+>    241          return 0;
+>    242  }
+> 
+> I'm not sure what the fix should be though.
 
-Fixes: 7743c48e54ee ("keys: Cache result of request_key*() temporarily in task_struct")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Good sleuthing!
 
- kernel/cred.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It certainly looks as though hiddev_disconnect() should not try to
+reference hiddev after dropping the existance_lock -- at least, not in
+the case that the device file is still open.  So I suggest reordering
+the statements in that routine: First call hid_hw_close() and
+wake_up_interruptible(), then drop the mutex.
 
-diff --git a/kernel/cred.c b/kernel/cred.c
-index c0a4c12d38b2..56395be1c2a8 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -175,8 +175,8 @@ void exit_creds(struct task_struct *tsk)
- 	put_cred(cred);
- 
- #ifdef CONFIG_KEYS_REQUEST_CACHE
--	key_put(current->cached_requested_key);
--	current->cached_requested_key = NULL;
-+	key_put(tsk->cached_requested_key);
-+	tsk->cached_requested_key = NULL;
- #endif
- }
- 
+Too bad syzbot doesn't have a reproducer to test this, though.
+
+Alan Stern
 
