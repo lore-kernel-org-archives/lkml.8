@@ -2,103 +2,181 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4071C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2062FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B80222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEECA2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:53:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Wm2t8cPh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RrlFg8Cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgANPw5 (ORCPT
+        id S1728852AbgANPxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:52:57 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33804 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgANPw5 (ORCPT
+        Tue, 14 Jan 2020 10:53:11 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15598 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgANPxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:52:57 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so10217496lfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 07:52:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zmI+7fCvDJ8jUI/s1LWzV0ABXbMh8NW+HrTxQxtxW+c=;
-        b=Wm2t8cPhYynnALTqITb4PRgUN3xAdtIL/l7NillCbGBQKs9d29OyBpMDhPLuc15IGf
-         Mrkog0biOqCEaTd77ua6TqgU2efNPzr7diD4mLhIaEAlNKTUf70asBLacWTFPtMxcoxN
-         eMS0MmaA5epHFn/XxW+Q4I/ZKoUxE8I1NMoaCo8m/4Do9dOn5ph7E4+xIATrfx66x+hI
-         9XYQDCGrx3yaP3P4rQhyt/IgawT3rlwBiPrJHHm/SPj7tOXx/Qk3ch9gCT3Yt4sJ68n0
-         4gwAKa/hwpG3oHP+rCxWWHYpouueIJI5yLV5rhVfs/PEQMqoiGm+OuXyD/3yauzIqK3u
-         Laeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zmI+7fCvDJ8jUI/s1LWzV0ABXbMh8NW+HrTxQxtxW+c=;
-        b=cOG9MRe7oYfxMzwXeHDDUm9pNsQCAcf3TXjrcCXPxgTvQck62Y3tZ8MDSSeZ/VXzDu
-         gBHNypQBZmSrkKG60CkcaGLVbjbucV8Q9y5SoI7Bz4fxwOpmpUM1pKOfDsdQSRI319h1
-         DKKyOjl2UJo22MvEeKXmOpAYKNslDy8QrGLEAZ1YYSWze0HSL8IIiJAtkqQ1PrWLBQk0
-         Rw14dBcfSozkckz9kVM2vaLHrP6dPxs/sx2LB0cJoStmRyERqDNqSPLZMQIxuS586WZZ
-         Mt9iOqMG5KzCQtR9Wjudev1F96mXcODDjHLQXOheXVqg7KFSIr7ze+SdgVe/OH41ByV5
-         1I1w==
-X-Gm-Message-State: APjAAAVbTmub4tnraPu029oyRKVbe53UdjbJM3FhzwLJInUQle9Sj4Zf
-        w9Eglrqok5Njh+IsCirlPIhjo143/6Y=
-X-Google-Smtp-Source: APXvYqw+3PJvfNkdFH3y9F3CIp1R5dqPceP7RzJP7ftqvhfxkDa2mvUtfpC+UzToTb1sJ6fKFFCIeQ==
-X-Received: by 2002:a05:6512:cf:: with SMTP id c15mr2106258lfp.57.1579017175586;
-        Tue, 14 Jan 2020 07:52:55 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id p15sm7379134lfo.88.2020.01.14.07.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 07:52:54 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E23471012B2; Tue, 14 Jan 2020 18:52:58 +0300 (+03)
-Date:   Tue, 14 Jan 2020 18:52:58 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 2/2] mm: factor out next_present_section_nr()
-Message-ID: <20200114155258.kww5ve7agifxxtoy@box>
-References: <0B77E39C-BD38-4A61-AB28-3578B519952F@redhat.com>
- <C40ACB72-F8C7-4F9B-B3F3-00FBC0C44406@redhat.com>
- <20200114104119.pybggnb4b2mq45wr@box>
- <4de17591-e2c4-daff-e4b2-d03dd8792d0f@redhat.com>
+        Tue, 14 Jan 2020 10:53:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1de3d10000>; Tue, 14 Jan 2020 07:52:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jan 2020 07:53:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jan 2020 07:53:09 -0800
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 15:53:09 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id EACE642D4E; Tue, 14 Jan 2020 17:53:06 +0200 (EET)
+Date:   Tue, 14 Jan 2020 17:53:06 +0200
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Peter Geis" <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        "Marcel Ziswiler" <marcel.ziswiler@toradex.com>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/12] NVIDIA Tegra20 CPUFreq driver major update
+Message-ID: <20200114155306.GI28289@pdeschrijver-desktop.Nvidia.com>
+References: <20191218202142.11717-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <4de17591-e2c4-daff-e4b2-d03dd8792d0f@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191218202142.11717-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579017169; bh=0SFkuHSJNQEdwduVKnvDRB9QOlYZ0liNb97A4TB33pc=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=RrlFg8CmwfKQXFxENsjwaShgE8D62gO5fYE0FysvL5mX+ACZBewp/hPk10HAmtqSI
+         6yqAMupgvZvKjuZIxTKBeFdhC6KUzqjksyi84XoNmyrs8W3e0s0YPzP77kYO23SSSY
+         /nY3h75vwdWhquByz7XC38jG2wECAw4yL8z7OrQvv3OEp7GnhLLAMtH4Lbqb+L2O57
+         fT13JLGcq5myTPuKl7xoJudh2SeaUSWhsaKtyHDA4f7waTBAC2eyZd6a/cXZTwMsv/
+         ZVFrhIGsViRp3nfPZvcRM4WqFQNuVl4fjJtCz03cWNl8OsQ65k/d5MuEe9khC0OQLO
+         Qazs9P2hS3I2A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:49:19AM +0100, David Hildenbrand wrote:
-> memmap_init_zone() is called for a physical memory region: pfn + size
-> (nr_pages)
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+
+On Wed, Dec 18, 2019 at 11:21:30PM +0300, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
 > 
-> The highest possible PFN you can have is "-1(unsigned long) >>
-> PFN_SHIFT". So even if you would want to add the very last section, the
-> PFN would still be smaller than -1UL << PFN_SECTION_SHIFT.
-
-PFN_SHIFT? I guess you mean PAGE_SHIFT.
-
-Of course PFN can be more than -1UL >> PAGE_SHIFT. Like on 32-bit x86 with
-PAE it is ((1ULL << 36) - 1) >> PAGE_SHIFT. That's the whole reason for
-PAE.
-
-The highest possible PFN must fit into phys_addr_t when shifted left by
-PAGE_SHIFT and must fit into unsigned long. It's can be -1UL if
-phys_addr_t is 64-bit.
-
-Any other limitation I miss?
-
--- 
- Kirill A. Shutemov
+> 
+> Hello,
+> 
+> This series moves intermediate-clk handling from tegra20-cpufreq into
+> tegra-clk driver. This allows us to switch to generic cpufreq-dt driver
+> which brings voltage scaling, per-hardware OPPs and Tegra30 support out
+> of the box. All boards need to adopt CPU OPPs in their device-trees in
+> order to get cpufreq support.
+> 
+> Changelog:
+> 
+> v6: - Dropped "cpufreq: dt-platdev: Blacklist NVIDIA Tegra20 and Tegra30 SoCs"
+>       patch from the series since Viresh picked up that patch separately.
+> 
+>     - Added two new patches to this series:
+> 
+>         ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
+>         ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
+> 
+>       Previously these patches were sent out separately from this series,
+>       but it should be more consistent to include them into the series since
+>       they directly relate to enabling of the cpufreq driver on Tegra30.
+> 
+> v5: - The "Use generic cpufreq-dt driver (Tegra30 supported now)" patch
+>       is separated now into two patches by factoring out the blacklisting
+>       of cpufreq-dt-platdev into a standalone patch. This is done in a
+>       response to request from Jon Hunter to fix the warning splats during
+>       boot that are coming from OPP core because OPPs are unavailable. The
+>       OPPs will become available once tegra20-cpufreq driver will be updated
+>       to support the cpufreq-dt.
+> 
+> v4: - Updated CCLK diagram in the "Add custom CCLK implementation" patch.
+> 
+>     - <linux/cpu.h> is now included in the "Use generic cpufreq-dt driver"
+>       patch, for consistency.
+> 
+>     - Returned value of get_cpu_device() is now checked in the "Use generic
+>       cpufreq-dt driver" patch, for consistency as well.
+> 
+> v3: - The "Add custom CCLK implementation" patch was updated in accordance
+>       to the comments from Peter De Schrijver. We will not use the clock
+>       skipper.
+> 
+>     - Re added OPPs for T30 Beaver board because Thierry has that board ;)
+> 
+>     - Added r-b for the "DT binding" patch from Rob Herring.
+> 
+> v2: - Kept modularity of the tegra20-cpufreq as was requested by Viresh Kumar
+>       in a review comment to v1.
+> 
+>     - Added acks from Viresh Kumar.
+> 
+>     - Added tested-by from Nicolas Chauvet to the "trimslice" patch.
+>       Nicolas told me on IRC that it works fine.
+> 
+>     - Fixed compilation of the "Add custom CCLK implementation" patch. The
+>       error happened because v1 was based on top of yet unreviewed/unapplied
+>       patch "clk: tegra: divider: Support enable-bit for Super clocks".
+>       Thanks to Peter Geis for reporting the problem.
+> 
+>     - Replaced Tegra30 "beaver" board with "cardhu-a04" because turned out
+>       that's what NVIDIA uses in the testing farm.
+> 
+> Dmitry Osipenko (12):
+>   clk: tegra: Add custom CCLK implementation
+>   clk: tegra: pll: Add pre/post rate-change hooks
+>   clk: tegra: cclk: Add helpers for handling PLLX rate changes
+>   clk: tegra20: Use custom CCLK implementation
+>   clk: tegra30: Use custom CCLK implementation
+>   ARM: tegra: Switch CPU to PLLP on resume from LP1 on Tegra30/114/124
+>   ARM: tegra: Don't enable PLLX while resuming from LP1 on Tegra30
+>   dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+>   cpufreq: tegra20: Use generic cpufreq-dt driver (Tegra30 supported
+>     now)
+>   ARM: tegra: Create tegra20-cpufreq platform device on Tegra30
+>   ARM: dts: tegra30: beaver: Set up voltage regulators for DVFS
+>   ARM: dts: tegra30: beaver: Add CPU Operating Performance Points
+> 
+>  .../cpufreq/nvidia,tegra20-cpufreq.txt        |  56 +++++
+>  arch/arm/boot/dts/tegra30-beaver.dts          |  40 +++-
+>  arch/arm/mach-tegra/sleep-tegra30.S           |  18 +-
+>  arch/arm/mach-tegra/tegra.c                   |   4 +
+>  drivers/clk/tegra/Makefile                    |   1 +
+>  drivers/clk/tegra/clk-pll.c                   |  12 +-
+>  drivers/clk/tegra/clk-tegra-super-cclk.c      | 212 +++++++++++++++++
+>  drivers/clk/tegra/clk-tegra20.c               |   7 +-
+>  drivers/clk/tegra/clk-tegra30.c               |   6 +-
+>  drivers/clk/tegra/clk.h                       |  19 +-
+>  drivers/cpufreq/Kconfig.arm                   |   6 +-
+>  drivers/cpufreq/tegra20-cpufreq.c             | 217 +++++-------------
+>  12 files changed, 418 insertions(+), 180 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>  create mode 100644 drivers/clk/tegra/clk-tegra-super-cclk.c
+> 
+> --
+> 2.24.0
+> 
