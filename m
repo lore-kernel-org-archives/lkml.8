@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2303C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DABC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F7024655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587E624670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgANTtt (ORCPT
+        id S1729129AbgANTt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:49:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44704 "EHLO
+        Tue, 14 Jan 2020 14:49:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44693 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgANTtC (ORCPT
+        with ESMTP id S1728863AbgANTtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 14:49:02 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1irSBR-0005ZX-Oa; Tue, 14 Jan 2020 20:49:01 +0100
-Message-Id: <20200114185946.983874540@linutronix.de>
+        id 1irSBO-0005ZC-VQ; Tue, 14 Jan 2020 20:48:59 +0100
+Message-Id: <20200114185946.656652824@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 19:52:41 +0100
+Date:   Tue, 14 Jan 2020 19:52:38 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -46,7 +46,7 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [patch 04/15] lib/vdso: Allow the high resolution parts to be compiled out
+Subject: [patch 01/15] lib/vdso: Make __arch_update_vdso_data() logic understandable
 References: <20200114185237.273005683@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,42 +55,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the architecture knows at compile time that there is no VDSO capable
-clocksource supported it makes sense to optimize the guts of the high
-resolution parts of the VDSO out at build time. Add a helper function to
-check whether the VDSO should be high resolution capable and provide a stub
-which can be overridden by an architecture.
+The function name suggests that this is a boolean checking whether the
+architecture asks for an update of the VDSO data, but it works the other
+way round. To spare further confusion invert the logic.
 
+Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- lib/vdso/gettimeofday.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/include/asm/vdso/vsyscall.h |    4 ++--
+ include/asm-generic/vdso/vsyscall.h  |    4 ++--
+ kernel/time/vsyscall.c               |    2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -38,6 +38,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last
+--- a/arch/arm/include/asm/vdso/vsyscall.h
++++ b/arch/arm/include/asm/vdso/vsyscall.h
+@@ -34,9 +34,9 @@ struct vdso_data *__arm_get_k_vdso_data(
+ #define __arch_get_k_vdso_data __arm_get_k_vdso_data
+ 
+ static __always_inline
+-int __arm_update_vdso_data(void)
++bool __arm_update_vdso_data(void)
+ {
+-	return !cntvct_ok;
++	return cntvct_ok;
  }
- #endif
+ #define __arch_update_vdso_data __arm_update_vdso_data
  
-+#ifndef __arch_vdso_hres_capable
-+static inline bool __arch_vdso_hres_capable(void)
-+{
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -12,9 +12,9 @@ static __always_inline struct vdso_data
+ #endif /* __arch_get_k_vdso_data */
+ 
+ #ifndef __arch_update_vdso_data
+-static __always_inline int __arch_update_vdso_data(void)
++static __always_inline bool __arch_update_vdso_data(void)
+ {
+-	return 0;
 +	return true;
-+}
-+#endif
-+
- #ifdef CONFIG_TIME_NS
- static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 			  struct __kernel_timespec *ts)
-@@ -101,6 +108,10 @@ static __always_inline int do_hres(const
- 	u64 cycles, last, sec, ns;
- 	u32 seq;
+ }
+ #endif /* __arch_update_vdso_data */
  
-+	/* Allows to compile the high resilution parts out */
-+	if (!__arch_vdso_hres_capable())
-+		return -1;
-+
- 	do {
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -84,7 +84,7 @@ void update_vsyscall(struct timekeeper *
+ 	struct vdso_timestamp *vdso_ts;
+ 	u64 nsec;
+ 
+-	if (__arch_update_vdso_data()) {
++	if (!__arch_update_vdso_data()) {
  		/*
- 		 * Open coded to handle VCLOCK_TIMENS. Time namespace
+ 		 * Some architectures might want to skip the update of the
+ 		 * data page.
 
