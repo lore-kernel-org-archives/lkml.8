@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C1FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F848C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2028A2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE4320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996625;
-	bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
+	s=default; t=1578996630;
+	bh=XQLkSruPo+o5PUSErv4u/zaJfbC1EOrkYq7lBk8SaLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqJRzWFt+UA9r8aWpWSyP7Amk3ghK4G7peBH1sQu9QEixbj7n2GhqOmqtv4zbHzZA
-	 7ugG2BwzxpofBAqDuYB1ve+YaBtsqRa+LeKFXfULjbcYn/aHdQbrMUNOh+q7aZa1gZ
-	 X6CoAFbiwakemZ/90oAC/QKqKXLU/CioGu79BYCo=
+	b=IfDtq3GVGVa9/pXSpeeS+B9ck2qX3IE8B8NafTWN/IOd0GSc/lDawWETNqK7VWtA2
+	 iTI8Lz24n7Sc3npDkuRDgXCH0szzkqHi5W7ig7Eu4nOyHZbOOLrEoKjQPRFqVffPpT
+	 JRyXbbChmdrlpi1lxF84QtNN+cPAyJ9KFUbwLBYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbgANKKY (ORCPT
+        id S1730979AbgANKK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:10:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729447AbgANKKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:20 -0500
+        id S1729406AbgANKKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:10:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C47224676;
-        Tue, 14 Jan 2020 10:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 387CB20678;
+        Tue, 14 Jan 2020 10:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996619;
-        bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
+        s=default; t=1578996624;
+        bh=XQLkSruPo+o5PUSErv4u/zaJfbC1EOrkYq7lBk8SaLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qT9ZOd+wf8mhLszf5Ur/zsM6adobQE3SMHRvYDRsTxf4zU0jdry4qfOMBSb3ktqD9
-         fuMYZPA4lsl3euMDe/jyc/ajfsKwkjHbbEF9oSSy6ZUBRwCr1eIRIvpEeaqjv1s7eq
-         uuP8EWfbE+RoS2TDMsv8YP62kugM2S+N327LNsME=
+        b=YgVp9Cokuj23NN7wpQLzCRoBwMNikFqlxfNNjge5hdKRZft4xI7fgqi2MTCJNZZsa
+         ka9ZZ4NFwJiAOy4H3j3Oa8PC7IcREgUiK1oGEqb2ZqBzUvdihEuwlnrVoKn4IoYewA
+         /+b5r14GY0+IwQ161iAnEF0Yy8CNak9B0FaNRJXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Roger Whittaker <Roger.Whittaker@suse.com>
-Subject: [PATCH 4.14 35/39] USB: Fix: Dont skip endpoint descriptors with maxpacket=0
-Date:   Tue, 14 Jan 2020 11:02:09 +0100
-Message-Id: <20200114094346.366822834@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.14 37/39] phy: cpcap-usb: Fix flakey host idling and enumerating of devices
+Date:   Tue, 14 Jan 2020 11:02:11 +0100
+Message-Id: <20200114094346.734805080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -60,63 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 2548288b4fb059b2da9ceada172ef763077e8a59 upstream.
+commit 049226b9fd7442149dcbcf55f15408f5973cceda upstream.
 
-It turns out that even though endpoints with a maxpacket length of 0
-aren't useful for data transfer, the descriptors do serve other
-purposes.  In particular, skipping them will also skip over other
-class-specific descriptors for classes such as UVC.  This unexpected
-side effect has caused some UVC cameras to stop working.
+We must let the USB host idle things properly before we switch to debug
+UART mode. Otherwise the USB host may never idle after disconnecting
+devices, and that causes the next enumeration to be flakey.
 
-In addition, the USB spec requires that when isochronous endpoint
-descriptors are present in an interface's altsetting 0 (which is true
-on some devices), the maxpacket size _must_ be set to 0.  Warning
-about such things seems like a bad idea.
-
-This patch updates an earlier commit which would log a warning and
-skip these endpoint descriptors.  Now we only log a warning, and we
-don't even do that for isochronous endpoints in altsetting 0.
-
-We don't need to worry about preventing endpoints with maxpacket = 0
-from ever being used for data transfers; usb_submit_urb() already
-checks for this.
-
-Reported-and-tested-by: Roger Whittaker <Roger.Whittaker@suse.com>
-Fixes: d482c7bb0541 ("USB: Skip endpoints with 0 maxpacket length")
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Link: https://marc.info/?l=linux-usb&m=157790377329882&w=2
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001061040270.1514-100000@iolanthe.rowland.org
+Cc: Jacopo Mondi <jacopo@jmondi.org>
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/phy/motorola/phy-cpcap-usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -392,12 +392,16 @@ static int usb_parse_endpoint(struct dev
- 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
+--- a/drivers/phy/motorola/phy-cpcap-usb.c
++++ b/drivers/phy/motorola/phy-cpcap-usb.c
+@@ -281,13 +281,13 @@ static void cpcap_usb_detect(struct work
+ 		return;
  	}
  
--	/* Validate the wMaxPacketSize field */
-+	/*
-+	 * Validate the wMaxPacketSize field.
-+	 * Some devices have isochronous endpoints in altsetting 0;
-+	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
-+	 * (see the end of section 5.6.3), so don't warn about them.
-+	 */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
--	if (maxp == 0) {
--		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
- 		    cfgno, inum, asnum, d->bEndpointAddress);
--		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
++	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
++
+ 	/* Default to debug UART mode */
+ 	error = cpcap_usb_set_uart_mode(ddata);
+ 	if (error)
+ 		goto out_err;
  
- 	/* Find the highest legal maxpacket size for this endpoint */
+-	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
+-
+ 	dev_dbg(ddata->dev, "set UART mode\n");
+ 
+ 	return;
 
 
