@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A949C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAF0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D96D24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418E524679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996526;
-	bh=T67fHZqidlAyh8FbzLOG1P11xKFtdBYShqTE/DNKaeg=;
+	s=default; t=1578996529;
+	bh=QLRq49Oa3q7afnFXHe3koQkdpAPWSchtx4mPwYc8D+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cF30kPSTQi5xC6QC5/FlF+PibHEzxCcwxWaj1ONed8uk3dJ3Q2m4cjRup4UM7S3W1
-	 g76KIca7NhALVZstKB4HqF0griIXHGvv82LktjlVHN3njLD0piLwkxtYUFGaUQ2yub
-	 u1xCPRwIYJB+nq76q2TW518Am3wuAHxBwkyoaSkQ=
+	b=T5Ys/9QrU1kNuVVJx6tA9C0rFWNkLDmt73rgtubM6gGND2zjLOjP++ll4AkwtTXyu
+	 SnwoqphB9XDXWrbtIJGJDg1z7IhnLBrTuDa8AJ+zWJFBrH+5Pe5W8gcCddSXyjYAST
+	 bp/4NMTZbLxmbAGUnLx14ZPOe58QpI3moQs8r6gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgANKIp (ORCPT
+        id S1731078AbgANKIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbgANKIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:42 -0500
+        id S1731061AbgANKIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08A8420678;
-        Tue, 14 Jan 2020 10:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 093BB20678;
+        Tue, 14 Jan 2020 10:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996522;
-        bh=T67fHZqidlAyh8FbzLOG1P11xKFtdBYShqTE/DNKaeg=;
+        s=default; t=1578996525;
+        bh=QLRq49Oa3q7afnFXHe3koQkdpAPWSchtx4mPwYc8D+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zq/lreziWcqXQqg6p8JG2MMaNq7OeGJUWPzv2Q+5cwzNi0KDE1GukPqz7VTPClrsd
-         gMxcTFD8ataIMnamYDIo2T5ICg1Cuk8GJpxGbKIFjU9dtvW+LNUHNGEZSv4q2HiF95
-         MPURjWIKR3DNhKdNlD3Ar/JmuPAFGhpmexhqHj+0=
+        b=TNC5H0KbB06niGVnD/RvLRL6Pz3oLTwtn7468m3hwOHN/0WZW5/GhfERML7LqY23g
+         mhXewsT2FCsplECEisdfBncBB4WUtjCizqVCTygDlbe1iU+0s/5XyfRmWhmrNfAJst
+         KXv7mDSXbJWNF+YmOjZb9akViIvHAOX6EyOdSuvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 46/46] netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
-Date:   Tue, 14 Jan 2020 11:02:03 +0100
-Message-Id: <20200114094348.890539049@linuxfoundation.org>
+        stable@vger.kernel.org, "Kenneth R. Crudup" <kenny@panix.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.19 34/46] tty: always relink the port
+Date:   Tue, 14 Jan 2020 11:01:51 +0100
+Message-Id: <20200114094347.142899987@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -62,59 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit 22dad713b8a5ff488e07b821195270672f486eb2 upstream.
+commit 273f632912f1b24b642ba5b7eb5022e43a72f3b5 upstream.
 
-The set uadt functions assume lineno is never NULL, but it is in
-case of ip_set_utest().
+If the serial device is disconnected and reconnected, it re-enumerates
+properly but does not link it. fwiw, linking means just saving the port
+index, so allow it always as there is no harm in saving the same value
+again even if it tries to relink with the same port.
 
-syzkaller managed to generate a netlink message that calls this with
-LINENO attr present:
-
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:hash_mac4_uadt+0x1bc/0x470 net/netfilter/ipset/ip_set_hash_mac.c:104
-Call Trace:
- ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
- nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
-
-pass a dummy lineno storage, its easier than patching all set
-implementations.
-
-This seems to be a day-0 bug.
-
-Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
-Fixes: a7b4f989a6294 ("netfilter: ipset: IP set core support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
+Reported-by: Kenneth R. Crudup <kenny@panix.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191227174434.12057-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/ipset/ip_set_core.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/tty_port.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1666,6 +1666,7 @@ static int ip_set_utest(struct net *net,
- 	struct ip_set *set;
- 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
- 	int ret = 0;
-+	u32 lineno;
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -89,8 +89,7 @@ void tty_port_link_device(struct tty_por
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	if (!driver->ports[index])
+-		driver->ports[index] = port;
++	driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
  
- 	if (unlikely(protocol_failed(attr) ||
- 		     !attr[IPSET_ATTR_SETNAME] ||
-@@ -1682,7 +1683,7 @@ static int ip_set_utest(struct net *net,
- 		return -IPSET_ERR_PROTOCOL;
- 
- 	rcu_read_lock_bh();
--	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
-+	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
- 	rcu_read_unlock_bh();
- 	/* Userspace can't trigger element to be re-added */
- 	if (ret == -EAGAIN)
 
 
