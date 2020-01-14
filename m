@@ -2,114 +2,67 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1229EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793B8C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18A524673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qm5G9CSi"
+	by mail.kernel.org (Postfix) with ESMTP id 56F4B24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579028825;
+	bh=4Ev8ap2VqtQ0F1aiYKeN/13TLf0ae9A2fOJ8gxXMaJo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xfycX1bEGrBGOtOFcMUwpN1gXSzCIz/0eKIovvalgMoc58l3EJeNpgRE3l8fb7kw8
+	 w0fUHKnXcrF0Tkfbur0kpi2eGo/RdP6sXi6CZQjue/LVW3p+5/8rrOHcNGUb85eVRR
+	 JzQT2oQqzrMHqhX847ezlEzvguEx270C43i38Blc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgANTGu (ORCPT
+        id S1728970AbgANTHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:06:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38633 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgANTG1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:06:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a33so6818657pgm.5;
-        Tue, 14 Jan 2020 11:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=Qm5G9CSi8hE6nPnKB0JHoF1ksIp45JPX3HX9vssDTwlZF4Rfy8IWq8WZsIfGUaH9sv
-         ZcXt/RoOwAMNw0W+DBimcFz0NHHlEnQjS7yrOba4yZe20ynilMcPvk5aqRF45lXWLZqy
-         jZtMMYTV6PHX4WUY+frShmcXUven7WUPwoW36tLU8UVW3noBGff2vxG63s5XrjaXppnB
-         hXlqvCjH16cL+ouJBOc87NujrFKXlQ68QlCGDNesz8niUqRtCESi7BQQlwQmEoGdBbSt
-         t5iCHJ/WDcw1FOO7PnDvGne5r9CkWnWxx2KVeS9GKtLAwFnYjmfcGyJxkodCXdiJaIhn
-         /cFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=e+Mh/RW+T5UGSV5vs9aDsOyszlS7OeO+W3/bSoRWnskyT5fcTULO3fm+Ea+faNHb7P
-         Z5y/3dXFzPMRkNGHBhY30ekaoEPZ/L7EoOHHzomE/it5p0JL9D7rfRrfTkAWUzCtP4P2
-         qHMaoyThx2hQ7KQrdCF1XpEy+NgRly3jIuFTgAx512NzwpXTaOWqUrwswFOHSCe6uuk6
-         bW21n880DWabTyy4ABaECxYI1uMMPZJ0Z94FXBhqjX9zh8QOC+PM/QAcOP9mU7X/6lLf
-         e6fpV6JqZ0KUik/v5pATuBOAsvvVbpWaEKs3OEGCsQEHBYumvQI3U1JUcc4amEtLx8ob
-         6TKA==
-X-Gm-Message-State: APjAAAWU3fESTS7olFeeA3zQG/YQLMhB/k5uigcRE0BJkLj632SUo7Np
-        Rlz7T9MXU9uuk7sjh2oQ+TTt0Xam
-X-Google-Smtp-Source: APXvYqxW4WEv33MceQhvOoDvCOyqNa0lcjz4YBr8Xi3MM+oBNXj+5uUCXiO6j87tYXtC2qT/dxYIrw==
-X-Received: by 2002:aa7:8a99:: with SMTP id a25mr26927807pfc.42.1579028786488;
-        Tue, 14 Jan 2020 11:06:26 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a195sm19284528pfa.120.2020.01.14.11.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 11:06:25 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
-        DRIVER), Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH v3 3/6] dt-bindings: thermal: Define BCM7216 thermal sensor compatible
-Date:   Tue, 14 Jan 2020 11:06:04 -0800
-Message-Id: <20200114190607.29339-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200114190607.29339-1-f.fainelli@gmail.com>
-References: <20200114190607.29339-1-f.fainelli@gmail.com>
+        Tue, 14 Jan 2020 14:07:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727092AbgANTHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:07:04 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C47624672;
+        Tue, 14 Jan 2020 19:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579028823;
+        bh=4Ev8ap2VqtQ0F1aiYKeN/13TLf0ae9A2fOJ8gxXMaJo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BpCHhg88cdGU69qecfkv9GBRwKg/A2BWsBH+iaKgvOUKcIYqyQ0QW+BvbdULb+caa
+         eVgnc3pLzstNLxtpc4GVMfT1T2hAaN5ZrZVBHCP1Gz8ecU4BxTUkFl3QXOTje1/D4O
+         iEzbh0l/2midTQ6c0r3vRiQUuv+mqbhwtLLUqCek=
+Date:   Tue, 14 Jan 2020 13:07:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Kelvin.Cao@microchip.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, epilmore@gigaio.com, dmeyer@gigaio.com
+Subject: Re: [PATCH 03/12] PCI/switchtec: Add support for new events
+Message-ID: <20200114190701.GA262120@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1ec69e8-624a-8e35-9a9e-3f8193fe9f68@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM7216 is a 16nm process STB chip, which requires a different
-compatible string to differentiate different temperature formulas.
+On Tue, Jan 14, 2020 at 11:21:45AM -0700, Logan Gunthorpe wrote:
+> Bjorn,
+> 
+> On 2020-01-13 7:07 p.m., Kelvin.Cao@microchip.com wrote:
+> > 'InterComm' is the spelling in the latest datasheet, it's short for "Inter Fabric Manager Communication". Thanks.
+> 
+> I noticed you fixed up the spelling in your branch but the IOCTL define
+> is still spelled INTERCOM, which is arguably the most important seeing
+> it's a userspace interface.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/thermal/brcm,avs-tmon.txt         | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-index 43a9ed545944..74a9ef09db8b 100644
---- a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-+++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-@@ -3,9 +3,13 @@
- Thermal management core, provided by the AVS TMON hardware block.
- 
- Required properties:
--- compatible: must be "brcm,avs-tmon" and/or "brcm,avs-tmon-bcm7445"
-+- compatible: must be one of:
-+	"brcm,avs-tmon-bcm7216"
-+	"brcm,avs-tmon-bcm7445"
-+	"brcm,avs-tmon"
- - reg: address range for the AVS TMON registers
--- interrupts: temperature monitor interrupt, for high/low threshold triggers
-+- interrupts: temperature monitor interrupt, for high/low threshold triggers,
-+	      required except for "brcm,avs-tmon-bcm7216"
- - interrupt-names: should be "tmon"
- 
- Example:
--- 
-2.17.1
-
+Thanks, I missed that one.  Fixed now.
