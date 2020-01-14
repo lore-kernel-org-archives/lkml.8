@@ -2,122 +2,114 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D217C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6176FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB1824679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3717224679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lc53V3tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgANNpE (ORCPT
+        id S1728942AbgANNpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:45:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43576 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgANNpE (ORCPT
+        Tue, 14 Jan 2020 08:45:08 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39041 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgANNpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:45:04 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irMVB-0006cA-B3; Tue, 14 Jan 2020 14:45:01 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7615A101DEE; Tue, 14 Jan 2020 14:45:00 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Ming Lei <minlei@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Subject: Re: Kernel-managed IRQ affinity (cont)
-In-Reply-To: <20200111024835.GA24575@ming.t460p>
-References: <20191216195712.GA161272@xz-x1> <20191219082819.GB15731@ming.t460p> <20191219143214.GA50561@xz-x1> <20191219161115.GA18672@ming.t460p> <87eew8l7oz.fsf@nanos.tec.linutronix.de> <20200110012802.GA4501@ming.t460p> <87v9pjrtbh.fsf@nanos.tec.linutronix.de> <20200111024835.GA24575@ming.t460p>
-Date:   Tue, 14 Jan 2020 14:45:00 +0100
-Message-ID: <87r202b19f.fsf@nanos.tec.linutronix.de>
+        Tue, 14 Jan 2020 08:45:06 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so12225133wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:45:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oOinymv8pj0OPIX5ZcmZOCfgWEimDpoAKZBv8j+ojuM=;
+        b=Lc53V3tkjlGBkcEODzZEcZMxyr5u7gBymcpf3xPxp3UNZGW7aeizjYh4kDZuGVh5cz
+         qj9whch/rqLI3Ms+cNnAas3dr76fCNtoqTEwSGdA76RrNzEzrVBGCQ1ZBpzyZTlYcTSv
+         VvYGl1lE+wciZiU2FOgrXwK/Can9sGn8/1L/FJa9ITjGCYnG/2TdK7I53a2xTymkhDi1
+         RCq+tyTcQHQXxN0zKysxR6gxzwH+zRKdlzK5vieFInf/jv15TfehzoKPGi+5+4sYlGiV
+         eTzHvH9FZjtWHYXp1mLaAvqmL70Tq3QbA+v1JVvijw0rTs4LlhrlZ9kKR/JTSroP7B5E
+         FWZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oOinymv8pj0OPIX5ZcmZOCfgWEimDpoAKZBv8j+ojuM=;
+        b=mvDkFbp92BZzZroGhlHkrRqDY+bIRPKyQFBIfYARQCQUMZQbkBfkDZCelHJ21aHYq1
+         CxmRNPfYXiZh2gGLVr8ZdAAR3+vbdsFtu7+u6CcUZNfxlj9SLuugPmMkJAElPdKwOSPl
+         1P+DZq/ineg4BqwFl6I2dqTCMVj7aYvtra40wsNVGYNkroQTnmizRVFHtMo+8QidsDO5
+         MNMArgK7myMwEKIIX2BjZ94sBSTG6fIu7SKR3enHZeXVr8uk+I8PZMPJpJO/je6Nyceq
+         EXbsNbPeqJnlYfbay82iQRtdpudX6wECRKV4xr57OgdZysJQ6oB9jIAJB97gT1euKUnp
+         A6Pg==
+X-Gm-Message-State: APjAAAUfsiTDjtGZXggnFiTEGdH7WLo4JMigOKAvKJsKG8TFtAgRGGJM
+        JnHwts04vawOn1otYj3XDfs=
+X-Google-Smtp-Source: APXvYqzFCtc2A2pvS5NtVwBfj/8CT2OpaYFNp29LauEBS3MXVSECFCW5PltwLwbBu1K/r6eg2TSLLw==
+X-Received: by 2002:a5d:6350:: with SMTP id b16mr25470961wrw.132.1579009504598;
+        Tue, 14 Jan 2020 05:45:04 -0800 (PST)
+Received: from localhost.localdomain (dslb-088-070-028-164.088.070.pools.vodafone-ip.de. [88.70.28.164])
+        by smtp.gmail.com with ESMTPSA id x10sm19361333wrp.58.2020.01.14.05.45.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 05:45:04 -0800 (PST)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 2/5] staging: rtl8188eu: convert rtw_hal_antdiv_before_linked() to bool
+Date:   Tue, 14 Jan 2020 14:44:19 +0100
+Message-Id: <20200114134422.13598-2-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114134422.13598-1-straube.linux@gmail.com>
+References: <20200114134422.13598-1-straube.linux@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
+Function rtw_hal_antdiv_before_linked() returns boolean values, so
+change the return type from u8 to bool.
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Fri, Jan 10, 2020 at 08:43:14PM +0100, Thomas Gleixner wrote:
->> Ming Lei <ming.lei@redhat.com> writes:
->> > That is why I try to exclude isolated CPUs from interrupt effective affinity,
->> > turns out the approach is simple and doable.
->> 
->> Yes, it's doable. But it still is inconsistent behaviour. Assume the
->> following configuration:
->> 
->>   8 CPUs CPU0,1 assigned for housekeeping
->> 
->> With 8 queues the proposed change does nothing because each queue is
->> mapped to exactly one CPU.
->
-> That is expected behavior for this RT case, given userspace won't submit
-> IO from isolated CPUs.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/hal/rtl8188e_dm.c  | 2 +-
+ drivers/staging/rtl8188eu/include/hal_intf.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-What is _this_ RT case? We really don't implement policy for a specific
-use case. If the kernel implements a policy then it has to be generally
-useful and practical.
-
->> With 4 queues you get the following:
->> 
->>  CPU0,1       queue 0
->>  CPU2,3       queue 1
->>  CPU4,5       queue 2
->>  CPU6,7       queue 3
->> 
->> No effect on the isolated CPUs either.
->> 
->> With 2 queues you get the following:
->> 
->>  CPU0,1,2,3   queue 0
->>  CPU4,5,6,7   queue 1
->> 
->> So here the isolated CPUs 2 and 3 get the isolation, but 4-7
->> not. That's perhaps intended, but definitely not documented.
->
-> That is intentional change, given no IO will be submitted from 4-7
-> most of times in RT case, so it is fine to select effective CPU from
-> isolated CPUs in this case. As peter mentioned, IO may just be submitted
-> from isolated CPUs during booting. Once the system is setup, no IO
-> comes from isolated CPUs, then no interrupt is delivered to isolated
-> CPUs, then meet RT's requirement.
-
-Again. This is a specific usecase. Is this generally applicable?
-
-> We can document this change somewhere.
-
-Yes, this needs to be documented very clearly with that command line
-parameter.
-
->> So you really need to make your mind up and describe what the intended
->> effect of this is and why you think that the result is correct.
->
-> In short, if there is at least one housekeeping available in the
-> interrupt's affinity, we choose effective CPU from housekeeping CPUs.
-> Otherwise, keep the current behavior wrt. selecting effective CPU.
->
-> With this approach, no interrupts can be delivered to isolated CPUs
-> if no IOs are submitted from these CPUs.
->
-> Please let us know if it addresses your concerns.
-
-Mostly. See above.
-
-Thanks,
-
-        tglx
-
+diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_dm.c b/drivers/staging/rtl8188eu/hal/rtl8188e_dm.c
+index 0aa5e9346787..756945d41412 100644
+--- a/drivers/staging/rtl8188eu/hal/rtl8188e_dm.c
++++ b/drivers/staging/rtl8188eu/hal/rtl8188e_dm.c
+@@ -184,7 +184,7 @@ void rtw_hal_antdiv_rssi_compared(struct adapter *Adapter, struct wlan_bssid_ex
+ }
+ 
+ /*  Add new function to reset the state of antenna diversity before link. */
+-u8 rtw_hal_antdiv_before_linked(struct adapter *Adapter)
++bool rtw_hal_antdiv_before_linked(struct adapter *Adapter)
+ {
+ 	struct odm_dm_struct *dm_odm = &Adapter->HalData->odmpriv;
+ 	struct sw_ant_switch *dm_swat_tbl = &dm_odm->DM_SWAT_Table;
+diff --git a/drivers/staging/rtl8188eu/include/hal_intf.h b/drivers/staging/rtl8188eu/include/hal_intf.h
+index 516a89647003..39df30599a5d 100644
+--- a/drivers/staging/rtl8188eu/include/hal_intf.h
++++ b/drivers/staging/rtl8188eu/include/hal_intf.h
+@@ -209,7 +209,7 @@ void	rtw_hal_set_bwmode(struct adapter *padapter,
+ void	rtw_hal_set_chan(struct adapter *padapter, u8 channel);
+ void	rtw_hal_dm_watchdog(struct adapter *padapter);
+ 
+-u8	rtw_hal_antdiv_before_linked(struct adapter *padapter);
++bool rtw_hal_antdiv_before_linked(struct adapter *padapter);
+ void	rtw_hal_antdiv_rssi_compared(struct adapter *padapter,
+ 				     struct wlan_bssid_ex *dst,
+ 				     struct wlan_bssid_ex *src);
+-- 
+2.24.1
 
