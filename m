@@ -2,141 +2,110 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEFBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFEDC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4089222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579029164;
-	bh=K6S3eb6VGlfyaLlPI2ZEVq0/bfCz3sFi7tpzjVRJ+X0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xDYNRevnISI2U61nWHs/+FE8fvMAOyM+8rAMHXy3RjjSXpaN0sPYAO1BS6x13OgP6
-	 STsmFZmyEDRBwhd/6QC4JSIA5rmugp15JGAl/wvRPRiiPpbyl7IGmGdUYndvkBHNx7
-	 19M9G+3O/Qma51MqlFk8W+wC3tiGmQhBziqw2f/M=
+	by mail.kernel.org (Postfix) with ESMTP id E954724672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IoV0u8G3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgANTMo (ORCPT
+        id S1728787AbgANTN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:12:44 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33859 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANTMn (ORCPT
+        Tue, 14 Jan 2020 14:13:56 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37430 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgANTNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:12:43 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so7037076pfc.1;
-        Tue, 14 Jan 2020 11:12:43 -0800 (PST)
+        Tue, 14 Jan 2020 14:13:55 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so6306594pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:13:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=f63B2LvCWNuhkfnuBRLARt3WlWJAkv9H8cQcBpg+JxA=;
-        b=FAh3QOQ1X9MK9Pkn9EPZC1KsIdUlp49a/rCb3pGSAITaan1p0Ol+Z7s8PCAXCawGqs
-         Aa/ExjygiJ+AtFLNFlladFpAl8pFyc/NyExixttixtN5ciGxwpzMPof30OJnzlegvZY0
-         /s/oOvu65AKFBuvQDrMfdkyHaOwhX7xUnUhWOVhx1wWUbqMvNkIjnC1t3BkSTAIw/2+s
-         EPPshBT+J1/T3JPY2XqkRc6ZdKJAxilRZu4bIMTGTdqowbXS6XxpBT4K0ZIzbHtb8qNg
-         fbTyUw8d1pqhgT/fkk8utuPbGZrAFBj8+JK1nlcvG3jdWmlKyQGTzgqTlnBe3eoWtNRK
-         RWaQ==
+        bh=Kh1Ge+Ojyq1Hkaf57+ksFQlpw/tvYEo5VWAEqDe26e0=;
+        b=IoV0u8G3OE4qe/OlOUrmQtTvkn0Ck8iGTgGitUdy4pm3zeqyty3RtPcor2vp/ZM5UM
+         bh3Y3Dm0Rl8FtYVdIGq1TmyzYHROP92D3Yb8/avJnDjSPv2yCHiRXrJt9rFiOnhFOgfx
+         J1uuzsbaA6SZJOUNcD3OseGl4+stFJaViEmj8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f63B2LvCWNuhkfnuBRLARt3WlWJAkv9H8cQcBpg+JxA=;
-        b=j2B1lTi5AaNnCW50WGCRDqtsEbxIDh8lNBv0t1piRlnun/GD5pO+2VF+UVg72enDF7
-         TVRQ+9mrBpzINP3ubf82cb1j+hv2x5SRuNpO8vdtanOJNN4AXY7rRp/bvYYHJRnkQYFK
-         e1kRBmcMqSnoR0x/XqU4Nx6swhC8wIqknk/nNAp6wI8Yg7SJ3LVP65YiQ39OnV2gtT57
-         7PrDQfcfbIHjUuW7dmxShiT8UXZLDYZI58l9BP8VOMf++RzZowf+0+PZkqxX2zyx3ytu
-         QXwoOp1tM9/bjMrh7njUyVEBziZEeWmNXyfdjkrIASlP/EJfT8O9yS0pIrgi4q5waHBl
-         cEOQ==
-X-Gm-Message-State: APjAAAWYE+tdLr5+CnWntQQis4DRJdk4kKD2d6dpcMyDowNgoLq5/YIw
-        eY9+IDQ36kvPqkSjtCk930U=
-X-Google-Smtp-Source: APXvYqyX2/Ztqg7zQzkHX1bJyFkvAa04iBHiUGPG+wyB3Anf0nnb8KK8PuqFSwewo4GCFsiXAryL3w==
-X-Received: by 2002:a63:b141:: with SMTP id g1mr29790386pgp.168.1579029162494;
-        Tue, 14 Jan 2020 11:12:42 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id b21sm20330960pfp.0.2020.01.14.11.12.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 11:12:41 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:12:39 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-Message-ID: <20200114191239.GB178589@google.com>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
- <3eec2097-75a3-1e1d-06d9-44ee5eaf1312@virtuozzo.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kh1Ge+Ojyq1Hkaf57+ksFQlpw/tvYEo5VWAEqDe26e0=;
+        b=c+XGeaya0IbH4vJPIgHBHNl9D6TCNvOVlwjptqXeVIawaySdxUq0o9HhkeoaysvdCK
+         yEL34Vxb5Yo7ZHcP/WXdO8tmExtOLh+UBxSSNVmRyFjzr670+7AHA8xZlWdRhmLDypbT
+         d1lT8avAYMFXzUV9aKrZte22ANKJNB8/1ge4e249FAEOxLQpCGQtTqI5VluJLPq03JD1
+         8G3PPbUAUMYMPI0h3W4MPlS5IwYbJVONreLnqpe777uexH4l6yeFZP4687AvFroQKts0
+         fj7RND2LpW8rGnyYd6Js+z0Ch7nQwXEQse4XwqC7XOyCZhL534iTjLMQIIsWsC5d57rD
+         cFeA==
+X-Gm-Message-State: APjAAAURALyDrYjyoN+4wJuMoJ4A9ZYUEshbb700e0N85Pys0J8btcX6
+        wTNn1AIs2X6k+xoZF/USFUNt8w==
+X-Google-Smtp-Source: APXvYqwzRsJ2RVe43UkCslTgq8Oqb8xg0wTDZUJHvubtVap0H3WXcQ3V3xpS5d6YsDXJ15yBA5c0TQ==
+X-Received: by 2002:a17:902:8c84:: with SMTP id t4mr21515599plo.101.1579029235167;
+        Tue, 14 Jan 2020 11:13:55 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id v4sm18628483pff.174.2020.01.14.11.13.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 11:13:54 -0800 (PST)
+Date:   Tue, 14 Jan 2020 11:13:53 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Chanwoo Choi <chanwoo@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 2/2] PM / devfreq: Use exclusively PM QoS to determine
+ frequency limits
+Message-ID: <20200114191353.GL89495@google.com>
+References: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+ <CGME20200110174932epcas1p345b0e750b48cc9e351dca14e0dd4de86@epcas1p3.samsung.com>
+ <20200110094913.2.Ie8eacf976ce7a13e421592f5c1ab8dbdc537da5c@changeid>
+ <c793c2e5-dd0e-bff4-9769-26344afe914e@samsung.com>
+ <VI1PR04MB702308C23513581F33EFE697EE340@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3eec2097-75a3-1e1d-06d9-44ee5eaf1312@virtuozzo.com>
+In-Reply-To: <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:39:28AM +0300, Kirill Tkhai wrote:
-> On 13.01.2020 22:18, Daniel Colascione wrote:
-> > On Mon, Jan 13, 2020, 12:47 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> >>> +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> >>> +             size_t, len_in, int, behavior, unsigned long, flags)
-> >>
-> >> I don't like the interface. The fact we have pidfd does not mean,
-> >> we have to use it for new syscalls always. A user may want to set
-> >> madvise for specific pid from console and pass pid as argument.
-> >> pidfd would be an overkill in this case.
-> >> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
-> >> allow this?
-> > 
-> > All new APIs should use pidfds: they're better than numeric PIDs
+On Wed, Jan 15, 2020 at 02:35:48AM +0900, Chanwoo Choi wrote:
+> On Wed, Jan 15, 2020 at 1:08 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+> >
+> > On 13.01.2020 09:24, Chanwoo Choi wrote:
+> > > Hi,
+> > >
+> > > Any device driver except for devfreq_cooling.c might
+> > > use dev_pm_opp_enable/disable interface.
+> > > So, don't need to remove the devfreq->scaling_max_freq
+> > > and devfreq->scaling_min_freq for supporting OPP interface.
+> >
+> > It seems that devfreq_cooling was the only upstream user of
+> > dev_pm_opp_enable and the remaining callers of dev_pm_opp_disable are
+> > probe-time checks.
 > 
-> Yes
-> 
-> > in every way.
-> 
-> No
-> 
-> > If a program wants to allow users to specify processes by
-> > numeric PID, it can parse that numeric PID, open the corresponding
-> > pidfd, and then use that pidfd with whatever system call it wants.
-> > It's not necessary to support numeric PIDs at the system call level to
-> > allow a console program to identify a process by numeric PID.
-> 
-> No. It is overkill. Ordinary pid interfaces also should be available.
-> There are a lot of cases, when they are more comfortable. Say, a calling
-> of process_madvise() from tracer, when a tracee is stopped. In this moment
-> the tracer knows everything about tracee state, and pidfd brackets
-> pidfd_open() and close() around actual action look just stupid, and this
-> is cpu time wasting.
-> 
-> Another example is a parent task, which manages parameters of its children.
-> It knows everything about them, whether they are alive or not. Pidfd interface
-> will just utilize additional cpu time here.
-> 
-> So, no. Both interfaces should be available.
+> OPP interface has still dev_pm_opp_enable and dev_pm_opp_disable
+> function. As long as remains them, any device driver related to devfreq
+> could call them at some time. The devfreq supports the OPP interface,
+> not just for only devfreq_cooling.
 
-Sounds like that you want to support both options for every upcoming API
-which deals with pid. I'm not sure how it's critical for process_madvise
-API this case. In general, we sacrifice some performance for the nicer one
-and later, once it's reported as hurdle for some workload, we could fix it
-via introducing new flag. What I don't like at this moment is to make
-syscall complicated with potential scenarios without real workload.
+I would like to remove the disabled OPP handling since no devfreq device
+makes use of dev_pm_opp_enable/disable, but I fear you are right that
+we have to keep it as long as the API is available.
