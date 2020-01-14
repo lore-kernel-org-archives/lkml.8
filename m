@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247CEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20920C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA8924687
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDB924685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996665;
-	bh=TZPYNpGpDpaqf2LZU3QqZZ+N5P4+4q0Qp1ecscUJ6W0=;
+	s=default; t=1578996667;
+	bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxWzbHsj0b3WLQIIrq1Sf9FQV1qBftrAQ8+xjpRY3clz67PRbPUJsfDqERVln4G9r
-	 jk8wBpE4ROltOiAoGtyjv7xnxThr4q9vM9wYlqT6Qt9i9fVzhqdlkUwqXSzIchoWfs
-	 dbcMHUK8wzROWC28y5m+oGA6UwnfpsM0msLAtGgU=
+	b=TYAUp77C7rTLOGDCsEygVYY4hLC8Aw6GlKKeTgWGc96EKSIdrFqk0qKjEC9L2U7wi
+	 MrwfQ5kQzyAALmkqFqhSMJBTOwPRDVCW+lfGk+NK/L/OPe32l4RmumCcOnZK9UlfL0
+	 +FBTL98iXXaKHyDvb1eejpmkTcZEOg9iDezxUsxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgANKLE (ORCPT
+        id S1732370AbgANKLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45626 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732118AbgANKLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:00 -0500
+        id S1731458AbgANKLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CAA24681;
-        Tue, 14 Jan 2020 10:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E90752467A;
+        Tue, 14 Jan 2020 10:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996659;
-        bh=TZPYNpGpDpaqf2LZU3QqZZ+N5P4+4q0Qp1ecscUJ6W0=;
+        s=default; t=1578996662;
+        bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/wn49ZU2FGDBViaobJC3jZ30QcXBnmUQrw44YYJymbgtHvFwapwSPl0rSF9RUSbU
-         sW0j6U5YQrkkQ5IpuJ6GxgHBquIuLJRqY39yDBJ4RPbeEn4ITzk1Y4Cxtk9L0HebXf
-         P60nf2+vqVmPvHEim1tVtES3lUikyqFvCaQrRfUs=
+        b=Y+P9GnyMe7Qsk/DfYL5vTBaQDoM4uvALG4/cFOP06U/k8xrYvSYpEt8ZGo2dOyGBa
+         H9+qbZpaBfgZAot3m5AWdTVPl7mSXB0tKI8L4e6wta6FLo5d/6GJ1+YTREGXJVTKgl
+         CRpbhAS/XYFjVQZhQiLNKefg5YFC4hLAiZQXc7tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.9 02/31] chardev: Avoid potential use-after-free in chrdev_open()
-Date:   Tue, 14 Jan 2020 11:01:54 +0100
-Message-Id: <20200114094336.313352800@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Peter Chen <peter.chen@freescale.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.9 03/31] usb: chipidea: host: Disable port power only if previously enabled
+Date:   Tue, 14 Jan 2020 11:01:55 +0100
+Message-Id: <20200114094337.955093296@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -62,96 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit 68faa679b8be1a74e6663c21c3a9d25d32f1c079 upstream.
+commit c1ffba305dbcf3fb9ca969c20a97acbddc38f8e9 upstream.
 
-'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
-'struct cdev *' stashed in the 'i_cdev' field of the target inode
-structure. If the pointer is NULL, then it is initialised lazily by
-looking up the kobject in the 'cdev_map' and so the whole procedure is
-protected by the 'cdev_lock' spinlock to serialise initialisation of
-the shared pointer.
+On shutdown, ehci_power_off() is called unconditionally to power off
+each port, even if it was never called to power on the port.
+For chipidea, this results in a call to ehci_ci_portpower() with a request
+to power off ports even if the port was never powered on.
+This results in the following warning from the regulator code.
 
-Unfortunately, it is possible for the initialising thread to fail *after*
-installing the new pointer, for example if the subsequent '->open()' call
-on the file fails. In this case, 'cdev_put()' is called, the reference
-count on the kobject is dropped and, if nobody else has taken a reference,
-the release function is called which finally clears 'inode->i_cdev' from
-'cdev_purge()' before potentially freeing the object. The problem here
-is that a racing thread can happily take the 'cdev_lock' and see the
-non-NULL pointer in the inode, which can result in a refcount increment
-from zero and a warning:
+WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
+unbalanced disables for usb_otg2_vbus
+Modules linked in:
+CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
+Hardware name: Freescale i.MX7 Dual (Device Tree)
+[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
+[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
+[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
+[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
+[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
+[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
+[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
+[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
+[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
+[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
+[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
+[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
+[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
+...
 
-  |  ------------[ cut here ]------------
-  |  refcount_t: addition on 0; use-after-free.
-  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
-  |  Modules linked in:
-  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
-  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
-  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
-  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
-  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
-  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
-  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
-  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
-  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
-  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
-  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
-  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  |  Call Trace:
-  |   kobject_get+0x5c/0x60
-  |   cdev_get+0x2b/0x60
-  |   chrdev_open+0x55/0x220
-  |   ? cdev_put.part.3+0x20/0x20
-  |   do_dentry_open+0x13a/0x390
-  |   path_openat+0x2c8/0x1470
-  |   do_filp_open+0x93/0x100
-  |   ? selinux_file_ioctl+0x17f/0x220
-  |   do_sys_open+0x186/0x220
-  |   do_syscall_64+0x48/0x150
-  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  |  RIP: 0033:0x7f3b87efcd0e
-  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
-  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
-  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
-  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
-  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
-  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
-  |  ---[ end trace 24f53ca58db8180a ]---
+Keeping track of the power enable state avoids the warning and traceback.
 
-Since 'cdev_get()' can already fail to obtain a reference, simply move
-it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
-which will cause the racing thread to return -ENXIO if the initialising
-thread fails unexpectedly.
-
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191219120203.32691-1-will@kernel.org
+Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: Peter Chen <peter.chen@freescale.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191226155754.25451-1-linux@roeck-us.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/char_dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/chipidea/host.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -336,7 +336,7 @@ static struct kobject *cdev_get(struct c
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -37,6 +37,7 @@ static int (*orig_bus_suspend)(struct us
  
- 	if (owner && !try_module_get(owner))
- 		return NULL;
--	kobj = kobject_get(&p->kobj);
-+	kobj = kobject_get_unless_zero(&p->kobj);
- 	if (!kobj)
- 		module_put(owner);
- 	return kobj;
+ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
++	bool enabled;
+ };
+ 
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+@@ -48,7 +49,7 @@ static int ehci_ci_portpower(struct usb_
+ 	int ret = 0;
+ 	int port = HCS_N_PORTS(ehci->hcs_params);
+ 
+-	if (priv->reg_vbus) {
++	if (priv->reg_vbus && enable != priv->enabled) {
+ 		if (port > 1) {
+ 			dev_warn(dev,
+ 				"Not support multi-port regulator control\n");
+@@ -64,6 +65,7 @@ static int ehci_ci_portpower(struct usb_
+ 				enable ? "enable" : "disable", ret);
+ 			return ret;
+ 		}
++		priv->enabled = enable;
+ 	}
+ 
+ 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
 
 
