@@ -2,111 +2,92 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5239C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFE5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28192467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996988;
-	bh=t1MVqNJSBHmvZFHC7AaR1jN9CTHzsv73hqiSaQTsSxM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sCrBHh8kMmy96GHGRtiVHsP6bxHIyrgHMAncN57ci/4fOiPYgkQQZ5O6FohOboNPb
-	 oL+/TB5Q1wIEce9j2ZtlMybwYMHVj/nYiWDcxf7XHoLH3W9kdI5jT7DfzmMPpd8BQB
-	 io6MyAqNokxKFNFfswoa+LDJwsgiEIwQztbQOOKs=
+	by mail.kernel.org (Postfix) with ESMTP id 12BAE207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbgANKJf (ORCPT
+        id S1731216AbgANKJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730950AbgANKJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:30 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7838724676;
-        Tue, 14 Jan 2020 10:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996569;
-        bh=t1MVqNJSBHmvZFHC7AaR1jN9CTHzsv73hqiSaQTsSxM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r4Wv1OhLrWnYJCXGooLMiVc5QB3VUQbvS5OZtfdCLbT5QzUFxtw3mr5z4Q5ACZkHN
-         JX1O+bxMqEuQ6zPn2ATnIrZk6/8y9fDTGSc+/EtErAOB2mZFpDO/uVnOB7ebvPgAlj
-         xiCRu+1Cyfiu9X+EpmS2xnbt0mrNKEXRwHMo7d58=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.14 15/39] staging: vt6656: set usb_set_intfdata on driver fail.
-Date:   Tue, 14 Jan 2020 11:01:49 +0100
-Message-Id: <20200114094342.541675810@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
-References: <20200114094336.210038037@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 14 Jan 2020 05:09:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44983 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731178AbgANKJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:00 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1irJ85-00031o-H6; Tue, 14 Jan 2020 11:08:57 +0100
+Message-ID: <d1f969346ad1758943e8f898244c69673f93f129.camel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix
+ intel,global-reset schema
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Date:   Tue, 14 Jan 2020 11:08:57 +0100
+In-Reply-To: <20200113214515.3950-1-robh@kernel.org>
+References: <20200113214515.3950-1-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+Hi Rob,
 
-commit c0bcf9f3f5b661d4ace2a64a79ef661edd2a4dc8 upstream.
+On Mon, 2020-01-13 at 15:45 -0600, Rob Herring wrote:
+> The intel,rcu-gw binding example has an error:
+> 
+> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
+>   reset-controller@e0000000: intel,global-reset: [[16, 30]] is too short
+> 
+> The error isn't really correct as the problem is in how the data is
+> encoded and the schema is not fixed up by the tooling correctly.
+> However, array properties should describe the elements in the array, so
+> lets do that which fixes the error in the process.
+> 
+> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the Intel Reset controller")
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> index 246dea8a2ec9..8ac437282659 100644
+> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> @@ -23,7 +23,11 @@ properties:
+>      description: Global reset register offset and bit offset.
+>      allOf:
+>        - $ref: /schemas/types.yaml#/definitions/uint32-array
+> -      - maxItems: 2
+> +    items:
+> +      - description: Register offset
+> +      - description: Register bit offset
+> +        minimum: 0
+> +        maximum: 31
+>  
+>    "#reset-cells":
+>      minimum: 2
 
-intfdata will contain stale pointer when the device is detached after
-failed initialization when referenced in vt6656_disconnect
+Thank you, applied to reset/next.
 
-Provide driver access to it here and NULL it.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/6de448d7-d833-ef2e-dd7b-3ef9992fee0e@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/vt6656/device.h   |    1 +
- drivers/staging/vt6656/main_usb.c |    1 +
- drivers/staging/vt6656/wcmd.c     |    1 +
- 3 files changed, 3 insertions(+)
-
---- a/drivers/staging/vt6656/device.h
-+++ b/drivers/staging/vt6656/device.h
-@@ -269,6 +269,7 @@ struct vnt_private {
- 	u8 mac_hw;
- 	/* netdev */
- 	struct usb_device *usb;
-+	struct usb_interface *intf;
- 
- 	u64 tsf_time;
- 	u8 rx_rate;
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -954,6 +954,7 @@ vt6656_probe(struct usb_interface *intf,
- 	priv = hw->priv;
- 	priv->hw = hw;
- 	priv->usb = udev;
-+	priv->intf = intf;
- 
- 	vnt_set_options(priv);
- 
---- a/drivers/staging/vt6656/wcmd.c
-+++ b/drivers/staging/vt6656/wcmd.c
-@@ -109,6 +109,7 @@ void vnt_run_command(struct work_struct
- 		if (vnt_init(priv)) {
- 			/* If fail all ends TODO retry */
- 			dev_err(&priv->usb->dev, "failed to start\n");
-+			usb_set_intfdata(priv->intf, NULL);
- 			ieee80211_free_hw(priv->hw);
- 			return;
- 		}
-
+regards
+Philipp
 
