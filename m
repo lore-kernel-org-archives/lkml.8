@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F72C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A58C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBF824673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A39224670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgANTWY (ORCPT
+        id S1728896AbgANTW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:22:24 -0500
+        Tue, 14 Jan 2020 14:22:27 -0500
 Received: from mga18.intel.com ([134.134.136.126]:48040 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728835AbgANTWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:22:21 -0500
+        id S1726491AbgANTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:22:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 11:22:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
-   d="scan'208";a="423259147"
+   d="scan'208";a="423259150"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
   by fmsmga005.fm.intel.com with ESMTP; 14 Jan 2020 11:22:20 -0800
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     andriy.shevchenko@intel.com, prarit@redhat.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/5] tools/power/x86/intel-speed-select: Add support for core-power discovery
-Date:   Tue, 14 Jan 2020 11:22:14 -0800
-Message-Id: <20200114192217.580364-3-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 3/5] tools/power/x86/intel-speed-select: Fix result display for turbo-freq auto mode
+Date:   Tue, 14 Jan 2020 11:22:15 -0800
+Message-Id: <20200114192217.580364-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
@@ -45,150 +45,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that BIOS may not enable core-power feature. In this case
-this additional interface will allow to enable from this utility. Also
-the information dump, includes the current status of core-power.
+The turbo-freq enable with auto mode, prints result for the last possible
+CPU, which is not correct when either CPU is not present or user wants
+command to be limited to a single die/package. For example, in the
+below command user wants to limit to die/package 0, but the
+"turbo-freq --auto" result is displayed using the other package.
+
+$ sudo intel-speed-select -c 0 turbo-freq enable -a
+Intel(R) Speed Select Technology
+ package-0
+  die-0
+    cpu-0
+      turbo-freq
+        enable:success
+ package--1
+  die-0
+    cpu-31
+      turbo-freq --auto
+        enable:success
+
+Since we do have to traverse all CPUs, don't display CPU info for
+"turbo-freq --auto", as we already displayed the result for
+turbo-freq enable with the CPU information.
+
+With the fix, the same command results in:
+
+$ sudo intel-speed-select -c 0 turbo-freq enable -a
+Intel(R) Speed Select Technology
+package-0
+  die-0
+    cpu-0
+      turbo-freq
+        enable:success
+      turbo-freq --auto
+        enable:success
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../power/x86/intel-speed-select/isst-core.c  | 55 +++++++++++++++++++
- .../x86/intel-speed-select/isst-display.c     | 11 ++++
- tools/power/x86/intel-speed-select/isst.h     |  6 ++
- 3 files changed, 72 insertions(+)
+ tools/power/x86/intel-speed-select/isst-config.c |  2 +-
+ .../power/x86/intel-speed-select/isst-display.c  | 16 +++++++++-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index d14c7bcd327a..81a119f688a3 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -6,6 +6,44 @@
- 
- #include "isst.h"
- 
-+int isst_write_pm_config(int cpu, int cp_state)
-+{
-+	unsigned int req, resp;
-+	int ret;
-+
-+	if (cp_state)
-+		req = BIT(16);
-+	else
-+		req = 0;
-+
-+	ret = isst_send_mbox_command(cpu, WRITE_PM_CONFIG, PM_FEATURE, 0, req,
-+				     &resp);
-+	if (ret)
-+		return ret;
-+
-+	debug_printf("cpu:%d WRITE_PM_CONFIG resp:%x\n", cpu, resp);
-+
-+	return 0;
-+}
-+
-+int isst_read_pm_config(int cpu, int *cp_state, int *cp_cap)
-+{
-+	unsigned int resp;
-+	int ret;
-+
-+	ret = isst_send_mbox_command(cpu, READ_PM_CONFIG, PM_FEATURE, 0, 0,
-+				     &resp);
-+	if (ret)
-+		return ret;
-+
-+	debug_printf("cpu:%d READ_PM_CONFIG resp:%x\n", cpu, resp);
-+
-+	*cp_state = resp & BIT(16);
-+	*cp_cap = resp & BIT(0) ? 1 : 0;
-+
-+	return 0;
-+}
-+
- int isst_get_ctdp_levels(int cpu, struct isst_pkg_ctdp *pkg_dev)
- {
- 	unsigned int resp;
-@@ -36,6 +74,7 @@ int isst_get_ctdp_levels(int cpu, struct isst_pkg_ctdp *pkg_dev)
- int isst_get_ctdp_control(int cpu, int config_index,
- 			  struct isst_pkg_ctdp_level_info *ctdp_level)
- {
-+	int cp_state, cp_cap;
- 	unsigned int resp;
- 	int ret;
- 
-@@ -50,6 +89,15 @@ int isst_get_ctdp_control(int cpu, int config_index,
- 	ctdp_level->fact_enabled = !!(resp & BIT(16));
- 	ctdp_level->pbf_enabled = !!(resp & BIT(17));
- 
-+	ret = isst_read_pm_config(cpu, &cp_state, &cp_cap);
-+	if (ret) {
-+		debug_printf("cpu:%d pm_config is not supported \n", cpu);
-+	} else {
-+		debug_printf("cpu:%d pm_config SST-CP state:%d cap:%d \n", cpu, cp_state, cp_cap);
-+		ctdp_level->sst_cp_support = cp_cap;
-+		ctdp_level->sst_cp_enabled = cp_state;
-+	}
-+
- 	debug_printf(
- 		"cpu:%d CONFIG_TDP_GET_TDP_CONTROL resp:%x fact_support:%d pbf_support: %d fact_enabled:%d pbf_enabled:%d\n",
- 		cpu, resp, ctdp_level->fact_support, ctdp_level->pbf_support,
-@@ -779,6 +827,13 @@ int isst_pm_qos_config(int cpu, int enable_clos, int priority_type)
- 			debug_printf("Turbo-freq feature must be disabled first\n");
- 			return -EINVAL;
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 944183f9ed5a..e22a694e6410 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -1638,7 +1638,7 @@ static void set_fact_enable(int arg)
+ 			if (ret)
+ 				goto error_disp;
  		}
-+		ret = isst_write_pm_config(cpu, 0);
-+		if (ret)
-+			perror("isst_write_pm_config\n");
-+	} else {
-+		ret = isst_write_pm_config(cpu, 1);
-+		if (ret)
-+			perror("isst_write_pm_config\n");
+-		isst_display_result(i, outf, "turbo-freq --auto", "enable", 0);
++		isst_display_result(-1, outf, "turbo-freq --auto", "enable", 0);
  	}
  
- 	ret = isst_send_mbox_command(cpu, CONFIG_CLOS, CLOS_PM_QOS_CONFIG, 0, 0,
+ 	return;
 diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 040dd09d5eee..1d1439036c12 100644
+index 1d1439036c12..4fb0c1d49d64 100644
 --- a/tools/power/x86/intel-speed-select/isst-display.c
 +++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -418,6 +418,17 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			snprintf(value, sizeof(value), "unsupported");
- 		format_and_print(outf, base_level + 4, header, value);
+@@ -645,13 +645,15 @@ void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
+ 	char header[256];
+ 	char value[256];
  
-+		snprintf(header, sizeof(header),
-+			 "speed-select-core-power");
-+		if (ctdp_level->sst_cp_support) {
-+			if (ctdp_level->sst_cp_enabled)
-+				snprintf(value, sizeof(value), "enabled");
-+			else
-+				snprintf(value, sizeof(value), "disabled");
-+		} else
-+			snprintf(value, sizeof(value), "unsupported");
-+		format_and_print(outf, base_level + 4, header, value);
-+
- 		if (is_clx_n_platform()) {
- 			if (ctdp_level->pbf_support)
- 				_isst_pbf_display_information(cpu, outf,
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index cdf0f8a6dbbf..ad5aa6341d0f 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -69,6 +69,10 @@
- #define PM_CLOS_OFFSET				0x08
- #define PQR_ASSOC_OFFSET			0x20
- 
-+#define READ_PM_CONFIG				0x94
-+#define WRITE_PM_CONFIG				0x95
-+#define PM_FEATURE				0x03
-+
- #define DISP_FREQ_MULTIPLIER 100
- 
- struct isst_clos_config {
-@@ -119,6 +123,8 @@ struct isst_pkg_ctdp_level_info {
- 	int pbf_support;
- 	int fact_enabled;
- 	int pbf_enabled;
-+	int sst_cp_support;
-+	int sst_cp_enabled;
- 	int tdp_ratio;
- 	int active;
- 	int tdp_control;
+-	snprintf(header, sizeof(header), "package-%d",
+-		 get_physical_package_id(cpu));
+-	format_and_print(outf, 1, header, NULL);
+-	snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
+-	format_and_print(outf, 2, header, NULL);
+-	snprintf(header, sizeof(header), "cpu-%d", cpu);
+-	format_and_print(outf, 3, header, NULL);
++	if (cpu >= 0) {
++		snprintf(header, sizeof(header), "package-%d",
++			 get_physical_package_id(cpu));
++		format_and_print(outf, 1, header, NULL);
++		snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
++		format_and_print(outf, 2, header, NULL);
++		snprintf(header, sizeof(header), "cpu-%d", cpu);
++		format_and_print(outf, 3, header, NULL);
++	}
+ 	snprintf(header, sizeof(header), "%s", feature);
+ 	format_and_print(outf, 4, header, NULL);
+ 	snprintf(header, sizeof(header), "%s", cmd);
 -- 
 2.24.1
 
