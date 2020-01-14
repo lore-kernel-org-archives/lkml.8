@@ -2,120 +2,94 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6169EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60984C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3450F2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/gaxXT7"
+	by mail.kernel.org (Postfix) with ESMTP id 2C1372084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgANJRR (ORCPT
+        id S1728918AbgANJR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:17:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33765 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725820AbgANJRQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:17:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578993435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8EBCXj/eGLlwqN/DCPQsauNTZOGi8UpIemA9DO6Kwow=;
-        b=E/gaxXT7DvemEDkij5K2TxOwSWy60VWTcWHqlvDOOsv6kLydnscpBkwpnCWyOwbT3EhYuv
-        ItSDxBU+WcOn1DJMKuEa1x92wwQRXDSp8wu4ixPolsvErveVJp1yUz1frMt1JQYL8/A3gA
-        d4fv6s3AtRojxmbHuM/SJlFexRKSqcw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-nducgHoPO2ilQSImbti2UQ-1; Tue, 14 Jan 2020 04:17:12 -0500
-X-MC-Unique: nducgHoPO2ilQSImbti2UQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE708DBF7;
-        Tue, 14 Jan 2020 09:17:10 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F3195DA80;
-        Tue, 14 Jan 2020 09:17:01 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 17:16:57 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        zhangsaisai <zhangsaisai@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>
-Subject: Re: [PATCH V2] brd: check parameter validation before
- register_blkdev func
-Message-ID: <20200114091456.GA22268@ming.t460p>
-References: <8b32ff09-74aa-3b92-38e4-aab12f47597b@huawei.com>
+        Tue, 14 Jan 2020 04:17:29 -0500
+Received: from mga12.intel.com ([192.55.52.136]:59465 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgANJR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:17:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 01:17:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="225168169"
+Received: from unknown (HELO [10.238.129.140]) ([10.238.129.140])
+  by orsmga003.jf.intel.com with ESMTP; 14 Jan 2020 01:17:26 -0800
+Subject: Re: [PATCH 3/4] x86/resctrl: Fix a deadlock due to inaccurate active
+ reference of kernfs node
+To:     Sasha Levin <sashal@kernel.org>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>
+References: <1578500886-21771-4-git-send-email-xiaochen.shen@intel.com>
+ <20200109143630.DD673206ED@mail.kernel.org>
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+Message-ID: <9a9ab238-604c-0c1f-f168-dd27ba89e989@intel.com>
+Date:   Tue, 14 Jan 2020 17:17:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b32ff09-74aa-3b92-38e4-aab12f47597b@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200109143630.DD673206ED@mail.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 09:43:23PM +0800, Zhiqiang Liu wrote:
-> In brd_init func, rd_nr num of brd_device are firstly allocated
-> and add in brd_devices, then brd_devices are traversed to add each
-> brd_device by calling add_disk func. When allocating brd_device,
-> the disk->first_minor is set to i * max_part, if rd_nr * max_part
-> is larger than MINORMASK, two different brd_device may have the same
-> devt, then only one of them can be successfully added.
+Hi Sasha,
 
-It is just because disk->first_minor is >= 0x100000, then same dev_t
-can be allocated in blk_alloc_devt().
+The backporting for v4.14.x stable tree needs some manual tweaking due to
+difference code bases:
+1. x86/resctrl rename/re-arrange in v5.0 upstream kernel.
+2. Code change in upstream commit cfd0f34e4cd5 ("x86/intel_rdt: Add
+diagnostics when making directories").
 
-	MKDEV(disk->major, disk->first_minor + part->partno)
+The backporting for v4.19.x stable tree needs some manual tweaking due to
+difference code bases: x86/resctrl rename/re-arrange in v5.0 upstream
+kernel.
 
-But block layer does support extended dynamic devt allocation, and brd
-sets flag of GENHD_FL_EXT_DEVT too.
+I will work on the backporting once this patch is merged into upstream.
 
-So I think the correct fix is to fallback to extended dynamic allocation
-when running out of consecutive minor space.
+Thank you.
 
-How about the following approach?
+On 1/9/2020 22:36, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: c7d9aac61311 ("x86/intel_rdt/cqm: Add mkdir support for RDT monitoring").
+> 
+> The bot has tested the following trees: v5.4.8, v4.19.93, v4.14.162.
+> 
+> v5.4.8: Build OK!
+> v4.19.93: Failed to apply! Possible dependencies:
+>      Unable to calculate
+> 
+> v4.14.162: Failed to apply! Possible dependencies:
+>      cfd0f34e4cd5 ("x86/intel_rdt: Add diagnostics when making directories")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
 
-And of course, ext devt allocation may fail too, but that is another
-generic un-solved issue: error handling isn't done for adding disk.
-
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index a8730cc4db10..9aa7ce7c9abf 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -398,7 +398,16 @@ static struct brd_device *brd_alloc(int i)
- 	if (!disk)
- 		goto out_free_queue;
- 	disk->major		= RAMDISK_MAJOR;
--	disk->first_minor	= i * max_part;
-+
-+	/*
-+	 * Clear .minors when running out of consecutive minor space since
-+	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt
-+	 */
-+	if ((i * disk->minors) & ~MINORMASK)
-+		disk->minors = 0;
-+	else
-+		disk->first_minor	= i * disk->minors;
-+
- 	disk->fops		= &brd_fops;
- 	disk->private_data	= brd;
- 	disk->flags		= GENHD_FL_EXT_DEVT;
-
-
-
-Thanks, 
-Ming
-
+-- 
+Best regards,
+Xiaochen
