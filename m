@@ -2,81 +2,145 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D345DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE84C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F202187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BE224658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iWnmoMlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgANQMv (ORCPT
+        id S1729401AbgANQMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:12:51 -0500
-Received: from mga07.intel.com ([134.134.136.100]:58605 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgANQMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:12:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 08:12:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,433,1571727600"; 
-   d="scan'208";a="217788065"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.255.37.212])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jan 2020 08:12:45 -0800
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        "Suresh Siddha" <suresh.b.siddha@intel.com>
-Subject: Re: [PATCH v24 12/24] x86/sgx: Linux Enclave Driver
-Reply-To: haitao.huang@linux.intel.com
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-13-jarkko.sakkinen@linux.intel.com>
-Date:   Tue, 14 Jan 2020 10:12:45 -0600
+        Tue, 14 Jan 2020 11:12:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43636 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728688AbgANQMw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:12:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=x+ttUEN/NS6BrlO/9nKVYw2uuqodMabBguY4qU1kFWc=; b=iWnmoMlRQkItEjXzvB/HH5yDWZ
+        PS0zTIEcudypIh4nwuowXENkKhWW01nf5gAcY00+vGC0HIrBHoSkdhNhqbmTlbaubBeUoQ/4FuLW+
+        MvXfiI4rJZxhKmKyciLADxGonrBgfq62VBcA4ZdoFDvCbjDtN0WTJTOtSKfUb3+ki9+rNXkKRlu7b
+        s0kyyX8KYDNz94WWMCMSYaFE+gzN1dwLgd/CtX/HmpCd151jSZJF0RrWdIoemOyd/wSHAfBETH/bk
+        JEKJ0p7/d68aL/JzgCs3ClBs1coxtIf0tk2hlPQC1Z515sGlE5pyMYwgo1OIXxLkBamqVUnkqiKie
+        gLwFZ78w==;
+Received: from [2001:4bb8:18c:4f54:fcbb:a92b:61e1:719] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irOoF-0000E6-P5; Tue, 14 Jan 2020 16:12:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH 09/12] gfs2: hold i_rwsem until AIO completes
+Date:   Tue, 14 Jan 2020 17:12:22 +0100
+Message-Id: <20200114161225.309792-10-hch@lst.de>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114161225.309792-1-hch@lst.de>
+References: <20200114161225.309792-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From:   "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.0ed4njqcwjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <20191129231326.18076-13-jarkko.sakkinen@linux.intel.com>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Nov 2019 17:13:14 -0600, Jarkko Sakkinen  
-<jarkko.sakkinen@linux.intel.com> wrote:
+Switch gfs from the magic i_dio_count scheme to just hold i_rwsem
+until the actual I/O has completed to reduce the locking complexity
+and avoid nasty bugs due to missing inode_dio_wait calls.
 
-> +static int sgx_encl_init(struct sgx_encl *encl, struct sgx_sigstruct  
-> *sigstruct,
-> +			 struct sgx_einittoken *token)
-> +{
-> +	u64 mrsigner[4];
-> +	int ret;
-> +	int i;
-> +	int j;
-> +
-> +	/* Check that the required attributes have been authorized. */
-> +	if (encl->secs_attributes & ~encl->allowed_attributes)
-> +		return -EINVAL;
-> +
+Note that gfs only uses i_rwsem for direct I/O writes, not for
+reads so no change to the read behavior.  It might also make sense
+to use the same scheme for the gfs2 internal cluster lock.
 
-EACCES to be more specific?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/gfs2/bmap.c  |  2 --
+ fs/gfs2/file.c  |  6 ++++--
+ fs/gfs2/glops.c | 10 ++--------
+ 3 files changed, 6 insertions(+), 12 deletions(-)
 
-Thanks
-Haitao
+diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
+index 08f6fbb3655e..226f4eb680c7 100644
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -2181,8 +2181,6 @@ int gfs2_setattr_size(struct inode *inode, u64 newsize)
+ 	if (ret)
+ 		return ret;
+ 
+-	inode_dio_wait(inode);
+-
+ 	ret = gfs2_rsqa_alloc(ip);
+ 	if (ret)
+ 		goto out;
+diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
+index 2260cb5d31af..82a2f313a3e6 100644
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -806,7 +806,8 @@ static ssize_t gfs2_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
+ 	if (offset + len > i_size_read(&ip->i_inode))
+ 		goto out;
+ 
+-	ret = iomap_dio_rw(iocb, from, &gfs2_iomap_ops, NULL, 0);
++	ret = iomap_dio_rw(iocb, from, &gfs2_iomap_ops, NULL,
++			   IOMAP_DIO_RWSEM_EXCL);
+ 
+ out:
+ 	gfs2_glock_dq(&gh);
+@@ -923,7 +924,8 @@ static ssize_t gfs2_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 	return generic_write_sync(iocb, ret);
+ 
+ out_unlock:
+-	inode_unlock(inode);
++	if (ret != -EIOCBQUEUED)
++		inode_unlock(inode);
+ 	return ret;
+ }
+ 
+diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
+index 4ede1f18de85..a705eeb75117 100644
+--- a/fs/gfs2/glops.c
++++ b/fs/gfs2/glops.c
+@@ -243,11 +243,8 @@ static void inode_go_sync(struct gfs2_glock *gl)
+ 	struct address_space *metamapping = gfs2_glock2aspace(gl);
+ 	int error;
+ 
+-	if (isreg) {
+-		if (test_and_clear_bit(GIF_SW_PAGED, &ip->i_flags))
+-			unmap_shared_mapping_range(ip->i_inode.i_mapping, 0, 0);
+-		inode_dio_wait(&ip->i_inode);
+-	}
++	if (isreg && test_and_clear_bit(GIF_SW_PAGED, &ip->i_flags))
++		unmap_shared_mapping_range(ip->i_inode.i_mapping, 0, 0);
+ 	if (!test_and_clear_bit(GLF_DIRTY, &gl->gl_flags))
+ 		goto out;
+ 
+@@ -440,9 +437,6 @@ static int inode_go_lock(struct gfs2_holder *gh)
+ 			return error;
+ 	}
+ 
+-	if (gh->gh_state != LM_ST_DEFERRED)
+-		inode_dio_wait(&ip->i_inode);
+-
+ 	if ((ip->i_diskflags & GFS2_DIF_TRUNC_IN_PROG) &&
+ 	    (gl->gl_state == LM_ST_EXCLUSIVE) &&
+ 	    (gh->gh_state == LM_ST_EXCLUSIVE)) {
+-- 
+2.24.1
+
