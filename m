@@ -2,120 +2,88 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA249C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA75BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADB5207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7663520678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578997100;
+	bh=DLUMAB8sKpPd5p+SiSltdWxQrt78MGu3CgUvppVNDlI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tMhOAro/AVqumU64fI8Du7nhMsfkprOFVS3E1TnMParb5gAd2FBGrdBzCOfm88LXF
+	 7k9kZRBOXy2wbzlgx28DWoMXo51Y/8LrewFQLLODBkRB5h/6/f3iydiEUa5DK/OfwC
+	 b/BhHj7/rYJY57x8DGSVV2+SYWQRu+yCzsCBzNVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbgANKSG (ORCPT
+        id S1729094AbgANKST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:18:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42307 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729852AbgANKQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:16:57 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1irJFl-0007gB-1O; Tue, 14 Jan 2020 11:16:53 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B45131C001A;
-        Tue, 14 Jan 2020 11:16:52 +0100 (CET)
-Date:   Tue, 14 Jan 2020 10:16:52 -0000
-From:   "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpufeatures: Add flag to track whether MSR
- IA32_FEAT_CTL is configured
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191221044513.21680-14-sean.j.christopherson@intel.com>
-References: <20191221044513.21680-14-sean.j.christopherson@intel.com>
+        Tue, 14 Jan 2020 05:18:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729067AbgANKID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:03 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B78AA2467D;
+        Tue, 14 Jan 2020 10:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578996483;
+        bh=DLUMAB8sKpPd5p+SiSltdWxQrt78MGu3CgUvppVNDlI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iko3LHqqWZT6vNgUS0SCNfO2xNf3UK2Zx18o6NgVR1prtRAjKOK+YQgD1FwkiijXI
+         JVX/lb96wRolIEBy8BOp95dcfzXHDa7P5MFC3o7JA/Hw3JYVX2WiZb9dIO4yiTwqWr
+         f2CCoXmB2XHR+LcOT0m3/l7Pouwrp8c7ETzZRVWM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 4.19 31/46] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
+Date:   Tue, 14 Jan 2020 11:01:48 +0100
+Message-Id: <20200114094346.678044719@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
+References: <20200114094339.608068818@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <157899701251.1022.4546938145887744610.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+From: Michael Straube <straube.linux@gmail.com>
 
-Commit-ID:     85c17291e2eb4903bf73e5d3f588f41dbcc6f115
-Gitweb:        https://git.kernel.org/tip/85c17291e2eb4903bf73e5d3f588f41dbcc6f115
-Author:        Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate:    Fri, 20 Dec 2019 20:45:07 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 13 Jan 2020 18:49:00 +01:00
+commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
 
-x86/cpufeatures: Add flag to track whether MSR IA32_FEAT_CTL is configured
+This device was added to the stand-alone driver on github.
+Add it to the staging driver as well.
 
-Add a new feature flag, X86_FEATURE_MSR_IA32_FEAT_CTL, to track whether
-IA32_FEAT_CTL has been initialized.  This will allow KVM, and any future
-subsystems that depend on IA32_FEAT_CTL, to rely purely on cpufeatures
-to query platform support, e.g. allows a future patch to remove KVM's
-manual IA32_FEAT_CTL MSR checks.
+Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Various features (on platforms that support IA32_FEAT_CTL) are dependent
-on IA32_FEAT_CTL being configured and locked, e.g. VMX and LMCE.  The
-MSR is always configured during boot, but only if the CPU vendor is
-recognized by the kernel.  Because CPUID doesn't incorporate the current
-IA32_FEAT_CTL value in its reporting of relevant features, it's possible
-for a feature to be reported as supported in cpufeatures but not truly
-enabled, e.g. if the CPU supports VMX but the kernel doesn't recognize
-the CPU.
-
-As a result, without the flag, KVM would see VMX as supported even if
-IA32_FEAT_CTL hasn't been initialized, and so would need to manually
-read the MSR and check the various enabling bits to avoid taking an
-unexpected #GP on VMXON.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20191221044513.21680-14-sean.j.christopherson@intel.com
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/feat_ctl.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index e9b6249..67d21b2 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -220,6 +220,7 @@
- #define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
- #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
- #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
-+#define X86_FEATURE_MSR_IA32_FEAT_CTL	( 7*32+31) /* "" MSR IA32_FEAT_CTL configured */
- 
- /* Virtualization flags: Linux defined, word 8 */
- #define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
-diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-index fcbb355..24a4fdc 100644
---- a/arch/x86/kernel/cpu/feat_ctl.c
-+++ b/arch/x86/kernel/cpu/feat_ctl.c
-@@ -126,6 +126,8 @@ void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
- 	wrmsrl(MSR_IA32_FEAT_CTL, msr);
- 
- update_caps:
-+	set_cpu_cap(c, X86_FEATURE_MSR_IA32_FEAT_CTL);
-+
- 	if (!cpu_has(c, X86_FEATURE_VMX))
- 		return;
- 
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -37,6 +37,7 @@ static const struct usb_device_id rtw_us
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
++	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
+
+
