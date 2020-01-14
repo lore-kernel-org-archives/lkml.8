@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65328C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D31C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45246207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CC2207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgANMyl (ORCPT
+        id S1728826AbgANMyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:54:41 -0500
+        Tue, 14 Jan 2020 07:54:45 -0500
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:56403 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgANMyl (ORCPT
+        by vger.kernel.org with ESMTP id S1728795AbgANMyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:54:41 -0500
+        Tue, 14 Jan 2020 07:54:44 -0500
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Jan 2020 18:24:00 +0530
 Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Jan 2020 18:23:49 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Jan 2020 18:23:48 +0530
 Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id E68543587; Tue, 14 Jan 2020 18:23:47 +0530 (IST)
+        id 046B33588; Tue, 14 Jan 2020 18:23:46 +0530 (IST)
 From:   Dikshita Agarwal <dikshita@codeaurora.org>
 To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
         Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH V4 2/4] dt-bindings: media: venus: Add sc7180 DT schema
-Date:   Tue, 14 Jan 2020 18:23:34 +0530
-Message-Id: <1579006416-11599-3-git-send-email-dikshita@codeaurora.org>
+Subject: [PATCH V4 1/4] arm64: dts: sc7180: Add Venus video codec DT node
+Date:   Tue, 14 Jan 2020 18:23:33 +0530
+Message-Id: <1579006416-11599-2-git-send-email-dikshita@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
 References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
@@ -42,165 +42,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new qcom,sc7180-venus DT binding schema.
+This adds Venus video codec DT node for sc7180.
 
 Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- .../bindings/media/qcom,sc7180-venus.yaml          | 144 +++++++++++++++++++++
- 1 file changed, 144 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-new file mode 100644
-index 0000000..7b6a8fb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
-@@ -0,0 +1,144 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3676bfd..6ecacca 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -10,6 +10,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
++#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -66,6 +67,11 @@
+ 			compatible = "qcom,cmd-db";
+ 			no-map;
+ 		};
 +
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/qcom,sc7180-venus.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++		venus_mem: memory@8f600000 {
++			reg = <0 0x8f600000 0 0x500000>;
++			no-map;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -1043,6 +1049,36 @@
+ 			};
+ 		};
+ 
++		venus: video-codec@aa00000 {
++			compatible = "qcom,sc7180-venus";
++			reg = <0 0x0aa00000 0 0xff000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&videocc VENUS_GDSC>,
++					<&videocc VCODEC0_GDSC>;
++			power-domain-names = "venus", "vcodec0";
++			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++			clock-names = "core", "iface", "bus",
++				      "vcodec0_core", "vcodec0_bus";
++			iommus = <&apps_smmu 0x0c00 0x60>;
++			memory-region = <&venus_mem>;
 +
-+title: Qualcomm Venus video encode and decode accelerators
++			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
++					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
++			interconnect-names = "video-mem", "cpu-cfg";
 +
-+maintainers:
-+  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
++			video-decoder {
++				compatible = "venus-decoder";
++			};
 +
-+description: |
-+  The Venus IP is a video encode and decode accelerator present
-+  on Qualcomm platforms
++			video-encoder {
++				compatible = "venus-encoder";
++			};
++		};
 +
-+properties:
-+  compatible:
-+    const: qcom,sc7180-venus
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 2
-+
-+  power-domain-names:
-+    items:
-+      - const: venus
-+      - const: vcodec0
-+
-+  clocks:
-+    maxItems: 5
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
-+      - const: bus
-+      - const: vcodec0_core
-+      - const: vcodec0_bus
-+
-+  iommus:
-+    maxItems: 1
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  interconnects:
-+    maxItems: 2
-+
-+  interconnect-names:
-+    items:
-+      - const: video-mem
-+      - const: cpu-cfg
-+
-+  video-decoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: venus-decoder
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-encoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: venus-encoder
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-firmware:
-+    type: object
-+
-+    description: |
-+      Firmware subnode is needed when the platform does not
-+      have TrustZone.
-+
-+    properties:
-+      iommus:
-+        maxItems: 1
-+
-+    required:
-+      - iommus
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - power-domains
-+  - power-domain-names
-+  - clocks
-+  - clock-names
-+  - iommus
-+  - memory-region
-+  - video-decoder
-+  - video-encoder
-+
-+examples:
-+  - |
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
-+
-+        venus: video-codec@aa00000 {
-+                compatible = "qcom,sc7180-venus";
-+                reg = <0 0x0aa00000 0 0xff000>;
-+                interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+                power-domains = <&videocc VENUS_GDSC>,
-+                                <&videocc VCODEC0_GDSC>;
-+                power-domain-names = "venus", "vcodec0";
-+                clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+                         <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+                         <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-+                         <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+                         <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+                clock-names = "core", "iface", "bus",
-+                              "vcodec0_core", "vcodec0_bus";
-+                iommus = <&apps_smmu 0x0c00 0x60>;
-+                memory-region = <&venus_mem>;
-+
-+                interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
-+                                <&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
-+                interconnect-names = "video-mem", "cpu-cfg";
-+
-+                video-decoder {
-+                        compatible = "venus-decoder";
-+                };
-+
-+                video-encoder {
-+                        compatible = "venus-encoder";
-+                };
-+        };
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
 -- 
 1.9.1
 
