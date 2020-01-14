@@ -2,107 +2,98 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777B6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36317C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487852084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XTiJWkcP"
+	by mail.kernel.org (Postfix) with ESMTP id F3D3F2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579021071;
+	bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rd0TkOcXkw6dLf0zS840E766DsNCTppnE68subUtQIEuKAb+6ziEYkIAxSp58pGqH
+	 xMddoXr7/GGVtCQjWYHQrKqCGF7gxqyA9AYTKtfULDkTc/dMyYaEgsWjCp/NeR2lrn
+	 tVw91Bu9X8CMBag2pbgw6fnV8xj51k7/drGcHDho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgANQ5n (ORCPT
+        id S1728765AbgANQ5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:57:43 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45898 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgANQ5m (ORCPT
+        Tue, 14 Jan 2020 11:57:50 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34292 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbgANQ5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:57:42 -0500
-Received: by mail-qv1-f66.google.com with SMTP id l14so5968246qvu.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:57:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R4InSAKuZ5aCK6QR9Y31K9i3lSVfiJudcKWrhEMNHDc=;
-        b=XTiJWkcP0CtYyjzpFYIsdheUjlKBCgS/2w+rJ6OzGCRSJQhoTM3fQPNtiylHKjRsUx
-         ayrC2dfUPa3VHxwXtXRAfyuvl5IzL+Clvwtq9p5vFydeY08ncMvtJVlB2PIhe1Cr/Vxv
-         DjZgNqeXb4lAgJNIfthyvvgBbP5uaC7dd9oRB4BrVhPE3xX7sATluJtjrCp3PwSdUUoh
-         v++u0APj+AaMOwdR3P4C+tYqR1iVvC+ZimG54pzqKaU8TmJ6OcvkixJgzhq+fEJjJ+5D
-         JUg1ZiQTPSazNN7A6pMwjLwBMZkHicU2mpVIpCH4LnOO/G9OWeZHvoORlWe2FiaeMlFF
-         rKJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R4InSAKuZ5aCK6QR9Y31K9i3lSVfiJudcKWrhEMNHDc=;
-        b=TXHycka1oVh0N5xLWJHta4T8D/WWboK3VGqp1ftj6/x/DmmhtJV3giVyDpnnVI4idc
-         L5cBdKrxGtYtDxHi32H0NrDCMDOiAUs4nElqsgeSR2WPJOC7QQ+YOJvKzkvS1I12W6BJ
-         ZCoUg494wajlZW2F82j7VJbQAsZi91s0FJ0CUQONeA5Fvj8Z4klS4kstV6FwlALYc1Eb
-         BK8yXwPn3GbxeiMJME2WEdIJ8ebVhUJ+Z5xYLmsBoUEJAwDF8w5V5W+D2dktB51KPX1q
-         xVOv9aEEQ5NfS5OODr6UzMITHNO5W4lfJyDCWmLz7cQrm0Ty0e6aO2gRkLIppkYNSL8D
-         V3eg==
-X-Gm-Message-State: APjAAAXjMJ2Bdx1hfkf0KGK6obnbAxu+yRy6TiESeHSB9lOAMJF+3qeh
-        Az+BWnMmJkXYpQsC+LBLQ9ityA==
-X-Google-Smtp-Source: APXvYqxAwJK6KP985x5SBiObouJjRK4aFNXWGUGpgf/HH+9wFqdlGTn1tzkvG8CrF/UY6GDih4BbRQ==
-X-Received: by 2002:a0c:fe8d:: with SMTP id d13mr21133077qvs.150.1579021061827;
-        Tue, 14 Jan 2020 08:57:41 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id j1sm6868284qkl.86.2020.01.14.08.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 08:57:41 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1irPVc-0003VV-RT; Tue, 14 Jan 2020 12:57:40 -0400
-Date:   Tue, 14 Jan 2020 12:57:40 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        paulmck@kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
- checking
-Message-ID: <20200114165740.GB22037@ziepe.ca>
-References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
+        Tue, 14 Jan 2020 11:57:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=; b=kWHKHJJ6ilFEWZ2bNlW/Xb26V
+        zGRDUEUZTnDadH1LnqM1ADZMn4ilWGec89HluanPHUxhNrpUyJ3xZqFAI5s2Q4E86vFSN9IF7T4Nf
+        gKE/KbbvYrjzJ3hSOsZPEkWNhP/YMZAWYoawaW2j8vSPiJajqf9hZ0l7gGfmHbxfE3+PY=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irPVc-0001hW-7R; Tue, 14 Jan 2020 16:57:40 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id ACA3ED01965; Tue, 14 Jan 2020 16:57:39 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 16:57:39 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>
+Subject: Re: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
+Message-ID: <20200114165739.GC3897@sirena.org.uk>
+References: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
+ <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="avNtfD0ffNO6L/9g"
 Content-Disposition: inline
-In-Reply-To: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 09:53:45PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> 
-> list_for_each_entry_rcu has built-in RCU and lock checking.
-> Pass cond argument to list_for_each_entry_rcu.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
->  drivers/infiniband/hw/hfi1/verbs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-> index 089e201d7550..22f2d4fd2577 100644
-> +++ b/drivers/infiniband/hw/hfi1/verbs.c
-> @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
->  				       opa_get_lid(packet->dlid, 9B));
->  		if (!mcast)
->  			goto drop;
-> -		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
-> +		list_for_each_entry_rcu(p, &mcast->qp_list, list, lockdep_is_held(&(ibp->rvp.lock))) {
 
-Okay, this looks reasonable
+--avNtfD0ffNO6L/9g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Mike, Dennis, is this the right lock to test?
+On Tue, Jan 14, 2020 at 04:26:18PM +0000, Joakim Tjernlund wrote:
 
-Jason
+> Don't you need to "undo" ioremap, irq etc. in case of later errors?
+
+Better, convert to devm_=20
+
+--avNtfD0ffNO6L/9g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d8wIACgkQJNaLcl1U
+h9DBpgf/ZMWk7TuStHKbaJC0YfEaWwp2D/yVzYAISxxSeNvL25vQlQlFJe6YGYR0
+2KK5vLMxNaH1Vf6vhet00ClpsdinZt7Jx91tzaplblsKxlPbraf4tSs6USCdy5Iq
+kSgUDnJvxiQSMnoTjJOkMh/ee/2LJQtVnYB+XirIqI9YWfqAZLrgm/PfqUnNq5vG
++g9nCJ3/RKsLQGb9VmbmXwMy5gVCj3u41aMoX9XDDgoayy1IZPWRIsBTIzUmmCLZ
+A5OhXxnxucHDkAMXjiHE+jmgPEC1LUV+JIBydgN7Z+ryBNvTeLXDTFbnavabBb3Q
+RaQCF+kEphOgL9A5QfgIkwmkUwtCtg==
+=SVwD
+-----END PGP SIGNATURE-----
+
+--avNtfD0ffNO6L/9g--
