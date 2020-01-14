@@ -2,323 +2,402 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF48C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D48EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8F2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6l/wPkA"
+	by mail.kernel.org (Postfix) with ESMTP id E83B62075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgANR3P (ORCPT
+        id S1728890AbgANR3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:29:15 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36323 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgANR3O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:29:14 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n12so10465022lfe.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:29:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cOPoDyHHe7c/QrCl65j4vL8tiyrDQaiPvJ1cy+BrJy8=;
-        b=R6l/wPkAwLaqTFmLQ5g4E4C2zNwYsVHlYye65aXueZZG0RJf/bWtt5T90zPqXT9SPJ
-         x2Fyj/sbTy0xpxGqjnCEi9woHbbY8pfBVDGaa/mQoQ3g/IlHZugoHPv5x59825Guaal4
-         tZ+22HyB/vklOnk4e1rDHHMR/yePT3mZPYR6A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cOPoDyHHe7c/QrCl65j4vL8tiyrDQaiPvJ1cy+BrJy8=;
-        b=gh+TrNfrxuTRLiGpZaERACTRa8fMxzwSCiR8fOxrj2ym/xp51lqEAkRlh22k1SMQzJ
-         UrIgAJ4PYcioTSTSFfT6XpZrcWUKHcagMlXiAJJcp2SMJhn5WnWW2n1e+KGXFnah4gBm
-         vVM+kjStEhq8Ps3vJ/2yHZBoY01ZVS3GUqFDvJ5nCJEzAEFf/WhWCG1XoqBbp1KlWFCy
-         S6hnSqZqppH/Nii0cthrXy/VNz3DsI8CywIkrseq88VzHwdsTtjdK9rFQX5lHWXo35sl
-         /WBaPFDzPGTlP6s+OfvZEeMeGWx9j1bVoIsozHQw/WzL9945Fzxd9Q90+tj6OtyfTlJK
-         NHAQ==
-X-Gm-Message-State: APjAAAXhDSqEBiPaTz7um1O1bpYweFA5jOut2yLbycqBe55MoLmTK7nk
-        DhUaMsZEBMG+9GSig7vWO/9ZyzNDlys=
-X-Google-Smtp-Source: APXvYqx/m6OIWe1D1DQfdimhzpgnm6hXX8vXexO17k7gR+86DLsQYA82K9WVLVIebTI1zqUjl7I2iw==
-X-Received: by 2002:a19:f619:: with SMTP id x25mr2489968lfe.146.1579022949733;
-        Tue, 14 Jan 2020 09:29:09 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id d24sm7640397lfb.94.2020.01.14.09.29.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 09:29:09 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id j1so15276224lja.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:29:08 -0800 (PST)
-X-Received: by 2002:a2e:b017:: with SMTP id y23mr15701704ljk.229.1579022947877;
- Tue, 14 Jan 2020 09:29:07 -0800 (PST)
+        Tue, 14 Jan 2020 12:29:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:55342 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgANR3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:29:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10B641396;
+        Tue, 14 Jan 2020 09:29:22 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D88613F68E;
+        Tue, 14 Jan 2020 09:29:20 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:29:17 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/14] net: axienet: Upgrade descriptors to hold 64-bit
+ addresses
+Message-ID: <20200114172917.7a44c5ee@donnerap.cambridge.arm.com>
+In-Reply-To: <CH2PR02MB7000DB66215C84721CD999C1C7340@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-12-andre.przywara@arm.com>
+        <CH2PR02MB7000DB66215C84721CD999C1C7340@CH2PR02MB7000.namprd02.prod.outlook.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-References: <20191219054506.20565-1-sibis@codeaurora.org> <20191219054506.20565-3-sibis@codeaurora.org>
- <CAE=gft56MhTCBX+EQt8=DMdK96Wj8Kg4ww7TbLjj_oON0zbKyw@mail.gmail.com> <4a72f7691f9ee1d887bca9b1109da6df@codeaurora.org>
-In-Reply-To: <4a72f7691f9ee1d887bca9b1109da6df@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 14 Jan 2020 09:28:31 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4Mys6qLVRb9O3YrXhcBM+YQYovHK51ZJRSgSvv3UDpfw@mail.gmail.com>
-Message-ID: <CAE=gft4Mys6qLVRb9O3YrXhcBM+YQYovHK51ZJRSgSvv3UDpfw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] remoteproc: mss: q6v5-mss: Add modem support on SC7180
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben Cohen <ohad@wizery.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:06 PM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> Hey Evan,
->
-> Thanks for the review!
-> sry for the delayed response
->
-> On 2020-01-08 02:51, Evan Green wrote:
-> > On Wed, Dec 18, 2019 at 9:45 PM Sibi Sankar <sibis@codeaurora.org>
-> > wrote:
-> >>
-> >> Add the out of reset sequence support for modem sub-system on SC7180
-> >> SoCs. It requires access to an additional halt nav register to put
-> >> the modem back into reset.
-> >>
-> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> ---
-> >>  drivers/remoteproc/qcom_q6v5_mss.c | 199
-> >> ++++++++++++++++++++++++++++-
-> >>  1 file changed, 198 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
-> >> b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> index 164fc2a53ef11..51f451311f5fc 100644
-> >> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> >> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> @@ -68,6 +68,9 @@
-> >>  #define AXI_HALTREQ_REG                        0x0
-> >>  #define AXI_HALTACK_REG                        0x4
-> >>  #define AXI_IDLE_REG                   0x8
-> >> +#define NAV_AXI_HALTREQ_BIT            BIT(0)
-> >> +#define NAV_AXI_HALTACK_BIT            BIT(1)
-> >> +#define NAV_AXI_IDLE_BIT               BIT(2)
-> >>
-> >>  #define HALT_ACK_TIMEOUT_MS            100
-> >>
-> >> @@ -101,9 +104,11 @@
-> >>  #define QDSP6SS_ACC_OVERRIDE_VAL               0x20
-> >>
-> >>  /* QDSP6v65 parameters */
-> >> +#define QDSP6SS_CORE_CBCR              0x20
-> >>  #define QDSP6SS_SLEEP                   0x3C
-> >>  #define QDSP6SS_BOOT_CORE_START         0x400
-> >>  #define QDSP6SS_BOOT_CMD                0x404
-> >> +#define QDSP6SS_BOOT_STATUS            0x408
-> >>  #define SLEEP_CHECK_MAX_LOOPS           200
-> >>  #define BOOT_FSM_TIMEOUT                10000
-> >>
-> >> @@ -131,6 +136,7 @@ struct rproc_hexagon_res {
-> >>         int version;
-> >>         bool need_mem_protection;
-> >>         bool has_alt_reset;
-> >> +       bool has_halt_nav;
-> >>  };
-> >>
-> >>  struct q6v5 {
-> >> @@ -141,9 +147,14 @@ struct q6v5 {
-> >>         void __iomem *rmb_base;
-> >>
-> >>         struct regmap *halt_map;
-> >> +       struct regmap *halt_nav_map;
-> >> +       struct regmap *conn_map;
-> >> +
-> >>         u32 halt_q6;
-> >>         u32 halt_modem;
-> >>         u32 halt_nc;
-> >> +       u32 halt_nav;
-> >> +       u32 conn_box;
-> >>
-> >>         struct reset_control *mss_restart;
-> >>         struct reset_control *pdc_reset;
-> >> @@ -187,6 +198,7 @@ struct q6v5 {
-> >>         struct qcom_sysmon *sysmon;
-> >>         bool need_mem_protection;
-> >>         bool has_alt_reset;
-> >> +       bool has_halt_nav;
-> >>         int mpss_perm;
-> >>         int mba_perm;
-> >>         const char *hexagon_mdt_image;
-> >> @@ -198,6 +210,7 @@ enum {
-> >>         MSS_MSM8974,
-> >>         MSS_MSM8996,
-> >>         MSS_MSM8998,
-> >> +       MSS_SC7180,
-> >>         MSS_SDM845,
-> >>  };
-> >>
-> >> @@ -396,6 +409,18 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
-> >>                 reset_control_assert(qproc->pdc_reset);
-> >>                 ret = reset_control_reset(qproc->mss_restart);
-> >>                 reset_control_deassert(qproc->pdc_reset);
-> >> +       } else if (qproc->has_halt_nav) {
-> >> +               /* SWAR using CONN_BOX_SPARE_0 for pipeline glitch
-> >> issue */
-> >
-> > Can you elaborate more in this comment, or remove it? Right now it
-> > doesn't help me since I don't know what SWAR is, I don't see a
->
-> SWAR -> software work around
->
-> I'll have to stop with the dumb
-> abbreviations
+On Tue, 14 Jan 2020 16:35:10 +0000
+Radhey Shyam Pandey <radheys@xilinx.com> wrote:
 
-heh I've never heard that one before. SWWA?
+Hi Radhey,
 
->
-> > reference to CONN_BOX_SPARE_0 in the code, I don't know what a
->
-> conn_box_spare_0 is at an offset
-> 0xb3e4 in the conn_map which is
-> described in the bindings.
->
-> > CONN_BOX is, and I don't know any details about the glitch issue :)
->
-> lol, yes I get that the comment does
-> not give details on the glitch. It
-> was targeted towards explaining why
-> there is a deviation in the reset_
-> assert sequence from the other SoCs.
-> If you still feel the comment does
-> not add any value I can get it
-> removed.
+> > -----Original Message-----
+> > From: Andre Przywara <andre.przywara@arm.com>
+> > Sent: Friday, January 10, 2020 5:24 PM
+> > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> > <radheys@xilinx.com>
+> > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH 11/14] net: axienet: Upgrade descriptors to hold 64-bit
+> > addresses
+> > 
+> > Newer revisions of the AXI DMA IP (>= v7.1) support 64-bit addresses,
+> > both for the descriptors itself, as well as for the buffers they are
+> > pointing to.
+> > This is realised by adding "MSB" words for the next and phys pointer
+> > right behind the existing address word, now named "LSB". These MSB words
+> > live in formerly reserved areas of the descriptor.
+> > 
+> > If the hardware supports it, write both words when setting an address.
+> > The buffer address is handled by two wrapper functions, the two
+> > occasions where we set the next pointers are open coded.
+> > 
+> > For now this is guarded by a flag which we don't set yet.
+> > 
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  drivers/net/ethernet/xilinx/xilinx_axienet.h  |   9 +-
+> >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 109 ++++++++++++------
+> >  2 files changed, 81 insertions(+), 37 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > index 2dacfc85b3ba..4aea4c23d3bb 100644
+> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > @@ -335,6 +335,7 @@
+> >  #define XAE_FEATURE_PARTIAL_TX_CSUM	(1 << 1)
+> >  #define XAE_FEATURE_FULL_RX_CSUM	(1 << 2)
+> >  #define XAE_FEATURE_FULL_TX_CSUM	(1 << 3)
+> > +#define XAE_FEATURE_DMA_64BIT		(1 << 4)
+> > 
+> >  #define XAE_NO_CSUM_OFFLOAD		0
+> > 
+> > @@ -347,9 +348,9 @@
+> >  /**
+> >   * struct axidma_bd - Axi Dma buffer descriptor layout
+> >   * @next:         MM2S/S2MM Next Descriptor Pointer
+> > - * @reserved1:    Reserved and not used
+> > + * @next_msb:     MM2S/S2MM Next Descriptor Pointer (high 32 bits)
+> >   * @phys:         MM2S/S2MM Buffer Address
+> > - * @reserved2:    Reserved and not used
+> > + * @phys_msb:     MM2S/S2MM Buffer Address (high 32 bits)
+> >   * @reserved3:    Reserved and not used
+> >   * @reserved4:    Reserved and not used
+> >   * @cntrl:        MM2S/S2MM Control value
+> > @@ -362,9 +363,9 @@
+> >   */
+> >  struct axidma_bd {
+> >  	u32 next;	/* Physical address of next buffer descriptor */
+> > -	u32 reserved1;
+> > +	u32 next_msb;	/* high 32 bits for IP >= v7.1, reserved on older IP */
+> >  	u32 phys;
+> > -	u32 reserved2;
+> > +	u32 phys_msb; 	/* for IP >= v7.1, reserved for older IP */
+> >  	u32 reserved3;
+> >  	u32 reserved4;
+> >  	u32 cntrl;
+> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > index bbdda4b0c677..133f088d797e 100644
+> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > @@ -153,6 +153,25 @@ static void axienet_dma_out_addr(struct axienet_local
+> > *lp, off_t reg,
+> >  	axienet_dma_out32(lp, reg, lower_32_bits(addr));
+> >  }
+> > 
+> > +static void desc_set_phys_addr(struct axienet_local *lp, dma_addr_t addr,
+> > +			       struct axidma_bd *desc)
+> > +{
+> > +	desc->phys = lower_32_bits(addr);
+> > +	if (lp->features & XAE_FEATURE_DMA_64BIT)  
+> 
+> Instead of set/get_phys_addr API, we can use writeq to update msb bits.
+> The previous IP version marks msb bits as reserved, and are used in
+> future IP version.  We can have two dma write functions that are selected
+> in probe dependending on IP version(new compatible string).  In this way
+> we can get rid of runtime lp->features check in each IO.
 
-Maybe just infusing some of the clarity you described here would be enough.
+I am not sure that writeq is a good idea. The documentation clearly speaks of 32-bit registers, so we should access them as such. How the bus implements 64-bit writes is a different story. I see that is seems to work in practice (TM), but what is exactly the problem you want to solve here?
+Are you concerned about the extra flag check each time we call desc_set_phys_addr()? And want to replace this with a function pointer?
 
->
-> >
-> >> +               reset_control_assert(qproc->pdc_reset);
-> >> +               regmap_update_bits(qproc->conn_map, qproc->conn_box,
-> >> +                                  BIT(0), BIT(0));
-> >
-> > Make a register name #define for this bit?
->
-> we'll have to make one up for it
-> since conn_box_spare_0 does not
-> have any predefined bits and seems
-> to be used to implement some missing
-> functionality.
+Cheers,
+Andre.
 
-Hm, so its functionality is controlled by firmware? Or was just
-defined super late in hardware so as to be termed spare through many
-earlier spins of the hardware? Making one up sounds fine, it's just
-nice for readability to get a sense of what exactly this bit is when
-we toggle it.
+> 
+> > +		desc->phys_msb = upper_32_bits(addr);
+> > +}
+> > +
+> > +static dma_addr_t desc_get_phys_addr(struct axienet_local *lp,
+> > +				     struct axidma_bd *desc)
+> > +{
+> > +	dma_addr_t ret = desc->phys;
+> > +
+> > +	if (lp->features & XAE_FEATURE_DMA_64BIT)
+> > +		ret |= (dma_addr_t)desc->phys_msb << 32;
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  /**
+> >   * axienet_dma_bd_release - Release buffer descriptor rings
+> >   * @ndev:	Pointer to the net_device structure
+> > @@ -176,6 +195,8 @@ static void axienet_dma_bd_release(struct net_device
+> > *ndev)
+> >  		return;
+> > 
+> >  	for (i = 0; i < lp->rx_bd_num; i++) {
+> > +		dma_addr_t phys;
+> > +
+> >  		/* A NULL skb means this descriptor has not been initialised
+> >  		 * at all.
+> >  		 */
+> > @@ -188,9 +209,11 @@ static void axienet_dma_bd_release(struct net_device
+> > *ndev)
+> >  		 * descriptor size, after it had been successfully allocated.
+> >  		 * So a non-zero value in there means we need to unmap it.
+> >  		 */
+> > -		if (lp->rx_bd_v[i].cntrl)
+> > -			dma_unmap_single(ndev->dev.parent, lp-  
+> > >rx_bd_v[i].phys,  
+> > +		if (lp->rx_bd_v[i].cntrl) {
+> > +			phys = desc_get_phys_addr(lp, &lp->rx_bd_v[i]);
+> > +			dma_unmap_single(ndev->dev.parent, phys,
+> >  					 lp->max_frm_size,
+> > DMA_FROM_DEVICE);
+> > +		}
+> >  	}
+> > 
+> >  	dma_free_coherent(ndev->dev.parent,
+> > @@ -235,29 +258,36 @@ static int axienet_dma_bd_init(struct net_device
+> > *ndev)
+> >  		goto out;
+> > 
+> >  	for (i = 0; i < lp->tx_bd_num; i++) {
+> > -		lp->tx_bd_v[i].next = lp->tx_bd_p +
+> > -				      sizeof(*lp->tx_bd_v) *
+> > -				      ((i + 1) % lp->tx_bd_num);
+> > +		dma_addr_t addr = lp->tx_bd_p +
+> > +				  sizeof(*lp->tx_bd_v) *
+> > +				  ((i + 1) % lp->tx_bd_num);
+> > +
+> > +		lp->tx_bd_v[i].next = lower_32_bits(addr);
+> > +		if (lp->features & XAE_FEATURE_DMA_64BIT)
+> > +			lp->tx_bd_v[i].next_msb = upper_32_bits(addr);
+> >  	}
+> > 
+> >  	for (i = 0; i < lp->rx_bd_num; i++) {
+> > -		lp->rx_bd_v[i].next = lp->rx_bd_p +
+> > -				      sizeof(*lp->rx_bd_v) *
+> > -				      ((i + 1) % lp->rx_bd_num);
+> > +		dma_addr_t addr;
+> > +
+> > +		addr = lp->rx_bd_p + sizeof(*lp->rx_bd_v) *
+> > +			((i + 1) % lp->rx_bd_num);
+> > +		lp->rx_bd_v[i].next = lower_32_bits(addr);
+> > +		if (lp->features & XAE_FEATURE_DMA_64BIT)
+> > +			lp->rx_bd_v[i].next_msb = upper_32_bits(addr);
+> > 
+> >  		skb = netdev_alloc_skb_ip_align(ndev, lp->max_frm_size);
+> >  		if (!skb)
+> >  			goto out;
+> > 
+> >  		lp->rx_bd_v[i].skb = skb;
+> > -		lp->rx_bd_v[i].phys = dma_map_single(ndev->dev.parent,
+> > -						     skb->data,
+> > -						     lp->max_frm_size,
+> > -						     DMA_FROM_DEVICE);
+> > -		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys))
+> > {
+> > +		addr = dma_map_single(ndev->dev.parent, skb->data,
+> > +				      lp->max_frm_size, DMA_FROM_DEVICE);
+> > +		if (dma_mapping_error(ndev->dev.parent, addr)) {
+> >  			dev_kfree_skb(skb);
+> >  			goto out;
+> >  		}
+> > +		desc_set_phys_addr(lp, addr, &lp->rx_bd_v[i]);
+> > 
+> >  		lp->rx_bd_v[i].cntrl = lp->max_frm_size;
+> >  	}
+> > @@ -565,6 +595,7 @@ static int axienet_free_tx_chain(struct net_device
+> > *ndev, u32 first_bd,
+> >  	struct axienet_local *lp = netdev_priv(ndev);
+> >  	int max_bds = (nr_bds != -1) ? nr_bds : lp->tx_bd_num;
+> >  	struct axidma_bd *cur_p;
+> > +	dma_addr_t phys;
+> >  	unsigned int status;
+> >  	int i;
+> > 
+> > @@ -578,7 +609,8 @@ static int axienet_free_tx_chain(struct net_device
+> > *ndev, u32 first_bd,
+> >  		if (nr_bds == -1 && !(status &
+> > XAXIDMA_BD_STS_COMPLETE_MASK))
+> >  			break;
+> > 
+> > -		dma_unmap_single(ndev->dev.parent, cur_p->phys,
+> > +		phys = desc_get_phys_addr(lp, cur_p);
+> > +		dma_unmap_single(ndev->dev.parent, phys,
+> >  				(cur_p->cntrl &
+> > XAXIDMA_BD_CTRL_LENGTH_MASK),
+> >  				DMA_TO_DEVICE);
+> > 
+> > @@ -676,7 +708,7 @@ axienet_start_xmit(struct sk_buff *skb, struct
+> > net_device *ndev)
+> >  	u32 csum_start_off;
+> >  	u32 csum_index_off;
+> >  	skb_frag_t *frag;
+> > -	dma_addr_t tail_p;
+> > +	dma_addr_t tail_p, phys;
+> >  	struct axienet_local *lp = netdev_priv(ndev);
+> >  	struct axidma_bd *cur_p;
+> >  	u32 orig_tail_ptr = lp->tx_bd_tail;
+> > @@ -715,10 +747,11 @@ axienet_start_xmit(struct sk_buff *skb, struct
+> > net_device *ndev)
+> >  		cur_p->app0 |= 2; /* Tx Full Checksum Offload Enabled */
+> >  	}
+> > 
+> > -	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
+> > -				     skb_headlen(skb), DMA_TO_DEVICE);
+> > -	if (dma_mapping_error(ndev->dev.parent, cur_p->phys))
+> > +	phys = dma_map_single(ndev->dev.parent, skb->data,
+> > +			      skb_headlen(skb), DMA_TO_DEVICE);
+> > +	if (dma_mapping_error(ndev->dev.parent, phys))
+> >  		return NETDEV_TX_BUSY;
+> > +	desc_set_phys_addr(lp, phys, cur_p);
+> >  	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
+> > 
+> >  	for (ii = 0; ii < num_frag; ii++) {
+> > @@ -726,17 +759,18 @@ axienet_start_xmit(struct sk_buff *skb, struct
+> > net_device *ndev)
+> >  			lp->tx_bd_tail = 0;
+> >  		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+> >  		frag = &skb_shinfo(skb)->frags[ii];
+> > -		cur_p->phys = dma_map_single(ndev->dev.parent,
+> > -					     skb_frag_address(frag),
+> > -					     skb_frag_size(frag),
+> > -					     DMA_TO_DEVICE);
+> > -		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
+> > +		phys = dma_map_single(ndev->dev.parent,
+> > +				      skb_frag_address(frag),
+> > +				      skb_frag_size(frag),
+> > +				      DMA_TO_DEVICE);
+> > +		if (dma_mapping_error(ndev->dev.parent, phys)) {
+> >  			axienet_free_tx_chain(ndev, orig_tail_ptr, ii + 1,
+> >  					      NULL);
+> >  			lp->tx_bd_tail = orig_tail_ptr;
+> > 
+> >  			return NETDEV_TX_BUSY;
+> >  		}
+> > +		desc_set_phys_addr(lp, phys, cur_p);
+> >  		cur_p->cntrl = skb_frag_size(frag);
+> >  	}
+> > 
+> > @@ -775,10 +809,12 @@ static void axienet_recv(struct net_device *ndev)
+> >  	cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
+> > 
+> >  	while ((cur_p->status & XAXIDMA_BD_STS_COMPLETE_MASK)) {
+> > +		dma_addr_t phys;
+> > +
+> >  		tail_p = lp->rx_bd_p + sizeof(*lp->rx_bd_v) * lp->rx_bd_ci;
+> > 
+> > -		dma_unmap_single(ndev->dev.parent, cur_p->phys,
+> > -				 lp->max_frm_size,
+> > +		phys = desc_get_phys_addr(lp, cur_p);
+> > +		dma_unmap_single(ndev->dev.parent, phys, lp->max_frm_size,
+> >  				 DMA_FROM_DEVICE);
+> > 
+> >  		skb = cur_p->skb;
+> > @@ -814,13 +850,14 @@ static void axienet_recv(struct net_device *ndev)
+> >  		if (!new_skb)
+> >  			return;
+> > 
+> > -		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb-  
+> > >data,  
+> > -					     lp->max_frm_size,
+> > -					     DMA_FROM_DEVICE);
+> > -		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
+> > +		phys = dma_map_single(ndev->dev.parent, new_skb->data,
+> > +				      lp->max_frm_size,
+> > +				      DMA_FROM_DEVICE);
+> > +		if (dma_mapping_error(ndev->dev.parent, phys)) {
+> >  			dev_kfree_skb(new_skb);
+> >  			return;
+> >  		}
+> > +		desc_set_phys_addr(lp, phys, cur_p);
+> > 
+> >  		cur_p->cntrl = lp->max_frm_size;
+> >  		cur_p->status = 0;
+> > @@ -865,7 +902,8 @@ static irqreturn_t axienet_tx_irq(int irq, void *_ndev)
+> >  		return IRQ_NONE;
+> >  	if (status & XAXIDMA_IRQ_ERROR_MASK) {
+> >  		dev_err(&ndev->dev, "DMA Tx error 0x%x\n", status);
+> > -		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
+> > +		dev_err(&ndev->dev, "Current BD is at: 0x%x%08x\n",
+> > +			(lp->tx_bd_v[lp->tx_bd_ci]).phys_msb,
+> >  			(lp->tx_bd_v[lp->tx_bd_ci]).phys);
+> > 
+> >  		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+> > @@ -914,7 +952,8 @@ static irqreturn_t axienet_rx_irq(int irq, void *_ndev)
+> >  		return IRQ_NONE;
+> >  	if (status & XAXIDMA_IRQ_ERROR_MASK) {
+> >  		dev_err(&ndev->dev, "DMA Rx error 0x%x\n", status);
+> > -		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
+> > +		dev_err(&ndev->dev, "Current BD is at: 0x%x%08x\n",
+> > +			(lp->rx_bd_v[lp->rx_bd_ci]).phys_msb,
+> >  			(lp->rx_bd_v[lp->rx_bd_ci]).phys);
+> > 
+> >  		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+> > @@ -1622,14 +1661,18 @@ static void axienet_dma_err_handler(unsigned long
+> > data)
+> > 
+> >  	for (i = 0; i < lp->tx_bd_num; i++) {
+> >  		cur_p = &lp->tx_bd_v[i];
+> > -		if (cur_p->cntrl)
+> > -			dma_unmap_single(ndev->dev.parent, cur_p->phys,
+> > +		if (cur_p->cntrl) {
+> > +			dma_addr_t addr = desc_get_phys_addr(lp, cur_p);
+> > +
+> > +			dma_unmap_single(ndev->dev.parent, addr,
+> >  					 (cur_p->cntrl &
+> >  					  XAXIDMA_BD_CTRL_LENGTH_MASK),
+> >  					 DMA_TO_DEVICE);
+> > +		}
+> >  		if (cur_p->skb)
+> >  			dev_kfree_skb_irq(cur_p->skb);
+> >  		cur_p->phys = 0;
+> > +		cur_p->phys_msb = 0;
+> >  		cur_p->cntrl = 0;
+> >  		cur_p->status = 0;
+> >  		cur_p->app0 = 0;
+> > --
+> > 2.17.1  
+> 
 
->
-> >
-> >> +               regmap_update_bits(qproc->halt_nav_map,
-> >> qproc->halt_nav,
-> >> +                                  NAV_AXI_HALTREQ_BIT, 0);
-> >> +               reset_control_assert(qproc->mss_restart);
-> >> +               reset_control_deassert(qproc->pdc_reset);
-> >> +               regmap_update_bits(qproc->conn_map, qproc->conn_box,
-> >> +                                  BIT(0), 0);
-> >> +               ret = reset_control_deassert(qproc->mss_restart);
-> >>         } else {
-> >>                 ret = reset_control_assert(qproc->mss_restart);
-> >>         }
-> >> @@ -413,6 +438,8 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
-> >>                 ret = reset_control_reset(qproc->mss_restart);
-> >>                 writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
-> >>                 reset_control_deassert(qproc->pdc_reset);
-> >> +       } else if (qproc->has_halt_nav) {
-> >> +               ret = reset_control_reset(qproc->mss_restart);
-> >>         } else {
-> >>                 ret = reset_control_deassert(qproc->mss_restart);
-> >>         }
-> >> @@ -499,6 +526,54 @@ static int q6v5proc_reset(struct q6v5 *qproc)
-> >>                         return ret;
-> >>                 }
-> >>
-> >> +               goto pbl_wait;
-> >
-> > Ick, this could benefit from a refactor that pulls those sorta-common
-> > steps "Remove IO clamp" through "Start core execution" into a helper
-> > function and then calls the new function from each case that needs it.
-> >
-> >> +       } else if (qproc->version == MSS_SC7180) {
-> >> +               val = readl(qproc->reg_base + QDSP6SS_SLEEP);
-> >> +               val |= 0x1;
-> >
-> > It'd be nice if there were defines for these magic 0x1 values in this
-> > hunk too.
-> >
-> >> +               writel(val, qproc->reg_base + QDSP6SS_SLEEP);
-> >> +
-> >> +               ret = readl_poll_timeout(qproc->reg_base +
-> >> QDSP6SS_SLEEP,
-> >> +                                        val, !(val & BIT(31)), 1,
-> >> +                                        SLEEP_CHECK_MAX_LOOPS);
-> >> +               if (ret) {
-> >> +                       dev_err(qproc->dev, "QDSP6SS Sleep clock timed
-> >> out\n");
-> >> +                       return -ETIMEDOUT;
-> >> +               }
-> >
-> > This toggling of the sleep bit is the same as sdm845, it could also be
-> > put into a helper function.
->
-> https://patchwork.kernel.org/patch/11250301/
-> https://patchwork.kernel.org/patch/11250317/
->
-> I did club ^^ a portion of the out of
-> reset sequence together reducing
-> code duplication initially but that
-> made the entire thing unreadable.
->
-> The general consensus at that time
-> was to introduce a patch for sc7180
-> that is most readable and have a
-> cleanup later with a lot of helper
-> functions and less branching like
-> you suggested.
-
-Sounds good.
-
->
-> >
-> >> +
-> >> +               /* Turn on the XO clock needed for PLL setup */
-> >> +               val = readl(qproc->reg_base + QDSP6SS_XO_CBCR);
-> >> +               val |= 0x1;
-> >> +               writel(val, qproc->reg_base + QDSP6SS_XO_CBCR);
-> >> +
-> >> +               ret = readl_poll_timeout(qproc->reg_base +
-> >> QDSP6SS_XO_CBCR,
-> >> +                                        val, !(val & BIT(31)), 1,
-> >> +                                        SLEEP_CHECK_MAX_LOOPS);
-> >
-> > Nit: SLEEP_CHECK_MAX_LOOPS isn't a loop count, it should really have
-> > been named something like SLEEP_CHECK_TIMEOUT_US. Could be done in a
-> > separate change.
->
-> I'll skip this for now. I'll
-> make sure that this gets named
-> appropriately during the
-> planned refactor.
-
-Thanks!
