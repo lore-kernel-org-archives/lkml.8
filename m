@@ -2,66 +2,111 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E403C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AA9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726952465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190E624676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579022882;
-	bh=zB8Tex21D7G2o4vwjaqh+wZVt5DqD++8sxupU9BOFUw=;
+	s=default; t=1579022945;
+	bh=i70L8DNui8VPmavm+tZ8ivBeZkZeG8PnKWDI53xqtSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DT214llOPAi4fr07d9qKDOh5fFppxoMvFu2dMYcvXO9q2kSze+WfNzAhzR24/nHNm
-	 XcIIP2+cK4MEo//TXcJK5Gp1+ROuOPKnLyWZRipuC/9TAkcFx9JFNHB8WbHL69BeE/
-	 y9ha8gXwBDExrDLJKenUYtKwepStvxn4onpMuorA=
+	b=feOMsWN8X4al8UYf3aPGGKhOTK1YnacOcJ0bn/KjVDCPs+O58UqCkM8O5ckBO4s57
+	 oAHmObjFJGY7RKVWdR4DbZkUupOFtqxsdTbQCjepA7UHCl4GSH5Hxkosf8LZ8q3EBu
+	 fsppf+RQJBoPQ8Uo6pdQJDN3eqsjZH6Vs3bh9TmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgANR2B (ORCPT
+        id S1728761AbgANR3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:28:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgANR2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:28:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1992F2075B;
-        Tue, 14 Jan 2020 17:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579022880;
-        bh=zB8Tex21D7G2o4vwjaqh+wZVt5DqD++8sxupU9BOFUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CllTOUuTl2XVsEERqQWDQhQ3c0XwQ39nXK1Wru5mIrCrp60MbrXQupMF4leJrLSsZ
-         4oYAci5Udel0Ekr+bF7gWMoDTohKchBGhi4XrY+qLMb1Oztdy05RUhjOsPN5YbKePt
-         rs+oHZNAdJGZTEjNlqSNi9D5yWroegPO7sEGTw8k=
-Date:   Tue, 14 Jan 2020 18:27:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] tty: baudrate: Synchronise baud_table[] and
- baud_bits[]
-Message-ID: <20200114172756.GA2052011@kroah.com>
-References: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
+        Tue, 14 Jan 2020 12:29:04 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58536 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgANR3E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:29:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=i70L8DNui8VPmavm+tZ8ivBeZkZeG8PnKWDI53xqtSM=; b=t1Oe+sLzVhteGVH2G8L+ZuR9d
+        9utrcXUyXrsEEQ/BJ6ZWl8JUkosr9QdU1c25uUJ79QZPFWw4dH0VxlptSVkRIH+eNsz7uWLaowKzz
+        bgZPklFW6glxzoPk2PfOWBAv2D8dgvyuOKSrZSrBaS7HS/Y4X20Ab+mqLujGICknxGT2E=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irPzh-0001qO-Tk; Tue, 14 Jan 2020 17:28:45 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 97845D01965; Tue, 14 Jan 2020 17:28:45 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 17:28:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v4 02/12] ELF: Add ELF program property parsing support
+Message-ID: <20200114172845.GF3897@sirena.org.uk>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-3-broonie@kernel.org>
+ <20200114163402.GH30444@arrakis.emea.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="656hIAUFSU7Oh46B"
 Content-Disposition: inline
-In-Reply-To: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200114163402.GH30444@arrakis.emea.arm.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 07:09:17PM +0200, Andy Shevchenko wrote:
-> Synchronize baud rate tables for better readability.
 
-"Synchronize"?  With what?  Why?  I'm all for cleaning up code, but this
-just seems totally gratuitous.
+--656hIAUFSU7Oh46B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We have whole serial drivers with _THOUSANDS_ of checkpatch issues, and
-this is bothering you?  :)
+On Tue, Jan 14, 2020 at 04:34:03PM +0000, Catalin Marinas wrote:
 
-greg k-h
+> The logic looks fine to me but I'm not sure the choice of returning -EIO
+> is suitable in most cases. I think apart from kernel_read() returning an
+> error, there rest look like malformed ELF notes, so rather -ENOEXEC.
+
+Sure, I don't have strong opinions either way.
+
+--656hIAUFSU7Oh46B
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d+koACgkQJNaLcl1U
+h9BzOAf/ZW4b8JHQ9qlWZwLXs7dElEQgCxM18zekE7pOdxU3oF7g7qLspavQhRB9
+6VwtDC7KE1ohuOMkwPE5HFSzlOW5WyGKodH8581UTigsQ3vp5Y4OKdIwNYCmvI0O
+OaPHa1Us+qy5w2fwhYFGQpJaKBAo52VFWFb1eS65cv/A1RVktrwfF0/5CUKQlOvT
+eUsZAkU1zgYf5BTaFmLlhrKlfbfOZE7U3nSMfRpM9k0uHS8TkV4gJY8Krs2/IKWG
+1ePbKRpoEnul7u915WZxspdgU8UI556Y1gmiJEO1RyMOWH56mWwEgHrQc/8MxLpG
+AoSckdNGC+G7zG4pARh7eWJDwYq3GA==
+=w1Xx
+-----END PGP SIGNATURE-----
+
+--656hIAUFSU7Oh46B--
