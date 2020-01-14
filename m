@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F33C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C1FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F53E24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2028A2467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996622;
-	bh=+B9vjfKRifOYrJv2rNTi+ClHryp0A5p2lCBhAplKizI=;
+	s=default; t=1578996625;
+	bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blHceE0HArU5HI4NEheOiAFJuc9IZXs5x7QzDIyeu0osHTeDUc5EhQPNCb/vksiLG
-	 GLA2H6s+cc7yoKcTVY4C9IlZ4Qqhl20QdKaJOa7qP1+yo8HweokR7U0mPXNr4XM3TH
-	 VfRTyhjk0Ar1WNYpQf9zbgrd28KkLVIQakccfmF8=
+	b=FqJRzWFt+UA9r8aWpWSyP7Amk3ghK4G7peBH1sQu9QEixbj7n2GhqOmqtv4zbHzZA
+	 7ugG2BwzxpofBAqDuYB1ve+YaBtsqRa+LeKFXfULjbcYn/aHdQbrMUNOh+q7aZa1gZ
+	 X6CoAFbiwakemZ/90oAC/QKqKXLU/CioGu79BYCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbgANKKV (ORCPT
+        id S1731664AbgANKKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:10:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbgANKKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:17 -0500
+        id S1729447AbgANKKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:10:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF8DF20678;
-        Tue, 14 Jan 2020 10:10:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C47224676;
+        Tue, 14 Jan 2020 10:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996617;
-        bh=+B9vjfKRifOYrJv2rNTi+ClHryp0A5p2lCBhAplKizI=;
+        s=default; t=1578996619;
+        bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMwpCbt2SwKL6B8jW14bDWjLWvjRsp0SAUCHwXttyTqU0Z1uSk7TQ23RtGodszmTD
-         j5RUkpnvic7DQlPTGzPC38QHO2oE41SnCdT5erEI+HL9MNXSKUAnkvtQ36+5JHEBtF
-         5ZTrhD22UyPazA5WsscW9dwtWT4tnpqVQir/rMaY=
+        b=qT9ZOd+wf8mhLszf5Ur/zsM6adobQE3SMHRvYDRsTxf4zU0jdry4qfOMBSb3ktqD9
+         fuMYZPA4lsl3euMDe/jyc/ajfsKwkjHbbEF9oSSy6ZUBRwCr1eIRIvpEeaqjv1s7eq
+         uuP8EWfbE+RoS2TDMsv8YP62kugM2S+N327LNsME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 4.14 26/39] tty: link tty and port before configuring it as console
-Date:   Tue, 14 Jan 2020 11:02:00 +0100
-Message-Id: <20200114094344.699176547@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Roger Whittaker <Roger.Whittaker@suse.com>
+Subject: [PATCH 4.14 35/39] USB: Fix: Dont skip endpoint descriptors with maxpacket=0
+Date:   Tue, 14 Jan 2020 11:02:09 +0100
+Message-Id: <20200114094346.366822834@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -59,69 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
+commit 2548288b4fb059b2da9ceada172ef763077e8a59 upstream.
 
-There seems to be a race condition in tty drivers and I could see on
-many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-do 'tty->port->itty = tty' even though tty->port is NULL.
-'tty->port' will be set by the driver and if the driver has not yet done
-it before we open the tty device we can get to this situation. By adding
-some extra debug prints, I noticed that:
+It turns out that even though endpoints with a maxpacket length of 0
+aren't useful for data transfer, the descriptors do serve other
+purposes.  In particular, skipping them will also skip over other
+class-specific descriptors for classes such as UVC.  This unexpected
+side effect has caused some UVC cameras to stop working.
 
-6.650130: uart_add_one_port
-6.663849: register_console
-6.664846: tty_open
-6.674391: tty_init_dev
-6.675456: tty_port_link_device
+In addition, the USB spec requires that when isochronous endpoint
+descriptors are present in an interface's altsetting 0 (which is true
+on some devices), the maxpacket size _must_ be set to 0.  Warning
+about such things seems like a bad idea.
 
-uart_add_one_port() registers the console, as soon as it registers, the
-userspace tries to use it and that leads to tty_open() but
-uart_add_one_port() has not yet done tty_port_link_device() and so
-tty->port is not yet configured when control reaches tty_init_dev().
+This patch updates an earlier commit which would log a warning and
+skip these endpoint descriptors.  Now we only log a warning, and we
+don't even do that for isochronous endpoints in altsetting 0.
 
-Further look into the code and tty_port_link_device() is done by
-uart_add_one_port(). After registering the console uart_add_one_port()
-will call tty_port_register_device_attr_serdev() and
-tty_port_link_device() is called from this.
+We don't need to worry about preventing endpoints with maxpacket = 0
+from ever being used for data transfers; usb_submit_urb() already
+checks for this.
 
-Call add tty_port_link_device() before uart_configure_port() is done and
-add a check in tty_port_link_device() so that it only links the port if
-it has not been done yet.
-
-Suggested-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
+Reported-and-tested-by: Roger Whittaker <Roger.Whittaker@suse.com>
+Fixes: d482c7bb0541 ("USB: Skip endpoints with 0 maxpacket length")
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Link: https://marc.info/?l=linux-usb&m=157790377329882&w=2
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001061040270.1514-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |    1 +
- drivers/tty/tty_port.c           |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/core/config.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2810,6 +2810,7 @@ int uart_add_one_port(struct uart_driver
- 	if (uport->cons && uport->dev)
- 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -392,12 +392,16 @@ static int usb_parse_endpoint(struct dev
+ 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
+ 	}
  
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
+-	/* Validate the wMaxPacketSize field */
++	/*
++	 * Validate the wMaxPacketSize field.
++	 * Some devices have isochronous endpoints in altsetting 0;
++	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
++	 * (see the end of section 5.6.3), so don't warn about them.
++	 */
+ 	maxp = usb_endpoint_maxp(&endpoint->desc);
+-	if (maxp == 0) {
+-		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
++	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
++		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
+ 		    cfgno, inum, asnum, d->bEndpointAddress);
+-		goto skip_to_next_endpoint_or_interface_descriptor;
+ 	}
  
- 	port->console = uart_console(uport);
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -88,7 +88,8 @@ void tty_port_link_device(struct tty_por
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
+ 	/* Find the highest legal maxpacket size for this endpoint */
 
 
