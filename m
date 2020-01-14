@@ -2,262 +2,202 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D748C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBA2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01E0207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEDC62080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="eOU2SEsj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mMc7iA8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgANAwT (ORCPT
+        id S1729113AbgANAyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:52:19 -0500
-Received: from mail-dm6nam11on2129.outbound.protection.outlook.com ([40.107.223.129]:26113
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726536AbgANAwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:52:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WoZNUncx5uulUVXtEnViDBqd2OTMi6jzjtHOJTqCvnqRYTFhUwmFiV3U8TfOe7m0q41+cZi1rHrxa8LX0VtOBeggpZuE/oGZgsievT3ezkcVV9ZJpQag9fJJP2fpHXSNqRSFqJXfRitLeyCq1psR1i3U/PilJc92ew/nsDyJjHADkqI78/XmT5sgyzMTotP+xtdkXEYIf/dFT/MUfQKDGNAerqylZP4ht96CHcQK3B21Oea1eGO8aRDSPrLLF3LlJ8zEsQlayK1qlukswCdYsU1CKMU7hUYIdVHcZZyUCJ4ao7b4GMUqUwOcc+NJlUzdkZwx7TBofoaKVma/J7BL7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pGQLEJGPUMi8Hg3s78JzmlE130VimwEGtOPucNQ8XzQ=;
- b=TFmGnYoOTcedh8WsbugBuHBDgl5VkhgYMZOGy3Qkkmc6DOveZoNt3SPKpLMnZtTWipKCVLltaFpyJKuyTq3MGT2U2ziPGLjDyI9roSubEreKUEqjg3C4ssb+fjwN7zQvjWFYrPTCV61knE//+JbS4BsBvU7P08ERZU3v//YdEIXfurh3ajJ5vfCM98RoygF3HFAIcv58bUmJIbNy+sUtUxd0EzW7A72aib29p156Ns6Ih2Ay0MwI9P9SK4eK9YDt28vLFMBh3X2A9BckAMJk0xJbRvUQz5A3+URxRUqRlDUzMg4bY36dPJ/SbuNtbDNdrsFfwfNeJ+Bo5B1i7dOVQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pGQLEJGPUMi8Hg3s78JzmlE130VimwEGtOPucNQ8XzQ=;
- b=eOU2SEsjzeVKLNASh8vgfVHMoX+Eu3gmurkjlP69UFy08POAsmIVS0NJma3a8RyuaQVJ6K4TxHtLw/ynsZOfKAVFjLzgTEkC0GzFKUi5mcfheoGMD/vXfxl/MnPoGnK3LnbY+Ik57+b5R+AitQCN/IciFUwjTbi4ZAya+FUcdeQ=
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com (10.167.151.161) by
- SN4PR2101MB0815.namprd21.prod.outlook.com (10.167.151.157) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.4; Tue, 14 Jan 2020 00:52:14 +0000
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::a9bd:595e:2ea9:471a]) by SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::a9bd:595e:2ea9:471a%2]) with mapi id 15.20.2644.015; Tue, 14 Jan 2020
- 00:52:14 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net]: hv_sock: Remove the accept port restriction
-Thread-Topic: [PATCH net]: hv_sock: Remove the accept port restriction
-Thread-Index: AdXKdNH1RBG+R7RHRNOEABe6Ndiffg==
-Date:   Tue, 14 Jan 2020 00:52:14 +0000
-Message-ID: <SN4PR2101MB08808AAFCEB4E8FC178A4B79C0340@SN4PR2101MB0880.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:b:54a5:1766:8019:ea72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c92bebbe-8d07-4dae-2a18-08d7988bff39
-x-ms-traffictypediagnostic: SN4PR2101MB0815:|SN4PR2101MB0815:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN4PR2101MB08156DE26D665DF075EFB23DC0340@SN4PR2101MB0815.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(189003)(199004)(6506007)(2906002)(8936002)(6636002)(71200400001)(186003)(10290500003)(110136005)(54906003)(81156014)(8676002)(8990500004)(478600001)(81166006)(7696005)(66946007)(66556008)(9686003)(64756008)(76116006)(66476007)(4326008)(33656002)(52536014)(66446008)(316002)(86362001)(5660300002)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR2101MB0815;H:SN4PR2101MB0880.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HDQlhvm3WIepmhpOMX/tc7W/t/qS8xBglmSGsNBrReyndrpdGMetFyD6PFTJH5MBYqjz9jyBFjO8q9UqfpdvSqtEX1Nu72ORAsnqmFLkgskH7zSzKJuAhBI24mkIO3QRwF8LqM+ezBg+ogqVfo2uiCF/fLIVO3e9cPNEm46PMn3vIVjR7R4Vu9kn+ak/uFTjx3RP9uWh+EPJoqTQX1+DoCVk2JuHx6MNUydU2WAT28NMpN1tksP93WLw733V4Ej10f5UYUDbjqf/Qfz1A6z1VvCP3uqGoLBreUp/sfvjwB8C/AiI0OVcqp6R5h4aqDa333X8kfBXxEHPpnln1f6fGmPecRE8zr0PFrldSxzDsJStfIg/2GYKrv8Qu7tFaLyQlhjChVIWVMqh51ixnD6bxbscKMKEWLWJQcI7IuB04Z3NchRjBhuveRvrXIzKgSsW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 19:54:49 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38618 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgANAys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:54:48 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f20so4513588plj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 16:54:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=i4tIlIuY63N7J2qzzaXh1IQqlXDyyq0nv6BqUm7J/CM=;
+        b=mMc7iA8m150d3kyklJaIfPUS2LEM8UbRcQcpV5QNvWU77wKnxmOJ6sz0E0LSlnVhTX
+         8/I9Ns2MxSDk9rXb1xF4T5hPjeY0Uu2InhFf2mcFnlyJgGgM/vBR+XGM6BSwl5/A/LAu
+         RmX8S1Oet1NNxwkI5WL/FxVmTsVOhdNR+WycIjWSdZ/+SyQEv2OLW7OfaGWBxiTXXaay
+         3ueCC6uKsQjt/8mCMPQz6L1bOEhiIuiqpjJwLYlH3Ry8GhLu1DdFa7IXn6UiPLfq3P4d
+         KkQorMSl1NMIi+oKNHNpXPRFsPzLZJiyBfTirZCNGemoZZWKjYesHtxVVTjPLc3RyYwB
+         3y3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=i4tIlIuY63N7J2qzzaXh1IQqlXDyyq0nv6BqUm7J/CM=;
+        b=By+B3/81I7qK2cwW0CJDUJ3Bb8QvDdXpSUFmEBeC1eHZBy9KrScZ1D90H8nmugfwpM
+         5LupCTxTzT5+JGryD+YDH0y/W9j3F2RfSTtavxD4V96DOiH35Z4u4EQv4wbMPbFffA/c
+         d1XOx9diSEeg/yn2JUGcUVfTNL5h0dtFoK1B7FXEzGRjmrjQuTpAuf4gXPmKsEn5WAtM
+         6SlGUBn2S703VpFIGWCgZIa4aa7EMMeLN7Znsll825Wex4Fl0/oVQCKPHn8ChzwqjmEk
+         5OtOwxxj/Duc+rXzcrDKxfUybi2BeXL/3AT1vf7dhkOJOZERPVgakuMFeuvCHNg8kcI4
+         Z+Vw==
+X-Gm-Message-State: APjAAAVxbagcoR0tFF25UmyxwfSuxwpvEaaHBbH53R52qhjwQHnJEK2x
+        4Plqp3TJZd4uwtXvOikjXf/kWg==
+X-Google-Smtp-Source: APXvYqw5Ad33yyrBH1TG7XCao+7rbWbRNYs7PR407QwkNL/P8BHAvovUlnJccNx+Ax/4T5ceApEwvQ==
+X-Received: by 2002:a17:902:b781:: with SMTP id e1mr23718913pls.128.1578963287490;
+        Mon, 13 Jan 2020 16:54:47 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id y14sm15372185pfe.147.2020.01.13.16.54.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 16:54:46 -0800 (PST)
+Date:   Mon, 13 Jan 2020 16:54:46 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Mina Almasry <almasrymina@google.com>
+cc:     mike.kravetz@oracle.com, shuah@kernel.org, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com,
+        Hillf Danton <hdanton@sina.com>
+Subject: Re: [PATCH v9 8/8] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ docs
+In-Reply-To: <20191217231615.164161-8-almasrymina@google.com>
+Message-ID: <alpine.DEB.2.21.2001131649100.164268@chino.kir.corp.google.com>
+References: <20191217231615.164161-1-almasrymina@google.com> <20191217231615.164161-8-almasrymina@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c92bebbe-8d07-4dae-2a18-08d7988bff39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 00:52:14.4378
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4wVh/lXvs/bCVdHpqtOSOxSdAoSUHwzQR+qROwlVgl5PncNhz3pWbolDyE5IhtsKM225GPQn4FV8HF82ThElrvqe1zAOJkNkXOxeU1Guk+c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR2101MB0815
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, hv_sock restricts the port the guest socket can accept
-connections on. hv_sock divides the socket port namespace into two parts
-for server side (listening socket), 0-0x7FFFFFFF & 0x80000000-0xFFFFFFFF
-(there are no restrictions on client port namespace). The first part
-(0-0x7FFFFFFF) is reserved for sockets where connections can be accepted.
-The second part (0x80000000-0xFFFFFFFF) is reserved for allocating ports
-for the peer (host) socket, once a connection is accepted.
-This reservation of the port namespace is specific to hv_sock and not
-known by the generic vsock library (ex: af_vsock). This is problematic
-because auto-binds/ephemeral ports are handled by the generic vsock
-library and it has no knowledge of this port reservation and could
-allocate a port that is not compatible with hv_sock (and legitimately so).
-The issue hasn't surfaced so far because the auto-bind code of vsock
-(__vsock_bind_stream) prior to the change 'VSOCK: bind to random port for
-VMADDR_PORT_ANY' would start walking up from LAST_RESERVED_PORT (1023) and
-start assigning ports. That will take a large number of iterations to hit
-0x7FFFFFFF. But, after the above change to randomize port selection, the
-issue has started coming up more frequently.
-There has really been no good reason to have this port reservation logic
-in hv_sock from the get go. Reserving a local port for peer ports is not
-how things are handled generally. Peer ports should reflect the peer port.
-This fixes the issue by lifting the port reservation, and also returns the
-right peer port. Since the code converts the GUID to the peer port (by
-using the first 4 bytes), there is a possibility of conflicts, but that
-seems like a reasonable risk to take, given this is limited to vsock and
-that only applies to all local sockets.
+On Tue, 17 Dec 2019, Mina Almasry wrote:
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
- net/vmw_vsock/hyperv_transport.c | 65 +++-----------------------------
- 1 file changed, 6 insertions(+), 59 deletions(-)
+> diff --git a/Documentation/admin-guide/cgroup-v1/hugetlb.rst b/Documentation/admin-guide/cgroup-v1/hugetlb.rst
+> index a3902aa253a96..efb94e4db9d5a 100644
+> --- a/Documentation/admin-guide/cgroup-v1/hugetlb.rst
+> +++ b/Documentation/admin-guide/cgroup-v1/hugetlb.rst
+> @@ -2,13 +2,6 @@
+>  HugeTLB Controller
+>  ==================
+> 
+> -The HugeTLB controller allows to limit the HugeTLB usage per control group and
+> -enforces the controller limit during page fault. Since HugeTLB doesn't
+> -support page reclaim, enforcing the limit at page fault time implies that,
+> -the application will get SIGBUS signal if it tries to access HugeTLB pages
+> -beyond its limit. This requires the application to know beforehand how much
+> -HugeTLB pages it would require for its use.
+> -
+>  HugeTLB controller can be created by first mounting the cgroup filesystem.
+> 
+>  # mount -t cgroup -o hugetlb none /sys/fs/cgroup
+> @@ -28,10 +21,14 @@ process (bash) into it.
+> 
+>  Brief summary of control files::
+> 
+> - hugetlb.<hugepagesize>.limit_in_bytes     # set/show limit of "hugepagesize" hugetlb usage
+> - hugetlb.<hugepagesize>.max_usage_in_bytes # show max "hugepagesize" hugetlb  usage recorded
+> - hugetlb.<hugepagesize>.usage_in_bytes     # show current usage for "hugepagesize" hugetlb
+> - hugetlb.<hugepagesize>.failcnt		   # show the number of allocation failure due to HugeTLB limit
+> + hugetlb.<hugepagesize>.reservation_limit_in_bytes     # set/show limit of "hugepagesize" hugetlb reservations
+> + hugetlb.<hugepagesize>.reservation_max_usage_in_bytes # show max "hugepagesize" hugetlb reservations and no-reserve faults.
+> + hugetlb.<hugepagesize>.reservation_usage_in_bytes     # show current reservations and no-reserve faults for "hugepagesize" hugetlb
+> + hugetlb.<hugepagesize>.reservation_failcnt            # show the number of allocation failure due to HugeTLB reservation limit
+> + hugetlb.<hugepagesize>.limit_in_bytes                 # set/show limit of "hugepagesize" hugetlb faults
+> + hugetlb.<hugepagesize>.max_usage_in_bytes             # show max "hugepagesize" hugetlb  usage recorded
+> + hugetlb.<hugepagesize>.usage_in_bytes                 # show current usage for "hugepagesize" hugetlb
+> + hugetlb.<hugepagesize>.failcnt                        # show the number of allocation failure due to HugeTLB usage limit
+> 
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index b3bdae74c243..3492c021925f 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -138,28 +138,15 @@ struct hvsock {
-  *************************************************************************=
-***
-  * The only valid Service GUIDs, from the perspectives of both the host an=
-d *
-  * Linux VM, that can be connected by the other end, must conform to this =
-  *
-- * format: <port>-facb-11e6-bd58-64006a7986d3, and the "port" must be in  =
-  *
-- * this range [0, 0x7FFFFFFF].                                            =
-  *
-+ * format: <port>-facb-11e6-bd58-64006a7986d3.                            =
-  *
-  *************************************************************************=
-***
-  *
-  * When we write apps on the host to connect(), the GUID ServiceID is used=
-.
-  * When we write apps in Linux VM to connect(), we only need to specify th=
-e
-  * port and the driver will form the GUID and use that to request the host=
-.
-  *
-- * From the perspective of Linux VM:
-- * 1. the local ephemeral port (i.e. the local auto-bound port when we cal=
-l
-- * connect() without explicit bind()) is generated by __vsock_bind_stream(=
-),
-- * and the range is [1024, 0xFFFFFFFF).
-- * 2. the remote ephemeral port (i.e. the auto-generated remote port for
-- * a connect request initiated by the host's connect()) is generated by
-- * hvs_remote_addr_init() and the range is [0x80000000, 0xFFFFFFFF).
-  */
-=20
--#define MAX_LISTEN_PORT			((u32)0x7FFFFFFF)
--#define MAX_VM_LISTEN_PORT		MAX_LISTEN_PORT
--#define MAX_HOST_LISTEN_PORT		MAX_LISTEN_PORT
--#define MIN_HOST_EPHEMERAL_PORT		(MAX_HOST_LISTEN_PORT + 1)
--
- /* 00000000-facb-11e6-bd58-64006a7986d3 */
- static const guid_t srv_id_template =3D
- 	GUID_INIT(0x00000000, 0xfacb, 0x11e6, 0xbd, 0x58,
-@@ -184,34 +171,6 @@ static void hvs_addr_init(struct sockaddr_vm *addr, co=
-nst guid_t *svr_id)
- 	vsock_addr_init(addr, VMADDR_CID_ANY, port);
- }
-=20
--static void hvs_remote_addr_init(struct sockaddr_vm *remote,
--				 struct sockaddr_vm *local)
--{
--	static u32 host_ephemeral_port =3D MIN_HOST_EPHEMERAL_PORT;
--	struct sock *sk;
--
--	/* Remote peer is always the host */
--	vsock_addr_init(remote, VMADDR_CID_HOST, VMADDR_PORT_ANY);
--
--	while (1) {
--		/* Wrap around ? */
--		if (host_ephemeral_port < MIN_HOST_EPHEMERAL_PORT ||
--		    host_ephemeral_port =3D=3D VMADDR_PORT_ANY)
--			host_ephemeral_port =3D MIN_HOST_EPHEMERAL_PORT;
--
--		remote->svm_port =3D host_ephemeral_port++;
--
--		sk =3D vsock_find_connected_socket(remote, local);
--		if (!sk) {
--			/* Found an available ephemeral port */
--			return;
--		}
--
--		/* Release refcnt got in vsock_find_connected_socket */
--		sock_put(sk);
--	}
--}
--
- static void hvs_set_channel_pending_send_size(struct vmbus_channel *chan)
- {
- 	set_channel_pending_send_size(chan,
-@@ -341,12 +300,7 @@ static void hvs_open_connection(struct vmbus_channel *=
-chan)
- 	if_type =3D &chan->offermsg.offer.if_type;
- 	if_instance =3D &chan->offermsg.offer.if_instance;
- 	conn_from_host =3D chan->offermsg.offer.u.pipe.user_def[0];
--
--	/* The host or the VM should only listen on a port in
--	 * [0, MAX_LISTEN_PORT]
--	 */
--	if (!is_valid_srv_id(if_type) ||
--	    get_port_by_srv_id(if_type) > MAX_LISTEN_PORT)
-+	if (!is_valid_srv_id(if_type))
- 		return;
-=20
- 	hvs_addr_init(&addr, conn_from_host ? if_type : if_instance);
-@@ -371,8 +325,11 @@ static void hvs_open_connection(struct vmbus_channel *=
-chan)
- 		vnew =3D vsock_sk(new);
-=20
- 		hvs_addr_init(&vnew->local_addr, if_type);
--		hvs_remote_addr_init(&vnew->remote_addr, &vnew->local_addr);
-=20
-+		/* Remote peer is always the host */
-+		vsock_addr_init(&vnew->remote_addr,
-+				VMADDR_CID_HOST, VMADDR_PORT_ANY);
-+		vnew->remote_addr.svm_port =3D get_port_by_srv_id(if_instance);
- 		ret =3D vsock_assign_transport(vnew, vsock_sk(sk));
- 		/* Transport assigned (looking at remote_addr) must be the
- 		 * same where we received the request.
-@@ -766,16 +723,6 @@ static bool hvs_stream_is_active(struct vsock_sock *vs=
-k)
-=20
- static bool hvs_stream_allow(u32 cid, u32 port)
- {
--	/* The host's port range [MIN_HOST_EPHEMERAL_PORT, 0xFFFFFFFF) is
--	 * reserved as ephemeral ports, which are used as the host's ports
--	 * when the host initiates connections.
--	 *
--	 * Perform this check in the guest so an immediate error is produced
--	 * instead of a timeout.
--	 */
--	if (port > MAX_HOST_LISTEN_PORT)
--		return false;
--
- 	if (cid =3D=3D VMADDR_CID_HOST)
- 		return true;
-=20
---=20
-2.17.1
+I assume these are better named hugetlb.<hugepagesize>.reservation.* 
+rather than reservation_*, or perhaps shortened to resv.*, so for example 
+hugetlb.<hugepagesize>.resv.limit_in_bytes.
+
+>  For a system supporting three hugepage sizes (64k, 32M and 1G), the control
+>  files include::
+> @@ -40,11 +37,56 @@ files include::
+>    hugetlb.1GB.max_usage_in_bytes
+>    hugetlb.1GB.usage_in_bytes
+>    hugetlb.1GB.failcnt
+> +  hugetlb.1GB.reservation_limit_in_bytes
+> +  hugetlb.1GB.reservation_max_usage_in_bytes
+> +  hugetlb.1GB.reservation_usage_in_bytes
+> +  hugetlb.1GB.reservation_failcnt
+>    hugetlb.64KB.limit_in_bytes
+>    hugetlb.64KB.max_usage_in_bytes
+>    hugetlb.64KB.usage_in_bytes
+>    hugetlb.64KB.failcnt
+> +  hugetlb.64KB.reservation_limit_in_bytes
+> +  hugetlb.64KB.reservation_max_usage_in_bytes
+> +  hugetlb.64KB.reservation_usage_in_bytes
+> +  hugetlb.64KB.reservation_failcnt
+>    hugetlb.32MB.limit_in_bytes
+>    hugetlb.32MB.max_usage_in_bytes
+>    hugetlb.32MB.usage_in_bytes
+>    hugetlb.32MB.failcnt
+> +  hugetlb.32MB.reservation_limit_in_bytes
+> +  hugetlb.32MB.reservation_max_usage_in_bytes
+> +  hugetlb.32MB.reservation_usage_in_bytes
+> +  hugetlb.32MB.reservation_failcnt
+> +
+> +
+> +1. Reservation limits
+
+Should probably be described after the page fault limits since those are 
+the canonical limits that already exist and the "reservation_.*" 
+equivalents are supplementary.
+
+> +
+> +The HugeTLB controller allows to limit the HugeTLB reservations per control
+> +group and enforces the controller limit at reservation time and at the fault of
+> +hugetlb memory for which no reservation exists. Reservation limits
+> +are superior to Page fault limits (see section 2), since Reservation limits are
+> +enforced at reservation time (on mmap or shget), and never causes the
+> +application to get SIGBUS signal if the memory was reserved before hand. For
+> +MAP_NORESERVE allocations, the reservation limit behaves the same as the fault
+> +limit, enforcing memory usage at fault time and causing the application to
+> +receive a SIGBUS if it's crossing its limit.
+> +
+
+When saying that reservation limits are superior to page fault limits, it 
+might be helpful to expand on the downsides of page fault limits.  The 
+existing documentation calls out that the application needs to know its 
+expected usage; it does not call attention to the fact that several 
+different applications may be accessing an overcommited system-wide pool 
+of hugetlb memory.  So it might be possible that the application 
+understands its own usage but it may not understand how that is 
+orchestrated with other applications on the same system accessing a shared 
+pool of hugetlb pages.
+
+But yes, I think MAP_FAILED and allow for fallback or freeing of hugetlb 
+memory is far superior to SIGBUS :)
+
+> +2. Page fault limits
+> +
+> +The HugeTLB controller allows to limit the HugeTLB usage (page fault) per
+> +control group and enforces the controller limit during page fault. Since HugeTLB
+> +doesn't support page reclaim, enforcing the limit at page fault time implies
+> +that, the application will get SIGBUS signal if it tries to access HugeTLB
+> +pages beyond its limit. This requires the application to know beforehand how
+> +much HugeTLB pages it would require for its use.
+> +
+> +
+> +3. Caveats with shared memory
+> +
+> +For shared hugetlb memory, both hugetlb reservation and page faults are charged
+> +to the first task that causes the memory to be reserved or faulted, and all
+> +subsequent uses of this reserved or faulted memory is done without charging.
+> +
+> +Shared hugetlb memory is only uncharged when it is unreserved or deallocated.
+> +This is usually when the hugetlbfs file is deleted, and not when the task that
+> +caused the reservation or fault has exited.
+
+Discussion of reparenting?
