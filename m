@@ -2,120 +2,99 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB614C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C6EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CD72187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0C32187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2E6iTOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgANQYU (ORCPT
+        id S1728799AbgANQY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:24:20 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54181 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANQYT (ORCPT
+        Tue, 14 Jan 2020 11:24:28 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36373 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANQY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:24:19 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irOz2-0004VT-7w; Tue, 14 Jan 2020 17:24:00 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irOz1-0004qL-Lg; Tue, 14 Jan 2020 17:23:59 +0100
-Date:   Tue, 14 Jan 2020 17:23:59 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Message-ID: <20200114162359.weoirknje6yhcmds@pengutronix.de>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-2-m.felsch@pengutronix.de>
- <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:20:29 up 60 days,  7:39, 57 users,  load average: 0.47, 0.25,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 14 Jan 2020 11:24:28 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x184so6828113pfb.3;
+        Tue, 14 Jan 2020 08:24:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PDyuI6D5hJtH0+thVw4r/qR9DD4Csl28GlClVXYvOmo=;
+        b=V2E6iTOF2PVQVslEQICUxmidoKU9xM7zyf01P1l8489cYNbLJV+ZZQtrMLKoe+T8eg
+         +RvB47tw077vmFFz1SAkZawppGOeh5OaoMD9v2r5r1y94MTQOQ6ddLw8/VsovLd9ksgB
+         NRfbzmyWdVy3/z1cel1683RKLbEehtnBUjZFDT9EgMVCocxLnMwj/o8KvPBRJEnJFrTE
+         JkPCEEOTnwhprwu9BJGSmZVnaIEEWLsJ7amXbOu8f9YNbGqjmxFz/NVL57hroXB+ioMA
+         3NljDF2X1l1v6dnYyjtA60qgRV+7ya0pidazHJ7gkZ7fLKb0XTCN8wyGHq696y0+STxM
+         qqng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PDyuI6D5hJtH0+thVw4r/qR9DD4Csl28GlClVXYvOmo=;
+        b=U2rl4GuV9yk1zWnlb5QpZ+DPzKQo2AC9iRZ8kP4LG/i/u2zrb+oG31fFVoqrR5gouH
+         o6lzB0pKFH+6cLm7rqKluX6Z1m58jsnLVa8zyQlrXTGbhrQXdMxoEWYxDgxERTPT2DFi
+         mVzMrplsKKcd2bDe20mzvgMhDNDJ0650fke0pugNDQtodenu7aOQHCStwyE9jRaesiem
+         3W9m4bEt5gMXYVyp9ksNbvZaFhf/HTAFbas7eYW0ntYyj2I/rygLIxfwcI3QOp1rxZ1z
+         fdF2TvtW9Z0ejRQzFdc5DwJxGQr5NmzgiLnqVZufQx3c93UFogEZ4QBh+ZSrAfcY/goJ
+         EavA==
+X-Gm-Message-State: APjAAAVuljGlpVuAFnTlJY7ZHvyxkpkKguxmzuydeYN0XtOBRSEFP9xD
+        uTNnOGKhpGulhYW1NtKL/sY=
+X-Google-Smtp-Source: APXvYqz88bNIaPHzcim/6S/uUF9DpjERKnfgOQ8Qhg0gQstgjbriVUc2j5BW+2+pkvXrCW1t1Hmc0Q==
+X-Received: by 2002:a65:56c6:: with SMTP id w6mr28444928pgs.167.1579019067136;
+        Tue, 14 Jan 2020 08:24:27 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee7:f789:438:77e9:83ea:bb95])
+        by smtp.gmail.com with ESMTPSA id s20sm17511918pjn.2.2020.01.14.08.24.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 08:24:26 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
+        jgg@ziepe.ca, paulmck@kernel.org
+Cc:     joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list checking
+Date:   Tue, 14 Jan 2020 21:53:45 +0530
+Message-Id: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-01-14 16:19, Adam Thomson wrote:
-> On 08 January 2020 09:57, Marco Felsch wrote:
-> 
-> > The watchdog driver compatible is "dlg,da9062-watchdog" and not
-> > "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-> > fwnode. As result the watchdog driver can't parse the devicetree.
-> > 
-> 
-> I do agree there's a mismatch between the documentation and the MFD code.
-> So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9062-wdt'
-> hence the issue? Are there any existing users who are using 'dlg,da9062-wdt' in
-> their DT instead?
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-Yes the upstream available DT I'm currently using is:
-arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi.
+list_for_each_entry_rcu has built-in RCU and lock checking.
+Pass cond argument to list_for_each_entry_rcu.
 
-I grep the code and found no _upstream_ user of 'dlg,da9062-wdt' also
-using this compatible would be a missmatch with the binding
-documentation. So those DT's assuming a wrong binding. Therefore I fixed
-it here and not within the watchdog driver.
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ drivers/infiniband/hw/hfi1/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-  Marco
-
-> > Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  drivers/mfd/da9062-core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> > index e69626867c26..9143de7b77b8 100644
-> > --- a/drivers/mfd/da9062-core.c
-> > +++ b/drivers/mfd/da9062-core.c
-> > @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] = {
-> >  		.name		= "da9062-watchdog",
-> >  		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
-> >  		.resources	= da9062_wdt_resources,
-> > -		.of_compatible  = "dlg,da9062-wdt",
-> > +		.of_compatible  = "dlg,da9062-watchdog",
-> >  	},
-> >  	{
-> >  		.name		= "da9062-thermal",
-> > --
-> > 2.20.1
-> 
-> 
-
+diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+index 089e201d7550..22f2d4fd2577 100644
+--- a/drivers/infiniband/hw/hfi1/verbs.c
++++ b/drivers/infiniband/hw/hfi1/verbs.c
+@@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
+ 				       opa_get_lid(packet->dlid, 9B));
+ 		if (!mcast)
+ 			goto drop;
+-		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
++		list_for_each_entry_rcu(p, &mcast->qp_list, list, lockdep_is_held(&(ibp->rvp.lock))) {
+ 			packet->qp = p->qp;
+ 			if (hfi1_do_pkey_check(packet))
+ 				goto drop;
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.17.1
+
