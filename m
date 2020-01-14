@@ -2,152 +2,144 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CB1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187DDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FB824672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6FE24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:55:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sWhN4A1j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PsZOg2dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgANSyB (ORCPT
+        id S1728754AbgANSzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:54:01 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45828 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgANSyB (ORCPT
+        Tue, 14 Jan 2020 13:55:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38670 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728346AbgANSzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:54:01 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x1so13109547qkl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FR9lhCYEbw12H0zeobUybUOQGm2CoSvzvFRxTVTYgPU=;
-        b=sWhN4A1jJF4zgCnuuE5MvnlwpdRSGb5ico9T3aDZ5KVbTDha/ZNXBr4OzGPVv1W4u4
-         tPz+4LZCRuC6dGCMw/qdT5wxChox1sGnbGmwwTuiFG3KCWEf+YaHUwD/1PI5a3HlFCeK
-         dvl/mvQmsKoIpfv803qf8biN8MP72s0uuFWGQzKc1cIo/52Mi1EhgtZjOSY0IqwtVETi
-         Z0HU5wvFqcUxXEaOHTQoqOU9fZis1x2p3ayPvgs4iN8elUrp9k7n8eCn4BpmRnA/z7wb
-         0vXLk0ZbZwDBTr4NrkKE83d4lE1ythYkAgjmMIw17D/rAwUOk26JkBQL+c0+czvy79Xw
-         1FNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FR9lhCYEbw12H0zeobUybUOQGm2CoSvzvFRxTVTYgPU=;
-        b=g55J/9uDskRSrTohKstJOH455e17ESFbFvOlNL8qYRzDWaV5O5lgqrhFds3XnpUmo3
-         o2h+P8EvihxRyRXeE69ixF/MVejBx4b0QCqrmT3/oCGm4AYgC73TqZ/QYfzFoctvzhfm
-         eG5nYp8ZnmQwUItLoLps/z3PC+WgMBqr2h3PlBFoA8NL9pV+pLVaFkCRgLMrd4ssSWAq
-         oosHA5DKwPPzwMJGw+8mzCuwwRdq+0lSjw78ylnGP2p75gsMufYtSxnsbSz20MTyGKm3
-         do6UgAF6Yhxo2/CgG4ljQMKXFAEk6kgpEd67azBiMPkByoL15D0FENS4ipfeuFEYJlXR
-         rk7g==
-X-Gm-Message-State: APjAAAXB8rL1JhU5+vQVd+ONKc3rd9xgiihDWMcHGQTqPNKaoz4EWEia
-        b0fU1oY8TeHMxh+WqDX+FV4j3/RvRq/cky0B8FkVuQ==
-X-Google-Smtp-Source: APXvYqx/CCE+s/Di7ck1wYwWrImCMzsEIMAjT6dwMMAl1rCV2+iOYzwsERCylc5qObPwRLK5zC8zX+ClZqlVCoWu7os=
-X-Received: by 2002:a05:620a:997:: with SMTP id x23mr18899493qkx.143.1579028040132;
- Tue, 14 Jan 2020 10:54:00 -0800 (PST)
+        Tue, 14 Jan 2020 13:55:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579028153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EhZHv8iNQCa35xCWnRUQPp9lfdnuViJaH22n40GrRTo=;
+        b=PsZOg2dq8EyGEWorKrjZX41TU2Gg3PKuyRfxGR6tgjqABkPNEEzgpszVSfaq3jIilbGDZ5
+        snnYrniy1jwxLEkkkU7iWYNRrUjDx0tZ8OcEzTWEgFEDymY9fzJdSQCiuh9YzwL71JpMr7
+        1qdzsB36HqhYHG25zkv7LLC276PrfSw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-5-Eu7dLCFyNbW25loSeKj39w-1; Tue, 14 Jan 2020 13:55:49 -0500
+X-MC-Unique: Eu7dLCFyNbW25loSeKj39w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 823AE10509B8;
+        Tue, 14 Jan 2020 18:55:47 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-218.rdu2.redhat.com [10.10.122.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B79555DA32;
+        Tue, 14 Jan 2020 18:55:43 +0000 (UTC)
+Subject: Re: [PATCH 02/12] locking/rwsem: Exit early when held by an anonymous
+ owner
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200114161225.309792-1-hch@lst.de>
+ <20200114161225.309792-3-hch@lst.de>
+ <925d1343-670e-8f92-0e73-6e9cee0d3ffb@redhat.com>
+ <20200114182514.GA9949@lst.de>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <8fae9cfa-93b0-4d54-6d16-35e920e25b6c@redhat.com>
+Date:   Tue, 14 Jan 2020 13:55:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
- <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
-In-Reply-To: <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Tue, 14 Jan 2020 10:53:48 -0800
-Message-ID: <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200114182514.GA9949@lst.de>
+Content-Type: multipart/mixed;
+ boundary="------------6BEFFBDE05D958EEDA91B3B4"
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > From: Yonghong Song <yhs@fb.com>
-> >
-> > Added four libbpf API functions to support map batch operations:
-> >   . int bpf_map_delete_batch( ... )
-> >   . int bpf_map_lookup_batch( ... )
-> >   . int bpf_map_lookup_and_delete_batch( ... )
-> >   . int bpf_map_update_batch( ... )
-> >
-> > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > ---
-> >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
-> >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
-> >  tools/lib/bpf/libbpf.map |  4 +++
-> >  3 files changed, 86 insertions(+)
-> >
-> > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> > index 500afe478e94a..12ce8d275f7dc 100644
-> > --- a/tools/lib/bpf/bpf.c
-> > +++ b/tools/lib/bpf/bpf.c
-> > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
-> >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
-> >  }
-> >
-> > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
-> > +                               void *out_batch, void *keys, void *values,
-> > +                               __u32 *count,
-> > +                               const struct bpf_map_batch_opts *opts)
-> > +{
-> > +       union bpf_attr attr = {};
-> > +       int ret;
-> > +
-> > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
-> > +               return -EINVAL;
-> > +
-> > +       memset(&attr, 0, sizeof(attr));
-> > +       attr.batch.map_fd = fd;
-> > +       attr.batch.in_batch = ptr_to_u64(in_batch);
-> > +       attr.batch.out_batch = ptr_to_u64(out_batch);
-> > +       attr.batch.keys = ptr_to_u64(keys);
-> > +       attr.batch.values = ptr_to_u64(values);
-> > +       if (count)
-> > +               attr.batch.count = *count;
-> > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
-> > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
-> > +
-> > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
-> > +       if (count)
-> > +               *count = attr.batch.count;
->
-> what if syscall failed, do you still want to assign *count then?
+This is a multi-part message in MIME format.
+--------------6BEFFBDE05D958EEDA91B3B4
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 
-Hi Andrii, thanks for taking a look.
+On 1/14/20 1:25 PM, Christoph Hellwig wrote:
+> On Tue, Jan 14, 2020 at 01:17:45PM -0500, Waiman Long wrote:
+>> The owner field is just a pointer to the task structure with the lower 3
+>> bits served as flag bits. Setting owner to RWSEM_OWNER_UNKNOWN (-2) will
+>> stop optimistic spinning. So under what condition did the crash happen?
+> When running xfstests with all patches in this series except for this
+> one, IIRC in generic/114.
 
-attr.batch.count should report the number of entries correctly
-processed before finding and error, an example could be when you
-provided a buffer for 3 entries and the map only has 1, ret is going
-to be -ENOENT meaning that you traversed the map and you still want to
-assign *count.
+Could you try the attached patch to see if it can fix the problem?
 
-That being said, the condition 'if (count)' is wrong and I think it
-should be removed.
+Thanks,
+Longman
 
->
-> > +
-> > +       return ret;
-> > +}
-> > +
->
-> [...]
+
+--------------6BEFFBDE05D958EEDA91B3B4
+Content-Type: text/x-patch;
+ name="0001-locking-rwsem-Fix-kernel-crash-when-spinning-on-RWSE.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-locking-rwsem-Fix-kernel-crash-when-spinning-on-RWSE.pa";
+ filename*1="tch"
+
+From 1fcfa946609b5e919a6b953a64be6853af5cdf05 Mon Sep 17 00:00:00 2001
+From: Waiman Long <longman@redhat.com>
+Date: Tue, 14 Jan 2020 13:39:02 -0500
+Subject: [PATCH] locking/rwsem: Fix kernel crash when spinning on
+ RWSEM_OWNER_UNKNOWN
+
+The commit 91d2a812dfb9 ("locking/rwsem: Make handoff writer
+optimistically spin on owner") will allow a recently woken up waiting
+writer to spin on the owner. Unfortunately, if the owner happens to be
+RWSEM_OWNER_UNKNOWN, the code will incorrectly spin on it leading to a
+kernel crash. This is fixed by passing the proper non-spinnable bits
+to rwsem_spin_on_owner() so that RWSEM_OWNER_UNKNOWN will be treated
+as a non-spinnable target.
+
+Fixes: 91d2a812dfb9 ("locking/rwsem: Make handoff writer optimistically spin on owner")
+
+Reported-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/locking/rwsem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 44e68761f432..1dd3d53f43c3 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -1227,7 +1227,7 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 		 * without sleeping.
+ 		 */
+ 		if ((wstate == WRITER_HANDOFF) &&
+-		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
++		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
+ 			goto trylock_again;
+ 
+ 		/* Block until there are no active lockers. */
+-- 
+2.18.1
+
+
+--------------6BEFFBDE05D958EEDA91B3B4--
+
