@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E6FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9262DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504ED207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6893420678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996877;
-	bh=szTmjal4HSnrS63ZUWmwLqq0z7P6GeYyZyvacrzg/KA=;
+	s=default; t=1578996894;
+	bh=UtpKgFdUgwj+i7ozPOAQauU/7XIGYCPBjWsPM7pu5Ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4VaF4VPWU/HJxMJQpEBAF8F9rWHIRQ8LS2OZi1YA1QrDbooMNwDFOfUa8kw1njZQ
-	 Z0FOKPWTbVEvI+hhDl2xRPrl9c2N+IcLv6KlzZyFm1bG0Qpm63dkVeuw+6VNdxdJVa
-	 fdyZOGjButvADrMGokKWB4K6VVVgTp5p2YBr4l0c=
+	b=reAT7QCwxsAGIj/6aJitum12GqWlc/my6Zm1ezIq/1eDMQGRKDPEywL0nX2xklqPJ
+	 qjFE8Ad1omts9HwwoN3TcUO9znQVG1iagAJHnC9x0UGto9aBYy110D222saXHj41qE
+	 v2NWMQX6pcTHq24Huy6MTnYkFCaDiCa+1N99YSdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgANKMe (ORCPT
+        id S1732741AbgANKLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbgANKMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:30 -0500
+        id S1732668AbgANKLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0907207FF;
-        Tue, 14 Jan 2020 10:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47FB124677;
+        Tue, 14 Jan 2020 10:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996749;
-        bh=szTmjal4HSnrS63ZUWmwLqq0z7P6GeYyZyvacrzg/KA=;
+        s=default; t=1578996701;
+        bh=UtpKgFdUgwj+i7ozPOAQauU/7XIGYCPBjWsPM7pu5Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ok48/CYxIkoeW5fHF4DFA8cr6p7dKSl+cXn4QeQYrWl3pzfRCOJqis6v2qz5zlVBX
-         1cPkgAe0MUxiQhRKFPypDu7blpBCN/71VooTlLTjEArILePny/CJhWUBrZorf3I80s
-         HCzJyvHlpF8ORn2yah5lhFzYQqvGHlFqSwBC8EKw=
+        b=AUTWKrC4xhOvyjPTWzNZbYYXKSHQvHI/d1h9++2XPSyO66PJjgcAeO2HhQAvvjrPt
+         GB5nTkyUox2+T/PYZRhm4tKEC27oi2xHdPGA4O4RVzgm9TX7H5e+XcnSzKDGDupuLv
+         xrrolkCZppav10aFhOTLwKYxO2hDeSNdAsf02Dag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.4 02/28] chardev: Avoid potential use-after-free in chrdev_open()
-Date:   Tue, 14 Jan 2020 11:02:04 +0100
-Message-Id: <20200114094337.950728924@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 25/31] mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
+Date:   Tue, 14 Jan 2020 11:02:17 +0100
+Message-Id: <20200114094344.665329691@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
-References: <20200114094336.845958665@linuxfoundation.org>
+In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
+References: <20200114094334.725604663@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,96 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Ganapathi Bhat <gbhat@marvell.com>
 
-commit 68faa679b8be1a74e6663c21c3a9d25d32f1c079 upstream.
+commit 3d94a4a8373bf5f45cf5f939e88b8354dbf2311b upstream.
 
-'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
-'struct cdev *' stashed in the 'i_cdev' field of the target inode
-structure. If the pointer is NULL, then it is initialised lazily by
-looking up the kobject in the 'cdev_map' and so the whole procedure is
-protected by the 'cdev_lock' spinlock to serialise initialisation of
-the shared pointer.
+mwifiex_process_country_ie() function parse elements of bss
+descriptor in beacon packet. When processing WLAN_EID_COUNTRY
+element, there is no upper limit check for country_ie_len before
+calling memcpy. The destination buffer domain_info->triplet is an
+array of length MWIFIEX_MAX_TRIPLET_802_11D(83). The remote
+attacker can build a fake AP with the same ssid as real AP, and
+send malicous beacon packet with long WLAN_EID_COUNTRY elemen
+(country_ie_len > 83). Attacker can  force STA connect to fake AP
+on a different channel. When the victim STA connects to fake AP,
+will trigger the heap buffer overflow. Fix this by checking for
+length and if found invalid, don not connect to the AP.
 
-Unfortunately, it is possible for the initialising thread to fail *after*
-installing the new pointer, for example if the subsequent '->open()' call
-on the file fails. In this case, 'cdev_put()' is called, the reference
-count on the kobject is dropped and, if nobody else has taken a reference,
-the release function is called which finally clears 'inode->i_cdev' from
-'cdev_purge()' before potentially freeing the object. The problem here
-is that a racing thread can happily take the 'cdev_lock' and see the
-non-NULL pointer in the inode, which can result in a refcount increment
-from zero and a warning:
+This fix addresses CVE-2019-14895.
 
-  |  ------------[ cut here ]------------
-  |  refcount_t: addition on 0; use-after-free.
-  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
-  |  Modules linked in:
-  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
-  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
-  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
-  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
-  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
-  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
-  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
-  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
-  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
-  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
-  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
-  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  |  Call Trace:
-  |   kobject_get+0x5c/0x60
-  |   cdev_get+0x2b/0x60
-  |   chrdev_open+0x55/0x220
-  |   ? cdev_put.part.3+0x20/0x20
-  |   do_dentry_open+0x13a/0x390
-  |   path_openat+0x2c8/0x1470
-  |   do_filp_open+0x93/0x100
-  |   ? selinux_file_ioctl+0x17f/0x220
-  |   do_sys_open+0x186/0x220
-  |   do_syscall_64+0x48/0x150
-  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  |  RIP: 0033:0x7f3b87efcd0e
-  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
-  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
-  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
-  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
-  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
-  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
-  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
-  |  ---[ end trace 24f53ca58db8180a ]---
-
-Since 'cdev_get()' can already fail to obtain a reference, simply move
-it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
-which will cause the racing thread to return -ENXIO if the initialising
-thread fails unexpectedly.
-
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191219120203.32691-1-will@kernel.org
+Reported-by: huangwen <huangwenabc@gmail.com>
+Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/char_dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/char_dev.c
-+++ b/fs/char_dev.c
-@@ -332,7 +332,7 @@ static struct kobject *cdev_get(struct c
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -271,6 +271,14 @@ static int mwifiex_process_country_ie(st
+ 			    "11D: skip setting domain info in FW\n");
+ 		return 0;
+ 	}
++
++	if (country_ie_len >
++	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		mwifiex_dbg(priv->adapter, ERROR,
++			    "11D: country_ie_len overflow!, deauth AP\n");
++		return -EINVAL;
++	}
++
+ 	memcpy(priv->adapter->country_code, &country_ie[2], 2);
  
- 	if (owner && !try_module_get(owner))
- 		return NULL;
--	kobj = kobject_get(&p->kobj);
-+	kobj = kobject_get_unless_zero(&p->kobj);
- 	if (!kobj)
- 		module_put(owner);
- 	return kobj;
+ 	domain_info->country_code[0] = country_ie[2];
+@@ -314,8 +322,9 @@ int mwifiex_bss_start(struct mwifiex_pri
+ 	priv->scan_block = false;
+ 
+ 	if (bss) {
+-		if (adapter->region_code == 0x00)
+-			mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00 &&
++		    mwifiex_process_country_ie(priv, bss))
++			return -EINVAL;
+ 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
 
 
