@@ -2,61 +2,70 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C80CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9D3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E86F24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975A424673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fm/TVH0m"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pk6gO3ry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgANUJI (ORCPT
+        id S1728801AbgANUL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:09:08 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:53226 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727556AbgANUI5 (ORCPT
+        Tue, 14 Jan 2020 15:11:29 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45165 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgANUL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:08:57 -0500
-Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C556C4049B;
-        Tue, 14 Jan 2020 20:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579032536; bh=f5GlxhH1g7W0d3zEgvx81jnLwcqIiTTmh3wCeGRzGW0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fm/TVH0mNkG5VblJWaqvz2mdAEeXboKh6uXtqrQv8g6K4lppyWbpONWze6HfTGsuk
-         D2nlY9m6Pj5TuT/CDkL/5sqZREDt6Zglbeh2zl2SeWZnT2t8hTzfTfGOBNL6qjn2ze
-         l+6kT7uCoaj6sPfP0fVQF0cAeyMFvxfLBseZ3fZnwnYBiRxvXI19qO5Z2DoBJKZnwh
-         OXJ0kTUQXr9X/Q6zhLzEm7kiJ+wGcLkYjxUHfkIx8UvjwO7rnNCDjoGqDi9kudoPcV
-         4I1HXDCoIfP3aTmCGr+u+jl1aLHOa6jxn1p9w8TUZ6nT7hprCvrRNupN9xnlctaqnw
-         IHOf0LtcpCi1A==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.25])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 88973A0096;
-        Tue, 14 Jan 2020 20:08:51 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [RFC 0/4] Switching ARC to optimized generic strncpy_from_user
-Date:   Tue, 14 Jan 2020 12:08:42 -0800
-Message-Id: <20200114200846.29434-1-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Jan 2020 15:11:29 -0500
+Received: by mail-qv1-f68.google.com with SMTP id l14so6284299qvu.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:11:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qBp3Gt/C+a/mHRpipU20c3QaHKvIEsS9ocruCJDZZhE=;
+        b=pk6gO3ry5wNUzd/t243vbBkeE+MDmMeF+1KrIkjJBT/AhgL4JEKmh4UN3hSngT6aG3
+         s4YyCYSJR48wyozqNncYg3yc3kFwVQ85HD8EEyz65dIgFlIkNrm24+JwhhJeVLQqn0R9
+         5eWxKX5YjIymf+FI6ozamFVtZ216TCUKUOKwQyyavzhz3tlwtNS88w3UCNRUKKB/vbN2
+         IBeu/o+ArE6aCPZyeA2Vluva4jEfnQX/dC34VXRf5XfjNSIQnCMlutDeuLABBSm3L2W6
+         c7vhVZsf1gSRjij4tRPuLyNVkhHUMAcFPrCalN1BqrWeTJc38vo2XsusRoB8/jbJiNKF
+         4lZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qBp3Gt/C+a/mHRpipU20c3QaHKvIEsS9ocruCJDZZhE=;
+        b=PMZRqBh8apOX+CUlu/ZBweWj9u/xKhDUbJLcLGaLF9RswJMnDns6+T1HHwVIVWqloS
+         TrO4ZM6PgHzbxWjxndOLqMvWVtOTp/xrHGzSdb7Q0k3g+ajP6m5qfKeXWjVo8Nv5syoQ
+         oMBAsPvsFTbTu+XBaVfazv8jcB/paRWLJuNTshp/2phA+VZnx0ZhSp7eel04hBB0ukEe
+         S51zLFRqVao4NY79O4h4oYXCTbWJQ3RiTcKq5HfEldvieTWTnJJHGOTH0ZRjAukdpiSJ
+         jopJIam1uBDKf4yS20kQq5GeUwcagGJ/ZG22gpc7GIdz3fLlc/W8fldwfSm6EyL+JwEu
+         StPQ==
+X-Gm-Message-State: APjAAAVXW1UxltVk5QwcuyXL4RD26Luq2kkfoHYhDqefnZWfnbU5x7bK
+        CONewGbOeYCfn9o5ZV4ucVPr4Q==
+X-Google-Smtp-Source: APXvYqzxZ8pgPcoyA9hDnr6J0eUQT4XcUQ6l54zl8N2EkmcgtTpRJuaSSDwK+/DZmuoelSC7OCcxrw==
+X-Received: by 2002:a0c:e28e:: with SMTP id r14mr18896392qvl.234.1579032688196;
+        Tue, 14 Jan 2020 12:11:28 -0800 (PST)
+Received: from ovpn-120-31.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j15sm7912023qtn.37.2020.01.14.12.11.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 12:11:27 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, sergey.senozhatsky.work@gmail.com,
+        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
+        david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/hotplug: silence a lockdep splat with printk()
+Date:   Tue, 14 Jan 2020 15:11:14 -0500
+Message-Id: <20200114201114.14696-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,41 +73,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Similar to the recent commit [1] merged into the random and -next trees,
+it is not a good idea to call printk() with zone->lock held. The
+standard fix is to use printk_deferred() in those places, but memory
+offline will call dump_page() which need to defer after the lock. While
+at it, remove a similar but unnecessary debug printk() as well.
 
-This came up when trying to move ARC over to generic word-at-a-time
-interface.
+[1] https://lore.kernel.org/lkml/1573679785-21068-1-git-send-email-cai@lca.pw/
 
- - 1/4 is a trivial fix (and needed for ARC switch)
- - 2/4 is mucking with internals hence the RFC. I could very likely be
-   overlooking some possible DoS / exploit issues and apologies in advance
-   if thats the case but I felt like sharing it anyways to see what
-   others think.
- - 3/4, 4/4 are ARC changes to remove the existing ARC version and
-   switch to generic (needs 1/4).
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/page-isolation.h |  2 +-
+ mm/memory_hotplug.c            |  2 +-
+ mm/page_alloc.c                | 12 +++++-------
+ mm/page_isolation.c            | 10 +++++++++-
+ 4 files changed, 16 insertions(+), 10 deletions(-)
 
-Thx,
--Vineet
-
-Vineet Gupta (4):
-  asm-generic/uaccess: don't define inline functions if noinline lib/*
-    in use
-  lib/strncpy_from_user: Remove redundant user space pointer range check
-  ARC: uaccess: remove noinline variants of __strncpy_from_user() and
-    friends
-  ARC: uaccess: use optimized generic __strnlen_user/__strncpy_from_user
-
- arch/arc/Kconfig                      |  2 +
- arch/arc/include/asm/Kbuild           |  1 -
- arch/arc/include/asm/uaccess.h        | 87 ++-------------------------
- arch/arc/include/asm/word-at-a-time.h | 49 +++++++++++++++
- arch/arc/mm/extable.c                 | 23 -------
- include/asm-generic/uaccess.h         |  4 ++
- lib/strncpy_from_user.c               | 36 ++++-------
- lib/strnlen_user.c                    | 28 +++------
- 8 files changed, 79 insertions(+), 151 deletions(-)
- create mode 100644 arch/arc/include/asm/word-at-a-time.h
-
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+index 148e65a9c606..5d8ba078006f 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -34,7 +34,7 @@ static inline bool is_migrate_isolate(int migratetype)
+ #define REPORT_FAILURE	0x2
+ 
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+-			 int flags);
++			 int flags, char *dump);
+ void set_pageblock_migratetype(struct page *page, int migratetype);
+ int move_freepages_block(struct zone *zone, struct page *page,
+ 				int migratetype, int *num_movable);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7a6de9b0dcab..f10928538fa3 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1149,7 +1149,7 @@ static bool is_pageblock_removable_nolock(unsigned long pfn)
+ 		return false;
+ 
+ 	return !has_unmovable_pages(zone, page, MIGRATE_MOVABLE,
+-				    MEMORY_OFFLINE);
++				    MEMORY_OFFLINE, NULL);
+ }
+ 
+ /* Checks if this range of memory is likely to be hot-removable. */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index e56cd1f33242..b6bec3925e80 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8204,7 +8204,7 @@ void *__init alloc_large_system_hash(const char *tablename,
+  * race condition. So you can't expect this function should be exact.
+  */
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+-			 int flags)
++			 int flags, char *dump)
+ {
+ 	unsigned long iter = 0;
+ 	unsigned long pfn = page_to_pfn(page);
+@@ -8305,8 +8305,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+ 	return false;
+ unmovable:
+ 	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+-	if (flags & REPORT_FAILURE)
+-		dump_page(pfn_to_page(pfn + iter), reason);
++	if (flags & REPORT_FAILURE) {
++		page = pfn_to_page(pfn + iter);
++		strscpy(dump, reason, 64);
++	}
+ 	return true;
+ }
+ 
+@@ -8711,10 +8713,6 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 		BUG_ON(!PageBuddy(page));
+ 		order = page_order(page);
+ 		offlined_pages += 1 << order;
+-#ifdef CONFIG_DEBUG_VM
+-		pr_info("remove from free list %lx %d %lx\n",
+-			pfn, 1 << order, end_pfn);
+-#endif
+ 		del_page_from_free_area(page, &zone->free_area[order]);
+ 		pfn += (1 << order);
+ 	}
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index 1f8b9dfecbe8..ce0fe3c1ceff 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -20,6 +20,7 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 	struct zone *zone;
+ 	unsigned long flags;
+ 	int ret = -EBUSY;
++	char dump[64];
+ 
+ 	zone = page_zone(page);
+ 
+@@ -37,7 +38,8 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 	 * FIXME: Now, memory hotplug doesn't call shrink_slab() by itself.
+ 	 * We just check MOVABLE pages.
+ 	 */
+-	if (!has_unmovable_pages(zone, page, migratetype, isol_flags)) {
++	if (!has_unmovable_pages(zone, page, migratetype, isol_flags,
++				 dump)) {
+ 		unsigned long nr_pages;
+ 		int mt = get_pageblock_migratetype(page);
+ 
+@@ -54,6 +56,12 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+ 	if (!ret)
+ 		drain_all_pages(zone);
++	else if (isol_flags & REPORT_FAILURE)
++		/*
++		 * printk() with zone->lock held will guarantee to trigger a
++		 * lockdep splat, so defer it here.
++		 */
++		dump_page(page, dump);
+ 	return ret;
+ }
+ 
 -- 
-2.20.1
+2.21.0 (Apple Git-122.2)
 
