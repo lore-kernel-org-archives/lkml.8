@@ -2,91 +2,118 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2051C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BFBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889A724685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5B82465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFOhR3Fq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgANNJC (ORCPT
+        id S1728057AbgANNKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:09:02 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11756 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgANNJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:09:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 05:09:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="256295592"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 05:09:00 -0800
-Subject: Re: [PATCH] mmc: sdhci: fix minimum clock rate for v3 controller
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-mmc@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org
-References: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <4264051e-6126-83c3-e49e-3d9050ff35ce@intel.com>
-Date:   Tue, 14 Jan 2020 15:08:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 08:10:52 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57132 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726014AbgANNKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:10:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579007449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QYRkIRZn0ZoxpR/xXmi8xhkYGv+QH1Q2b0cVKYeNAcg=;
+        b=IFOhR3Fq/DWXRczT2kKbMinWAkaaQpbQuNo6ogLBRaXHAlUUDJgxyyCyhXRZizZSNJGoAS
+        FjLzlU+0rQQ6whWnrc3NWg851KQZqozg15UPwF4tF03STanvz+xSvFRZ4R+W2+4RVJSffQ
+        UmgXzdiZXv4oHFkrOVgMnaqHprWhYHY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-131-X3bcbHaVMQW5sU9Eh-hs5A-1; Tue, 14 Jan 2020 08:10:45 -0500
+X-MC-Unique: X3bcbHaVMQW5sU9Eh-hs5A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BFB51902EC2;
+        Tue, 14 Jan 2020 13:10:44 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-200-45.brq.redhat.com [10.40.200.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DEC25E240;
+        Tue, 14 Jan 2020 13:10:24 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
+        haiyangz@microsoft.com, netdev@vger.kernel.org
+Cc:     kys@microsoft.com, sashal@kernel.org, vkuznets@redhat.com,
+        cavery@redhat.com, linux-kernel@vger.kernel.org,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH v2] hv_netvsc: Fix memory leak when removing rndis device
+Date:   Tue, 14 Jan 2020 15:09:50 +0200
+Message-Id: <20200114130950.6962-1-mgamal@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/01/20 12:51 pm, Michał Mirosław wrote:
-> For SDHCIv3+ with programmable clock mode, minimal clock frequency is
-> still base clock / max(divider). Minimal programmable clock frequency is
-> always greater than minimal divided clock frequency. Without this patch,
-> SDHCI uses out-of-spec initial frequency when multiplier is big enough:
-> 
-> mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
-> [for 480 MHz source clock divided by 1024]
+kmemleak detects the following memory leak when hot removing
+a network device:
 
-The maximum divisor in programmable clock mode is 1024.  So I do not
-understand what is wrong.  Can you explain some more?
+unreferenced object 0xffff888083f63600 (size 256):
+  comm "kworker/0:1", pid 12, jiffies 4294831717 (age 1113.676s)
+  hex dump (first 32 bytes):
+    00 40 c7 33 80 88 ff ff 00 00 00 00 10 00 00 00  .@.3............
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+  backtrace:
+    [<00000000d4a8f5be>] rndis_filter_device_add+0x117/0x11c0 [hv_netvsc]
+    [<000000009c02d75b>] netvsc_probe+0x5e7/0xbf0 [hv_netvsc]
+    [<00000000ddafce23>] vmbus_probe+0x74/0x170 [hv_vmbus]
+    [<00000000046e64f1>] really_probe+0x22f/0xb50
+    [<000000005cc35eb7>] driver_probe_device+0x25e/0x370
+    [<0000000043c642b2>] bus_for_each_drv+0x11f/0x1b0
+    [<000000005e3d09f0>] __device_attach+0x1c6/0x2f0
+    [<00000000a72c362f>] bus_probe_device+0x1a6/0x260
+    [<0000000008478399>] device_add+0x10a3/0x18e0
+    [<00000000cf07b48c>] vmbus_device_register+0xe7/0x1e0 [hv_vmbus]
+    [<00000000d46cf032>] vmbus_add_channel_work+0x8ab/0x1770 [hv_vmbus]
+    [<000000002c94bb64>] process_one_work+0x919/0x17d0
+    [<0000000096de6781>] worker_thread+0x87/0xb40
+    [<00000000fbe7397e>] kthread+0x333/0x3f0
+    [<000000004f844269>] ret_from_fork+0x3a/0x50
 
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/mmc/host/sdhci.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 275102c0a1bf..0036ddf85674 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3902,11 +3902,9 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	if (host->ops->get_min_clock)
->  		mmc->f_min = host->ops->get_min_clock(host);
->  	else if (host->version >= SDHCI_SPEC_300) {
-> -		if (host->clk_mul) {
-> -			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
-> +		if (host->clk_mul)
->  			max_clk = host->max_clk * host->clk_mul;
-> -		} else
-> -			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-> +		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
->  	} else
->  		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
->  
-> 
+rndis_filter_device_add() allocates an instance of struct rndis_device
+which never gets deallocated as rndis_filter_device_remove() sets
+net_device->extension which points to the rndis_device struct to NULL,
+leaving the rndis_device dangling.
+
+Since net_device->extension is eventually freed in free_netvsc_device(),
+we refrain from setting it to NULL inside rndis_filter_device_remove()
+
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+---
+ drivers/net/hyperv/rndis_filter.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
+_filter.c
+index 857c4bea451c..e66d77dc28c8 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -1443,8 +1443,6 @@ void rndis_filter_device_remove(struct hv_device *d=
+ev,
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
+=20
+-	net_dev->extension =3D NULL;
+-
+ 	netvsc_device_remove(dev);
+ }
+=20
+--=20
+2.21.0
 
