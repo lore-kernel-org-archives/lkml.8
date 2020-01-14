@@ -2,86 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B504AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF158C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D53F2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579020350;
-	bh=rH/RDxa3aDON1h6odC8ATdFjCaRm+9u0dtk/K0hiIXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=idhJ/EAWOw4DDqaaXDHdDhhvXIQpuopj9BjGj3LKTseAcze0P/8rubK/s6wROZIvT
-	 Dukgr5KM73dCdjR4UkcfxP75GyHiGs7o9yJAj/oGlutlbNieEDJrtpje60/3i/0Wkf
-	 0exRW0ZQ50Jy3ddTTP6jCj8aWtzZy1czrb139TuY=
+	by mail.kernel.org (Postfix) with ESMTP id A4EAB24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d2OVa2oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgANQpt (ORCPT
+        id S1728787AbgANQp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:45:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANQpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:45:49 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61ED72075B;
-        Tue, 14 Jan 2020 16:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579020349;
-        bh=rH/RDxa3aDON1h6odC8ATdFjCaRm+9u0dtk/K0hiIXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hmsaowv+R3R8eS752gOgWAxq6ARtQoXDTAs36J0Y07vEKJc1daHBkPor8BVcONK6I
-         Uvz3JrLvGLDQqzFaa7XbpaR6i4AK5K8hPJZai1epyL7ftf4czsPSdaZnFPfRtTuz1R
-         s5XgCnLah2e0bPTkqUvV384qlEgPKXqID8lB+H/c=
-Date:   Tue, 14 Jan 2020 16:45:44 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Steven Price <steven.price@arm.com>, maz@kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH v5 0/3] arm64: Workaround for Cortex-A55 erratum 1530923
-Message-ID: <20200114164543.GD2579@willie-the-truck>
-References: <20191216115631.17804-1-steven.price@arm.com>
+        Tue, 14 Jan 2020 11:45:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33284 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgANQp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:45:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Flw8yamdhbUI/Y8isJM9I81gkbm2so+Fjah3kdZccsI=; b=d2OVa2oiSFbtq1TKQwTTOGbix
+        +J7m6UjsOOPGsrC7vja9rBloPfhe00FEHIT2QzGCRF3/8hg290T8McF7EA/HHhSz8ovVYDTk9AoYw
+        PuLWKu7sggYQj7lxpZUbRHHsmLhv85btRed/hc55TtkxEekUY4XmMHozA3Fm6pPgm0UGYpXNg30lu
+        3WczxIg7RBeglC/yD3ZQvBgDHrjkEKoqLLiG2DcEQfKzEgj+jpMj0jIlav9pLkiSqiFxxWJzaatiR
+        n4EOUYy93yNWtzTH2Blz7OcnE3+7BcitVKqeNU2fxJ5bziallXXPHLAkE1RRhSAp3GLI1pfqZXg3M
+        GVvDl87eQ==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irPKI-0007IP-Gy; Tue, 14 Jan 2020 16:45:58 +0000
+Subject: Re: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
+        rjw@rjwysocki.net, dmitry.torokhov@gmail.com, sfr@canb.auug.org.au,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
+References: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
+ <2242e184-93a5-147d-d603-4017ca86eba9@infradead.org>
+ <alpine.LRH.2.20.2001141639240.15464@dhcp-10-175-171-251.vpn.oracle.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <51d7d427-2ef6-b0cd-ad23-2fb75b06b763@infradead.org>
+Date:   Tue, 14 Jan 2020 08:45:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216115631.17804-1-steven.price@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LRH.2.20.2001141639240.15464@dhcp-10-175-171-251.vpn.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 11:56:28AM +0000, Steven Price wrote:
-> Version 5 is a rebasing of version 4 (no changes).
+On 1/14/20 8:42 AM, Alan Maguire wrote:
+> On Tue, 14 Jan 2020, Randy Dunlap wrote:
 > 
-> This series enables a workaround for Cortex-A55 erratum 1530923. The
-> erratum potentially allows TLB entries to be allocated as a result of a
-> speculative AT instruction. This may happen in the middle of a guest
-> world switch while the relevant VMSA configuration is in an inconsistent
-> state, leading to erroneous content being allocated into TLBs.
+>> Hi Alan,
+>>
+>> On 1/14/20 8:09 AM, Alan Maguire wrote:
+>>> currently the property entry kunit tests are built if CONFIG_KUNIT=y.
+>>> This will cause warnings when merged with the kunit tree that now
+>>> supports tristate CONFIG_KUNIT.  While the tests appear to compile
+>>> as a module, we get a warning about missing module license.
+>>>
+>>> It's better to have a per-test suite CONFIG variable so that
+>>> we can do selective building of kunit-based suites, and can
+>>> also avoid merge issues like this.
+>>>
+>>> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>>
 > 
-> There are existing workarounds for similar issues, 1165522 is
-> effectively the same, and 1319367/1319537 is similar but without VHE
-> support.  Rather than add to the selection of errata, the first patch
-> renames 1165522 to WORKAROUND_SPECULATIVE_AT which can be reused (in the
-> final patch) for 1530923.
+> Apologies for missing you out here.
+>  
+>>> Fixes: c032ace71c29 ("software node: add basic tests for property entries")
+>>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+>>> ---
+>>>  drivers/base/test/Kconfig  | 3 +++
+>>>  drivers/base/test/Makefile | 2 +-
+>>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+>>> index 86e85da..d29ae95 100644
+>>> --- a/drivers/base/test/Kconfig
+>>> +++ b/drivers/base/test/Kconfig
+>>> @@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
+>>>  	  The module name will be test_async_driver_probe.ko
+>>>  
+>>>  	  If unsure say N.
+>>> +config KUNIT_DRIVER_PE_TEST
+>>> +	bool "KUnit Tests for property entry API"
+>>> +	depends on KUNIT
+>>
+>> Why is this bool instead of tristate?
+>>
 > 
-> The workaround for errata 1319367 and 1319537 although similar cannot
-> use VHE (not available on those CPUs) so cannot share the workaround.
-> However, to keep some sense of symmetry the workaround is renamed to
-> SPECULATIVE_AT_NVHE.
-> 
-> Changes since v4:
->  * Rebased to v5.5-rc1
+> The support for building kunit and kunit tests as modules has not merged 
+> into linux-next yet, so if we set the option to tristate the build would
+> fail for allmodconfig builds.   Once it's merged we can revisit though; I 
+> should have mentioned this, thanks for reminding me!
 
-Looks fine to me. Marc, are you ok with me queueing this via arm64 (that's
-where the existing workarounds came from), or would you prefer to take them
-via kvm-arm?
+Oh. I see.  Thanks.
 
-Will
+-- 
+~Randy
+
