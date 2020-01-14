@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D31C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472FDC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1527124685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1B02467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgANNDx (ORCPT
+        id S1728926AbgANNCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:03:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43215 "EHLO
+        Tue, 14 Jan 2020 08:02:32 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43170 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgANNCe (ORCPT
+        with ESMTP id S1728876AbgANNC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:02:34 -0500
+        Tue, 14 Jan 2020 08:02:28 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLpu-0004fM-HP; Tue, 14 Jan 2020 14:02:22 +0100
+        id 1irLpw-0004fy-S7; Tue, 14 Jan 2020 14:02:25 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 669831C0820;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9EA1C1C0821;
         Tue, 14 Jan 2020 14:02:17 +0100 (CET)
 Date:   Tue, 14 Jan 2020 13:02:17 -0000
 From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-timers: Make clock_nanosleep() time namespace aware
+Subject: [tip: timers/core] hrtimers: Prepare hrtimer_nanosleep() for time namespaces
 Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-18-dima@arista.com>
-References: <20191112012724.250792-18-dima@arista.com>
+In-Reply-To: <20191112012724.250792-17-dima@arista.com>
+References: <20191112012724.250792-17-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157900693724.396.15529903988053697826.tip-bot2@tip-bot2>
+Message-ID: <157900693748.396.7774588643324768623.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,114 +56,150 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     1f9b37bfbb607a09d838c248843e63a2cafe1080
-Gitweb:        https://git.kernel.org/tip/1f9b37bfbb607a09d838c248843e63a2cafe1080
-Author:        Andrei Vagin <avagin@openvz.org>
-AuthorDate:    Tue, 12 Nov 2019 01:27:06 
+Commit-ID:     ea2d1f7fce0f18b67f915c00c6a7a6860116bc92
+Gitweb:        https://git.kernel.org/tip/ea2d1f7fce0f18b67f915c00c6a7a6860116bc92
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:05 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 14 Jan 2020 12:20:55 +01:00
 
-posix-timers: Make clock_nanosleep() time namespace aware
+hrtimers: Prepare hrtimer_nanosleep() for time namespaces
 
-clock_nanosleep() accepts absolute values of expiration time, if the
-TIMER_ABSTIME flag is set. This value is in the tasks time namespace,
-which has to be converted to the host time namespace.
+clock_nanosleep() accepts absolute values of expiration time when
+TIMER_ABSTIME flag is set. This absolute value is inside the task's
+time namespace, and has to be converted to the host's time.
+
+There is timens_ktime_to_host() helper for converting time, but
+it accepts ktime argument.
+
+As a preparation, make hrtimer_nanosleep() accept a clock value in ktime
+instead of timespec64.
 
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-18-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-17-dima@arista.com
 
 
 ---
- kernel/time/posix-stubs.c  | 12 ++++++++++--
- kernel/time/posix-timers.c | 17 +++++++++++++++--
- 2 files changed, 25 insertions(+), 4 deletions(-)
+ include/linux/hrtimer.h        |  3 +--
+ kernel/time/hrtimer.c          | 12 +++++++-----
+ kernel/time/posix-stubs.c      |  4 ++--
+ kernel/time/posix-timers.c     |  4 +++-
+ tools/perf/examples/bpf/5sec.c |  6 ++++--
+ 5 files changed, 17 insertions(+), 12 deletions(-)
 
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 1f98b52..15c8ac3 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -508,8 +508,7 @@ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
+ /* Precise sleep: */
+ 
+ extern int nanosleep_copyout(struct restart_block *, struct timespec64 *);
+-extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
+-			      const enum hrtimer_mode mode,
++extern long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
+ 			      const clockid_t clockid);
+ 
+ extern int schedule_hrtimeout_range(ktime_t *expires, u64 delta,
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 8de90ea..d8b62f9 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1910,8 +1910,8 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
+ 	return ret;
+ }
+ 
+-long hrtimer_nanosleep(const struct timespec64 *rqtp,
+-		       const enum hrtimer_mode mode, const clockid_t clockid)
++long hrtimer_nanosleep(ktime_t rqtp, const enum hrtimer_mode mode,
++		       const clockid_t clockid)
+ {
+ 	struct restart_block *restart;
+ 	struct hrtimer_sleeper t;
+@@ -1923,7 +1923,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
+ 		slack = 0;
+ 
+ 	hrtimer_init_sleeper_on_stack(&t, clockid, mode);
+-	hrtimer_set_expires_range_ns(&t.timer, timespec64_to_ktime(*rqtp), slack);
++	hrtimer_set_expires_range_ns(&t.timer, rqtp, slack);
+ 	ret = do_nanosleep(&t, mode);
+ 	if (ret != -ERESTART_RESTARTBLOCK)
+ 		goto out;
+@@ -1958,7 +1958,8 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
+ 
+ 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+ 	current->restart_block.nanosleep.rmtp = rmtp;
+-	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
++	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL,
++				 CLOCK_MONOTONIC);
+ }
+ 
+ #endif
+@@ -1978,7 +1979,8 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
+ 
+ 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+-	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
++	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL,
++				 CLOCK_MONOTONIC);
+ }
+ #endif
+ 
 diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-index 5745a13..fcb3b21 100644
+index bcbaa20..5745a13 100644
 --- a/kernel/time/posix-stubs.c
 +++ b/kernel/time/posix-stubs.c
-@@ -129,6 +129,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
- 		struct __kernel_timespec __user *, rmtp)
- {
- 	struct timespec64 t;
-+	ktime_t texp;
- 
- 	switch (which_clock) {
- 	case CLOCK_REALTIME:
-@@ -147,7 +148,10 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+@@ -147,7 +147,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
  		rmtp = NULL;
  	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
  	current->restart_block.nanosleep.rmtp = rmtp;
--	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
-+	texp = timespec64_to_ktime(t);
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(which_clock, texp);
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+-	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
++	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
  				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
  				 which_clock);
  }
-@@ -218,6 +222,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- 		struct old_timespec32 __user *, rmtp)
- {
- 	struct timespec64 t;
-+	ktime_t texp;
- 
- 	switch (which_clock) {
- 	case CLOCK_REALTIME:
-@@ -236,7 +241,10 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+@@ -236,7 +236,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
  		rmtp = NULL;
  	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
  	current->restart_block.nanosleep.compat_rmtp = rmtp;
--	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
-+	texp = timespec64_to_ktime(t);
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(which_clock, texp);
-+	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+-	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
++	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
  				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
  				 which_clock);
  }
 diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 75fee6e..ff0eb30 100644
+index 473082b..75fee6e 100644
 --- a/kernel/time/posix-timers.c
 +++ b/kernel/time/posix-timers.c
-@@ -1228,6 +1228,19 @@ static int common_nsleep(const clockid_t which_clock, int flags,
- 				 which_clock);
- }
- 
-+static int common_nsleep_timens(const clockid_t which_clock, int flags,
-+			 const struct timespec64 *rqtp)
-+{
+@@ -1221,7 +1221,9 @@ SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
+ static int common_nsleep(const clockid_t which_clock, int flags,
+ 			 const struct timespec64 *rqtp)
+ {
+-	return hrtimer_nanosleep(rqtp, flags & TIMER_ABSTIME ?
 +	ktime_t texp = timespec64_to_ktime(*rqtp);
 +
-+	if (flags & TIMER_ABSTIME)
-+		texp = timens_ktime_to_host(which_clock, texp);
-+
 +	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
-+				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
-+				 which_clock);
-+}
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+diff --git a/tools/perf/examples/bpf/5sec.c b/tools/perf/examples/bpf/5sec.c
+index b9c2032..e6b6181 100644
+--- a/tools/perf/examples/bpf/5sec.c
++++ b/tools/perf/examples/bpf/5sec.c
+@@ -41,9 +41,11 @@
+ 
+ #include <bpf.h>
+ 
+-int probe(hrtimer_nanosleep, rqtp->tv_sec)(void *ctx, int err, long sec)
++#define NSEC_PER_SEC	1000000000L
 +
- SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
- 		const struct __kernel_timespec __user *, rqtp,
- 		struct __kernel_timespec __user *, rmtp)
-@@ -1305,7 +1318,7 @@ static const struct k_clock clock_monotonic = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_timespec	= posix_get_monotonic_timespec,
- 	.clock_get_ktime	= posix_get_monotonic_ktime,
--	.nsleep			= common_nsleep,
-+	.nsleep			= common_nsleep_timens,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
- 	.timer_get		= common_timer_get,
-@@ -1354,7 +1367,7 @@ static const struct k_clock clock_boottime = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_ktime	= posix_get_boottime_ktime,
- 	.clock_get_timespec	= posix_get_boottime_timespec,
--	.nsleep			= common_nsleep,
-+	.nsleep			= common_nsleep_timens,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
- 	.timer_get		= common_timer_get,
++int probe(hrtimer_nanosleep, rqtp)(void *ctx, int err, long long sec)
+ {
+-	return sec == 5;
++	return sec / NSEC_PER_SEC == 5ULL;
+ }
+ 
+ license(GPL);
