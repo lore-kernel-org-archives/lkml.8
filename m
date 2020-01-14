@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46531C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A226C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19CC5222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203612467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kThH+XYf"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CSJ1TE9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgANQJv (ORCPT
+        id S1729365AbgANQJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:09:51 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:40762 "EHLO
+        Tue, 14 Jan 2020 11:09:48 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:40754 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729317AbgANQJn (ORCPT
+        by vger.kernel.org with ESMTP id S1729010AbgANQJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 11:09:43 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A9A60C0625;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8BBB0C0622;
         Tue, 14 Jan 2020 16:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579018182; bh=IpgC8gwCLfuMhlz/18scusRLH4OpcFzXcL5IZQwNnHQ=;
+        t=1579018181; bh=ZUcejPObu8oHBPIY+jDHZmtqjrP/NpkNh9B+0IOcr6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=kThH+XYfPaJRH4DPNarOkI+XphSw/f6G6Ld25d7xlQ7r/qhsDgyU3gPBfAAmk2hue
-         r4x8azQ3rkTEppHVrggSEFU0hz3f9SCJmMVARO9NxY/F1nhTPYS1LB/mI2oh90uDNB
-         Cm3udueCSmYBnpC9pZCdXSwfqhFkevW2isarqK4erxL8fA02uJ6mcfNaJEb2YfFz9B
-         Eu9Yc2t1nxqvr0i/d4AUopRG2Yz37eiEqNrN4E7feik5iwQTSqZtxYep8IErQE89j/
-         EZmn3qNVIR8gMDt4WDwu46jS2MXw9EJuqulIRnqBvn1ikQyJSVRUmzHd6P0KBe7zlo
-         19cSyJMmQViwQ==
+        b=CSJ1TE9Da/2Cwv52ZJtVkmhg0oeulSS5Z1nmTFqNa1dItw/2WpgwT8ylC5h1Minmj
+         qvdPb3KAvc6lHu3r2QSM9PJCeUFOwb4A8p0cfPNAOnkY+d58kbdk8P4xADU/z3N83b
+         arX9mSmc5CfoRMOxj5dJrLJGwDIqtpgLpdbbtpcG01XSQv1XN6F+GVngvA1VVrwNVw
+         FDbT6mtUQzN8eA6UtVp9vJwSq5O5Be3f6M2d1bTXuJ8IwGyiexWbrOC9v6ObU77kyc
+         dzRVdO5teG6TPopscRVdxmJl3UfJhKmIOR8cazKNCmsHEmBKwwzx4PpvSY8u8O759A
+         PkgnepzRaPYQQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 136EAA0061;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 32E86A0072;
         Tue, 14 Jan 2020 16:09:35 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -55,9 +55,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
         Vineet Gupta <Vineet.Gupta1@synopsys.com>,
         linux-snps-arc@lists.infradead.org
-Subject: [PATCH net 1/4] net: stmmac: selftests: Make it work in Synopsys AXS101 boards
-Date:   Tue, 14 Jan 2020 17:09:21 +0100
-Message-Id: <73b03cd37079ed3e2a5bc8568bcaa21dffe6198a.1579017787.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 3/4] net: stmmac: selftests: Guard VLAN Perfect test against non supported HW
+Date:   Tue, 14 Jan 2020 17:09:23 +0100
+Message-Id: <8dd7b44a9daa12301b34c3cb4b393c6d0e4a104a.1579017787.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1579017787.git.Jose.Abreu@synopsys.com>
 References: <cover.1579017787.git.Jose.Abreu@synopsys.com>
@@ -68,12 +68,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synopsys AXS101 boards do not support unaligned memory loads or stores.
-Change the selftests mechanism to explicity:
-- Not add extra alignment in TX SKB
-- Use the unaligned version of ether_addr_equal()
+When HW does not support perfect filtering the feature will not be
+enabled in the net_device. Add a check for this to prevent failures.
 
-Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Fixes: 1b2250a04c1f ("net: stmmac: selftests: Add tests for VLAN Perfect Filtering")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -90,79 +88,33 @@ Cc: Alexey Brodkin <abrodkin@synopsys.com>
 Cc: Vineet Gupta <vgupta@synopsys.com>
 Cc: linux-snps-arc@lists.infradead.org
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c   | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 36a4c43a799a..6516d65e84b8 100644
+index 7edee3c87ac9..450d7dac3ea6 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -80,7 +80,7 @@ static struct sk_buff *stmmac_test_get_udp_skb(struct stmmac_priv *priv,
- 	if (attr->max_size && (attr->max_size > size))
- 		size = attr->max_size;
- 
--	skb = netdev_alloc_skb_ip_align(priv->dev, size);
-+	skb = netdev_alloc_skb(priv->dev, size);
- 	if (!skb)
- 		return NULL;
- 
-@@ -244,6 +244,8 @@ static int stmmac_test_loopback_validate(struct sk_buff *skb,
- 					 struct net_device *orig_ndev)
+@@ -971,6 +971,9 @@ static int stmmac_test_vlanfilt_perfect(struct stmmac_priv *priv)
  {
- 	struct stmmac_test_priv *tpriv = pt->af_packet_priv;
-+	unsigned char *src = tpriv->packet->src;
-+	unsigned char *dst = tpriv->packet->dst;
- 	struct stmmachdr *shdr;
- 	struct ethhdr *ehdr;
- 	struct udphdr *uhdr;
-@@ -260,15 +262,15 @@ static int stmmac_test_loopback_validate(struct sk_buff *skb,
- 		goto out;
+ 	int ret, prev_cap = priv->dma_cap.vlhash;
  
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
--	if (tpriv->packet->dst) {
--		if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
-+	if (dst) {
-+		if (!ether_addr_equal_unaligned(ehdr->h_dest, dst))
- 			goto out;
- 	}
- 	if (tpriv->packet->sarc) {
--		if (!ether_addr_equal(ehdr->h_source, ehdr->h_dest))
-+		if (!ether_addr_equal_unaligned(ehdr->h_source, ehdr->h_dest))
- 			goto out;
--	} else if (tpriv->packet->src) {
--		if (!ether_addr_equal(ehdr->h_source, tpriv->packet->src))
-+	} else if (src) {
-+		if (!ether_addr_equal_unaligned(ehdr->h_source, src))
- 			goto out;
- 	}
++	if (!(priv->dev->features & NETIF_F_HW_VLAN_CTAG_FILTER))
++		return -EOPNOTSUPP;
++
+ 	priv->dma_cap.vlhash = 0;
+ 	ret = __stmmac_test_vlanfilt(priv);
+ 	priv->dma_cap.vlhash = prev_cap;
+@@ -1063,6 +1066,9 @@ static int stmmac_test_dvlanfilt_perfect(struct stmmac_priv *priv)
+ {
+ 	int ret, prev_cap = priv->dma_cap.vlhash;
  
-@@ -714,7 +716,7 @@ static int stmmac_test_flowctrl_validate(struct sk_buff *skb,
- 	struct ethhdr *ehdr;
- 
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
--	if (!ether_addr_equal(ehdr->h_source, orig_ndev->dev_addr))
-+	if (!ether_addr_equal_unaligned(ehdr->h_source, orig_ndev->dev_addr))
- 		goto out;
- 	if (ehdr->h_proto != htons(ETH_P_PAUSE))
- 		goto out;
-@@ -856,7 +858,7 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
- 	}
- 
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
--	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->dst))
-+	if (!ether_addr_equal_unaligned(ehdr->h_dest, tpriv->packet->dst))
- 		goto out;
- 
- 	ihdr = ip_hdr(skb);
-@@ -1586,7 +1588,7 @@ static int stmmac_test_arp_validate(struct sk_buff *skb,
- 	struct arphdr *ahdr;
- 
- 	ehdr = (struct ethhdr *)skb_mac_header(skb);
--	if (!ether_addr_equal(ehdr->h_dest, tpriv->packet->src))
-+	if (!ether_addr_equal_unaligned(ehdr->h_dest, tpriv->packet->src))
- 		goto out;
- 
- 	ahdr = arp_hdr(skb);
++	if (!(priv->dev->features & NETIF_F_HW_VLAN_STAG_FILTER))
++		return -EOPNOTSUPP;
++
+ 	priv->dma_cap.vlhash = 0;
+ 	ret = __stmmac_test_dvlanfilt(priv);
+ 	priv->dma_cap.vlhash = prev_cap;
 -- 
 2.7.4
 
