@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6A4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8C2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9544F2467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ED2A2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996257;
-	bh=cDMPHelRIw699s8iZylocwWEmrlu9aghmUsMlfUg4AE=;
+	s=default; t=1578996260;
+	bh=2ejj/U4kx70Rb1UpkbNqX1RW2WtsjFSzCDYZstS/hTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILITTXc6E20yz5upxEY6HGnIATct1gx6YhWP+UEsMbjyQgask5e1CYVF35iYwVn/m
-	 OKhEAcoGBEMYbssEPfgBgQBkxryAYWv2XyT09aT+t/kIkWBKUihAMr+kS3m7vDlcXa
-	 Pb8wfnjC/Cz9JVZszcg4PmT7lgluHqChsNEeueWI=
+	b=uWNcAQq6W4bAx2IfwF4MKcQTh5SVIGt1a34BwQEkmirIWt0r0/w7q7P605urdikhX
+	 rLGFtw3eg6aEowMcUoUfCJ8r89obJcDHYcVW4vqd82RX9bti+sBmhIGOfoGEZ76lyT
+	 kklx8x5j3I2vA82RUaHKTArAOAMOla+jUO42pnrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgANKEQ (ORCPT
+        id S1729852AbgANKET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729019AbgANKEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:15 -0500
+        id S1729375AbgANKES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D6924676;
-        Tue, 14 Jan 2020 10:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B22924672;
+        Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996254;
-        bh=cDMPHelRIw699s8iZylocwWEmrlu9aghmUsMlfUg4AE=;
+        s=default; t=1578996257;
+        bh=2ejj/U4kx70Rb1UpkbNqX1RW2WtsjFSzCDYZstS/hTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDip9DvbUelJZ49innsWP9yONYcLDRH/h2kjqCubgnQUSPCiJT/smQ52BB+DAog/k
-         IAb9W2Cv3/q4js5Y72qWSvkNjopNt0nIMNB2P8AEClF1GQJO75pUy0EmbOkGEP7sYl
-         phQaW/7PYcNekVzCJn0Eu7EMxFkaE5C34G1uTYxg=
+        b=SbrycaYE8QUnX3XQpMrYD55uIVW0t6AkvSIORU3BKzARxvPH1VJ575PpVGrfKJFIh
+         Ftr41NDll+pIpOxVpO1vdL+e0zUUdXdbNSMx4M9CLoFoe9HSifQ84KPXPpEEEscwVB
+         onqYAX7Mhk+XiJ5GMy2Rka0rleS2ULUkbb40P9Co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 33/78] can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
-Date:   Tue, 14 Jan 2020 11:01:07 +0100
-Message-Id: <20200114094358.095193284@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        David Sterba <dsterba@suse.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Antonio Borneo <antonio.borneo@st.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 16/78] tracing: Change offset type to s32 in preempt/irq tracepoints
+Date:   Tue, 14 Jan 2020 11:00:50 +0100
+Message-Id: <20200114094355.821961976@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,42 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-commit 2f361cd9474ab2c4ab9ac8db20faf81e66c6279b upstream.
+commit bf44f488e168368cae4139b4b33c3d0aaa11679c upstream.
 
-Make sure to always use the descriptors of the current alternate setting
-to avoid future issues when accessing fields that may differ between
-settings.
+Discussion in the below link reported that symbols in modules can appear
+to be before _stext on ARM architecture, causing wrapping with the
+offsets of this tracepoint. Change the offset type to s32 to fix this.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Link: http://lore.kernel.org/r/20191127154428.191095-1-antonio.borneo@st.com
+Link: http://lkml.kernel.org/r/20200102194625.226436-1-joel@joelfernandes.org
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: David Sterba <dsterba@suse.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Antonio Borneo <antonio.borneo@st.com>
+Cc: stable@vger.kernel.org
+Fixes: d59158162e032 ("tracing: Add support for preempt and irq enable/disable events")
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/gs_usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/trace/events/preemptirq.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/can/usb/gs_usb.c
-+++ b/drivers/net/can/usb/gs_usb.c
-@@ -918,7 +918,7 @@ static int gs_usb_probe(struct usb_inter
- 			     GS_USB_BREQ_HOST_FORMAT,
- 			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
- 			     1,
--			     intf->altsetting[0].desc.bInterfaceNumber,
-+			     intf->cur_altsetting->desc.bInterfaceNumber,
- 			     hconf,
- 			     sizeof(*hconf),
- 			     1000);
-@@ -941,7 +941,7 @@ static int gs_usb_probe(struct usb_inter
- 			     GS_USB_BREQ_DEVICE_CONFIG,
- 			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
- 			     1,
--			     intf->altsetting[0].desc.bInterfaceNumber,
-+			     intf->cur_altsetting->desc.bInterfaceNumber,
- 			     dconf,
- 			     sizeof(*dconf),
- 			     1000);
+--- a/include/trace/events/preemptirq.h
++++ b/include/trace/events/preemptirq.h
+@@ -18,13 +18,13 @@ DECLARE_EVENT_CLASS(preemptirq_template,
+ 	TP_ARGS(ip, parent_ip),
+ 
+ 	TP_STRUCT__entry(
+-		__field(u32, caller_offs)
+-		__field(u32, parent_offs)
++		__field(s32, caller_offs)
++		__field(s32, parent_offs)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->caller_offs = (u32)(ip - (unsigned long)_stext);
+-		__entry->parent_offs = (u32)(parent_ip - (unsigned long)_stext);
++		__entry->caller_offs = (s32)(ip - (unsigned long)_stext);
++		__entry->parent_offs = (s32)(parent_ip - (unsigned long)_stext);
+ 	),
+ 
+ 	TP_printk("caller=%pS parent=%pS",
 
 
