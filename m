@@ -2,138 +2,112 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31492C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B792C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007C524670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C4424658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="scxTRtqw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7jAJHf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgANTaa (ORCPT
+        id S1728862AbgANTbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:30:30 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:28975 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANTa3 (ORCPT
+        Tue, 14 Jan 2020 14:31:31 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36537 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANTbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:30:29 -0500
+        Tue, 14 Jan 2020 14:31:31 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so13405162wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:31:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1579030228; x=1610566228;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kERWQcPBD6U7cttKEBKCe+VLCzWuIvbuKzU3wI+3unU=;
-  b=scxTRtqwvDG4gt1n++qHyLf4X19Tko65fdiRcC7WpWD5MVHiQtJtdnzo
-   OThiQrtjSpn3uQIfrrGpeWVu2SectF68SmPqGQr1KFv8quvJLK4imwmNJ
-   kX9anqxYP/n5V+uRG0u9NzjlsGPPJshzWE9wFIQmGnkWCFhsuPnEyPSx/
-   I=;
-IronPort-SDR: 1XWTl0ZFPeAlOX/4U8kY6SYcBuV6mXXPHzXHV+KPO++vV8ZqU64Zy3g8i6YkQ3MNzJ1c7HsLNp
- 881qx3hEFFTA==
-X-IronPort-AV: E=Sophos;i="5.70,319,1574121600"; 
-   d="scan'208";a="18710229"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 14 Jan 2020 19:30:15 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id F0146A29E9;
-        Tue, 14 Jan 2020 19:30:07 +0000 (UTC)
-Received: from EX13D10UWB004.ant.amazon.com (10.43.161.121) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 14 Jan 2020 19:29:52 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D10UWB004.ant.amazon.com (10.43.161.121) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 14 Jan 2020 19:29:52 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Tue, 14 Jan 2020 19:29:52 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 2E01D40E7F; Tue, 14 Jan 2020 19:29:52 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 19:29:52 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>, "axboe@kernel.dk" <axboe@kernel.dk>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "konrad.wilk@oracle.co" <konrad.wilk@oracle.co>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        <anchalag@amazon.com>
-Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
- hibernation
-Message-ID: <20200114192952.GA26755@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200108105011.GY2827@hirez.programming.kicks-ass.net>
- <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
- <20200113101609.GT2844@hirez.programming.kicks-ass.net>
- <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
- <20200113124247.GG2827@hirez.programming.kicks-ass.net>
- <CAJZ5v0jv+5aLY3N4wFSitu61o9S8tJWEWGGn1Xyw-P82_TwFdQ@mail.gmail.com>
- <CAJZ5v0imNbbch=NWAdgVKf_hjwRrEiWAL8SFNwe6rW_SjgYzrw@mail.gmail.com>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XU3df1UrRKDXcpcQHNFwUN0kOKaJVsq9R83HuMFlYmk=;
+        b=N7jAJHf9q7vg451kF3fb+8EhrByNUfz1vq+5OYJjQXQlZhUQGX+LBBKEtVQDNxoGjW
+         isaKMu7LvMS1gD22tNOrzkn9I5Qjq8UU/Tm0JLjwnaru8dLPbhCJ5xQc3h7z4agEyHbD
+         ZOr0xTEMDNDuM7Lgidw8V49AiLykdivK73t3IH2PpljY+rtJDnMQrQPTa95lY2DnkCCT
+         XMNot8jNOMSmh4ZuFpgnXlg5QrY8R5rYVeMjBI6zeFFfKIUa9WG0Cv+8IjK80UUrXQiZ
+         82P1TybaIbA98QKCDMoO0130yg6/O1oJmKr/GMoM3Kv183F86gh5ErLOMqB4dZkzhF64
+         ue6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XU3df1UrRKDXcpcQHNFwUN0kOKaJVsq9R83HuMFlYmk=;
+        b=pi9HFZB01iyk+vYDMKtSra25iuXUtnjqWS43BR8RGZPMaDlnpQGhOPRrA/ulkXTTju
+         xbiVin3l0P+Wk8iVfBgmY6fxOr/ffBJBD88ehhhH+UR+wqIE5KFT1GpbxMtQCwbqCkeT
+         Xr9jEy/cTGgLz+sOryws5cHdokgSMec7U8ZgtYPZ03fMocFVfacK2f2G5gmNM1Vd/+sL
+         sv5LhfeAZSUPUxEm7JmC+QKGNJQ/+bRkErgH35MXgzYlpEvQnPDnlAvDTFJangiRavXv
+         azHnpehb8asy7L5mXm/X7olPr16PryKSMwB7psmgwYhKHIjTQVhanPA+IK+W90UGXAGC
+         u5Mw==
+X-Gm-Message-State: APjAAAVHpEyveLEBZMkvhv2fxXZ/aZpauUhxLiqQGkxLEYlllgv/8sYp
+        1Oynm1nqKEbCov5Y+b8Ah8Fn7LCID+k=
+X-Google-Smtp-Source: APXvYqxrP4DV0i8/Qt7Sw2OrX4i1isPayf/eUqQFjZMhgtzdquHIT1vraTP2u649g15aNLACI2r5hg==
+X-Received: by 2002:a5d:6a88:: with SMTP id s8mr26099761wru.173.1579030289475;
+        Tue, 14 Jan 2020 11:31:29 -0800 (PST)
+Received: from wambui.zuku.co.ke ([197.237.61.225])
+        by smtp.googlemail.com with ESMTPSA id e8sm21050418wrt.7.2020.01.14.11.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 11:31:28 -0800 (PST)
+From:   Wambui Karuga <wambui.karugax@gmail.com>
+To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915/audio: convert to using drm_dbg_kms()
+Date:   Tue, 14 Jan 2020 22:31:23 +0300
+Message-Id: <20200114193123.5314-1-wambui.karugax@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0imNbbch=NWAdgVKf_hjwRrEiWAL8SFNwe6rW_SjgYzrw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:30:02AM +0100, Rafael J. Wysocki wrote:
-> On Mon, Jan 13, 2020 at 10:50 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Mon, Jan 13, 2020 at 1:43 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Mon, Jan 13, 2020 at 11:43:18AM +0000, Singh, Balbir wrote:
-> > > > For your original comment, just wanted to clarify the following:
-> > > >
-> > > > 1. After hibernation, the machine can be resumed on a different but compatible
-> > > > host (these are VM images hibernated)
-> > > > 2. This means the clock between host1 and host2 can/will be different
-> > > >
-> > > > In your comments are you making the assumption that the host(s) is/are the
-> > > > same? Just checking the assumptions being made and being on the same page with
-> > > > them.
-> > >
-> > > I would expect this to be the same problem we have as regular suspend,
-> > > after power off the TSC will have been reset, so resume will have to
-> > > somehow bridge that gap. I've no idea if/how it does that.
-> >
-> > In general, this is done by timekeeping_resume() and the only special
-> > thing done for the TSC appears to be the tsc_verify_tsc_adjust(true)
-> > call in tsc_resume().
-> 
-> And I forgot about tsc_restore_sched_clock_state() that gets called
-> via restore_processor_state() on x86, before calling
-> timekeeping_resume().
->
-In this case tsc_verify_tsc_adjust(true) this does nothing as
-feature bit X86_FEATURE_TSC_ADJUST is not available to guest. 
-I am no expert in this area, but could this be messing things up?
+Convert from the drm_dbg() logging macro to the drm_dbg_kms() macro in
+modesetting code.
 
-Thanks,
-Anchal
+Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+---
+ drivers/gpu/drm/i915/display/intel_audio.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_audio.c b/drivers/gpu/drm/i915/display/intel_audio.c
+index 57208440bf6d..771a677c905b 100644
+--- a/drivers/gpu/drm/i915/display/intel_audio.c
++++ b/drivers/gpu/drm/i915/display/intel_audio.c
+@@ -361,7 +361,7 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
+ 	I915_WRITE(G4X_AUD_CNTL_ST, tmp);
+ 
+ 	len = min(drm_eld_size(eld) / 4, len);
+-	drm_dbg(&dev_priv->drm, "ELD size %d\n", len);
++	drm_dbg_kms(&dev_priv->drm, "ELD size %d\n", len);
+ 	for (i = 0; i < len; i++)
+ 		I915_WRITE(G4X_HDMIW_HDMIEDID, *((const u32 *)eld + i));
+ 
+@@ -710,9 +710,10 @@ void intel_audio_codec_enable(struct intel_encoder *encoder,
+ 			    "Bogus ELD on [CONNECTOR:%d:%s]\n",
+ 			    connector->base.id, connector->name);
+ 
+-	drm_dbg(&dev_priv->drm, "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
+-		connector->base.id, connector->name,
+-		connector->encoder->base.id, connector->encoder->name);
++	drm_dbg_kms(&dev_priv->drm,
++		    "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
++		    connector->base.id, connector->name,
++		    connector->encoder->base.id, connector->encoder->name);
+ 
+ 	connector->eld[6] = drm_av_sync_delay(connector, adjusted_mode) / 2;
+ 
+-- 
+2.24.1
+
