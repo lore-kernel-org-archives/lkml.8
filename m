@@ -2,191 +2,92 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF25DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66B6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A170E222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZt7jWyj"
+	by mail.kernel.org (Postfix) with ESMTP id 712BC2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579015091;
+	bh=ympg1hiVbMKbw9k2iIFP+5ggi34Gv3Oy1HvJ7tLTdGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iZ3Q+1Eo/nZo+vHIy0XrCW/ZD8LsxyTkcjT6sZrG+ay0OsCU3OJBs8o6wshpcXx9L
+	 aXHyj2NdkFJpPf4k4E/0IIGJyUyW1PUMsPJh2G0fLlaJV2CrKblG0e22kIyiafOJBS
+	 48OCYLBo6dd9JlmvaoOCo33b7LVEIT5yqmIIGxP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgANPRz (ORCPT
+        id S1729144AbgANPSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:17:55 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38478 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgANPRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:17:54 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so6734314pfc.5;
-        Tue, 14 Jan 2020 07:17:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NccOTQjRE3K/mry3ktyfcVSqMgiS7x0ndgHbwmuP8TQ=;
-        b=eZt7jWyj1lFcAl+nxOMeOUkRlU/C5B9gtr1fYUIkxqtPV7ZLoHlFBT9L+nnBkuVvsI
-         76KXt4W1Sc/eX0hJHYnfXtkmSrjtCzlZ4knqTozpPeGS4awMa/uhW5RKe5F5IK2KxtcC
-         hSzOwtndvb3vc2n6un8ZoX7X3QF2T/PHZVi/kZFTqibdl06MqwPVw9EtcTZ7Xbs72esb
-         OBxlvh7+wXJQbjJw+voB2QhTM2w3dpqxOA2xLLooA4mWpZxvX4FsZPnXWCM99GvyABb/
-         hJDBBKujbLMqDpB5XfxABB6VDerelAx8BJIceJDqMh0DTximUuNaWkMvTKfp2kbMGLGf
-         M9sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NccOTQjRE3K/mry3ktyfcVSqMgiS7x0ndgHbwmuP8TQ=;
-        b=i47GzduhUsvnFM57j1NA7YQ8xQhWXKR5r5r9QlXL0uTfTv2PZ4u7wFQP8Qif3c/wkM
-         PWjf5decpgSCE6sudoJAoj0E+lEjyEY61lqwj1TALuDdIf87b9pUnuI3hIYlcc8kvYFc
-         3ilQa8UGVnbYS9WlOUaCn6iw5PgKLknLFpomr8J3FGoOe8UfpX95PA2RpuUUqMmDmuPc
-         XeiUjk7Nx2fDaTQ06/R+Vo3kJlbWhk5/OTP54P1a5np9VbsfCfTrS2QhliVSjUagl51a
-         k3T1ZaRCRrDuXMqXSmfYypCyE/K7lkn1sKRkygTxaI+XCGFKPTTLSksVzc1Rbis6di6b
-         viPg==
-X-Gm-Message-State: APjAAAU4I3C1rklI4BT/MTdYdBaknLnfWdEEW/HPphC9GMVAlBDpmDA/
-        CWoiYMtWElIF13Tjm+FXXPs=
-X-Google-Smtp-Source: APXvYqzwNEAFXEtPiRfWUAnOnIb8U9kJ3KgFoweLCKDYPBx7VAISFddFFf8Pt91PMer7e3JiwzH0Jw==
-X-Received: by 2002:a63:b005:: with SMTP id h5mr26671855pgf.67.1579015073738;
-        Tue, 14 Jan 2020 07:17:53 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id s131sm20232099pfs.135.2020.01.14.07.17.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 07:17:52 -0800 (PST)
-Subject: Re: [PATCH] can, slip: Protect tty->disc_data access with RCU
-To:     Richard Palethorpe <rpalethorpe@suse.com>,
-        linux-can@vger.kernel.org
-Cc:     syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tyler Hall <tylerwhall@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller@googlegroups.com
-References: <0000000000002b81b70590a83ad7@google.com>
- <20200114143244.20739-1-rpalethorpe@suse.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
-Date:   Tue, 14 Jan 2020 07:17:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 10:18:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbgANPSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:18:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A08222C4;
+        Tue, 14 Jan 2020 15:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579015089;
+        bh=ympg1hiVbMKbw9k2iIFP+5ggi34Gv3Oy1HvJ7tLTdGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cm6kyE9IES+mOy15gjTzAxr2xbZNWxqa50M85aszKRHM+WxHSfw56lscy4+QN2xXF
+         40/xkvMmrZTJwbeBAPAHL742GRIaRFbEpVYrldt0nBOCyGY8Htm/GKcXONWdV1OxgK
+         5BUmWs8sneQsEb5PqEfE0KlBsD7vfiARnqQ/ayfQ=
+Date:   Tue, 14 Jan 2020 16:18:07 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
+Message-ID: <20200114151807.GA2029513@kroah.com>
+References: <20200114094352.428808181@linuxfoundation.org>
+ <67098cc6-6b86-c441-065a-2cb7fe9a2be6@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200114143244.20739-1-rpalethorpe@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67098cc6-6b86-c441-065a-2cb7fe9a2be6@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/14/20 6:32 AM, Richard Palethorpe wrote:
-> write_wakeup can happen in parallel with close where tty->disc_data is set
-> to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
-> is an atomic operation. Otherwise accessing tty->disc_data could result in
-> a NULL pointer deref or access to some random location.
+On Tue, Jan 14, 2020 at 03:02:56PM +0000, Jon Hunter wrote:
 > 
-> This problem was found by Syzkaller on slcan, but the same issue appears to
-> exist in slip where slcan was copied from.
+> On 14/01/2020 10:00, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.12 release.
+> > There are 78 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> A fix which didn't use RCU was posted by Hillf Danton.
+> All tests are passing for Tegra ...
 > 
-> Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
-> Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
-> Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
-> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-> Cc: Wolfgang Grandegger <wg@grandegger.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Tyler Hall <tylerwhall@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: syzkaller@googlegroups.com
-> ---
-> 
-> Note, that mabye RCU should also applied to receive_buf as that also happens
-> in interrupt context. So if the pointer assignment is split by the compiler
-> then sl may point somewhere unexpected?
-> 
->  drivers/net/can/slcan.c | 11 +++++++++--
->  drivers/net/slip/slip.c | 11 +++++++++--
->  2 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-> index 2e57122f02fb..ee029aae69d4 100644
-> --- a/drivers/net/can/slcan.c
-> +++ b/drivers/net/can/slcan.c
-> @@ -344,7 +344,14 @@ static void slcan_transmit(struct work_struct *work)
->   */
->  static void slcan_write_wakeup(struct tty_struct *tty)
->  {
-> -	struct slcan *sl = tty->disc_data;
-> +	struct slcan *sl;
-> +
-> +	rcu_read_lock();
-> +	sl = rcu_dereference(tty->disc_data);
-> +	rcu_read_unlock();
+> Test results for stable-v5.4:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     38 tests:	38 pass, 0 fail
 
-This rcu_read_lock()/rcu_read_unlock() pair is not protecting anything.
+Wonderful, thanks for the testing and quick response.
 
-Right after rcu_read_unlock(), sl validity can not be guaranteed.
-
-> +
-> +	if (!sl)
-> +		return;
->  
->  	schedule_work(&sl->tx_work);
->  }
-> @@ -644,7 +651,7 @@ static void slcan_close(struct tty_struct *tty)
->  		return;
->  
->  	spin_lock_bh(&sl->lock);
-> -	tty->disc_data = NULL;
-> +	rcu_assign_pointer(tty->disc_data, NULL);
->  	sl->tty = NULL;
->  	spin_unlock_bh(&sl->lock);
-
-
-
-Where is the rcu grace period before freeing enforced ?
-
->  
-> diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-> index 2a91c192659f..dfed9f0b8646 100644
-> --- a/drivers/net/slip/slip.c
-> +++ b/drivers/net/slip/slip.c
-> @@ -452,7 +452,14 @@ static void slip_transmit(struct work_struct *work)
->   */
->  static void slip_write_wakeup(struct tty_struct *tty)
->  {
-> -	struct slip *sl = tty->disc_data;
-> +	struct slip *sl;
-> +
-> +	rcu_read_lock();
-> +	sl = rcu_dereference(tty->disc_data);
-> +	rcu_read_unlock();
-
-Same here.
-
-> +
-> +	if (!sl)
-> +		return;
->  
->  	schedule_work(&sl->tx_work);
->  }
-> @@ -882,7 +889,7 @@ static void slip_close(struct tty_struct *tty)
->  		return;
->  
->  	spin_lock_bh(&sl->lock);
-> -	tty->disc_data = NULL;
-> +	rcu_assign_pointer(tty->disc_data, NULL);
->  	sl->tty = NULL;
->  	spin_unlock_bh(&sl->lock);
->  
-> 
+greg k-h
