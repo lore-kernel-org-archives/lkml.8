@@ -2,127 +2,136 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62407C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF7AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B34222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7D124658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:36:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEUPaR4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgANSgS (ORCPT
+        id S1728774AbgANSgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:36:18 -0500
-Received: from mga06.intel.com ([134.134.136.31]:50146 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgANSgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:36:17 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 10:36:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
-   d="scan'208";a="242574988"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jan 2020 10:36:16 -0800
-Date:   Tue, 14 Jan 2020 10:36:16 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v24 07/24] x86/cpu/intel: Detect SGX supprt
-Message-ID: <20200114183615.GH16784@linux.intel.com>
-References: <20191129231326.18076-1-jarkko.sakkinen@linux.intel.com>
- <20191129231326.18076-8-jarkko.sakkinen@linux.intel.com>
- <20191223094614.GB16710@zn.tnic>
+        Tue, 14 Jan 2020 13:36:52 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44201 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANSgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:36:52 -0500
+Received: by mail-qt1-f194.google.com with SMTP id t3so13335342qtr.11;
+        Tue, 14 Jan 2020 10:36:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h0zBvJjpzgwK67F0RVeLSWa1LpfeS/py8/GHMZRGeeQ=;
+        b=LEUPaR4f1Z3WcSuOoq1PxBaZG1mAx+z3vRXwJlTT8EJCU24AOglgH5v/VdMHlbTvlg
+         rORVQe1GNuxAZOCTWc6Fw6ks+RvUBb4pll4BVvmuLcu7DbMWYZ8R9fIFMKRevwx6WIrP
+         ArX5im+jSYJ3Nrf+aZpVIOvXOYfxROh0YD1itotDirLNRcggdIvZEeP55NvCMMfkP61Y
+         dPKI3MCZrLCJudy9go8quE4JAVGWXsFKOKLJD3wW7RZwCpOCEf5g7M4OwByiTekbYoc+
+         oT8gO8sUSmPHBMlE3yl4DPRjdd/N2kt4PXcOo8/leUm7Kgfo9/nZH+NyuwRSFA2hK8i3
+         5nvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h0zBvJjpzgwK67F0RVeLSWa1LpfeS/py8/GHMZRGeeQ=;
+        b=qk5UTpQwkee4HRXTY6NmtGFV1jCYrbIwhv75XhYJqCCwP5IXdTBjPrX5Zx4G1sR1UH
+         Kc7RRWNpt2BW/qFRt9jSqxPGSehj6xzQPBMpDLohe86LNm1SDSraUSt0vRc82zQAYAXq
+         wTu6lLflp8nLFO9Vtk45V+jbULelradr78pxGojnAeOW2GWtKJO6zzvq7qJdSwi6evXh
+         cfUKkz5HWlp+zyIXasuS1uDil34QjoLrg15QLV19TAMcB2WNCt0vuXDTK21P1PYAJDgE
+         K7V6MnS0h+U91WnB86vGtKmVVa3QwIjLprkNYPMV1kF+MXeeSI29vizhD15iS7n7Q0VF
+         FzNw==
+X-Gm-Message-State: APjAAAVy5MfNfMpLxZngTn5Uc28fMrwJif5ZXpngmPZ9uwK4VJPreLJw
+        zEfhuvSuJUca0rUnGO2rTmJtqAlDdfG5YBSDcTg=
+X-Google-Smtp-Source: APXvYqzKxGlm4fHti+iVpkSm7aZilbYKxb0vpta9AbCkO/OJVoWVOO3/fzlIz03xAgU2/Z3piNxaqH+qdovH+LludLA=
+X-Received: by 2002:ac8:4050:: with SMTP id j16mr4865708qtl.171.1579027011156;
+ Tue, 14 Jan 2020 10:36:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223094614.GB16710@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
+In-Reply-To: <20200114164614.47029-9-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 14 Jan 2020 10:36:40 -0800
+Message-ID: <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 10:46:14AM +0100, Borislav Petkov wrote:
-> On Sat, Nov 30, 2019 at 01:13:09AM +0200, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > When the CPU supports SGX, check that the BIOS has enabled SGX and SGX1
-> > opcodes are available. Otherwise, all the SGX related capabilities.
-> > 
-> > In addition, clear X86_FEATURE_SGX_LC also in the case when the launch
-> > enclave are read-only. This way the feature bit reflects the level that
-> > Linux supports the launch control.
-> > 
-> > The check is done for every CPU, not just BSP, in order to verify that
-> > MSR_IA32_FEATURE_CONTROL is correctly configured on all CPUs. The other
-> > parts of the kernel, like the enclave driver, expect the same
-> > configuration from all CPUs.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> > index c2fdc00df163..89a71367716c 100644
-> > --- a/arch/x86/kernel/cpu/intel.c
-> > +++ b/arch/x86/kernel/cpu/intel.c
-> > @@ -624,6 +624,42 @@ static void detect_tme(struct cpuinfo_x86 *c)
-> >  	c->x86_phys_bits -= keyid_bits;
-> >  }
-> >  
-> > +static void __maybe_unused detect_sgx(struct cpuinfo_x86 *c)
-> > +{
-> > +	unsigned long long fc;
-> > +
-> > +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> > +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> > +		pr_err_once("sgx: The feature control MSR is not locked\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> > +		pr_err_once("sgx: SGX is not enabled in IA32_FEATURE_CONTROL MSR\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
-> > +		pr_err_once("sgx: SGX1 instruction set is not supported\n");
-> > +		goto err_unsupported;
-> > +	}
-> > +
-> > +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
-> > +		pr_info_once("sgx: The launch control MSRs are not writable\n");
-> > +		goto err_msrs_rdonly;
-> > +	}
-> 
-> One more thing - and we talked about this already - when the hash
-> MSRs are not writable, the kernel needs to disable all SGX support by
-> default. Basically, no SGX support is present.
+On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> From: Yonghong Song <yhs@fb.com>
+>
+> Added four libbpf API functions to support map batch operations:
+>   . int bpf_map_delete_batch( ... )
+>   . int bpf_map_lookup_batch( ... )
+>   . int bpf_map_lookup_and_delete_batch( ... )
+>   . int bpf_map_update_batch( ... )
+>
+> Signed-off-by: Yonghong Song <yhs@fb.com>
+> ---
+>  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
+>  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
+>  tools/lib/bpf/libbpf.map |  4 +++
+>  3 files changed, 86 insertions(+)
+>
+> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> index 500afe478e94a..12ce8d275f7dc 100644
+> --- a/tools/lib/bpf/bpf.c
+> +++ b/tools/lib/bpf/bpf.c
+> @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
+>         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
+>  }
+>
+> +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
+> +                               void *out_batch, void *keys, void *values,
+> +                               __u32 *count,
+> +                               const struct bpf_map_batch_opts *opts)
+> +{
+> +       union bpf_attr attr = {};
+> +       int ret;
+> +
+> +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
+> +               return -EINVAL;
+> +
+> +       memset(&attr, 0, sizeof(attr));
+> +       attr.batch.map_fd = fd;
+> +       attr.batch.in_batch = ptr_to_u64(in_batch);
+> +       attr.batch.out_batch = ptr_to_u64(out_batch);
+> +       attr.batch.keys = ptr_to_u64(keys);
+> +       attr.batch.values = ptr_to_u64(values);
+> +       if (count)
+> +               attr.batch.count = *count;
+> +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
+> +       attr.batch.flags = OPTS_GET(opts, flags, 0);
+> +
+> +       ret = sys_bpf(cmd, &attr, sizeof(attr));
+> +       if (count)
+> +               *count = attr.batch.count;
 
-Yep.
- 
-> If the user wants to run KVM guests with SGX enclaves, then she should
-> probably boot with a special kvm param or so. Details on how can exactly
-> control that can be discussed later - just making sure you guys are not
-> forgetting this use angle.
+what if syscall failed, do you still want to assign *count then?
 
-Ya, planning on having a 'sgx' KVM module param.  It could take a string
-if we want to allow the admin to enable SGX virtualization if and only if
-SGX LC is fully enabled, e.g. sgx='off|on|lc'. 
+> +
+> +       return ret;
+> +}
+> +
+
+[...]
