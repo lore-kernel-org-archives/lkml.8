@@ -2,52 +2,67 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E443CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D0BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B078C2467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D537D24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="l31+T+c+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="iq1+IOT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgANMYL (ORCPT
+        id S1729402AbgANMYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:24:11 -0500
-Received: from forward105p.mail.yandex.net ([77.88.28.108]:44172 "EHLO
-        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgANMYL (ORCPT
+        Tue, 14 Jan 2020 07:24:25 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46238 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbgANMYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:24:11 -0500
-Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
-        by forward105p.mail.yandex.net (Yandex) with ESMTP id 1BE664D41932;
-        Tue, 14 Jan 2020 15:24:07 +0300 (MSK)
-Received: from iva2-18315b3f9ecc.qloud-c.yandex.net (iva2-18315b3f9ecc.qloud-c.yandex.net [2a02:6b8:c0c:1404:0:640:1831:5b3f])
-        by mxback1j.mail.yandex.net (mxback/Yandex) with ESMTP id y5m3FK6K65-O6piEkfp;
-        Tue, 14 Jan 2020 15:24:07 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579004647;
-        bh=Y+G5Lr09yCsF/0LzYGt2QYGSXAaHB6SYzR6VuIq7/PM=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=l31+T+c+7P18zDJYD4GzuqryorqyMWyJMM7MXAdkAqtDj16JnQDQ7ccbuCU2v3LeX
-         aZJXpw9Vrg6HSFA1eycF8OFJJi1PAvLnOa3w7YPMOnVQECB3kcUc4+rRkgr7lp0YSc
-         7p0/YkSrDOvZawc2ruEsveNKY+VrmBY8kB8uokiE=
-Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by iva2-18315b3f9ecc.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id YR81iErVaf-NvW8RLJp;
-        Tue, 14 Jan 2020 15:24:03 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com,
-        linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH] MIPS: Introduce aligned IO memory operations
-Date:   Tue, 14 Jan 2020 20:23:43 +0800
-Message-Id: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 14 Jan 2020 07:24:24 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so11910672wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 04:24:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5mSoKlTvMJsvy/aWRaeQ2pQkJgO/oDfhepfqApYUWHY=;
+        b=iq1+IOT0TSlUk5bWsYYbaKhXsd8S3JjZHsCYS/tkRtbI4ywzBvUpEU52kcoNqC61SK
+         9rKM0kn99StxumghVrT/mXaVOEwXX/QBt1h0+vx61hihI+gx7v7+7Kp5TBSOna/LkAam
+         n9ZBC3EUmYB0j8BLWInMbsRO2reicDCaW5jSIZL5JbWoUtaF11kH8dlYiS0dxOMOXuLN
+         k3VbLXBYx/xYvWkt5wjThwQhEvfU+zdbcuYFX2IUtTBl6Ds8YCv3N+Ga/FaPydwTOvk9
+         4BBCdr+KdYFp390biCT/5eJBKlVtnFDymbAc/0sXEK9tt/j4sz+hA0g4BzHbay7EPRfl
+         wS8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=5mSoKlTvMJsvy/aWRaeQ2pQkJgO/oDfhepfqApYUWHY=;
+        b=SbFsSKFQOItZ8AHnuvCjmE2FksNNBrQz9Y1v8x8jTmoO3BxJVGpWdorir3J+EQDYHi
+         gVMa0PhCm27h10Pr6wxP/kWBOKHZXZ4IC01Er47OJrloJur7eveb625VHIMz9Ns004bS
+         z4sWktM4lJmFrGUeXVtOGKK6D/jwSOUoj3Ztg7AePTcNXD7MVsVa5A0uIEWBzw2BVAig
+         dbFHG2GwXCSGTfkJ6Hyhga9TdSPFBqOYRG/EVrLd1F+OxZudUwQa2/uV2dVzWlP075cc
+         1FP4ZUQtIe9vMZKBdeGOimdfNyb9aAqZ3oZpf73jba9xDq48KHhD79CQw2cXdc0brELb
+         h+iw==
+X-Gm-Message-State: APjAAAWvVAs935WUAs26KjrCKgGyzdIsuKhs18OVTXQccOo5T9GNXpCk
+        1YgGtnHtcGrPTptnZzy1UVWhiTcr/2cl5Q==
+X-Google-Smtp-Source: APXvYqyqUluW7UuOqo2cVVnIaPGVRw5RC1I1zsAWEnAALlO7VICIDKAAz4ujBRY5BJTHLDIQjGN59g==
+X-Received: by 2002:a5d:5706:: with SMTP id a6mr12029783wrv.108.1579004662239;
+        Tue, 14 Jan 2020 04:24:22 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id v3sm19257860wru.32.2020.01.14.04.24.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 04:24:21 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Subject: [PATCH] microblaze: Kernel parameters should be parsed earlier
+Date:   Tue, 14 Jan 2020 13:24:20 +0100
+Message-Id: <a0f1570686e4cb99025d0c0b571f07a84d6467d9.1579004658.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,187 +70,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
-instructions like lwl or lwr in IO memory access. However, our current
-IO memcpy/memset is wired to the generic implementation, which leads
-to a fatal result.
+Kernel command line should be parsed before mmu_init is called to be able
+to get for example cma sizes from command line. That's why call
+parse_early_param() earlier in machine_early_init().
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- arch/mips/Kconfig          |  4 ++
- arch/mips/include/asm/io.h | 10 ++++
- arch/mips/kernel/Makefile  |  2 +-
- arch/mips/kernel/io.c      | 98 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 113 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/kernel/io.c
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 8b0cd692a43f..15a331aa23a2 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
- 	select CPU_SUPPORTS_HIGHMEM
- 	select CPU_SUPPORTS_HUGEPAGES
- 	select CPU_SUPPORTS_MSA
-+	select CPU_NEEDS_ALIGNED_IO
- 	select CPU_HAS_LOAD_STORE_LR
- 	select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
- 	select CPU_MIPSR2_IRQ_VI
-@@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
- 	  LWL, LWR, SWL, SWR (Load/store word left/right).
- 	  LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
+ arch/microblaze/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
+index effed14eee06..34a082b17a01 100644
+--- a/arch/microblaze/kernel/setup.c
++++ b/arch/microblaze/kernel/setup.c
+@@ -54,7 +54,6 @@ void __init setup_arch(char **cmdline_p)
+ 	*cmdline_p = boot_command_line;
  
-+config CPU_NEEDS_ALIGNED_IO
-+	bool
-+
- #
- # Vectored interrupt mode is an R2 feature
- #
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 3f6ce74335b4..3b0eb4941f23 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
- BUILDSTRING(q, u64)
- #endif
+ 	setup_memory();
+-	parse_early_param();
  
-+#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
-+extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
-+extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
-+extern void __memset_io(volatile void __iomem *, int, size_t);
+ 	console_verbose();
+ 
+@@ -177,6 +176,8 @@ void __init machine_early_init(const char *cmdline, unsigned int ram,
+ 	/* Initialize global data */
+ 	per_cpu(KM, 0) = 0x1;	/* We start in kernel mode */
+ 	per_cpu(CURRENT_SAVE, 0) = (unsigned long)current;
 +
-+#define memset_io(c, v, l)	__memset_io((c), (v), (l))
-+#define memcpy_fromio(a, c, l)	__memcpy_fromio((a), (c), (l))
-+#define memcpy_toio(c, a, l)	__memcpy_toio((c), (a), (l))
-+#else
- static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
- {
- 	memset((void __force *) addr, val, count);
-@@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
- {
- 	memcpy((void __force *) dst, src, count);
++	parse_early_param();
  }
-+#endif
  
- /*
-  * The caches on some architectures aren't dma-coherent and have need to
-diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
-index d6e97df51cfb..b07b97b9385e 100644
---- a/arch/mips/kernel/Makefile
-+++ b/arch/mips/kernel/Makefile
-@@ -8,7 +8,7 @@ extra-y		:= head.o vmlinux.lds
- obj-y		+= cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
- 		   process.o prom.o ptrace.o reset.o setup.o signal.o \
- 		   syscall.o time.o topology.o traps.o unaligned.o watch.o \
--		   vdso.o cacheinfo.o
-+		   vdso.o cacheinfo.o io.o
- 
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_ftrace.o = -pg
-diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
-new file mode 100644
-index 000000000000..ca105aa76d4d
---- /dev/null
-+++ b/arch/mips/kernel/io.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <linux/export.h>
-+#include <linux/types.h>
-+#include <linux/io.h>
-+
-+#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
-+
-+#if defined(CONFIG_64BIT)
-+#define IO_LONG_READ	__raw_readq
-+#define IO_LONG_WRITE	__raw_writeq
-+#define IO_LONG_SIZE	8
-+#else
-+#define IO_LONG_READ	__raw_readl
-+#define IO_LONG_WRITE	__raw_writel
-+#define IO_LONG_SIZE	4
-+#endif
-+
-+void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
-+{
-+	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
-+		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
-+		*(u8 *)to = __raw_readb(from);
-+		from++;
-+		to++;
-+		count--;
-+	}
-+
-+	while (count >= IO_LONG_SIZE) {
-+		*(unsigned long *)to = IO_LONG_READ(from);
-+		from += IO_LONG_SIZE;
-+		to += IO_LONG_SIZE;
-+		count -= IO_LONG_SIZE;
-+	}
-+
-+	while (count) {
-+		*(u8 *)to = __raw_readb(from);
-+		from++;
-+		to++;
-+		count--;
-+	}
-+}
-+EXPORT_SYMBOL(__memcpy_fromio);
-+
-+void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
-+{
-+	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
-+		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
-+		__raw_writeb(*(u8 *)from, to);
-+		from++;
-+		to++;
-+		count--;
-+	}
-+
-+	while (count >= IO_LONG_SIZE) {
-+		IO_LONG_WRITE(*(unsigned long *)from, to);
-+		from += IO_LONG_SIZE;
-+		to += IO_LONG_SIZE;
-+		count -= IO_LONG_SIZE;
-+	}
-+
-+	while (count) {
-+		__raw_writeb(*(u8 *)from, to);
-+		from++;
-+		to++;
-+		count--;
-+	}
-+}
-+EXPORT_SYMBOL(__memcpy_toio);
-+
-+void __memset_io(volatile void __iomem *dst, int c, size_t count)
-+{
-+	unsigned long lc = (u8)c;
-+	int i;
-+
-+	for (i = 1; i < IO_LONG_SIZE; i++)
-+		lc |= (u8)c << (i * BITS_PER_BYTE);
-+
-+	while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
-+		__raw_writeb((u8)c, dst);
-+		dst++;
-+		count--;
-+	}
-+
-+	while (count >= IO_LONG_SIZE) {
-+		IO_LONG_WRITE(lc, dst);
-+		dst += IO_LONG_SIZE;
-+		count -= IO_LONG_SIZE;
-+	}
-+
-+	while (count) {
-+		__raw_writeb(c, dst);
-+		dst++;
-+		count--;
-+	}
-+}
-+EXPORT_SYMBOL(__memset_io);
-+#endif
+ void __init time_init(void)
 -- 
-2.24.1
+2.24.0
 
