@@ -2,117 +2,79 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E7EC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60539C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7602924673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRB5dAWc"
+	by mail.kernel.org (Postfix) with ESMTP id 39E3A24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579028796;
+	bh=13IflzZpLaLZL3xSAJ55gLJNP3cz/M84IOILAKmmi3k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=uTtZgMyAxwuVYoFrYAzWZ4CE788N4UYs7CDvjor38zDdTUvINSX0gH2O9l+MUDsGa
+	 ZCom1wiWi8geQiYJkUccZGYsEl8RRklAO6Jbun/6jRikFqjrUtlgbXgkTN9mBOWFPm
+	 32hullkTgpOC81xLd+VSiMemUkDl9zfxXRBhgLbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgANTGc (ORCPT
+        id S1728913AbgANTGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:06:32 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46657 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728853AbgANTG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:06:28 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so6804341pgb.13;
-        Tue, 14 Jan 2020 11:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vD4wTJSOL9eulpsTOv7Le84ncUzkM09cyPSOhtdnfmU=;
-        b=sRB5dAWcX/qUSYqbrlWhiWc0MnbvpoatmZ6LCpB0UwOkZrtsYHqNLBFUVULx4jVB1h
-         yzSnkzLcqPStLhkUXefgdfCUNhyhmMU7OVnpe7kimMEjwIOAxXVt06nuJ/SH3MyNhDsG
-         gpEXvDKXO3QEkIDdR518cafxevtrh4gXvsAAYp8oLHNwvuOTsyijwX9qstj/kSBzYDh3
-         j4YPo83hJw4RNS3iqKSBngW7p2yQRuiEU5Wv6f7Qc3GhmjQR/TsfS8EFEVn5ezuPOGfO
-         SKoxuyzlOjbR1H0EIMHWm17hUa91GfSalnFWWkiK7XQNcU185sOSEM7qofNsbaRGyh6f
-         7CBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vD4wTJSOL9eulpsTOv7Le84ncUzkM09cyPSOhtdnfmU=;
-        b=sgxaJvuyBwgJ/0/pfFRj8WgO3oVm4n2hZX3BsMtTYlW/QVWH5TrF3SNGCxW7opE8pu
-         lpCR2436izLNHeD0zYcv2UMbedBgxvI7Kj80p/eFVVoEo6yqky5GOBaiVd7Y3GwNpX/c
-         QFLna1Gs9QN7GFvfMoKqktPHrBeItPgCpzIx8/VfalHDTVfuFWPNu9IRc9IH6k7YJ2x9
-         fgrlxLAOXtzvqArsY96E8r1bgctbwxJaZRgzJD9a3FJmKx+IxwdHqAa2Oso2TmL53WqK
-         f8aXE/fT3+nqRSPrphGitiEyUyFhtmgqbazaMlOF2u9Dnk0M+y1OwNYPC2+1prTwBsl2
-         2DgQ==
-X-Gm-Message-State: APjAAAVuczivlVB6mdDoz2iyrZwj0bY7aWupXUv5rzHlwKQ7DG5A14Ml
-        expvc7nu5uz7tvn+YlrlGXSm8ENL
-X-Google-Smtp-Source: APXvYqwCWirANusXlzS5wVKhPR+K7LLYkWVsiIK/0rFOHoFwJJOpRuMfg3cj6pr0b/4klXZYXW5G/Q==
-X-Received: by 2002:aa7:9306:: with SMTP id 6mr26753037pfj.36.1579028787478;
-        Tue, 14 Jan 2020 11:06:27 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a195sm19284528pfa.120.2020.01.14.11.06.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 11:06:27 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
-        DRIVER), Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH v3 4/6] thermal: brcmstb_thermal: Add 16nm process thermal parameters
-Date:   Tue, 14 Jan 2020 11:06:05 -0800
-Message-Id: <20200114190607.29339-5-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200114190607.29339-1-f.fainelli@gmail.com>
-References: <20200114190607.29339-1-f.fainelli@gmail.com>
+        Tue, 14 Jan 2020 14:06:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728765AbgANTGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:06:33 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D155222C4;
+        Tue, 14 Jan 2020 19:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579028792;
+        bh=13IflzZpLaLZL3xSAJ55gLJNP3cz/M84IOILAKmmi3k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MdqPl2BtwochWuO4zhXzMSR9NriX5vjiUQ9ksONrtaGxiE7OJBIvPr6jJTRTrwoeQ
+         XZ6ZrwBNwe3GhL3xBXSwvD/ZyKN5TpbSJ149DQ/rViQTXOP3Q7OckpyV9jttjoqw3d
+         hsotX5gyKDa+UY8mNgBAzg3+XRrhXboukTJsbF6o=
+Date:   Tue, 14 Jan 2020 13:06:30 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5] PCI: Fix disabling of bridge BARs when assigning bus
+ resources
+Message-ID: <20200114190630.GA262043@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f15334a9-6cac-803d-7e64-28c74c4d12af@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Match the 7216 compatible string in order to derive the correct 16nm
-process thermal parameters to obtain correct readings.
+On Tue, Jan 14, 2020 at 11:07:12AM -0700, Logan Gunthorpe wrote:
+> On 2020-01-13 1:07 p.m., Bjorn Helgaas wrote:
+> > Applied to pci/resource for v5.6, thanks!
+> > 
+> > I added a check of pci_is_bridge() as another hint that this is really
+> > a bridge-specific issue.  Let me know if that breaks anything.
+> > 
+> > commit 9db8dc6d0785 ("PCI: Don't disable bridge BARs when assigning bus resources")
+> > Author: Logan Gunthorpe <logang@deltatee.com>
+> > Date:   Wed Jan 8 14:32:08 2020 -0700
+> 
+> Thanks! I was going to test the pci/resource branch, but I haven't seen
+> the patch in your repo yet... Current head is
+> 
+> 86f98025a075 ("PCI: Allow extend_bridge_window() to shrink resource if
+> necessary")
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/thermal/broadcom/brcmstb_thermal.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
-index 2d555e7b884a..4b328586959f 100644
---- a/drivers/thermal/broadcom/brcmstb_thermal.c
-+++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-@@ -292,12 +292,18 @@ static const struct thermal_zone_of_device_ops of_ops = {
- 	.set_trips	= brcmstb_set_trips,
- };
- 
-+static const struct brcmstb_thermal_params brcmstb_16nm_params = {
-+	.offset	= 457829,
-+	.mult	= 557,
-+};
-+
- static const struct brcmstb_thermal_params brcmstb_28nm_params = {
- 	.offset	= 410040,
- 	.mult	= 487,
- };
- 
- static const struct of_device_id brcmstb_thermal_id_table[] = {
-+	{ .compatible = "brcm,avs-tmon-bcm7216", .data = &brcmstb_16nm_params },
- 	{ .compatible = "brcm,avs-tmon", .data = &brcmstb_28nm_params },
- 	{},
- };
--- 
-2.17.1
-
+Pushed.  I'm anticipating some tweaks to Nicholas' patches on that
+branch, so I put yours at the base.
