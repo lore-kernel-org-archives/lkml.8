@@ -2,203 +2,120 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8645CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6169EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602C02084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3450F2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/gaxXT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgANJQ1 (ORCPT
+        id S1728896AbgANJRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:16:27 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:54422 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbgANJQ1 (ORCPT
+        Tue, 14 Jan 2020 04:17:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33765 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725820AbgANJRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:16:27 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TniOLoy_1578993382;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TniOLoy_1578993382)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Jan 2020 17:16:23 +0800
-Subject: Re: [PATCH v7 00/10] per lruvec lru_lock for memcg
-To:     Hugh Dickins <hughd@google.com>
-Cc:     hannes@cmpxchg.org, Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <20191231150514.61c2b8c8354320f09b09f377@linux-foundation.org>
- <944f0f6a-466a-7ce3-524c-f6db86fd0891@linux.alibaba.com>
- <d2efad94-750b-3298-8859-84bccc6ecf06@linux.alibaba.com>
- <alpine.LSU.2.11.2001130032170.1103@eggly.anvils>
- <24d671ac-36ef-8883-ad94-1bd497d46783@linux.alibaba.com>
- <alpine.LSU.2.11.2001131157500.1084@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <641e4c96-c79f-fbdd-9762-f4608961423c@linux.alibaba.com>
-Date:   Tue, 14 Jan 2020 17:14:54 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Tue, 14 Jan 2020 04:17:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578993435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8EBCXj/eGLlwqN/DCPQsauNTZOGi8UpIemA9DO6Kwow=;
+        b=E/gaxXT7DvemEDkij5K2TxOwSWy60VWTcWHqlvDOOsv6kLydnscpBkwpnCWyOwbT3EhYuv
+        ItSDxBU+WcOn1DJMKuEa1x92wwQRXDSp8wu4ixPolsvErveVJp1yUz1frMt1JQYL8/A3gA
+        d4fv6s3AtRojxmbHuM/SJlFexRKSqcw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-nducgHoPO2ilQSImbti2UQ-1; Tue, 14 Jan 2020 04:17:12 -0500
+X-MC-Unique: nducgHoPO2ilQSImbti2UQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE708DBF7;
+        Tue, 14 Jan 2020 09:17:10 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F3195DA80;
+        Tue, 14 Jan 2020 09:17:01 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 17:16:57 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+Subject: Re: [PATCH V2] brd: check parameter validation before
+ register_blkdev func
+Message-ID: <20200114091456.GA22268@ming.t460p>
+References: <8b32ff09-74aa-3b92-38e4-aab12f47597b@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2001131157500.1084@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b32ff09-74aa-3b92-38e4-aab12f47597b@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 09:43:23PM +0800, Zhiqiang Liu wrote:
+> In brd_init func, rd_nr num of brd_device are firstly allocated
+> and add in brd_devices, then brd_devices are traversed to add each
+> brd_device by calling add_disk func. When allocating brd_device,
+> the disk->first_minor is set to i * max_part, if rd_nr * max_part
+> is larger than MINORMASK, two different brd_device may have the same
+> devt, then only one of them can be successfully added.
 
-> I tried with the mods you had appended, from [PATCH v7 02/10]
-> discussion with Konstantion: no, still crashes in a similar way.> 
-> Does your github tree have other changes too?  I see it says "Latest
-> commit e05d0dd 22 days ago", which doesn't seem to fit.  Afraid I
-> don't have time to test many variations.
+It is just because disk->first_minor is >= 0x100000, then same dev_t
+can be allocated in blk_alloc_devt().
 
-Thanks a lot for testing! the github version is same as your tested.
-The github branches page has a bug, it don't show correct update time.
-https://github.com/alexshi/linux/branches while detailed page does. 
-https://github.com/alexshi/linux/tree/lru-next 
-> 
-> It looks like, in my case, systemd was usually jumping in and doing
-> something with shmem (perhaps via memfd) that read back from swap
-> and triggered the crash without any further intervention from me.
-> 
-> So please try booting with mem=700M and 1.5G swap,
-> mount -t tmpfs -o size=470M tmpfs /tst
-> cp /dev/zero /tst; cp /tst/zero /dev/null
-> 
-> That's enough to crash it for me, without getting into any losetup or
-> systemd complications. But you might have to adjust the numbers to be
-> sure of writing out and reading back from swap.
-> 
-> It's swap to SSD in my case, don't think that matters. I happen to
-> run with swappiness 100 (precisely to help generate swap problems),
-> but swappiness 60 is good enough to get these crashes.
-> 
+	MKDEV(disk->major, disk->first_minor + part->partno)
 
-I did use 700M memory and 1.5G swapfile in my qemu, but with a swapfile
-not a disk.
-qemu-system-x86_64  -smp 4 -enable-kvm -cpu SandyBridge \
-	-m 700M -kernel /home/kuiliang.as/linux/qemulru/arch/x86/boot/bzImage \
-	-append "earlyprintk=ttyS0 root=/dev/sda1 console=ttyS0 debug crashkernel=128M printk.devkmsg=on " \
-	-hda /home/kuiliang.as/rootimages/CentOS-7-x86_64-Azure-1703.qcow2 \
-	-hdb /home/kuiliang.as/rootimages/hdb.qcow2 \
-	--nographic \
+But block layer does support extended dynamic devt allocation, and brd
+sets flag of GENHD_FL_EXT_DEVT too.
 
-Anyway, although I didn't reproduced the bug. but I found a bug in my
-debug function:
-	VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
+So I think the correct fix is to fallback to extended dynamic allocation
+when running out of consecutive minor space.
 
- if !page->mem_cgroup, the bug could be triggered, so, seems it's a bug
-for debug function, not real issue. The 9th patch should be replaced by
-the following new patch. 
+How about the following approach?
 
-Many thanks for testing!
-Alex
+And of course, ext devt allocation may fail too, but that is another
+generic un-solved issue: error handling isn't done for adding disk.
 
-From ac6d3e2bcfba5727d5c03f9655bb0c7443f655eb Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Mon, 23 Dec 2019 13:33:54 +0800
-Subject: [PATCH v8 8/9] mm/lru: add debug checking for page memcg moving
-
-This debug patch could give some clues if there are sth out of
-consideration.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/memcontrol.h |  5 +++++
- mm/compaction.c            |  2 ++
- mm/memcontrol.c            | 13 +++++++++++++
- 3 files changed, 20 insertions(+)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 09e861df48e8..ece88bb11d0f 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -421,6 +421,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *);
- struct lruvec *lock_page_lruvec_irqsave(struct page *, unsigned long*);
- void unlock_page_lruvec_irq(struct lruvec *);
- void unlock_page_lruvec_irqrestore(struct lruvec *, unsigned long);
-+void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page);
- 
- struct mem_cgroup *mem_cgroup_from_task(struct task_struct *p);
- 
-@@ -1183,6 +1184,10 @@ static inline
- void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
- {
- }
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index a8730cc4db10..9aa7ce7c9abf 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -398,7 +398,16 @@ static struct brd_device *brd_alloc(int i)
+ 	if (!disk)
+ 		goto out_free_queue;
+ 	disk->major		= RAMDISK_MAJOR;
+-	disk->first_minor	= i * max_part;
 +
-+static inline void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
-+{
-+}
- #endif /* CONFIG_MEMCG */
- 
- /* idx can be of type enum memcg_stat_item or node_stat_item */
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 8c0a2da217d8..151242817bf4 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -971,6 +971,8 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
- 			locked_lruvec = lruvec;
- 
-+			lruvec_memcg_debug(lruvec, page);
-+
- 			/* Try get exclusive access under lock */
- 			if (!skip_updated) {
- 				skip_updated = true;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 00fef8ddbd08..a473da8d2275 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1238,6 +1238,17 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
- 	return lruvec;
- }
- 
-+void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
-+{
-+	if (mem_cgroup_disabled())
-+		return;
-+
-+	if (!page->mem_cgroup)
-+		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != root_mem_cgroup, page);
++	/*
++	 * Clear .minors when running out of consecutive minor space since
++	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt
++	 */
++	if ((i * disk->minors) & ~MINORMASK)
++		disk->minors = 0;
 +	else
-+		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
-+}
++		disk->first_minor	= i * disk->minors;
 +
- struct lruvec *lock_page_lruvec_irq(struct page *page)
- {
- 	struct lruvec *lruvec;
-@@ -1247,6 +1258,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *page)
- 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
- 	spin_lock_irq(&lruvec->lru_lock);
- 
-+	lruvec_memcg_debug(lruvec, page);
- 	return lruvec;
- }
- 
-@@ -1259,6 +1271,7 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page, unsigned long *flags)
- 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
- 	spin_lock_irqsave(&lruvec->lru_lock, *flags);
- 
-+	lruvec_memcg_debug(lruvec, page);
- 	return lruvec;
- }
- 
--- 
-2.22.0
+ 	disk->fops		= &brd_fops;
+ 	disk->private_data	= brd;
+ 	disk->flags		= GENHD_FL_EXT_DEVT;
+
+
+
+Thanks, 
+Ming
 
