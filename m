@@ -2,119 +2,109 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472F2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF090C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109F324685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E2724680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="m2bfD8zk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y9McB/OF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgANPQE (ORCPT
+        id S1729021AbgANPQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:16:04 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47598 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgANPQE (ORCPT
+        Tue, 14 Jan 2020 10:16:50 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1647 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:16:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1579014962; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kann6zCyNBbdeCYKcxlAxIyBSoLFOxdoAfrds4Ykqew=;
-        b=m2bfD8zkD7c1NMMwpd4j5EvVeSrnaEjcN+Zirav8BO5gKVRc73sv4NiqrnLvmj9fUZ9rww
-        tqLLASDOGtM1ES8AoU9N1o3/Ph2OERksgOoE0mCmt8XE4KT+HljF9mi1q+T2qWxRl4XH12
-        119cIoASr+kLxZ+E8c8LvtBOD5lIWFQ=
-Date:   Tue, 14 Jan 2020 12:15:48 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: common: usb-conn-gpio: Register charger
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1579014948.3.0@crapouillou.net>
-In-Reply-To: <1578536872.21256.25.camel@mhfsdcap03>
-References: <20200107002901.940297-1-paul@crapouillou.net>
-        <20200108165323.GA2506374@kroah.com> <1578504370.3.1@crapouillou.net>
-        <1578536872.21256.25.camel@mhfsdcap03>
+        Tue, 14 Jan 2020 10:16:50 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ddb2a0000>; Tue, 14 Jan 2020 07:15:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jan 2020 07:16:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jan 2020 07:16:49 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 15:16:47 +0000
+Subject: Re: [PATCH v4 03/14] dmaengine: tegra-apb: Prevent race conditions on
+ channel's freeing
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-4-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b99f455c-edd8-1a84-337a-fa0dc4ecb16a@nvidia.com>
+Date:   Tue, 14 Jan 2020 15:16:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200112173006.29863-4-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579014954; bh=k/wRed/cBeFlQnmA2AHyddPhCZsFdx4iEANjqjBOrzI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Y9McB/OFldXkh5PGu7wzBoklXoqzt81w4R7aWhTIUtbjYxpic8yuQATq0gQLl2cJf
+         6njViWHWYmoT+ymMYdYNDBKARwRNgQWhiE2T2z/LwXhgNepedOjoQTwrB7WvJ2i9ml
+         W0pEhK8+Qm1AcszKKHEjynir+BAA68H0VFy6PiNRP5zZCRrjIc7NrIXMjgmoMHh3Fo
+         3dFR/uetZ9rzwfZqiwMA7LTVwmg2eEDexZ3GnxL1eMTklNcE2/RCKXB2JNVjMozNnT
+         9ZzdxeinUPOHHCpGCkSk3Zv/zUXT0RlWVajF3n3EHa8S7tRi0kLNBNa6pldjqN/OaD
+         hLA54HEZg3t2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chunfeng,
 
-Le jeu., janv. 9, 2020 at 10:27, Chunfeng Yun=20
-<chunfeng.yun@mediatek.com> a =E9crit :
-> Hi Paul,
->=20
-> On Wed, 2020-01-08 at 14:26 -0300, Paul Cercueil wrote:
->>  Hi Greg,
->>=20
->>=20
->>  Le mer., janv. 8, 2020 at 17:53, Greg Kroah-Hartman
->>  <gregkh@linuxfoundation.org> a =E9crit :
->>  > On Tue, Jan 07, 2020 at 01:29:01AM +0100, Paul Cercueil wrote:
->>  >>  Register a power supply charger, whose online state depends on
->>  >> whether
->>  >>  the USB role is set to device or not.
->>  >
->>  > That says _what_ you are doing, but I have no idea _why_ you want=20
->> to
->>  > do
->>  > this.
->>  >
->>  > What is this going to cause to have happen?  What new userspace=20
->> api is
->>  > going to result?  What will a user do with this?
->>=20
->>  This is useful when the USB role is the only way to know if the=20
->> device
->>  is charging from USB.
-> There is no charger IC on your platform?
+On 12/01/2020 17:29, Dmitry Osipenko wrote:
+> It's incorrect to check the channel's "busy" state without taking a lock.
+> That shouldn't cause any real troubles, nevertheless it's always better
+> not to have any race conditions in the code.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 664e9c5df3ba..24ad3a5a04e3 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -1294,8 +1294,7 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+>  
+>  	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
+>  
+> -	if (tdc->busy)
+> -		tegra_dma_terminate_all(dc);
+> +	tegra_dma_terminate_all(dc);
+>  
+>  	spin_lock_irqsave(&tdc->lock, flags);
+>  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
 
-Correct.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
->=20
->>=20
->>  The API is the standard power supply charger API, you get a
->>  /sys/class/power_supply/xxx/online node which tells you the state of
->>  the charger.
->>=20
->>  The sole purpose of this is to give userspace applications a way to
->>  know whether or not the charger is plugged.
->>=20
->>  > Is this going to always show up, no matter if the role is not even
->>  > relevant for a power supply?
->>=20
->>  I guess it'd always show up, yes. In which case would the role not=20
->> be
->>  relevant for a power supply?
-> Do you also need it if the platform don't have battery?
+Cheers
+Jon
 
-I guess not. Would you prefer it to be disabled by default? If so, what=20
-would be the way to have it enabled? A flag in devicetree?
-
->=20
->>  Is gpio-b-connector not always used for
->>  OTG connectors?
-> It also supports device only mode, usually uses vBus pin to
-> enable/disable controller
-
-Yes, that would work too. The problem would be a host-only=20
-gpio-b-connector.
-
--Paul
-
-=
-
+-- 
+nvpublic
