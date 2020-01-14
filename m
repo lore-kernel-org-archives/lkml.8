@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5992C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C791C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA6524676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048CD24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996954;
-	bh=D3VkGmMM0F+62RmYOJvCGnU+mkcmb+KmFgNnf0ojJhg=;
+	s=default; t=1578996960;
+	bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SaBtCHVVKkOqPDjHYqfJdCjSBZHRXI/fpWMR6d/49+Momgd9VGqA9xFc8BtPRfMjv
-	 OlqTPBwoxZ9xSOh7sMqDb7CFSSvuONCEOVsOgBKmyR7m3IqF/3V/zeQEvHJxuYGSBC
-	 na+YU3bjZx4cG1lbWRzprseFEcX8GZLQMDq3xU3w=
+	b=iEwSLQqHDAzkSVUj4hVIn/2X8g8E+AhCoaBcXCdE5aMeZmu/pLrJzt1ki33IKa6Yp
+	 xiwqORGgfAxEN6KZsI80k9HwlmZ6eIAkgXoE1AAYh8aEkfpqUjp5/TffiwpnCcTui/
+	 zwcDmIly9L9dOGFZWgUzz0n2GYPmxlsm/fbCyvr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgANKKb (ORCPT
+        id S1731598AbgANKKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:10:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731652AbgANKKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:23 -0500
+        id S1729505AbgANKKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:10:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4DE324679;
-        Tue, 14 Jan 2020 10:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A750724677;
+        Tue, 14 Jan 2020 10:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996622;
-        bh=D3VkGmMM0F+62RmYOJvCGnU+mkcmb+KmFgNnf0ojJhg=;
+        s=default; t=1578996612;
+        bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RWh4A6+lIEtNCUdSBi+0pR8R8zZGgf5xHIO+xIJwCjAWBTE+7bIs08FcgF3Rh24PY
-         llkfzGW1q3qt3cS6k4EkiK4ZNb3O+RZP/F9FioY1UNjIg3JsGjeHqIZgENnVTRDUbC
-         NWq8Vf5yk8uRJfupPhAB6hadUsHeGFG1BQGBqrPw=
+        b=1XetOQKH+mLzTKbJOu+Bxcyim0B8sP2oXXo3PDs36Il2At2z/E3UjrEw/tnxuKdr3
+         /CSzQdNL10DANZPz3HSO5XblglUTpa258j1kyvMENFJ+o6d9Zr3SWIu1ZgjEoP7jAr
+         LJndQIz07/bhUCMkSSsLe7D05dRLtZykstt8y+ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 4.14 36/39] phy: cpcap-usb: Fix error path when no host driver is loaded
-Date:   Tue, 14 Jan 2020 11:02:10 +0100
-Message-Id: <20200114094346.548999755@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Faber <faber@faberman.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.14 11/39] can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
+Date:   Tue, 14 Jan 2020 11:01:45 +0100
+Message-Id: <20200114094341.641803479@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -62,107 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Florian Faber <faber@faberman.de>
 
-commit 4acb0200ab2b07843e3ef5599add3454c7440f03 upstream.
+commit 2d77bd61a2927be8f4e00d9478fe6996c47e8d45 upstream.
 
-If musb_mailbox() returns an error, we must still continue to finish
-configuring the phy.
+Under load, the RX side of the mscan driver can get stuck while TX still
+works. Restarting the interface locks up the system. This behaviour
+could be reproduced reliably on a MPC5121e based system.
 
-Otherwise the phy state may end up only half initialized, and this can
-cause the debug serial console to stop working. And this will happen if the
-usb driver musb controller is not loaded.
+The patch fixes the return value of the NAPI polling function (should be
+the number of processed packets, not constant 1) and the condition under
+which IRQs are enabled again after polling is finished.
 
-Let's fix the issue by adding helper for cpcap_usb_try_musb_mailbox().
+With this patch, no more lockups were observed over a test period of ten
+days.
 
-Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: afa17a500a36 ("net/can: add driver for mscan family & mpc52xx_mscan")
+Signed-off-by: Florian Faber <faber@faberman.de>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/motorola/phy-cpcap-usb.c |   33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ drivers/net/can/mscan/mscan.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -207,6 +207,19 @@ static int cpcap_phy_get_ints_state(stru
- static int cpcap_usb_set_uart_mode(struct cpcap_phy_ddata *ddata);
- static int cpcap_usb_set_usb_mode(struct cpcap_phy_ddata *ddata);
+--- a/drivers/net/can/mscan/mscan.c
++++ b/drivers/net/can/mscan/mscan.c
+@@ -392,13 +392,12 @@ static int mscan_rx_poll(struct napi_str
+ 	struct net_device *dev = napi->dev;
+ 	struct mscan_regs __iomem *regs = priv->reg_base;
+ 	struct net_device_stats *stats = &dev->stats;
+-	int npackets = 0;
+-	int ret = 1;
++	int work_done = 0;
+ 	struct sk_buff *skb;
+ 	struct can_frame *frame;
+ 	u8 canrflg;
  
-+static void cpcap_usb_try_musb_mailbox(struct cpcap_phy_ddata *ddata,
-+				       enum musb_vbus_id_status status)
-+{
-+	int error;
-+
-+	error = musb_mailbox(status);
-+	if (!error)
-+		return;
-+
-+	dev_dbg(ddata->dev, "%s: musb_mailbox failed: %i\n",
-+		__func__, error);
-+}
-+
- static void cpcap_usb_detect(struct work_struct *work)
- {
- 	struct cpcap_phy_ddata *ddata;
-@@ -226,9 +239,7 @@ static void cpcap_usb_detect(struct work
- 		if (error)
- 			goto out_err;
+-	while (npackets < quota) {
++	while (work_done < quota) {
+ 		canrflg = in_8(&regs->canrflg);
+ 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
+ 			break;
+@@ -419,18 +418,18 @@ static int mscan_rx_poll(struct napi_str
  
--		error = musb_mailbox(MUSB_ID_GROUND);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
- 
- 		error = regmap_update_bits(ddata->reg, CPCAP_REG_USBC3,
- 					   CPCAP_BIT_VBUSSTBY_EN,
-@@ -255,9 +266,7 @@ static void cpcap_usb_detect(struct work
- 			error = cpcap_usb_set_usb_mode(ddata);
- 			if (error)
- 				goto out_err;
--			error = musb_mailbox(MUSB_ID_GROUND);
--			if (error)
--				goto out_err;
-+			cpcap_usb_try_musb_mailbox(ddata, MUSB_ID_GROUND);
- 
- 			return;
- 		}
-@@ -267,9 +276,7 @@ static void cpcap_usb_detect(struct work
- 		error = cpcap_usb_set_usb_mode(ddata);
- 		if (error)
- 			goto out_err;
--		error = musb_mailbox(MUSB_VBUS_VALID);
--		if (error)
--			goto out_err;
-+		cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_VALID);
- 
- 		return;
+ 		stats->rx_packets++;
+ 		stats->rx_bytes += frame->can_dlc;
+-		npackets++;
++		work_done++;
+ 		netif_receive_skb(skb);
  	}
-@@ -279,9 +286,7 @@ static void cpcap_usb_detect(struct work
- 	if (error)
- 		goto out_err;
  
--	error = musb_mailbox(MUSB_VBUS_OFF);
--	if (error)
--		goto out_err;
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
+-	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
+-		napi_complete(&priv->napi);
+-		clear_bit(F_RX_PROGRESS, &priv->flags);
+-		if (priv->can.state < CAN_STATE_BUS_OFF)
+-			out_8(&regs->canrier, priv->shadow_canrier);
+-		ret = 0;
++	if (work_done < quota) {
++		if (likely(napi_complete_done(&priv->napi, work_done))) {
++			clear_bit(F_RX_PROGRESS, &priv->flags);
++			if (priv->can.state < CAN_STATE_BUS_OFF)
++				out_8(&regs->canrier, priv->shadow_canrier);
++		}
+ 	}
+-	return ret;
++	return work_done;
+ }
  
- 	dev_dbg(ddata->dev, "set UART mode\n");
- 
-@@ -647,9 +652,7 @@ static int cpcap_usb_phy_remove(struct p
- 	if (error)
- 		dev_err(ddata->dev, "could not set UART mode\n");
- 
--	error = musb_mailbox(MUSB_VBUS_OFF);
--	if (error)
--		dev_err(ddata->dev, "could not set mailbox\n");
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
- 
- 	usb_remove_phy(&ddata->phy);
- 	cancel_delayed_work_sync(&ddata->detect_work);
+ static irqreturn_t mscan_isr(int irq, void *dev_id)
 
 
