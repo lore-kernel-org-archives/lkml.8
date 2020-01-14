@@ -2,156 +2,152 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43549C33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A467C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A022072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E982072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="TX7kp1IN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pfC2hgW1"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="VeacHFBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgANF7y (ORCPT
+        id S1728640AbgANGBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 00:59:54 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50999 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725936AbgANF7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 00:59:53 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 94EAB808C;
-        Tue, 14 Jan 2020 00:59:52 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 14 Jan 2020 00:59:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        hfX/vQq29sm8h9CFPcu58VExDE6jtSKXUcX35KAhkgc=; b=TX7kp1INE+5wqoGG
-        2dS8Lci3evRXmsaBr6Pqfc/H7NeZ8j8WAB99WrrirX0VSl9pDySJ40pejgfyv6tR
-        Pf4L1DG5vWZYst91xX8cOqLpNLvqGl7dILUHJ/mJSyG/LYRznKZqT47vYOVtHzYK
-        ErzWGITiDIrzs6Oh2iT/FaR7h/fsJ0sVbOvehKm1cJB+1XqX+WkO0vcCrbBP6HQp
-        ueiXgLWqufjOM4f5dY2ZmHJc50L3U7vlT+Akdg84nXRczEj5Vx8hLNAfLTvcjwVg
-        I5Fd7XQjMcS1yaBfQuTUc54czgaFiMqELjboKY/RoAFw+tLGO4Q3lR+49C8ASh8+
-        8+1Z4w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=hfX/vQq29sm8h9CFPcu58VExDE6jtSKXUcX35KAhk
-        gc=; b=pfC2hgW1S6aGHeRRLZh50FI6XFlxAz/YvH23cZs1FKkoVMqfRxx+zeJEg
-        buE2AveXYsJSs61U0VuDhAz5yPde8bHsc5pmyjvO9OyHN6DrRNUDKJbBJ95WqMV3
-        9QsRp6ECp/BXJ6iZi6WoFvnMhV+fcPQ1wIGRnnGa+CUbiWHXq75PwV3zsMV1fxfC
-        hwvfXsabduveumYMVHvLSfSe4ysxldZYGqEwHdunaFyUbplSA2n3Dd2vQZLNZ8aI
-        0K4xrB3ksaFoizMdo/5tQeFktvOuOZgUJUiwkqbKB31fFWU7r3vgBcB9hXtj7dwC
-        FzUF9Mqf4F7vb2XFOiX0xWRixQRiw==
-X-ME-Sender: <xms:11gdXvIE27K_H38S--vhJQc-RtpSE7kWUNrBl-BjvnjjiRRYgGdtow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdejuddgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
-    drudejhedrvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgr
-    fidrnhgvthenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:11gdXrgfD8N45aCScFuMVLwL5wUuHYNxfbvItm6sOV3Cqko4bCcDlw>
-    <xmx:11gdXp4pVJxMEp1kK4N-dDTpndGxZSlJblpzjv1RtvTZWFsANIKfoA>
-    <xmx:11gdXgPeP4AE5dG4mr9SOxe2VSBxgjhVnFlpTAMJKQZUqXKtxDlQXQ>
-    <xmx:2FgdXp-gxBJS0lsQH1Uzf2yCm1XjTMjjcpT8mxhqXnouo-SfN1wwxw>
-Received: from mickey.themaw.net (unknown [118.209.175.25])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9CC6C80061;
-        Tue, 14 Jan 2020 00:59:46 -0500 (EST)
-Message-ID: <1fb8a0e4a763219f0f6cde6023ba89c1774cb854.camel@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 14 Jan 2020 13:59:42 +0800
-In-Reply-To: <d6cad1552171da1eb38c55d1d7b1ff45902b101f.camel@themaw.net>
-References: <20200103014901.GC8904@ZenIV.linux.org.uk>
-         <20200108031314.GE8904@ZenIV.linux.org.uk>
-         <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
-         <20200108213444.GF8904@ZenIV.linux.org.uk>
-         <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
-         <20200110041523.GK8904@ZenIV.linux.org.uk>
-         <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
-         <20200112213352.GP8904@ZenIV.linux.org.uk>
-         <800d36a0dccd43f1b61cab6332a6252ab9aab73c.camel@themaw.net>
-         <19fa114ef619057c0d14dc1a587d0ae9ad67dc6d.camel@themaw.net>
-         <20200114043924.GV8904@ZenIV.linux.org.uk>
-         <d6cad1552171da1eb38c55d1d7b1ff45902b101f.camel@themaw.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 14 Jan 2020 01:01:11 -0500
+Received: from ozlabs.org ([203.11.71.1]:57653 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgANGBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:01:11 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47xfw44QqWz9s29;
+        Tue, 14 Jan 2020 17:01:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1578981669;
+        bh=ALUqYMWpSbT7KFgjzz53QbyoSg0qLp1ykpVazbFizZs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=VeacHFBr9aPVdYAUvzFeq7NcHKql1k4vcG9bAmkdkP0pLZT7B8j9hNg3y/L2RIj9z
+         BDaQF4D7aqE14D9Thn18l0FaoUHV0MaHWCuzMCISlSlohqUG5aJmgPaqSUHFG5pZDH
+         FtazzpjNGDaGyyQQo9DBN6op1Tr8bmfsN1XPWXeUYzy93mOdMhtt1HwSzVUM1om7au
+         CC3fquYcjZWeqzToqCOweP0/3oRjXtSeSnhe0mK50gFHFLqurE3ZpFfKwqaTm2/OG0
+         2rOZERZDdudk46PoAypvGV0rRE7BUMwHg1S7rOqLB/nkd1kf9uT10bWmc1AQBFFHvh
+         UMMy2sUoIk97A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/ptdump: don't entirely rebuild kernel when selecting CONFIG_PPC_DEBUG_WX
+In-Reply-To: <176774c19b0398634e004835b9515c93030d326f.1578645835.git.christophe.leroy@c-s.fr>
+References: <176774c19b0398634e004835b9515c93030d326f.1578645835.git.christophe.leroy@c-s.fr>
+Date:   Tue, 14 Jan 2020 16:01:10 +1000
+Message-ID: <87muaqa861.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-14 at 13:01 +0800, Ian Kent wrote:
-> On Tue, 2020-01-14 at 04:39 +0000, Al Viro wrote:
-> > On Tue, Jan 14, 2020 at 08:25:19AM +0800, Ian Kent wrote:
-> > 
-> > > This isn't right.
-> > > 
-> > > There's actually nothing stopping a user from using a direct map
-> > > entry that's a multi-mount without an actual mount at its root.
-> > > So there could be directories created under these, it's just not
-> > > usually done.
-> > > 
-> > > I'm pretty sure I don't check and disallow this.
-> > 
-> > IDGI...  How the hell will that work in v5?  Who will set _any_
-> > traps outside the one in root in that scenario?  autofs_lookup()
-> > won't (there it's conditional upon indirect mount).  Neither
-> > will autofs_dir_mkdir() (conditional upon version being less
-> > than 5).  Who will, then?
-> > 
-> > Confused...
-> 
-> It's easy to miss.
-> 
-> For autofs type direct and offset mounts the flags are set at fill
-> super time.
-> 
-> They have to be set then because they are direct mounts and offset
-> mounts behave the same as direct mounts so they need to be set then
-> too. So, like direct mounts, offset mounts are each distinct autofs
-> (trigger) mounts.
-> 
-> I could check for this construct and refuse it if that's really
-> needed. I'm pretty sure this map construct isn't much used by
-> people using direct mounts.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Selecting CONFIG_PPC_DEBUG_WX only impacts ptdump and pgtable_32/64
+> init calls. Declaring related functions in asm/pgtable.h implies
+> rebuilding almost everything.
+>
+> Move ptdump_check_wx() declaration in a new dedicated header file.
 
-Ok, once again I'm not exactly accurate is some of what I said.
+Can you put it in arch/powerpc/mm/mmu_decl.h ? That already exists for
+things that are private to arch/powerpc/mm, which this function is
+AFAICT.
 
-It turns out that the autofs connectathon tests, one of the tests
-that I use, does test direct mounts with offsets both with and
-without a real mount at the base of the mount.
+cheers
 
-Based on that, I have to say this map construct is meant to be
-supported with Sun format maps of autofs (even though I think it's
-probably not used much).
-
-So not allowing it is probably the wrong thing to do.
-
-OTOH initial testing with the #work.namei branch shows these are
-functioning as required.
-
-Ian
-
+>  arch/powerpc/include/asm/pgtable.h |  6 ------
+>  arch/powerpc/include/asm/ptdump.h  | 15 +++++++++++++++
+>  arch/powerpc/mm/pgtable_32.c       |  1 +
+>  arch/powerpc/mm/pgtable_64.c       |  1 +
+>  arch/powerpc/mm/ptdump/ptdump.c    |  1 +
+>  5 files changed, 18 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/ptdump.h
+>
+> diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
+> index 0e4ec8cc37b7..8cc543ed114c 100644
+> --- a/arch/powerpc/include/asm/pgtable.h
+> +++ b/arch/powerpc/include/asm/pgtable.h
+> @@ -94,12 +94,6 @@ void mark_initmem_nx(void);
+>  static inline void mark_initmem_nx(void) { }
+>  #endif
+>  
+> -#ifdef CONFIG_PPC_DEBUG_WX
+> -void ptdump_check_wx(void);
+> -#else
+> -static inline void ptdump_check_wx(void) { }
+> -#endif
+> -
+>  /*
+>   * When used, PTE_FRAG_NR is defined in subarch pgtable.h
+>   * so we are sure it is included when arriving here.
+> diff --git a/arch/powerpc/include/asm/ptdump.h b/arch/powerpc/include/asm/ptdump.h
+> new file mode 100644
+> index 000000000000..246b92c21729
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/ptdump.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_POWERPC_PTDUMP_H
+> +#define _ASM_POWERPC_PTDUMP_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#ifdef CONFIG_PPC_DEBUG_WX
+> +void ptdump_check_wx(void);
+> +#else
+> +static inline void ptdump_check_wx(void) { }
+> +#endif
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif /* _ASM_POWERPC_PTDUMP_H */
+> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+> index 73b84166d06a..6c866f1b1eeb 100644
+> --- a/arch/powerpc/mm/pgtable_32.c
+> +++ b/arch/powerpc/mm/pgtable_32.c
+> @@ -29,6 +29,7 @@
+>  #include <asm/fixmap.h>
+>  #include <asm/setup.h>
+>  #include <asm/sections.h>
+> +#include <asm/ptdump.h>
+>  
+>  #include <mm/mmu_decl.h>
+>  
+> diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
+> index e78832dce7bb..3686cd887c2f 100644
+> --- a/arch/powerpc/mm/pgtable_64.c
+> +++ b/arch/powerpc/mm/pgtable_64.c
+> @@ -45,6 +45,7 @@
+>  #include <asm/sections.h>
+>  #include <asm/firmware.h>
+>  #include <asm/dma.h>
+> +#include <asm/ptdump.h>
+>  
+>  #include <mm/mmu_decl.h>
+>  
+> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+> index 2f9ddc29c535..d7b02bcd0691 100644
+> --- a/arch/powerpc/mm/ptdump/ptdump.c
+> +++ b/arch/powerpc/mm/ptdump/ptdump.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/const.h>
+>  #include <asm/page.h>
+>  #include <asm/pgalloc.h>
+> +#include <asm/ptdump.h>
+>  
+>  #include "ptdump.h"
+>  
+> -- 
+> 2.13.3
