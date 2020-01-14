@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E7FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A596C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572622467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618D02467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996397;
-	bh=Jh40u/tSBu3myoAaCydzkNwil2EpuaMTa9hi9TmuNPk=;
+	s=default; t=1578996400;
+	bh=WyIhIt16m1+94Tbnkg+8anM20YQiwXa69PsEMkW6yR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5wuSgy95OQuwLjIgyWamJrRRGnrpSxVtU6rSbNNpfnbfL+dfdf3cWv0HXxysYHSa
-	 UzQ2Q2leHbrk4IIi22Rxt+Kr8gfz8okO7HJEoY5m1jJmEE3UJ5vC/aZxB68d8IMRik
-	 WOTM+oXJ62ZW6lcFUxmkBfX5o9nof/ENKTdCnldk=
+	b=z3Ea4pO1Hk+Xzp7bHgWTubqnzL76vRc5vfm3iyOAA1A+EIRgbgbLGBM2IHMEAbFqj
+	 hxmphZQ7dII8apH3BsEjDSDeZqu5fj07JEiGxCG1WrMQv+6X42H6BN97wc6mH/QIWv
+	 4uS988ExZmUH1gp1yM0uK0MJZR/kwF2CASXHtwf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbgANKGf (ORCPT
+        id S1730395AbgANKGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729640AbgANKGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:32 -0500
+        id S1730393AbgANKGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FC3E24677;
-        Tue, 14 Jan 2020 10:06:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDC5424676;
+        Tue, 14 Jan 2020 10:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996391;
-        bh=Jh40u/tSBu3myoAaCydzkNwil2EpuaMTa9hi9TmuNPk=;
+        s=default; t=1578996394;
+        bh=WyIhIt16m1+94Tbnkg+8anM20YQiwXa69PsEMkW6yR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWhRRAPo3ygs8CHOJ2H6u6eMS2+3vvUuTfkUaY9MxAsr7rvAg3ZZ6WdQBgz3DdIYA
-         FuN1r9iOqOOdMn9vEngqbWAN14awrh2WE7fIRojo8MtfLFlP3z18WOrEdZoYggBo0c
-         MNqwm4H6GzON6mT+zyQMmQ2XXtL3jpU21WZvLDFs=
+        b=lDa/LbsSz3eqM2W4C1hrdyvVveoPZZOaPIHC6KZAis9r7sVxOD9qM6BU4xeSO9iI7
+         PJbC/vbzm7MBrbH3BmnePHBM6rE9gHyxcUTUghRSaOVnBXxThZuTRWfeBT5o9TI+PH
+         3zhMl8GbiRfZQTNQeMffe1FHUAcg8tHg0B0as6So=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 5.4 65/78] staging: vt6656: remove bool from vnt_radio_power_on ret
-Date:   Tue, 14 Jan 2020 11:01:39 +0100
-Message-Id: <20200114094402.155167930@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 5.4 66/78] mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
+Date:   Tue, 14 Jan 2020 11:01:40 +0100
+Message-Id: <20200114094402.279099148@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -58,30 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Ganapathi Bhat <gbhat@marvell.com>
 
-commit 07f59f180ee083c48c32a1e69ae1d0091444d212 upstream.
+commit 3d94a4a8373bf5f45cf5f939e88b8354dbf2311b upstream.
 
-The driver uses logical only error checking a bool true would flag error.
+mwifiex_process_country_ie() function parse elements of bss
+descriptor in beacon packet. When processing WLAN_EID_COUNTRY
+element, there is no upper limit check for country_ie_len before
+calling memcpy. The destination buffer domain_info->triplet is an
+array of length MWIFIEX_MAX_TRIPLET_802_11D(83). The remote
+attacker can build a fake AP with the same ssid as real AP, and
+send malicous beacon packet with long WLAN_EID_COUNTRY elemen
+(country_ie_len > 83). Attacker can  force STA connect to fake AP
+on a different channel. When the victim STA connects to fake AP,
+will trigger the heap buffer overflow. Fix this by checking for
+length and if found invalid, don not connect to the AP.
 
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/cc52b67c-9ef8-3e57-815a-44d10701919e@gmail.com
+This fix addresses CVE-2019-14895.
+
+Reported-by: huangwen <huangwenabc@gmail.com>
+Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/card.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/vt6656/card.c
-+++ b/drivers/staging/vt6656/card.c
-@@ -719,7 +719,7 @@ end:
-  */
- int vnt_radio_power_on(struct vnt_private *priv)
- {
--	int ret = true;
-+	int ret = 0;
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -229,6 +229,14 @@ static int mwifiex_process_country_ie(st
+ 			    "11D: skip setting domain info in FW\n");
+ 		return 0;
+ 	}
++
++	if (country_ie_len >
++	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		mwifiex_dbg(priv->adapter, ERROR,
++			    "11D: country_ie_len overflow!, deauth AP\n");
++		return -EINVAL;
++	}
++
+ 	memcpy(priv->adapter->country_code, &country_ie[2], 2);
  
- 	vnt_exit_deep_sleep(priv);
+ 	domain_info->country_code[0] = country_ie[2];
+@@ -272,8 +280,9 @@ int mwifiex_bss_start(struct mwifiex_pri
+ 	priv->scan_block = false;
  
+ 	if (bss) {
+-		if (adapter->region_code == 0x00)
+-			mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00 &&
++		    mwifiex_process_country_ie(priv, bss))
++			return -EINVAL;
+ 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
 
 
