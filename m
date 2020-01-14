@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDFAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849F3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC46520678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B36F20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996967;
-	bh=hp3tyotnzJKkUh2bGZfuSWRRRn68vaaDLm7ShU8eO6Q=;
+	s=default; t=1578996971;
+	bh=otAkdyOj/yWKhsgb0O1ZTTUXCLP9jOd+1Jir8Krge+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0mWIBCgR31yjzaAwsTZrqub99B72mmB42NPkzg55KjioZ6sI/xeE4Cd4ypPohhrM
-	 fedwj45GLrllfaJwNlScnFtXkrPWQ7bJxq+vVsCO01jJhzErhYMzlqZD2yE2dyMCDC
-	 kiwV/9T5YR+Izpxmu7Fj4q9YXgFNBP3/pfZxpYk0=
+	b=l9INlvoS7iSIKghQ5JWJw/Ukcg5YwKRnUdDLb4YjCMphFO9K/zD7tCyoe0D9QHpsX
+	 XK8ncjfkW1O16ko7OuJxPyzhfqECzYAyIVgq8QFYMIDK32D6IX+Y7kbnabr06XE4hJ
+	 Pm+hP7cfX8UKNDZQgtKVHcUthyyRnoK/gDctmDio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbgANKQH (ORCPT
+        id S1731064AbgANKJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgANKKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:00 -0500
+        id S1731467AbgANKJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B43A20678;
-        Tue, 14 Jan 2020 10:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E708E20678;
+        Tue, 14 Jan 2020 10:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996599;
-        bh=hp3tyotnzJKkUh2bGZfuSWRRRn68vaaDLm7ShU8eO6Q=;
+        s=default; t=1578996592;
+        bh=otAkdyOj/yWKhsgb0O1ZTTUXCLP9jOd+1Jir8Krge+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=so8nOLiPwTnunJQttMjdBy+noJ+tKTJ46bqCx/4gdh7MpX543mPlcv7c9t9at/o5R
-         /wgCpacdrDroSv3DCXZugkvl0aAV9iG4/SWHgYvezA3AgcF/Dy+9yJyQ/YZHthfaDx
-         CjMycHSWVxDZMoQry3C4OOUUNOcOl0AItz9uXYqU=
+        b=hlDx3thdXmqVWsv6Ji9c6WLUk0QTzd3L7mOuVZVAQJvs9iax7MpZefAtKkQi+Wn6U
+         nDVczY+Kf7veEyhHDekj8tj8rqPz6kpuxx+SbmK7YXeTAdbycjx0j8SYoRqqHgJcYe
+         O7HPepRiD3yTN8BfuDOZ3sVuBm4Msu9tzNsAJ96o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaitao Cheng <pilgrimtao@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 06/39] kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
-Date:   Tue, 14 Jan 2020 11:01:40 +0100
-Message-Id: <20200114094340.673452739@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 4.14 23/39] drm/fb-helper: Round up bits_per_pixel if possible
+Date:   Tue, 14 Jan 2020 11:01:57 +0100
+Message-Id: <20200114094344.125349345@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -59,45 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaitao Cheng <pilgrimtao@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 50f9ad607ea891a9308e67b81f774c71736d1098 upstream.
+commit f30e27779d3031a092c2a177b7fb76adccc45241 upstream.
 
-In the function, if register_trace_sched_migrate_task() returns error,
-sched_switch/sched_wakeup_new/sched_wakeup won't unregister. That is
-why fail_deprobe_sched_switch was added.
+When userspace requests a video mode parameter value that is not
+supported, frame buffer device drivers should round it up to a supported
+value, if possible, instead of just rejecting it.  This allows
+applications to quickly scan for supported video modes.
 
-Link: http://lkml.kernel.org/r/20191231133530.2794-1-pilgrimtao@gmail.com
+Currently this rule is not followed for the number of bits per pixel,
+causing e.g. "fbset -depth N" to fail, if N is smaller than the current
+number of bits per pixel.
 
+Fix this by returning an error only if bits per pixel is too large, and
+setting it to the current value otherwise.
+
+See also Documentation/fb/framebuffer.rst, Section 2 (Programmer's View
+of /dev/fb*").
+
+Fixes: 865afb11949e5bf4 ("drm/fb-helper: reject any changes to the fbdev")
 Cc: stable@vger.kernel.org
-Fixes: 478142c39c8c2 ("tracing: do not grab lock in wakeup latency function tracing")
-Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191230132734.4538-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_sched_wakeup.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_fb_helper.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -640,7 +640,7 @@ static void start_wakeup_tracer(struct t
- 	if (ret) {
- 		pr_info("wakeup trace: Couldn't activate tracepoint"
- 			" probe to kernel_sched_migrate_task\n");
--		return;
-+		goto fail_deprobe_sched_switch;
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -1590,7 +1590,7 @@ int drm_fb_helper_check_var(struct fb_va
+ 	 * Changes struct fb_var_screeninfo are currently not pushed back
+ 	 * to KMS, hence fail if different settings are requested.
+ 	 */
+-	if (var->bits_per_pixel != fb->format->cpp[0] * 8 ||
++	if (var->bits_per_pixel > fb->format->cpp[0] * 8 ||
+ 	    var->xres > fb->width || var->yres > fb->height ||
+ 	    var->xres_virtual > fb->width || var->yres_virtual > fb->height) {
+ 		DRM_DEBUG("fb requested width/height/bpp can't fit in current fb "
+@@ -1616,6 +1616,11 @@ int drm_fb_helper_check_var(struct fb_va
  	}
  
- 	wakeup_reset(tr);
-@@ -658,6 +658,8 @@ static void start_wakeup_tracer(struct t
- 		printk(KERN_ERR "failed to start wakeup tracer\n");
- 
- 	return;
-+fail_deprobe_sched_switch:
-+	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
- fail_deprobe_wake_new:
- 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
- fail_deprobe:
+ 	/*
++	 * Likewise, bits_per_pixel should be rounded up to a supported value.
++	 */
++	var->bits_per_pixel = fb->format->cpp[0] * 8;
++
++	/*
+ 	 * drm fbdev emulation doesn't support changing the pixel format at all,
+ 	 * so reject all pixel format changing requests.
+ 	 */
 
 
