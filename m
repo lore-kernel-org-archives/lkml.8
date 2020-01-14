@@ -2,156 +2,162 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD41C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F1FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0DF207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF015217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TAfXd23q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgANJYk convert rfc822-to-8bit (ORCPT
+        id S1729016AbgANJZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:24:40 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43995 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANJYh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:24:37 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 09180C0012;
-        Tue, 14 Jan 2020 09:24:33 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 10:24:32 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
-Message-ID: <20200114102432.602415a4@xps13>
-In-Reply-To: <20191209113506.41341ed4@collabora.com>
-References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
-        <20191127105522.31445-5-miquel.raynal@bootlin.com>
-        <20191209113506.41341ed4@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 Jan 2020 04:25:00 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:45848 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbgANJY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:24:59 -0500
+Received: from zn.tnic (p200300EC2F0C7700ADC3CAC9BB95AB92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:adc3:cac9:bb95:ab92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 13E9D1EC0C76;
+        Tue, 14 Jan 2020 10:24:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578993898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lCPS559Qb2dkos6z5zHaZpTmRiSzeCBjtEVcicxIAhk=;
+        b=TAfXd23q2G31h+y6K9ys2x9wxFX0poAJ6s/65OyI0W4MRRtWsM3q/2ee2IGoJBOmdkwMG5
+        9rEEIlATqqvsYcdbqdsZfTTgkUFlH0Bs4+3WG1rIMuoWjVtTMu7Mqt5ZDht/qYpY+ZSzKL
+        XJaydJSSUaf7LmAn7axl/FsLIcdmC6U=
+Date:   Tue, 14 Jan 2020 10:24:50 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     x86@kernel.org, Bhupesh Sharma <bhsharma@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Chris Down <chris@chrisdown.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][v6] x86/resctrl: Add task resctrl information display
+Message-ID: <20200114092450.GA31032@zn.tnic>
+References: <20200110070608.18902-1-yu.c.chen@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110070608.18902-1-yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, Jan 10, 2020 at 03:06:08PM +0800, Chen Yu wrote:
+> Monitoring tools that want to find out which resctrl control
+> and monitor groups a task belongs to must currently read
+> the "tasks" file in every group until they locate the process
+> ID.
+> 
+> Add an additional file /proc/{pid}/cpu_resctrl to provide this
+> information.
+> 
+> The output is as followed, for example:
+> 
+>  1)   ""
+>       Resctrl is not available.
+> 
+>  2)   "/"
+>       Task is part of the root group, task is not associated to
+>       any monitor group.
+> 
+>  3)   "/mon_groups/mon0"
+>       Task is part of the root group and monitor group mon0.
+> 
+>  4)   "/group0"
+>       Task is part of resctrl control group group0, task is not
+>       associated to any monitor group.
+> 
+>  5)   "/group0/mon_groups/mon1"
+>       Task is part of resctrl control group group0 and monitor
+>       group mon1.
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 9 Dec
-2019 11:35:06 +0100:
+So this way to present the information is totally non-intuitive,
+IMNSVHO. What's wrong with:
 
-> On Wed, 27 Nov 2019 11:55:22 +0100
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> 
-> > Introduce a generic way to define concatenated MTD devices. This may
-> > be very useful in the case of ie. stacked SPI-NOR. Partitions to
-> > concatenate are described in an additional property of the partitions
-> > subnode:
-> > 
-> >         flash0 {
-> >                 partitions {
-> >                         compatible = "fixed-partitions";
-> >                         part-concat = <&flash0_part1>, <&flash1_part0>;
-> > 
-> > 			part0@0 {
-> > 				label = "part0_0";
-> > 				reg = <0x0 0x800000>;
-> > 			};
-> > 
-> > 			flash0_part1: part1@800000 {
-> > 				label = "part0_1";
-> > 				reg = <0x800000 0x800000>;  
-> 
-> So, flash0_part1 and flash0_part2 will be created even though the user
-> probably doesn't need them?
-> 
-> > 			};
-> >                 };
-> >         };
-> > 
-> >         flash1 {
-> >                 partitions {
-> >                         compatible = "fixed-partitions";
-> > 
-> > 			flash0_part1: part1@0 {
-> > 				label = "part1_0";
-> > 				reg = <0x0 0x800000>;
-> > 			};
-> > 
-> > 			part0@800000 {
-> > 				label = "part1_1";
-> > 				reg = <0x800000 0x800000>;
-> > 			};
-> >                 };
-> >         };  
-> 
-> IMHO this representation is far from intuitive. At first glance it's not
-> obvious which partitions are linked together and what's the name of the
-> resulting concatenated part. I definitely prefer the solution where we
-> have a virtual device describing the concatenation. I also understand
-> that this goes against the #1 DT rule: "DT only decribes HW blocks, not
-> how they should be used/configured", but maybe we can find a compromise
-> here, like moving this description to the /chosen node?
-> 
-> chosen {
-> 	flash-arrays {
-> 		/*
-> 		 * my-flash-array is the MTD name if label is
-> 		 * not present.
-> 		 */
-> 		my-flash-array {
-> 			/*
-> 			 * We could have
-> 			 * compatible = "flash-array";
-> 			 * but we can also do without it.
-> 			 */
-> 			label = "foo";
-> 			flashes = <&flash1 &flash2 ...>;
-> 			partitions {
-> 				/* usual partition description. */
-> 				...
-> 			};
-> 		};
-> 	};
-> };
-> 
-> Rob, what do you think?
+1)
+	res_group:
+	mon_group:
 
-Rob, I would really welcome your thoughts on this solution, having
-something like a flash-array node in the /chosen/ node would avoid
-creating dummy devices, keep the declarations of the physical nodes
-tidy and have a very simple description.
+2)
+	res_group: /
+	mon_group:
 
-Hope this compromise could fit!
- 
-> 
-> > 
-> > This is useful for boards where memory range has been extended with
-> > the use of multiple flash chips as memory banks of a single MTD
-> > device, with partitions spanning chip borders.
-> > 
-> > Suggested-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+3)
+	res_group: /
+	mon_group: mon0
 
-Thanks,
-Miquèl
+4)
+	res_group: group0
+	mon_group:
+
+5)
+	res_group: group0
+	mon_group: mon1
+
+?
+
+You can even call the file "cpu_resctrl_groups" so that it is clear that
+it will dump groups and then do:
+
+	res: group0
+	mon: mon1
+
+which is both human-readable and easily greppable.
+
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 2e3b06d6bbc6..dcbf62d6b689 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -725,6 +725,85 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_PROC_CPU_RESCTRL
+> +
+> +/*
+> + * A task can only be part of one resctrl
+> + * control group and of one monitor
+> + * group which is associated to that resctrl
+> + * control group.
+
+Extend those comments to 80 cols.
+
+> + * So one line is simple and clear enough:
+
+Actually, the one line format you've done is confusing and can be done
+much more human- and tool-readable.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
