@@ -2,179 +2,267 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DF7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA28924673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U7K6vNPA"
+	by mail.kernel.org (Postfix) with ESMTP id ED6B224676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgANLek (ORCPT
+        id S1729224AbgANLhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:34:40 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:60028 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728746AbgANLek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:34:40 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579001679; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=woaMqbbGS/XqLPbmGA4bjzbSXSg0w6f97FTkhMSYq/c=;
- b=U7K6vNPAvuWEsDVNXVsRncyoj4rYD/wYsZF5HB9V5DypPISguLYukShwKmMuYxCk5Mjt6yea
- iMDlXDqFVcPutOzda5Um3hYTYPF8qYlFduh/edS/T57xTPhEk2VDVQ4ujtdknbdyHbAkACTb
- 6Vy4ouU7EQ3Rut6rcR1oM9uu4MQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1da74d.7f84b40bf500-smtp-out-n02;
- Tue, 14 Jan 2020 11:34:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41295C447A1; Tue, 14 Jan 2020 11:34:36 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 822A0C433CB;
-        Tue, 14 Jan 2020 11:34:35 +0000 (UTC)
+        Tue, 14 Jan 2020 06:37:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8716 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbgANLhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:37:06 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C8605A6E80C2610A71DD;
+        Tue, 14 Jan 2020 19:37:03 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 14 Jan 2020 19:36:57 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: change to use rwsem for gc_mutex
+Date:   Tue, 14 Jan 2020 19:36:50 +0800
+Message-ID: <20200114113650.104881-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jan 2020 17:04:35 +0530
-From:   bgodavar@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        tientzu@chromium.org, seanpaul@chromium.org,
-        gubbaven@codeaurora.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
-In-Reply-To: <20191212174348.GS228856@google.com>
-References: <20191114081430.25427-1-bgodavar@codeaurora.org>
- <20191212174348.GS228856@google.com>
-Message-ID: <2650b5540448295e767448ddd7662d30@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Mutex lock won't serialize callers, in order to avoid starving of unlucky
+caller, let's use rwsem lock instead.
 
-sorry missed you mail.
-On 2019-12-12 23:13, Matthias Kaehlcke wrote:
-> On Thu, Nov 14, 2019 at 01:44:30PM +0530, Balakrishna Godavarthi wrote:
->> Instead of relying on other subsytem to turn ON clocks
->> required for BT SoC to operate, voting them from the driver.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
->>  1 file changed, 29 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index f10bdf8e1fc5..dc95e378574b 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -164,6 +164,7 @@ struct qca_serdev {
->>  };
->> 
->>  static int qca_regulator_enable(struct qca_serdev *qcadev);
->> +static int qca_power_on(struct qca_serdev *qcadev);
->>  static void qca_regulator_disable(struct qca_serdev *qcadev);
->>  static void qca_power_shutdown(struct hci_uart *hu);
->>  static int qca_power_off(struct hci_dev *hdev);
->> @@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
->>  		} else {
->>  			hu->init_speed = qcadev->init_speed;
->>  			hu->oper_speed = qcadev->oper_speed;
->> -			ret = qca_regulator_enable(qcadev);
->> +			ret = qca_power_on(qcadev);
->>  			if (ret) {
->>  				destroy_workqueue(qca->workqueue);
->>  				kfree_skb(qca->rx_skb);
->> @@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
->>  	qcadev = serdev_device_get_drvdata(hu->serdev);
->>  	if (!qcadev->bt_power->vregs_on) {
->>  		serdev_device_close(hu->serdev);
->> -		ret = qca_regulator_enable(qcadev);
->> +		ret = qca_power_on(qcadev);
->>  		if (ret)
->>  			return ret;
->> 
->> @@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart 
->> *hu)
->>  	host_set_baudrate(hu, 2400);
->>  	qca_send_power_pulse(hu, false);
->>  	qca_regulator_disable(qcadev);
->> +
->> +	if (qcadev->susclk)
->> +		clk_disable_unprepare(qcadev->susclk);
->>  }
->> 
->>  static int qca_power_off(struct hci_dev *hdev)
->> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
->>  	return 0;
->>  }
->> 
->> +static int qca_power_on(struct qca_serdev *qcadev)
->> +{
->> +	int err;
->> +
->> +	if (qcadev->susclk) {
->> +		err = clk_prepare_enable(qcadev->susclk);
->> +		if (err)
->> +			return err;
->> +	}
->> +
->> +	qca_regulator_enable(qcadev);
->> +	return 0;
->> +}
->> +
->>  static int qca_regulator_enable(struct qca_serdev *qcadev)
->>  {
->>  	struct qca_power *power = qcadev->bt_power;
->> @@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct 
->> serdev_device *serdev)
->> 
->>  		qcadev->bt_power->vregs_on = false;
->> 
->> +		if (qcadev->btsoc_type == QCA_WCN3990 ||
->> +		    qcadev->btsoc_type == QCA_WCN3991) {
->> +			qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
->> +			if (IS_ERR(qcadev->susclk)) {
->> +				dev_err(&serdev->dev, "failed to acquire clk\n");
->> +				return PTR_ERR(qcadev->susclk);
->> +			}
-> 
-> This will break existing users. Use devm_clk_get_optional() and at most
-> raise a warning if the clock doesn't exist.
-> 
-> It would also be nice to add the clock to the affected devices in the 
-> tree
-> if possible:
-> 
-[Bala]: Sure we will use devm_clk_get_optional() in the next patch.
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h    |  5 ++++-
+ fs/f2fs/file.c    | 12 ++++++------
+ fs/f2fs/gc.c      | 12 ++++++------
+ fs/f2fs/segment.c |  6 +++---
+ fs/f2fs/super.c   | 16 ++++++++--------
+ 5 files changed, 27 insertions(+), 24 deletions(-)
 
-We will check the effected areas and update the necessary as i see some 
-projects are not existing.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index e7208442d32a..61d62cd06449 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1391,7 +1391,10 @@ struct f2fs_sb_info {
+ 	struct f2fs_mount_info mount_opt;	/* mount options */
+ 
+ 	/* for cleaning operations */
+-	struct mutex gc_mutex;			/* mutex for GC */
++	struct rw_semaphore gc_lock;		/*
++						 * semaphore for GC, avoid
++						 * race between GC and GC or CP
++						 */
+ 	struct f2fs_gc_kthread	*gc_thread;	/* GC thread */
+ 	unsigned int cur_victim_sec;		/* current victim section num */
+ 	unsigned int gc_mode;			/* current GC state */
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 0dff22566a1d..86ddbb55d2b1 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1642,7 +1642,7 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+ next_alloc:
+ 		if (has_not_enough_free_secs(sbi, 0,
+ 			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+-			mutex_lock(&sbi->gc_mutex);
++			down_write(&sbi->gc_lock);
+ 			err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+ 			if (err && err != -ENODATA && err != -EAGAIN)
+ 				goto out_err;
+@@ -2450,12 +2450,12 @@ static int f2fs_ioc_gc(struct file *filp, unsigned long arg)
+ 		return ret;
+ 
+ 	if (!sync) {
+-		if (!mutex_trylock(&sbi->gc_mutex)) {
++		if (!down_write_trylock(&sbi->gc_lock)) {
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
+ 	} else {
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 	}
+ 
+ 	ret = f2fs_gc(sbi, sync, true, NULL_SEGNO);
+@@ -2493,12 +2493,12 @@ static int f2fs_ioc_gc_range(struct file *filp, unsigned long arg)
+ 
+ do_more:
+ 	if (!range.sync) {
+-		if (!mutex_trylock(&sbi->gc_mutex)) {
++		if (!down_write_trylock(&sbi->gc_lock)) {
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
+ 	} else {
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 	}
+ 
+ 	ret = f2fs_gc(sbi, range.sync, true, GET_SEGNO(sbi, range.start));
+@@ -2929,7 +2929,7 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
+ 	end_segno = min(start_segno + range.segments, dev_end_segno);
+ 
+ 	while (start_segno < end_segno) {
+-		if (!mutex_trylock(&sbi->gc_mutex)) {
++		if (!down_write_trylock(&sbi->gc_lock)) {
+ 			ret = -EBUSY;
+ 			goto out;
+ 		}
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index c43181ef98c4..67eca7c2d983 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -78,18 +78,18 @@ static int gc_thread_func(void *data)
+ 		 */
+ 		if (sbi->gc_mode == GC_URGENT) {
+ 			wait_ms = gc_th->urgent_sleep_time;
+-			mutex_lock(&sbi->gc_mutex);
++			down_write(&sbi->gc_lock);
+ 			goto do_gc;
+ 		}
+ 
+-		if (!mutex_trylock(&sbi->gc_mutex)) {
++		if (!down_write_trylock(&sbi->gc_lock)) {
+ 			stat_other_skip_bggc_count(sbi);
+ 			goto next;
+ 		}
+ 
+ 		if (!is_idle(sbi, GC_TIME)) {
+ 			increase_sleep_time(gc_th, &wait_ms);
+-			mutex_unlock(&sbi->gc_mutex);
++			up_write(&sbi->gc_lock);
+ 			stat_io_skip_bggc_count(sbi);
+ 			goto next;
+ 		}
+@@ -1370,7 +1370,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+ 				reserved_segments(sbi),
+ 				prefree_segments(sbi));
+ 
+-	mutex_unlock(&sbi->gc_mutex);
++	up_write(&sbi->gc_lock);
+ 
+ 	put_gc_inode(&gc_list);
+ 
+@@ -1409,9 +1409,9 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+ 			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+ 		};
+ 
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+-		mutex_unlock(&sbi->gc_mutex);
++		up_write(&sbi->gc_lock);
+ 		put_gc_inode(&gc_list);
+ 
+ 		if (get_valid_blocks(sbi, segno, true))
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 311fe4937f6a..6d03b89242f5 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -504,7 +504,7 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+ 	 * dir/node pages without enough free segments.
+ 	 */
+ 	if (has_not_enough_free_secs(sbi, 0, 0)) {
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 		f2fs_gc(sbi, false, false, NULL_SEGNO);
+ 	}
+ }
+@@ -2860,9 +2860,9 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
+ 	if (sbi->discard_blks == 0)
+ 		goto out;
+ 
+-	mutex_lock(&sbi->gc_mutex);
++	down_write(&sbi->gc_lock);
+ 	err = f2fs_write_checkpoint(sbi, &cpc);
+-	mutex_unlock(&sbi->gc_mutex);
++	up_write(&sbi->gc_lock);
+ 	if (err)
+ 		goto out;
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 593dc3d2b80b..65a7a432dfee 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1238,9 +1238,9 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
+ 
+ 		cpc.reason = __get_cp_reason(sbi);
+ 
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 		err = f2fs_write_checkpoint(sbi, &cpc);
+-		mutex_unlock(&sbi->gc_mutex);
++		up_write(&sbi->gc_lock);
+ 	}
+ 	f2fs_trace_ios(NULL, 1);
+ 
+@@ -1621,7 +1621,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 	f2fs_update_time(sbi, DISABLE_TIME);
+ 
+ 	while (!f2fs_time_over(sbi, DISABLE_TIME)) {
+-		mutex_lock(&sbi->gc_mutex);
++		down_write(&sbi->gc_lock);
+ 		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+ 		if (err == -ENODATA) {
+ 			err = 0;
+@@ -1643,7 +1643,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 		goto restore_flag;
+ 	}
+ 
+-	mutex_lock(&sbi->gc_mutex);
++	down_write(&sbi->gc_lock);
+ 	cpc.reason = CP_PAUSE;
+ 	set_sbi_flag(sbi, SBI_CP_DISABLED);
+ 	err = f2fs_write_checkpoint(sbi, &cpc);
+@@ -1655,7 +1655,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 	spin_unlock(&sbi->stat_lock);
+ 
+ out_unlock:
+-	mutex_unlock(&sbi->gc_mutex);
++	up_write(&sbi->gc_lock);
+ restore_flag:
+ 	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
+ 	return err;
+@@ -1663,12 +1663,12 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
+ 
+ static void f2fs_enable_checkpoint(struct f2fs_sb_info *sbi)
+ {
+-	mutex_lock(&sbi->gc_mutex);
++	down_write(&sbi->gc_lock);
+ 	f2fs_dirty_to_prefree(sbi);
+ 
+ 	clear_sbi_flag(sbi, SBI_CP_DISABLED);
+ 	set_sbi_flag(sbi, SBI_IS_DIRTY);
+-	mutex_unlock(&sbi->gc_mutex);
++	up_write(&sbi->gc_lock);
+ 
+ 	f2fs_sync_fs(sbi->sb, 1);
+ }
+@@ -3398,7 +3398,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 
+ 	/* init f2fs-specific super block info */
+ 	sbi->valid_super_block = valid_super_block;
+-	mutex_init(&sbi->gc_mutex);
++	init_rwsem(&sbi->gc_lock);
+ 	mutex_init(&sbi->writepages);
+ 	mutex_init(&sbi->cp_mutex);
+ 	mutex_init(&sbi->resize_mutex);
+-- 
+2.18.0.rc1
 
-> arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi:
-> compatible = "qcom,wcn3990-bt";
-> arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi:              compatible =
-> "qcom,wcn3990-bt";
-> arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:               compatible =
-> "qcom,wcn3990-bt";
-> arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:             compatible =
-> "qcom,wcn3990-bt";
-> arch/arm64/boot/dts/qcom/sdm845-db845c.dts:             compatible =
-> "qcom,wcn3990-bt";
-> arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts:
-> compatible = "qcom,wcn3990-bt";
