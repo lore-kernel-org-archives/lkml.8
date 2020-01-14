@@ -2,308 +2,105 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92115C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7852080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbDZPA61"
+	by mail.kernel.org (Postfix) with ESMTP id 6CFDD2080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgANBh0 (ORCPT
+        id S1729536AbgANBhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:37:26 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46642 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbgANBg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:36:58 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f15so8425155lfl.13;
-        Mon, 13 Jan 2020 17:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R9OJk1oEYttgvht3VdngYW5fu/JjHOhoNUqTnPVMWnU=;
-        b=kbDZPA61+M3cx751SNF/C+C3EnaCBAhn8rcK/BGvQf2AZaAD//N+zYJnXEzSrwhH5A
-         xXddc1MH0uUVMLTWvnprJHJoAbWAx5hVXnva+hVrhQC+5LeatSrlBWT4Bu7apCoGBmcq
-         jrG8iq5c39nJvk2ccBflyEkFa4QbQvYNzpIsI/G4g/9A2yDP67nE3orjCNVl5Wy84uGQ
-         UAZrRI+Kxfie5RcJxnPWCLltrc66+iYKoYKAu4P7PGK+4nbp3OxsXx7cz58dwfvBK37T
-         SkWrnaJqZkhwaeZUGyOAvo1OZaN6IGZLNUW0cLSkdCGjleZcxMHDWIexpSa+2GEKhwAJ
-         81cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R9OJk1oEYttgvht3VdngYW5fu/JjHOhoNUqTnPVMWnU=;
-        b=KfWqnRAoG3NkdV2uPJqfDIMpo35CxUplFpCO4v/IN35DCDeDS4ky3cNhjzkDGWb9Ro
-         deMiQgd7q7gYnuzQh2mDPauwFq/goPxhQTbULd4FLQ78yXhoYj1jE6e/yC30sYAoedF3
-         qdbbN4Bm2sNKJzd7CaY4XoQe1tp0wLIZW2RstZxFvf0Cclt9/U1MgER8MRXO1HvVFM2g
-         YU4HrrmJ5ZHRORYdfuwtNjlX44mRzoBmstKtDRrrYj8xBcL+RCxiJr725gR6tdruuUjf
-         lc5iW7jKU9/6LOP4Cff+VBkboMDF7OYSD5oSHnscXQ3E4a+QFFRjecrRIHg9pkp0jzBL
-         tFTA==
-X-Gm-Message-State: APjAAAVKBqgXiky7Rw/+nReGnPKobQvYbj1kdRmvBFfckKqSCCONBKi9
-        7/XPj0Ni1pOMXxLQVeTJgBY=
-X-Google-Smtp-Source: APXvYqxXtSpHcJn0JRdwhg2nhztS+0hsuiJ+r59IwVsH/W63vD5pzDiUlObjy8e89S1aWgUe6hcXLA==
-X-Received: by 2002:ac2:50cc:: with SMTP id h12mr186911lfm.29.1578965816448;
-        Mon, 13 Jan 2020 17:36:56 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id m189sm6427627lfd.92.2020.01.13.17.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 17:36:55 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/8] i2c: tegra: Prevent interrupt triggering after transfer timeout
-Date:   Tue, 14 Jan 2020 04:34:37 +0300
-Message-Id: <20200114013442.28448-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200114013442.28448-1-digetx@gmail.com>
-References: <20200114013442.28448-1-digetx@gmail.com>
+        Mon, 13 Jan 2020 20:37:35 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60630 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729081AbgANBhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:37:34 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 31963EB1957F3B2A33A1;
+        Tue, 14 Jan 2020 09:37:33 +0800 (CST)
+Received: from huawei.com (10.175.104.193) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
+ 09:37:22 +0800
+From:   Cheng Jian <cj.chengjian@huawei.com>
+To:     <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <rostedt@goodmis.org>, <tglx@linutronix.de>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <cj.chengjian@huawei.com>, <bobo.shaobowang@huawei.com>
+Subject: [PATCH] x86/ftrace: use ftrace_write to simplify code
+Date:   Tue, 14 Jan 2020 01:52:17 +0000
+Message-ID: <20200114015217.9246-1-cj.chengjian@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Potentially it is possible that interrupt may fire after transfer timeout.
-That may not end up well for the next transfer because interrupt handling
-may race with hardware resetting.
+ftrace_write() can be used in ftrace_modify_code_direct(),
+that make the code more brief.
 
-This is very unlikely to happen in practice, but anyway let's prevent the
-potential problem by enabling interrupt only at the moments when it is
-actually necessary to get some interrupt event.
-
-Tested-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 70 +++++++++++++++++-----------------
- 1 file changed, 36 insertions(+), 34 deletions(-)
+ arch/x86/kernel/ftrace.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 61339c665ebd..882b283e0ed7 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-@@ -230,7 +231,6 @@ struct tegra_i2c_hw_feature {
-  * @base_phys: physical base address of the I2C controller
-  * @cont_id: I2C controller ID, used for packet header
-  * @irq: IRQ number of transfer complete interrupt
-- * @irq_disabled: used to track whether or not the interrupt is enabled
-  * @is_dvc: identifies the DVC I2C controller, has a different register layout
-  * @msg_complete: transfer completion notifier
-  * @msg_err: error code for completed message
-@@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
-  * @bus_clk_rate: current I2C bus clock rate
-  * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
-  * @is_multimaster_mode: track if I2C controller is in multi-master mode
-- * @xfer_lock: lock to serialize transfer submission and processing
-  * @tx_dma_chan: DMA transmit channel
-  * @rx_dma_chan: DMA receive channel
-  * @dma_phys: handle to DMA resources
-@@ -260,7 +259,6 @@ struct tegra_i2c_dev {
- 	phys_addr_t base_phys;
- 	int cont_id;
- 	int irq;
--	bool irq_disabled;
- 	int is_dvc;
- 	struct completion msg_complete;
- 	int msg_err;
-@@ -270,8 +268,6 @@ struct tegra_i2c_dev {
- 	u32 bus_clk_rate;
- 	u16 clk_divisor_non_hs_mode;
- 	bool is_multimaster_mode;
--	/* xfer_lock: lock to serialize transfer submission and processing */
--	spinlock_t xfer_lock;
- 	struct dma_chan *tx_dma_chan;
- 	struct dma_chan *rx_dma_chan;
- 	dma_addr_t dma_phys;
-@@ -790,11 +786,6 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
- 	if (err)
- 		return err;
- 
--	if (i2c_dev->irq_disabled) {
--		i2c_dev->irq_disabled = false;
--		enable_irq(i2c_dev->irq);
--	}
--
- 	return 0;
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 024c3053dbba..6b36ed2fd04d 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -114,6 +114,16 @@ static const unsigned char *ftrace_nop_replace(void)
+ 	return ideal_nops[NOP_ATOMIC5];
  }
  
-@@ -825,18 +816,12 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
- 
--	spin_lock(&i2c_dev->xfer_lock);
- 	if (status == 0) {
- 		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
- 			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
- 			 i2c_readl(i2c_dev, I2C_STATUS),
- 			 i2c_readl(i2c_dev, I2C_CNFG));
- 		i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
--
--		if (!i2c_dev->irq_disabled) {
--			disable_irq_nosync(i2c_dev->irq);
--			i2c_dev->irq_disabled = true;
--		}
- 		goto err;
- 	}
- 
-@@ -925,7 +910,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	complete(&i2c_dev->msg_complete);
- done:
--	spin_unlock(&i2c_dev->xfer_lock);
- 	return IRQ_HANDLED;
- }
- 
-@@ -999,6 +983,30 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
- 	i2c_writel(i2c_dev, val, reg);
- }
- 
-+static unsigned long
-+tegra_i2c_wait_completion_timeout(struct tegra_i2c_dev *i2c_dev,
-+				  struct completion *complete,
-+				  unsigned int timeout_ms)
++static int ftrace_write(unsigned long ip, const char *val, int size)
 +{
-+	unsigned long ret;
++	ip = text_ip_addr(ip);
 +
-+	enable_irq(i2c_dev->irq);
-+	ret = wait_for_completion_timeout(complete,
-+					  msecs_to_jiffies(timeout_ms));
-+	disable_irq(i2c_dev->irq);
++	if (probe_kernel_write((void *)ip, val, size))
++		return -EPERM;
 +
-+	/*
-+	 * There is a chance that completion may happen after IRQ
-+	 * synchronization, which is done by disable_irq().
-+	 */
-+	if (ret == 0 && completion_done(complete)) {
-+		dev_warn(i2c_dev->dev, "completion done after timeout\n");
-+		ret = 1;
-+	}
-+
-+	return ret;
++	return 0;
 +}
 +
- static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+ static int
+ ftrace_modify_code_direct(unsigned long ip, unsigned const char *old_code,
+ 		   unsigned const char *new_code)
+@@ -138,10 +148,8 @@ ftrace_modify_code_direct(unsigned long ip, unsigned const char *old_code,
+ 	if (memcmp(replaced, old_code, MCOUNT_INSN_SIZE) != 0)
+ 		return -EINVAL;
+ 
+-	ip = text_ip_addr(ip);
+-
+ 	/* replace the text with the new text */
+-	if (probe_kernel_write((void *)ip, new_code, MCOUNT_INSN_SIZE))
++	if (ftrace_write(ip, new_code, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+ 
+ 	sync_core();
+@@ -326,16 +334,6 @@ int ftrace_int3_handler(struct pt_regs *regs)
+ }
+ NOKPROBE_SYMBOL(ftrace_int3_handler);
+ 
+-static int ftrace_write(unsigned long ip, const char *val, int size)
+-{
+-	ip = text_ip_addr(ip);
+-
+-	if (probe_kernel_write((void *)ip, val, size))
+-		return -EPERM;
+-
+-	return 0;
+-}
+-
+ static int add_break(unsigned long ip, const char *old)
  {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
-@@ -1020,8 +1028,8 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- 	i2c_writel(i2c_dev, reg, I2C_BUS_CLEAR_CNFG);
- 	tegra_i2c_unmask_irq(i2c_dev, I2C_INT_BUS_CLR_DONE);
- 
--	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
--						msecs_to_jiffies(50));
-+	time_left = tegra_i2c_wait_completion_timeout(
-+			i2c_dev, &i2c_dev->msg_complete, 50);
- 	if (time_left == 0) {
- 		dev_err(i2c_dev->dev, "timed out for bus clear\n");
- 		return -ETIMEDOUT;
-@@ -1044,7 +1052,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	u32 packet_header;
- 	u32 int_mask;
- 	unsigned long time_left;
--	unsigned long flags;
- 	size_t xfer_size;
- 	u32 *buffer = NULL;
- 	int err = 0;
-@@ -1075,7 +1082,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	 */
- 	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
- 					i2c_dev->bus_clk_rate);
--	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
- 
- 	int_mask = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
- 	tegra_i2c_unmask_irq(i2c_dev, int_mask);
-@@ -1090,7 +1096,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 				dev_err(i2c_dev->dev,
- 					"starting RX DMA failed, err %d\n",
- 					err);
--				goto unlock;
-+				return err;
- 			}
- 
- 		} else {
-@@ -1149,7 +1155,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 				dev_err(i2c_dev->dev,
- 					"starting TX DMA failed, err %d\n",
- 					err);
--				goto unlock;
-+				return err;
- 			}
- 		} else {
- 			tegra_i2c_fill_tx_fifo(i2c_dev);
-@@ -1169,15 +1175,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	dev_dbg(i2c_dev->dev, "unmasked irq: %02x\n",
- 		i2c_readl(i2c_dev, I2C_INT_MASK));
- 
--unlock:
--	spin_unlock_irqrestore(&i2c_dev->xfer_lock, flags);
--
- 	if (dma) {
--		if (err)
--			return err;
-+		time_left = tegra_i2c_wait_completion_timeout(
-+				i2c_dev, &i2c_dev->dma_complete, xfer_time);
- 
--		time_left = wait_for_completion_timeout(&i2c_dev->dma_complete,
--							msecs_to_jiffies(xfer_time));
- 		if (time_left == 0) {
- 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
- 			dmaengine_terminate_sync(i2c_dev->msg_read ?
-@@ -1202,13 +1203,13 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 					      i2c_dev->tx_dma_chan);
- 	}
- 
--	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
--						msecs_to_jiffies(xfer_time));
-+	time_left = tegra_i2c_wait_completion_timeout(
-+			i2c_dev, &i2c_dev->msg_complete, xfer_time);
-+
- 	tegra_i2c_mask_irq(i2c_dev, int_mask);
- 
- 	if (time_left == 0) {
- 		dev_err(i2c_dev->dev, "i2c transfer timed out\n");
--
- 		tegra_i2c_init(i2c_dev, true);
- 		return -ETIMEDOUT;
- 	}
-@@ -1568,7 +1569,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 				I2C_PACKET_HEADER_SIZE;
- 	init_completion(&i2c_dev->msg_complete);
- 	init_completion(&i2c_dev->dma_complete);
--	spin_lock_init(&i2c_dev->xfer_lock);
- 
- 	if (!i2c_dev->hw->has_single_clk_source) {
- 		fast_clk = devm_clk_get(&pdev->dev, "fast-clk");
-@@ -1644,6 +1644,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto release_dma;
- 	}
- 
-+	irq_set_status_flags(i2c_dev->irq, IRQ_NOAUTOEN);
-+
- 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq,
- 			       tegra_i2c_isr, 0, dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
+ 	unsigned char replaced[MCOUNT_INSN_SIZE];
 -- 
-2.24.0
+2.17.1
 
