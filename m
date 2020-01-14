@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DFFC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB04C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A9C24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1582B24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ybmuOAx4"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="oiW4ZIcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgANLVT (ORCPT
+        id S1729470AbgANLVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:21:19 -0500
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:54334 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725956AbgANLVT (ORCPT
+        Tue, 14 Jan 2020 06:21:22 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12736 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725820AbgANLVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 06:21:19 -0500
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EBKPhD020029;
-        Tue, 14 Jan 2020 06:20:33 -0500
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2xfbvb7cg3-1
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EBCFkY005929;
+        Tue, 14 Jan 2020 06:20:30 -0500
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2057.outbound.protection.outlook.com [104.47.45.57])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xfc59f442-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 06:20:33 -0500
+        Tue, 14 Jan 2020 06:20:30 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ehtQta8TqSp70wFXLht6X/VYR7ZfeHvjqAFWCB2zeMHebtmJU5aBVa/KX951NHSzSa5l6ES/PWWOh2WCdU54yuqdwWQ6uHLFGWuRnrFM1k10klgTs3CCfNFqsSzDh4slq0PQ75WWvx4EcsDNshW1cAkqPzCuPKkJMmdLC4FQTp+nl3dgMhpopK5qo8FfPtsD/JNwkWA9DJlxuWHFeslb/Z9S8RpiaHNkca09yzZGQWhaxCgHMw6i+mOFby12QTm4VMQARo3YcUXbRnFddIH0Ff9AEcmQ8qIVQ3sZgHATpxmkrcSg6N46phC+SXRDonA8OaxXmHg5MgVOZOWX151tqg==
+ b=lQsAeUZ/W7JbDxrkZQdtBvI5szDsnNevzmJgwiuScA3LGza0+UmjFPWDXzhZwkRXC+zVdI4jm5tf2AGDIIu0IOzGHHTPlgV41j92HCqfoSaffmeZ+7Eqn037f2xdRBXdS+tUJZZRs4ouXT4f5JqWQ8yE2p4tIAPYGy+3iuEKzcUPfnnEF5pYJLmABVcwLKRG+CEWlGG58dMDIpfGTwRvhYo3rE9Y9INgnH93yCt1Jnu5vRgaFafv5JspTvtpV4oye7wV0X+cf1Yw0fwtLjd9eO6UfC1r7PeNIjLmlUf66ywhqGm8AhrE+CBnDxtcXuZQ0OGRze+cxisQTsQ+pYjkSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kRQwcOYHTJOYZ80uoP+5xGXrAJpxABvWGBDm+D5iEGA=;
- b=bZ5+oOtsVg1n9Xr6lqwrvecsARtGnC8mD4SrcXBchNUt5m6Oa31csKhX5uUTVL2CAL6y25lYHgR5Bp0fE63HX4x+Ns3eNBPvSKh4IFZg1CJv/JcUueuDqk/L1vSYIKkhjpZPazXyyPgigXC+cwtIu3LJwrEI+A7TkB8/jLnj8EewKdu29cEvg41AEG2klJ4YTPaohybKlMmTU7O4DiYk+oGGpXdtKIXmUDWWYspgiWz7oOG/E7O5JbrnSuWNaAOujL1JAsCFImaKjAs+qrw+2xUgyV8OvWcSYkZzbHRwWDpApdnYGOlFuSSp+LKIo24ywM9VXq32Sy5S+MfMiKzMtg==
+ bh=MUcN2UxNerb51F6IvC9P9/Dl6M6Ol7a7VFFlAAXlFoc=;
+ b=iewjdlU435+VNgDX5R8eeqPKZIIM/Tvp9c3rjhxA/xDs9Ri3XOMQWZRyFg8g+9EOegI06jw26snxDX/tQdGwkKD/tolgdHcgbVrPR4lRwKQaWgmMysxTsqvioQPW6oMC4apuexpbp9KBk5A8p48KY3ojiuWdIqMonjVIvqwL0fr3U8DYFeE3GlILWCfOvcFaocNMsky/djJHhBrzv05KFaqjokKvJcoqxa3vvtpHhlnkm06HV77D+pVryrH87XENvUqGSfUB2S3AO1HZjsPrcn5QY0ysxx/WFuPqIKQVhCyZ3ffprF4lu8WeSWM3H00P98cAkpYawnI+X54/r59U6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
  dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
@@ -44,39 +44,39 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kRQwcOYHTJOYZ80uoP+5xGXrAJpxABvWGBDm+D5iEGA=;
- b=ybmuOAx4bb/pHswF4TES8xSF0Tl7DjcWIVndJ8wN4xdWx7+zw5WYKDOLfKQ2xG4+JEcEFQrjT88nqE/e/lFYT7sIdPBEURKaaRHpzLhMjO3P/IyDzo044hhr6LD1k/4vmsOkeJOTjJELu7mmk91+GSszldc7n8BTB7s1U1A3ndg=
-Received: from BN3PR03CA0081.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::41) by BN7PR03MB4466.namprd03.prod.outlook.com
- (2603:10b6:408:3f::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9; Tue, 14 Jan
- 2020 11:20:31 +0000
-Received: from BL2NAM02FT036.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::207) by BN3PR03CA0081.outlook.office365.com
- (2a01:111:e400:7a4d::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend
- Transport; Tue, 14 Jan 2020 11:20:31 +0000
+ bh=MUcN2UxNerb51F6IvC9P9/Dl6M6Ol7a7VFFlAAXlFoc=;
+ b=oiW4ZIcnKGQmxF+jgoEnbEhTTy4dk/mwuUVeU+aTBE84iyYiFRZ6F5CuxXADkltyPkFU8KdxmEc3dKqOD4hboJ/C/Zu2MJTt6m0CpSrnL7qPOefi95X6cZJSONVZAwDADAItr2qX93t7maZrEBGIjP3ukrBgMlYsijoIjugFeCg=
+Received: from CH2PR03CA0024.namprd03.prod.outlook.com (2603:10b6:610:59::34)
+ by BYAPR03MB3847.namprd03.prod.outlook.com (2603:10b6:a03:6d::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11; Tue, 14 Jan
+ 2020 11:20:27 +0000
+Received: from BL2NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by CH2PR03CA0024.outlook.office365.com
+ (2603:10b6:610:59::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend
+ Transport; Tue, 14 Jan 2020 11:20:27 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.55 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
 Received: from nwd2mta1.analog.com (137.71.25.55) by
- BL2NAM02FT036.mail.protection.outlook.com (10.152.77.154) with Microsoft SMTP
+ BL2NAM02FT034.mail.protection.outlook.com (10.152.77.161) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2623.9
- via Frontend Transport; Tue, 14 Jan 2020 11:20:30 +0000
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00EBKIq2018144
+ via Frontend Transport; Tue, 14 Jan 2020 11:20:27 +0000
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00EBKEGH018133
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 14 Jan 2020 03:20:18 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 14 Jan 2020 03:20:15 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 14 Jan
- 2020 03:20:28 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 14 Jan 2020 03:20:27 -0800
+ 2020 03:20:25 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 14 Jan 2020 06:20:24 -0500
 Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00EBKJnL022085;
-        Tue, 14 Jan 2020 06:20:24 -0500
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00EBKJnK022085;
+        Tue, 14 Jan 2020 06:20:20 -0500
 From:   Beniamin Bia <beniamin.bia@analog.com>
 To:     <linux-hwmon@vger.kernel.org>
 CC:     <Michael.Hennerich@analog.com>, <linux-kernel@vger.kernel.org>,
@@ -84,132 +84,447 @@ CC:     <Michael.Hennerich@analog.com>, <linux-kernel@vger.kernel.org>,
         <lgirdwood@gmail.com>, <broonie@kernel.org>,
         <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
         Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v4 2/3] dt-binding: hwmon: Add documentation for ADM1177
-Date:   Tue, 14 Jan 2020 13:21:58 +0200
-Message-ID: <20200114112159.25998-2-beniamin.bia@analog.com>
+Subject: [PATCH v4 1/3] hwmon: (adm1177) Add ADM1177 Hot Swap Controller and Digital Power Monitor driver
+Date:   Tue, 14 Jan 2020 13:21:57 +0200
+Message-ID: <20200114112159.25998-1-beniamin.bia@analog.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200114112159.25998-1-beniamin.bia@analog.com>
-References: <20200114112159.25998-1-beniamin.bia@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(1076003)(44832011)(356004)(6666004)(336012)(5660300002)(86362001)(246002)(8936002)(4326008)(2906002)(8676002)(426003)(6916009)(26005)(7636002)(70586007)(70206006)(2616005)(186003)(107886003)(7696005)(478600001)(316002)(54906003)(36756003)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB4466;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(346002)(376002)(199004)(189003)(70586007)(1076003)(6916009)(5660300002)(44832011)(70206006)(246002)(6666004)(356004)(7636002)(2616005)(4326008)(966005)(426003)(336012)(2906002)(8936002)(36756003)(26005)(186003)(7696005)(86362001)(478600001)(8676002)(107886003)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3847;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e78bbff2-996d-4db8-ac87-08d798e3c3f3
-X-MS-TrafficTypeDiagnostic: BN7PR03MB4466:
-X-Microsoft-Antispam-PRVS: <BN7PR03MB4466A6897C77FE8AE7B2273AF0340@BN7PR03MB4466.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Office365-Filtering-Correlation-Id: 3687ed94-51de-42fc-8346-08d798e3c1f9
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3847:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB384764C0930AE93CBBC30BE7F0340@BYAPR03MB3847.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-Forefront-PRVS: 028256169F
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YJjKasKOVG6txd8Qdxf3bmgI23/Xbw3d7SeMhvKmv+FpV1z26lIWFp/zU5YimKbh606D4NSU+JYnzjlcnVPay3etOF46pq49LkBI4hiwZ2iNQ13tZT211DK+1pFbJzZbjlUguorsGGyJe59/5xUTRUzf1ecB5XZJNFkEzQvT2OomculD7JGXqubUjSbAccIPn8JE42pEaRHAh1OmfGgOZ3QmNQuqb9u0qG9unHfmiJslawo82YyN/ALrHEucsX9vGhCD9Zh5DGURPZApgLTr2l0FgSOrzh1Ow/+69528UgISwY8OR3eccOUskIcO0ptkKT1kpoC7AUs/DUGISQIstpf52HxMd8qSm28cQrUcwV8z2ggjN5MhDlMMBf79E/XbiE2J7SV3KVXN1bbIBK1ixd82dZZ7TgneDk+q1Fos8VBsV+Yv3/fBuHQPUhL/XmMCwa3CgaRgAMAb4QcCTpmagkhWO+OiIZ1a2Ias+ueREw52CetKbOg1jpI5eLVBUuwnWJnyexa/n/2TQKk+YqiFWg==
+X-Microsoft-Antispam-Message-Info: cHkNji0xeGR17n5zKcB23/s4SCuxuINa3wVEehbNH3QcqaQPX+A6fgtsYNI6nr/o6LgS/kLnLDTJfYMLSDwUYmTKKD3SJO8pNig7h6kvHOJrbjRVaml2+0hk5f0fpHdLl1YmBLEfFacMVTe/HAsNBePDQ5A68Z16R9CPCwVl4/Cjo5y1Iuh2osdLl5f1ud6X+PpP+F7Rc1WMBXU3meRSWvvHYeeSdBzLmODDSDT3vPlsXAWxpX24Rrqkl3FWX6U9Pcwg4YA8KpZkO+0S/vtI4QM4NKQ5Dwj5KWt8XYbeKuIaRvxRb9hfnS4a3HgsMkmfjOO2ieJoDYxhz3lEOVyxGHqhAvabPB/Fzw1EcByFIKbo5/qCgt6rKMS38s0BcQEcrItI9bt4JEXcYWGag4QXU/30w0P2fDoFbP3A8pun0/9/Ja+Oy0jgyWMYaX8mxRus9JG0tTUhx25gHlhSk0X58DQHzuzGcQPgDVEsNc2ZIGU=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2020 11:20:30.8258
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2020 11:20:27.5077
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e78bbff2-996d-4db8-ac87-08d798e3c3f3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3687ed94-51de-42fc-8346-08d798e3c1f9
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB4466
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3847
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-14_03:2020-01-13,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- adultscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1011 priorityscore=1501
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001140101
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001140100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation for ADM1177 was added.
+ADM1177 is a Hot Swap Controller and Digital Power Monitor with
+Soft Start Pin.
+
+Datasheet:
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
 
 Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
 Changes in v4:
--complains about using tab instead of space fixed
+-reverse condition in adm1177_write_alert_thr fixed
 
- .../bindings/hwmon/adi,adm1177.yaml           | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
+ Documentation/hwmon/adm1177.rst |  36 ++++
+ Documentation/hwmon/index.rst   |   1 +
+ drivers/hwmon/Kconfig           |  10 ++
+ drivers/hwmon/Makefile          |   1 +
+ drivers/hwmon/adm1177.c         | 288 ++++++++++++++++++++++++++++++++
+ 5 files changed, 336 insertions(+)
+ create mode 100644 Documentation/hwmon/adm1177.rst
+ create mode 100644 drivers/hwmon/adm1177.c
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
+diff --git a/Documentation/hwmon/adm1177.rst b/Documentation/hwmon/adm1177.rst
 new file mode 100644
-index 000000000000..2a9822075b36
+index 000000000000..c81e0b4abd28
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1177.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/hwmon/adm1177.rst
+@@ -0,0 +1,36 @@
++Kernel driver adm1177
++=====================
 +
-+title: Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
++Supported chips:
++  * Analog Devices ADM1177
++    Prefix: 'adm1177'
++    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
 +
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+  - Beniamin Bia <beniamin.bia@analog.com>
++Author: Beniamin Bia <beniamin.bia@analog.com>
 +
-+description: |
-+  Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
 +
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1177
++Description
++-----------
 +
-+  reg:
-+    maxItems: 1
++This driver supports hardware monitoring for Analog Devices ADM1177
++Hot-Swap Controller and Digital Power Monitors with Soft Start Pin.
 +
-+  avcc-supply:
-+    description:
-+      Phandle to the Avcc power supply
 +
-+  shunt-resistor-micro-ohms:
-+    description:
-+      The value of curent sense resistor in microohms. If not provided,
-+      the current reading and overcurrent alert is disabled.
++Usage Notes
++-----------
 +
-+  adi,shutdown-threshold-microamp:
-+    description:
-+      Specifies the current level at which an over current alert occurs.
-+      If not provided, the overcurrent alert is configured to max ADC range
-+      based on shunt-resistor-micro-ohms.
++This driver does not auto-detect devices. You will have to instantiate the
++devices explicitly. Please see Documentation/i2c/instantiating-devices for
++details.
 +
-+  adi,vrange-high-enable:
-+    description:
-+      Specifies which internal voltage divider to be used. A 1 selects
-+      a 7:2 voltage divider while a 0 selects a 14:1 voltage divider.
-+    type: boolean
 +
-+required:
-+  - compatible
-+  - reg
++Sysfs entries
++-------------
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++The following attributes are supported. Current maxim attribute
++is read-write, all other attributes are read-only.
 +
-+        pwmon@5a {
-+                compatible = "adi,adm1177";
-+                reg = <0x5a>;
-+                shunt-resistor-micro-ohms = <50000>; /* 50 mOhm */
-+                adi,shutdown-threshold-microamp = <1059000>; /* 1.059 A */
-+                adi,vrange-high-enable;
-+        };
-+    };
-+...
++in0_input		Measured voltage in microvolts.
++
++curr1_input		Measured current in microamperes.
++curr1_max_alarm		Overcurrent alarm in microamperes.
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index 682ef4dda89c..cc7000593a73 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -29,6 +29,7 @@ Hardware Monitoring Kernel Drivers
+    adm1025
+    adm1026
+    adm1031
++   adm1177
+    adm1275
+    adm9240
+    ads7828
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 7ea61648ad16..47ac20aee06f 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -164,6 +164,16 @@ config SENSORS_ADM1031
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called adm1031.
+ 
++config SENSORS_ADM1177
++	tristate "Analog Devices ADM1177 and compatibles"
++	depends on I2C
++	help
++	  If you say yes here you get support for Analog Devices ADM1177
++	  sensor chips.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called adm1177.
++
+ config SENSORS_ADM9240
+ 	tristate "Analog Devices ADM9240 and compatibles"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index f0f514f9cf24..613f50987965 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_SENSORS_ADM1025)	+= adm1025.o
+ obj-$(CONFIG_SENSORS_ADM1026)	+= adm1026.o
+ obj-$(CONFIG_SENSORS_ADM1029)	+= adm1029.o
+ obj-$(CONFIG_SENSORS_ADM1031)	+= adm1031.o
++obj-$(CONFIG_SENSORS_ADM1177)	+= adm1177.o
+ obj-$(CONFIG_SENSORS_ADM9240)	+= adm9240.o
+ obj-$(CONFIG_SENSORS_ADS7828)	+= ads7828.o
+ obj-$(CONFIG_SENSORS_ADS7871)	+= ads7871.o
+diff --git a/drivers/hwmon/adm1177.c b/drivers/hwmon/adm1177.c
+new file mode 100644
+index 000000000000..d314223a404a
+--- /dev/null
++++ b/drivers/hwmon/adm1177.c
+@@ -0,0 +1,288 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ADM1177 Hot Swap Controller and Digital Power Monitor with Soft Start Pin
++ *
++ * Copyright 2015-2019 Analog Devices Inc.
++ */
++
++#include <linux/bits.h>
++#include <linux/device.h>
++#include <linux/hwmon.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/regulator/consumer.h>
++
++/*  Command Byte Operations */
++#define ADM1177_CMD_V_CONT	BIT(0)
++#define ADM1177_CMD_I_CONT	BIT(2)
++#define ADM1177_CMD_VRANGE	BIT(4)
++
++/* Extended Register */
++#define ADM1177_REG_ALERT_TH	2
++
++#define ADM1177_BITS		12
++
++/**
++ * struct adm1177_state - driver instance specific data
++ * @client		pointer to i2c client
++ * @reg			regulator info for the the power supply of the device
++ * @r_sense_uohm	current sense resistor value
++ * @alert_threshold_ua	current limit for shutdown
++ * @vrange_high		internal voltage divider
++ */
++struct adm1177_state {
++	struct i2c_client	*client;
++	struct regulator	*reg;
++	u32			r_sense_uohm;
++	u32			alert_threshold_ua;
++	bool			vrange_high;
++};
++
++static int adm1177_read_raw(struct adm1177_state *st, u8 num, u8 *data)
++{
++	return i2c_master_recv(st->client, data, num);
++}
++
++static int adm1177_write_cmd(struct adm1177_state *st, u8 cmd)
++{
++	return i2c_smbus_write_byte(st->client, cmd);
++}
++
++static int adm1177_write_alert_thr(struct adm1177_state *st,
++				   u32 alert_threshold_ua)
++{
++	u64 val;
++	int ret;
++
++	val = 0xFFULL * alert_threshold_ua * st->r_sense_uohm;
++	val = div_u64(val, 105840000U);
++	val = div_u64(val, 1000U);
++	if (val > 0xFF)
++		val = 0xFF;
++
++	ret = i2c_smbus_write_byte_data(st->client, ADM1177_REG_ALERT_TH,
++					val);
++	if (ret)
++		return ret;
++
++	st->alert_threshold_ua = alert_threshold_ua;
++	return 0;
++}
++
++static int adm1177_read(struct device *dev, enum hwmon_sensor_types type,
++			u32 attr, int channel, long *val)
++{
++	struct adm1177_state *st = dev_get_drvdata(dev);
++	u8 data[3];
++	long dummy;
++	int ret;
++
++	switch (type) {
++	case hwmon_curr:
++		switch (attr) {
++		case hwmon_curr_input:
++			ret = adm1177_read_raw(st, 3, data);
++			if (ret < 0)
++				return ret;
++			dummy = (data[1] << 4) | (data[2] & 0xF);
++			/*
++			 * convert to milliamperes
++			 * ((105.84mV / 4096) x raw) / senseResistor(ohm)
++			 */
++			*val = div_u64((105840000ull * dummy),
++				       4096 * st->r_sense_uohm);
++			return 0;
++		case hwmon_curr_max_alarm:
++			*val = st->alert_threshold_ua;
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	case hwmon_in:
++		ret = adm1177_read_raw(st, 3, data);
++		if (ret < 0)
++			return ret;
++		dummy = (data[0] << 4) | (data[2] >> 4);
++		/*
++		 * convert to millivolts based on resistor devision
++		 * (V_fullscale / 4096) * raw
++		 */
++		if (st->vrange_high)
++			dummy *= 26350;
++		else
++			dummy *= 6650;
++
++		*val = DIV_ROUND_CLOSEST(dummy, 4096);
++		return 0;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int adm1177_write(struct device *dev, enum hwmon_sensor_types type,
++			 u32 attr, int channel, long val)
++{
++	struct adm1177_state *st = dev_get_drvdata(dev);
++
++	switch (type) {
++	case hwmon_curr:
++		switch (attr) {
++		case hwmon_curr_max_alarm:
++			adm1177_write_alert_thr(st, val);
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static umode_t adm1177_is_visible(const void *data,
++				  enum hwmon_sensor_types type,
++				  u32 attr, int channel)
++{
++	const struct adm1177_state *st = data;
++
++	switch (type) {
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_input:
++			return 0444;
++		}
++		break;
++	case hwmon_curr:
++		switch (attr) {
++		case hwmon_curr_input:
++			if (st->r_sense_uohm)
++				return 0444;
++			return 0;
++		case hwmon_curr_max_alarm:
++			if (st->r_sense_uohm)
++				return 0644;
++			return 0;
++		}
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static const struct hwmon_channel_info *adm1177_info[] = {
++	HWMON_CHANNEL_INFO(curr,
++			   HWMON_C_INPUT | HWMON_C_MAX_ALARM),
++	HWMON_CHANNEL_INFO(in,
++			   HWMON_I_INPUT),
++	NULL
++};
++
++static const struct hwmon_ops adm1177_hwmon_ops = {
++	.is_visible = adm1177_is_visible,
++	.read = adm1177_read,
++	.write = adm1177_write,
++};
++
++static const struct hwmon_chip_info adm1177_chip_info = {
++	.ops = &adm1177_hwmon_ops,
++	.info = adm1177_info,
++};
++
++static void adm1177_remove(void *data)
++{
++	struct adm1177_state *st = data;
++
++	regulator_disable(st->reg);
++}
++
++static int adm1177_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct device *hwmon_dev;
++	struct adm1177_state *st;
++	u32 alert_threshold_ua;
++	int ret;
++
++	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
++	if (!st)
++		return -ENOMEM;
++
++	st->client = client;
++
++	st->reg = devm_regulator_get_optional(&client->dev, "vref");
++	if (IS_ERR(st->reg)) {
++		if (PTR_ERR(st->reg) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		st->reg = NULL;
++	} else {
++		ret = regulator_enable(st->reg);
++		if (ret)
++			return ret;
++		ret = devm_add_action_or_reset(&client->dev, adm1177_remove,
++					       st);
++		if (ret)
++			return ret;
++	}
++
++	if (device_property_read_u32(dev, "shunt-resistor-micro-ohms",
++				     &st->r_sense_uohm))
++		st->r_sense_uohm = 0;
++	if (device_property_read_u32(dev, "adi,shutdown-threshold-microamp",
++				     &alert_threshold_ua)) {
++		if (st->r_sense_uohm)
++			/*
++			 * set maximum default value from datasheet based on
++			 * shunt-resistor
++			 */
++			alert_threshold_ua = div_u64(105840000000,
++						     st->r_sense_uohm);
++		else
++			alert_threshold_ua = 0;
++	}
++	st->vrange_high = device_property_read_bool(dev,
++						    "adi,vrange-high-enable");
++	if (alert_threshold_ua && st->r_sense_uohm)
++		adm1177_write_alert_thr(st, alert_threshold_ua);
++
++	ret = adm1177_write_cmd(st, ADM1177_CMD_V_CONT |
++				    ADM1177_CMD_I_CONT |
++				    (st->vrange_high ? 0 : ADM1177_CMD_VRANGE));
++	if (ret)
++		return ret;
++
++	hwmon_dev =
++		devm_hwmon_device_register_with_info(dev, client->name, st,
++						     &adm1177_chip_info, NULL);
++	return PTR_ERR_OR_ZERO(hwmon_dev);
++}
++
++static const struct i2c_device_id adm1177_id[] = {
++	{"adm1177", 0},
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, adm1177_id);
++
++static const struct of_device_id adm1177_dt_ids[] = {
++	{ .compatible = "adi,adm1177" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, adm1177_dt_ids);
++
++static struct i2c_driver adm1177_driver = {
++	.class = I2C_CLASS_HWMON,
++	.driver = {
++		.name = "adm1177",
++		.of_match_table = adm1177_dt_ids,
++	},
++	.probe = adm1177_probe,
++	.id_table = adm1177_id,
++};
++module_i2c_driver(adm1177_driver);
++
++MODULE_AUTHOR("Beniamin Bia <beniamin.bia@analog.com>");
++MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
++MODULE_DESCRIPTION("Analog Devices ADM1177 ADC driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
