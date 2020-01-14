@@ -2,89 +2,120 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B91C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E1AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A0A2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3574D207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="06WPGrTR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK2Dg5z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgANKuN (ORCPT
+        id S1729267AbgANKxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:50:13 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42186 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgANKuM (ORCPT
+        Tue, 14 Jan 2020 05:53:33 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44522 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgANKxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:50:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zpOpHUjbhC0rJlP6b+TZpjlC26yEgKMY83qh9k5bu3U=; b=06WPGrTR6s6NFO7DsI67V5+Wb
-        czeAIAK6w/njHcQBpq93jCuo23ME14WPrkiMr/UMjsHGO4vzBJNoFc9LXxprLIKuw3e+y2ZUtBvLZ
-        tesAN9rgpIW2rciGL43nVoFli7oDpK4HQ3iFt49iyuScNAwqus9zOxEK3vcqfYuHzFIeaPs0BBAi7
-        lninJVJH/XZ/XwdXFmS0UNyoy8ad6Pjp7JZ2risRViJXfec0wFZmyDB8U3Jbovtk1HYPR8Pb7tIZT
-        HHzHcW9AuK70ebMSNFvqwaf3Oa8sKUUNUr4K72419Hr6A4bsNCLcv3Ssh0Fpm7qAmHGI9JhHtBhUb
-        Y5/ugemyw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irJls-0008BE-LF; Tue, 14 Jan 2020 10:50:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 45F9C304123;
-        Tue, 14 Jan 2020 11:48:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1B42629D73921; Tue, 14 Jan 2020 11:50:02 +0100 (CET)
-Date:   Tue, 14 Jan 2020 11:50:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, will@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] Fixup page directory freeing
-Message-ID: <20200114105002.GD2844@hirez.programming.kicks-ass.net>
-References: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
+        Tue, 14 Jan 2020 05:53:32 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so12131901otj.11;
+        Tue, 14 Jan 2020 02:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cn5oQa4AQw8CAHBLFyCfO9lTHCbEgvgO8kS0oRO7bOQ=;
+        b=eK2Dg5z/JYnAaAy6xwTmYeSjPvJjm0B44DIx4I1iEs+x7RetgpH2bxuRg9XU2ddA+s
+         yvJk4W4uXxtsjYY10pSPcdvwgzRXoTHfPNCjs7juDha99ypLF/CI+ZiR+1n+LF1MSI9e
+         IsUJNA/MwMJ4PjqXR7xQMKcK42h6yssTx3yuTskJ5v2NhyECfnKY9wcfTtuspvItViB+
+         xX8MeHMofmTJ4y9xpvMwrXV7olJeP/qyvpr3Ti6vgVGxlnDqDuIawEfZvrocueL5+wdk
+         5KyZ8gf//54ZLlPevCJT0IC4N6g1jXbzei+H0KkL/lOXS5WmOFrnu8M+HUuzgdONO/yt
+         kOvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cn5oQa4AQw8CAHBLFyCfO9lTHCbEgvgO8kS0oRO7bOQ=;
+        b=VJsF5j1RR+yWjtX0pzztD4y8JJihtNgn4OOHAWeN0nOYxfxINDb1a34xGbt5FANsvt
+         VZxFUQZ5j6bJKBYvDby3MHf5j2VFqzymnQ+LkT4kPnpCg9TgPgFU6Ba7pIbgdpHMaqya
+         EMDn/mxzDrmQSc2+4xJjX0qRu+sovw/80rudRUyhdMzXEBmTKcBEoJV0+u4RNN6W1Uiu
+         DHRLooGTO1ghVeD8B7LzP8v5lEHU0RjfAuZtw/NJ5DBX0BUk9afaDYGnprcQ4cyaDKZs
+         qN7s//REqU3JrObizTUFbM2RW9beDBsVSJk5bLrg4RX+zLYOhY2o+3sKnAY8uYy8+fay
+         n8SQ==
+X-Gm-Message-State: APjAAAWITXqLw5LK0grORBZkCevBK1/1MC5Phv+VtAa7LGOIilo7pePr
+        46E/3gJiRBhPPfV9BwI+CvMGC/ZWTh+S0a1MCcw=
+X-Google-Smtp-Source: APXvYqxhttxJBOc2iHCA0/wkTwR5uKcaMUnB+U6b9v/qVX340MTbr4dC/XjtB54IGpNIS77ISdOm2hRgUkn+e+kY654=
+X-Received: by 2002:a05:6830:231d:: with SMTP id u29mr2091403ote.185.1578999212027;
+ Tue, 14 Jan 2020 02:53:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
+ <20200108155040.GB2827@hirez.programming.kicks-ass.net> <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
+ <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
+ <20200113104314.GU2844@hirez.programming.kicks-ass.net> <ee2b6da2-be8c-2540-29e9-ffbb9fdfd3fc@redhat.com>
+ <20200113123558.GF2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200113123558.GF2827@hirez.programming.kicks-ass.net>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 14 Jan 2020 18:53:19 +0800
+Message-ID: <CANRm+Cz10Spq1mjBBa+RvgeUtNvWEXSfPzHy49gZbD-Z8+fh2A@mail.gmail.com>
+Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
+        Len Brown <len.brown@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 03:31:36PM +0530, Aneesh Kumar K.V wrote:
-> This is a repost of patch series from Peter with the arch specific changes except ppc64 dropped.
-> ppc64 changes are added here because we are redoing the patch series on top of ppc64 changes. This makes it
-> easy to backport these changes. Only the first 3 patches need to be backported to stable. 
-> 
-> The thing is, on anything SMP, freeing page directories should observe the
-> exact same order as normal page freeing:
-> 
->  1) unhook page/directory
->  2) TLB invalidate
->  3) free page/directory
-> 
-> Without this, any concurrent page-table walk could end up with a Use-after-Free.
-> This is esp. trivial for anything that has software page-table walkers
-> (HAVE_FAST_GUP / software TLB fill) or the hardware caches partial page-walks
-> (ie. caches page directories).
-> 
-> Even on UP this might give issues since mmu_gather is preemptible these days.
-> An interrupt or preempted task accessing user pages might stumble into the free
-> page if the hardware caches page directories.
-> 
-> This patch series fixup ppc64 and add generic MMU_GATHER changes to support the conversion of other architectures.
-> I haven't added patches w.r.t other architecture because they are yet to be acked.
+On Mon, 13 Jan 2020 at 20:36, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Jan 13, 2020 at 12:52:20PM +0100, Paolo Bonzini wrote:
+> > On 13/01/20 11:43, Peter Zijlstra wrote:
+> > > So the very first thing we need to get sorted is that MPERF/TSC ratio
+> > > thing. TurboStat does it, but has 'funny' hacks on like:
+> > >
+> > >   b2b34dfe4d9a ("tools/power turbostat: KNL workaround for %Busy and Avg_MHz")
+> > >
+> > > and I imagine that there's going to be more exceptions there. You're
+> > > basically going to have to get both Intel and AMD to commit to this.
+> > >
+> > > IFF we can get concensus on MPERF/TSC, then yes, that is a reasonable
+> > > way to detect a VCPU being idle I suppose. I've added a bunch of people
+> > > who seem to know about this.
+> > >
+> > > Anyone, what will it take to get MPERF/TSC 'working' ?
+> >
+> > Do we really need MPERF/TSC for this use case, or can we just track
+> > APERF as well and do MPERF/APERF to compute the "non-idle" time?
+>
+> So MPERF runs at fixed frequency (when !IDLE and typically the same
+> frequency as TSC), APERF runs at variable frequency (when !IDLE)
+> depending on DVFS state.
+>
+> So APERF/MPERF gives the effective frequency of the core, but since both
+> stop during IDLE, it will not be a good indication of IDLE.
+>
+> Otoh, TSC doesn't stop in idle (.oO this depends on
+> X86_FEATURE_CONSTANT_TSC) and therefore the MPERF/TSC ratio gives how
+> much !idle time there was between readings.
 
-Obviously looks good to me; will you route this through the Power tree
-since you're in a hurry to see this fixed?
+Do you have a better solution to penalty vCPU process which mwait/hlt
+executed inside? :)
+
+    Wanpeng
