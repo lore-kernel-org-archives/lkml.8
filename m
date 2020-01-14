@@ -2,73 +2,126 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DA7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B03AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE5F24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE63224679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgANPzv (ORCPT
+        id S1728963AbgANPzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 14 Jan 2020 10:55:51 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41677 "EHLO
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41675 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726375AbgANPzv (ORCPT
+        with ESMTP id S1725904AbgANPzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 10:55:51 -0500
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
         with ESMTPS (AES256-SHA encrypted); 14 Jan 2020 17:55:45 +0200
 Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.134.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00EFtiIe015197;
-        Tue, 14 Jan 2020 17:55:44 +0200
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00EFtjD4015233;
+        Tue, 14 Jan 2020 17:55:45 +0200
 Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00EFtitB019698;
-        Tue, 14 Jan 2020 17:55:44 +0200
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00EFtjtl019702;
+        Tue, 14 Jan 2020 17:55:45 +0200
 Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00EFti44019696;
-        Tue, 14 Jan 2020 17:55:44 +0200
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00EFtjK4019701;
+        Tue, 14 Jan 2020 17:55:45 +0200
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 0/3] Add mlx5 devices FW upgrade reset support
-Date:   Tue, 14 Jan 2020 17:55:25 +0200
-Message-Id: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC 2/3] net/mlx5: Add functions to set/query MFRL register
+Date:   Tue, 14 Jan 2020 17:55:27 +0200
+Message-Id: <1579017328-19643-3-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
+References: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for FW upgrade.
-On devlink reload, if a pending FW image is found, the driver will perform
-a FW upgrade reset flow to activate the pending FW image.
+Add functions to set the reset level required and to query the reset
+levels supported by fw.
 
-Sending as RFC because the FW activation reset requires a pci link
-toggling. Although it works and we verify that the device is the only
-device on the pcie bridge before allowing such reset, as already done by
-other drivers [1], we would like to get some feedback on the last patch
-of this series.
-
-[1] function trigger_sbr() at drivers/infiniband/hw/hfi1/pcie.c
-
-Moshe Shemesh (3):
-  net/mlx5: Add structure layout and defines for MFRL register
-  net/mlx5: Add functions to set/query MFRL register
-  net/mlx5: Add FW upgrade reset support
-
- drivers/net/ethernet/mellanox/mlx5/core/devlink.c  | 81 +++++++++++++++++++++-
- drivers/net/ethernet/mellanox/mlx5/core/fw.c       | 44 ++++++++++++
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/fw.c       | 44 ++++++++++++++++++++++
  .../net/ethernet/mellanox/mlx5/core/mlx5_core.h    |  2 +
- include/linux/mlx5/driver.h                        |  1 +
- include/linux/mlx5/mlx5_ifc.h                      | 17 +++++
- 5 files changed, 144 insertions(+), 1 deletion(-)
+ 2 files changed, 46 insertions(+)
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw.c b/drivers/net/ethernet/mellanox/mlx5/core/fw.c
+index 1723229..1c6dfe9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fw.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw.c
+@@ -769,3 +769,47 @@ int mlx5_fw_version_query(struct mlx5_core_dev *dev,
+ 
+ 	return 0;
+ }
++
++static int mlx5_reg_mfrl_set(struct mlx5_core_dev *dev, u8 reset_level,
++			     u8 reset_type_sel)
++{
++	u32 out[MLX5_ST_SZ_DW(mfrl_reg)];
++	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++
++	MLX5_SET(mfrl_reg, in, reset_level, reset_level);
++	MLX5_SET(mfrl_reg, in, rst_type_sel, reset_type_sel);
++
++	return mlx5_core_access_reg(dev, in, sizeof(in), out,
++				    sizeof(out), MLX5_REG_MFRL, 0, 1);
++}
++
++static int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level,
++			       u8 *reset_type_sel, u8 *reset_type)
++{
++	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++	int err;
++
++	err = mlx5_core_access_reg(dev, in, sizeof(in), out,
++				   sizeof(out), MLX5_REG_MFRL, 0, 0);
++	if (err)
++		return err;
++
++	*reset_level = MLX5_GET(mfrl_reg, out, reset_level);
++	*reset_type = MLX5_GET(mfrl_reg, out, reset_type);
++	*reset_type_sel = MLX5_GET(mfrl_reg, out, rst_type_sel);
++
++	return 0;
++}
++
++int mlx5_fw_query_reset_level(struct mlx5_core_dev *dev, u8 *reset_level)
++{
++	u8 reset_type_sel, reset_type;
++
++	return mlx5_reg_mfrl_query(dev, reset_level, &reset_type_sel, &reset_type);
++}
++
++int mlx5_fw_set_reset_level(struct mlx5_core_dev *dev, u8 reset_level)
++{
++	return mlx5_reg_mfrl_set(dev, reset_level, 0);
++}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+index da67b28..1b55a5a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+@@ -210,6 +210,8 @@ int mlx5_firmware_flash(struct mlx5_core_dev *dev, const struct firmware *fw,
+ 			struct netlink_ext_ack *extack);
+ int mlx5_fw_version_query(struct mlx5_core_dev *dev,
+ 			  u32 *running_ver, u32 *stored_ver);
++int mlx5_fw_query_reset_level(struct mlx5_core_dev *dev, u8 *reset_level);
++int mlx5_fw_set_reset_level(struct mlx5_core_dev *dev, u8 reset_level);
+ 
+ void mlx5e_init(void);
+ void mlx5e_cleanup(void);
 -- 
 1.8.3.1
 
