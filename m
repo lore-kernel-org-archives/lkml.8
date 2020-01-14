@@ -2,88 +2,156 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80812C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43549C33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E2A2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A022072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 05:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="TX7kp1IN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pfC2hgW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgANF5T (ORCPT
+        id S1728558AbgANF7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 00:57:19 -0500
-Received: from sauhun.de ([88.99.104.3]:47028 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgANF5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 00:57:19 -0500
-Received: from localhost (p54B33250.dip0.t-ipconnect.de [84.179.50.80])
-        by pokefinder.org (Postfix) with ESMTPSA id A2F722C06E9;
-        Tue, 14 Jan 2020 06:57:17 +0100 (CET)
-Date:   Tue, 14 Jan 2020 06:57:17 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/8] i2c: tegra: Support atomic transfers
-Message-ID: <20200114055717.GA1054@kunai>
-References: <20200112171430.27219-1-digetx@gmail.com>
- <20200112171430.27219-5-digetx@gmail.com>
- <20200113220315.GB2689@ninjato>
- <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
+        Tue, 14 Jan 2020 00:59:54 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50999 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725936AbgANF7x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 00:59:53 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 94EAB808C;
+        Tue, 14 Jan 2020 00:59:52 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 14 Jan 2020 00:59:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        hfX/vQq29sm8h9CFPcu58VExDE6jtSKXUcX35KAhkgc=; b=TX7kp1INE+5wqoGG
+        2dS8Lci3evRXmsaBr6Pqfc/H7NeZ8j8WAB99WrrirX0VSl9pDySJ40pejgfyv6tR
+        Pf4L1DG5vWZYst91xX8cOqLpNLvqGl7dILUHJ/mJSyG/LYRznKZqT47vYOVtHzYK
+        ErzWGITiDIrzs6Oh2iT/FaR7h/fsJ0sVbOvehKm1cJB+1XqX+WkO0vcCrbBP6HQp
+        ueiXgLWqufjOM4f5dY2ZmHJc50L3U7vlT+Akdg84nXRczEj5Vx8hLNAfLTvcjwVg
+        I5Fd7XQjMcS1yaBfQuTUc54czgaFiMqELjboKY/RoAFw+tLGO4Q3lR+49C8ASh8+
+        8+1Z4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=hfX/vQq29sm8h9CFPcu58VExDE6jtSKXUcX35KAhk
+        gc=; b=pfC2hgW1S6aGHeRRLZh50FI6XFlxAz/YvH23cZs1FKkoVMqfRxx+zeJEg
+        buE2AveXYsJSs61U0VuDhAz5yPde8bHsc5pmyjvO9OyHN6DrRNUDKJbBJ95WqMV3
+        9QsRp6ECp/BXJ6iZi6WoFvnMhV+fcPQ1wIGRnnGa+CUbiWHXq75PwV3zsMV1fxfC
+        hwvfXsabduveumYMVHvLSfSe4ysxldZYGqEwHdunaFyUbplSA2n3Dd2vQZLNZ8aI
+        0K4xrB3ksaFoizMdo/5tQeFktvOuOZgUJUiwkqbKB31fFWU7r3vgBcB9hXtj7dwC
+        FzUF9Mqf4F7vb2XFOiX0xWRixQRiw==
+X-ME-Sender: <xms:11gdXvIE27K_H38S--vhJQc-RtpSE7kWUNrBl-BjvnjjiRRYgGdtow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdejuddgkeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
+    drudejhedrvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgr
+    fidrnhgvthenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:11gdXrgfD8N45aCScFuMVLwL5wUuHYNxfbvItm6sOV3Cqko4bCcDlw>
+    <xmx:11gdXp4pVJxMEp1kK4N-dDTpndGxZSlJblpzjv1RtvTZWFsANIKfoA>
+    <xmx:11gdXgPeP4AE5dG4mr9SOxe2VSBxgjhVnFlpTAMJKQZUqXKtxDlQXQ>
+    <xmx:2FgdXp-gxBJS0lsQH1Uzf2yCm1XjTMjjcpT8mxhqXnouo-SfN1wwxw>
+Received: from mickey.themaw.net (unknown [118.209.175.25])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9CC6C80061;
+        Tue, 14 Jan 2020 00:59:46 -0500 (EST)
+Message-ID: <1fb8a0e4a763219f0f6cde6023ba89c1774cb854.camel@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 13:59:42 +0800
+In-Reply-To: <d6cad1552171da1eb38c55d1d7b1ff45902b101f.camel@themaw.net>
+References: <20200103014901.GC8904@ZenIV.linux.org.uk>
+         <20200108031314.GE8904@ZenIV.linux.org.uk>
+         <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+         <20200108213444.GF8904@ZenIV.linux.org.uk>
+         <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
+         <20200110041523.GK8904@ZenIV.linux.org.uk>
+         <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
+         <20200112213352.GP8904@ZenIV.linux.org.uk>
+         <800d36a0dccd43f1b61cab6332a6252ab9aab73c.camel@themaw.net>
+         <19fa114ef619057c0d14dc1a587d0ae9ad67dc6d.camel@themaw.net>
+         <20200114043924.GV8904@ZenIV.linux.org.uk>
+         <d6cad1552171da1eb38c55d1d7b1ff45902b101f.camel@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-In-Reply-To: <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-01-14 at 13:01 +0800, Ian Kent wrote:
+> On Tue, 2020-01-14 at 04:39 +0000, Al Viro wrote:
+> > On Tue, Jan 14, 2020 at 08:25:19AM +0800, Ian Kent wrote:
+> > 
+> > > This isn't right.
+> > > 
+> > > There's actually nothing stopping a user from using a direct map
+> > > entry that's a multi-mount without an actual mount at its root.
+> > > So there could be directories created under these, it's just not
+> > > usually done.
+> > > 
+> > > I'm pretty sure I don't check and disallow this.
+> > 
+> > IDGI...  How the hell will that work in v5?  Who will set _any_
+> > traps outside the one in root in that scenario?  autofs_lookup()
+> > won't (there it's conditional upon indirect mount).  Neither
+> > will autofs_dir_mkdir() (conditional upon version being less
+> > than 5).  Who will, then?
+> > 
+> > Confused...
+> 
+> It's easy to miss.
+> 
+> For autofs type direct and offset mounts the flags are set at fill
+> super time.
+> 
+> They have to be set then because they are direct mounts and offset
+> mounts behave the same as direct mounts so they need to be set then
+> too. So, like direct mounts, offset mounts are each distinct autofs
+> (trigger) mounts.
+> 
+> I could check for this construct and refuse it if that's really
+> needed. I'm pretty sure this map construct isn't much used by
+> people using direct mounts.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, once again I'm not exactly accurate is some of what I said.
 
+It turns out that the autofs connectathon tests, one of the tests
+that I use, does test direct mounts with offsets both with and
+without a real mount at the base of the mount.
 
-> > Given my reasoning above, that should have happened before the warning
-> > was printed as well? Because same behaviour. I'd be surprised if there
-> > was a change...
->=20
-> Pretty sure that it was happening before, but I wasn't paying much
-> attention back then.
+Based on that, I have to say this map construct is meant to be
+supported with Sun format maps of autofs (even though I think it's
+probably not used much).
 
-Thanks! All good then. Because this WARN was added to report transfers
-which might have never worked but went unnoticed so far. I am glad it
-served its purpose.
+So not allowing it is probably the wrong thing to do.
 
+OTOH initial testing with the #work.namei branch shows these are
+functioning as required.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
+Ian
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4dWDcACgkQFA3kzBSg
-KbaDkg//ateAVPiPu9ogaOyXDMUu7rAq53gZw+sBNluuPqo3dseWD+rImSgJ8qwY
-GWW580bLfr6P0lfTZvnM5Z1/3c2hZjvilEELGdZQaYSMsOE2hxn36QtjbEBKHjqP
-igKWmdLEEMtTztN2Dxh9frTeSFzbBv1+kKJEZC0HJIJgIJ41+oqa11qTK+V9Q2cY
-yHjRFC/e4Kt86xwbmkbJZG3ezxFPWzbBwnV3mmjJ14DHneD5MD5BXOnKfNC11/3Q
-i5/zdELcVWAz3BahXqu32mZEk4uco1D85aGG5CGTgkgq/T+SQfsFdlXO0cqMzxvj
-F1T4HqvHhPew6phyNh/Y/dlzZZGT6s1weUoVv7sewM1hQrzLhw52+nwH/T5QXu98
-PatBVmZuFzi8YTBDKOG3SawEqpop4gADreyc9LRomocHKb97lsWcIHZ54pXg9VvF
-z4R435Q22tHj6R+MCnif8ksU8phRGAtfieAAoG5YOTxppm53dAceJkTJTK07P20D
-DsFvnSYUvbMyiDbMayt8NxmdeY8/1hNFkf/LbPN8bNEFtGoTAliiYnN4pOBz4SiG
-8CM0Y2mipUodk1yKnBCf3v/vkjp5Kw/Gd3QmUhRH824h+0ZDNMzed5qR2QVpnCD5
-IymE3XUa3b2e7Jv2x1j1VwFRShTVo4bjJUTpBo3OpVBnf6t0PPI=
-=loTy
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
