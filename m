@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBB8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F34C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34E92467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626F22467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996318;
-	bh=IA4zhxySlZan7pfY5mjPaJZUUfUKv3XdLULsUDAO+GU=;
+	s=default; t=1578996325;
+	bh=9mG7apXH3z1oevkdoVIIupPDJz8NHaoIfmcZ4hXq3dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVw+tzfvVGfNJtNi7GwwExP2YyfyS37vP8uEhmfSfdoYB5SuDWpB541fuS3Lwrlhd
-	 bMUkiHCyLqY+4CD9ykuOjX5djvZChkwO2ShiLSMJP/w/Ge+0psPLameJfMc9M5VbPW
-	 hStaICeVdZlJhkcp7yALn57KEcFcMTHSiUWaKQGk=
+	b=R/bMMMfd23WszZdg0/EnTF5L6Yh4ukiFZ7wPauYM8jVEnHeTE3KTmy9kcoriCAW8S
+	 1jcSbxE1nAmFa6tR0RAoBNbrUhK6/SXhnuILX6skzB3QDqZx9PAslIPiXGzGhWSv5z
+	 2UDGWqdS5TszWuTXyp0WIyQxMWtPkOqXNo8LAdLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgANKFQ (ORCPT
+        id S1730124AbgANKFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33160 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgANKFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:12 -0500
+        id S1729447AbgANKFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7267E2467A;
-        Tue, 14 Jan 2020 10:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A322467D;
+        Tue, 14 Jan 2020 10:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996312;
-        bh=IA4zhxySlZan7pfY5mjPaJZUUfUKv3XdLULsUDAO+GU=;
+        s=default; t=1578996318;
+        bh=9mG7apXH3z1oevkdoVIIupPDJz8NHaoIfmcZ4hXq3dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7y2Z1OPaM2/J1MpQK/71c6WxvJLRTQlNjCoGnzXb7GknERLaRtxl/juz7ELClR3B
-         vkO6O7R4a4k6JgH5DlUQFIrDSkCPrnjyRsZZ+pb7QQD6h07CA3RUdhAfmJHWxzlwxc
-         fI9w5FRgYbpdnaZbo0LRpjol6h1ywFUzat7H5GIU=
+        b=EejMWe6xGSD5/qAchl4t+vG81xaiU1zszr64G94v0LvoEqyY6HoeoXN+FoRPckK1c
+         1n5jD+73KQR1SM54ffYL8f8bK/5o9TNsWrTSdcFqA2n6cC+zrXhL+IChnuPXKNCcWN
+         lbs37+EpDJUPCfyOd6vWMgOFq7HXl3tkd7gHvgfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 53/78] serdev: Dont claim unsupported ACPI serial devices
-Date:   Tue, 14 Jan 2020 11:01:27 +0100
-Message-Id: <20200114094400.596438147@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 5.4 55/78] tty: link tty and port before configuring it as console
+Date:   Tue, 14 Jan 2020 11:01:29 +0100
+Message-Id: <20200114094400.846717319@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,57 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit c5ee0b3104e0b292d353e63fd31cb8c692645d8c upstream.
+commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
 
-Serdev sub-system claims all ACPI serial devices that are not already
-initialised. As a result, no device node is created for serial ports
-on certain boards such as the Apollo Lake based UP2. This has the
-unintended consequence of not being able to raise the login prompt via
-serial connection.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-Introduce a blacklist to reject ACPI serial devices that should not be
-claimed by serdev sub-system. Add the peripheral ids for Intel HS UART
-to the blacklist to bring back serial port on SoCs carrying them.
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191219100345.911093-1-punit1.agrawal@toshiba.co.jp
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
+
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
+
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
+
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/core.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/tty/serial/serial_core.c |    1 +
+ drivers/tty/tty_port.c           |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -582,6 +582,12 @@ static acpi_status acpi_serdev_register_
- 	return AE_OK;
- }
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2834,6 +2834,7 @@ int uart_add_one_port(struct uart_driver
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
  
-+static const struct acpi_device_id serdev_acpi_devices_blacklist[] = {
-+	{ "INT3511", 0 },
-+	{ "INT3512", 0 },
-+	{ },
-+};
-+
- static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
- 				       void *data, void **return_value)
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	port->console = uart_console(uport);
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_por
  {
-@@ -591,6 +597,10 @@ static acpi_status acpi_serdev_add_devic
- 	if (acpi_bus_get_device(handle, &adev))
- 		return AE_OK;
- 
-+	/* Skip if black listed */
-+	if (!acpi_match_device_ids(adev, serdev_acpi_devices_blacklist))
-+		return AE_OK;
-+
- 	return acpi_serdev_register_device(ctrl, adev);
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
  }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
  
 
 
