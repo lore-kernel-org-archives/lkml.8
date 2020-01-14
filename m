@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BABC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005B4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078AA2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C669A222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579018160;
-	bh=NFFHSNv1DlWGNVCrdRN2Z/J+vG6rhp5TLj2SjfZ2eM4=;
+	s=default; t=1579018164;
+	bh=faTRHh+bcvRrhOjGBJd7xe1b1/kzt+dXal4VH2s7aSw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VgGfcEVj8YZ6dCoFC/VLKGvdHiZf5Hy9ySK+9prgCKMQQuHwo2XKLwySvZvnMZBPB
-	 LBpzYfSB/1T/G7SovJuT4raNw4QOEBhEpNTYAsYBs92M9XVNMMb0YpK+7h+VMyd5P+
-	 CnbD2GV2ubIGd9L2teKDRLHBGcFkKRVxG231rwu4=
+	b=gqxT0QCYlrrEL4j/rpO5/FhMh86j82Igys2Qi39ataWDGj1zer4YOUBSE9A3Fn+1f
+	 GZ++lmGxt+KAEN7NJwYugLx4sVXKODtFfY4nQS0U2qEsG6kWg9TKs4hHfKapac6M5Q
+	 eS6sK1jE7yzsferifsIoVhVRNBwuNTuFYMyQegjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgANQJT (ORCPT
+        id S1729173AbgANQJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:09:19 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37278 "EHLO
+        Tue, 14 Jan 2020 11:09:24 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37410 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgANQJR (ORCPT
+        with ESMTP id S1726342AbgANQJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:09:17 -0500
+        Tue, 14 Jan 2020 11:09:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=PL4q4saA2/5hcYaIEYDv2N6RnvzTXQ5f0CStk5GfbSE=; b=RnX0cGelf9IM
-        WbVdpWTjBKuRSzT2EwQ7UDfXnqbUmt1XoIyRW08vWg3vQQVUuqWOzWgVTTLPJs3tIMSecZDbC4R+1
-        EWA/a3p5oIhMSBiQfzaQtsBrOXtSzOPLNIyBmVvIsO4O6xbXdKpgh9mx4Y8LPW4kzctZQw0Wx8bxl
-        6LIGg=;
+        List-Archive; bh=Pq8REMESzpH6q41kFJ7Xdz/mnGbbiWifWQ5pOJY+B+Q=; b=OHnhLjdjRfDE
+        kHG9H27H5hJUUcJEp0KyT9sVJyzX6cjHyOJWj4gQGxmIj4whuU4H4uDSeymP86e03vIWog6BZzEaU
+        JgmQDDltYrFCLUFhX3chRHWM2fDzk+uSgUkfTIDNTxDCD3qz5p1m6f5NVvHJURx4hjjC3/Kh0W5Kf
+        on50A=;
 Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1irOkd-0001V2-QD; Tue, 14 Jan 2020 16:09:07 +0000
+        id 1irOkb-0001Ul-Ic; Tue, 14 Jan 2020 16:09:05 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 80462D02C7C; Tue, 14 Jan 2020 16:09:07 +0000 (GMT)
+        id 40A1AD02C7B; Tue, 14 Jan 2020 16:09:05 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Rob Herring <robh+dt@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "dt-bindings: sound: Convert jz47*-codec doc to YAML" to the asoc tree
-In-Reply-To: <20191224002708.1207884-1-paul@crapouillou.net>
-Message-Id: <applied-20191224002708.1207884-1-paul@crapouillou.net>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, festevam@gmail.com,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Mark Brown <broonie@kernel.org>,
+        mark.rutland@arm.com, nicoleotsuka@gmail.com, perex@perex.cz,
+        robh+dt@kernel.org, Rob Herring <robh@kernel.org>,
+        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm & imx8qxp" to the asoc tree
+In-Reply-To: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
+Message-Id: <applied-b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
 X-Patchwork-Hint: ignore
-Date:   Tue, 14 Jan 2020 16:09:07 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 16:09:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: sound: Convert jz47*-codec doc to YAML
+   ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm & imx8qxp
 
 has been applied to the asoc tree at
 
@@ -90,142 +91,57 @@ to this mail.
 Thanks,
 Mark
 
-From 30bcb1f264bfdd49561cc7a974b67c4d712b3668 Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Tue, 24 Dec 2019 01:27:07 +0100
-Subject: [PATCH] dt-bindings: sound: Convert jz47*-codec doc to YAML
+From 8441f87eadf6d6bba542e7a5bf3888595248d888 Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Wed, 4 Dec 2019 20:00:18 +0800
+Subject: [PATCH] ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm
+ & imx8qxp
 
-Convert ingenic,jz4740-codec.txt and ingenic,jz4725b-codec.txt to one
-single ingenic,codec.yaml file, since they share the same binding.
+Add compatible string "fsl,imx8qm-asrc" for imx8qm platform,
+"fsl,imx8qxp-asrc" for imx8qxp platform.
 
-Add the ingenic,jz4770-codec compatible string in the process.
+There are two asrc modules in imx8qm & imx8qxp, the clock mapping is
+different for each other, so add new property "fsl,asrc-clk-map"
+to distinguish them.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191224002708.1207884-1-paul@crapouillou.net
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/ingenic,codec.yaml         | 55 +++++++++++++++++++
- .../bindings/sound/ingenic,jz4725b-codec.txt  | 20 -------
- .../bindings/sound/ingenic,jz4740-codec.txt   | 20 -------
- 3 files changed, 55 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/ingenic,codec.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
- delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+ Documentation/devicetree/bindings/sound/fsl,asrc.txt | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/ingenic,codec.yaml b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
-new file mode 100644
-index 000000000000..eb4be86464bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/ingenic,codec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+index 1d4d9f938689..cb9a25165503 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+@@ -8,7 +8,12 @@ three substreams within totally 10 channels.
+ 
+ Required properties:
+ 
+-  - compatible		: Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
++  - compatible		: Compatible list, should contain one of the following
++			  compatibles:
++			  "fsl,imx35-asrc",
++			  "fsl,imx53-asrc",
++			  "fsl,imx8qm-asrc",
++			  "fsl,imx8qxp-asrc",
+ 
+   - reg			: Offset and length of the register set for the device.
+ 
+@@ -35,6 +40,11 @@ Required properties:
+ 
+    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
+ 
++   - fsl,asrc-clk-map   : Defines clock map used in driver. which is required
++			  by imx8qm/imx8qxp platform
++			  <0> - select the map for asrc0 in imx8qm/imx8qxp
++			  <1> - select the map for asrc1 in imx8qm/imx8qxp
 +
-+title: Ingenic JZ47xx internal codec DT bindings
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+properties:
-+  $nodename:
-+    pattern: '^audio-codec@.*'
-+
-+  compatible:
-+    oneOf:
-+      - const: ingenic,jz4770-codec
-+      - const: ingenic,jz4725b-codec
-+      - const: ingenic,jz4740-codec
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: aic
-+
-+  '#sound-dai-cells':
-+    const: 0
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#sound-dai-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    codec: audio-codec@10020080 {
-+      compatible = "ingenic,jz4740-codec";
-+      reg = <0x10020080 0x8>;
-+      #sound-dai-cells = <0>;
-+      clocks = <&cgu JZ4740_CLK_AIC>;
-+      clock-names = "aic";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
-deleted file mode 100644
-index 05adc0d47b13..000000000000
---- a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--Ingenic JZ4725B codec controller
--
--Required properties:
--- compatible : "ingenic,jz4725b-codec"
--- reg : codec registers location and length
--- clocks : phandle to the AIC clock.
--- clock-names: must be set to "aic".
--- #sound-dai-cells: Must be set to 0.
--
--Example:
--
--codec: audio-codec@100200a4 {
--	compatible = "ingenic,jz4725b-codec";
--	reg = <0x100200a4 0x8>;
--
--	#sound-dai-cells = <0>;
--
--	clocks = <&cgu JZ4725B_CLK_AIC>;
--	clock-names = "aic";
--};
-diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
-deleted file mode 100644
-index 1ffcade87e7b..000000000000
---- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--Ingenic JZ4740 codec controller
--
--Required properties:
--- compatible : "ingenic,jz4740-codec"
--- reg : codec registers location and length
--- clocks : phandle to the AIC clock.
--- clock-names: must be set to "aic".
--- #sound-dai-cells: Must be set to 0.
--
--Example:
--
--codec: audio-codec@10020080 {
--	compatible = "ingenic,jz4740-codec";
--	reg = <0x10020080 0x8>;
--
--	#sound-dai-cells = <0>;
--
--	clocks = <&cgu JZ4740_CLK_AIC>;
--	clock-names = "aic";
--};
+ Optional properties:
+ 
+    - big-endian		: If this property is absent, the little endian mode
 -- 
 2.20.1
 
