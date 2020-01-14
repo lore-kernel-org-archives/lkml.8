@@ -2,126 +2,144 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EABC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BA424658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2909524658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RB4FekL2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bNQcHd+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgANUMY (ORCPT
+        id S1728859AbgANUPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:12:24 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41808 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANUMX (ORCPT
+        Tue, 14 Jan 2020 15:15:12 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13500 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgANUPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:12:23 -0500
-Received: by mail-ed1-f66.google.com with SMTP id c26so13145643eds.8;
-        Tue, 14 Jan 2020 12:12:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vV+GJ0x1tGGP4SM4rLH+VCpE9DGndiHHm1uWDluzfFg=;
-        b=RB4FekL2abu4zjxBeac2aIhtA1DQAYxku4TPR9xLduBUYzFIngDIvUVfWQl0NeSFGb
-         foVcKgTtxAdlUNiPHyHsR3TAFANiNEknpe7Z+iwFIPR7H+VR8eBICh8MfO1KvRl9HoeX
-         bT/JUkpT9TXwEW7Gzk+NAOXDtlxespc8KQULYfbJX4iYLAoNlpgMLtKt4cPjVl/td1Lq
-         R18CdZfE713rmYAkkZEdn8xe33CUV55cn78GHb7YCcFeLce7T80FsBmt1lSBs2rMudRE
-         MTDsrkBv7p68mTNKUayOrlvBGI62M7pnQB/x0T8UrOLSyWwa3SIhrlon2dWKpsGCAROq
-         PTqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vV+GJ0x1tGGP4SM4rLH+VCpE9DGndiHHm1uWDluzfFg=;
-        b=rTiAMVh3GE8JkM9SB8uANx/N0TOn3QrX8437TPTpCztoNXl9hcolbTHIHAkBQuA0kT
-         2/yGAFf0CMYoxmKKK0KXh3p/7p2YQUegBuOHXPARzWglqmEwaxWNAKekepIuyOLJDdzP
-         Z1JB9pPvyjv6sesjqA+xGpqThYgVLirTm8vAUTgevpou1kqskm7ScXlhscPCnUm0lyXN
-         8bWoYrB4WhdLwHMPXaRIjLpDHIFiVHH8CqZP5QR61fZ+A7ZKtAKz/jXyhe5z4116FeG1
-         dPNVqaSqwvHG8EUNCOMOiPQHMb80cmS6W+iJfP1kigJqbUU9aRsYlguRD5Imx3OhUvVB
-         Gjjg==
-X-Gm-Message-State: APjAAAUiYOPdoqfH4QcZLoKHj/RNOC+rJlUMusKMPSwiPotXzrNv/YpU
-        XDx7PHzS9PYHb+8S6oAQvBzGGBaNYKfURx0PVFI=
-X-Google-Smtp-Source: APXvYqwHoUwmDQgURkLoCVvyH8XUPku3082WCJH6JAKtOp7e/sjyH/7MAV/ghZOjgmzWWNTr0yjJ3rWdoYSYd6hulbA=
-X-Received: by 2002:a50:875c:: with SMTP id 28mr6886375edv.271.1579032741448;
- Tue, 14 Jan 2020 12:12:21 -0800 (PST)
+        Tue, 14 Jan 2020 15:15:11 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1e21390001>; Tue, 14 Jan 2020 12:14:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 Jan 2020 12:15:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 Jan 2020 12:15:09 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 20:15:09 +0000
+Subject: Re: [PATCH v12 00/22] mm/gup: prereqs to track dma-pinned pages:
+ FOLL_PIN
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200107224558.2362728-1-jhubbard@nvidia.com>
+ <2a9145d4-586e-6489-64e4-0c54f47afaa1@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <9d7f3c1a-6020-bdec-c513-80c5399e55d7@nvidia.com>
+Date:   Tue, 14 Jan 2020 12:15:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200112002459.2124850-1-martin.blumenstingl@googlemail.com>
- <20200112002459.2124850-2-martin.blumenstingl@googlemail.com> <20200113211020.GA12476@bogus>
-In-Reply-To: <20200113211020.GA12476@bogus>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 14 Jan 2020 21:12:09 +0100
-Message-ID: <CAFBinCAA1kGFqDbYXYVn9W9DRhOnk09WpjGqP5R9YTwu_5vSCw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Document the Amlogic Meson SDHC
- MMC host controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2a9145d4-586e-6489-64e4-0c54f47afaa1@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579032890; bh=wLxNzNFRStaOZ7jAQIV4tH1wBKaWmBKZBOUdkq/PVGQ=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bNQcHd+kt2S6qArSD90PMkNX5LSRoo2toPf1fdY/D3ysgVjnnuMPbcBLvU4mGjBbT
+         LR4uZiIEi3/mAViybdXB1PH001dny/ndD230xDMGlhs7NAYpQR6mGLaj5Fl0H44uol
+         s/WH8SaFGbiYHrC+Jf2F7bChe3A2NqguquLvhseggPHll2epR/FoT6c0YMA6JGSKkp
+         eSDWR40pps95gbxdKKvy2DClT3lBSMdUwcemTQnf2Jrxy6nLuQLIDhcegQ+kyGcscI
+         uknj/1R1Mw2ETSzcXASW/vo/Q3g+SHupTZUPph9j3ZAnq/QlpAxhi10ckpA46Ke/0I
+         HjefW3dJ5Akvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 1/9/20 2:07 PM, John Hubbard wrote:
+> On 1/7/20 2:45 PM, John Hubbard wrote:
+>> Hi,
+>>
+>> The "track FOLL_PIN pages" would have been the very next patch, but it is
+>> not included here because I'm still debugging a bug report from Leon.
+>> Let's get all of the prerequisite work (it's been reviewed) into the tree
+>> so that future reviews are easier. It's clear that any fixes that are
+>> required to the tracking patch, won't affect these patches here.
+>>
+>> This implements an API naming change (put_user_page*() -->
+>> unpin_user_page*()), and also adds FOLL_PIN page support, up to
+>> *but not including* actually tracking FOLL_PIN pages. It extends
+>> the FOLL_PIN support to a few select subsystems. More subsystems will
+>> be added in follow up work.
+>>
+> 
+> Hi Andrew and all,
+> 
+> To clarify: I'm hoping that this series can go into 5.6.
+> 
+> Meanwhile, I'm working on tracking down and solving the problem that Leon
+> reported, in the "track FOLL_PIN pages" patch, and that patch is not part of
+> this series.
+> 
 
-On Mon, Jan 13, 2020 at 10:10 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Sun, Jan 12, 2020 at 01:24:57AM +0100, Martin Blumenstingl wrote:
-> > This documents the devicetree bindings for the SDHC MMC host controller
-> > found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-> > bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-> > HS200 mode (up to 100MHz clock). It embeds an internal clock controller
-> > which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
-> > fed by four external input clocks (clkin[0-3]). "pclk" is the module
-> > register clock, it has to be enabled to access the registers.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 83 +++++++++++++++++++
-> >  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |  8 ++
-> >  2 files changed, 91 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
-> >  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
->
-> Fails 'make dt_binding_check':
->
-> Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.example.dts:17:53:
-> warning: extra tokens at end of #include directive
->  #include <dt-bindings/clock/meson-mx-sdhc-clkc.yaml>;
->                                                      ^
-> Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.example.dts:17:10:
-> fatal error: dt-bindings/clock/meson-mx-sdhc-clkc.yaml: No such file or directory
->  #include <dt-bindings/clock/meson-mx-sdhc-clkc.yaml>;
->           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sorry for that - I'll fix it in v5
+Hi Andrew and all,
 
-[...]
-> > +  clock-names:
-> > +    items:
-> > +      - const: pclk
-> > +      - const: mod_clk
-> > +      - const: sd_clk
-> > +      - const: rx_clk
-> > +      - const: tx_clk
-> > +      - const: clkin0
-> > +      - const: clkin1
-> > +      - const: clkin2
-> > +      - const: clkin3
->
-> Kind of odd to put the output clocks in the middle of the list.
-I'll have to re-send this anyways so I'll put clkin[0-3] at the start
-of the list
+Any thoughts on this?
+
+As for the not-included-yet tracking patch, my local testing still suggests the
+need to allow for larger refcounts of huge pages (in other words, I can write a test
+to pin huge pages many times, and overflow with the same backtrace that Leon has
+reported).
+
+The second struct page (I recall Jan suggested) can hold those, so I'm going to proceed
+with that approach, while waiting to see if Leon has any more test data for me.
+
+Again, I think this series is worth getting out of the way, in the meantime.
 
 
-Martin
+thanks,
+-- 
+John Hubbard
+NVIDIA
