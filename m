@@ -2,188 +2,163 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAA4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D85C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F5124658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AAE2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRbkRaQG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o1RTeYs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgANQE6 (ORCPT
+        id S1728983AbgANQFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:04:58 -0500
-Received: from mail-io1-f41.google.com ([209.85.166.41]:34301 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728835AbgANQE5 (ORCPT
+        Tue, 14 Jan 2020 11:05:44 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40427 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgANQFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:04:57 -0500
-Received: by mail-io1-f41.google.com with SMTP id z193so14393330iof.1;
-        Tue, 14 Jan 2020 08:04:57 -0800 (PST)
+        Tue, 14 Jan 2020 11:05:43 -0500
+Received: by mail-yw1-f67.google.com with SMTP id i126so9423989ywe.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:05:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v3IvYmcGimwuEN+/tbhVg4f+uAHLk1U4Opz1X1TABkM=;
-        b=BRbkRaQGkZsDAKCG9VdBHFPU2jVnKOc8SEywhumuz9LXfxBFF/KBBf/ViobDyt8Ltb
-         4hb70Rjjr0euUf9mDAeTSnbf3hyDF9Yi9/aoJPc4Wq378qeHrR9dkJCyTkgCgrutTcSm
-         GrdNhZXaJt3XXLDpYuy2VQDPwa/pCKxq9ja26hHjjLX4bwVckP/QuJ5eniHv0S5zMjyw
-         Y6Ek+zq5zVEiso8lC9uRb8ZznFJn1IPvy0G4tJ/1MTz662zOiB4pYbAvihW3AbPILxht
-         Z1XvLwv+T2fuen4V6E4+QAnBKB/dOfItyaxyzUOuSfhNgYM/STjacljtbPdt17bLZwpm
-         1YZA==
+        bh=JAAP2JdXcgFxBhl56nV1tk8WCkwM6wjoMIO0G3IteqI=;
+        b=o1RTeYs0to9YmBEHxHTwHSEUv/fnUFuviFip7biVyFBtfv5BDeL0yAdUT55WtszMqM
+         ZtntMmTkEAMK1rWaB7QrdvmGZ2EOI74jVS4ilQfTFWt2lt2dJZVYZ5NRZNNlJWMjDcFl
+         QCiLlI8UBrYup1P8VCdFz2ls7TLH19qwmU4f1qd5CfW2IaKnFt50WMK6C9XCquq5YStv
+         FBo42piZx2N64YHzBR3D4m7KVj5PPEoZSWXhvrNLga+L1DrLnshGrTNdkSCAzAfOP6jP
+         0u/2VH5CuV3aVHEM5/D4L45RP6aMp27BEqdvWtX1tRhHzXMSj2V7op94wQugvjwU7jGA
+         TKtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v3IvYmcGimwuEN+/tbhVg4f+uAHLk1U4Opz1X1TABkM=;
-        b=p+FKbeeXawEcGz7wW1d2m0kyDIbh281u38SEFLiCeCqxLEd/NWJw+7xvskMthwswM0
-         gEj5SpnhkI7zN2inWhpngmRcDrlONmsW4MNJddVzOpN8OWp09jXXVOyVpf9MtBNRq5Fc
-         wKO3pvqaK/a7f0sQ1YQ7qcpBv+7lIc4WGZ/g8Ng8ZmptcVJ+690zSPmuIjHcnmam15Ti
-         FsgU0rUs5HEmpZXjcwKVf4Xt3RzrMH1Lp51yOD5gL4OWYIu6S8bMehYbe6WyHsnx7rKf
-         /fsIUkUAzbS+ayZSarfkFppA3tDTQJhxnFBbaFAmPP3T+/JMpZca/fP2RwkyCFgfm+c2
-         Ae1A==
-X-Gm-Message-State: APjAAAXR3fEdTYY2zQ/T49nDovIH2gAweZ+I4SFMD+J7s1WNyYeSWRim
-        xQ6r5mZcPptTfm4/Da1cxIFu6Myzf+hAb4m9Plg=
-X-Google-Smtp-Source: APXvYqyLvxCk0Y5/M9spC9uyi7Y+XWQiWwIY1wxE92OOmzgTP3PKC8QOD4Iqs18UgnfXReUZQaI752wU3S2Eqz5kObE=
-X-Received: by 2002:a5d:93d1:: with SMTP id j17mr18349954ioo.300.1579017897096;
- Tue, 14 Jan 2020 08:04:57 -0800 (PST)
+        bh=JAAP2JdXcgFxBhl56nV1tk8WCkwM6wjoMIO0G3IteqI=;
+        b=Iz2UJn1iXRHP4Ggn7cJHvWYtrhJDCtHQm/4+HXebyFFnrNK4WGapPxOUfBtECIwFKY
+         J+pCTKCkeLwVgBEkltf/3aX8qhAn+w9ArRPCygYr0AM/wgZO7bps/e6MvuuWKUdYnxKu
+         cCW+qAMGJk0SHR2PuGs+Kb4oDqFzvQqVo5u22+reEYUkPcMEVJrZ9/jBR3DW9LZS3qDu
+         0JJrRMxiNtb0pVHfbbLHQ5cKcedzAJsOYqcfhzH4LRhBOoCOX4HCTaWl3VbIAessV/Hk
+         lxIaXOYsRajJ2Y8A8/WaGWFPJ8uTN7M4aAEGcuJEOGgweup/hXcqaijESgLjqVF2o9NJ
+         bFBg==
+X-Gm-Message-State: APjAAAVg5aon7G57W7aRdLK/5n7wZaJEDMWmAlvGXqgMEpb52+uHwTTZ
+        +1f2p6JbvlQ8dTCOswxZC9qnyf5mX0+pEpOJYR1KFw==
+X-Google-Smtp-Source: APXvYqwC0OB/6gLA6rihbYKssh977hvwsHcfpO/KRTW1EX3faERVWGaeFnIgAC1VBqkXkhCGpThc6iCZ1wiXtKcbvxU=
+X-Received: by 2002:a0d:dd56:: with SMTP id g83mr17603981ywe.174.1579017942555;
+ Tue, 14 Jan 2020 08:05:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110070608.18902-1-yu.c.chen@intel.com> <20200114092450.GA31032@zn.tnic>
-In-Reply-To: <20200114092450.GA31032@zn.tnic>
-From:   Chen Yu <yu.chen.surf@gmail.com>
-Date:   Wed, 15 Jan 2020 00:04:44 +0800
-Message-ID: <CADjb_WRicSYZP3cXz+PWzXCY42qxgHM2Q5uoqqiSzKtfQ--AZQ@mail.gmail.com>
-Subject: Re: [PATCH][v6] x86/resctrl: Add task resctrl information display
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Chen Yu <yu.c.chen@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1578993820-2114-1-git-send-email-yangpc@wangsu.com>
+In-Reply-To: <1578993820-2114-1-git-send-email-yangpc@wangsu.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 14 Jan 2020 08:05:30 -0800
+Message-ID: <CANn89i+nf+cPSxZdRziRa3NaDvdMG+xKYBsy752NX+3vkLba1w@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix marked lost packets not being retransmitted
+To:     Pengcheng Yang <yangpc@wangsu.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        andriin@fb.com, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-On Tue, Jan 14, 2020 at 5:25 PM Borislav Petkov <bp@alien8.de> wrote:
+On Tue, Jan 14, 2020 at 1:24 AM Pengcheng Yang <yangpc@wangsu.com> wrote:
 >
-> On Fri, Jan 10, 2020 at 03:06:08PM +0800, Chen Yu wrote:
-> > Monitoring tools that want to find out which resctrl control
-> > and monitor groups a task belongs to must currently read
-> > the "tasks" file in every group until they locate the process
-> > ID.
-> >
-> > Add an additional file /proc/{pid}/cpu_resctrl to provide this
-> > information.
-> >
-> > The output is as followed, for example:
-> >
-> >  1)   ""
-> >       Resctrl is not available.
-> >
-> >  2)   "/"
-> >       Task is part of the root group, task is not associated to
-> >       any monitor group.
-> >
-> >  3)   "/mon_groups/mon0"
-> >       Task is part of the root group and monitor group mon0.
-> >
-> >  4)   "/group0"
-> >       Task is part of resctrl control group group0, task is not
-> >       associated to any monitor group.
-> >
-> >  5)   "/group0/mon_groups/mon1"
-> >       Task is part of resctrl control group group0 and monitor
-> >       group mon1.
->
-> So this way to present the information is totally non-intuitive,
-> IMNSVHO. What's wrong with:
->
-> 1)
->         res_group:
->         mon_group:
->
-> 2)
->         res_group: /
->         mon_group:
->
-> 3)
->         res_group: /
->         mon_group: mon0
->
-> 4)
->         res_group: group0
->         mon_group:
->
-> 5)
->         res_group: group0
->         mon_group: mon1
->
-> ?
->
-> You can even call the file "cpu_resctrl_groups" so that it is clear that
-> it will dump groups and then do:
->
->         res: group0
->         mon: mon1
->
-> which is both human-readable and easily greppable.
->
-Yes, to display resctrl control and monitor group separately might be more
-friendly to the user.  Although I was thinking if the user would like
-to see the full path of
-the resource, which might make it easier to be parsed:
-A) res: group0
-    mon: mon1
-vs
-B) res: /group0
-    mon: /group0/mon_groups/mon1
-as proposal B might introduce duplication I'll send a new version
-based on proposal A.
-> > +/*
-> > + * A task can only be part of one resctrl
-> > + * control group and of one monitor
-> > + * group which is associated to that resctrl
-> > + * control group.
->
-> Extend those comments to 80 cols.
->
-Okay. will do.
-> > + * So one line is simple and clear enough:
->
-> Actually, the one line format you've done is confusing and can be done
-> much more human- and tool-readable.
->
-Got it.
-Thanks,
-Chenyu
+> When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
+> retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
+> If packet loss is detected at this time, retransmit_skb_hint will be set
+> to point to the current packet loss in tcp_verify_retransmit_hint(),
+> then the packets that were previously marked lost but not retransmitted
+> due to the restriction of cwnd will be skipped and cannot be
+> retransmitted.
 
-> Thx.
+
+"cannot be retransmittted"  sounds quite alarming.
+
+You meant they will eventually be retransmitted, or that the flow is
+completely frozen at this point ?
+
+Thanks for the fix and test !
+
+(Not sure why you CC all these people having little TCP expertise btw)
+
+> To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
+> be reset only after all marked lost packets are retransmitted
+> (retrans_out >= lost_out), otherwise we need to traverse from
+> tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
+>
+> Packetdrill to demonstrate:
+>
+> // Disable RACK and set max_reordering to keep things simple
+>     0 `sysctl -q net.ipv4.tcp_recovery=0`
+>    +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
+>
+> // Establish a connection
+>    +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+>    +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+>    +0 bind(3, ..., ...) = 0
+>    +0 listen(3, 1) = 0
+>
+>   +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
+>    +0 > S. 0:0(0) ack 1 <...>
+>  +.01 < . 1:1(0) ack 1 win 257
+>    +0 accept(3, ..., ...) = 4
+>
+> // Send 8 data segments
+>    +0 write(4, ..., 8000) = 8000
+>    +0 > P. 1:8001(8000) ack 1
+>
+> // Enter recovery and 1:3001 is marked lost
+>  +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
+>    +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
+>    +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
+>
+> // Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
+>    +0 > . 1:1001(1000) ack 1
+>
+> // 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
+>  +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
+> // Now retransmit_skb_hint points to 4001:5001 which is now marked lost
+>
+> // BUG: 2001:3001 was not retransmitted
+>    +0 > . 2001:3001(1000) ack 1
+>
+> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+> ---
+>  net/ipv4/tcp_input.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index 0238b55..5347ab2 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -915,9 +915,10 @@ static void tcp_check_sack_reordering(struct sock *sk, const u32 low_seq,
+>  /* This must be called before lost_out is incremented */
+>  static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
+>  {
+> -       if (!tp->retransmit_skb_hint ||
+> -           before(TCP_SKB_CB(skb)->seq,
+> -                  TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
+> +       if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
+> +           (tp->retransmit_skb_hint &&
+> +            before(TCP_SKB_CB(skb)->seq,
+> +                   TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
+>                 tp->retransmit_skb_hint = skb;
+>  }
 >
 > --
-> Regards/Gruss,
->     Boris.
+> 1.8.3.1
 >
-> https://people.kernel.org/tglx/notes-about-netiquette
