@@ -2,133 +2,66 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A587C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4012CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC872467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fBEWXnlX"
+	by mail.kernel.org (Postfix) with ESMTP id 2215C24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgANTlv (ORCPT
+        id S1728852AbgANTqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:41:51 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38515 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgANTlu (ORCPT
+        Tue, 14 Jan 2020 14:46:05 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47028 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbgANTqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:41:50 -0500
-Received: by mail-qt1-f194.google.com with SMTP id c24so2771717qtp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VD1VewVfYzcowrTTTc3p/NP2nAZZrqrdh/Y1+DTe6+o=;
-        b=fBEWXnlXPRTh7yxZ1lkX1I9O8Fi9nn1GRvSKPOkv4DsNb4xxnzRKN8cEU9sILm04e0
-         bKvt9UFvIMbTWGHhe7YTvvPlQDW+At6DCbGnIalW77Mbrd7GEnLW6iSGjbYNeu/LHoc5
-         iegGOQZeFHQqNfRl+EQxvE6XDKCXAbG+HJQYE6lRK68aUkQrvSPcn1A3DLI0/KEYibSL
-         T07NUjLYFcugJNpLRYOyA2oRhrN5Yz6XOqlLyfGujguLHbb+3HFst8+rveOYK2bbSlGF
-         qycO77V5ORIVqXJ3o9WXJXxXx4OJDebAszpViFXpFugNQPa7rt0a9cOcZDK9ZBsZZiFo
-         uKkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VD1VewVfYzcowrTTTc3p/NP2nAZZrqrdh/Y1+DTe6+o=;
-        b=HAkVq1RbijB/oKfW+a9nWLQL/wUYCQ3DWAgNUkqTn+O1Ozz4vS2qH4VrPkKfrr69pw
-         tV/itsCS0ySB4ARXkxb4rVxzlEFs0cZezuGWdn9MpLsGqs07I6QnmNJGcfNP2mRC8XdE
-         s+8F+XIBXpQW4yFw7MMVs4ebuRiRlNOH2aZUe9DdwDdMuc/CeGJF2JabvWPEZZ/uZA6H
-         2WMMKs481Zmcrf0mrW91WfodGlLyogtmx7kot8dUKjrR9uDKvgUmMCmsfB8GwOYXavUo
-         sb7XsoZOz4Wo+4rPeGjVdtILTCdQbt42CDF4XXVVxxdUekRmf5UpGwj7/Z7/RBdUyxMU
-         hniA==
-X-Gm-Message-State: APjAAAVcoPVQ0o+W56GkQMEVQ9rfpQymHUJ9+IehK9TA/mO0F9RiEuxM
-        QvZxkDgkPchtdLhEMw+/PPq+dQ==
-X-Google-Smtp-Source: APXvYqyZXNJxL/f6fEf8lTGkE6lao/zdKc6zFDFvbpLKofSirhqC8ULCTv5Dyqi9Xe7jEJK/Am2mwg==
-X-Received: by 2002:ac8:4289:: with SMTP id o9mr173201qtl.277.1579030910016;
-        Tue, 14 Jan 2020 11:41:50 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id k4sm7189056qki.35.2020.01.14.11.41.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 11:41:49 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1irS4S-0006jm-U1; Tue, 14 Jan 2020 15:41:48 -0400
-Date:   Tue, 14 Jan 2020 15:41:48 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc:     madhuparnabhowmik04@gmail.com, mike.marciniszyn@intel.com,
-        paulmck@kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
- checking
-Message-ID: <20200114194148.GD22037@ziepe.ca>
-References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
- <20200114165740.GB22037@ziepe.ca>
- <74adec84-ec5b-ea1b-7adf-3f8608838259@intel.com>
- <25133367-6544-d0af-ae30-5178909748b1@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <25133367-6544-d0af-ae30-5178909748b1@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 14 Jan 2020 14:46:05 -0500
+Received: from localhost (unknown [63.64.162.234])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9ABA41549340A;
+        Tue, 14 Jan 2020 11:46:03 -0800 (PST)
+Date:   Tue, 14 Jan 2020 11:46:03 -0800 (PST)
+Message-Id: <20200114.114603.2006132483826469750.davem@davemloft.net>
+To:     antoine.tenart@bootlin.com
+Cc:     sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
+        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
+Subject: Re: [PATCH net-next v6 00/10] net: macsec: initial support for
+ hardware offloading
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200113223148.746096-1-antoine.tenart@bootlin.com>
+References: <20200113223148.746096-1-antoine.tenart@bootlin.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jan 2020 11:46:04 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:24:00PM -0500, Dennis Dalessandro wrote:
-> On 1/14/2020 12:00 PM, Dennis Dalessandro wrote:
-> > On 1/14/2020 11:57 AM, Jason Gunthorpe wrote:
-> > > On Tue, Jan 14, 2020 at 09:53:45PM +0530,
-> > > madhuparnabhowmik04@gmail.com wrote:
-> > > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > > > 
-> > > > list_for_each_entry_rcu has built-in RCU and lock checking.
-> > > > Pass cond argument to list_for_each_entry_rcu.
-> > > > 
-> > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > > >   drivers/infiniband/hw/hfi1/verbs.c | 2 +-
-> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/infiniband/hw/hfi1/verbs.c
-> > > > b/drivers/infiniband/hw/hfi1/verbs.c
-> > > > index 089e201d7550..22f2d4fd2577 100644
-> > > > +++ b/drivers/infiniband/hw/hfi1/verbs.c
-> > > > @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct
-> > > > hfi1_packet *packet,
-> > > >                          opa_get_lid(packet->dlid, 9B));
-> > > >           if (!mcast)
-> > > >               goto drop;
-> > > > -        list_for_each_entry_rcu(p, &mcast->qp_list, list) {
-> > > > +        list_for_each_entry_rcu(p, &mcast->qp_list, list,
-> > > > lockdep_is_held(&(ibp->rvp.lock))) {
-> > > 
-> > > Okay, this looks reasonable
-> > > 
-> > > Mike, Dennis, is this the right lock to test?
-> > > 
-> > 
-> > I'm looking at that right now actually, I don't think this is correct.
-> > Wanted to talk to Mike before I send a response though.
-> > 
-> > -Denny
-> 
-> That's definitely going to throw a ton of lock dep messages. It's not really
-> the right lock either. Instead what we probably need to do is what we do in
-> the non-multicast part of the code and take the rcu_read_lock().
+From: Antoine Tenart <antoine.tenart@bootlin.com>
+Date: Mon, 13 Jan 2020 23:31:38 +0100
 
-Uh.. why is this using the _rcu varient without holding the rcu lock?
-That is quite wrong already.
+> This series intends to add support for offloading MACsec transformations
+> to hardware enabled devices. The series adds the necessary
+> infrastructure for offloading MACsec configurations to hardware drivers,
+> in patches 1 to 5; then introduces MACsec offloading support in the
+> Microsemi MSCC PHY driver, in patches 6 to 10.
+ ...
 
-Jason
+Series applied to net-next.
+
+I'll push this out after build testing.
+
+Thanks.
