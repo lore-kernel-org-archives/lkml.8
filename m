@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912D6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BEAC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E17720678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0712024679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996811;
-	bh=fhT81gaC5764XHrF5/vuPYumrfJfn92jsBtEmupYDFk=;
+	s=default; t=1578996814;
+	bh=++IoPrVeOtNpc/HS3RKMmAtk7RWzKjdx1GR1mIE0UVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LI0H3tcZlXrIDySV7eqHKmDICD3elSpC6k5A3EXHtosspamKP7k25dLMV6k/fPng+
-	 Bomi3MaWRoktjpAOCyBFdWd1d1uSWuhpCnuh45TJyhKe3E54xTQWzkERenrAfC23tj
-	 vi7tRX9xp87Cmfbv1QLzLZS9oItPwk6UJI1hQjjs=
+	b=mXYRWRRvBYhzt6xqa8rh2vVdg692TYNyuwxnmIaxSu7Exy9lyYKKmL3tD+T7URN3+
+	 3dXiF2rpxSRWI9DJn4sGaJi3yLiCW4LW3Svp/QN8a/Ge1BZG/vMIQY64wiXchShVAB
+	 fYEw2yZexZd/tMdi8xjLDWQAUM6ipwf8DzVIGui0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733204AbgANKNb (ORCPT
+        id S1733213AbgANKNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:13:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:13:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730514AbgANKN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:13:26 -0500
+        id S1732259AbgANKN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:13:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A701924679;
-        Tue, 14 Jan 2020 10:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28CD120678;
+        Tue, 14 Jan 2020 10:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996805;
-        bh=fhT81gaC5764XHrF5/vuPYumrfJfn92jsBtEmupYDFk=;
+        s=default; t=1578996808;
+        bh=++IoPrVeOtNpc/HS3RKMmAtk7RWzKjdx1GR1mIE0UVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tgc6/7FneJ71LEIuq29LXZQuPpN2H+W07+xp9tr2fpEJKI6oiU9WAwpdlbZkvo43I
-         48yXXcvbMXWgGqekiG2koF1SWR2TCa/PLs0/kHyBSqKBxC7PHRJl6yUFw7S3p/Vy7R
-         XX0mVA07gFSe0Z97TIrLaJAXIPXc4Gn9huSSuzxQ=
+        b=jdQ1xVfQHG5DEWwUVYHL1Eh7ks7IxGbxhjSaJ4JVSWCKrD0OWs+geT8KkB5oh9VSe
+         s6xCLugxAJcJuYdWVBxSdH4FhX2umsYuILdFzzs2Q2s5mkZ9we2q9KZCgqyMleuiYR
+         cKaABerTD+ThFVEpbQvcVt1MtnJmuByAeivswQPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.4 15/28] staging: vt6656: set usb_set_intfdata on driver fail.
-Date:   Tue, 14 Jan 2020 11:02:17 +0100
-Message-Id: <20200114094342.462555114@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 16/28] USB: serial: option: add ZLP support for 0x1bc7/0x9010
+Date:   Tue, 14 Jan 2020 11:02:18 +0100
+Message-Id: <20200114094342.713235890@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -58,55 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit c0bcf9f3f5b661d4ace2a64a79ef661edd2a4dc8 upstream.
+commit 2438c3a19dec5e98905fd3ffcc2f24716aceda6b upstream.
 
-intfdata will contain stale pointer when the device is detached after
-failed initialization when referenced in vt6656_disconnect
+Telit FN980 flashing device 0x1bc7/0x9010 requires zero packet
+to be sent if out data size is is equal to the endpoint max size.
 
-Provide driver access to it here and NULL it.
-
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+[ johan: switch operands in conditional ]
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/6de448d7-d833-ef2e-dd7b-3ef9992fee0e@gmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/device.h   |    1 +
- drivers/staging/vt6656/main_usb.c |    1 +
- drivers/staging/vt6656/wcmd.c     |    1 +
- 3 files changed, 3 insertions(+)
+ drivers/usb/serial/option.c   |    8 ++++++++
+ drivers/usb/serial/usb-wwan.h |    1 +
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 3 files changed, 13 insertions(+)
 
---- a/drivers/staging/vt6656/device.h
-+++ b/drivers/staging/vt6656/device.h
-@@ -272,6 +272,7 @@ struct vnt_private {
- 	u8 mac_hw;
- 	/* netdev */
- 	struct usb_device *usb;
-+	struct usb_interface *intf;
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -566,6 +566,9 @@ static void option_instat_callback(struc
+ /* Interface is reserved */
+ #define RSVD(ifnum)	((BIT(ifnum) & 0xff) << 0)
  
- 	u64 tsf_time;
- 	u8 rx_rate;
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -979,6 +979,7 @@ vt6656_probe(struct usb_interface *intf,
- 	priv = hw->priv;
- 	priv->hw = hw;
- 	priv->usb = udev;
-+	priv->intf = intf;
++/* Device needs ZLP */
++#define ZLP		BIT(17)
++
  
- 	vnt_set_options(priv);
+ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
+@@ -1193,6 +1196,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(1) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
++	  .driver_info = NCTRL(0) | ZLP },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(1) },
+@@ -2097,6 +2102,9 @@ static int option_attach(struct usb_seri
+ 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
+ 		data->use_send_setup = 1;
  
---- a/drivers/staging/vt6656/wcmd.c
-+++ b/drivers/staging/vt6656/wcmd.c
-@@ -113,6 +113,7 @@ void vnt_run_command(struct work_struct
- 		if (vnt_init(priv)) {
- 			/* If fail all ends TODO retry */
- 			dev_err(&priv->usb->dev, "failed to start\n");
-+			usb_set_intfdata(priv->intf, NULL);
- 			ieee80211_free_hw(priv->hw);
- 			return;
- 		}
++	if (device_flags & ZLP)
++		data->use_zlp = 1;
++
+ 	spin_lock_init(&data->susp_lock);
+ 
+ 	usb_set_serial_data(serial, data);
+--- a/drivers/usb/serial/usb-wwan.h
++++ b/drivers/usb/serial/usb-wwan.h
+@@ -35,6 +35,7 @@ struct usb_wwan_intf_private {
+ 	spinlock_t susp_lock;
+ 	unsigned int suspended:1;
+ 	unsigned int use_send_setup:1;
++	unsigned int use_zlp:1;
+ 	int in_flight;
+ 	unsigned int open_ports;
+ 	void *private;
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -495,6 +495,7 @@ static struct urb *usb_wwan_setup_urb(st
+ 				      void (*callback) (struct urb *))
+ {
+ 	struct usb_serial *serial = port->serial;
++	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
+ 	struct urb *urb;
+ 
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
+@@ -505,6 +506,9 @@ static struct urb *usb_wwan_setup_urb(st
+ 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
+ 			  buf, len, callback, ctx);
+ 
++	if (intfdata->use_zlp && dir == USB_DIR_OUT)
++		urb->transfer_flags |= URB_ZERO_PACKET;
++
+ 	return urb;
+ }
+ 
 
 
