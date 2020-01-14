@@ -2,71 +2,92 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FB1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5E8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F73E214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA5E2467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDtpxNds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgANSQH (ORCPT
+        id S1728699AbgANSRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:16:07 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59657 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgANSQH (ORCPT
+        Tue, 14 Jan 2020 13:17:48 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43440 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANSRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:16:07 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1irQjU-0002ln-Ii; Tue, 14 Jan 2020 18:16:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@suse.de>, devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: wlan-ng: ensure error return is actually returned
-Date:   Tue, 14 Jan 2020 18:16:04 +0000
-Message-Id: <20200114181604.390235-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 14 Jan 2020 13:17:47 -0500
+Received: by mail-pl1-f195.google.com with SMTP id p27so5539296pli.10;
+        Tue, 14 Jan 2020 10:17:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pTDm6uj7nXPZqYgCReR2qesU7OAfZp8TW1KIkVsDtsg=;
+        b=TDtpxNdsmrScmiMRJHH/FVuHnOx9oBrr0lHnJy4J+VHYHVhYSlOiLQxvhQSVhFzkke
+         KHtRQkUBlNqfU+DKKrxNo3R0GA5e2wpe5OFv19B9GNj2VQR3moju1ibBmNLgtFxEYrbm
+         GvUH8L0M1YwWbaTr2NmjdO9udFhfriYHVlFg0pJIzftkFZ805vLmU7QP/2kvv5QjULKS
+         PbSKTcsNhdL4Chxygp0OOTZN6HUFwAdt2yDP4ATCDvk5Mks7AL3tbTOevOojp6RFjT0s
+         HBNnJVzwgHRmrzRlo+z4sriA8rJAKWl1aAs2pVTWAaciezvmqmthew4FkrmBoUuOtvPM
+         7vfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pTDm6uj7nXPZqYgCReR2qesU7OAfZp8TW1KIkVsDtsg=;
+        b=Yd6q0oeobBJliWVg1okbh5jvQK3GK4QBO6ZLG74Mz81tct4D7twvH53OgdJZMsD+E3
+         QfF31biHSRUYRytRyYkYoHuuP3t0O3WDrISRbG5xVXlyPEDrRyOF8bxT1CDvNBmYXtz9
+         +Dgn7yCYeSJEQMvZ+Cy+LVJWABvs6ppySvhx6EBNi+OL113CVYrv6OzdC3URAzPOsz9H
+         s7V/LJzEnkkmeAi31iCHWlIJYbw1DXHercIYCAE4/TzNnKqidZN5EBvjP30cUVXzxZPA
+         G7iG9J34N7WbZY+p7rTOr2yujR9jIBk4xizVb+AXJMnOIcXeHVc9rOfb2oDS9O/FMBNV
+         5MaQ==
+X-Gm-Message-State: APjAAAWq55AlQ7NpvcVpUqYLh121t9hlh+ZV8pzntrrMdlS2M6ER7q/q
+        zVqh43nX9ye0RWTBBTF8KJs=
+X-Google-Smtp-Source: APXvYqyEwNUVk4bb3HJz1Xqyz5CcuVz21L8us0zxIA63STCvqg6FpWv+rGvZjJYsxlGv7aVmB32mNw==
+X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr28350689plr.16.1579025866843;
+        Tue, 14 Jan 2020 10:17:46 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r3sm19490818pfg.145.2020.01.14.10.17.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 10:17:46 -0800 (PST)
+Date:   Tue, 14 Jan 2020 10:17:45 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
+Message-ID: <20200114181745.GD18872@roeck-us.net>
+References: <20200114094352.428808181@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jan 14, 2020 at 11:00:34AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.12 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> Anything received after that time might be too late.
+> 
 
-Currently when the call to prism2sta_ifst fails a netdev_err error
-is reported, error return variable result is set to -1 but the
-function always returns 0 for success.  Fix this by returning
-the error value in variable result rather than 0.
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 389 pass: 389 fail: 0
 
-Addresses-Coverity: ("Unused value")
-Fixes: 00b3ed168508 ("Staging: add wlan-ng prism2 usb driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/wlan-ng/prism2mgmt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/wlan-ng/prism2mgmt.c b/drivers/staging/wlan-ng/prism2mgmt.c
-index 7350fe5d96a3..a8860d2aee68 100644
---- a/drivers/staging/wlan-ng/prism2mgmt.c
-+++ b/drivers/staging/wlan-ng/prism2mgmt.c
-@@ -959,7 +959,7 @@ int prism2mgmt_flashdl_state(struct wlandevice *wlandev, void *msgp)
- 		}
- 	}
- 
--	return 0;
-+	return result;
- }
- 
- /*----------------------------------------------------------------
--- 
-2.24.0
-
+Guenter
