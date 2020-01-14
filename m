@@ -2,112 +2,240 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CE6C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E443CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D8824672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B078C2467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LjQRYpxP"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="l31+T+c+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgANMVR (ORCPT
+        id S1729238AbgANMYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:21:17 -0500
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60729 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgANMVQ (ORCPT
+        Tue, 14 Jan 2020 07:24:11 -0500
+Received: from forward105p.mail.yandex.net ([77.88.28.108]:44172 "EHLO
+        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgANMYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:21:16 -0500
-Received: from [IPv6:2001:420:44c1:2577:11b:d594:936e:b16a]
- ([IPv6:2001:420:44c1:2577:11b:d594:936e:b16a])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id rLBviFvU2pLtbrLByieypI; Tue, 14 Jan 2020 13:21:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1579004473; bh=el/sCcXKoLi1FEc8sscgQSjCYSmbdJMyDT1iZnQSnSU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=LjQRYpxPLh+sE48zdnmzx1dYwbjH4bXf1Ow+L9xGtnyLYk22ootoKM/W9LPRAIgKT
-         LLdOswZfIOJ19EhGCDm2XmYZWdtI6Xuyl8dC5s7pZAnPOnHvgDHSBKUIFmgTQIhTVG
-         ij0tC8LIc6YqFte/+lbYjCbxQhtShNEKnJZi5/TjgcBt3gomJpQPEu7aOO69F69zpN
-         OZPkGFql/MkFGntWAnRLCI4yBg5FtwfYVadZ5t73EwJzQSaPTnFRe9rfkiRcwhvAGE
-         0ir1vP7bKiXOEArWvvZbnMYeMemda8rYy6AiZUejTxhRAkSw6FHwz7VxGtoaJJalpD
-         AZAylzCO9BqGw==
-Subject: Re: [PATCH v2 05/17] dt-bindings: atmel-isi: add
- microchip,sam9x60-isi
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <58d0a872-9f9e-ab64-b9e4-d6548b05142b@xs4all.nl>
-Date:   Tue, 14 Jan 2020 13:21:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jan 2020 07:24:11 -0500
+Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
+        by forward105p.mail.yandex.net (Yandex) with ESMTP id 1BE664D41932;
+        Tue, 14 Jan 2020 15:24:07 +0300 (MSK)
+Received: from iva2-18315b3f9ecc.qloud-c.yandex.net (iva2-18315b3f9ecc.qloud-c.yandex.net [2a02:6b8:c0c:1404:0:640:1831:5b3f])
+        by mxback1j.mail.yandex.net (mxback/Yandex) with ESMTP id y5m3FK6K65-O6piEkfp;
+        Tue, 14 Jan 2020 15:24:07 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579004647;
+        bh=Y+G5Lr09yCsF/0LzYGt2QYGSXAaHB6SYzR6VuIq7/PM=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=l31+T+c+7P18zDJYD4GzuqryorqyMWyJMM7MXAdkAqtDj16JnQDQ7ccbuCU2v3LeX
+         aZJXpw9Vrg6HSFA1eycF8OFJJi1PAvLnOa3w7YPMOnVQECB3kcUc4+rRkgr7lp0YSc
+         7p0/YkSrDOvZawc2ruEsveNKY+VrmBY8kB8uokiE=
+Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by iva2-18315b3f9ecc.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id YR81iErVaf-NvW8RLJp;
+        Tue, 14 Jan 2020 15:24:03 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com,
+        linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH] MIPS: Introduce aligned IO memory operations
+Date:   Tue, 14 Jan 2020 20:23:43 +0800
+Message-Id: <20200114122343.163685-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDyyJ8A46d/VZ6mWF8HvSJL6XohAbYvGlIDN2xY5sRpRC0AJZrnUH0YX0+FSqCMhFZjpHxOyHfMDslHdlLv97QcDoHwck2Z9TrOv5t+lopMv/NRf0PUV
- 55QN8cKR2GeYA535VmrhiJJ3ojVhCtZHdqwlNqcXOOfA1jLuIJ84iCZRAPBbM5rNAMNY7EvoyTG6hFaMVlzvbuZ37zENLdycB1+4kebYsziUTwZWtoZuAnMk
- LMyouB9mCtPGzmRTzeL74XvIxJXSiMOXKUukMY9CZcdbxL+hqcyNHH1cvq0Ae2LxwdzWO4GARzgfg1BRhHkpDrmwNAST/Nzpp1yk+mYmUHUeCKMDd8m74vHt
- kAndHbAOE1qpMQD5koRQwLbarJX8A/2eAFJTImw2pecQ7825zIoL2og3ZAauw5oPkPbp/rESm4VQrrwIzQZTIdS19wLJw93WlMa24o0M4Pe9Z5x+vxoRp8Xp
- MMUfb2fVE69KZls7TdCcam6e05Yvra1yqVNR1HEStwiaFBzk/jI1Bo9NFI5Glm7TYVnbqxqMkf306iQCOo0qEXlt+P7vZcEiAVvNC8QVCAnZ33xDCOO1P0MJ
- t0xckD3lecqem5SKtKLXefkxwFCHpcH207vyGk/FUL9CikGLulLMLG70jX9Ld1ENlKvZKk+13vUDiYXETUhOLvxSM6cMGAGAw9ZxxcdL4ipi7AhZ8LDj/Hos
- Mkt9jvglBTYomM/KU9sebjVWgPJeviHg+luR+JN4Q5LWheX1ajixs/F7bHRcZ6vELvkzMcco4AX3I2EuQF4KMcH1Q96bO+BppQYyR75cNBcTiu6LbkouxWVm
- MW4NsCXcJ0fzeQoSgXBZIfj4wzfcvGDsqbwGk6u+aW6XLHkGAEIwPAz0wqV7xfW4B3Tt72thIoZ7yEUcb1NqMczIB0lX1EeMNRmoxXWuOAXv/Y3kllOdMvVM
- Ar5uaZEBf2ZZJczJNl00ZE/cL98RXshGjLQcLmOO0cOB+ZAxxE+2AbyLSmra4urIpIuGwP7z7WLnDrpuqSoBI65/nkfakNI++OOqwtpqiY5+Ovy2sTlhvJMP
- NKQilXVls4YsoomtfMm326htDEL8iehi87LtyVzJDdVEbpDuB6M944CpeFCi1lvlbLZKp/xm9YleC7sbhMLQVs92SnXK+0ICEfNtNZ1N8vaiu7fVSr1BFLjZ
- 8jCShZPcvKBaXW12eRihzGqkWpLj65UlbQwlDHhc7D924tsjBZuhfWnz7g69Vb/e/iBiBa4o3+DHoJJhFax7VwFnU7KuBXXDdERSFtOo/S6RRxadrFshFakC
- uUzp6UW6M/OChwP1r3uaki5uIkuF9f7/Jnmdj1J/6ho0dIxRF3nVLa/XFeZ5FVlRe4UOcaC31YtX32Em/eD2YPZuHMSsTxORpfBZpdDOFMwv4NAg26A=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/20 5:17 PM, Claudiu Beznea wrote:
-> Add microchip,sam9x60-isi to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/media/atmel-isi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> index 332513a151cc..8924c7545b63 100644
-> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
-> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> @@ -2,7 +2,7 @@ Atmel Image Sensor Interface (ISI)
->  ----------------------------------
->  
->  Required properties for ISI:
-> -- compatible: must be "atmel,at91sam9g45-isi".
-> +- compatible: must be "atmel,at91sam9g45-isi" or "microchip,sam9x60-isi".
->  - reg: physical base address and length of the registers set for the device.
->  - interrupts: should contain IRQ line for the ISI.
->  - clocks: list of clock specifiers, corresponding to entries in the clock-names
-> 
+Some platforms, such as Loongson64 or QEMU/KVM, don't support unaligned
+instructions like lwl or lwr in IO memory access. However, our current
+IO memcpy/memset is wired to the generic implementation, which leads
+to a fatal result.
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/Kconfig          |  4 ++
+ arch/mips/include/asm/io.h | 10 ++++
+ arch/mips/kernel/Makefile  |  2 +-
+ arch/mips/kernel/io.c      | 98 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 113 insertions(+), 1 deletion(-)
+ create mode 100644 arch/mips/kernel/io.c
 
-Regards,
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 8b0cd692a43f..15a331aa23a2 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1450,6 +1450,7 @@ config CPU_LOONGSON64
+ 	select CPU_SUPPORTS_HIGHMEM
+ 	select CPU_SUPPORTS_HUGEPAGES
+ 	select CPU_SUPPORTS_MSA
++	select CPU_NEEDS_ALIGNED_IO
+ 	select CPU_HAS_LOAD_STORE_LR
+ 	select CPU_DIEI_BROKEN if !LOONGSON3_ENHANCEMENT
+ 	select CPU_MIPSR2_IRQ_VI
+@@ -2598,6 +2599,9 @@ config CPU_HAS_LOAD_STORE_LR
+ 	  LWL, LWR, SWL, SWR (Load/store word left/right).
+ 	  LDL, LDR, SDL, SDR (Load/store doubleword left/right, for 64bit systems).
+ 
++config CPU_NEEDS_ALIGNED_IO
++	bool
++
+ #
+ # Vectored interrupt mode is an R2 feature
+ #
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 3f6ce74335b4..3b0eb4941f23 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -577,6 +577,15 @@ BUILDSTRING(l, u32)
+ BUILDSTRING(q, u64)
+ #endif
+ 
++#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
++extern void __memcpy_fromio(void *, const volatile void __iomem *, size_t);
++extern void __memcpy_toio(volatile void __iomem *, const void *, size_t);
++extern void __memset_io(volatile void __iomem *, int, size_t);
++
++#define memset_io(c, v, l)	__memset_io((c), (v), (l))
++#define memcpy_fromio(a, c, l)	__memcpy_fromio((a), (c), (l))
++#define memcpy_toio(c, a, l)	__memcpy_toio((c), (a), (l))
++#else
+ static inline void memset_io(volatile void __iomem *addr, unsigned char val, int count)
+ {
+ 	memset((void __force *) addr, val, count);
+@@ -589,6 +598,7 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src, int
+ {
+ 	memcpy((void __force *) dst, src, count);
+ }
++#endif
+ 
+ /*
+  * The caches on some architectures aren't dma-coherent and have need to
+diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+index d6e97df51cfb..b07b97b9385e 100644
+--- a/arch/mips/kernel/Makefile
++++ b/arch/mips/kernel/Makefile
+@@ -8,7 +8,7 @@ extra-y		:= head.o vmlinux.lds
+ obj-y		+= cmpxchg.o cpu-probe.o branch.o elf.o entry.o genex.o idle.o irq.o \
+ 		   process.o prom.o ptrace.o reset.o setup.o signal.o \
+ 		   syscall.o time.o topology.o traps.o unaligned.o watch.o \
+-		   vdso.o cacheinfo.o
++		   vdso.o cacheinfo.o io.o
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_ftrace.o = -pg
+diff --git a/arch/mips/kernel/io.c b/arch/mips/kernel/io.c
+new file mode 100644
+index 000000000000..ca105aa76d4d
+--- /dev/null
++++ b/arch/mips/kernel/io.c
+@@ -0,0 +1,98 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/export.h>
++#include <linux/types.h>
++#include <linux/io.h>
++
++#if defined(CONFIG_CPU_NEEDS_ALIGNED_IO)
++
++#if defined(CONFIG_64BIT)
++#define IO_LONG_READ	__raw_readq
++#define IO_LONG_WRITE	__raw_writeq
++#define IO_LONG_SIZE	8
++#else
++#define IO_LONG_READ	__raw_readl
++#define IO_LONG_WRITE	__raw_writel
++#define IO_LONG_SIZE	4
++#endif
++
++void __memcpy_fromio(void *to, const volatile void __iomem *from, size_t count)
++{
++	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
++		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
++		*(u8 *)to = __raw_readb(from);
++		from++;
++		to++;
++		count--;
++	}
++
++	while (count >= IO_LONG_SIZE) {
++		*(unsigned long *)to = IO_LONG_READ(from);
++		from += IO_LONG_SIZE;
++		to += IO_LONG_SIZE;
++		count -= IO_LONG_SIZE;
++	}
++
++	while (count) {
++		*(u8 *)to = __raw_readb(from);
++		from++;
++		to++;
++		count--;
++	}
++}
++EXPORT_SYMBOL(__memcpy_fromio);
++
++void __memcpy_toio(volatile void __iomem *to, const void *from, size_t count)
++{
++	while (count && !IS_ALIGNED((unsigned long)from, IO_LONG_SIZE) &&
++		!IS_ALIGNED((unsigned long)to, IO_LONG_SIZE)) {
++		__raw_writeb(*(u8 *)from, to);
++		from++;
++		to++;
++		count--;
++	}
++
++	while (count >= IO_LONG_SIZE) {
++		IO_LONG_WRITE(*(unsigned long *)from, to);
++		from += IO_LONG_SIZE;
++		to += IO_LONG_SIZE;
++		count -= IO_LONG_SIZE;
++	}
++
++	while (count) {
++		__raw_writeb(*(u8 *)from, to);
++		from++;
++		to++;
++		count--;
++	}
++}
++EXPORT_SYMBOL(__memcpy_toio);
++
++void __memset_io(volatile void __iomem *dst, int c, size_t count)
++{
++	unsigned long lc = (u8)c;
++	int i;
++
++	for (i = 1; i < IO_LONG_SIZE; i++)
++		lc |= (u8)c << (i * BITS_PER_BYTE);
++
++	while (count && !IS_ALIGNED((unsigned long)dst, IO_LONG_SIZE)) {
++		__raw_writeb((u8)c, dst);
++		dst++;
++		count--;
++	}
++
++	while (count >= IO_LONG_SIZE) {
++		IO_LONG_WRITE(lc, dst);
++		dst += IO_LONG_SIZE;
++		count -= IO_LONG_SIZE;
++	}
++
++	while (count) {
++		__raw_writeb(c, dst);
++		dst++;
++		count--;
++	}
++}
++EXPORT_SYMBOL(__memset_io);
++#endif
+-- 
+2.24.1
 
-	Hans
