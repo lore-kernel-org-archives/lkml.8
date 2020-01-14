@@ -7,172 +7,102 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01982C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21A8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45402465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD4024656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TNvgsk56"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="trAj8ycD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgANRyI (ORCPT
+        id S1728901AbgANRyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:54:08 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:14532 "EHLO pegase1.c-s.fr"
+        Tue, 14 Jan 2020 12:54:07 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:46906 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgANRyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:54:05 -0500
+        id S1728794AbgANRyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:54:06 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47xykd4BXTz9txgy;
-        Tue, 14 Jan 2020 18:54:01 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47xykg4CK5z9txh1;
+        Tue, 14 Jan 2020 18:54:03 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=TNvgsk56; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=trAj8ycD; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5lOsJDYHaxU2; Tue, 14 Jan 2020 18:54:01 +0100 (CET)
+        with ESMTP id E1j5e-IhSXwz; Tue, 14 Jan 2020 18:54:03 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47xykd2ybqz9txgv;
-        Tue, 14 Jan 2020 18:54:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579024441; bh=NDoHlqPwlBNpLNoc61s6LOMRRHtVzZVZMHu1UPfR0fY=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=TNvgsk56BWefPm8l3glW6KCYLikrEfZVoMdpy72g7v+VYgQFpzs5mSZpWPhdxIka9
-         Tbr5WTHAyN+ZtNJ3CCPMKh1asmMS+0byxbgjVmoIv6uVjchmgc1aF1dAwoimE3i+5B
-         jNGUtQTuqWCsfDqvD5j1TORbBl8GnS4VeFS93d2Q=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 205008B7EB;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47xykg3Bhsz9txgv;
         Tue, 14 Jan 2020 18:54:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579024443; bh=1gi8tiy8dwBccsWJGA9/konOi1hFYyPrqA/8BJnI8Bs=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=trAj8ycD8diCyKtiJlgO5Ksee62ZFOkwrA+hRQdP9J69dNXqYLdXFLF/S5kH/XJYD
+         sM/Xp3fxcPY1UrSNa85p0CbGbpkO0ciXIWM7iC8jwuwPqhXABX6uqkqftL4oWioqiN
+         z1z5Mn2ujoPm1x3Bb/4sXqjYMfQaL2VS5/zay9nE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 29EE68B7EB;
+        Tue, 14 Jan 2020 18:54:05 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UQUJdClR7uyP; Tue, 14 Jan 2020 18:54:03 +0100 (CET)
+        with ESMTP id R8LJQr3mEul9; Tue, 14 Jan 2020 18:54:05 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D125C8B7E8;
-        Tue, 14 Jan 2020 18:54:02 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E258D8B7E8;
+        Tue, 14 Jan 2020 18:54:04 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id A3DBD6381C; Tue, 14 Jan 2020 17:54:02 +0000 (UTC)
-Message-Id: <f909da11aecb59ab7f32ba01fae6f356eaa4d7bc.1579024426.git.christophe.leroy@c-s.fr>
+        id B1B776381C; Tue, 14 Jan 2020 17:54:04 +0000 (UTC)
+Message-Id: <b29ffffb9206dc14541fa420c17604240728041b.1579024426.git.christophe.leroy@c-s.fr>
 In-Reply-To: <031dec5487bde9b2181c8b3c9800e1879cf98c1a.1579024426.git.christophe.leroy@c-s.fr>
 References: <031dec5487bde9b2181c8b3c9800e1879cf98c1a.1579024426.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 3/5] powerpc/32: force KASAN_VMALLOC for modules
+Subject: [PATCH 5/5] powerpc/32: reuse orphaned memblocks in
+ kasan_init_shadow_page_tables()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org,
         dja@axtens.net
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 14 Jan 2020 17:54:02 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 17:54:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unloading/Reloading of modules seems to fail with KASAN_VMALLOC
-but works properly with it.
+If concurrent PMD population has happened, re-use orphaned memblocks.
 
-Force selection of KASAN_VMALLOC when MODULES are selected, and
-drop module_alloc() which was dedicated to KASAN for modules.
-
-Reported-by: <erhard_f@mailbox.org>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205283
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c  | 31 +++++--------------------------
- arch/powerpc/platforms/Kconfig.cputype |  1 +
- 2 files changed, 6 insertions(+), 26 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 88036fb88350..b782d92622b4 100644
+index c4bf9ed04f88..d3cacd462560 100644
 --- a/arch/powerpc/mm/kasan/kasan_init_32.c
 +++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -12,7 +12,7 @@
- #include <asm/code-patching.h>
- #include <mm/mmu_decl.h>
- 
--static pgprot_t kasan_prot_ro(void)
-+static pgprot_t __init kasan_prot_ro(void)
- {
- 	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE))
- 		return PAGE_READONLY;
-@@ -20,7 +20,7 @@ static pgprot_t kasan_prot_ro(void)
- 	return PAGE_KERNEL_RO;
- }
- 
--static void kasan_populate_pte(pte_t *ptep, pgprot_t prot)
-+static void __init kasan_populate_pte(pte_t *ptep, pgprot_t prot)
- {
- 	unsigned long va = (unsigned long)kasan_early_shadow_page;
- 	phys_addr_t pa = __pa(kasan_early_shadow_page);
-@@ -30,7 +30,7 @@ static void kasan_populate_pte(pte_t *ptep, pgprot_t prot)
- 		__set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
- }
- 
--static int __ref kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
-+static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
+@@ -34,17 +34,17 @@ static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned
  {
  	pmd_t *pmd;
  	unsigned long k_cur, k_next;
-@@ -70,7 +70,7 @@ static int __ref kasan_init_shadow_page_tables(unsigned long k_start, unsigned l
- 	return 0;
- }
++	pte_t *new = NULL;
  
--static void __ref *kasan_get_one_page(void)
-+static void __init *kasan_get_one_page(void)
- {
- 	if (slab_is_available())
- 		return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-@@ -78,7 +78,7 @@ static void __ref *kasan_get_one_page(void)
- 	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- }
+ 	pmd = pmd_offset(pud_offset(pgd_offset_k(k_start), k_start), k_start);
  
--static int __ref kasan_init_region(void *start, size_t size)
-+static int __init kasan_init_region(void *start, size_t size)
- {
- 	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
- 	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-@@ -196,27 +196,6 @@ void __init kasan_late_init(void)
- 		kasan_unmap_early_shadow_vmalloc();
- }
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
+-		pte_t *new;
+-
+ 		k_next = pgd_addr_end(k_cur, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
  
--#if defined(CONFIG_MODULES) && !defined(CONFIG_KASAN_VMALLOC)
--void *module_alloc(unsigned long size)
--{
--	void *base;
--
--	base = __vmalloc_node_range(size, MODULE_ALIGN, VMALLOC_START, VMALLOC_END,
--				    GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
--				    NUMA_NO_NODE, __builtin_return_address(0));
--
--	if (!base)
--		return NULL;
--
--	if (!kasan_init_region(base, size))
--		return base;
--
--	vfree(base);
--
--	return NULL;
--}
--#endif
--
- #ifdef CONFIG_PPC_BOOK3S_32
- u8 __initdata early_hash[256 << 10] __aligned(256 << 10) = {0};
+-		new = memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
++		if (!new)
++			new = memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
  
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 536a2efcb7f0..851a92ffe290 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -2,6 +2,7 @@
- config PPC32
- 	bool
- 	default y if !PPC64
-+	select KASAN_VMALLOC if KASAN && MODULES
- 
- config PPC64
- 	bool "64-bit kernel"
+ 		if (!new)
+ 			return -ENOMEM;
 -- 
 2.13.3
 
