@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57054C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DFFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAB824683
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815DC2467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996329;
-	bh=QLRq49Oa3q7afnFXHe3koQkdpAPWSchtx4mPwYc8D+I=;
+	s=default; t=1578996332;
+	bh=0cdLB7wehuBT3ubfoI3yEb17IXH1TWYAp5f76Ckw7m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aT9Hw8MZr8SN11/C+A7SdtQac+SXUgVn9qF2kebumJeOURSyMvE3B/vaByyWRjv5K
-	 jF8cYaS4S44znUYvAECybIjXBSiSY7leTt14616lSnYw4Q4LfN/gu7a6e1oHn5q+b8
-	 9j85lvm9OEzqa/wvcUEdhdkkLUj/inaLE+KYF1RY=
+	b=zAv7nKFuuG6lqhgEeTuFyyy4Sb+BRKHnOR/MtDcoZ/w/tPRAWg7wM8ay1MFdt244/
+	 1qamV36j2P5AYGG5lgndY5XPIJ8BHio4IxbSV4QzZZTDriBaGhVdZ+r52pPu1BAc3L
+	 5mb8eCpaWXDDPlgOFMboBA+jWY0kl5bkqQk0t/lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgANKF2 (ORCPT
+        id S1730138AbgANKFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33450 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730126AbgANKFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:24 -0500
+        id S1729359AbgANKF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D242467D;
-        Tue, 14 Jan 2020 10:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E0B2467E;
+        Tue, 14 Jan 2020 10:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996324;
-        bh=QLRq49Oa3q7afnFXHe3koQkdpAPWSchtx4mPwYc8D+I=;
+        s=default; t=1578996326;
+        bh=0cdLB7wehuBT3ubfoI3yEb17IXH1TWYAp5f76Ckw7m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocP803m3vJDqSW9N+mq/KBnYnbYh63mjRmez2j1NKJrgGVQe4PYo9GyAH5I0F13TP
-         Gy1Jww4B90ilLilztCRavn3v5ZHBXY8co2NZjV5Gea20aFCOpiKp47TyOOvqZeFdfB
-         UQw2KbPdqLY1LdKspCGRJDAfhJvqllx1BerXE5g8=
+        b=apxZPinOJ4E9dFBnHe/qYu71RzNQ7p9rZY1sOx2plVDx7nh5Dx8TgE9sqtu5cv3ju
+         vIriXsc/+RwVHJDfCjCthAaQ0H7G+2AMkNNl1tf+C/dBTj8NIvrR3LM6JhekCbVqK8
+         BnMtUQ853VF1TAQ1jrGjsQgkVTzhJcCeJLkGzjIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Kenneth R. Crudup" <kenny@panix.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 5.4 56/78] tty: always relink the port
-Date:   Tue, 14 Jan 2020 11:01:30 +0100
-Message-Id: <20200114094400.977175947@linuxfoundation.org>
+        stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 57/78] arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
+Date:   Tue, 14 Jan 2020 11:01:31 +0100
+Message-Id: <20200114094401.111792585@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,37 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Amanieu d'Antras <amanieu@gmail.com>
 
-commit 273f632912f1b24b642ba5b7eb5022e43a72f3b5 upstream.
+commit 3e3c8ca5a351350031f0f3d5ecedf7048b1b9008 upstream.
 
-If the serial device is disconnected and reconnected, it re-enumerates
-properly but does not link it. fwiw, linking means just saving the port
-index, so allow it always as there is no harm in saving the same value
-again even if it tries to relink with the same port.
+Previously this was only defined in the internal headers which
+resulted in __NR_clone3 not being defined in the user headers.
 
-Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
-Reported-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191227174434.12057-1-sudipm.mukherjee@gmail.com
+Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: <stable@vger.kernel.org> # 5.3.x
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200102172413.654385-2-amanieu@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/tty_port.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/include/asm/unistd.h      |    1 -
+ arch/arm64/include/uapi/asm/unistd.h |    1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -89,8 +89,7 @@ void tty_port_link_device(struct tty_por
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	if (!driver->ports[index])
--		driver->ports[index] = port;
-+	driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -42,7 +42,6 @@
+ #endif
  
+ #define __ARCH_WANT_SYS_CLONE
+-#define __ARCH_WANT_SYS_CLONE3
+ 
+ #ifndef __COMPAT_SYSCALL_NR
+ #include <uapi/asm/unistd.h>
+--- a/arch/arm64/include/uapi/asm/unistd.h
++++ b/arch/arm64/include/uapi/asm/unistd.h
+@@ -19,5 +19,6 @@
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SET_GET_RLIMIT
+ #define __ARCH_WANT_TIME32_SYSCALLS
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #include <asm-generic/unistd.h>
 
 
