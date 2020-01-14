@@ -2,133 +2,73 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF0C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FC9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7D52465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BBF2465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o/xjIevW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgANKCf (ORCPT
+        id S1729353AbgANKCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:02:35 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729238AbgANKCd (ORCPT
+        Tue, 14 Jan 2020 05:02:42 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41060 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgANKCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:02:33 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EA23Pg081517;
-        Tue, 14 Jan 2020 05:02:07 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfavytyd7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 05:02:06 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00EA075d020269;
-        Tue, 14 Jan 2020 10:01:56 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 2xf74p13k0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 10:01:55 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00EA1sED50921896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 10:01:54 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 935E5C6057;
-        Tue, 14 Jan 2020 10:01:54 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A37FC605A;
-        Tue, 14 Jan 2020 10:01:52 +0000 (GMT)
-Received: from skywalker.in.ibm.com (unknown [9.124.35.105])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jan 2020 10:01:51 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 0/9] Fixup page directory freeing
-Date:   Tue, 14 Jan 2020 15:31:36 +0530
-Message-Id: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 14 Jan 2020 05:02:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DyoJ2hA1fU1X63Qmz1hq0mnr1uqWmaszLSaW5lT0+iI=; b=o/xjIevWfUgEeraf8BCj8KgN3
+        YkxD+ytudJ1eE7zpSCVU/jnmToR85ngrnVeb87obRoSGaIbr1tb8xIEdBzQuDzzK3iBbIuC09Aj4n
+        rNRIFAZx8dEyQ7qa9nq/VKMa57fF/KONbVUbXtdTNQJ2o2XHE9cAmBgzcYLBfCSbD3PbRrk1wbWL/
+        7LMHJBTg+6m+86p8GW6cGfNSB5TzX9ekTKQ8gGaAOdyjh0pf1fKJ41zx/wMqtXWUbPEIv914jgJkV
+        NSZ9GHlp1SEEbflQFHRzugy8DuajSukBxpb0MgfN5FkFpCNupyrQs7b0GsGDnW7ow/+ntTLEeGz7m
+        Cb0NtJJcA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irJ1m-0003IE-TS; Tue, 14 Jan 2020 10:02:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E66793058B4;
+        Tue, 14 Jan 2020 11:00:48 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E1A12B6AFB83; Tue, 14 Jan 2020 11:02:24 +0100 (CET)
+Date:   Tue, 14 Jan 2020 11:02:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>, mingo@redhat.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] idle: fix spelling mistake "iterrupts" -> "interrupts"
+Message-ID: <20200114100224.GC2844@hirez.programming.kicks-ass.net>
+References: <20200110025604.34373-1-hewenliang4@huawei.com>
+ <20200113160413.5afcfbd7@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_02:2020-01-13,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=2 adultscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=487 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001140090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113160413.5afcfbd7@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a repost of patch series from Peter with the arch specific changes except ppc64 dropped.
-ppc64 changes are added here because we are redoing the patch series on top of ppc64 changes. This makes it
-easy to backport these changes. Only the first 3 patches need to be backported to stable. 
+On Mon, Jan 13, 2020 at 04:04:13PM -0500, Steven Rostedt wrote:
+> 
+> Peter,
+> 
+> I guess you could just pull this into one of your queues.
 
-The thing is, on anything SMP, freeing page directories should observe the
-exact same order as normal page freeing:
-
- 1) unhook page/directory
- 2) TLB invalidate
- 3) free page/directory
-
-Without this, any concurrent page-table walk could end up with a Use-after-Free.
-This is esp. trivial for anything that has software page-table walkers
-(HAVE_FAST_GUP / software TLB fill) or the hardware caches partial page-walks
-(ie. caches page directories).
-
-Even on UP this might give issues since mmu_gather is preemptible these days.
-An interrupt or preempted task accessing user pages might stumble into the free
-page if the hardware caches page directories.
-
-This patch series fixup ppc64 and add generic MMU_GATHER changes to support the conversion of other architectures.
-I haven't added patches w.r.t other architecture because they are yet to be acked.
-
-
-Aneesh Kumar K.V (1):
-  powerpc/mmu_gather: Enable RCU_TABLE_FREE even for !SMP case
-
-Peter Zijlstra (8):
-  mm/mmu_gather: Invalidate TLB correctly on batch allocation failure
-    and flush
-  asm-generic/tlb: Avoid potential double flush
-  asm-gemeric/tlb: Remove stray function declarations
-  asm-generic/tlb: Add missing CONFIG symbol
-  asm-generic/tlb: Rename HAVE_RCU_TABLE_FREE
-  asm-generic/tlb: Rename HAVE_MMU_GATHER_PAGE_SIZE
-  asm-generic/tlb: Rename HAVE_MMU_GATHER_NO_GATHER
-  asm-generic/tlb: Provide MMU_GATHER_TABLE_FREE
-
- arch/Kconfig                                 |  13 +-
- arch/arm/Kconfig                             |   2 +-
- arch/arm/include/asm/tlb.h                   |   4 -
- arch/arm64/Kconfig                           |   2 +-
- arch/powerpc/Kconfig                         |   5 +-
- arch/powerpc/include/asm/book3s/32/pgalloc.h |   8 --
- arch/powerpc/include/asm/book3s/64/pgalloc.h |   2 -
- arch/powerpc/include/asm/nohash/pgalloc.h    |   8 --
- arch/powerpc/include/asm/tlb.h               |  11 ++
- arch/powerpc/mm/book3s64/pgtable.c           |   7 -
- arch/s390/Kconfig                            |   4 +-
- arch/sparc/Kconfig                           |   3 +-
- arch/sparc/include/asm/tlb_64.h              |   9 ++
- arch/x86/Kconfig                             |   2 +-
- arch/x86/include/asm/tlb.h                   |   4 +-
- include/asm-generic/tlb.h                    | 120 ++++++++++-------
- mm/gup.c                                     |   2 +-
- mm/mmu_gather.c                              | 134 +++++++++++++------
- 18 files changed, 207 insertions(+), 133 deletions(-)
-
--- 
-2.24.1
+Only because you replied, otherwise I tend to ignore such patches.
 
