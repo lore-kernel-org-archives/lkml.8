@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60EAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E516FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38C020678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC47924679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996344;
-	bh=jMKI6v65FTBsSYZvJUeHNjo+HJGBAmYqD6BdTqDO74M=;
+	s=default; t=1578996347;
+	bh=sbl4UHn02AWHf0pfvvgwLZS/ij6DwQksVxXf3qeOdro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bfpYMKp8enSliA1Xrw36LHh+h+bOLtOGO8tSlLFrOspUaqtqFThLTmuC5K6Ry1v2O
-	 qK4woi4jLhVLYovbGlmOoqcOaJv0c6cS4trHDiXTnfdc4p/HfmoLMzBOXu/xkTnhxT
-	 PsrJM5rqKyUG+hq5bPfzp640nMQBi43LZYQiHo6M=
+	b=oRfbvPKt5hhaDt536E6Pyq8/1E0phKMj887sC3EGAU/GNqkjBwWtdiixZRMzymi5J
+	 k6Xm0tjo3ZFClDz+NfJcgnLCQ1kZt5/E2k5A8GGwZXbfHfSFvvgfc8/F4kDROj/tKQ
+	 0vl0+NEXs/F3xKF4vmANOZDURW/uR509EEoZHwAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgANKFo (ORCPT
+        id S1730183AbgANKFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730154AbgANKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:38 -0500
+        id S1730161AbgANKFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91BA52467D;
-        Tue, 14 Jan 2020 10:05:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C6224683;
+        Tue, 14 Jan 2020 10:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996338;
-        bh=jMKI6v65FTBsSYZvJUeHNjo+HJGBAmYqD6BdTqDO74M=;
+        s=default; t=1578996340;
+        bh=sbl4UHn02AWHf0pfvvgwLZS/ij6DwQksVxXf3qeOdro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXWK6rTaQm1Lx1OyZOwu1Mvdsig3DkqhYxkVhoGZsgyr7Kcg9tiqQeXTKgss1tgrC
-         mpTP/j3gbV1Gpx2m8uQM6nI0ohRW+vrLEOTodSZwZr7rnFZThiXMr/SiGzSHf91hAq
-         3HezGaDPuSSIvD8hufEt0iWfYcO9V3+WNE0I7TII=
+        b=ZsqLjwCryoFdXKVT013k/w7TF0NptzLam5LZ9snAFp4g5FZ/G9FklCrjL541zbo//
+         OzcqxqSXTf9x1+gF3+XHQkUj0gOLGYKfl/EG6fdp4vV4DtBoU+aVvlUrj3nxDKECDW
+         plg0FgWzRu60V86jtr9RMb+yN4bm9974FsOd+MQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
-        linux-riscv@lists.infradead.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 61/78] riscv: Implement copy_thread_tls
-Date:   Tue, 14 Jan 2020 11:01:35 +0100
-Message-Id: <20200114094401.622410384@linuxfoundation.org>
+        stable@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 39/78] pstore/ram: Regularize prz label allocation lifetime
+Date:   Tue, 14 Jan 2020 11:01:13 +0100
+Message-Id: <20200114094358.836312422@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -60,56 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amanieu d'Antras <amanieu@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 20bda4ed62f507ed72e30e817b43c65fdba60be7 upstream.
+commit e163fdb3f7f8c62dccf194f3f37a7bcb3c333aa8 upstream.
 
-This is required for clone3 which passes the TLS value through a
-struct rather than a register.
+In my attempt to fix a memory leak, I introduced a double-free in the
+pstore error path. Instead of trying to manage the allocation lifetime
+between persistent_ram_new() and its callers, adjust the logic so
+persistent_ram_new() always takes a kstrdup() copy, and leaves the
+caller's allocation lifetime up to the caller. Therefore callers are
+_always_ responsible for freeing their label. Before, it only needed
+freeing when the prz itself failed to allocate, and not in any of the
+other prz failure cases, which callers would have no visibility into,
+which is the root design problem that lead to both the leak and now
+double-free bugs.
 
-Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-Cc: linux-riscv@lists.infradead.org
-Cc: <stable@vger.kernel.org> # 5.3.x
-Link: https://lore.kernel.org/r/20200102172413.654385-6-amanieu@gmail.com
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Reported-by: Cengiz Can <cengiz@kernel.wtf>
+Link: https://lore.kernel.org/lkml/d4ec59002ede4aaf9928c7f7526da87c@kernel.wtf
+Fixes: 8df955a32a73 ("pstore/ram: Fix error-path memory leak in persistent_ram_new() callers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/riscv/Kconfig          |    1 +
- arch/riscv/kernel/process.c |    6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/pstore/ram.c      |    4 ++--
+ fs/pstore/ram_core.c |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -61,6 +61,7 @@ config RISCV
- 	select SPARSEMEM_STATIC if 32BIT
- 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
- 	select HAVE_ARCH_MMAP_RND_BITS
-+	select HAVE_COPY_THREAD_TLS
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -583,12 +583,12 @@ static int ramoops_init_przs(const char
+ 		prz_ar[i] = persistent_ram_new(*paddr, zone_sz, sig,
+ 					       &cxt->ecc_info,
+ 					       cxt->memtype, flags, label);
++		kfree(label);
+ 		if (IS_ERR(prz_ar[i])) {
+ 			err = PTR_ERR(prz_ar[i]);
+ 			dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
+ 				name, record_size,
+ 				(unsigned long long)*paddr, err);
+-			kfree(label);
  
- config ARCH_MMAP_RND_BITS_MIN
- 	default 18 if 64BIT
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -99,8 +99,8 @@ int arch_dup_task_struct(struct task_str
- 	return 0;
- }
+ 			while (i > 0) {
+ 				i--;
+@@ -629,12 +629,12 @@ static int ramoops_init_prz(const char *
+ 	label = kasprintf(GFP_KERNEL, "ramoops:%s", name);
+ 	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+ 				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
++	kfree(label);
+ 	if (IS_ERR(*prz)) {
+ 		int err = PTR_ERR(*prz);
  
--int copy_thread(unsigned long clone_flags, unsigned long usp,
--	unsigned long arg, struct task_struct *p)
-+int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
-+	unsigned long arg, struct task_struct *p, unsigned long tls)
- {
- 	struct pt_regs *childregs = task_pt_regs(p);
- 
-@@ -120,7 +120,7 @@ int copy_thread(unsigned long clone_flag
- 		if (usp) /* User fork */
- 			childregs->sp = usp;
- 		if (clone_flags & CLONE_SETTLS)
--			childregs->tp = childregs->a5;
-+			childregs->tp = tls;
- 		childregs->a0 = 0; /* Return value of fork() */
- 		p->thread.ra = (unsigned long)ret_from_fork;
+ 		dev_err(dev, "failed to request %s mem region (0x%zx@0x%llx): %d\n",
+ 			name, sz, (unsigned long long)*paddr, err);
+-		kfree(label);
+ 		return err;
  	}
+ 
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -574,7 +574,7 @@ struct persistent_ram_zone *persistent_r
+ 	/* Initialize general buffer state. */
+ 	raw_spin_lock_init(&prz->buffer_lock);
+ 	prz->flags = flags;
+-	prz->label = label;
++	prz->label = kstrdup(label, GFP_KERNEL);
+ 
+ 	ret = persistent_ram_buffer_map(start, size, prz, memtype);
+ 	if (ret)
 
 
