@@ -2,100 +2,167 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B15C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD0FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC3E24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0E324670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579035741;
+	bh=8fbFTVsVS4GidZaEWzOWjrKbrqylVcd/KMLGffuKT5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MF1utUNdgX2zKoTUhyNgtnKVfx6O1BSQsf4S3ddK8jUigSDFyDbtKrsvDPDZkabuv
+	 tzeN2lROjUhSEzXsBzh+pPx4IJsNK4HJMmMN6h4GxTruQqMr7DGFCoWesyZJU0ILsq
+	 qoXlx0CjOC0pZ8UomGpz/O7Q3jRDgsPus7LIMuJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgANU6B (ORCPT
+        id S1728844AbgANVCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:58:01 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:43061 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANU6A (ORCPT
+        Tue, 14 Jan 2020 16:02:20 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34230 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANVCU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:58:00 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MpDa5-1jRbhI13iJ-00qlZL; Tue, 14 Jan 2020 21:57:59 +0100
-Received: by mail-qk1-f174.google.com with SMTP id j9so13607771qkk.1;
-        Tue, 14 Jan 2020 12:57:58 -0800 (PST)
-X-Gm-Message-State: APjAAAXcv/58nsBItD6xmmsBSbFGrgcAhJ2ogCVxYy6v/J+/treDGYjy
-        zFL33cjSTSOG0tHMx7z47onwA5LDgup/Ci5Go3o=
-X-Google-Smtp-Source: APXvYqwhg5lxdDG9hw24GdeXieaQIzqGf7tcgGAhb/t/luGZu0DMMqM2FGkeCDHJm3CEiDORiqOll/dN1rxk4xKyAcY=
-X-Received: by 2002:a37:a8d4:: with SMTP id r203mr19031507qke.394.1579035478013;
- Tue, 14 Jan 2020 12:57:58 -0800 (PST)
+        Tue, 14 Jan 2020 16:02:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so13661454wrr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 13:02:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l77KtsOfNd0cs5BnhlgAfKFicPNamjeiI3/uAn8/oZQ=;
+        b=jnF1T9azP+f+rL78bCrJiRgAyfCzbFONcC7ZE0LtQVYYggLSvFHoTG8w2klbJTmkhz
+         hUEEw8ENmG5S9WNHwgoWOkEczB+zrqg8Uad4ELCT4OBWNbsZRs4iAtEh1rx0t2qNBQ9T
+         XuumS/sRO2kGz60AK4yeXloffGa9EUl0Z3fMg6yk6dTivSmuERP8thT+GtvkFAB+bgW9
+         6HqMQfFbKrhQSp7R9vhC4kk7kB/qWgYpm5u1vpJ5vVaHp2RTX97DRCLRHx/uz7RDOjMM
+         Hbi3Q/VRaBv2ZL9Y99SZ2zEhrEySVhsmTqHbs5ZLQvR9rBpUahNo4Sir8Lc0vledrpza
+         uDcQ==
+X-Gm-Message-State: APjAAAXl8gqSicIWMQLdH5dPHxjVj0zsMy2LDfJmLEeiM5WXwZdlBraY
+        ODjjsmsxPGI0Bg5lldt7TlI=
+X-Google-Smtp-Source: APXvYqwnyT/Am63E6gvJAIngyYQf5/d6L7e4MnF+7XYpoVNdfnRvyYqiJRxaG9v/j0o2j+EBFlgtyw==
+X-Received: by 2002:a5d:5708:: with SMTP id a8mr28531469wrv.79.1579035737959;
+        Tue, 14 Jan 2020 13:02:17 -0800 (PST)
+Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
+        by smtp.gmail.com with ESMTPSA id t12sm20925635wrs.96.2020.01.14.13.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 13:02:16 -0800 (PST)
+Date:   Tue, 14 Jan 2020 22:02:15 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mm/hotplug: silence a lockdep splat with printk()
+Message-ID: <20200114210215.GQ19428@dhcp22.suse.cz>
+References: <20200114201114.14696-1-cai@lca.pw>
+ <6d9d2923-a44c-60fb-5caa-e6228cb8aaf5@redhat.com>
 MIME-Version: 1.0
-References: <20200114200846.29434-1-vgupta@synopsys.com> <20200114200846.29434-2-vgupta@synopsys.com>
-In-Reply-To: <20200114200846.29434-2-vgupta@synopsys.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jan 2020 21:57:42 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3W0eLK+qypnPwq=PdcF7+ey8OZEhmOoA6Bg7hMGm5hqQ@mail.gmail.com>
-Message-ID: <CAK8P3a3W0eLK+qypnPwq=PdcF7+ey8OZEhmOoA6Bg7hMGm5hqQ@mail.gmail.com>
-Subject: Re: [RFC 1/4] asm-generic/uaccess: don't define inline functions if
- noinline lib/* in use
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:kDnJNAh/DNMBSqFPq6pLI1Nlr9B0G9P4obBew/8vuXY0oVgXmJw
- Nv/q1RAtYWHD7iaYn6uj3/GYEEUDxyIzlxtWfs3swS+9vrwM3Eh7taZQFUCI2mVelJDhCAE
- wtNEg0QlQWgsWNv36ps92xCvtka8T7kKwUn3F5UcFCwdTahhU4Z6+pxS+X2fuB53MKKXo+j
- rzj+G8gQMcz7vn066OrPA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S9alnY7jl0w=:QIO67bfjC+c2E4/f6+vfNp
- sJ83S1el6CRwhZ7PhMdRGEQKcFOtDl5Y8+W9V7P8KOOz9VgGezLClXFxuaSS+bvKFBdVNPEg/
- kPPr/qd2n3NlndzoFcyvs4MWwuNXWMXbrSFMig0xQFJy4caFeId5wlvbsK7BZoT23/BS6KK2R
- s1LyXTw/NVTJ5qtsvci9u26OVjoZkWyXchDOJ5ZaC+qu1LWF8oZH16Y1x6mDvX4vwWqluSl2M
- s80MQGJi+gZZgSU0T4nDXLhdUIlLrxbHzN6NHDhoGjeERHb4MvLwBjraNl+c2KZl5Mr7kijYa
- qg05/GoIAohm41IKuCYpICH+rLpAmOJ9Qw5JLS63qdZ5jJGoSTwz4VaE1DmOuGbL0UVuEKYO8
- WUiHKdqE5SfHz+qCdXuAi4Z3GLpbFoYrS+6n+mYQuRM4YGw/rV2ZVBmpHrRwyKyP/sWpaXtxL
- PBsTzOsJEcYDGadFblz0vFkbrRRnFoLS8rDQAoNEWhL01lUgMMZXHWlAZ54k8dte4a7c7guTu
- 4w1BtCUZDvB3HFhYG8cmrJAbJPjxSf5KRUwwsSZOi/wnS+wO4suzZ3BZNhfVVtvRheUtqmo9b
- eNWQ/WvubyGsgJ7beGXOHWaZUrdxrCfur5ZekQer5UK9ttmZaSFAnDHJ9A6+Bfc6ffPtB+UO2
- 0i3SLIHqs3OO1dSe1POh130jngV3WZny0LnDRnBALEtIcBugqY3vTu2FOJsQ7mfyJ2uxqSJj+
- OlBA6QA/Nl046q4hXHZVjKM9HKtCfnAwZ2Ui0Cil1yw2FicMvQmH+CB5jT3NBp7mzxbxyEbXO
- KjgSpY/RGYVGEeRdlEQ9SNfvLsmPUSELJRt0K5Xdu0aaWQWi3EpDDp/8DPewXZzzZ2FKOWaYb
- WVk3Mc5AlfvNp5qwBhng==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d9d2923-a44c-60fb-5caa-e6228cb8aaf5@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 9:08 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
->
-> There are 2 generic varaints of strncpy_from_user() / strnlen_user()
->  (1). inline version in asm-generic/uaccess.h
->  (2). optimized word-at-a-time version in lib/*
->
-> This patch disables #1 if #2 selected. This allows arches to continue
-> reusing asm-generic/uaccess.h for rest of code
->
-> This came up when switching ARC to generic word-at-a-time interface
->
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+On Tue 14-01-20 21:20:08, David Hildenbrand wrote:
+> On 14.01.20 21:11, Qian Cai wrote:
+> > Similar to the recent commit [1] merged into the random and -next trees,
+> > it is not a good idea to call printk() with zone->lock held. The
+> > standard fix is to use printk_deferred() in those places, but memory
+> > offline will call dump_page() which need to defer after the lock. While
+> > at it, remove a similar but unnecessary debug printk() as well.
+> > 
+> > [1] https://lore.kernel.org/lkml/1573679785-21068-1-git-send-email-cai@lca.pw/
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  include/linux/page-isolation.h |  2 +-
+> >  mm/memory_hotplug.c            |  2 +-
+> >  mm/page_alloc.c                | 12 +++++-------
+> >  mm/page_isolation.c            | 10 +++++++++-
+> >  4 files changed, 16 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+> > index 148e65a9c606..5d8ba078006f 100644
+> > --- a/include/linux/page-isolation.h
+> > +++ b/include/linux/page-isolation.h
+> > @@ -34,7 +34,7 @@ static inline bool is_migrate_isolate(int migratetype)
+> >  #define REPORT_FAILURE	0x2
+> >  
+> >  bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+> > -			 int flags);
+> > +			 int flags, char *dump);
+> >  void set_pageblock_migratetype(struct page *page, int migratetype);
+> >  int move_freepages_block(struct zone *zone, struct page *page,
+> >  				int migratetype, int *num_movable);
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index 7a6de9b0dcab..f10928538fa3 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -1149,7 +1149,7 @@ static bool is_pageblock_removable_nolock(unsigned long pfn)
+> >  		return false;
+> >  
+> >  	return !has_unmovable_pages(zone, page, MIGRATE_MOVABLE,
+> > -				    MEMORY_OFFLINE);
+> > +				    MEMORY_OFFLINE, NULL);
+> >  }
+> >  
+> >  /* Checks if this range of memory is likely to be hot-removable. */
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index e56cd1f33242..b6bec3925e80 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -8204,7 +8204,7 @@ void *__init alloc_large_system_hash(const char *tablename,
+> >   * race condition. So you can't expect this function should be exact.
+> >   */
+> >  bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+> > -			 int flags)
+> > +			 int flags, char *dump)
+> >  {
+> >  	unsigned long iter = 0;
+> >  	unsigned long pfn = page_to_pfn(page);
+> > @@ -8305,8 +8305,10 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int migratetype,
+> >  	return false;
+> >  unmovable:
+> >  	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+> > -	if (flags & REPORT_FAILURE)
+> > -		dump_page(pfn_to_page(pfn + iter), reason);
+> > +	if (flags & REPORT_FAILURE) {
+> > +		page = pfn_to_page(pfn + iter);
+> > +		strscpy(dump, reason, 64);
+> > +	}
+> >  	return true;
+> >  }
+> >  
+> > @@ -8711,10 +8713,6 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+> >  		BUG_ON(!PageBuddy(page));
+> >  		order = page_order(page);
+> >  		offlined_pages += 1 << order;
+> > -#ifdef CONFIG_DEBUG_VM
+> > -		pr_info("remove from free list %lx %d %lx\n",
+> > -			pfn, 1 << order, end_pfn);
+> > -#endif
+> 
+> ack to getting rid of this.
 
-This looks like a useful change, but I think we can do even better: It
-seems that
-there are no  callers of __strnlen_user or __strncpy_from_user  in the
-kernel today, so these should not be defined either when the Kconfig symbols
-are set. Also, I would suggest moving the 'extern' declaration for the two
-functions into the #else branch of the conditional so it does not need to be
-duplicated.
+Yeah and that should go into it's own patch.
 
-      Arnd
+> Regarding the other stuff, I remember Michal had an opinion about the
+> previous approach, so it's best if he comments.
+
+Yeah, that was a long discussion with a lot of lockdep false positives.
+I believe I have made it clear that the console code shouldn't depend on
+memory allocation because that is just too fragile. If that is not
+possible for some reason then it has to be mentioned in the changelog.
+I really do not want us to add kludges to the MM code just because of
+printk deficiencies unless that is absolutely inevitable.
+-- 
+Michal Hocko
+SUSE Labs
