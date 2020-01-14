@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FED9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F33C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D4420678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F53E24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996620;
-	bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
+	s=default; t=1578996622;
+	bh=+B9vjfKRifOYrJv2rNTi+ClHryp0A5p2lCBhAplKizI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=feOyuVLNEvJ5a0FtbS7cPJ/EpxbTLqS9VT2ZHZ3gtnxqrpsAwsRGwTu4Bs+dD8R/L
-	 /IgkYiPHXNwauXmgvS8h+Y/gbA+eqc/Lm0DW3qqYJamYXqeQz2Pxv1GVMnWVJ5gf8v
-	 imclVTb+rJpXSTEDC4zFKzMxsMPAJpJUHF5/fvV4=
+	b=blHceE0HArU5HI4NEheOiAFJuc9IZXs5x7QzDIyeu0osHTeDUc5EhQPNCb/vksiLG
+	 GLA2H6s+cc7yoKcTVY4C9IlZ4Qqhl20QdKaJOa7qP1+yo8HweokR7U0mPXNr4XM3TH
+	 VfRTyhjk0Ar1WNYpQf9zbgrd28KkLVIQakccfmF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbgANKKT (ORCPT
+        id S1731644AbgANKKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbgANKKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:16 -0500
+        id S1731616AbgANKKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:10:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 280DC24681;
-        Tue, 14 Jan 2020 10:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8DF20678;
+        Tue, 14 Jan 2020 10:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996614;
-        bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
+        s=default; t=1578996617;
+        bh=+B9vjfKRifOYrJv2rNTi+ClHryp0A5p2lCBhAplKizI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOuGDub8Nz6RcEPyZZyY+JvSel9WJB7wCX1xLwdOCMJXh8SuATieQOHojREFpgt8/
-         +HtI4Ku7CcOY/81D3JDjvNp1/0r8OB3oQC2B1A/0MZqMTvXTtALUy1mY0HT0UMixrL
-         b1fZxWWHaNO9xX638b1enwP6SEmIjDowpOTW1QDc=
+        b=nMwpCbt2SwKL6B8jW14bDWjLWvjRsp0SAUCHwXttyTqU0Z1uSk7TQ23RtGodszmTD
+         j5RUkpnvic7DQlPTGzPC38QHO2oE41SnCdT5erEI+HL9MNXSKUAnkvtQ36+5JHEBtF
+         5ZTrhD22UyPazA5WsscW9dwtWT4tnpqVQir/rMaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Peter Chen <peter.chen@freescale.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.14 02/39] usb: chipidea: host: Disable port power only if previously enabled
-Date:   Tue, 14 Jan 2020 11:01:36 +0100
-Message-Id: <20200114094337.099032398@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.14 26/39] tty: link tty and port before configuring it as console
+Date:   Tue, 14 Jan 2020 11:02:00 +0100
+Message-Id: <20200114094344.699176547@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -62,77 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit c1ffba305dbcf3fb9ca969c20a97acbddc38f8e9 upstream.
+commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
 
-On shutdown, ehci_power_off() is called unconditionally to power off
-each port, even if it was never called to power on the port.
-For chipidea, this results in a call to ehci_ci_portpower() with a request
-to power off ports even if the port was never powered on.
-This results in the following warning from the regulator code.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
-unbalanced disables for usb_otg2_vbus
-Modules linked in:
-CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
-Hardware name: Freescale i.MX7 Dual (Device Tree)
-[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
-[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
-[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
-[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
-[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
-[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
-[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
-[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
-[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
-[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
-[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
-[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
-[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
-...
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
 
-Keeping track of the power enable state avoids the warning and traceback.
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
 
-Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Peter Chen <peter.chen@freescale.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20191226155754.25451-1-linux@roeck-us.net
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
+
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
+
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/chipidea/host.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/serial_core.c |    1 +
+ drivers/tty/tty_port.c           |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -37,6 +37,7 @@ static int (*orig_bus_suspend)(struct us
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2810,6 +2810,7 @@ int uart_add_one_port(struct uart_driver
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
  
- struct ehci_ci_priv {
- 	struct regulator *reg_vbus;
-+	bool enabled;
- };
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
  
- static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
-@@ -48,7 +49,7 @@ static int ehci_ci_portpower(struct usb_
- 	int ret = 0;
- 	int port = HCS_N_PORTS(ehci->hcs_params);
+ 	port->console = uart_console(uport);
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -88,7 +88,8 @@ void tty_port_link_device(struct tty_por
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
  
--	if (priv->reg_vbus) {
-+	if (priv->reg_vbus && enable != priv->enabled) {
- 		if (port > 1) {
- 			dev_warn(dev,
- 				"Not support multi-port regulator control\n");
-@@ -64,6 +65,7 @@ static int ehci_ci_portpower(struct usb_
- 				enable ? "enable" : "disable", ret);
- 			return ret;
- 		}
-+		priv->enabled = enable;
- 	}
- 
- 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
 
 
