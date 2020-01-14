@@ -2,95 +2,82 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420F7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A88C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC942187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16542187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="B/JnFwJP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jlTtnwmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgANNpz (ORCPT
+        id S1728874AbgANNqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:45:55 -0500
-Received: from mx3.wp.pl ([212.77.101.9]:9043 "EHLO mx3.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgANNpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:45:54 -0500
-Received: (wp-smtpd smtp.wp.pl 30180 invoked from network); 14 Jan 2020 14:45:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1579009550; bh=1OCCshn/NahZBP1gvKTaGqss5mpmUoD2DAPD0KfhKvo=;
-          h=From:To:Cc:Subject;
-          b=B/JnFwJP0YTQ5MWEM8Xjp9XJbCCGcxPqRvYh6grlUxxIwM/8vzqBbR2XVnHyR3gRg
-           Y7GFZFp2v/91NdDqQ+NgP+hZkA+uiATwvzF3lnKuecSMTZpZ1BiNen91iCBN1Dv10A
-           awohaKHajJnNbkae8aglEM90VbUWmAxTdmPY7Yak=
-Received: from c-73-93-4-247.hsd1.ca.comcast.net (HELO cakuba.hsd1.ca.comcast.net) (kubakici@wp.pl@[73.93.4.247])
-          (envelope-sender <kubakici@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <ms@dev.tdt.de>; 14 Jan 2020 14:45:50 +0100
-Date:   Tue, 14 Jan 2020 05:45:43 -0800
-From:   Jakub Kicinski <kubakici@wp.pl>
-To:     Martin Schiller <ms@dev.tdt.de>
-Cc:     khc@pm.waw.pl, davem@davemloft.net, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] wan/hdlc_x25: make lapb params configurable
-Message-ID: <20200114054543.576dbf8b@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <3b439730f93e29c9e823126b74c2fbd3@dev.tdt.de>
-References: <20200113124551.2570-1-ms@dev.tdt.de>
-        <20200113055316.4e811276@cakuba>
-        <83f60f76a0cf602c73361ccdb34cc640@dev.tdt.de>
-        <20200114045149.4e97f0ac@cakuba>
-        <3b439730f93e29c9e823126b74c2fbd3@dev.tdt.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-WP-MailID: 7066841284ff01c5adb105bd79b4273d
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [AXPU]                               
+        Tue, 14 Jan 2020 08:46:24 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46014 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgANNqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:46:23 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w30so12409424qtd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:46:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=FJt5ul6jSl2oFgQgoNYCrlZqJ8ZxSmr3QhwWHFt0fl0=;
+        b=jlTtnwmXXaDZbMLFdDf9rwr5nOnDzERvvJZeZRJJ4nklL+kf4y4RYe2uFCwecObjDt
+         NOpcGc8JN0hIY1RA5TJaAGT2Kt+Br5DTYoXKnDBA6D4vWMDVIy9akjaGEezKyscsmgF5
+         1JVRcnV+SPxc81HX2DRsNQ6LmeYErSfjszdJ51njd0gaYDjIsc2qY96jQlmFvbcH15J+
+         w9p1jCZ4uLAhjRnUEAQa8lxV+MMYSoz0V+zv6zBMTYtoPlSsKHW4V9RwFyqjLHBfmnKG
+         C7ejF5aUKxM5mf46atR1oNZ8r9qQSV3ahe4YHWM6LJN1Ah949eVDQRPfPLzvE8K5iK0Y
+         6U4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=FJt5ul6jSl2oFgQgoNYCrlZqJ8ZxSmr3QhwWHFt0fl0=;
+        b=eXsJ16oWquOEg8Z7oD1i/QZdLJXaCRCx4zG5FfPvwbiYsboZGFChcTmX8tve+spgI7
+         3ZSjDjhUXMOs7HNn1c0KwfMPkdAr3BpTRt/4CgDYrKYX3dzfvl330D9jL5o6+1nePIAa
+         BJLw310HaVcAfjlGJdmkBcChTacOCELY7fH8MBIyGkApxLe+t7W3ESN185jeH411nx2a
+         ajGiWqndVA+4z1XULO17mbhp1vQnHbGrQwPOqObf8O6Kl0VyTNNAF4zscJ5ebuc+Y9wp
+         AGHn2xBXx3/rxPT0Qf575Flpa+2R36DguWeceinkoPZ2WgLJR4Rz/xzMSZqhct0CwwqT
+         tNZw==
+X-Gm-Message-State: APjAAAUuF0IwKNpyUnS02ZIeL71NAbeSeVKmz4lm5FFtPTCwr7IiOOpy
+        weDSIZpWoVndh84Cz3yBJbG5opAVQwPW9w==
+X-Google-Smtp-Source: APXvYqwjloJcjp9rPTzCKEyvILBYokgQ8xivl6xDKlKiin4V+lyZt1nRX4QTpnG8/kBXw6NfMgK6Tg==
+X-Received: by 2002:ac8:a8b:: with SMTP id d11mr3570022qti.94.1579009582711;
+        Tue, 14 Jan 2020 05:46:22 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l44sm7724328qtb.48.2020.01.14.05.46.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 05:46:22 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/vmscan: remove prefetch_prev_lru_page
+Date:   Tue, 14 Jan 2020 08:46:21 -0500
+Message-Id: <FC618797-2F5E-4F73-A244-0DC19AA1CB74@lca.pw>
+References: <1579006500-127143-1-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1579006500-127143-1-git-send-email-alex.shi@linux.alibaba.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 14:33:51 +0100, Martin Schiller wrote:
-> On 2020-01-14 13:51, Jakub Kicinski wrote:
-> > On Tue, 14 Jan 2020 06:37:03 +0100, Martin Schiller wrote:  
-> >> >> diff --git a/include/uapi/linux/hdlc/ioctl.h
-> >> >> b/include/uapi/linux/hdlc/ioctl.h
-> >> >> index 0fe4238e8246..3656ce8b8af0 100644
-> >> >> --- a/include/uapi/linux/hdlc/ioctl.h
-> >> >> +++ b/include/uapi/linux/hdlc/ioctl.h
-> >> >> @@ -3,7 +3,7 @@
-> >> >>  #define __HDLC_IOCTL_H__
-> >> >>
-> >> >>
-> >> >> -#define GENERIC_HDLC_VERSION 4	/* For synchronization with sethdlc
-> >> >> utility */
-> >> >> +#define GENERIC_HDLC_VERSION 5	/* For synchronization with sethdlc
-> >> >> utility */  
-> >> >
-> >> > What's the backward compatibility story in this code?  
-> >> 
-> >> Well, I thought I have to increment the version to keep the kernel 
-> >> code
-> >> and the sethdlc utility in sync (like the comment says).  
-> > 
-> > Perhaps I chose the wrong place for asking this question, IOCTL code
-> > was my real worry. I don't think this version number is validated so
-> > I think bumping it shouldn't break anything?  
-> 
-> sethdlc validates the GENERIC_HDLC_VERSION at compile time.
->
-> https://mirrors.edge.kernel.org/pub/linux/utils/net/hdlc/
 
-Aw, okay, best not to bump it then.
- 
-> Another question:
-> Where do I have to send my patch for sethdlc to?
 
-No idea :)
+> On Jan 14, 2020, at 7:55 AM, Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>=20
+> This macro are never used in git history. So better to remove.
+
+When removing unused thingy, it is important to figure out which commit intr=
+oduced it in the first place and Cc the relevant people in that commit.=
