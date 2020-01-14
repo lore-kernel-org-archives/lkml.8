@@ -2,332 +2,130 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8822C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA00C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977CD24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9B72465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LpgACcfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728836AbgANOXQ (ORCPT
+        id S1729021AbgANOYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:23:16 -0500
-Received: from mga03.intel.com ([134.134.136.65]:20916 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgANOXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:23:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 06:23:15 -0800
-X-IronPort-AV: E=Sophos;i="5.69,433,1571727600"; 
-   d="scan'208";a="225231267"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 06:23:11 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] drm/i915/audio: convert to new drm logging macros.
-In-Reply-To: <20200114095107.21197-3-wambui.karugax@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200114095107.21197-1-wambui.karugax@gmail.com> <20200114095107.21197-3-wambui.karugax@gmail.com>
-Date:   Tue, 14 Jan 2020 16:23:09 +0200
-Message-ID: <87d0bmktgy.fsf@intel.com>
+        Tue, 14 Jan 2020 09:24:08 -0500
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:11461 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbgANOYH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:24:07 -0500
+Date:   Tue, 14 Jan 2020 14:23:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1579011844;
+        bh=lpMOa+iJAF3MtHqUdxDVUs+npedWnm91Kj5dgmwc2PU=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=LpgACcfJBOF6PL+bDsMcoJJZdQvw9qO/eb+oldm8VU5m3y2y6eWPKyLaMc5e1v7Y0
+         AIosKcpKusScaGatpoudpOicuiXXECuT2SVMLh5+WpUt1/36LuBQdxIhvqZOqlfnZ1
+         A6Zm6mLGoduMzBzKiI/2CieLiJ/JSMbXV1CLd1KQ=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Krzysztof Piecuch <piecuch@protonmail.com>
+Cc:     "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "malat@debian.org" <malat@debian.org>,
+        "piecuch@protonmail.com" <piecuch@protonmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "mzhivich@akamai.com" <mzhivich@akamai.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "drake@endlessm.com" <drake@endlessm.com>,
+        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Reply-To: Krzysztof Piecuch <piecuch@protonmail.com>
+Subject: [PATCH] x86/tsc: Add tsc_guess flag disabling CPUID.16h use for tsc calibration
+Message-ID: <03j72W25Dne_HDSwI8Y7xiXPzvEBX5Ezw_xw8ed8DC83bpdMxoPcjhbinNcDD0yeoX9GGN691f3kqqtGLztTnW8Pay3FrbO5sTlj3vjnh-Y=@protonmail.com>
+Feedback-ID: krphKiiPlx_XKIryTSpdJ_XtBwogkHXWA-Us-PsTeaBSrzOTAKWxwbFkseT4Z85b_7PMRvSnq3Ah7f9INXrOMw==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> Converts the printk based logging macros in i915/display/intel_audio.c
-> to the struct drm_device based logging macros.
+Changing base clock frequency directly impacts tsc hz but not CPUID.16h
+values. An overclocked CPU supporting CPUID.16h and partial CPUID.15h
+support will set tsc hz according to "best guess" given by CPUID.16h
+relying on tsc_refine_calibration_work to give better numbers later.
+tsc_refine_calibration_work will refuse to do its work when the outcome is
+off the early tsc hz value by more than 1% which is certain to happen on an
+overclocked system.
 
-Couple of comments inline.
+Signed-off-by: Krzysztof Piecuch <piecuch@protonmail.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
+ arch/x86/kernel/tsc.c                           | 12 ++++++++++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
-BR,
-Jani.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentatio=
+n/admin-guide/kernel-parameters.txt
+index ade4e6ec23e0..54ae9e153a19 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4905,6 +4905,12 @@
+ =09=09=09interruptions from clocksource watchdog are not
+ =09=09=09acceptable).
 
++=09tsc_guess=3D=09[X86,INTEL] Don't use data provided by CPUID.16h during
++=09=09=09early tsc calibration. Disabling this may be useful for
++=09=09=09CPUs with altered base clocks.
++=09=09=09Format: <bool> (1/Y/y=3Denable, 0/N/n=3Ddisable)
++=09=09=09default: enabled
++
+ =09tsx=3D=09=09[X86] Control Transactional Synchronization
+ =09=09=09Extensions (TSX) feature in Intel processors that
+ =09=09=09support TSX control.
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 7e322e2daaf5..a807c33a3d41 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -59,6 +59,13 @@ struct cyc2ns {
 
-> This transformation was achieved using the following coccinelle script
-> that matches the existence of the struct drm_i915_private device:
->
-> @rule1@
-> identifier fn, T;
-> @@
->
-> fn(struct drm_i915_private *T,...) {
-> <+...
-> (
-> -DRM_INFO(
-> +drm_info(&T->drm,
-> ...)
-> |
-> -DRM_ERROR(
-> +drm_err(&T->drm,
-> ...)
-> |
-> -DRM_WARN(
-> +drm_warn(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_DRIVER(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_KMS(
-> +drm_dbg_kms(&T->drm,
-> ...)
-> )
-> ...+>
-> }
->
-> @rule2@
-> identifier fn, T;
-> @@
->
-> fn(...) {
-> ...
-> struct drm_i915_private *T = ...;
-> <+...
-> (
-> -DRM_INFO(
-> +drm_info(&T->drm,
-> ...)
-> |
-> -DRM_ERROR(
-> +drm_err(&T->drm,
-> ...)
-> |
-> -DRM_WARN(
-> +drm_warn(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG(
-> +drm_dbg(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_KMS(
-> +drm_dbg_kms(&T->drm,
-> ...)
-> |
-> -DRM_DEBUG_DRIVER(
-> +drm_dbg(&T->drm,
-> ...)
-> )
-> ...+>
-> }
->
-> Checkpatch warnings were manually fixed.
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_audio.c | 71 ++++++++++++----------
->  1 file changed, 40 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_audio.c b/drivers/gpu/drm/i915/display/intel_audio.c
-> index e406719a6716..57208440bf6d 100644
-> --- a/drivers/gpu/drm/i915/display/intel_audio.c
-> +++ b/drivers/gpu/drm/i915/display/intel_audio.c
-> @@ -315,7 +315,7 @@ static void g4x_audio_codec_disable(struct intel_encoder *encoder,
->  	struct drm_i915_private *dev_priv = to_i915(encoder->base.dev);
->  	u32 eldv, tmp;
->  
-> -	DRM_DEBUG_KMS("Disable audio codec\n");
-> +	drm_dbg_kms(&dev_priv->drm, "Disable audio codec\n");
->  
->  	tmp = I915_READ(G4X_AUD_VID_DID);
->  	if (tmp == INTEL_AUDIO_DEVBLC || tmp == INTEL_AUDIO_DEVCL)
-> @@ -340,7 +340,8 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
->  	u32 tmp;
->  	int len, i;
->  
-> -	DRM_DEBUG_KMS("Enable audio codec, %u bytes ELD\n", drm_eld_size(eld));
-> +	drm_dbg_kms(&dev_priv->drm, "Enable audio codec, %u bytes ELD\n",
-> +		    drm_eld_size(eld));
->  
->  	tmp = I915_READ(G4X_AUD_VID_DID);
->  	if (tmp == INTEL_AUDIO_DEVBLC || tmp == INTEL_AUDIO_DEVCL)
-> @@ -360,7 +361,7 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
->  	I915_WRITE(G4X_AUD_CNTL_ST, tmp);
->  
->  	len = min(drm_eld_size(eld) / 4, len);
-> -	DRM_DEBUG_DRIVER("ELD size %d\n", len);
-> +	drm_dbg(&dev_priv->drm, "ELD size %d\n", len);
+ static DEFINE_PER_CPU_ALIGNED(struct cyc2ns, cyc2ns);
 
-Please convert this to drm_dbg_kms() while at it.
++static bool _read_mostly tsc_guess =3D 1;
++static int __init tsc_guess_setup(char *buf)
++{
++=09return strtobool(buf, &tsc_guess);
++}
++early_param("tsc_guess", tsc_guess_setup);
++
+ __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+ {
+ =09int seq, idx;
+@@ -654,7 +661,8 @@ unsigned long native_calibrate_tsc(void)
+ =09 * clock, but we can easily calculate it to a high degree of accuracy
+ =09 * by considering the crystal ratio and the CPU speed.
+ =09 */
+-=09if (crystal_khz =3D=3D 0 && boot_cpu_data.cpuid_level >=3D 0x16) {
++=09if (crystal_khz =3D=3D 0 && tsc_guess &&
++=09=09boot_cpu_data.cpuid_level >=3D 0x16) {
+ =09=09unsigned int eax_base_mhz, ebx, ecx, edx;
 
->  	for (i = 0; i < len; i++)
->  		I915_WRITE(G4X_HDMIW_HDMIEDID, *((const u32 *)eld + i));
->  
-> @@ -384,9 +385,10 @@ hsw_dp_audio_config_update(struct intel_encoder *encoder,
->  	rate = acomp ? acomp->aud_sample_rate[port] : 0;
->  	nm = audio_config_dp_get_n_m(crtc_state, rate);
->  	if (nm)
-> -		DRM_DEBUG_KMS("using Maud %u, Naud %u\n", nm->m, nm->n);
-> +		drm_dbg_kms(&dev_priv->drm, "using Maud %u, Naud %u\n", nm->m,
-> +			    nm->n);
->  	else
-> -		DRM_DEBUG_KMS("using automatic Maud, Naud\n");
-> +		drm_dbg_kms(&dev_priv->drm, "using automatic Maud, Naud\n");
->  
->  	tmp = I915_READ(HSW_AUD_CFG(cpu_transcoder));
->  	tmp &= ~AUD_CONFIG_N_VALUE_INDEX;
-> @@ -437,13 +439,13 @@ hsw_hdmi_audio_config_update(struct intel_encoder *encoder,
->  
->  	n = audio_config_hdmi_get_n(crtc_state, rate);
->  	if (n != 0) {
-> -		DRM_DEBUG_KMS("using N %d\n", n);
-> +		drm_dbg_kms(&dev_priv->drm, "using N %d\n", n);
->  
->  		tmp &= ~AUD_CONFIG_N_MASK;
->  		tmp |= AUD_CONFIG_N(n);
->  		tmp |= AUD_CONFIG_N_PROG_ENABLE;
->  	} else {
-> -		DRM_DEBUG_KMS("using automatic N\n");
-> +		drm_dbg_kms(&dev_priv->drm, "using automatic N\n");
->  	}
->  
->  	I915_WRITE(HSW_AUD_CFG(cpu_transcoder), tmp);
-> @@ -476,8 +478,8 @@ static void hsw_audio_codec_disable(struct intel_encoder *encoder,
->  	enum transcoder cpu_transcoder = old_crtc_state->cpu_transcoder;
->  	u32 tmp;
->  
-> -	DRM_DEBUG_KMS("Disable audio codec on transcoder %s\n",
-> -		      transcoder_name(cpu_transcoder));
-> +	drm_dbg_kms(&dev_priv->drm, "Disable audio codec on transcoder %s\n",
-> +		    transcoder_name(cpu_transcoder));
->  
->  	mutex_lock(&dev_priv->av_mutex);
->  
-> @@ -511,8 +513,9 @@ static void hsw_audio_codec_enable(struct intel_encoder *encoder,
->  	u32 tmp;
->  	int len, i;
->  
-> -	DRM_DEBUG_KMS("Enable audio codec on transcoder %s, %u bytes ELD\n",
-> -		      transcoder_name(cpu_transcoder), drm_eld_size(eld));
-> +	drm_dbg_kms(&dev_priv->drm,
-> +		    "Enable audio codec on transcoder %s, %u bytes ELD\n",
-> +		     transcoder_name(cpu_transcoder), drm_eld_size(eld));
->  
->  	mutex_lock(&dev_priv->av_mutex);
->  
-> @@ -561,9 +564,10 @@ static void ilk_audio_codec_disable(struct intel_encoder *encoder,
->  	u32 tmp, eldv;
->  	i915_reg_t aud_config, aud_cntrl_st2;
->  
-> -	DRM_DEBUG_KMS("Disable audio codec on [ENCODER:%d:%s], pipe %c\n",
-> -		      encoder->base.base.id, encoder->base.name,
-> -		      pipe_name(pipe));
-> +	drm_dbg_kms(&dev_priv->drm,
-> +		    "Disable audio codec on [ENCODER:%d:%s], pipe %c\n",
-> +		     encoder->base.base.id, encoder->base.name,
-> +		     pipe_name(pipe));
->  
->  	if (WARN_ON(port == PORT_A))
->  		return;
-> @@ -611,9 +615,10 @@ static void ilk_audio_codec_enable(struct intel_encoder *encoder,
->  	int len, i;
->  	i915_reg_t hdmiw_hdmiedid, aud_config, aud_cntl_st, aud_cntrl_st2;
->  
-> -	DRM_DEBUG_KMS("Enable audio codec on [ENCODER:%d:%s], pipe %c, %u bytes ELD\n",
-> -		      encoder->base.base.id, encoder->base.name,
-> -		      pipe_name(pipe), drm_eld_size(eld));
-> +	drm_dbg_kms(&dev_priv->drm,
-> +		    "Enable audio codec on [ENCODER:%d:%s], pipe %c, %u bytes ELD\n",
-> +		    encoder->base.base.id, encoder->base.name,
-> +		    pipe_name(pipe), drm_eld_size(eld));
->  
->  	if (WARN_ON(port == PORT_A))
->  		return;
-> @@ -701,14 +706,13 @@ void intel_audio_codec_enable(struct intel_encoder *encoder,
->  
->  	/* FIXME precompute the ELD in .compute_config() */
->  	if (!connector->eld[0])
-> -		DRM_DEBUG_KMS("Bogus ELD on [CONNECTOR:%d:%s]\n",
-> -			      connector->base.id, connector->name);
-> +		drm_dbg_kms(&dev_priv->drm,
-> +			    "Bogus ELD on [CONNECTOR:%d:%s]\n",
-> +			    connector->base.id, connector->name);
->  
-> -	DRM_DEBUG_DRIVER("ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
-> -			 connector->base.id,
-> -			 connector->name,
-> -			 connector->encoder->base.id,
-> -			 connector->encoder->name);
-> +	drm_dbg(&dev_priv->drm, "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
-> +		connector->base.id, connector->name,
-> +		connector->encoder->base.id, connector->encoder->name);
+ =09=09cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
+@@ -692,7 +700,7 @@ static unsigned long cpu_khz_from_cpuid(void)
+ =09if (boot_cpu_data.x86_vendor !=3D X86_VENDOR_INTEL)
+ =09=09return 0;
 
-Please convert this to drm_dbg_kms() while at it.
+-=09if (boot_cpu_data.cpuid_level < 0x16)
++=09if (boot_cpu_data.cpuid_level < 0x16 || !tsc_guess)
+ =09=09return 0;
 
->  
->  	connector->eld[6] = drm_av_sync_delay(connector, adjusted_mode) / 2;
->  
-> @@ -851,8 +855,9 @@ static unsigned long i915_audio_component_get_power(struct device *kdev)
->  	if (dev_priv->audio_power_refcount++ == 0) {
->  		if (IS_TIGERLAKE(dev_priv) || IS_ICELAKE(dev_priv)) {
->  			I915_WRITE(AUD_FREQ_CNTRL, dev_priv->audio_freq_cntrl);
-> -			DRM_DEBUG_KMS("restored AUD_FREQ_CNTRL to 0x%x\n",
-> -				      dev_priv->audio_freq_cntrl);
-> +			drm_dbg_kms(&dev_priv->drm,
-> +				    "restored AUD_FREQ_CNTRL to 0x%x\n",
-> +				    dev_priv->audio_freq_cntrl);
->  		}
->  
->  		/* Force CDCLK to 2*BCLK as long as we need audio powered. */
-> @@ -992,7 +997,8 @@ static int i915_audio_component_sync_audio_rate(struct device *kdev, int port,
->  	/* 1. get the pipe */
->  	encoder = get_saved_enc(dev_priv, port, pipe);
->  	if (!encoder || !encoder->base.crtc) {
-> -		DRM_DEBUG_KMS("Not valid for port %c\n", port_name(port));
-> +		drm_dbg_kms(&dev_priv->drm, "Not valid for port %c\n",
-> +			    port_name(port));
->  		err = -ENODEV;
->  		goto unlock;
->  	}
-> @@ -1023,7 +1029,8 @@ static int i915_audio_component_get_eld(struct device *kdev, int port,
->  
->  	intel_encoder = get_saved_enc(dev_priv, port, pipe);
->  	if (!intel_encoder) {
-> -		DRM_DEBUG_KMS("Not valid for port %c\n", port_name(port));
-> +		drm_dbg_kms(&dev_priv->drm, "Not valid for port %c\n",
-> +			    port_name(port));
->  		mutex_unlock(&dev_priv->av_mutex);
->  		return ret;
->  	}
-> @@ -1119,15 +1126,17 @@ static void i915_audio_component_init(struct drm_i915_private *dev_priv)
->  				  &i915_audio_component_bind_ops,
->  				  I915_COMPONENT_AUDIO);
->  	if (ret < 0) {
-> -		DRM_ERROR("failed to add audio component (%d)\n", ret);
-> +		drm_err(&dev_priv->drm,
-> +			"failed to add audio component (%d)\n", ret);
->  		/* continue with reduced functionality */
->  		return;
->  	}
->  
->  	if (IS_TIGERLAKE(dev_priv) || IS_ICELAKE(dev_priv)) {
->  		dev_priv->audio_freq_cntrl = I915_READ(AUD_FREQ_CNTRL);
-> -		DRM_DEBUG_KMS("init value of AUD_FREQ_CNTRL of 0x%x\n",
-> -			      dev_priv->audio_freq_cntrl);
-> +		drm_dbg_kms(&dev_priv->drm,
-> +			    "init value of AUD_FREQ_CNTRL of 0x%x\n",
-> +			    dev_priv->audio_freq_cntrl);
->  	}
->  
->  	dev_priv->audio_component_registered = true;
+ =09eax_base_mhz =3D ebx_max_mhz =3D ecx_bus_mhz =3D edx =3D 0;
+--
+2.20.1
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
