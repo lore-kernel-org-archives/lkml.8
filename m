@@ -2,117 +2,172 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BB8C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61791C33CB0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BA32084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:27:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdLGHd8A"
+	by mail.kernel.org (Postfix) with ESMTP id 42BFB20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgANB16 (ORCPT
+        id S1729485AbgANBaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:27:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43811 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgANB1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:27:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so12340563ljm.10;
-        Mon, 13 Jan 2020 17:27:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9J+ZBDrrbAWIuYb9veix6cNQ5A4bHUrnUSJB4zcW68k=;
-        b=ZdLGHd8ALoHsOB7Odi9BlE3MBkQlCtuLWt/omzqH2vJyZA1f7nzweh/ne+kv87A165
-         MW9iHcqmiclnGk2LCki08DEjy7Yb5TrxILnjxsQAP8mhgYh7yzHScwn3AaeFJBtombzW
-         cvL2Nohgsi4uDiTCtrkxmz3zafTIfjdBhofs2M66VHxO/XmEpV0HtHNPuE9frVX9AF7Y
-         46yzJv50UpQKZs8GbG94m+lQ3CP72m5dCV6utACRjHVlLKHK9tOY524mQHUuOSm489p4
-         PiSBJt2FoKKvXSGvod22r3Zd5Nes64D4HrAVMQD0S0vsFX1fjOq5cFKVRS4Z2cwfZ9jB
-         YcZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9J+ZBDrrbAWIuYb9veix6cNQ5A4bHUrnUSJB4zcW68k=;
-        b=RvarO9fHWCkr2AJ1b117AkTcCTVy3uxltrauN56sk14/41GjwR5MW8Ty6r1ctiR3LU
-         /cRlfjqbJXnzorB3E34Il/F3O6DacZUhs+TgXdHKNWzb9tDbM62YVcUHDMfTmJl7DrWS
-         casMtC7ycg824UfHhkRkGj/1BB/tIfBU3hC7rD29XS1iiPKVrOVUN2497id0zBrPWQaV
-         H1ZRQ4fbt3l2y2JcTh6WNFFHdt3aq5C4WYjPKkSqZOepWAL8LhRCiflCverIBVxmq2gL
-         RzxnSSugAKJN0SDQ7O9G70N3qgO7Y772AvvBtBEwi8qU4KCaEktfbcfNoVXagWKeIQ7Q
-         C89Q==
-X-Gm-Message-State: APjAAAUm9SxmLNbOQUZ+k6gQDiPPyeQGNTEk31/vEJwo9H4eSwYpihKx
-        kFTgto3rk9aMC9rsciLt7v98mnbC
-X-Google-Smtp-Source: APXvYqzzO9l1yft9CikyOnAO3k3mUKutKwk/sQe+BlAogzYNR1k2D/EI85SPG+Ynq1mZQJOxpLfLxQ==
-X-Received: by 2002:a2e:8916:: with SMTP id d22mr11919214lji.19.1578965273521;
-        Mon, 13 Jan 2020 17:27:53 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id s12sm6698527ljs.96.2020.01.13.17.27.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 17:27:52 -0800 (PST)
-Subject: Re: [PATCH v4 4/8] i2c: tegra: Support atomic transfers
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200112171430.27219-1-digetx@gmail.com>
- <20200112171430.27219-5-digetx@gmail.com> <20200113220315.GB2689@ninjato>
- <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
-Message-ID: <49fbcb5d-011b-8ace-15f9-a36d4ae30397@gmail.com>
-Date:   Tue, 14 Jan 2020 04:26:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jan 2020 20:30:21 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:46084 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728802AbgANBaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:30:20 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B52FA1A01C9;
+        Tue, 14 Jan 2020 02:30:17 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3B32E1A07BA;
+        Tue, 14 Jan 2020 02:30:12 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D2002402C7;
+        Tue, 14 Jan 2020 09:30:05 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 2/3] dt-bindings: clock: Convert i.MX8MM to json-schema
+Date:   Tue, 14 Jan 2020 09:26:06 +0800
+Message-Id: <1578965167-31588-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
+References: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 01:52, Dmitry Osipenko пишет:
-> 14.01.2020 01:03, Wolfram Sang пишет:
->> On Sun, Jan 12, 2020 at 08:14:26PM +0300, Dmitry Osipenko wrote:
->>> System shutdown may happen with interrupts being disabled and in this case
->>> I2C core rejects transfers if atomic transfer isn't supported by driver.
->>
->> Well, not quite. The core complains about it nowadays, but does not
->> reject messages. It will try the same behaviour as before. It will just
->> inform the user that somethings is tried which may not work. I probably
->> should update the error message printed saying that the transfer is
->> still tried.
-> 
-> Indeed, now I'm recalling noticing that the transfer actually should
-> happen despite of the error message, but then completely forgot to
-> update the commit's message. I can update the message and send out v5,
-> if you're thinking that it's worthwhile to do.
+Convert the i.MX8MM clock binding to DT schema format using json-schema
 
-I have time to do it now, will send v5 shortly.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ .../devicetree/bindings/clock/imx8mm-clock.txt     | 29 ---------
+ .../devicetree/bindings/clock/imx8mm-clock.yaml    | 68 ++++++++++++++++++++++
+ 2 files changed, 68 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx8mm-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mm-clock.yaml
 
-And yes, clarifying the error message could be helpful. Although,
-perhaps it won't help much to drivers which may schedule during the
-atomic transfer.
+diff --git a/Documentation/devicetree/bindings/clock/imx8mm-clock.txt b/Documentation/devicetree/bindings/clock/imx8mm-clock.txt
+deleted file mode 100644
+index 8e4ab9e..0000000
+--- a/Documentation/devicetree/bindings/clock/imx8mm-clock.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-* Clock bindings for NXP i.MX8M Mini
+-
+-Required properties:
+-- compatible: Should be "fsl,imx8mm-ccm"
+-- reg: Address and length of the register set
+-- #clock-cells: Should be <1>
+-- clocks: list of clock specifiers, must contain an entry for each required
+-          entry in clock-names
+-- clock-names: should include the following entries:
+-    - "osc_32k"
+-    - "osc_24m"
+-    - "clk_ext1"
+-    - "clk_ext2"
+-    - "clk_ext3"
+-    - "clk_ext4"
+-
+-clk: clock-controller@30380000 {
+-	compatible = "fsl,imx8mm-ccm";
+-	reg = <0x0 0x30380000 0x0 0x10000>;
+-	#clock-cells = <1>;
+-	clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>, <&clk_ext2>,
+-		 <&clk_ext3>, <&clk_ext4>;
+-	clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+-		      "clk_ext3", "clk_ext4";
+-};
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mm-clock.h
+-for the full list of i.MX8M Mini clock IDs.
+diff --git a/Documentation/devicetree/bindings/clock/imx8mm-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mm-clock.yaml
+new file mode 100644
+index 0000000..f5be181
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx8mm-clock.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/imx8mm-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX8M Mini Clock Control Module Binding
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  NXP i.MX8M Mini clock control module is an integrated clock controller, which
++  generates and supplies to all modules.
++
++properties:
++  compatible:
++    const: fsl,imx8mm-ccm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: 32k osc
++      - description: 24m osc
++      - description: ext1 clock input
++      - description: ext2 clock input
++      - description: ext3 clock input
++      - description: ext4 clock input
++
++  clock-names:
++    items:
++      - const: osc_32k
++      - const: osc_24m
++      - const: clk_ext1
++      - const: clk_ext2
++      - const: clk_ext3
++      - const: clk_ext4
++
++  '#clock-cells':
++    const: 1
++    description:
++      The clock consumer should specify the desired clock by having the clock
++      ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mm-clock.h
++      for the full list of i.MX8M Mini clock IDs.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++examples:
++  # Clock Control Module node:
++  - |
++    clk: clock-controller@30380000 {
++        compatible = "fsl,imx8mm-ccm";
++        reg = <0x30380000 0x10000>;
++        #clock-cells = <1>;
++        clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>, <&clk_ext2>,
++                 <&clk_ext3>, <&clk_ext4>;
++        clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
++                      "clk_ext3", "clk_ext4";
++    };
++
++...
+-- 
+2.7.4
 
->>> There were several occurrences where I found my Nexus 7 completely
->>> discharged despite of being turned off and then one day I spotted this in
->>> the log:
->>
->> Given my reasoning above, that should have happened before the warning
->> was printed as well? Because same behaviour. I'd be surprised if there
->> was a change...
-> 
-> Pretty sure that it was happening before, but I wasn't paying much
-> attention back then.
-> 
