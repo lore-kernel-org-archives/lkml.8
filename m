@@ -2,50 +2,51 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE328C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13563C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB52207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7E324676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996695;
-	bh=rkSjrn7Hqd8PJz5qq88E2kS3hyDaQ57gfM2PwtCM6EU=;
+	s=default; t=1578996698;
+	bh=PXb/Yq6gAYSBh3gsLt+Df61Nx9TZS2MPBBw3RVnLXpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmU95QEHBKW0JA5Wnsi7ocJxbtNv4NzZNHsUBQp8rffkkHJs4oyQxSYrLGQ01ldz+
-	 TZE2h58i/zT2l15KP6LNbIUkKNgGGGp0zA48GygV+r6sGLUK7SckM6cF9Za8vD91kV
-	 bUIGwUqDwxAzaQF2lDtSU6g5F5nFbw4OxLJeyVOc=
+	b=xx+tTQSgtFp7jeiVPsBVOd/FQUgLDxeYkRDOAgYSsnOWrdhkn9H7drIwUsFum3TR5
+	 /EeiUEszsKNgQX0czUvXIKwZf4eL8Z521zEE9fLApYZfTgpeKjYhdqhSONcaVrXntr
+	 b2lo6tDEw6pNZDO4+t9b9ncCY43fadhvbIBWRMrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbgANKLe (ORCPT
+        id S1732630AbgANKLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46766 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731651AbgANKLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:32 -0500
+        id S1732567AbgANKLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34C6220678;
-        Tue, 14 Jan 2020 10:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D27B524676;
+        Tue, 14 Jan 2020 10:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996691;
-        bh=rkSjrn7Hqd8PJz5qq88E2kS3hyDaQ57gfM2PwtCM6EU=;
+        s=default; t=1578996694;
+        bh=PXb/Yq6gAYSBh3gsLt+Df61Nx9TZS2MPBBw3RVnLXpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PObRDJSF+kPwSO2DcNEugt9wiF6jQe+3sbJLynd3csmZ6E5th1dNnnUvAxZWKHpao
-         8rXiKVYxz48vF7bEf1SPM2/ZGuEewKBAlR+sQqwVMzPg03JQJLgodo5x38RintTJXD
-         x+w1Jvyh+d0OnO4Tm4RiKiuPxyPtZsT57TzDuQxM=
+        b=xZqRFYQL5+Poyx4jwYmOd7MvbsvQcLzd/qsp96Ed9BW5hg3+PJnDXMgeBES5xcZbJ
+         tkDN8KPWxpghwCcMQejxSMVVblxO/QouzoVOQYk9c906e73/yEDm0FGN4tSh/ipFP7
+         lOz8nIk6uErXla51t1pVKL3C9xzif6XEouMpVsdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 4.9 22/31] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
-Date:   Tue, 14 Jan 2020 11:02:14 +0100
-Message-Id: <20200114094344.081944689@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.9 23/31] tty: link tty and port before configuring it as console
+Date:   Tue, 14 Jan 2020 11:02:15 +0100
+Message-Id: <20200114094344.277311138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -58,32 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Straube <straube.linux@gmail.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
+commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
 
-This device was added to the stand-alone driver on github.
-Add it to the staging driver as well.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
+
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
+
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
+
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
+
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
+Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/serial_core.c |    1 +
+ drivers/tty/tty_port.c           |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -45,6 +45,7 @@ static struct usb_device_id rtw_usb_id_t
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
- 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
- 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
-+	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
- 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
- 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
- 	{}	/* Terminating entry */
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2795,6 +2795,7 @@ int uart_add_one_port(struct uart_driver
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	port->console = uart_console(uport);
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -48,7 +48,8 @@ void tty_port_link_device(struct tty_por
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
+ 
 
 
