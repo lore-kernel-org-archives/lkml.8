@@ -2,235 +2,116 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE41C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB42207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5266D2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QBggGLZ2"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QXVtnf1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgANInO (ORCPT
+        id S1728926AbgANInY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:43:14 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40888 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgANInN (ORCPT
+        Tue, 14 Jan 2020 03:43:24 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:19112 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726044AbgANInY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:43:13 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E8h4qf037205;
-        Tue, 14 Jan 2020 08:43:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=6e/W9TQHg2xePSimcFP2Q3jO4cc4W9D6PWex2C6fsU4=;
- b=QBggGLZ2dhJzcmsoH2/qO79QuzRdqaLO0X67jUtBcsLiQ6+nFHKe/lq6kxRACIxTrnjj
- 4wMbzVgFbBpgShZP7J43Hdn1f/OqgcJe41abgKn5nk1yxRLnX4k9jasKmv61mMbNfF+a
- zXX7GJs+60itiq4N1weg7UBRFy+lLVB9eMQIIAYQa95ic6a+TBCS6Po2i1yiucWY8eL9
- IozcQI8In/uQNkwF4h34+c6lZCT+aX5BYKlgvjOPFdACG6hK2oGQDz2vUfyMz9XSKG8E
- HwHnz2QEG0oqcixcHLoIugrHyqLStXTI1f/9YM0xDGRePd3YVCIFsPJc+8GyA2TYuvpk rQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xf73tmarc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 08:43:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E8d7WV143109;
-        Tue, 14 Jan 2020 08:41:03 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xh8ernms0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 08:41:03 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E8f12N008342;
-        Tue, 14 Jan 2020 08:41:01 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jan 2020 00:41:00 -0800
-Date:   Tue, 14 Jan 2020 11:40:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+002f559bf34c2c7467d0@syzkaller.appspotmail.com>,
-        dave.jiang@intel.com, dan.j.williams@intel.com
-Cc:     ira.weiny@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com,
-        vishal.l.verma@intel.com
-Subject: Re: KASAN: vmalloc-out-of-bounds Read in acpi_nfit_ctl
-Message-ID: <20200114084051.GB3719@kadam>
-References: <0000000000009acfef059c13c771@google.com>
+        Tue, 14 Jan 2020 03:43:24 -0500
+X-UUID: 79f9a9652fba4d1b961fbd873e7a6b4c-20200114
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Dost+0dFRh/iyChepfPjiNF1opJPrShWqwDKLyfccxU=;
+        b=QXVtnf1DkOTqkpLGMZjknKW60MYhfMs6y+lpAUJ9y42cuJPoeNvFy+SLphZudI9nIZSN9gmCkEbLoNA8otekF98ixvxHA1PvwpzmS9kNc4IRreHkhsgbZPt83wrIoRHwg80rQfL69UWC0O+Jb41flAYsYAEizeXNHTfs79dfHZk=;
+X-UUID: 79f9a9652fba4d1b961fbd873e7a6b4c-20200114
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 123695352; Tue, 14 Jan 2020 16:43:17 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 14 Jan
+ 2020 16:43:39 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 14 Jan 2020 16:42:27 +0800
+Message-ID: <1578991386.21256.36.camel@mhfsdcap03>
+Subject: Re: [RESEND PATCH v5 01/11] dt-bindings: phy-mtk-tphy: add two
+ optional properties for u2phy
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Kishon Vijay Abraham I <kishon@a0393678ub>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 16:43:06 +0800
+In-Reply-To: <970b7cce-40ed-9ab7-5e04-9e3d609eadf7@ti.com>
+References: <1578448326-27455-1-git-send-email-chunfeng.yun@mediatek.com>
+         <20200110111006.GB2220@a0393678ub> <1578990166.21256.35.camel@mhfsdcap03>
+         <970b7cce-40ed-9ab7-5e04-9e3d609eadf7@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000009acfef059c13c771@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140076
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140077
+X-TM-SNTS-SMTP: D582942802D1883A0CC1327A8F6B5666E8F2723D1A7B198DCC432FD73969D2B32000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:34:10PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    040a3c33 Merge tag 'iommu-fixes-v5.5-rc5' of git://git.ker..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=120a5d8ee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=002f559bf34c2c7467d0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+002f559bf34c2c7467d0@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: vmalloc-out-of-bounds in test_bit
-> include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-> BUG: KASAN: vmalloc-out-of-bounds in acpi_nfit_ctl+0x47f/0x1840
-> drivers/acpi/nfit/core.c:495
-> Read of size 8 at addr ffffc90002ddbbb8 by task syz-executor.1/5941
-> 
-> CPU: 3 PID: 5941 Comm: syz-executor.1 Not tainted 5.5.0-rc5-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x197/0x210 lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
->  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:639
->  check_memory_region_inline mm/kasan/generic.c:185 [inline]
->  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->  __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
->  test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
->  acpi_nfit_ctl+0x47f/0x1840 drivers/acpi/nfit/core.c:495
->  __nd_ioctl drivers/nvdimm/bus.c:1152 [inline]
->  nd_ioctl.isra.0+0xfe2/0x1580 drivers/nvdimm/bus.c:1230
-
-drivers/acpi/nfit/core.c
-   438  int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
-   439                  unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
-                                          ^^^^^^^^^
-"buf" comes from the user.
-
-   440  {
-   441          struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-   442          struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-   443          union acpi_object in_obj, in_buf, *out_obj;
-   444          const struct nd_cmd_desc *desc = NULL;
-   445          struct device *dev = acpi_desc->dev;
-   446          struct nd_cmd_pkg *call_pkg = NULL;
-   447          const char *cmd_name, *dimm_name;
-   448          unsigned long cmd_mask, dsm_mask;
-   449          u32 offset, fw_status = 0;
-   450          acpi_handle handle;
-   451          const guid_t *guid;
-   452          int func, rc, i;
-   453  
-   454          if (cmd_rc)
-   455                  *cmd_rc = -EINVAL;
-   456  
-   457          if (cmd == ND_CMD_CALL)
-   458                  call_pkg = buf;
-                        ^^^^^^^^^^^^^^
-   459          func = cmd_to_func(nfit_mem, cmd, call_pkg);
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-func is call_pkg->nd_command so it comes from the user.
-
-   460          if (func < 0)
-   461                  return func;
-   462  
-   463          if (nvdimm) {
-   464                  struct acpi_device *adev = nfit_mem->adev;
-   465  
-   466                  if (!adev)
-   467                          return -ENOTTY;
-   468  
-   469                  dimm_name = nvdimm_name(nvdimm);
-   470                  cmd_name = nvdimm_cmd_name(cmd);
-   471                  cmd_mask = nvdimm_cmd_mask(nvdimm);
-   472                  dsm_mask = nfit_mem->dsm_mask;
-   473                  desc = nd_cmd_dimm_desc(cmd);
-   474                  guid = to_nfit_uuid(nfit_mem->family);
-   475                  handle = adev->handle;
-   476          } else {
-   477                  struct acpi_device *adev = to_acpi_dev(acpi_desc);
-   478  
-   479                  cmd_name = nvdimm_bus_cmd_name(cmd);
-   480                  cmd_mask = nd_desc->cmd_mask;
-   481                  dsm_mask = nd_desc->bus_dsm_mask;
-   482                  desc = nd_cmd_bus_desc(cmd);
-   483                  guid = to_nfit_uuid(NFIT_DEV_BUS);
-   484                  handle = adev->handle;
-   485                  dimm_name = "bus";
-   486          }
-   487  
-   488          if (!desc || (cmd && (desc->out_num + desc->in_num == 0)))
-   489                  return -ENOTTY;
-   490  
-   491          /*
-   492           * Check for a valid command.  For ND_CMD_CALL, we also have to
-   493           * make sure that the DSM function is supported.
-   494           */
-   495          if (cmd == ND_CMD_CALL && !test_bit(func, &dsm_mask))
-                                                    ^^^^
-If func is more than sizeof(long) * 8 then this will overflow.  The
-temptation is to add a check on func in cmd_to_func() but capping it at
-sizeof(long) * 8 feels unnatural and I'm not sure what the max function
-should be.
-
-[Edit.  I see below that > 31 is not supported. ]
-
-   496                  return -ENOTTY;
-   497          else if (!test_bit(cmd, &cmd_mask))
-   498                  return -ENOTTY;
-   499  
-   500          in_obj.type = ACPI_TYPE_PACKAGE;
-   501          in_obj.package.count = 1;
-   502          in_obj.package.elements = &in_buf;
-
-There is a another problem in acpi_nfit_clear_to_send().
-
-acpi/nfit/core.c
-  3485  /* prevent security commands from being issued via ioctl */
-  3486  static int acpi_nfit_clear_to_send(struct nvdimm_bus_descriptor *nd_desc,
-  3487                  struct nvdimm *nvdimm, unsigned int cmd, void *buf)
-  3488  {
-  3489          struct nd_cmd_pkg *call_pkg = buf;
-  3490          unsigned int func;
-  3491  
-  3492          if (nvdimm && cmd == ND_CMD_CALL &&
-  3493                          call_pkg->nd_family == NVDIMM_FAMILY_INTEL) {
-  3494                  func = call_pkg->nd_command;
-  3495                  if ((1 << func) & NVDIMM_INTEL_SECURITY_CMDMASK)
-                             ^^^^^^^^^
-This is undefined if func is greater than 31.
-
-  3496                          return -EOPNOTSUPP;
-  3497          }
-  3498  
-  3499          return __acpi_nfit_clear_to_send(nd_desc, nvdimm, cmd);
-  3500  }
-
-regards,
-dan carpenter
+T24gVHVlLCAyMDIwLTAxLTE0IGF0IDE0OjAxICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJ
+IHdyb3RlOg0KPiBIaSBDaHVuZmVuZywNCj4gDQo+IE9uIDE0LzAxLzIwIDE6NTIgUE0sIENodW5m
+ZW5nIFl1biB3cm90ZToNCj4gPiBIaSBLaXNob24sDQo+ID4gDQo+ID4gT24gRnJpLCAyMDIwLTAx
+LTEwIGF0IDE2OjQwICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJIHdyb3RlOg0KPiA+PiBI
+aSwNCj4gPj4NCj4gPj4gT24gV2VkLCBKYW4gMDgsIDIwMjAgYXQgMDk6NTE6NTZBTSArMDgwMCwg
+Q2h1bmZlbmcgWXVuIHdyb3RlOg0KPiA+Pj4gQWRkIHR3byBvcHRpb25hbCBwcm9wZXJ0aWVzLCBv
+bmUgZm9yIHR1bmluZyBKLUsgdm9sdGFnZSBieSBJTlRSLA0KPiA+Pj4gYW5vdGhlciBmb3IgZGlz
+Y29ubmVjdCB0aHJlc2hvbGQsIGJvdGggb2YgdGhlbSBhcmUgcmVsYXRlZCB3aXRoDQo+ID4+PiBj
+b25uZWN0IGRldGVjdGlvbg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IENodW5mZW5nIFl1
+biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCj4gPj4+IEFja2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPg0KPiA+Pg0KPiA+PiBQYXRjaCBkb2VzIG5vdCBhcHBseS4gSSBn
+ZXQgdGhlIGZvbGxvd2luZyBlcnJvcnMNCj4gPj4gZXJyb3I6IHBhdGNoIGZhaWxlZDogRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0OjUyDQo+ID4+
+IGVycm9yOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdGstdHBo
+eS50eHQ6IHBhdGNoIGRvZXMgbm90IGFwcGx5DQo+ID4+IGVycm9yOiBEaWQgeW91IGhhbmQgZWRp
+dCB5b3VyIHBhdGNoPw0KPiA+Pg0KPiA+PiBDYW4geW91IHNlbmQgdGhlbSBhZ2FpbiBpbiB0aGUg
+cmlnaHQgZm9ybWF0Pw0KPiA+IEkgZG93bmxvYWQgdGhpcyBwYXRjaCBmcm9tIGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEzMjI1MDUvDQo+ID4gYW5kIGZldGNoIGtlcm5lbDUu
+NS1yYzUsIHRoZW4NCj4gDQo+IFBsZWFzZSB0cnkgYXBwbHlpbmcgdG8NCj4gZ2l0Oi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2tpc2hvbi9saW51eC1waHkuZ2l0IG5l
+eHQNCg0KR290IGl0LCB3aWxsIHRlc3QgYWdhaW4sIHRoYW5rcyBhIGxvdA0KDQo+ID4gDQo+ID4g
+Z2l0IGFtIC0tcmVqZWN0DQo+ID4gUkVTRU5ELXY1LTAxLTExLWR0LWJpbmRpbmdzLXBoeS1tdGst
+dHBoeS1hZGQtdHdvLW9wdGlvbmFsLXByb3BlcnRpZXMtZm9yLXUycGh5LnBhdGNoDQo+ID4gQXBw
+bHlpbmc6IGR0LWJpbmRpbmdzOiBwaHktbXRrLXRwaHk6IGFkZCB0d28gb3B0aW9uYWwgcHJvcGVy
+dGllcyBmb3INCj4gPiB1MnBoeQ0KPiA+IENoZWNraW5nIHBhdGNoIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10cGh5LnR4dC4uLg0KPiA+IEFwcGxpZWQgcGF0
+Y2ggRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0
+DQo+ID4gY2xlYW5seS4NCj4gPiANCj4gPiBkb24ndCByZXByb2R1Y2UgdGhlIGVycm9yIHlvdSBl
+bmNvdW50ZXJlZCwgY2FuIHlvdSB0ZWxsIG1lIHRoZSBzdGVwcyB5b3UNCj4gPiBhcHBseSB0aGUg
+cGF0Y2gsIHRoYW5rcw0KPiANCj4gZ2l0IGFtIGNodW5mZW5nLnl1bi5wYXRjaCAtLXJlamVjdA0K
+PiBBcHBseWluZzogZHQtYmluZGluZ3M6IHBoeS1tdGstdHBoeTogYWRkIHR3byBvcHRpb25hbCBw
+cm9wZXJ0aWVzIGZvciB1MnBoeQ0KPiBDaGVja2luZyBwYXRjaCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdGstdHBoeS50eHQuLi4NCj4gZXJyb3I6IHdoaWxlIHNl
+YXJjaGluZyBmb3I6DQo+IC0gbWVkaWF0ZWssZXllLXZydAk6IHUzMiwgdGhlIHNlbGVjdGlvbiBv
+ZiBWUlQgcmVmZXJlbmNlIHZvbHRhZ2U/DQo+IC0gbWVkaWF0ZWssZXllLXRlcm0JOiB1MzIsIHRo
+ZSBzZWxlY3Rpb24gb2YgSFNfVFggVEVSTSByZWZlcmVuY2Ugdm9sdGFnZT8NCj4gLSBtZWRpYXRl
+ayxiYzEyCTogYm9vbCwgZW5hYmxlIEJDMTIgb2YgdTJwaHkgaWYgc3VwcG9ydCBpdD8NCj4gPw0K
+PiBFeGFtcGxlOj8NCj4gPw0KPiANCj4gZXJyb3I6IHBhdGNoIGZhaWxlZDoNCj4gRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0OjUyDQo+IEFwcGx5
+aW5nIHBhdGNoIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10
+cGh5LnR4dA0KPiB3aXRoIDEgcmVqZWN0Li4uDQo+IFJlamVjdGVkIGh1bmsgIzEuDQo+IFBhdGNo
+IGZhaWxlZCBhdCAwMDAxIGR0LWJpbmRpbmdzOiBwaHktbXRrLXRwaHk6IGFkZCB0d28gb3B0aW9u
+YWwNCj4gcHJvcGVydGllcyBmb3IgdTJwaHkNCj4gVXNlICdnaXQgYW0gLS1zaG93LWN1cnJlbnQt
+cGF0Y2gnIHRvIHNlZSB0aGUgZmFpbGVkIHBhdGNoDQo+IFdoZW4geW91IGhhdmUgcmVzb2x2ZWQg
+dGhpcyBwcm9ibGVtLCBydW4gImdpdCBhbSAtLWNvbnRpbnVlIi4NCj4gSWYgeW91IHByZWZlciB0
+byBza2lwIHRoaXMgcGF0Y2gsIHJ1biAiZ2l0IGFtIC0tc2tpcCIgaW5zdGVhZC4NCj4gVG8gcmVz
+dG9yZSB0aGUgb3JpZ2luYWwgYnJhbmNoIGFuZCBzdG9wIHBhdGNoaW5nLCBydW4gImdpdCBhbSAt
+LWFib3J0Ii4NCj4gDQo+IFRoYW5rcw0KPiBLaXNob24NCg0K
 
