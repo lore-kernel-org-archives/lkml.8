@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BEAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4B9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0712024679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181EA24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996814;
-	bh=++IoPrVeOtNpc/HS3RKMmAtk7RWzKjdx1GR1mIE0UVs=;
+	s=default; t=1578996816;
+	bh=DqdKq8k+ElV5a+yPjy3KKkiW09hq6K3B7z9btllzCrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXYRWRRvBYhzt6xqa8rh2vVdg692TYNyuwxnmIaxSu7Exy9lyYKKmL3tD+T7URN3+
-	 3dXiF2rpxSRWI9DJn4sGaJi3yLiCW4LW3Svp/QN8a/Ge1BZG/vMIQY64wiXchShVAB
-	 fYEw2yZexZd/tMdi8xjLDWQAUM6ipwf8DzVIGui0=
+	b=K/f6uLhaJrvs2wZib+zPul/VvZOTdg5smLcsrU+UfwL5h04R74dzE/apQt1sayqJ5
+	 QZH7ANoCG6sn6LbbvV9D0ogTZh0+IgJUIPtWjr+NcXvr4sky8Tv4/186QyozTxAQ8H
+	 mX8bJ+mpjnPwwoWX5WvG17BI5l2Z/n9HWZRfhp9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbgANKNd (ORCPT
+        id S1733218AbgANKNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:13:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732259AbgANKN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:13:29 -0500
+        id S1733209AbgANKNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:13:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28CD120678;
-        Tue, 14 Jan 2020 10:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C58E24676;
+        Tue, 14 Jan 2020 10:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996808;
-        bh=++IoPrVeOtNpc/HS3RKMmAtk7RWzKjdx1GR1mIE0UVs=;
+        s=default; t=1578996812;
+        bh=DqdKq8k+ElV5a+yPjy3KKkiW09hq6K3B7z9btllzCrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdQ1xVfQHG5DEWwUVYHL1Eh7ks7IxGbxhjSaJ4JVSWCKrD0OWs+geT8KkB5oh9VSe
-         s6xCLugxAJcJuYdWVBxSdH4FhX2umsYuILdFzzs2Q2s5mkZ9we2q9KZCgqyMleuiYR
-         cKaABerTD+ThFVEpbQvcVt1MtnJmuByAeivswQPk=
+        b=R+6ce4d+61TJWjuSfnzlRBg/Yghcz50pY3g0+JUyiOSQzdzM8nw+tW7BJKLfR2qye
+         WHHIbbOLfmfuz0BEKBZc5wdxaRS+e6dFouU4TTzeEYou3P22KcjoEq0Yw2uKifqd3E
+         oFiT/hRkcoOaksViD8xZ9EnaRcY0xmssJB2Mz7N8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 16/28] USB: serial: option: add ZLP support for 0x1bc7/0x9010
-Date:   Tue, 14 Jan 2020 11:02:18 +0100
-Message-Id: <20200114094342.713235890@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.4 17/28] usb: musb: Disable pullup at init
+Date:   Tue, 14 Jan 2020 11:02:19 +0100
+Message-Id: <20200114094343.011684611@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -59,85 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 2438c3a19dec5e98905fd3ffcc2f24716aceda6b upstream.
+commit 96a0c12843109e5c4d5eb1e09d915fdd0ce31d25 upstream.
 
-Telit FN980 flashing device 0x1bc7/0x9010 requires zero packet
-to be sent if out data size is is equal to the endpoint max size.
+The pullup may be already enabled before the driver is initialized. This
+happens for instance on JZ4740.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-[ johan: switch operands in conditional ]
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+It has to be disabled at init time, as we cannot guarantee that a gadget
+driver will be bound to the UDC.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Bin Liu <b-liu@ti.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200107152625.857-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c   |    8 ++++++++
- drivers/usb/serial/usb-wwan.h |    1 +
- drivers/usb/serial/usb_wwan.c |    4 ++++
- 3 files changed, 13 insertions(+)
+ drivers/usb/musb/musb_core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -566,6 +566,9 @@ static void option_instat_callback(struc
- /* Interface is reserved */
- #define RSVD(ifnum)	((BIT(ifnum) & 0xff) << 0)
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2132,6 +2132,9 @@ musb_init_controller(struct device *dev,
+ 	musb_platform_disable(musb);
+ 	musb_generic_disable(musb);
  
-+/* Device needs ZLP */
-+#define ZLP		BIT(17)
++	/* MUSB_POWER_SOFTCONN might be already set, JZ4740 does this. */
++	musb_writeb(musb->mregs, MUSB_POWER, 0);
 +
- 
- static const struct usb_device_id option_ids[] = {
- 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
-@@ -1193,6 +1196,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
- 	  .driver_info = NCTRL(0) },
-+	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
-+	  .driver_info = NCTRL(0) | ZLP },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
- 	  .driver_info = RSVD(1) },
-@@ -2097,6 +2102,9 @@ static int option_attach(struct usb_seri
- 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
- 		data->use_send_setup = 1;
- 
-+	if (device_flags & ZLP)
-+		data->use_zlp = 1;
-+
- 	spin_lock_init(&data->susp_lock);
- 
- 	usb_set_serial_data(serial, data);
---- a/drivers/usb/serial/usb-wwan.h
-+++ b/drivers/usb/serial/usb-wwan.h
-@@ -35,6 +35,7 @@ struct usb_wwan_intf_private {
- 	spinlock_t susp_lock;
- 	unsigned int suspended:1;
- 	unsigned int use_send_setup:1;
-+	unsigned int use_zlp:1;
- 	int in_flight;
- 	unsigned int open_ports;
- 	void *private;
---- a/drivers/usb/serial/usb_wwan.c
-+++ b/drivers/usb/serial/usb_wwan.c
-@@ -495,6 +495,7 @@ static struct urb *usb_wwan_setup_urb(st
- 				      void (*callback) (struct urb *))
- {
- 	struct usb_serial *serial = port->serial;
-+	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
- 	struct urb *urb;
- 
- 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
-@@ -505,6 +506,9 @@ static struct urb *usb_wwan_setup_urb(st
- 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
- 			  buf, len, callback, ctx);
- 
-+	if (intfdata->use_zlp && dir == USB_DIR_OUT)
-+		urb->transfer_flags |= URB_ZERO_PACKET;
-+
- 	return urb;
- }
- 
+ 	/* Init IRQ workqueue before request_irq */
+ 	INIT_WORK(&musb->irq_work, musb_irq_work);
+ 	INIT_DELAYED_WORK(&musb->deassert_reset_work, musb_deassert_reset);
 
 
