@@ -2,296 +2,176 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE9DC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFACC33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3A1214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578960161;
-	bh=3rMP88KeQ95Q1jALKKLcvL/uxmNmdiRFVwsItINpQOY=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=Ub350Kjg48m9HfgETOWwncmRXFIl+TejQpus1Kl/HQlRdNhebwvj/K0fkD6bNJQSd
-	 J31sRxxUkluhif0gOB1OVpMTYmS79qRHSAGV5jUXVIy+AU2yfizVfrtiooVR4Ix9xf
-	 mLtzSs/9kIL433qmIQRuIADzD5sAZuqpOHKpcLg4=
+	by mail.kernel.org (Postfix) with ESMTP id BBAFD2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RCfWsjSr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgANACl (ORCPT
+        id S1729306AbgANAJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:02:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgANACk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:02:40 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0A8B2084D;
-        Tue, 14 Jan 2020 00:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578960159;
-        bh=3rMP88KeQ95Q1jALKKLcvL/uxmNmdiRFVwsItINpQOY=;
-        h=Date:From:To:Subject:From;
-        b=HTCYuNmSlWl8GiuRzzB3EfHwdW9BcN3tOFIiX9O/0+mNkiTMCBE12DnmHn4yBB6Ba
-         b7vg2q6c8v5Q6x7MdY6CO7q8/tF74v3c2XUHKOjdPkCE78o00XVaqADdS90+XKDWId
-         9+E/RF7KWoqpCtOwRYM2tAjO6wNdrX9MdpW9/Jc0=
-Date:   Mon, 13 Jan 2020 16:02:38 -0800
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2020-01-13-16-02 uploaded
-Message-ID: <20200114000238.AdMWG%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.15
+        Mon, 13 Jan 2020 19:09:16 -0500
+Received: from mail-mw2nam10on2122.outbound.protection.outlook.com ([40.107.94.122]:30839
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729037AbgANAJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:09:16 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AgNPFIJj26p8JEMD1qlw24qy2/XOhKDD3etgr/gKW6Co6VlC2pZU14hRK7CDgcyrhj8yHlx1USeiSDJlqxvuBOQjS0y3k9QvA5FP6PxZjwecIBY0s2qnDllzmtn9pKfQZhBOElVONwfwGIO4Pqs9111iegOgIiYwbciS6Mm76fXDQVJdhrjbZhQgCE01q4XFG3a2lRJ5im53csfrBk0n/YT8JxIwc8mZn8jJx25dnSm2YRZVogmQDtNrs98scM9zrQAJ+kv2HifcsTfejLDDpsexkHn3Q81lMZWVf7sgdiYN20qtWiMH6tt469bKZU5pMb5r0yKtWC9QFfWnfeGlcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/r9plZLp71RQh02xobAbBVttQI7z40JfexOyUZR2Lc0=;
+ b=cIX7wmaXiaFEUooEivm5bLafGdCnZhr95KOItDsSyg6/ZRBC4Eigz4y8AkZcbRHP8sc80kFJeIkuWbCeNQIhrYfB6IDwsSmGvSpMI1lM1SsANrPDd/qZJVgccCTbPJujDF1ms+eYRvOIUHmuuRkG9VU6kczZQzSCV5OewNyIhePcHNhSqTl0YtbbcHQ8WapLoLnVbZrqxAkdIISQ5la/IoKccSfUKJ7aVw6oJo2kvpRqY1fOtbv1OoOVtEDFSBR2N45uh6CmBj9zqgV4zjK1f1rr67RUwgPSPnrbzHnG9H07ElQCNnT+PP/Bipb8MHvewBxZpSrSiwAp685Jr5M9ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/r9plZLp71RQh02xobAbBVttQI7z40JfexOyUZR2Lc0=;
+ b=RCfWsjSrK4aWfntJFHAKDv8N0sxuSPJqgrgLYa9Z4xOAU7BBprlnJazVAdt33D4ABWZxVIPqnGUCVxGW6AFlEnnXzN2YMoRaZBT+54ihOSmyvXDkfGZ4rjdqUmIMNSuSZSADfansvSn4Iias5pXfxgNi+tZeT7aNsK5dX0lVJuA=
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
+ BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.1; Tue, 14 Jan 2020 00:09:14 +0000
+Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::d1de:7b03:3f66:19fb]) by BL0PR2101MB1123.namprd21.prod.outlook.com
+ ([fe80::d1de:7b03:3f66:19fb%6]) with mapi id 15.20.2644.015; Tue, 14 Jan 2020
+ 00:09:14 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: storvsc: Correctly set number of hardware queues
+ for IDE disk
+Thread-Topic: [PATCH] scsi: storvsc: Correctly set number of hardware queues
+ for IDE disk
+Thread-Index: AQHVyFeNXrmFjnrM6EqlVQHcZtw04qfnOc2AgAITGyA=
+Date:   Tue, 14 Jan 2020 00:09:13 +0000
+Message-ID: <BL0PR2101MB1123B1FE52EA5FEFA14BA711CE340@BL0PR2101MB1123.namprd21.prod.outlook.com>
+References: <1578730634-109961-1-git-send-email-longli@linuxonhyperv.com>
+ <MW2PR2101MB105213EDB40D8974CF45A8B6D73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB105213EDB40D8974CF45A8B6D73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-12T16:27:52.7146620Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8f411da8-28a5-40b9-a091-23693cfcc31b;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=longli@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8281001d-bffd-4e06-b408-08d79885fd2a
+x-ms-traffictypediagnostic: BL0PR2101MB1123:|BL0PR2101MB1123:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR2101MB11233B9BCC8E22AFA3E494B3CE340@BL0PR2101MB1123.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(136003)(366004)(396003)(39860400002)(199004)(189003)(33656002)(8990500004)(86362001)(8676002)(71200400001)(2906002)(316002)(10290500003)(52536014)(76116006)(9686003)(64756008)(478600001)(55016002)(110136005)(66946007)(5660300002)(8936002)(7696005)(81156014)(186003)(6506007)(66556008)(81166006)(66446008)(66476007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1123;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ehl8C5dI/V4RjkhTapQo0ZMNcuEdZmk/sMZcnv+/HCc3Z3weDWvMEO/6a8trp4CfFx9vSx32Ds7qC/DFQOd3fVfz5ptSE4JD2Yt3DV/sYsshLcjG47m3HCWtd5J3G0u7jZxmk8bKTDJPFuFTjwIOsseiSP5+6Gj00hZY3B11vf0S5iN6WpTN7fbRMfjYKz7Ci8B6NraIAdKtYfUlVGvgbI/3xNauAiya1CF4EYN6O/ikQT+d0S8SBkhFKmMVfPp13QqoQbboqGZ1fUDrTC4wOv9TxjlvE7Bj4GLblZjaYuu9X6/jEWJXIzXHXGFZ9jrsiMEPUfi5kUtE0mF0ZYY20j2uTvCR/NuIe22U9coDSHkHx+nPd7sQ1JowyCN90SA75XlGN2jVsmq2pr3uHU7pEmRhUX4KEHQIG6mF6MRqnd///uwVIhBLtcqGPTVeyZPvL1iGdf1y1BZPYOG0l0VEgzPBk4vOyE1ik9ywe9pSivL50cIgahweVGmkkHNx/vor
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8281001d-bffd-4e06-b408-08d79885fd2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 00:09:13.9722
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S8MLL1yxuqj64Zi7ryh1X2U9m9owlZtpVhba/fsWplK74256nnqfP5myBzRxtxnmDb5K8SoZeMOruWrZF2XuyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2020-01-13-16-02 has been uploaded to
+>Subject: RE: [PATCH] scsi: storvsc: Correctly set number of hardware queue=
+s for
+>IDE disk
+>
+>From: Long Li <longli@microsoft.com>  Sent: Saturday, January 11, 2020 12:=
+17
+>AM
+>>
+>> Commit 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between
+>> hardware queue and CPU queue") introduced a regression for disks
+>> attached to IDE. For these disks the host VSP only offers one VMBUS
+>> channel. Setting multiple queues can overload the VMBUS channel and
+>> result in performance drop for high queue depth workload on system
+>> with large number of CPUs.
+>>
+>> Fix it by leaving the number of hardware queues to 1 (default value)
+>> for IDE disks.
+>>
+>> Fixes: 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between
+>> hardware queue and CPU
+>> queue")
+>> Signed-off-by: Long Li <longli@microsoft.com>
+>> ---
+>>  drivers/scsi/storvsc_drv.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+>> index f8faf8b3d965..992b28e40374 100644
+>> --- a/drivers/scsi/storvsc_drv.c
+>> +++ b/drivers/scsi/storvsc_drv.c
+>> @@ -1842,9 +1842,11 @@ static int storvsc_probe(struct hv_device *device=
+,
+>>  	 */
+>>  	host->sg_tablesize =3D (stor_device->max_transfer_bytes >> PAGE_SHIFT)=
+;
+>>  	/*
+>> +	 * For non-IDE disks, the host supports multiple channels.
+>>  	 * Set the number of HW queues we are supporting.
+>>  	 */
+>> -	host->nr_hw_queues =3D num_present_cpus();
+>> +	if (dev_id->driver_data !=3D IDE_GUID)
+>
+>This function already has a pre-computed value of this test in
+>the local variable "dev_is_ide".   It would be more consistent
+>to just use it.
+>
+>Michael
 
-   http://www.ozlabs.org/~akpm/mmotm/
+I will send v2 to address this.
 
-mmotm-readme.txt says
+Long
 
-README for mm-of-the-moment:
+>
+>> +		host->nr_hw_queues =3D num_present_cpus();
+>>
+>>  	/*
+>>  	 * Set the error handler work queue.
+>> --
+>> 2.20.1
 
-http://www.ozlabs.org/~akpm/mmotm/
-
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
-
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
-
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-	https://github.com/hnaz/linux-mm
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is also available at
-
-	https://github.com/hnaz/linux-mm
-
-
-
-This mmotm tree contains the following patches against 5.5-rc6:
-(patches marked "*" will be included in linux-next)
-
-* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
-* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
-* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
-* x86-mm-split-vmalloc_sync_all.patch
-* revert-ipcsem-remove-uneeded-sem_undo_list-lock-usage-in-exit_sem.patch
-* mm-fix-uninitialized-memmaps-on-a-partially-populated-last-section.patch
-* fs-proc-pagec-allow-inspection-of-last-section-and-fix-end-detection.patch
-* mm-initialize-memmap-of-unavailable-memory-directly.patch
-* mm-memory_hotplug-dont-free-usage-map-when-removing-a-re-added-early-section.patch
-* thp-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment.patch
-* thp-shmem-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment.patch
-* thp-shmem-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment-fix.patch
-* mm-memcg-slab-fix-percpu-slab-vmstats-flushing.patch
-* mm-debug_pagealloc-dont-rely-on-static-keys-too-early.patch
-* mm-debug_pagealloc-dont-rely-on-static-keys-too-early-fix.patch
-* mm-page-writebackc-avoid-potential-division-by-zero-in-wb_min_max_ratio.patch
-* mm-page-writebackc-use-div64_ul-for-u64-by-unsigned-long-divide.patch
-* mm-page-writebackc-improve-arithmetic-divisions.patch
-* mm-memcg-slab-call-flush_memcg_workqueue-only-if-memcg-workqueue-is-valid.patch
-* mm-khugepaged-add-trace-status-description-for-scan_page_has_private.patch
-* mm-thp-grab-the-lock-before-manipulation-defer-list.patch
-* lib-test_bitmap-correct-test-data-offsets-for-32-bit.patch
-* watchdog-fix-uaf-in-reboot-notifier-handling-in-watchdog-core-code.patch
-* memcg-fix-a-crash-in-wb_workfn-when-a-device-disappears.patch
-* scripts-spellingtxt-add-more-spellings-to-spellingtxt.patch
-* scripts-spellingtxt-add-issus-typo.patch
-* fs-ocfs-remove-unnecessary-assertion-in-dlm_migrate_lockres.patch
-* ocfs2-remove-unneeded-semicolon.patch
-* ocfs2-make-local-header-paths-relative-to-c-files.patch
-* ocfs2-dlm-remove-redundant-assignment-to-ret.patch
-* ocfs2-dlm-move-bits_to_bytes-to-bitopsh-for-wider-use.patch
-* ocfs2-fix-a-null-pointer-dereference-when-call-ocfs2_update_inode_fsync_trans.patch
-* ocfs2-use-ocfs2_update_inode_fsync_trans-to-access-t_tid-in-handle-h_transaction.patch
-* ramfs-support-o_tmpfile.patch
-* watchdog-fix-possible-soft-lockup-warning-at-bootup.patch
-* watchdog-fix-possible-soft-lockup-warning-at-bootup-v2.patch
-  mm.patch
-* mm-avoid-slub-allocation-while-holding-list_lock.patch
-* kmemleak-turn-kmemleak_lock-and-object-lock-to-raw_spinlock_t.patch
-* mm-clean-up-filemap_write_and_wait.patch
-* mm-fix-gup_pud_range.patch
-* mm-gupc-use-is_vm_hugetlb_page-to-check-whether-to-follow-huge.patch
-* mm-cleanup-some-useless-code.patch
-* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
-* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
-* mm-mmap-fix-the-adjusted-length-error.patch
-* mm-page_vma_mappedc-explicitly-compare-pfn-for-normal-hugetlbfs-and-thp-page.patch
-* drivers-base-memoryc-cache-blocks-in-radix-tree-to-accelerate-lookup.patch
-* drivers-base-memoryc-cache-blocks-in-radix-tree-to-accelerate-lookup-fix-2.patch
-* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
-* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
-* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
-* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
-* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
-* mm-memory_hotplug-cleanup-__remove_pages.patch
-* mm-memory_hotplug-drop-valid_start-valid_end-from-test_pages_in_a_zone.patch
-* mm-memory_hotplug-pass-in-nid-to-online_pages.patch
-* drivers-base-memoryc-get-rid-of-find_memory_block.patch
-* mm-tracing-print-symbol-name-for-kmem_alloc_node-call_site-events.patch
-* mm-early_remap-use-%pa-to-print-resource_size_t-variables.patch
-* mm-page_alloc-skip-non-present-sections-on-zone-initialization.patch
-* mm-page_alloc-fix-and-rework-pfn-handling-in-memmap_init_zone.patch
-* mm-factor-out-next_present_section_nr.patch
-* mm-remove-the-memory-isolate-notifier.patch
-* mm-remove-count-parameter-from-has_unmovable_pages.patch
-* mm-vmscanc-remove-unused-return-value-of-shrink_node.patch
-* mm-memblock-define-memblock_physmem_add.patch
-* memblock-use-__func__-in-remaining-memblock_dbg-call-sites.patch
-* mm-oom-avoid-printk-iteration-under-rcu.patch
-* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
-* mm-hugetlb-controller-for-cgroups-v2.patch
-* mm-huge_memoryc-use-head-to-check-huge-zero-page.patch
-* mm-huge_memoryc-use-head-to-emphasize-the-purpose-of-page.patch
-* mm-huge_memoryc-reduce-critical-section-protected-by-split_queue_lock.patch
-* mm-migrate-remove-useless-mask-of-start-address.patch
-* mm-migrate-clean-up-some-minor-coding-style.patch
-* mm-migrate-add-stable-check-in-migrate_vma_insert_page.patch
-* mm-get-rid-of-odd-jump-labels-in-find_mergeable_anon_vma.patch
-* zswap-add-allocation-hysteresis-if-pool-limit-is-hit.patch
-* mm-clean-up-obsolete-check-on-space-in-page-flags.patch
-* mm-remove-dead-code-totalram_pages_set.patch
-* mm-drop-elements-hw-and-phys_callback-from-struct-memory_block.patch
-* mm-fix-comments-related-to-node-reclaim.patch
-* lib-rbtree-avoid-pointless-rb_node-alignment.patch
-* zram-try-to-avoid-worst-case-scenario-on-same-element-pages.patch
-* zram-try-to-avoid-worst-case-scenario-on-same-element-pages-update.patch
-* zram-fix-error-return-codes-not-being-returned-in-writeback_store.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* kernel-hung_taskc-monitor-killed-tasks.patch
-* y2038-remove-ktime-to-from-timespec-timeval-conversion.patch
-* y2038-remove-unused-time32-interfaces.patch
-* y2038-hide-timeval-timespec-itimerval-itimerspec-types.patch
-* add-helpers-for-kelvin-to-from-celsius-conversion.patch
-* acpi-thermal-switch-to-use-linux-unitsh-helpers.patch
-* platform-x86-asus-wmi-switch-to-use-linux-unitsh-helpers.patch
-* platform-x86-intel_menlow-switch-to-use-linux-unitsh-helpers.patch
-* thermal-int340x-switch-to-use-linux-unitsh-helpers.patch
-* thermal-intel_pch-switch-to-use-linux-unitsh-helpers.patch
-* nvme-hwmon-switch-to-use-linux-unitsh-helpers.patch
-* thermal-remove-kelvin-to-from-celsius-conversion-helpers-from-linux-thermalh.patch
-* iwlegacy-use-linux-unitsh-helpers.patch
-* iwlwifi-use-linux-unitsh-helpers.patch
-* thermal-armada-remove-unused-to_mcelsius-macro.patch
-* iio-adc-qcom-vadc-common-use-linux-unitsh-helpers.patch
-* lib-zlib-add-s390-hardware-support-for-kernel-zlib_deflate.patch
-* s390-boot-rename-heap_size-due-to-name-collision.patch
-* lib-zlib-add-s390-hardware-support-for-kernel-zlib_inflate.patch
-* s390-boot-add-dfltcc=-kernel-command-line-parameter.patch
-* lib-zlib-add-zlib_deflate_dfltcc_enabled-function.patch
-* btrfs-use-larger-zlib-buffer-for-s390-hardware-compression.patch
-* lib-scatterlist-adjust-indentation-in-__sg_alloc_table.patch
-* uapi-rename-ext2_swab-to-swab-and-share-globally-in-swabh.patch
-* lib-find_bitc-join-_find_next_bit_le.patch
-* lib-find_bitc-uninline-helper-_find_next_bit.patch
-* string-add-stracpy-and-stracpy_pad-mechanisms.patch
-* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
-* elf-smaller-code-generation-around-auxv-vector-fill.patch
-* elf-fix-start_code-calculation.patch
-* elf-dont-copy-elf-header-around.patch
-* elf-better-codegen-around-current-mm.patch
-* elf-make-bad_addr-unlikely.patch
-* elf-coredump-allocate-core-elf-header-on-stack.patch
-* elf-coredump-delete-duplicated-overflow-check.patch
-* elf-coredump-allow-process-with-empty-address-space-to-coredump.patch
-* init-mainc-log-arguments-and-environment-passed-to-init.patch
-* init-mainc-remove-unnecessary-repair_env_string-in-do_initcall_level.patch
-* init-mainc-fix-quoted-value-handling-in-unknown_bootoption.patch
-* init-fix-misleading-this-architecture-does-not-have-kernel-memory-protection-message.patch
-* reiserfs-prevent-null-pointer-dereference-in-reiserfs_insert_item.patch
-* execve-warn-if-process-starts-with-executable-stack.patch
-* io-mapping-use-phys_pfn-macro-in-io_mapping_map_atomic_wc.patch
-* aio-simplify-read_events.patch
-* smp_mb__beforeafter_atomic-update-documentation.patch
-* ipc-mqueuec-remove-duplicated-code.patch
-* ipc-mqueuec-update-document-memory-barriers.patch
-* ipc-msgc-update-and-document-memory-barriers.patch
-* ipc-semc-document-and-update-memory-barriers.patch
-* ipc-consolidate-all-xxxctl_down-functions.patch
-* ipc-consolidate-all-xxxctl_down-functions-fix.patch
-  linux-next.patch
-  linux-next-rejects.patch
-  linux-next-fix.patch
-* drivers-block-null_blk_mainc-fix-layout.patch
-* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* mm-remove-__krealloc.patch
-* mm-add-generic-pd_leaf-macros.patch
-* arc-mm-add-pd_leaf-definitions.patch
-* arm-mm-add-pd_leaf-definitions.patch
-* arm64-mm-add-pd_leaf-definitions.patch
-* mips-mm-add-pd_leaf-definitions.patch
-* powerpc-mm-add-pd_leaf-definitions.patch
-* riscv-mm-add-pd_leaf-definitions.patch
-* s390-mm-add-pd_leaf-definitions.patch
-* sparc-mm-add-pd_leaf-definitions.patch
-* x86-mm-add-pd_leaf-definitions.patch
-* mm-pagewalk-add-p4d_entry-and-pgd_entry.patch
-* mm-pagewalk-add-p4d_entry-and-pgd_entry-fix.patch
-* mm-pagewalk-allow-walking-without-vma.patch
-* mm-pagewalk-dont-lock-ptes-for-walk_page_range_novma.patch
-* mm-pagewalk-fix-termination-condition-in-walk_pte_range.patch
-* mm-pagewalk-add-depth-parameter-to-pte_hole.patch
-* x86-mm-point-to-struct-seq_file-from-struct-pg_state.patch
-* x86-mmefi-convert-ptdump_walk_pgd_level-to-take-a-mm_struct.patch
-* x86-mm-convert-ptdump_walk_pgd_level_debugfs-to-take-an-mm_struct.patch
-* mm-add-generic-ptdump.patch
-* x86-mm-convert-dump_pagetables-to-use-walk_page_range.patch
-* arm64-mm-convert-mm-dumpc-to-use-walk_page_range.patch
-* arm64-mm-display-non-present-entries-in-ptdump.patch
-* mm-ptdump-reduce-level-numbers-by-1-in-note_page.patch
-* x86-mm-avoid-allocating-struct-mm_struct-on-the-stack.patch
-* x86-mm-avoid-allocating-struct-mm_struct-on-the-stack-fix.patch
-* proc-decouple-proc-from-vfs-with-struct-proc_ops.patch
-* proc-convert-everything-to-struct-proc_ops.patch
-* proc-convert-everything-to-struct-proc_ops-fix.patch
-* lib-string-add-strnchrnul.patch
-* bitops-more-bits_to_-macros.patch
-* lib-add-test-for-bitmap_parse.patch
-* lib-add-test-for-bitmap_parse-fix.patch
-* lib-add-test-for-bitmap_parse-fix-2.patch
-* lib-make-bitmap_parse_user-a-wrapper-on-bitmap_parse.patch
-* lib-rework-bitmap_parse.patch
-* lib-new-testcases-for-bitmap_parse_user.patch
-* cpumask-dont-calculate-length-of-the-input-string.patch
-* treewide-remove-redundent-is_err-before-error-code-check.patch
-* arm-dma-api-fix-max_pfn-off-by-one-error-in-__dma_supported.patch
-* drivers-tty-serial-sh-scic-suppress-warning.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  workaround-for-a-pci-restoring-bug.patch
