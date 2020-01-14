@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD71C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97CEC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945D024685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3B824689
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgANNEk (ORCPT
+        id S1728775AbgANNCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:04:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43119 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbgANNCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 08:02:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43092 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANNCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:02:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLpm-0004aY-H3; Tue, 14 Jan 2020 14:02:14 +0100
+        id 1irLpm-0004Zy-2H; Tue, 14 Jan 2020 14:02:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3461D1C07FA;
-        Tue, 14 Jan 2020 14:02:14 +0100 (CET)
-Date:   Tue, 14 Jan 2020 13:02:14 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 992951C07EC;
+        Tue, 14 Jan 2020 14:02:13 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:13 -0000
+From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] selftests/timens: Add a test for timerfd
+Subject: [tip: timers/core] selftests/timens: Add procfs selftest
 Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-30-dima@arista.com>
-References: <20191112012724.250792-30-dima@arista.com>
+In-Reply-To: <20191112012724.250792-32-dima@arista.com>
+References: <20191112012724.250792-32-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157900693401.396.18220148724378132319.tip-bot2@tip-bot2>
+Message-ID: <157900693341.396.1073477907812567891.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,201 +56,210 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     11873de3ce4d2fe289d51932c03b3668cf519186
-Gitweb:        https://git.kernel.org/tip/11873de3ce4d2fe289d51932c03b3668cf519186
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:18 
+Commit-ID:     9d1f5a8c9dadad29f72e40a409239d7b71cf3037
+Gitweb:        https://git.kernel.org/tip/9d1f5a8c9dadad29f72e40a409239d7b71cf3037
+Author:        Dmitry Safonov <dima@arista.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:20 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Jan 2020 12:21:00 +01:00
+CommitterDate: Tue, 14 Jan 2020 12:21:01 +01:00
 
-selftests/timens: Add a test for timerfd
+selftests/timens: Add procfs selftest
 
-Check that timerfd_create() takes into account clock offsets.
+Check that /proc/uptime is correct inside a new time namespace.
 
 Output on success:
- 1..3
- ok 1 clockid=7
- ok 2 clockid=1
- ok 3 clockid=9
- # Pass 3 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-
-Output on failure:
- 1..3
- not ok 1 clockid: 7 elapsed: 0
- not ok 2 clockid: 1 elapsed: 0
- not ok 3 clockid: 9 elapsed: 0
- Bail out!
+ 1..1
+ ok 1 Passed for /proc/uptime
+ # Pass 1 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
 
 Output with lack of permissions:
- 1..3
+ 1..1
  not ok 1 # SKIP need to run as root
 
 Output without support of time namespaces:
- 1..3
+ 1..1
  not ok 1 # SKIP Time namespaces are not supported
 
-Co-developed-by: Dmitry Safonov <dima@arista.com>
+Co-developed-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-30-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-32-dima@arista.com
 
 
 ---
  tools/testing/selftests/timens/.gitignore |   1 +-
  tools/testing/selftests/timens/Makefile   |   2 +-
- tools/testing/selftests/timens/timerfd.c  | 128 +++++++++++++++++++++-
- 3 files changed, 130 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/timens/timerfd.c
+ tools/testing/selftests/timens/procfs.c   | 144 +++++++++++++++++++++-
+ 3 files changed, 146 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/timens/procfs.c
 
 diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index 27a6932..b609f6e 100644
+index 9b6c8dd..94ffdd9 100644
 --- a/tools/testing/selftests/timens/.gitignore
 +++ b/tools/testing/selftests/timens/.gitignore
-@@ -1 +1,2 @@
+@@ -1,3 +1,4 @@
+ clock_nanosleep
++procfs
  timens
-+timerfd
+ timerfd
 diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index 49a9dcc..293aed6 100644
+index 40f630d..8a33df7 100644
 --- a/tools/testing/selftests/timens/Makefile
 +++ b/tools/testing/selftests/timens/Makefile
 @@ -1,4 +1,4 @@
--TEST_GEN_PROGS := timens
-+TEST_GEN_PROGS := timens timerfd
+-TEST_GEN_PROGS := timens timerfd clock_nanosleep
++TEST_GEN_PROGS := timens timerfd clock_nanosleep procfs
  
- CFLAGS := -Wall -Werror
+ CFLAGS := -Wall -Werror -pthread
  LDFLAGS := -lrt
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
+diff --git a/tools/testing/selftests/timens/procfs.c b/tools/testing/selftests/timens/procfs.c
 new file mode 100644
-index 0000000..eff1ec5
+index 0000000..43d93f4
 --- /dev/null
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -0,0 +1,128 @@
++++ b/tools/testing/selftests/timens/procfs.c
+@@ -0,0 +1,144 @@
 +// SPDX-License-Identifier: GPL-2.0
 +#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h>
++#include <math.h>
 +#include <sched.h>
-+
-+#include <sys/timerfd.h>
++#include <stdio.h>
++#include <stdbool.h>
++#include <stdlib.h>
++#include <sys/stat.h>
 +#include <sys/syscall.h>
 +#include <sys/types.h>
-+#include <sys/wait.h>
 +#include <time.h>
 +#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stdint.h>
++#include <time.h>
 +
 +#include "log.h"
 +#include "timens.h"
 +
-+static int tclock_gettime(clock_t clockid, struct timespec *now)
++/*
++ * Test shouldn't be run for a day, so add 10 days to child
++ * time and check parent's time to be in the same day.
++ */
++#define MAX_TEST_TIME_SEC		(60*5)
++#define DAY_IN_SEC			(60*60*24)
++#define TEN_DAYS_IN_SEC			(10*DAY_IN_SEC)
++
++#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
++
++static int child_ns, parent_ns;
++
++static int switch_ns(int fd)
 +{
-+	if (clockid == CLOCK_BOOTTIME_ALARM)
-+		clockid = CLOCK_BOOTTIME;
-+	return clock_gettime(clockid, now);
++	if (setns(fd, CLONE_NEWTIME))
++		return pr_perror("setns()");
++
++	return 0;
 +}
 +
-+int run_test(int clockid, struct timespec now)
++static int init_namespaces(void)
 +{
-+	struct itimerspec new_value;
-+	long long elapsed;
-+	int fd, i;
++	char path[] = "/proc/self/ns/time_for_children";
++	struct stat st1, st2;
 +
-+	if (tclock_gettime(clockid, &now))
-+		return pr_perror("clock_gettime(%d)", clockid);
++	parent_ns = open(path, O_RDONLY);
++	if (parent_ns <= 0)
++		return pr_perror("Unable to open %s", path);
 +
-+	for (i = 0; i < 2; i++) {
-+		int flags = 0;
++	if (fstat(parent_ns, &st1))
++		return pr_perror("Unable to stat the parent timens");
 +
-+		new_value.it_value.tv_sec = 3600;
-+		new_value.it_value.tv_nsec = 0;
-+		new_value.it_interval.tv_sec = 1;
-+		new_value.it_interval.tv_nsec = 0;
++	if (unshare_timens())
++		return -1;
 +
-+		if (i == 1) {
-+			new_value.it_value.tv_sec += now.tv_sec;
-+			new_value.it_value.tv_nsec += now.tv_nsec;
-+		}
++	child_ns = open(path, O_RDONLY);
++	if (child_ns <= 0)
++		return pr_perror("Unable to open %s", path);
 +
-+		fd = timerfd_create(clockid, 0);
-+		if (fd == -1)
-+			return pr_perror("timerfd_create(%d)", clockid);
++	if (fstat(child_ns, &st2))
++		return pr_perror("Unable to stat the timens");
 +
-+		if (i == 1)
-+			flags |= TFD_TIMER_ABSTIME;
++	if (st1.st_ino == st2.st_ino)
++		return pr_err("The same child_ns after CLONE_NEWTIME");
 +
-+		if (timerfd_settime(fd, flags, &new_value, NULL))
-+			return pr_perror("timerfd_settime(%d)", clockid);
++	if (_settime(CLOCK_BOOTTIME, TEN_DAYS_IN_SEC))
++		return -1;
 +
-+		if (timerfd_gettime(fd, &new_value))
-+			return pr_perror("timerfd_gettime(%d)", clockid);
++	return 0;
++}
 +
-+		elapsed = new_value.it_value.tv_sec;
-+		if (abs(elapsed - 3600) > 60) {
-+			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
-+					      clockid, elapsed);
-+			return 1;
-+		}
++static int read_proc_uptime(struct timespec *uptime)
++{
++	unsigned long up_sec, up_nsec;
++	FILE *proc;
 +
-+		close(fd);
++	proc = fopen("/proc/uptime", "r");
++	if (proc == NULL) {
++		pr_perror("Unable to open /proc/uptime");
++		return -1;
 +	}
 +
-+	ksft_test_result_pass("clockid=%d\n", clockid);
++	if (fscanf(proc, "%lu.%02lu", &up_sec, &up_nsec) != 2) {
++		if (errno) {
++			pr_perror("fscanf");
++			return -errno;
++		}
++		pr_err("failed to parse /proc/uptime");
++		return -1;
++	}
++	fclose(proc);
 +
++	uptime->tv_sec = up_sec;
++	uptime->tv_nsec = up_nsec;
++	return 0;
++}
++
++static int check_uptime(void)
++{
++	struct timespec uptime_new, uptime_old;
++	time_t uptime_expected;
++	double prec = MAX_TEST_TIME_SEC;
++
++	if (switch_ns(parent_ns))
++		return pr_err("switch_ns(%d)", parent_ns);
++
++	if (read_proc_uptime(&uptime_old))
++		return 1;
++
++	if (switch_ns(child_ns))
++		return pr_err("switch_ns(%d)", child_ns);
++
++	if (read_proc_uptime(&uptime_new))
++		return 1;
++
++	uptime_expected = uptime_old.tv_sec + TEN_DAYS_IN_SEC;
++	if (fabs(difftime(uptime_new.tv_sec, uptime_expected)) > prec) {
++		pr_fail("uptime in /proc/uptime: old %ld, new %ld [%ld]",
++			uptime_old.tv_sec, uptime_new.tv_sec,
++			uptime_old.tv_sec + TEN_DAYS_IN_SEC);
++		return 1;
++	}
++
++	ksft_test_result_pass("Passed for /proc/uptime\n");
 +	return 0;
 +}
 +
 +int main(int argc, char *argv[])
 +{
-+	int ret, status, len, fd;
-+	char buf[4096];
-+	pid_t pid;
-+	struct timespec btime_now, mtime_now;
++	int ret = 0;
 +
 +	nscheck();
 +
-+	ksft_set_plan(3);
++	ksft_set_plan(1);
 +
-+	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
-+	clock_gettime(CLOCK_BOOTTIME, &btime_now);
-+
-+	if (unshare_timens())
++	if (init_namespaces())
 +		return 1;
 +
-+	len = snprintf(buf, sizeof(buf), "%d %d 0\n%d %d 0",
-+			CLOCK_MONOTONIC, 70 * 24 * 3600,
-+			CLOCK_BOOTTIME, 9 * 24 * 3600);
-+	fd = open("/proc/self/timens_offsets", O_WRONLY);
-+	if (fd < 0)
-+		return pr_perror("/proc/self/timens_offsets");
++	ret |= check_uptime();
 +
-+	if (write(fd, buf, len) != len)
-+		return pr_perror("/proc/self/timens_offsets");
-+
-+	close(fd);
-+	mtime_now.tv_sec += 70 * 24 * 3600;
-+	btime_now.tv_sec += 9 * 24 * 3600;
-+
-+	pid = fork();
-+	if (pid < 0)
-+		return pr_perror("Unable to fork");
-+	if (pid == 0) {
-+		ret = 0;
-+		ret |= run_test(CLOCK_BOOTTIME, btime_now);
-+		ret |= run_test(CLOCK_MONOTONIC, mtime_now);
-+		ret |= run_test(CLOCK_BOOTTIME_ALARM, btime_now);
-+
-+		if (ret)
-+			ksft_exit_fail();
-+		ksft_exit_pass();
-+		return ret;
-+	}
-+
-+	if (waitpid(pid, &status, 0) != pid)
-+		return pr_perror("Unable to wait the child process");
-+
-+	if (WIFEXITED(status))
-+		return WEXITSTATUS(status);
-+
-+	return 1;
++	if (ret)
++		ksft_exit_fail();
++	ksft_exit_pass();
++	return ret;
 +}
