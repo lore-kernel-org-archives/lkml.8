@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75106C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A12F2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCA224683
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996197;
-	bh=Y8n5Xq7QrrHdn51y6Y+MiO1NJwW6aO/i/vy85JvAh30=;
+	s=default; t=1578996201;
+	bh=z+j12MR7yYmLLELtA9jkABUaAXHiSBqS2s/W2w96+MI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eW4gbvifrfcSPsAYYM0gDHSWJndjmpC7wlVxca8GfY9rMennz0yDdTm8U3NPhb1qc
-	 XYT3HHSJXyA1PlF2d8MJyugRZmTJicyC+VVnlmlM6lBpW/OrQiCo8cdM5OjTOU3+Hd
-	 2kFgkZ3IQtNVLxNZs4A4zCafU9NiRbPvzeHDWNcs=
+	b=zThQlNCzrOZuTcwRJkf4tW8TnQkK9bghM1PACE8AMUPbADWj6+IMbE4QshLDuKIp2
+	 GLhpIx70UQKJAkta2or3mFqlMapEId1twZCNhutJexgIhezCqe/kcrdOLYWkfrUtIP
+	 J+4enKauGGS5Mbm1qWnli4RyIAJD7v37xpeESXYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgANKDQ (ORCPT
+        id S1729519AbgANKDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:03:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57962 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726169AbgANKDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:14 -0500
+        id S1726169AbgANKDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2602467A;
-        Tue, 14 Jan 2020 10:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6922B2465B;
+        Tue, 14 Jan 2020 10:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996193;
-        bh=Y8n5Xq7QrrHdn51y6Y+MiO1NJwW6aO/i/vy85JvAh30=;
+        s=default; t=1578996197;
+        bh=z+j12MR7yYmLLELtA9jkABUaAXHiSBqS2s/W2w96+MI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XiVDGZ80SF7eBWg/dUy/tGi6VlgujKyiDw+qyCEEdes9OKuQ2sT5hwujBueW/FLC
-         VmvBXPVDhTqGpXrXvU7KAbJHET3smwk1aMZ9lEMcQE9vZb8qLAw6kmaIX6mMsadJil
-         Q9SGN4PwcutfrbYQlSAGvlZnhqGtwA2eIjFRE9qo=
+        b=o+8+edrPj0y2xsTxxHMJvEXwmz+iJopnwCrSJnepYx+Bz/b3OUBiUyEo55JVqjXaY
+         7HLvp0Jw0XYZeBxIrflFK8JbPROl3WYbFWAgL2ktAIjWH0qCEqTgxhL9dEGRyqclP6
+         pPoI3B6QIrPe2e8y3SgwZVqHns9bAEHDWMBjjqhE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 13/78] rtc: sun6i: Add support for RTC clocks on R40
-Date:   Tue, 14 Jan 2020 11:00:47 +0100
-Message-Id: <20200114094354.475637579@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 02/78] i2c: fix bus recovery stop mode timing
+Date:   Tue, 14 Jan 2020 11:00:36 +0100
+Message-Id: <20200114094352.828392087@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -60,57 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 111bf02b8f544f98de53ea1f912ae01f598b161b upstream.
+commit cf8ce8b80f8bf9669f6ec4e71e16668430febdac upstream.
 
-When support for the R40 in the rtc-sun6i driver was split out for a
-separate compatible string, only the RTC half was covered, and not the
-clock half. Unfortunately this results in the whole driver not working,
-as the RTC half expects the clock half to have been initialized.
+The I2C specification states that tsu:sto for standard mode timing must
+be at minimum 4us. Pictographically, this is:
 
-Add support for the clock part as well. The clock part is like the H3,
-but does not need to export the internal oscillator, nor does it have
-a gateable LOSC external output.
+SCL: ____/~~~~~~~~~
+SDA: _________/~~~~
+       ->|    |<- 4us minimum
 
-This fixes issues with WiFi and Bluetooth not working on the BPI M2U.
+We are currently waiting 2.5us between asserting SCL and SDA, which is
+in violation of the standard. Adjust the timings to ensure that we meet
+what is stipulated as the minimum timings to ensure that all devices
+correctly interpret the STOP bus transition.
 
-Fixes: d6624cc75021 ("rtc: sun6i: Add R40 compatible")
-Cc: <stable@vger.kernel.org> # 5.3.x
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Link: https://lore.kernel.org/r/20191205085054.6049-1-wens@kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This is more important than trying to generate a square wave with even
+duty cycle.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-sun6i.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/i2c/i2c-core-base.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -380,6 +380,22 @@ static void __init sun50i_h6_rtc_clk_ini
- CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
- 		      sun50i_h6_rtc_clk_init);
- 
-+/*
-+ * The R40 user manual is self-conflicting on whether the prescaler is
-+ * fixed or configurable. The clock diagram shows it as fixed, but there
-+ * is also a configurable divider in the RTC block.
-+ */
-+static const struct sun6i_rtc_clk_data sun8i_r40_rtc_data = {
-+	.rc_osc_rate = 16000000,
-+	.fixed_prescaler = 512,
-+};
-+static void __init sun8i_r40_rtc_clk_init(struct device_node *node)
-+{
-+	sun6i_rtc_clk_init(node, &sun8i_r40_rtc_data);
-+}
-+CLK_OF_DECLARE_DRIVER(sun8i_r40_rtc_clk, "allwinner,sun8i-r40-rtc",
-+		      sun8i_r40_rtc_clk_init);
-+
- static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
- 	.rc_osc_rate = 32000,
- 	.has_out_clk = 1,
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -186,10 +186,11 @@ int i2c_generic_scl_recovery(struct i2c_
+ 	 * If we can set SDA, we will always create a STOP to ensure additional
+ 	 * pulses will do no harm. This is achieved by letting SDA follow SCL
+ 	 * half a cycle later. Check the 'incomplete_write_byte' fault injector
+-	 * for details.
++	 * for details. Note that we must honour tsu:sto, 4us, but lets use 5us
++	 * here for simplicity.
+ 	 */
+ 	bri->set_scl(adap, scl);
+-	ndelay(RECOVERY_NDELAY / 2);
++	ndelay(RECOVERY_NDELAY);
+ 	if (bri->set_sda)
+ 		bri->set_sda(adap, scl);
+ 	ndelay(RECOVERY_NDELAY / 2);
+@@ -211,7 +212,13 @@ int i2c_generic_scl_recovery(struct i2c_
+ 		scl = !scl;
+ 		bri->set_scl(adap, scl);
+ 		/* Creating STOP again, see above */
+-		ndelay(RECOVERY_NDELAY / 2);
++		if (scl)  {
++			/* Honour minimum tsu:sto */
++			ndelay(RECOVERY_NDELAY);
++		} else {
++			/* Honour minimum tf and thd:dat */
++			ndelay(RECOVERY_NDELAY / 2);
++		}
+ 		if (bri->set_sda)
+ 			bri->set_sda(adap, scl);
+ 		ndelay(RECOVERY_NDELAY / 2);
 
 
