@@ -2,45 +2,62 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF72C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E818C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BD824679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A8420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MzJVhEfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgANBzO (ORCPT
+        id S1729370AbgANB5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:55:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728838AbgANBzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:55:12 -0500
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5259207FF;
-        Tue, 14 Jan 2020 01:55:09 +0000 (UTC)
-Subject: Re: [PATCH] m68k: Implement copy_thread_tls()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Amanieu d'Antras <amanieu@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-References: <20200113103040.23661-1-geert@linux-m68k.org>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <f744a139-f2ae-a07f-e7e7-a1aaca946f8c@linux-m68k.org>
-Date:   Tue, 14 Jan 2020 11:55:06 +1000
+        Mon, 13 Jan 2020 20:57:55 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:44201 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729040AbgANB5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:57:54 -0500
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 00E1vSqQ1582716
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 13 Jan 2020 17:57:28 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 00E1vSqQ1582716
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019122001; t=1578967049;
+        bh=73sdd0gKwzsK+W5DK5KjaAPkEWXgfp6lmaX6TIBl45s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MzJVhEfUnp/Ys8ckWAFzhRGYURhonr2Q9hWGSdWR04Jr57keXilDA7+WG/tSAnoFr
+         TmEgFiKdkULKEe6LPNqhaAffJ9+2bx1kwN3DqwIxmn0MVvF35Hr9NT9nULqIjYQB0j
+         35GcW2/gSDI+KbF+dLMaef3o3r+VsWDGDWM59fac/6j9E00JndWk6VTcHUU4gnzYDq
+         PWq4unzGORLkvhhlz1WnPuH/pqaV3CABiwK9Uk/O6jonmmks/GnGmE3ATRbRtzBbaw
+         W74mEB4pj4x3QtyRSsQg3Y/UZUn5AfkvXs6X+w1IqzRil4S8ULmEJ60bQ6Evy4t9yi
+         lvmI1OuAbGunA==
+Subject: Re: [PATCH v3] x86/vmlinux: Fix vmlinux.lds.S with pre-2.23 binutils
+To:     Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+References: <20200113161310.GA191743@rani.riverdale.lan>
+ <20200113195337.604646-1-nivedita@alum.mit.edu>
+ <202001131750.C1B8468@keescook>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <261ae869-4169-296e-f673-5c08ff34bdde@zytor.com>
+Date:   Mon, 13 Jan 2020 17:57:23 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200113103040.23661-1-geert@linux-m68k.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <202001131750.C1B8468@keescook>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,106 +65,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On 13/1/20 8:30 pm, Geert Uytterhoeven wrote:
-> This is required for clone3(), which passes the TLS value through a
-> struct rather than a register.
+On 2020-01-13 17:53, Kees Cook wrote:>>
+>> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+>> index 3a1a819da137..bad4e22384dc 100644
+>> --- a/arch/x86/kernel/vmlinux.lds.S
+>> +++ b/arch/x86/kernel/vmlinux.lds.S
+>> @@ -144,10 +144,12 @@ SECTIONS
+>>  		*(.text.__x86.indirect_thunk)
+>>  		__indirect_thunk_end = .;
+>>  #endif
+>> +
+>> +		/* End of text section */
+>> +		_etext = .;
+>>  	} :text =0xcccc
+>>  
+>> -	/* End of text section, which should occupy whole number of pages */
+>> -	_etext = .;
+>> +	/* .text should occupy whole number of pages */
+>>  	. = ALIGN(PAGE_SIZE);
 > 
-> As do_fork() is only available if CONFIG_HAVE_COPY_THREAD_TLS is set,
-> m68k_clone() must be changed to call _do_fork() directly.
+> NAK: linkers can add things at the end of .text that will go missing from
+> the kernel if _etext isn't _outside_ the .text section, truly beyond the
+> end of the .text section. This patch will break Control Flow Integrity
+> checking since the jump tables are at the end of .text.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Looks good for ColdFire too. I compiled for both MMU and non-MMU
-targets and no regressions (I did not test clone3() itself though).
-
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
-
-Regards
-Greg
-
-
-> ---
-> This is a dependency for the combination of commits
-> e8bb2a2a1d51511e ("m68k: Wire up clone3() syscall") in m68k/for-next,
-> dd499f7a7e342702 ("clone3: ensure copy_thread_tls is implemented") in
-> v5.5-rc6.
-> ---
->   arch/m68k/Kconfig          |  1 +
->   arch/m68k/kernel/process.c | 31 ++++++++++++++++++++++---------
->   2 files changed, 23 insertions(+), 9 deletions(-)
+> Boris, we're always working around weird linker problems; I don't see a
+> problem with the v2 patch to fix up old binutils...
 > 
-> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> index 6663f1741798e83f..6ad6cdac74b3dc42 100644
-> --- a/arch/m68k/Kconfig
-> +++ b/arch/m68k/Kconfig
-> @@ -14,6 +14,7 @@ config M68K
->   	select HAVE_AOUT if MMU
->   	select HAVE_ASM_MODVERSIONS
->   	select HAVE_DEBUG_BUGVERBOSE
-> +	select HAVE_COPY_THREAD_TLS
->   	select GENERIC_IRQ_SHOW
->   	select GENERIC_ATOMIC64
->   	select HAVE_UID16
-> diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
-> index 22e6b8f4f9582aa4..8f0d9140700f09ad 100644
-> --- a/arch/m68k/kernel/process.c
-> +++ b/arch/m68k/kernel/process.c
-> @@ -108,16 +108,28 @@ void flush_thread(void)
->    * on top of pt_regs, which means that sys_clone() arguments would be
->    * buried.  We could, of course, copy them, but it's too costly for no
->    * good reason - generic clone() would have to copy them *again* for
-> - * do_fork() anyway.  So in this case it's actually better to pass pt_regs *
-> - * and extract arguments for do_fork() from there.  Eventually we might
-> - * go for calling do_fork() directly from the wrapper, but only after we
-> - * are finished with do_fork() prototype conversion.
-> + * _do_fork() anyway.  So in this case it's actually better to pass pt_regs *
-> + * and extract arguments for _do_fork() from there.  Eventually we might
-> + * go for calling _do_fork() directly from the wrapper, but only after we
-> + * are finished with _do_fork() prototype conversion.
->    */
->   asmlinkage int m68k_clone(struct pt_regs *regs)
->   {
->   	/* regs will be equal to current_pt_regs() */
-> -	return do_fork(regs->d1, regs->d2, 0,
-> -		       (int __user *)regs->d3, (int __user *)regs->d4);
-> +	struct kernel_clone_args args = {
-> +		.flags		= regs->d1 & ~CSIGNAL,
-> +		.pidfd		= (int __user *)regs->d3,
-> +		.child_tid	= (int __user *)regs->d4,
-> +		.parent_tid	= (int __user *)regs->d3,
-> +		.exit_signal	= regs->d1 & CSIGNAL,
-> +		.stack		= regs->d2,
-> +		.tls		= regs->d5,
-> +	};
-> +
-> +	if (!legacy_clone_args_valid(&args))
-> +		return -EINVAL;
-> +
-> +	return _do_fork(&args);
->   }
->   
->   /*
-> @@ -130,8 +142,9 @@ asmlinkage int m68k_clone3(struct pt_regs *regs)
->   	return sys_clone3((struct clone_args __user *)regs->d1, regs->d2);
->   }
->   
-> -int copy_thread(unsigned long clone_flags, unsigned long usp,
-> -		 unsigned long arg, struct task_struct *p)
-> +int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
-> +		    unsigned long arg, struct task_struct *p,
-> +		    unsigned long tls)
->   {
->   	struct fork_frame {
->   		struct switch_stack sw;
-> @@ -166,7 +179,7 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
->   	p->thread.usp = usp ?: rdusp();
->   
->   	if (clone_flags & CLONE_SETTLS)
-> -		task_thread_info(p)->tp_value = frame->regs.d5;
-> +		task_thread_info(p)->tp_value = tls;
->   
->   #ifdef CONFIG_FPU
->   	if (!FPU_IS_EMU) {
-> 
+
+Why not add the marker into a separate section instead of leaving it as an
+absolute "floater"? Very old binutils would botch that case, but I think that
+has been long since addressed well below our current minimum version.
+
+	-hpa
+
+
+
