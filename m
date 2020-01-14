@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF03C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDE4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5254824679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8423824676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996376;
-	bh=hEYvx7c/QpZ6TklmjJfBcVF6hImmEbnkxqlMHgEV5RA=;
+	s=default; t=1578996379;
+	bh=EzNgiiWZ33n+Hg8gPGnUEB6TwMW3CwgI6GJIxqhBaLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjKcPs8ZAvyzVy3qQV1UemnmFW+3FtlNwJAdmk+S0tTugZ6Nxy58LwcHE7Cf1MIQQ
-	 lHdeejSs0+QquHseu4YbXPH/JyxCh5TLCMkQFQ/2HtlxmkdLxSZyJmFVv5eqpnlupD
-	 cx6yG62EM6hfiWmN0iODPI/j4Qr35HSZ7oGPX3Xs=
+	b=R9FipsXBeMJsI7F3U1RsRHFsbXzQj2mS5n8z9YPQYS/5HZSGGMWz20y7upn0FzEJk
+	 UjzRMtiz3E5iz6LYqO03pztK5U3SrEB6kotzdL+rx8KQVQR/U8JT+ZIqjisa+qy4Rd
+	 TDxa4eEzvVe8m3TnHC5G4ZnVHW+WfmoKnwQ00sYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgANKGL (ORCPT
+        id S1729663AbgANKGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbgANKGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:08 -0500
+        id S1729225AbgANKGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B18C924683;
-        Tue, 14 Jan 2020 10:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4B02467A;
+        Tue, 14 Jan 2020 10:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996367;
-        bh=hEYvx7c/QpZ6TklmjJfBcVF6hImmEbnkxqlMHgEV5RA=;
+        s=default; t=1578996362;
+        bh=EzNgiiWZ33n+Hg8gPGnUEB6TwMW3CwgI6GJIxqhBaLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1JpQjQdzzgIFP9zIZsJNSPavb1othtNW7HpTdrWheLO4QyQ4YEAvl/g48DV6m4ogW
-         qEAHmdn0DEi0rlbzNsfopPNVOz1ld0bg+T/bIvom80i+uxINDyl3LDp6hLFs/d4KZa
-         7bGjgFBlqCbqs1IYMBSWklxJunr2oYaySNH0q1/g=
+        b=snuwBmexcIroCTXFUWFwaiZYdkfPt0ci1370m2WzsbMqHnBVmdP53czc7Lx+j023a
+         o9lHK0kywDAD5f7f+fIDnNN3e9yKSvoZCAQjVbKP6nL7Nr5R34Zo5UJ8iwZdxhdpDa
+         X6lvPYsHC9OxDY64E/cGF3z2Ql4TwH11RWc/d8J0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.4 72/78] HID: hiddev: fix mess in hiddev_open()
-Date:   Tue, 14 Jan 2020 11:01:46 +0100
-Message-Id: <20200114094403.046774857@linuxfoundation.org>
+        syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 36/78] can: can_dropped_invalid_skb(): ensure an initialized headroom in outgoing CAN sk_buffs
+Date:   Tue, 14 Jan 2020 11:01:10 +0100
+Message-Id: <20200114094358.465829190@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -60,157 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
 
-commit 18a1b06e5b91d47dc86c0a66a762646ea7c5d141 upstream.
+commit e7153bf70c3496bac00e7e4f395bb8d8394ac0ea upstream.
 
-The open method of hiddev handler fails to bring the device out of
-autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
-blocks that try to start the transport (call hid_hw_open()) with both
-being guarded by the "open" counter, so the 2nd block is never executed as
-the first block increments the counter so it is never at 0 when we check
-it for the second block.
+KMSAN sysbot detected a read access to an untinitialized value in the
+headroom of an outgoing CAN related sk_buff. When using CAN sockets this
+area is filled appropriately - but when using a packet socket this
+initialization is missing.
 
-Additionally hiddev_open() was leaving counter incremented on errors,
-causing the device to never be reopened properly if there was ever an
-error.
+The problematic read access occurs in the CAN receive path which can
+only be triggered when the sk_buff is sent through a (virtual) CAN
+interface. So we check in the sending path whether we need to perform
+the missing initializations.
 
-Let's fix all of this by factoring out code that creates client structure
-and powers up the device into a separate function that is being called
-from usbhid_open() with the "existancelock" being held.
-
-Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Fixes: d3b58c47d330d ("can: replace timestamp as unique skb attribute")
+Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
+Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Tested-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: linux-stable <stable@vger.kernel.org> # >= v4.1
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hiddev.c |   97 +++++++++++++++++++-------------------------
- 1 file changed, 42 insertions(+), 55 deletions(-)
+ include/linux/can/dev.h |   34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -241,12 +241,51 @@ static int hiddev_release(struct inode *
- 	return 0;
- }
+--- a/include/linux/can/dev.h
++++ b/include/linux/can/dev.h
+@@ -18,6 +18,7 @@
+ #include <linux/can/error.h>
+ #include <linux/can/led.h>
+ #include <linux/can/netlink.h>
++#include <linux/can/skb.h>
+ #include <linux/netdevice.h>
  
-+static int __hiddev_open(struct hiddev *hiddev, struct file *file)
+ /*
+@@ -91,6 +92,36 @@ struct can_priv {
+ #define get_can_dlc(i)		(min_t(__u8, (i), CAN_MAX_DLC))
+ #define get_canfd_dlc(i)	(min_t(__u8, (i), CANFD_MAX_DLC))
+ 
++/* Check for outgoing skbs that have not been created by the CAN subsystem */
++static inline bool can_skb_headroom_valid(struct net_device *dev,
++					  struct sk_buff *skb)
 +{
-+	struct hiddev_list *list;
-+	int error;
++	/* af_packet creates a headroom of HH_DATA_MOD bytes which is fine */
++	if (WARN_ON_ONCE(skb_headroom(skb) < sizeof(struct can_skb_priv)))
++		return false;
 +
-+	lockdep_assert_held(&hiddev->existancelock);
++	/* af_packet does not apply CAN skb specific settings */
++	if (skb->ip_summed == CHECKSUM_NONE) {
++		/* init headroom */
++		can_skb_prv(skb)->ifindex = dev->ifindex;
++		can_skb_prv(skb)->skbcnt = 0;
 +
-+	list = vzalloc(sizeof(*list));
-+	if (!list)
-+		return -ENOMEM;
++		skb->ip_summed = CHECKSUM_UNNECESSARY;
 +
-+	mutex_init(&list->thread_lock);
-+	list->hiddev = hiddev;
++		/* preform proper loopback on capable devices */
++		if (dev->flags & IFF_ECHO)
++			skb->pkt_type = PACKET_LOOPBACK;
++		else
++			skb->pkt_type = PACKET_HOST;
 +
-+	if (!hiddev->open++) {
-+		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
-+		if (error < 0)
-+			goto err_drop_count;
-+
-+		error = hid_hw_open(hiddev->hid);
-+		if (error < 0)
-+			goto err_normal_power;
++		skb_reset_mac_header(skb);
++		skb_reset_network_header(skb);
++		skb_reset_transport_header(skb);
 +	}
 +
-+	spin_lock_irq(&hiddev->list_lock);
-+	list_add_tail(&list->node, &hiddev->list);
-+	spin_unlock_irq(&hiddev->list_lock);
-+
-+	file->private_data = list;
-+
-+	return 0;
-+
-+err_normal_power:
-+	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
-+err_drop_count:
-+	hiddev->open--;
-+	vfree(list);
-+	return error;
++	return true;
 +}
 +
- /*
-  * open file op
-  */
- static int hiddev_open(struct inode *inode, struct file *file)
- {
--	struct hiddev_list *list;
- 	struct usb_interface *intf;
- 	struct hid_device *hid;
- 	struct hiddev *hiddev;
-@@ -255,66 +294,14 @@ static int hiddev_open(struct inode *ino
- 	intf = usbhid_find_interface(iminor(inode));
- 	if (!intf)
- 		return -ENODEV;
+ /* Drop a given socketbuffer if it does not contain a valid CAN frame. */
+ static inline bool can_dropped_invalid_skb(struct net_device *dev,
+ 					  struct sk_buff *skb)
+@@ -108,6 +139,9 @@ static inline bool can_dropped_invalid_s
+ 	} else
+ 		goto inval_skb;
+ 
++	if (!can_skb_headroom_valid(dev, skb))
++		goto inval_skb;
 +
- 	hid = usb_get_intfdata(intf);
- 	hiddev = hid->hiddev;
+ 	return false;
  
--	if (!(list = vzalloc(sizeof(struct hiddev_list))))
--		return -ENOMEM;
--	mutex_init(&list->thread_lock);
--	list->hiddev = hiddev;
--	file->private_data = list;
--
--	/*
--	 * no need for locking because the USB major number
--	 * is shared which usbcore guards against disconnect
--	 */
--	if (list->hiddev->exist) {
--		if (!list->hiddev->open++) {
--			res = hid_hw_open(hiddev->hid);
--			if (res < 0)
--				goto bail;
--		}
--	} else {
--		res = -ENODEV;
--		goto bail;
--	}
--
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_add_tail(&list->node, &hiddev->list);
--	spin_unlock_irq(&list->hiddev->list_lock);
--
- 	mutex_lock(&hiddev->existancelock);
--	/*
--	 * recheck exist with existance lock held to
--	 * avoid opening a disconnected device
--	 */
--	if (!list->hiddev->exist) {
--		res = -ENODEV;
--		goto bail_unlock;
--	}
--	if (!list->hiddev->open++)
--		if (list->hiddev->exist) {
--			struct hid_device *hid = hiddev->hid;
--			res = hid_hw_power(hid, PM_HINT_FULLON);
--			if (res < 0)
--				goto bail_unlock;
--			res = hid_hw_open(hid);
--			if (res < 0)
--				goto bail_normal_power;
--		}
--	mutex_unlock(&hiddev->existancelock);
--	return 0;
--bail_normal_power:
--	hid_hw_power(hid, PM_HINT_NORMAL);
--bail_unlock:
-+	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
- 	mutex_unlock(&hiddev->existancelock);
- 
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_del(&list->node);
--	spin_unlock_irq(&list->hiddev->list_lock);
--bail:
--	file->private_data = NULL;
--	vfree(list);
- 	return res;
- }
- 
+ inval_skb:
 
 
