@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2650DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56357C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A7B20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D114207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996491;
-	bh=kzrT3qT3qSemd6xAxlmFMym2JQwhldvlctsOG+uH+kQ=;
+	s=default; t=1578996494;
+	bh=4BXyphWGIi64QsKJpkaEKqah5x13QFTr6FzjuvcO7bU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5+x8NCK873mXeyMNN+Wy7yHvavmYXud95By+rY2h1kVxh/0TMzgBUEUy6LhNTkBg
-	 A8jn1PY4Hi+as0fDFbOqwVy17jUOmbmICYtse8nyCF01A1ZearkODyCBzHA9H+kAy+
-	 rGyRm2GNQbqzyK7BgsMeb3Gr6T7KnpLE8mEm9oi8=
+	b=cDoAC0FsmZxuZq3KjTM80b+vXFCdjBVvdOm0jB/wQVWzacj/berCkrsNCdg7oQnoG
+	 A66cCAJF7W4u82wJT/or7vENteZEqEaLUnvtV+BRwDTyozy9iV2mm4S1OR2gPaDiru
+	 r6LYdJtHg4nPRsdNsfSKyZqs8/rqL5cojcCBvU38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbgANKIJ (ORCPT
+        id S1729847AbgANKIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbgANKIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:06 -0500
+        id S1730898AbgANKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C628524685;
-        Tue, 14 Jan 2020 10:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7417C2467D;
+        Tue, 14 Jan 2020 10:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996486;
-        bh=kzrT3qT3qSemd6xAxlmFMym2JQwhldvlctsOG+uH+kQ=;
+        s=default; t=1578996489;
+        bh=4BXyphWGIi64QsKJpkaEKqah5x13QFTr6FzjuvcO7bU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwWOr04mdm9WXWjrPPTqNetlXfKotysNQ8zllbFiYfzZAEMc+b/LvNFfxYG1E+BDI
-         UblVJMIuKHiSrKSMJkbvPyvgRaJnKCBSPPoeT8podkA4VDIzr8NLnkYhvh1VcD0u2X
-         b7W5r0RfIKyQOPQf1eer5fbsMkLVkX79FYzB1DD8=
+        b=Wot9GptdxiR7eg/tV9iY/8j/i5cFki3QQKv1tbt2VPB9g9w7SCuQGLn1clrm+v2Hy
+         BGT8lluQK3yoYYzIdhp1xVUYZXLUvE73pZW2rCzaO7uLL7Hv6SPocSr4qdZTrnzvGu
+         +dmfr3BiH3oBPjucvJzeVKVuwPswJ57q1aOmRRcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        David Sterba <dsterba@suse.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Antonio Borneo <antonio.borneo@st.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 09/46] tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
-Date:   Tue, 14 Jan 2020 11:01:26 +0100
-Message-Id: <20200114094342.369694851@linuxfoundation.org>
+Subject: [PATCH 4.19 10/46] tracing: Change offset type to s32 in preempt/irq tracepoints
+Date:   Tue, 14 Jan 2020 11:01:27 +0100
+Message-Id: <20200114094342.583498138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -59,39 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
+commit bf44f488e168368cae4139b4b33c3d0aaa11679c upstream.
 
-On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
-this makes the stack tracer fail to compile. Just define it to zero in this
-case.
+Discussion in the below link reported that symbols in modules can appear
+to be before _stext on ARM architecture, causing wrapping with the
+offsets of this tracepoint. Change the offset type to s32 to fix this.
 
-Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
+Link: http://lore.kernel.org/r/20191127154428.191095-1-antonio.borneo@st.com
+Link: http://lkml.kernel.org/r/20200102194625.226436-1-joel@joelfernandes.org
 
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: David Sterba <dsterba@suse.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Antonio Borneo <antonio.borneo@st.com>
 Cc: stable@vger.kernel.org
-Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
-Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: d59158162e032 ("tracing: Add support for preempt and irq enable/disable events")
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_stack.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ include/trace/events/preemptirq.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -196,6 +196,11 @@ check_stack(unsigned long ip, unsigned l
- 	local_irq_restore(flags);
- }
+--- a/include/trace/events/preemptirq.h
++++ b/include/trace/events/preemptirq.h
+@@ -18,13 +18,13 @@ DECLARE_EVENT_CLASS(preemptirq_template,
+ 	TP_ARGS(ip, parent_ip),
  
-+/* Some archs may not define MCOUNT_INSN_SIZE */
-+#ifndef MCOUNT_INSN_SIZE
-+# define MCOUNT_INSN_SIZE 0
-+#endif
-+
- static void
- stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
+ 	TP_STRUCT__entry(
+-		__field(u32, caller_offs)
+-		__field(u32, parent_offs)
++		__field(s32, caller_offs)
++		__field(s32, parent_offs)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->caller_offs = (u32)(ip - (unsigned long)_stext);
+-		__entry->parent_offs = (u32)(parent_ip - (unsigned long)_stext);
++		__entry->caller_offs = (s32)(ip - (unsigned long)_stext);
++		__entry->parent_offs = (s32)(parent_ip - (unsigned long)_stext);
+ 	),
+ 
+ 	TP_printk("caller=%pF parent=%pF",
 
 
