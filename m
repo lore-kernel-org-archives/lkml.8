@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F22C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F046FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697B424676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FF620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996572;
-	bh=gKvv+/SrsS+y93wpbqPaEa5gVBCDz92L2kQPTaV/LFA=;
+	s=default; t=1578996578;
+	bh=dbpZ/6J9+XYcY93rQiSQGr/8xtaLFGNJTRqP8j/x0Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VrJMJvgQ3O5R79zAINzkLFUbTNA1jJAJKBHsVP2avcGpNljT0eDWZ9A2hdsoA3cRS
-	 x9Vm0wp39I3HaZoGz6Szr3J7EXIq+UVu5GARZ7mN0MS4Jc0/gOSXwHGFPLgnyKUm3v
-	 7/B1Lr0I0Hw9zk5xiaREQwPa5HhTLVmxFHiZ2m6U=
+	b=nvqk0Z+xdvA6E/J38I1BMNhKiigdioY0kx9WlX2To2wYY4BFjw97HU8DXDJBcnVIy
+	 kBuKoFXumXCkJCUUJ8d6MzbCdCO2dVYSB/Qo4rV5pO78I5I/4Kc9RYWpiGnR1WOWc+
+	 9RS1Z9LTCEBB3qOkve4utfYS2DLvSnT4M6AjoiHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgANKJb (ORCPT
+        id S1729163AbgANKJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42276 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:09:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbgANKJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:27 -0500
+        id S1728969AbgANKJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61ED5207FF;
-        Tue, 14 Jan 2020 10:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD765207FF;
+        Tue, 14 Jan 2020 10:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996566;
-        bh=gKvv+/SrsS+y93wpbqPaEa5gVBCDz92L2kQPTaV/LFA=;
+        s=default; t=1578996572;
+        bh=dbpZ/6J9+XYcY93rQiSQGr/8xtaLFGNJTRqP8j/x0Ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OOUkZC+odxFGkCeXaTYUgANLd2aooNp9yCXUaoR0gJYdmkxPNeMwPMby/FgqN4ebC
-         LDCKpiuEKbo0TodONo1rmwMTbg22QM2v9kggrRGQyT5z3ohXDmT4BceLcx8hGVGBgF
-         RxTh04cIqQ2zYWXsKiMCx8KLUICNuFj09q/Ke3FM=
+        b=02stQHMsy1FdAQAhmSTMDtPemkaHxMLA2fGv/MBLBf4kweyQII+CS4k+B7OkDliJP
+         haPDlDDZ8lQ7J9fskYyDkI298cmg5kFjdo6Hre8XgvxdU0zjXw9tWTzxIU8UC7ZQlG
+         3jEbDIC+Mb6f54Y3M3J1MN3r7Lz92iPZuL7GkGwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 14/39] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
-Date:   Tue, 14 Jan 2020 11:01:48 +0100
-Message-Id: <20200114094342.309028889@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 16/39] USB: serial: option: add ZLP support for 0x1bc7/0x9010
+Date:   Tue, 14 Jan 2020 11:01:50 +0100
+Message-Id: <20200114094342.797098121@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -62,105 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit aa23ca3d98f756d5b1e503fb140665fb24a41a38 upstream.
+commit 2438c3a19dec5e98905fd3ffcc2f24716aceda6b upstream.
 
-On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
-event handling causes spurious wakeups.
+Telit FN980 flashing device 0x1bc7/0x9010 requires zero packet
+to be sent if out data size is is equal to the endpoint max size.
 
-This commit adds a new honor_wakeup option, defaulting to true (our current
-behavior), which can be used to disable wakeup on troublesome hardware
-to avoid these spurious wakeups.
-
-This is a workaround for an architectural problem with s2idle under Linux
-where we do not have any mechanism to immediately go back to sleep after
-wakeup events, other then for embedded-controller events using the standard
-ACPI EC interface, for details see:
-https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@redhat.com/
-
-One series of laptops which is not able to suspend without this workaround
-is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
-which makes sets honor_wakeup to false on these models.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200105160357.97154-3-hdegoede@redhat.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+[ johan: switch operands in conditional ]
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ drivers/usb/serial/option.c   |    8 ++++++++
+ drivers/usb/serial/usb-wwan.h |    1 +
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 3 files changed, 13 insertions(+)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -25,12 +25,18 @@
- #include "gpiolib.h"
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -570,6 +570,9 @@ static void option_instat_callback(struc
+ /* Interface must have two endpoints */
+ #define NUMEP2		BIT(16)
  
- #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
-+#define QUIRK_NO_WAKEUP				0x02l
- 
- static int run_edge_events_on_boot = -1;
- module_param(run_edge_events_on_boot, int, 0444);
- MODULE_PARM_DESC(run_edge_events_on_boot,
- 		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
- 
-+static int honor_wakeup = -1;
-+module_param(honor_wakeup, int, 0444);
-+MODULE_PARM_DESC(honor_wakeup,
-+		 "Honor the ACPI wake-capable flag: 0=no, 1=yes, -1=auto");
++/* Device needs ZLP */
++#define ZLP		BIT(17)
 +
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -341,7 +347,7 @@ static acpi_status acpi_gpiochip_alloc_e
- 	event->handle = evt_handle;
- 	event->handler = handler;
- 	event->irq = irq;
--	event->irq_is_wake = agpio->wake_capable == ACPI_WAKE_CAPABLE;
-+	event->irq_is_wake = honor_wakeup && agpio->wake_capable == ACPI_WAKE_CAPABLE;
- 	event->pin = pin;
- 	event->desc = desc;
  
-@@ -1340,6 +1346,23 @@ static const struct dmi_system_id gpioli
- 		},
- 		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
-+	{
-+		/*
-+		 * Various HP X2 10 Cherry Trail models use an external
-+		 * embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler. The embedded controller generates various
-+		 * spurious wakeup events when suspended. So disable wakeup
-+		 * for its handler (it uses the only ACPI GPIO event handler).
-+		 * This breaks wakeup when opening the lid, the user needs
-+		 * to press the power-button to wakeup the system. The
-+		 * alternative is suspend simply not working, which is worse.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
-+		},
-+		.driver_data = (void *)QUIRK_NO_WAKEUP,
-+	},
- 	{} /* Terminating entry */
- };
+ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
+@@ -1201,6 +1204,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(1) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
++	  .driver_info = NCTRL(0) | ZLP },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(1) },
+@@ -2109,6 +2114,9 @@ static int option_attach(struct usb_seri
+ 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
+ 		data->use_send_setup = 1;
  
-@@ -1359,6 +1382,13 @@ static int acpi_gpio_setup_params(void)
- 			run_edge_events_on_boot = 1;
- 	}
- 
-+	if (honor_wakeup < 0) {
-+		if (quirks & QUIRK_NO_WAKEUP)
-+			honor_wakeup = 0;
-+		else
-+			honor_wakeup = 1;
-+	}
++	if (device_flags & ZLP)
++		data->use_zlp = 1;
 +
- 	return 0;
+ 	spin_lock_init(&data->susp_lock);
+ 
+ 	usb_set_serial_data(serial, data);
+--- a/drivers/usb/serial/usb-wwan.h
++++ b/drivers/usb/serial/usb-wwan.h
+@@ -36,6 +36,7 @@ struct usb_wwan_intf_private {
+ 	spinlock_t susp_lock;
+ 	unsigned int suspended:1;
+ 	unsigned int use_send_setup:1;
++	unsigned int use_zlp:1;
+ 	int in_flight;
+ 	unsigned int open_ports;
+ 	void *private;
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -492,6 +492,7 @@ static struct urb *usb_wwan_setup_urb(st
+ 				      void (*callback) (struct urb *))
+ {
+ 	struct usb_serial *serial = port->serial;
++	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
+ 	struct urb *urb;
+ 
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
+@@ -502,6 +503,9 @@ static struct urb *usb_wwan_setup_urb(st
+ 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
+ 			  buf, len, callback, ctx);
+ 
++	if (intfdata->use_zlp && dir == USB_DIR_OUT)
++		urb->transfer_flags |= URB_ZERO_PACKET;
++
+ 	return urb;
  }
  
 
