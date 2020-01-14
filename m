@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1EDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAC9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30B9207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C83207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997182;
-	bh=VPYKbHK9cT8m+9JoWShICak7GUWHXzcF2k0ceTisMxM=;
+	s=default; t=1578997185;
+	bh=f+zasHaFZPGHYrBOj3ttLWGwZTdT81teXLi8J/9nfYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rX8+zTp3zXNy+fuUheFe9okrFKw9xmkapx8b438oYl+64WZowrNtYT5S7hdNxV0FP
-	 TEWUoG3A9TFaxnnrvzNyEM5T7maZuiBZuwZhtP8EBFsW+80tIBEyl7zo0mUP5Q8dzo
-	 SvjMIJTEOtCMKabdtj0YvzZjyRGd9qtSQdDcp4fQ=
+	b=X2rm51/IR/ndomTzWGD+NDXHGA+JbYkSPFufPgnn3VWQcHVJnl2VKZZAcSdJ688+r
+	 vzW7oPo/Up/meD+1UoczFT/GJoUSmjUFCz76kwuspcfSl+ZOPqHIOEE3osmO9cTUTa
+	 x4ekXlDbglDJEIgeEcJYkwvdTELHTVb8bHzsAT18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbgANKFW (ORCPT
+        id S1730989AbgANKTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33256 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgANKFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:16 -0500
+        id S1729727AbgANKFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922182467A;
-        Tue, 14 Jan 2020 10:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4AB224672;
+        Tue, 14 Jan 2020 10:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996315;
-        bh=VPYKbHK9cT8m+9JoWShICak7GUWHXzcF2k0ceTisMxM=;
+        s=default; t=1578996321;
+        bh=f+zasHaFZPGHYrBOj3ttLWGwZTdT81teXLi8J/9nfYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tswaZspW5Uop8iIimI1abhRunxTws2rnbuhrpTABSvPhOylo5MTpdP0VHeL4bQsJF
-         51uux9jwWjEWL5UzRMxU/onee2wbF3q1agJEW3ulZPnIn+aleDJ91bEk6KtlH/FaRV
-         V6cZQM6lX6wGJ+hefA/IwFazhHSVFW5Uz5RNjYlQ=
+        b=eJL9b3MN4qfecomgMvphJNbqTooks3hM/XMgTV+ZYjeOY63DNgJpGInlbJ90hTA0R
+         yU01SRJyUzFEuYxG5grckDX/YjGVQ+Z7s6Bd5X3bUNq7Jsg2jc5aUXuXExtMFSHjuS
+         LhgADU208AtXQImxG+J22uPnpvOvqoIVAxchIcfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Steinhardt <ps@pks.im>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 54/78] iommu/vt-d: Fix adding non-PCI devices to Intel IOMMU
-Date:   Tue, 14 Jan 2020 11:01:28 +0100
-Message-Id: <20200114094400.718566344@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 38/78] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
+Date:   Tue, 14 Jan 2020 11:01:12 +0100
+Message-Id: <20200114094358.716630382@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -60,87 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Steinhardt <ps@pks.im>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 4a350a0ee5b0a14f826fcdf60dd1a3199cafbfd6 upstream.
+commit aa23ca3d98f756d5b1e503fb140665fb24a41a38 upstream.
 
-Starting with commit fa212a97f3a3 ("iommu/vt-d: Probe DMA-capable ACPI
-name space devices"), we now probe DMA-capable ACPI name
-space devices. On Dell XPS 13 9343, which has an Intel LPSS platform
-device INTL9C60 enumerated via ACPI, this change leads to the following
-warning:
+On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
+event handling causes spurious wakeups.
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 1 PID: 1 at pci_device_group+0x11a/0x130
-    CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 5.5.0-rc3+ #22
-    Hardware name: Dell Inc. XPS 13 9343/0310JH, BIOS A20 06/06/2019
-    RIP: 0010:pci_device_group+0x11a/0x130
-    Code: f0 ff ff 48 85 c0 49 89 c4 75 c4 48 8d 74 24 10 48 89 ef e8 48 ef ff ff 48 85 c0 49 89 c4 75 af e8 db f7 ff ff 49 89 c4 eb a5 <0f> 0b 49 c7 c4 ea ff ff ff eb 9a e8 96 1e c7 ff 66 0f 1f 44 00 00
-    RSP: 0000:ffffc0d6c0043cb0 EFLAGS: 00010202
-    RAX: 0000000000000000 RBX: ffffa3d1d43dd810 RCX: 0000000000000000
-    RDX: ffffa3d1d4fecf80 RSI: ffffa3d12943dcc0 RDI: ffffa3d1d43dd810
-    RBP: ffffa3d1d43dd810 R08: 0000000000000000 R09: ffffa3d1d4c04a80
-    R10: ffffa3d1d4c00880 R11: ffffa3d1d44ba000 R12: 0000000000000000
-    R13: ffffa3d1d4383b80 R14: ffffa3d1d4c090d0 R15: ffffa3d1d4324530
-    FS:  0000000000000000(0000) GS:ffffa3d1d6700000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 0000000000000000 CR3: 000000000460a001 CR4: 00000000003606e0
-    Call Trace:
-     ? iommu_group_get_for_dev+0x81/0x1f0
-     ? intel_iommu_add_device+0x61/0x170
-     ? iommu_probe_device+0x43/0xd0
-     ? intel_iommu_init+0x1fa2/0x2235
-     ? pci_iommu_init+0x52/0xe7
-     ? e820__memblock_setup+0x15c/0x15c
-     ? do_one_initcall+0xcc/0x27e
-     ? kernel_init_freeable+0x169/0x259
-     ? rest_init+0x95/0x95
-     ? kernel_init+0x5/0xeb
-     ? ret_from_fork+0x35/0x40
-    ---[ end trace 28473e7abc25b92c ]---
-    DMAR: ACPI name space devices didn't probe correctly
+This commit adds a new honor_wakeup option, defaulting to true (our current
+behavior), which can be used to disable wakeup on troublesome hardware
+to avoid these spurious wakeups.
 
-The bug results from the fact that while we now enumerate ACPI devices,
-we aren't able to handle any non-PCI device when generating the device
-group. Fix the issue by implementing an Intel-specific callback that
-returns `pci_device_group` only if the device is a PCI device.
-Otherwise, it will return a generic device group.
+This is a workaround for an architectural problem with s2idle under Linux
+where we do not have any mechanism to immediately go back to sleep after
+wakeup events, other then for embedded-controller events using the standard
+ACPI EC interface, for details see:
+https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@redhat.com/
 
-Fixes: fa212a97f3a3 ("iommu/vt-d: Probe DMA-capable ACPI name space devices")
-Signed-off-by: Patrick Steinhardt <ps@pks.im>
-Cc: stable@vger.kernel.org # v5.3+
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+One series of laptops which is not able to suspend without this workaround
+is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
+which makes sets honor_wakeup to false on these models.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200105160357.97154-3-hdegoede@redhat.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib-acpi.c |   32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5786,6 +5786,13 @@ static void intel_iommu_apply_resv_regio
- 	WARN_ON_ONCE(!reserve_iova(&dmar_domain->iovad, start, end));
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -22,12 +22,18 @@
+ #include "gpiolib-acpi.h"
+ 
+ #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
++#define QUIRK_NO_WAKEUP				0x02l
+ 
+ static int run_edge_events_on_boot = -1;
+ module_param(run_edge_events_on_boot, int, 0444);
+ MODULE_PARM_DESC(run_edge_events_on_boot,
+ 		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
+ 
++static int honor_wakeup = -1;
++module_param(honor_wakeup, int, 0444);
++MODULE_PARM_DESC(honor_wakeup,
++		 "Honor the ACPI wake-capable flag: 0=no, 1=yes, -1=auto");
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -276,7 +282,7 @@ static acpi_status acpi_gpiochip_alloc_e
+ 	event->handle = evt_handle;
+ 	event->handler = handler;
+ 	event->irq = irq;
+-	event->irq_is_wake = agpio->wake_capable == ACPI_WAKE_CAPABLE;
++	event->irq_is_wake = honor_wakeup && agpio->wake_capable == ACPI_WAKE_CAPABLE;
+ 	event->pin = pin;
+ 	event->desc = desc;
+ 
+@@ -1330,6 +1336,23 @@ static const struct dmi_system_id gpioli
+ 		},
+ 		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
+ 	},
++	{
++		/*
++		 * Various HP X2 10 Cherry Trail models use an external
++		 * embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler. The embedded controller generates various
++		 * spurious wakeup events when suspended. So disable wakeup
++		 * for its handler (it uses the only ACPI GPIO event handler).
++		 * This breaks wakeup when opening the lid, the user needs
++		 * to press the power-button to wakeup the system. The
++		 * alternative is suspend simply not working, which is worse.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
++		},
++		.driver_data = (void *)QUIRK_NO_WAKEUP,
++	},
+ 	{} /* Terminating entry */
+ };
+ 
+@@ -1349,6 +1372,13 @@ static int acpi_gpio_setup_params(void)
+ 			run_edge_events_on_boot = 1;
+ 	}
+ 
++	if (honor_wakeup < 0) {
++		if (quirks & QUIRK_NO_WAKEUP)
++			honor_wakeup = 0;
++		else
++			honor_wakeup = 1;
++	}
++
+ 	return 0;
  }
  
-+static struct iommu_group *intel_iommu_device_group(struct device *dev)
-+{
-+	if (dev_is_pci(dev))
-+		return pci_device_group(dev);
-+	return generic_device_group(dev);
-+}
-+
- #ifdef CONFIG_INTEL_IOMMU_SVM
- struct intel_iommu *intel_svm_device_to_iommu(struct device *dev)
- {
-@@ -5958,7 +5965,7 @@ const struct iommu_ops intel_iommu_ops =
- 	.get_resv_regions	= intel_iommu_get_resv_regions,
- 	.put_resv_regions	= intel_iommu_put_resv_regions,
- 	.apply_resv_region	= intel_iommu_apply_resv_region,
--	.device_group		= pci_device_group,
-+	.device_group		= intel_iommu_device_group,
- 	.dev_has_feat		= intel_iommu_dev_has_feat,
- 	.dev_feat_enabled	= intel_iommu_dev_feat_enabled,
- 	.dev_enable_feat	= intel_iommu_dev_enable_feat,
 
 
