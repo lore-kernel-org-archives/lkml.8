@@ -2,119 +2,77 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0FDC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98398C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9885020678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6860F222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578983864;
+	bh=NBIza/ymMVuUCaPXacKYwhUHlMW1KvmRdb+puHl++z0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Snlb6kJeo1NzmXQmYHs79erV74atmiQbHpDmFqhBoA83qu03bwtLuHfo3gARqIA9B
+	 ZCxjKxr9lYYsTN2gEP8Ahcnf2CSHMvLC1gPSZw9xYqzV0IY7WV2VXNk0HjBFSaLsJ/
+	 3c/kSiumu10cxukTnw91lPz/THs1qkVO5uCcA3UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgANGfk (ORCPT
+        id S1728689AbgANGhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:35:40 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:56638 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726279AbgANGfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:35:38 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TnhU9aL_1578983727;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnhU9aL_1578983727)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Jan 2020 14:35:28 +0800
-Subject: Re: [PATCH v7 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, yang.shi@linux.alibaba.com,
-        willy@infradead.org, shakeelb@google.com, hannes@cmpxchg.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
- <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <677cb490-35a4-4186-0935-6d71305a3a3e@linux.alibaba.com>
-Date:   Tue, 14 Jan 2020 14:33:58 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Tue, 14 Jan 2020 01:37:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbgANGhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:37:43 -0500
+Received: from localhost (unknown [49.207.51.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FBF207FD;
+        Tue, 14 Jan 2020 06:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578983862;
+        bh=NBIza/ymMVuUCaPXacKYwhUHlMW1KvmRdb+puHl++z0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=evne6lx6eGCVUOFd4izSpN2llgzRkiJK5XATRjbordGx98m5YSbiX3nWlx1xHgo3O
+         hS+nBOSpmAhra3jWnzS4vuBkT4ySiFB6eXb6d5oRHSwXmJ+jFExefT/twUSZuwFWvk
+         /e0Xa/BPdQZ6BfL5ge0nvLdikwUtIvop2Ps37jKw=
+Date:   Tue, 14 Jan 2020 12:07:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH] soundwire: bus: fix device number leak on errors
+Message-ID: <20200114063738.GG2818@vkoul-mobl>
+References: <20200113225637.17313-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113225637.17313-1-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-ÔÚ 2020/1/13 ÏÂÎç11:41, Daniel Jordan Ð´µÀ:
-> Hi Alex,
+On 13-01-20, 16:56, Pierre-Louis Bossart wrote:
+> If the programming of the dev_number fails due to an IO error, a new
+> device_number will be assigned, resulting in a leak.
 > 
-> On Wed, Dec 25, 2019 at 05:04:19PM +0800, Alex Shi wrote:
->> @@ -900,6 +904,29 @@ static inline struct lruvec *mem_cgroup_page_lruvec(struct page *page,
->>  {
->>  	return &pgdat->__lruvec;
->>  }
->> +#define lock_page_lruvec_irq(page)			\
->> +({							\
->> +	struct pglist_data *pgdat = page_pgdat(page);	\
->> +	spin_lock_irq(&pgdat->__lruvec.lru_lock);	\
->> +	&pgdat->__lruvec;				\
->> +})
->> +
->> +#define lock_page_lruvec_irqsave(page, flagsp)			\
->> +({								\
->> +	struct pglist_data *pgdat = page_pgdat(page);		\
->> +	spin_lock_irqsave(&pgdat->__lruvec.lru_lock, *flagsp);	\
->> +	&pgdat->__lruvec;					\
->> +})
->> +
->> +#define unlock_page_lruvec_irq(lruvec)			\
->> +({							\
->> +	spin_unlock_irq(&lruvec->lru_lock);		\
->> +})
->> +
->> +#define unlock_page_lruvec_irqrestore(lruvec, flags)		\
->> +({								\
->> +	spin_unlock_irqrestore(&lruvec->lru_lock, flags);	\
->> +})
-> 
-> Noticed this while testing your series.  These are safe as inline functions, so
-> I think you may have gotten the wrong impression when Johannes made this point:
-> 
-> https://lore.kernel.org/linux-mm/20191119164448.GA396644@cmpxchg.org/
-> 
+> Make sure we only assign a device_number once per Slave device.
 
-Thanks for reminder! Daniel!
+Although I am not sure if this would be a leak, we assign a new num and
+old number should have gotten recycled as they would be unattached
+status.
 
-I write them to macro, since I guess it's more favorite for some guys. It's do a bit more neat than function although cost a bit readablity. 
+Anyway this is good improvement as it helps to debug having same
+dev_num, so Applied, thanks
 
-Thanks a lot! :)
-Alex
+-- 
+~Vinod
