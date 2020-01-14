@@ -3,146 +3,204 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0325AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D70C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCB424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D20524656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="IfdDcPIP"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="R8IHlH5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgANQ0f (ORCPT
+        id S1727102AbgANQ2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:26:35 -0500
-Received: from mail-dm6nam10on2050.outbound.protection.outlook.com ([40.107.93.50]:6027
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbgANQ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:26:34 -0500
+        Tue, 14 Jan 2020 11:28:46 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:48592 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgANQ2p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:28:45 -0500
+Received: from [46.226.52.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id 9F/47-19890-A3CED1E5; Tue, 14 Jan 2020 16:28:42 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRWlGSWpSXmKPExsWSoc9hrGv1Rjb
+  OYPdXRov5R86xWqyaupPF4v7Xo4wWl3fNYbO4sW4fu8WThWeYLD7susps0br3CLsDh8emVZ1s
+  Hneu7WHz6P9r4LHzewO7x+dNcgGsUayZeUn5FQmsGS///2QpWCRUMeveRuYGxsV8XYxcHIwCS
+  5klzqy9zALhHGORuLihiwnC2cwo8bv3JxuIwyJwglniYfNzMEdIoJ9J4uvlg8wQzl1Gicdfrg
+  NlODnYBCwkJp94AGaLCMRLHJ97FqyIWeAes8TS1c1MIAlhAReJSw+OM0EUuUpcX3gCqsFJYs2
+  6vcwgNouAKlDNYiCbg4NXIFZiyqNAiGWfGCU27+hjB6nhFLCVmPJ7ISuIzSggK/GlcTVYL7OA
+  uMStJ/PB5ksICEgs2XOeGcIWlXj5+B9UfarEyaYbjBBxHYmz159A2UoS8+YegbJlJS7N74ayf
+  SW27PjFAmFrSey7fw9qpoXEku5WFpA7JQRUJP4dqoQI50gcaNkMVaIm8fnpFShbRqL/7AxWkF
+  8kBNawSGxefodtAqP+LCRnQ9g6Egt2f2KDsLUlli18zQxi8woISpyc+YRlASPLKkaLpKLM9Iy
+  S3MTMHF1DAwNdQ0MjXUNLc10jQzO9xCrdJL3UUt3y1OISXUO9xPJiveLK3OScFL281JJNjMBk
+  llJw9MYOxt9f3uodYpTkYFIS5RXZIxsnxJeUn1KZkVicEV9UmpNafIhRhoNDSYK3/BVQTrAoN
+  T21Ii0zB5hYYdISHDxKIryir4HSvMUFibnFmekQqVOMuhwTXs5dxCzEkpeflyolzlsJMkMApC
+  ijNA9uBCzJX2KUlRLmZWRgYBDiKUgtys0sQZV/xSjOwagkzNsDMoUnM68EbtMroCOYgI6Yfwr
+  siJJEhJRUA1ONiU1pt7n8tyeOG+ssmoTmi9rp/ZA8zWEq4Ph15VXmsETTS6VXLD6Zy89dO2Ou
+  6p/ew19r36tWvdM0rrNs4RXJ7X6XziomePygYx9DAee9iSaXHnlM/yxRMY1ff7vpl/0WJ/d1O
+  puzL2nyT7nUJ/vMi0d9Wmqrke39Y8UV2f/WMOi4nvPIbYsQ3ZwptVzLIKjgYOCRfGGG5EUSXq
+  n5WzXszm9UmyT/M2zPXc8JojpPjrU1r91l87ufK9VZ/8vy7nvc5n1Rj3VuvhGslBRb3tX18rH
+  6Tta3N2Ykputq/FC5yBF2/GZunzND93rV1as2e1hrFK7kj3la+G+K3dzpyx6qWfyZu2xCzNTO
+  sqwVSizFGYmGWsxFxYkAvpYdrm0EAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-19.tower-292.messagelabs.com!1579019321!428579!1
+X-Originating-IP: [104.47.8.51]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 17206 invoked from network); 14 Jan 2020 16:28:41 -0000
+Received: from mail-am5eur03lp2051.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.51)
+  by server-19.tower-292.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Jan 2020 16:28:41 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QCSBwrcYeKcA9zkIFq8U/cH3np3uqHS2nWR2Y71HiiIpL7eFRV3PRoBFAEn2nkX/raLmaBgVyYfQdrAZSuZ+/h6OUDcfP8dNKs+j1+bHsBGYrT0qwT7Kyahipl32es3cOwzVdrqEPtZqqtBuQmn62W6yWvLdT8NysNJJJddpaYyiIFYFXMu0ZyFde4WqSAkel4E6iUqYF2kdLebR8OhTuWrTdxglIB3CWryYP577STKrk2LTt+HsBpKLcRlY4JdpHnTxim+HZGr6jzBrMns4O9tAPhPRJDoyklYhfzkurcUcHT/yiGeKq+TqV91BRDDv0H8mtHu7qgZ5wGyTzOnrEg==
+ b=gndyR8QQzCU7RLVdPi30QMHtx0JrWsW1RmBbVZjeSMSqf4Ft+H4tnDAZC8StyP5nS7eN4sBFhfazGeTE+LCeu07NNgMthTBx6STJOHOn696xi5z8RmNbCVb1AY7NyR7yq+vHGWbLIfc5hc5pAfDDA94mmuEYDd+e2RYvwogbmA8XG1G1yuDH9byfsFC8cJbvabcx/45QZ5Hq3LxfRF8HsmJ+Re3lJT1OlBkNR2hKQfgS3RIbbqZZ5yRaTELTySYnYnnQ9g5rLEbTk2saNPuVcrMFxmDR1zpZGKIEF9f6Ykcj/eyistEthR4qI36jDs65YuMPCcGrhTLQL/rCt/R8aQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QHy/C5++OemYKYAG8zWr6nCPTuRvwJJfOwocbfcEbHc=;
- b=bT95sRS6/E9Z0t31l7Q8zMCrp0oqRRBFJ1ial5ozVK8Hho679rmfpAoGO6aM6eIVrlb/Ac4aFG2nAvdI3hF4wMs92BQI8hyKSKIBbUF7wMoxbXbbcy+RcBagutFHJ5+4RWR4kXE+c+MDARVPNjNi/YgMn2i/1OpdqI/O72Tov88HIy3HqJV72b3/Uzt/gfN2G7Uh1FGA3I2Viq1L8BlxKI8cu7t3qB3M0d1DjJ8sCIR0jXuedZIWNf1MpgJZv3eZIjHPeuLJtgl0xzVS6qOFjaN+TADgrw505gKr7BQSc2HOT7DPCZlWnMZuoFvwzGB0ru0FC/+0s/2VGU1fw1gI8w==
+ bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
+ b=L0GMxE3t9alfS96F5lOkKWgUpuBQgKJp7BzjKqfJgE72OxJDqRsnwYaN3CW18A1jDZNw6F1UW3kB2Veo6E4N3SmxHeiGCpkj2m9vsiSTkhnIVwJmfUTuRIH8IOrUIFNxx1vPi0KhFHIXonrL50BZVybF61GlNZZFK75AN7SmqkVQ780cMaP9VMx4RPwT5g7POQNaQUT5lG0jbz6U4Xki5k1glL/ZlA4kG0F+SrFy8BircLy6s/eXSx8VAhQFxp5oiVR2y5u3wsB13M8ZVzz7cp8Y+Xgtc1M3UMEJ+HABzTirUgdyYVvt+cg9Mk2gq1nva1Ayu50eQFli8H7gwxj/0g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QHy/C5++OemYKYAG8zWr6nCPTuRvwJJfOwocbfcEbHc=;
- b=IfdDcPIP6e8L0EogBpxhGyYbYo/DrvKPABgSEzVo3ODnRwHrF+2SQLfbUeefmfX/bZVA4kvLzRFVNIKvv/tlu1PBjU3NtV6VMMDcwDHe/xk8YaCwQfoZXjUQSXhevk4AMaHXw7BBiBM2jXEXaEzipIW9D5ln3fY2f8sdPCfORJo=
-Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.77.152) by
- BN8PR10MB3524.namprd10.prod.outlook.com (20.179.79.219) with Microsoft SMTP
+ bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
+ b=R8IHlH5qGfBz3temhV0ALz87hYnhcxA5uFYtkE2celxXe9KyLCKyfyTheWHK7D/rtoXON3EhXDSZHKizEQkPV3N+Kum7Hc/915WJeRWx2EKrNQILsU1OcRS9jIGbpcTaSvBZrduBSkheuyaHgjKNxtLVWM5ases4omgqfTuY12A=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
+ AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM (20.179.2.151) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 16:26:18 +0000
-Received: from BN8PR10MB3540.namprd10.prod.outlook.com
- ([fe80::6922:a072:d75e:74ef]) by BN8PR10MB3540.namprd10.prod.outlook.com
- ([fe80::6922:a072:d75e:74ef%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 16:26:18 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ 15.20.2623.9; Tue, 14 Jan 2020 16:28:40 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 16:28:40 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     Support Opensource <Support.Opensource@diasemi.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lkp@intel.com" <lkp@intel.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
-Thread-Topic: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
-Thread-Index: AQHVyvSaV4B/R2znCEqweeHE7izY96fqWMiA
-Date:   Tue, 14 Jan 2020 16:26:18 +0000
-Message-ID: <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
-References: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
-In-Reply-To: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Thread-Topic: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Thread-Index: AQHVxgoH+VEwCd0goUCdzD0vjKNBfafqYIMggAABdYCAAACmIA==
+Date:   Tue, 14 Jan 2020 16:28:40 +0000
+Message-ID: <AM6PR10MB22632546AC9A4466B642BEFD80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-2-m.felsch@pengutronix.de>
+ <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <20200114162359.weoirknje6yhcmds@pengutronix.de>
+In-Reply-To: <20200114162359.weoirknje6yhcmds@pengutronix.de>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
-x-originating-ip: [88.131.87.201]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fc679e57-a0a1-4f2b-e643-08d7990e7bc9
-x-ms-traffictypediagnostic: BN8PR10MB3524:
-x-microsoft-antispam-prvs: <BN8PR10MB352454091E4AC3AC8EC28539F4340@BN8PR10MB3524.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-office365-filtering-correlation-id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
+x-ms-traffictypediagnostic: AM6PR10MB2726:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB2726222D05CF0690C4049704A7340@AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(6506007)(4326008)(5660300002)(6486002)(6512007)(36756003)(66476007)(66556008)(478600001)(64756008)(8936002)(81166006)(81156014)(8676002)(2906002)(66446008)(76116006)(91956017)(66946007)(71200400001)(316002)(54906003)(26005)(86362001)(2616005)(186003)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3524;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: infinera.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(189003)(199004)(64756008)(966005)(478600001)(2906002)(4326008)(66556008)(66476007)(66446008)(66946007)(316002)(110136005)(54906003)(76116006)(55236004)(52536014)(26005)(8936002)(6506007)(53546011)(5660300002)(81156014)(8676002)(86362001)(81166006)(186003)(55016002)(9686003)(71200400001)(7696005)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2726;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cfP5hGgiG2GVd4C0ge3c6tp2HCcYKSmkM1m3QSvBoXpOFO2j+CyfF/kAlePXm759PuzzCC1d4rhiacDw/XsiBDJV/cr7c1VFug4dreXo2e5fMZy2uy4zSYzxe+cGfedkwreWhOErUD4YEEW/stqODPOvvHOoX41SX3crwaVse9Tvj/26jn6GAGiNf1v70SA1oWqYeXkJWXlc/F+tD9UKd0hgY0sGgpBhOBqSf3TjkPbTcruzRkbjgeKBFfCRW4ADt1d2ND5veqemrDJbAqx6+aIHLrXyRfUHrID5XNGeXxOoCA9kFpp2spckILibO7RrtF9HWCnm2wgJLiHMqTtprNkvycvdOjM5f8EbT2iB7lBPltcv/zRIZ4f3b/iP2vFGvdNA2Nzrbw8cgNoe27GIOPHcXcUvgaCJWWtJyXo1ygYiRDdQbVSYByuYMNhZYYCH
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <75EE43E45520CF4BBC8B477E9A2C63F7@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: UY0ETwwWB1NC4jQJjjIyRfZgLyPA0HocCW7OweiydhtyjTfulqfcb6Gii7m9AGLpur6kaPBFzdeuwN6ZFDolbywaB6FSkyOzJuA6mh/OPe2s+J3oduf2O9k1JQn1itn+IWTiyK+IMLfRsuVKEAcLynyiLdjH5KQkBEJku/+OJxAwXOO0Q7OtSR3n11sWbOOiK8JMecT4PXCnbm3HO679+TvehW+sW057MarOt3imA+6cwnALlRXfT4ZIEAEcSZ+/ahOFiNFa5de91/AO15shTLd7T1qsmcb/dNbqBQucQkxpWg/eMXFbafmCw/KHVGAHARfs6oI0QC+W8kZ4cac+Csor21+FlEbskNUj7JOSIeeQ5GIwG1cnaX8modneSBT9fDScmAZQTIHl6/qqDKybKO8Z++25cx7AxXkjRBB0oCZbIi/s39FFIhWfQ0xkdh9tOho9tFwibhOVvJNznRMDOsWLPuzjPgpEISB0AAkh0qDB3otgvVndRQwE/KSDPAs8A1P61u37IuY5ED5Jn0BeRQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc679e57-a0a1-4f2b-e643-08d7990e7bc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:26:18.0556
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:28:40.7757
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j8kzUAkVImhXUWvrGTWmaeeL+9YiJJfW3Yjzbpdw4uuEcnvRuHJjt9S1Dgw2vPikP+mt9XHOW1LM/BXBnyBPfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3524
+X-MS-Exchange-CrossTenant-userprincipalname: xrlcAF6X62ThIJJxqBw3QYFfX5s1g24k7hBeL1xqlEqPTAq6iNRJY+NV2Gm49gsomItKfz42l63GrwV/ET5k3CKQcNHmyuqV1InPQcYzhdI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAxLTE0IGF0IDE2OjAyICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
-cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
-cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
-Cj4gDQo+IA0KPiBObyBuZWVkIHRvICdnb3RvIGVycjsnIGZvciBqdXN0IGRvaW5nIGEgcmV0dXJu
-Lg0KPiByZXR1cm4gZGlyZWN0bHkgZnJvbSB3aGVyZSB0aGUgZXJyb3IgaGFwcGVucy4NCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZy
-Pg0KPiAtLS0NCj4gdjM6IHJlYmFzZSBvbiB0b2RheSdzIHNwaS9mb3ItbmV4dCBhbmQgdXNpbmcg
-UFRSX0VSUl9PUl9aRVJPKCkgaW4gb25lIHBsYWNlLg0KPiAtLS0NCj4gIGRyaXZlcnMvc3BpL3Nw
-aS1mc2wtc3BpLmMgfCAyNyArKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtc3BpLmMgYi9kcml2ZXJzL3NwaS9zcGktZnNsLXNwaS5j
-DQo+IGluZGV4IGZiNDE1OWFkNmJmNi4uM2I4MTc3MmZlYTBkIDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL3NwaS9zcGktZnNsLXNwaS5jDQo+ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtc3BpLmMN
-Cj4gQEAgLTcwNiw4ICs3MDYsOCBAQCBzdGF0aWMgaW50IG9mX2ZzbF9zcGlfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqb2ZkZXYpDQo+ICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
-cCA9IG9mZGV2LT5kZXYub2Zfbm9kZTsNCj4gICAgICAgICBzdHJ1Y3Qgc3BpX21hc3RlciAqbWFz
-dGVyOw0KPiAgICAgICAgIHN0cnVjdCByZXNvdXJjZSBtZW07DQo+IC0gICAgICAgaW50IGlycSA9
-IDAsIHR5cGU7DQo+IC0gICAgICAgaW50IHJldCA9IC1FTk9NRU07DQo+ICsgICAgICAgaW50IGly
-cSwgdHlwZTsNCj4gKyAgICAgICBpbnQgcmV0Ow0KPiANCj4gICAgICAgICByZXQgPSBvZl9tcGM4
-eHh4X3NwaV9wcm9iZShvZmRldik7DQo+ICAgICAgICAgaWYgKHJldCkNCj4gQEAgLTcyMiwxMCAr
-NzIyLDggQEAgc3RhdGljIGludCBvZl9mc2xfc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKm9mZGV2KQ0KPiANCj4gICAgICAgICAgICAgICAgIGlmIChzcGlzZWxfYm9vdCkgew0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICBwaW5mby0+aW1tcl9zcGlfY3MgPSBpb3JlbWFwKGdldF9p
-bW1yYmFzZSgpICsgSU1NUl9TUElfQ1NfT0ZGU0VULCA0KTsNCj4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgaWYgKCFwaW5mby0+aW1tcl9zcGlfY3MpIHsNCj4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICByZXQgPSAtRU5PTUVNOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGdvdG8gZXJyOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICB9DQo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGlmICghcGluZm8tPmltbXJfc3BpX2NzKQ0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiAgICAgICAgICAgICAgICAgfQ0KPiAg
-I2VuZGlmDQo+ICAgICAgICAgICAgICAgICAvKg0KPiBAQCAtNzQ0LDI0ICs3NDIsMTUgQEAgc3Rh
-dGljIGludCBvZl9mc2xfc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKm9mZGV2KQ0K
-PiANCj4gICAgICAgICByZXQgPSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKG5wLCAwLCAmbWVtKTsN
-Cj4gICAgICAgICBpZiAocmV0KQ0KPiAtICAgICAgICAgICAgICAgZ290byBlcnI7DQo+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiANCj4gICAgICAgICBpcnEgPSBwbGF0Zm9ybV9nZXRf
-aXJxKG9mZGV2LCAwKTsNCj4gLSAgICAgICBpZiAoaXJxIDwgMCkgew0KPiAtICAgICAgICAgICAg
-ICAgcmV0ID0gaXJxOw0KPiAtICAgICAgICAgICAgICAgZ290byBlcnI7DQo+IC0gICAgICAgfQ0K
-PiArICAgICAgIGlmIChpcnEgPCAwKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGlycTsNCj4g
-DQo+ICAgICAgICAgbWFzdGVyID0gZnNsX3NwaV9wcm9iZShkZXYsICZtZW0sIGlycSk7DQo+IC0g
-ICAgICAgaWYgKElTX0VSUihtYXN0ZXIpKSB7DQo+IC0gICAgICAgICAgICAgICByZXQgPSBQVFJf
-RVJSKG1hc3Rlcik7DQo+IC0gICAgICAgICAgICAgICBnb3RvIGVycjsNCj4gLSAgICAgICB9DQo+
-IC0NCg0KRG9uJ3QgeW91IG5lZWQgdG8gInVuZG8iIGlvcmVtYXAsIGlycSBldGMuIGluIGNhc2Ug
-b2YgbGF0ZXIgZXJyb3JzPw0KDQo+IC0gICAgICAgcmV0dXJuIDA7DQo+IA0KPiAtZXJyOg0KPiAt
-ICAgICAgIHJldHVybiByZXQ7DQo+ICsgICAgICAgcmV0dXJuIFBUUl9FUlJfT1JfWkVSTyhtYXN0
-ZXIpOw0KPiAgfQ0KPiANCj4gIHN0YXRpYyBpbnQgb2ZfZnNsX3NwaV9yZW1vdmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqb2ZkZXYpDQo+IC0tDQo+IDIuMTMuMw0KPiANCg0K
+On 14 January 2020 16:24, Marco Felsch wrote:
+
+> On 20-01-14 16:19, Adam Thomson wrote:
+> > On 08 January 2020 09:57, Marco Felsch wrote:
+> >
+> > > The watchdog driver compatible is "dlg,da9062-watchdog" and not
+> > > "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node a=
+nd
+> > > fwnode. As result the watchdog driver can't parse the devicetree.
+> > >
+> >
+> > I do agree there's a mismatch between the documentation and the MFD cod=
+e.
+> > So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9=
+062-wdt'
+> > hence the issue? Are there any existing users who are using 'dlg,da9062=
+-wdt' in
+> > their DT instead?
+>=20
+> Yes the upstream available DT I'm currently using is:
+> arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi.
+>=20
+> I grep the code and found no _upstream_ user of 'dlg,da9062-wdt' also
+> using this compatible would be a missmatch with the binding
+> documentation. So those DT's assuming a wrong binding. Therefore I fixed
+> it here and not within the watchdog driver.
+
+Ok, no problem. Just wanted to be clear. In which case:
+
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+>=20
+> Regards,
+>   Marco
+>=20
+> > > Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > ---
+> > >  drivers/mfd/da9062-core.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+> > > index e69626867c26..9143de7b77b8 100644
+> > > --- a/drivers/mfd/da9062-core.c
+> > > +++ b/drivers/mfd/da9062-core.c
+> > > @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] =3D {
+> > >  		.name		=3D "da9062-watchdog",
+> > >  		.num_resources	=3D ARRAY_SIZE(da9062_wdt_resources),
+> > >  		.resources	=3D da9062_wdt_resources,
+> > > -		.of_compatible  =3D "dlg,da9062-wdt",
+> > > +		.of_compatible  =3D "dlg,da9062-watchdog",
+> > >  	},
+> > >  	{
+> > >  		.name		=3D "da9062-thermal",
+> > > --
+> > > 2.20.1
+> >
+> >
+>=20
+> --
+> Pengutronix e.K.                           |                             =
+|
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  =
+|
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
