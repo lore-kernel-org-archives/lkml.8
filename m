@@ -2,121 +2,115 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB9BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E61C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B42B24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03B524656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZATTa1i1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NY2FUl3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgANQ3E (ORCPT
+        id S1728773AbgANQaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:29:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53941 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725904AbgANQ3E (ORCPT
+        Tue, 14 Jan 2020 11:30:09 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48408 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbgANQaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:29:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579019343;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IPYT5vQh2Yd4w7szH352o1kr3SakRWqAyBbk7sSmaIs=;
-        b=ZATTa1i1ovuqN7g7acAoF8nX1tK2R9PgT10vbIVVEEcGyhG/+ouKzm2R/5O9QZKsNDlq6b
-        nzqxlLQx9p+cEk2bvt5uV9/ZxEqOrW9VhvPPhNUkiP+We7V+dAnHpB9VSd3VUlIOwGnjaf
-        +BNEZBS7xjOnHGbP2i4Pp5oFQKyFalM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-jZQy2EB5PPidwbylHzvu8Q-1; Tue, 14 Jan 2020 11:29:02 -0500
-X-MC-Unique: jZQy2EB5PPidwbylHzvu8Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63A771143798;
-        Tue, 14 Jan 2020 16:29:00 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-20.phx2.redhat.com [10.3.112.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C395550A8F;
-        Tue, 14 Jan 2020 16:28:59 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 78A26119; Tue, 14 Jan 2020 13:28:55 -0300 (BRT)
-Date:   Tue, 14 Jan 2020 13:28:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Andres Freund <andres@anarazel.de>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] perf c2c: Fix sorting.
-Message-ID: <20200114162855.GD3115@redhat.com>
-References: <20200109043030.233746-1-andres@anarazel.de>
- <20200109084822.GD52936@krava>
- <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
- <20200109214611.GC82989@krava>
+        Tue, 14 Jan 2020 11:30:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nus/i78kK3SpGp2U2Esf2bTqwzBG98LRZpZBiWVKPiw=; b=NY2FUl3vLOtb2XkzeXGzvfcdD
+        wtXkCRAhj01IpPwNLvBWCdHKSi8O/O5hU3EK364oV+TvbT3AIfOHbU4KslE8M/+dDnRABVZJP5f5B
+        nVvTsa8LWYGSOM4Oe7kfhNQEltOWrhWo+7kRk9Llr41SG9QswSNS3DxpJl/yUQI1nebSvFALhUcIS
+        vJ+ZOUgj+FHvTLHw1fjZZePBqe9BkaeHhw9VUw8c9Wk96Y7kLx4tcHHpbYSy6IGE0XgHVfRiu20CZ
+        qMG7VTxBe4ODOw9Z0TzIDX77HXwwVphYKSsiA08DUnJaFhEkYlDZI5z9AAdC6jAzZ5WSOFcgXLb8r
+        TCDe/lYqw==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irP4x-00072m-VB; Tue, 14 Jan 2020 16:30:08 +0000
+Subject: Re: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
+To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        dmitry.torokhov@gmail.com
+Cc:     sfr@canb.auug.org.au, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        skhan@linuxfoundation.org
+References: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2242e184-93a5-147d-d603-4017ca86eba9@infradead.org>
+Date:   Tue, 14 Jan 2020 08:30:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109214611.GC82989@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Jan 09, 2020 at 10:46:11PM +0100, Jiri Olsa escreveu:
-> On Thu, Jan 09, 2020 at 09:00:41AM -0800, Andres Freund wrote:
-> 
-> SNIP
-> 
-> > > >  tools/perf/builtin-c2c.c | 10 ++++++----
-> > > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > > index e69f44941aad..f2e9d2b1b913 100644
-> > > > --- a/tools/perf/builtin-c2c.c
-> > > > +++ b/tools/perf/builtin-c2c.c
-> > > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> > > >  {
-> > > >  	struct c2c_hist_entry *c2c_left;
-> > > >  	struct c2c_hist_entry *c2c_right;
-> > > > -	unsigned int tot_hitm_left;
-> > > > -	unsigned int tot_hitm_right;
-> > > > +	uint64_t tot_hitm_left;
-> > > > +	uint64_t tot_hitm_right;
-> > > 
-> > > that change looks right, but I can't see how that could
-> > > happened because of change in Fixes: tag
-> > > 
-> > > was the return statement of this function:
-> > > 
-> > >         return tot_hitm_left - tot_hitm_right;
-> > > 
-> > > considered to be 'unsigned int' and then converted to int64_t,
-> > > which would treat negative 'unsigned int' as big positive 'int64_t'?
-> > 
-> > Correct. So e.g. when comparing 1 and 2 tot_hitm, we'd get (int64_t)
-> > UINT_MAX as a result, which is obviously wrong. However, due to
-> > hist_entry__sort() returning int at the time, this was masked, as the
-> > int64_t was cast to int. Thereby again yielding a negative number for
-> > the comparisons of hist_entry__sort()'s result.  After
-> > hist_entry__sort() was fixed however, there never could be negative
-> > return values (but 0's are possible) of hist_entry__sort() for c2c.
-> 
-> I see.. ok
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+Hi Alan,
 
-Thanks, applied.
+On 1/14/20 8:09 AM, Alan Maguire wrote:
+> currently the property entry kunit tests are built if CONFIG_KUNIT=y.
+> This will cause warnings when merged with the kunit tree that now
+> supports tristate CONFIG_KUNIT.  While the tests appear to compile
+> as a module, we get a warning about missing module license.
+> 
+> It's better to have a per-test suite CONFIG variable so that
+> we can do selective building of kunit-based suites, and can
+> also avoid merge issues like this.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-- Arnaldo
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+
+> Fixes: c032ace71c29 ("software node: add basic tests for property entries")
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>  drivers/base/test/Kconfig  | 3 +++
+>  drivers/base/test/Makefile | 2 +-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+> index 86e85da..d29ae95 100644
+> --- a/drivers/base/test/Kconfig
+> +++ b/drivers/base/test/Kconfig
+> @@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
+>  	  The module name will be test_async_driver_probe.ko
+>  
+>  	  If unsure say N.
+> +config KUNIT_DRIVER_PE_TEST
+> +	bool "KUnit Tests for property entry API"
+> +	depends on KUNIT
+
+Why is this bool instead of tristate?
+
+> diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+> index 2214310..3ca5636 100644
+> --- a/drivers/base/test/Makefile
+> +++ b/drivers/base/test/Makefile
+> @@ -1,4 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
+>  
+> -obj-$(CONFIG_KUNIT) += property-entry-test.o
+> +obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
+> 
+
+thanks.
+-- 
+~Randy
 
