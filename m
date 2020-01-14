@@ -2,94 +2,106 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F67C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB27C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1086424656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BCB24658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:57:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="meEWzXz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgANUtT (ORCPT
+        id S1728831AbgANU50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:49:19 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34129 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANUtS (ORCPT
+        Tue, 14 Jan 2020 15:57:26 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33772 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANU50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:49:18 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irT7j-0005Fo-Vw; Tue, 14 Jan 2020 21:49:15 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irT7j-0003jC-38; Tue, 14 Jan 2020 21:49:15 +0100
-Date:   Tue, 14 Jan 2020 21:49:15 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thorsten Scherer <thorsten.scherer@eckelmann.de>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] siox: Use the correct style for SPDX License
- Identifier
-Message-ID: <20200114204914.o34qu2h7neoynpvs@pengutronix.de>
-References: <20200101131418.GA3110@nishad>
- <20200107063250.GA30387@ws067.eckelmann.group>
- <20200107073204.k4t25kchrpczekfc@pengutronix.de>
- <20200114204734.GA2221856@kroah.com>
+        Tue, 14 Jan 2020 15:57:26 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay11so5720851plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:57:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Yw4+mImP3xYemjNvEkTXmDMcGpXxaxAKM4GUBoCUQVE=;
+        b=meEWzXz0iIiGD+szilzJbFn93Ka67aSbLRJ9wne3w2YWA+jsC7qemaDkmGSUrhndjx
+         6LzOtL6Vvux8f8xKsXQz0p5sHQTf7/Z14qIDx7ZCfiRZLg11JY86JF48ZSFoSYisTPgD
+         Z3hyNfR+nHSLcmiWbGyA1E0X3mCdGHa1iLNwBOIXcLHS1cEhv5502Gjcp/H3L4bYi5VM
+         EhWQLy65l4h/wnaGDxqWu+Ve/UMFwaq3Cx79sI7wDGUNcwpMuwUnuJFvI5Z7bewxIlR9
+         7Ol2MY1JtdE0ZkhBTpaPEv+yR8x1MNHBaqg+G2fPLK1WiBBZ2VGvkUhAq2WVsHpdcF7A
+         JonQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Yw4+mImP3xYemjNvEkTXmDMcGpXxaxAKM4GUBoCUQVE=;
+        b=qNak3XkZozV7AyEfeKCa9UAjE8mJUP6yLxhJqKm/0yCRibL2REi1qv9s7KbaTn0ZNZ
+         egHirwOy6QrAsG2O72T5qcizq6qGymxpgxAjQVtXk9orMNP1ztMCHpSW+pIZp0q7P4io
+         67nsxTcY9/UqxXAhGiSUGkHj0MBfGXf9HapLUF1vcnUGgfheZU3kPavL1e9aoZ9qEAJN
+         1D3uo8dP5HnfxBv8D9jD6xvq72S7sXQvqw+7vRlXCpzTU7O0wUpn29dYOHtOw8VebwGW
+         6kf9LVeIH7Ah5+n7sgZ7GcrXqCdexisc8Kx+qNIGsQCadj+qa6rhuNKya0Ta0oR1GrSb
+         LN6g==
+X-Gm-Message-State: APjAAAWz2a+w2UF7MI8YMpFT7P8NhSSvGSAdHNWZlhdykMOfLiO6s+0D
+        9wiaG7G0OXuXilpXwlhGY62yNg==
+X-Google-Smtp-Source: APXvYqz7YJQ9CTCHO6hNIZZYM+ZTeUZfAdGByWSmm119Y5+Eq0RdJ4hmTUZWY3fJDjxiiqFGyvET8A==
+X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr31206212pjn.60.1579035443905;
+        Tue, 14 Jan 2020 12:57:23 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id t63sm19315754pfb.70.2020.01.14.12.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 12:57:22 -0800 (PST)
+Date:   Tue, 14 Jan 2020 12:57:22 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+cc:     Michal Hocko <mhocko@kernel.org>,
+        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com
+Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer
+ list
+In-Reply-To: <20200114105921.eo2vdwikrvtt3gkb@box>
+Message-ID: <alpine.DEB.2.21.2001141254460.84781@chino.kir.corp.google.com>
+References: <20200109143054.13203-1-richardw.yang@linux.intel.com> <20200111000352.efy6krudecpshezh@box> <20200114093122.GH19428@dhcp22.suse.cz> <20200114103112.o6ozdbkfnzdsc2ke@box> <20200114105921.eo2vdwikrvtt3gkb@box>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114204734.GA2221856@kroah.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 09:47:34PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Jan 07, 2020 at 08:32:04AM +0100, Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > On Tue, Jan 07, 2020 at 07:32:50AM +0100, Thorsten Scherer wrote:
-> > > On Wed, Jan 01, 2020 at 06:44:23PM +0530, Nishad Kamdar wrote:
-> > > > This patch corrects the SPDX License Identifier style in
-> > > > header file related to Eckelmann SIOX driver.
-> > > > For C header files Documentation/process/license-rules.rst
-> > > > mandates C-like comments (opposed to C source files where
-> > > > C++ style should be used).
-> > > > 
-> > > > Changes made by using a script provided by Joe Perches here:
-> > > > https://lkml.org/lkml/2019/2/7/46.
-> > > > 
-> > > > Suggested-by: Joe Perches <joe@perches.com>
-> > > > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> > > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > 
-> > > Acked-by: Thorsten Scherer <thorsten.scherer@eckelmann.de>
-> > 
-> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Tue, 14 Jan 2020, Kirill A. Shutemov wrote:
+
+> split_huge_page_to_list() has page lock taken.
 > 
-> Ah, this is why I had 2 acks, you acked it twice :)
+> free_transhuge_page() is in the free path and doesn't susceptible to the
+> race.
+> 
+> deferred_split_scan() is trickier. list_move() should be safe against
+> list_empty() as it will not produce false-positive list_empty().
+> list_del_init() *should* (correct me if I'm wrong) be safe because the page
+> is freeing and memcg will not touch the page anymore.
+> 
+> deferred_split_huge_page() is a problematic one. It called from
+> page_remove_rmap() path witch does require page lock. I don't see any
+> obvious way to exclude race with mem_cgroup_move_account() here.
+> Anybody else?
+> 
+> Wei, could you rewrite the commit message with deferred_split_huge_page()
+> as a race source instead of split_huge_page_to_list()?
+> 
 
-Ah, didn't even notice that v2 came with my ack already.
-
-..ooOO(Acked-intensively-by: ...)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+I think describing the race in terms of deferred_split_huge_page() makes 
+the most sense and I'd prefer a cc to stable for 5.4+.  Even getting the 
+split_queue_len, which is unsigned long, to underflow because of a 
+list_empty(page_deferred_list()) check that is no longer accurate after 
+the lock is taken would be a significant issue for shrinkers.
