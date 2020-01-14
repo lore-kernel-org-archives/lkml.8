@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00DEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E38FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A97207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98F12467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996655;
-	bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+	s=default; t=1578996658;
+	bh=IwlnD3gylgsFIjT/sKWm453OL+MT8zvnLChM6b2Fy0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Go0/Z5IRaATEtcS8KaXufJqIbbuKzjY5cyDjyTf3BDlov2DrG9y8jvQsU2uEPaldT
-	 hueZK3gO8Kimt+XkO1xyThd2xXg445W3VzWGeeUjKePiZeA//tsxDbRLbsnZgAKWTB
-	 LSLpvdJJFhwAPTxfy9R5WllzcB4SHhW2e4aGgdrI=
+	b=0K6uAtAwfGvL2G3j9D1Rtdimz8RL3/T/7WuyZ5epkQD5jUkXtkRBtxBjH8vRHxYT2
+	 ZHGL+7jCbROHLiBWQs2Avwem0p6RmQW6+Xi2VWPIfsQbyfNmlDZzyLcru0AKMeCSds
+	 /9LeOFwrjULmMs1nQNuZPPa4OM7Ituh/pgz1lHi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgANKKy (ORCPT
+        id S1730959AbgANKK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:10:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbgANKKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:52 -0500
+        id S1731919AbgANKKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:10:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 501A9207FF;
-        Tue, 14 Jan 2020 10:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43772467A;
+        Tue, 14 Jan 2020 10:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996651;
-        bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+        s=default; t=1578996649;
+        bh=IwlnD3gylgsFIjT/sKWm453OL+MT8zvnLChM6b2Fy0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SwLeglJN7XfMP4j02CtFOyyyGErqHjfkLmwdPf4NQKtt3fbn7ydbLzryoZw2mHO5m
-         I/l4lHIXuUKHeRVsyFEb7rn8TGNu68Hlk9h6l+oTleg49E4QsK1vvaw2Wnbh5i0Umj
-         GaQ90SPKcHlXdbJlxGvMwZtzJT62qFuDpKq31L+c=
+        b=xxFZEUsnjHXQHv87+SItqp6W/6r9guE6eq6eJ0mUsR/o8RMlaREntdiZN0yXjlGQT
+         9r5vEi6o/QcDDeQATyL/7dPJVCRTu68uuu4ZHP1RRcyrir90oEHY2L9Se+QHa59wND
+         GmvuxSaSUXpkGVzlDnEGE9JCcMegnUKZYck+SWk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 4.14 34/39] HID: hiddev: fix mess in hiddev_open()
-Date:   Tue, 14 Jan 2020 11:02:08 +0100
-Message-Id: <20200114094346.202352828@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH 4.14 33/39] arm64: cpufeature: Avoid warnings due to unused symbols
+Date:   Tue, 14 Jan 2020 11:02:07 +0100
+Message-Id: <20200114094345.996008920@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -60,157 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 18a1b06e5b91d47dc86c0a66a762646ea7c5d141 upstream.
+commit 12eb369125abe92bfc55e9ce198200f5807b63ff upstream.
 
-The open method of hiddev handler fails to bring the device out of
-autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
-blocks that try to start the transport (call hid_hw_open()) with both
-being guarded by the "open" counter, so the 2nd block is never executed as
-the first block increments the counter so it is never at 0 when we check
-it for the second block.
+An allnoconfig build complains about unused symbols due to functions
+that are called via conditional cpufeature and cpu_errata table entries.
 
-Additionally hiddev_open() was leaving counter incremented on errors,
-causing the device to never be reopened properly if there was ever an
-error.
+Annotate these as __maybe_unused if they are likely to be generic, or
+predicate their compilation on the same option as the table entry if
+they are specific to a given alternative.
 
-Let's fix all of this by factoring out code that creates client structure
-and powers up the device into a separate function that is being called
-from usbhid_open() with the "existancelock" being held.
-
-Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+[Just a portion of the original patch]
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hiddev.c |   97 +++++++++++++++++++-------------------------
- 1 file changed, 42 insertions(+), 55 deletions(-)
+ arch/arm64/kernel/cpufeature.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -254,12 +254,51 @@ static int hiddev_release(struct inode *
- 	return 0;
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -799,11 +799,6 @@ static bool has_no_hw_prefetch(const str
+ 		MIDR_CPU_VAR_REV(1, MIDR_REVISION_MASK));
  }
  
-+static int __hiddev_open(struct hiddev *hiddev, struct file *file)
+-static bool runs_at_el2(const struct arm64_cpu_capabilities *entry, int __unused)
+-{
+-	return is_kernel_in_hyp_mode();
+-}
+-
+ static bool hyp_offset_low(const struct arm64_cpu_capabilities *entry,
+ 			   int __unused)
+ {
+@@ -937,6 +932,12 @@ static int __init parse_kpti(char *str)
+ }
+ early_param("kpti", parse_kpti);
+ 
++#ifdef CONFIG_ARM64_VHE
++static bool runs_at_el2(const struct arm64_cpu_capabilities *entry, int __unused)
 +{
-+	struct hiddev_list *list;
-+	int error;
-+
-+	lockdep_assert_held(&hiddev->existancelock);
-+
-+	list = vzalloc(sizeof(*list));
-+	if (!list)
-+		return -ENOMEM;
-+
-+	mutex_init(&list->thread_lock);
-+	list->hiddev = hiddev;
-+
-+	if (!hiddev->open++) {
-+		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
-+		if (error < 0)
-+			goto err_drop_count;
-+
-+		error = hid_hw_open(hiddev->hid);
-+		if (error < 0)
-+			goto err_normal_power;
-+	}
-+
-+	spin_lock_irq(&hiddev->list_lock);
-+	list_add_tail(&list->node, &hiddev->list);
-+	spin_unlock_irq(&hiddev->list_lock);
-+
-+	file->private_data = list;
-+
-+	return 0;
-+
-+err_normal_power:
-+	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
-+err_drop_count:
-+	hiddev->open--;
-+	vfree(list);
-+	return error;
++	return is_kernel_in_hyp_mode();
 +}
 +
- /*
-  * open file op
-  */
- static int hiddev_open(struct inode *inode, struct file *file)
+ static void cpu_copy_el2regs(const struct arm64_cpu_capabilities *__unused)
  {
--	struct hiddev_list *list;
- 	struct usb_interface *intf;
- 	struct hid_device *hid;
- 	struct hiddev *hiddev;
-@@ -268,66 +307,14 @@ static int hiddev_open(struct inode *ino
- 	intf = usbhid_find_interface(iminor(inode));
- 	if (!intf)
- 		return -ENODEV;
-+
- 	hid = usb_get_intfdata(intf);
- 	hiddev = hid->hiddev;
- 
--	if (!(list = vzalloc(sizeof(struct hiddev_list))))
--		return -ENOMEM;
--	mutex_init(&list->thread_lock);
--	list->hiddev = hiddev;
--	file->private_data = list;
--
--	/*
--	 * no need for locking because the USB major number
--	 * is shared which usbcore guards against disconnect
--	 */
--	if (list->hiddev->exist) {
--		if (!list->hiddev->open++) {
--			res = hid_hw_open(hiddev->hid);
--			if (res < 0)
--				goto bail;
--		}
--	} else {
--		res = -ENODEV;
--		goto bail;
--	}
--
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_add_tail(&list->node, &hiddev->list);
--	spin_unlock_irq(&list->hiddev->list_lock);
--
- 	mutex_lock(&hiddev->existancelock);
--	/*
--	 * recheck exist with existance lock held to
--	 * avoid opening a disconnected device
--	 */
--	if (!list->hiddev->exist) {
--		res = -ENODEV;
--		goto bail_unlock;
--	}
--	if (!list->hiddev->open++)
--		if (list->hiddev->exist) {
--			struct hid_device *hid = hiddev->hid;
--			res = hid_hw_power(hid, PM_HINT_FULLON);
--			if (res < 0)
--				goto bail_unlock;
--			res = hid_hw_open(hid);
--			if (res < 0)
--				goto bail_normal_power;
--		}
--	mutex_unlock(&hiddev->existancelock);
--	return 0;
--bail_normal_power:
--	hid_hw_power(hid, PM_HINT_NORMAL);
--bail_unlock:
-+	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
- 	mutex_unlock(&hiddev->existancelock);
- 
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_del(&list->node);
--	spin_unlock_irq(&list->hiddev->list_lock);
--bail:
--	file->private_data = NULL;
--	vfree(list);
- 	return res;
+ 	/*
+@@ -950,6 +951,7 @@ static void cpu_copy_el2regs(const struc
+ 	if (!alternatives_applied)
+ 		write_sysreg(read_sysreg(tpidr_el1), tpidr_el2);
  }
++#endif
  
+ #ifdef CONFIG_ARM64_SSBD
+ static int ssbs_emulation_handler(struct pt_regs *regs, u32 instr)
 
 
