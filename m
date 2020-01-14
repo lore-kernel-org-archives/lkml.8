@@ -2,92 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5E8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6824CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA5E2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B792084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDtpxNds"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afYg6nO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgANSRs (ORCPT
+        id S1728809AbgANSRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:17:48 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43440 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANSRr (ORCPT
+        Tue, 14 Jan 2020 13:17:53 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46177 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANSRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:17:47 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p27so5539296pli.10;
-        Tue, 14 Jan 2020 10:17:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pTDm6uj7nXPZqYgCReR2qesU7OAfZp8TW1KIkVsDtsg=;
-        b=TDtpxNdsmrScmiMRJHH/FVuHnOx9oBrr0lHnJy4J+VHYHVhYSlOiLQxvhQSVhFzkke
-         KHtRQkUBlNqfU+DKKrxNo3R0GA5e2wpe5OFv19B9GNj2VQR3moju1ibBmNLgtFxEYrbm
-         GvUH8L0M1YwWbaTr2NmjdO9udFhfriYHVlFg0pJIzftkFZ805vLmU7QP/2kvv5QjULKS
-         PbSKTcsNhdL4Chxygp0OOTZN6HUFwAdt2yDP4ATCDvk5Mks7AL3tbTOevOojp6RFjT0s
-         HBNnJVzwgHRmrzRlo+z4sriA8rJAKWl1aAs2pVTWAaciezvmqmthew4FkrmBoUuOtvPM
-         7vfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pTDm6uj7nXPZqYgCReR2qesU7OAfZp8TW1KIkVsDtsg=;
-        b=Yd6q0oeobBJliWVg1okbh5jvQK3GK4QBO6ZLG74Mz81tct4D7twvH53OgdJZMsD+E3
-         QfF31biHSRUYRytRyYkYoHuuP3t0O3WDrISRbG5xVXlyPEDrRyOF8bxT1CDvNBmYXtz9
-         +Dgn7yCYeSJEQMvZ+Cy+LVJWABvs6ppySvhx6EBNi+OL113CVYrv6OzdC3URAzPOsz9H
-         s7V/LJzEnkkmeAi31iCHWlIJYbw1DXHercIYCAE4/TzNnKqidZN5EBvjP30cUVXzxZPA
-         G7iG9J34N7WbZY+p7rTOr2yujR9jIBk4xizVb+AXJMnOIcXeHVc9rOfb2oDS9O/FMBNV
-         5MaQ==
-X-Gm-Message-State: APjAAAWq55AlQ7NpvcVpUqYLh121t9hlh+ZV8pzntrrMdlS2M6ER7q/q
-        zVqh43nX9ye0RWTBBTF8KJs=
-X-Google-Smtp-Source: APXvYqyEwNUVk4bb3HJz1Xqyz5CcuVz21L8us0zxIA63STCvqg6FpWv+rGvZjJYsxlGv7aVmB32mNw==
-X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr28350689plr.16.1579025866843;
-        Tue, 14 Jan 2020 10:17:46 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r3sm19490818pfg.145.2020.01.14.10.17.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 10:17:46 -0800 (PST)
-Date:   Tue, 14 Jan 2020 10:17:45 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
-Message-ID: <20200114181745.GD18872@roeck-us.net>
-References: <20200114094352.428808181@linuxfoundation.org>
+        Tue, 14 Jan 2020 13:17:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579025871;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hh3KavZEWvh09y9W/Fa2u/FR21ffnME+K80eDTgvZSQ=;
+        b=afYg6nO3V87gDqmMjt/4E5raUj8QckYNAr9Z/n6v6c2Bbr7pWczK49hwxSup+RH5HCN2QK
+        yKyx6b5onGOYq10MaGbJRRuig+uNsxRhLf/9T0vLQfF9TJsb7X9JMas05+kQP9kPNh4u/S
+        t8D/aVORus+Jx6DCWw6rLJn52GauYiQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-22-Ybtb5NfzPF62aX4wm66bYg-1; Tue, 14 Jan 2020 13:17:50 -0500
+X-MC-Unique: Ybtb5NfzPF62aX4wm66bYg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0A7C801E6C;
+        Tue, 14 Jan 2020 18:17:48 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-218.rdu2.redhat.com [10.10.122.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06F4960BF4;
+        Tue, 14 Jan 2020 18:17:44 +0000 (UTC)
+Subject: Re: [PATCH 02/12] locking/rwsem: Exit early when held by an anonymous
+ owner
+To:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200114161225.309792-1-hch@lst.de>
+ <20200114161225.309792-3-hch@lst.de>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <925d1343-670e-8f92-0e73-6e9cee0d3ffb@redhat.com>
+Date:   Tue, 14 Jan 2020 13:17:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200114161225.309792-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:00:34AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.12 release.
-> There are 78 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
-> Anything received after that time might be too late.
-> 
+On 1/14/20 11:12 AM, Christoph Hellwig wrote:
+> The rwsem code overloads the owner field with either a task struct or
+> negative magic numbers.  Add a quick hack to catch these negative
+> values early on.  Without this spinning on a writer that replaced the
+> owner with RWSEM_OWNER_UNKNOWN, rwsem_spin_on_owner can crash while
+> deferencing the task_struct ->on_cpu field of a -8 value.
+>
+> XXX: This might be a bit of a hack as the code otherwise doesn't use
+> the ERR_PTR family macros, better suggestions welcome.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  kernel/locking/rwsem.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index 44e68761f432..6adc719a30a1 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -725,6 +725,8 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
+>  	state = rwsem_owner_state(owner, flags, nonspinnable);
+>  	if (state != OWNER_WRITER)
+>  		return state;
+> +	if (IS_ERR(owner))
+> +		return state;
+>  
+>  	rcu_read_lock();
+>  	for (;;) {
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 389 pass: 389 fail: 0
+The owner field is just a pointer to the task structure with the lower 3
+bits served as flag bits. Setting owner to RWSEM_OWNER_UNKNOWN (-2) will
+stop optimistic spinning. So under what condition did the crash happen?
 
-Guenter
+Anyway, PeterZ is working on revising the percpu-rwsem implementation to
+more gracefully handle the frozen case. At the end, there will not be a
+need for the RWSEM_OWNER_UNKNOWN magic and it can be removed.
+
+Cheers,
+Longman
+
+RWSEM_OWNER_UNKNOWN
+
