@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745E1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82C6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B81624682
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA2D2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996826;
-	bh=2SuF5Ov3ZZj5k94Idb+r3P2mHS8K75zkQj20S3k4tcQ=;
+	s=default; t=1578996828;
+	bh=qe+amIO6FsqBNpi7ZCNhfwA0gpWZnUNTGkxW7VB5bHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNbrzfw0/HJq9tpwIirV2OxkkhIDvXIhhyYlO+ts+C4tEGVnHOhlPK9FppftYzvli
-	 sdtmCmkF4EJul4/+bzhlL51kIgcV0p1QbyMYKq4L6xH4pBW4LA8q4iCvVApLPebCmx
-	 HylMZ7ObwyYebVGjs5JIh5DuM2H9tM0oiZtrwFBs=
+	b=XuxZy6dqdpS44zAwA+szkzfNFKQ32iRhWZ61HctHk3bfMMZvqm5gK6DSGbIS3U6aQ
+	 KO43mueen1gsEPRRSUUiIlRwTweTs1KUNNRMe0ksxyqH2xqavkDljQldXa1IAO0Xbj
+	 v1gVgFFjVAa6MDQBQsbepFqafXkX0UluiJHuoIOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733225AbgANKNp (ORCPT
+        id S1733234AbgANKNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:13:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51424 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:13:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731670AbgANKNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:13:42 -0500
+        id S1733108AbgANKNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:13:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35FBD24679;
-        Tue, 14 Jan 2020 10:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F22F24676;
+        Tue, 14 Jan 2020 10:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996821;
-        bh=2SuF5Ov3ZZj5k94Idb+r3P2mHS8K75zkQj20S3k4tcQ=;
+        s=default; t=1578996824;
+        bh=qe+amIO6FsqBNpi7ZCNhfwA0gpWZnUNTGkxW7VB5bHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3sSCh9gGcSvXkJypzAYyd/sWl7kcfJp8H2EERrHogtqMol4qlGH497dYnXQVRZLJ
-         rvG0U80WAsjbpFNq9TlFqAgMRkJfc/eblS2SYTqg9Jy4mNJJ2Io/byDgjEMMXpx4Kd
-         1tE6busnlgrUOtxtbNMqcE4rrPEo7hs/UpxzgUXg=
+        b=lY/+flYmY86xiKKflXUEr9X7fMg029fCq/8yLSRvzKOD3b8Ugjwe/6d1xvSJWlVXV
+         szdTQwd//Uh5uTBHgSpY4fRMfflN2QnKhVML66TLFf42ESdHEMUBrlBidV2e/ylHuV
+         3sxGNGOSJ1qmZofmKJ6IGTZqzc8yqoqM5MwfLjOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH 4.4 20/28] tty: link tty and port before configuring it as console
-Date:   Tue, 14 Jan 2020 11:02:22 +0100
-Message-Id: <20200114094343.605638669@linuxfoundation.org>
+        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
+        Wayne Lin <Wayne.Lin@amd.com>, Lyude Paul <lyude@redhat.com>
+Subject: [PATCH 4.4 11/28] drm/dp_mst: correct the shifting in DP_REMOTE_I2C_READ
+Date:   Tue, 14 Jan 2020 11:02:13 +0100
+Message-Id: <20200114094341.718808413@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -59,69 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
+commit c4e4fccc5d52d881afaac11d3353265ef4eccb8b upstream.
 
-There seems to be a race condition in tty drivers and I could see on
-many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-do 'tty->port->itty = tty' even though tty->port is NULL.
-'tty->port' will be set by the driver and if the driver has not yet done
-it before we open the tty device we can get to this situation. By adding
-some extra debug prints, I noticed that:
+[Why]
+According to DP spec, it should shift left 4 digits for NO_STOP_BIT
+in REMOTE_I2C_READ message. Not 5 digits.
 
-6.650130: uart_add_one_port
-6.663849: register_console
-6.664846: tty_open
-6.674391: tty_init_dev
-6.675456: tty_port_link_device
+In current code, NO_STOP_BIT is always set to zero which means I2C
+master is always generating a I2C stop at the end of each I2C write
+transaction while handling REMOTE_I2C_READ sideband message. This issue
+might have the generated I2C signal not meeting the requirement. Take
+random read in I2C for instance, I2C master should generate a repeat
+start to start to read data after writing the read address. This issue
+will cause the I2C master to generate a stop-start rather than a
+re-start which is not expected in I2C random read.
 
-uart_add_one_port() registers the console, as soon as it registers, the
-userspace tries to use it and that leads to tty_open() but
-uart_add_one_port() has not yet done tty_port_link_device() and so
-tty->port is not yet configured when control reaches tty_init_dev().
+[How]
+Correct the shifting value of NO_STOP_BIT for DP_REMOTE_I2C_READ case in
+drm_dp_encode_sideband_req().
 
-Further look into the code and tty_port_link_device() is done by
-uart_add_one_port(). After registering the console uart_add_one_port()
-will call tty_port_register_device_attr_serdev() and
-tty_port_link_device() is called from this.
+Changes since v1:(https://patchwork.kernel.org/patch/11312667/)
+* Add more descriptions in commit and cc to stable
 
-Call add tty_port_link_device() before uart_configure_port() is done and
-add a check in tty_port_link_device() so that it only links the port if
-it has not been done yet.
-
-Suggested-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200103055001.10287-1-Wayne.Lin@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/serial_core.c |    1 +
- drivers/tty/tty_port.c           |    3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2702,6 +2702,7 @@ int uart_add_one_port(struct uart_driver
- 	if (uport->cons && uport->dev)
- 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -272,7 +272,7 @@ static void drm_dp_encode_sideband_req(s
+ 			memcpy(&buf[idx], req->u.i2c_read.transactions[i].bytes, req->u.i2c_read.transactions[i].num_bytes);
+ 			idx += req->u.i2c_read.transactions[i].num_bytes;
  
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
- 
- 	num_groups = 2;
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -48,7 +48,8 @@ void tty_port_link_device(struct tty_por
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
+-			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 5;
++			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 4;
+ 			buf[idx] |= (req->u.i2c_read.transactions[i].i2c_transaction_delay & 0xf);
+ 			idx++;
+ 		}
 
 
