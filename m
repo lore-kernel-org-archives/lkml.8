@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9244FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2F7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DC424683
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A8124680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996359;
-	bh=RBXAiiyvsTUqqMd8QvTDja/F0J5+e2uKRVWGvdJhjRQ=;
+	s=default; t=1578996362;
+	bh=NNPL/5vO9M1U6KCQtxB3LBrt8nXgwNKAIzbwvvAykA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDWoL85D9b3Kt1whRZbSzLbgs5ZeHokdU2baebNqbBmR9ZeFym19AmncwtMjWdFt5
-	 +EUxr+qdJnkng4+y8pIadtdSoPa5ijPfLRB9mZO4wKqFs1KW6NapPvACedhgrDO6k+
-	 ds6hVSdPqPzdZLEFej9w7m0rEj/4oxb95LOf98Ts=
+	b=w0MemMmt3mjHvfwkLdo6fDNZVG8Mvp2xpV/WBo3MwiG67mtO+0lSlWQbMdEcyCdOt
+	 afSeHK2sOkumOaJNyXW0isrycFgcQYrjENlKGFW8pAUcgfSKuDLrEJaVETpA+TJEh+
+	 ZScQcugvoa2hBe0XENTZZo/a4Ajwl7McBTIuR7Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgANKF6 (ORCPT
+        id S1730275AbgANKGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbgANKF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:56 -0500
+        id S1729225AbgANKF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5682324679;
-        Tue, 14 Jan 2020 10:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B2722467A;
+        Tue, 14 Jan 2020 10:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996355;
-        bh=RBXAiiyvsTUqqMd8QvTDja/F0J5+e2uKRVWGvdJhjRQ=;
+        s=default; t=1578996359;
+        bh=NNPL/5vO9M1U6KCQtxB3LBrt8nXgwNKAIzbwvvAykA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEFQ9es+YLoIlX5akc0+yB5C3VRWIwOsqwKftJQc8f2gXixuQMZHCSNJvq8D/gnSX
-         EU79rDBcGqz/ec28Zba4L65tFBpLeTmotqZjjsxDP5oDAQrTcc1S3rXWaFnY1d9XW1
-         FRFlcIKtiyCUo+NXl72vAOppvNAxHn0ijZ4MXBuU=
+        b=P+IeIsTezpXYvfxM8BVxkXj3B8uX474eDWEb01g9lkWVKjosQpZorZQCZYQ8DIrJl
+         HMF3vqYAFqBmzjUrjVOxF1dOcC5VgxSvma/u+CMmiVHErMOIK9zW1d+pjlKk0nhQWB
+         ITaMj3d9mAadvZKIkJkpmib+k7fnvtoku9/XISL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 44/78] USB-PD tcpm: bad warning+size, PPS adapters
-Date:   Tue, 14 Jan 2020 11:01:18 +0100
-Message-Id: <20200114094359.462572888@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.4 45/78] USB: serial: option: add ZLP support for 0x1bc7/0x9010
+Date:   Tue, 14 Jan 2020 11:01:19 +0100
+Message-Id: <20200114094359.591729220@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,76 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Gilbert <dgilbert@interlog.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit c215e48e97d232249a33849fc46fc50311043e11 upstream.
+commit 2438c3a19dec5e98905fd3ffcc2f24716aceda6b upstream.
 
-Augmented Power Delivery Objects (A)PDO_s are used by USB-C
-PD power adapters to advertize the voltages and currents
-they support. There can be up to 7 PDO_s but before PPS
-(programmable power supply) there were seldom more than 4
-or 5. Recently Samsung released an optional PPS 45 Watt power
-adapter (EP-TA485) that has 7 PDO_s. It is for the Galaxy 10+
-tablet and charges it quicker than the adapter supplied at
-purchase. The EP-TA485 causes an overzealous WARN_ON to soil
-the log plus it miscalculates the number of bytes to read.
+Telit FN980 flashing device 0x1bc7/0x9010 requires zero packet
+to be sent if out data size is is equal to the endpoint max size.
 
-So this bug has been there for some time but goes
-undetected for the majority of USB-C PD power adapters on
-the market today that have 6 or less PDO_s. That may soon
-change as more USB-C PD adapters with PPS come to market.
-
-Tested on a EP-TA485 and an older Lenovo PN: SA10M13950
-USB-C 65 Watt adapter (without PPS and has 4 PDO_s) plus
-several other PD power adapters.
-
-Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+[ johan: switch operands in conditional ]
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191230033544.1809-1-dgilbert@interlog.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tcpm/tcpci.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/usb/serial/option.c   |    8 ++++++++
+ drivers/usb/serial/usb-wwan.h |    1 +
+ drivers/usb/serial/usb_wwan.c |    4 ++++
+ 3 files changed, 13 insertions(+)
 
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -432,20 +432,30 @@ irqreturn_t tcpci_irq(struct tcpci *tcpc
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -567,6 +567,9 @@ static void option_instat_callback(struc
+ /* Interface must have two endpoints */
+ #define NUMEP2		BIT(16)
  
- 	if (status & TCPC_ALERT_RX_STATUS) {
- 		struct pd_message msg;
--		unsigned int cnt;
-+		unsigned int cnt, payload_cnt;
- 		u16 header;
++/* Device needs ZLP */
++#define ZLP		BIT(17)
++
  
- 		regmap_read(tcpci->regmap, TCPC_RX_BYTE_CNT, &cnt);
-+		/*
-+		 * 'cnt' corresponds to READABLE_BYTE_COUNT in section 4.4.14
-+		 * of the TCPCI spec [Rev 2.0 Ver 1.0 October 2017] and is
-+		 * defined in table 4-36 as one greater than the number of
-+		 * bytes received. And that number includes the header. So:
-+		 */
-+		if (cnt > 3)
-+			payload_cnt = cnt - (1 + sizeof(msg.header));
-+		else
-+			payload_cnt = 0;
+ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
+@@ -1198,6 +1201,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(1) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
++	  .driver_info = NCTRL(0) | ZLP },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(1) },
+@@ -2099,6 +2104,9 @@ static int option_attach(struct usb_seri
+ 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
+ 		data->use_send_setup = 1;
  
- 		tcpci_read16(tcpci, TCPC_RX_HDR, &header);
- 		msg.header = cpu_to_le16(header);
++	if (device_flags & ZLP)
++		data->use_zlp = 1;
++
+ 	spin_lock_init(&data->susp_lock);
  
--		if (WARN_ON(cnt > sizeof(msg.payload)))
--			cnt = sizeof(msg.payload);
-+		if (WARN_ON(payload_cnt > sizeof(msg.payload)))
-+			payload_cnt = sizeof(msg.payload);
+ 	usb_set_serial_data(serial, data);
+--- a/drivers/usb/serial/usb-wwan.h
++++ b/drivers/usb/serial/usb-wwan.h
+@@ -38,6 +38,7 @@ struct usb_wwan_intf_private {
+ 	spinlock_t susp_lock;
+ 	unsigned int suspended:1;
+ 	unsigned int use_send_setup:1;
++	unsigned int use_zlp:1;
+ 	int in_flight;
+ 	unsigned int open_ports;
+ 	void *private;
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -461,6 +461,7 @@ static struct urb *usb_wwan_setup_urb(st
+ 				      void (*callback) (struct urb *))
+ {
+ 	struct usb_serial *serial = port->serial;
++	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
+ 	struct urb *urb;
  
--		if (cnt > 0)
-+		if (payload_cnt > 0)
- 			regmap_raw_read(tcpci->regmap, TCPC_RX_DATA,
--					&msg.payload, cnt);
-+					&msg.payload, payload_cnt);
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
+@@ -471,6 +472,9 @@ static struct urb *usb_wwan_setup_urb(st
+ 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
+ 			  buf, len, callback, ctx);
  
- 		/* Read complete, clear RX status alert bit */
- 		tcpci_write16(tcpci, TCPC_ALERT, TCPC_ALERT_RX_STATUS);
++	if (intfdata->use_zlp && dir == USB_DIR_OUT)
++		urb->transfer_flags |= URB_ZERO_PACKET;
++
+ 	return urb;
+ }
+ 
 
 
