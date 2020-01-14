@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CEDC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DC3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7583D2468D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A382467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgANNCq (ORCPT
+        id S1729238AbgANNDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:02:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43252 "EHLO
+        Tue, 14 Jan 2020 08:03:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43282 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgANNCj (ORCPT
+        with ESMTP id S1729075AbgANNCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:02:39 -0500
+        Tue, 14 Jan 2020 08:02:46 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLq1-0004iA-VF; Tue, 14 Jan 2020 14:02:30 +0100
+        id 1irLqE-0004qj-IA; Tue, 14 Jan 2020 14:02:42 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BDF041C0826;
-        Tue, 14 Jan 2020 14:02:18 +0100 (CET)
-Date:   Tue, 14 Jan 2020 13:02:18 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BCAAE1C0859;
+        Tue, 14 Jan 2020 14:02:23 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:23 -0000
+From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] time: Add do_timens_ktime_to_host() helper
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] lib/vdso: Remove VDSO_HAS_32BIT_FALLBACK
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-13-dima@arista.com>
-References: <20191112012724.250792-13-dima@arista.com>
+In-Reply-To: <20190830135902.20861-5-vincenzo.frascino@arm.com>
+References: <20190830135902.20861-5-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Message-ID: <157900693861.396.1529895528875824491.tip-bot2@tip-bot2>
+Message-ID: <157900694361.396.14575643195272387916.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,109 +56,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     89dd8eecfe961fab4924dcd14f80cf2ab2820044
-Gitweb:        https://git.kernel.org/tip/89dd8eecfe961fab4924dcd14f80cf2ab2820044
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:01 
+Commit-ID:     b767081c07a400ff1c6f95b87639a9405886e7a6
+Gitweb:        https://git.kernel.org/tip/b767081c07a400ff1c6f95b87639a9405886e7a6
+Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
+AuthorDate:    Fri, 30 Aug 2019 14:58:58 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Jan 2020 12:20:53 +01:00
+CommitterDate: Tue, 14 Jan 2020 12:20:44 +01:00
 
-time: Add do_timens_ktime_to_host() helper
+lib/vdso: Remove VDSO_HAS_32BIT_FALLBACK
 
-The helper subtracts namespace's clock offset from the given time
-and ensures that the result is within [0, KTIME_MAX].
+VDSO_HAS_32BIT_FALLBACK was introduced to address a regression which
+caused seccomp to deny access to the applications to clock_gettime64()
+and clock_getres64() because they are not enabled in the existing
+filters.
 
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+The purpose of VDSO_HAS_32BIT_FALLBACK was to simplify the conditional
+implementation of __cvdso_clock_get*time32() variants.
+
+Now that all the architectures that support the generic vDSO library
+have been converted to support the 32 bit fallbacks the conditional
+can be removed.
+
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-13-dima@arista.com
+Link: https://lore.kernel.org/r/20190830135902.20861-5-vincenzo.frascino@arm.com
 
+References: c60a32ea4f45 ("lib/vdso/32: Provide legacy syscall fallbacks")
 
 ---
- include/linux/time_namespace.h | 17 ++++++++++++++++-
- kernel/time/namespace.c        | 36 +++++++++++++++++++++++++++++++++-
- 2 files changed, 53 insertions(+)
+ lib/vdso/gettimeofday.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index d7e3b49..34ee110 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -59,6 +59,19 @@ static inline void timens_add_boottime(struct timespec64 *ts)
- 	*ts = timespec64_add(*ts, ns_offsets->boottime);
- }
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 8e77071..cd3aacf 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -126,13 +126,8 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
  
-+ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-+				struct timens_offsets *offsets);
-+
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
-+{
-+	struct time_namespace *ns = current->nsproxy->time_ns;
-+
-+	if (likely(ns == &init_time_ns))
-+		return tim;
-+
-+	return do_timens_ktime_to_host(clockid, tim, &ns->offsets);
-+}
-+
- #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
- {
-@@ -88,6 +101,10 @@ static inline int timens_on_fork(struct nsproxy *nsproxy,
+ 	ret = __cvdso_clock_gettime_common(clock, &ts);
  
- static inline void timens_add_monotonic(struct timespec64 *ts) { }
- static inline void timens_add_boottime(struct timespec64 *ts) { }
-+static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
-+{
-+	return tim;
-+}
- #endif
+-#ifdef VDSO_HAS_32BIT_FALLBACK
+ 	if (unlikely(ret))
+ 		return clock_gettime32_fallback(clock, res);
+-#else
+-	if (unlikely(ret))
+-		ret = clock_gettime_fallback(clock, &ts);
+-#endif
  
- #endif /* _LINUX_TIMENS_H */
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index c2a58e4..1a0fbaa 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -16,6 +16,42 @@
- #include <linux/err.h>
- #include <linux/mm.h>
+ 	if (likely(!ret)) {
+ 		res->tv_sec = ts.tv_sec;
+@@ -242,13 +237,8 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
  
-+ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
-+				struct timens_offsets *ns_offsets)
-+{
-+	ktime_t offset;
-+
-+	switch (clockid) {
-+	case CLOCK_MONOTONIC:
-+		offset = timespec64_to_ktime(ns_offsets->monotonic);
-+		break;
-+	case CLOCK_BOOTTIME:
-+	case CLOCK_BOOTTIME_ALARM:
-+		offset = timespec64_to_ktime(ns_offsets->boottime);
-+		break;
-+	default:
-+		return tim;
-+	}
-+
-+	/*
-+	 * Check that @tim value is in [offset, KTIME_MAX + offset]
-+	 * and subtract offset.
-+	 */
-+	if (tim < offset) {
-+		/*
-+		 * User can specify @tim *absolute* value - if it's lesser than
-+		 * the time namespace's offset - it's already expired.
-+		 */
-+		tim = 0;
-+	} else {
-+		tim = ktime_sub(tim, offset);
-+		if (unlikely(tim > KTIME_MAX))
-+			tim = KTIME_MAX;
-+	}
-+
-+	return tim;
-+}
-+
- static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
- {
- 	return inc_ucount(ns, current_euid(), UCOUNT_TIME_NAMESPACES);
+ 	ret = __cvdso_clock_getres_common(clock, &ts);
+ 
+-#ifdef VDSO_HAS_32BIT_FALLBACK
+ 	if (unlikely(ret))
+ 		return clock_getres32_fallback(clock, res);
+-#else
+-	if (unlikely(ret))
+-		ret = clock_getres_fallback(clock, &ts);
+-#endif
+ 
+ 	if (likely(!ret && res)) {
+ 		res->tv_sec = ts.tv_sec;
