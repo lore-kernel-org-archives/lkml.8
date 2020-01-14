@@ -6,154 +6,104 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CF1C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256D7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC976217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0521C207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgANImM (ORCPT
+        id S1728848AbgANIm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:42:12 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39093 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANImL (ORCPT
+        Tue, 14 Jan 2020 03:42:26 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:45133 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANImZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:42:11 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so11854852oty.6;
-        Tue, 14 Jan 2020 00:42:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T8qOAMy0UIqL+2eVFMgbKLOWTgbr4olC4h9PpEXhBEs=;
-        b=Y73pDsuMjCzY/mlgZ8Oa51uUqlcAHqdE6fDWz/GjAOclq4BImQqY+pFD5QFtAxrjuM
-         Nxa1ARGsEQT+oFy/CS8NTob4TT+j/vrD4H2B2uA5s3D+J0DV+pYR3u5/dvO+XtUSZxl2
-         p/1kHUqNnJzbvGeSijGWPtx4XvBdTgglYZdIlAnH1L6DRhaWpNzFQ5r8LXGx3jrSBj3a
-         CEntHaCo1f+3bRIkUNSNjALchCngi3K1xak5LW8ZloC2b6VWnSEx22J+2ggLhGPFqZcO
-         zDacjCaHURvGOSY54dfTg+Hdw03XG7zlKjgQeeB4zeMYQ0QBhpSHvC+HbhOijCmo0d2+
-         82hQ==
-X-Gm-Message-State: APjAAAVFIdIIEfGNY8G9vml43MAIdr4XGiGWrtFzuWxooruaghoyuCoZ
-        67Pu2o4LXVhkRRwdwP/csm6+p257t5P4H7dgK8U=
-X-Google-Smtp-Source: APXvYqxUCQecu3YzIZSDnRSv/ewulyJd9KDh+r675JgSsNl5OZBpCXt5w0a87sU6yueUxo1mbGOMxGOBVtCwDp+pFVM=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr16189276ots.250.1578991330906;
- Tue, 14 Jan 2020 00:42:10 -0800 (PST)
+        Tue, 14 Jan 2020 03:42:25 -0500
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5G1V-1jpXMb0r8X-011DMH; Tue, 14 Jan 2020 09:42:24 +0100
+Received: by mail-qv1-f47.google.com with SMTP id dp13so5288694qvb.7;
+        Tue, 14 Jan 2020 00:42:23 -0800 (PST)
+X-Gm-Message-State: APjAAAWlw9t3c2G9F62XI6aneaxBdeKfPLh9jknZL4cVsYbgtg2xEHKB
+        rjAK/PwouSN3VMVUDWLqKSV+1wnQaJNUfzhvKcU=
+X-Google-Smtp-Source: APXvYqzHlEAuow8J7sfEaKx0vXugFGGudqVBX74JnJkLjytKVNtvs5tT0fUcCXq4SrHOE5kJOWfUX/v75TtgCYRAp54=
+X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr15837659qvo.222.1578991342846;
+ Tue, 14 Jan 2020 00:42:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110153207.70c888cd@canb.auug.org.au>
-In-Reply-To: <20200110153207.70c888cd@canb.auug.org.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jan 2020 09:41:57 +0100
-Message-ID: <CAMuHMdVY2W1=9paE+WpJUHprocOdutRMcNUJenn+jz9A-iv90A@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the usb-gadget tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jayshri Pawar <jpawar@cadence.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: multipart/mixed; boundary="000000000000622738059c159180"
+References: <20200110134337.1752000-1-arnd@arndb.de> <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
+In-Reply-To: <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Jan 2020 09:42:06 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2YJuUvZnK4DEYoCrj=DZwvXKnN1Y2bLkAKd7gp1us3eQ@mail.gmail.com>
+Message-ID: <CAK8P3a2YJuUvZnK4DEYoCrj=DZwvXKnN1Y2bLkAKd7gp1us3eQ@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] kunit: move binary assertion out of line
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9547x2bVt3blggZ1UxBmuWeDc52ZrKwp9cZzwP3O+Z0QxT2vzbn
+ p2YrZZllygUR5/yhEMbPoqz1Iv7dLM1SiMQPKZh/nXEk3gYzvEen2UqczXxNJKcOhbY8+cu
+ PTNWMURzNUctheXmbrcQoJ0WzEMzpmNpkC+ERLgRCFSw0LBY9kj5qwWQs6Ps4MjYDTMljIH
+ VCM7uy+67v6q/UhZQyyVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bHcbYbgWn2g=:McvsmWOR1P9y2FOt5ylA3t
+ aPn2KuyOFoaeODWp/Xo3jzzX/04V92SO1itz1WaVpSajr+WVf1R8hc/qBGnfiM3Fexb0iipdH
+ 1CkwsZRSC5VZHH3j8mG2gx00UTGYnUKjAHWjiWwcAYyY5sPcpRGIegwrDxUotVH+zZh3Vh+qT
+ 0nGrqYzwdqQ0LeCqcNcg6Sz4zSajTffSt1SVSA+TAnPg3H4R80pLisDS6evjqOtS5kDXHfMtr
+ FVLF/HRCL/3Xrf/qhj9tsxG9P5fuA/BIiBrTUZWyaRxpLGuZ64i6mhJv/BEHMlpB62EetxB9Z
+ 01iR0NHzZ/VXCE3SfJKJUQAOEpPeOEKw/g6pcxicG/ugf6bmzIJt65XtLCMIUehy7q+DUQx9l
+ luRl9m7i5yebqtDpb4WXGPVj3psACHEvviJ6tKAcb7KhXL584dQ6Gv8gp2xQOqyp5Vnwq0eHn
+ idc36T6fRKV+0JBot6DasVUxmkmw831Ri3/NY1lSwr/GWD0rV/E4WPue7bJt/LwgSNtQQOiEb
+ aFD9iCP06P8J4BuwrNnXfAD75YAOd+nEi4xo999HeqS8i8xUuglGfw5i0x84oiOfMR/wweAYE
+ 12MzcBiBni5EBjGWVC12oyFumj7be9a3FRj3JXs7SHYQkqyijmbvAnlxVtHbg06emzKAUnkML
+ b5EF2udYSCwYj23WYCkYizyh092x9o/WiOJ9RI6n1L+ev4jfmctTogTZ50Ff2FzQ6wFlU/jrs
+ fUBdsNiNCwMtBhIRqt/zsJatUZahBJ2IQ+vOi7n2Twq8wxS8TidO2vPpieTr5AY8e234whtS+
+ AuIyfLKkYQabVlHWQz5lvluV+ZVEIbLviOHf2itXIjFGeF7qp4EYw+bvJaEp/vdmP8Fycaf7n
+ bf7s9rQ0wfGpLZITPuuw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000622738059c159180
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Stephen,
-
-On Fri, Jan 10, 2020 at 5:33 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Today's linux-next merge of the usb-gadget tree got a conflict in:
+On Tue, Jan 14, 2020 at 3:13 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
->   drivers/usb/cdns3/gadget.c
+> On Fri, Jan 10, 2020 at 5:43 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > In combination with the structleak gcc plugin, kunit can lead to excessive
+> > stack usage when each assertion adds another structure to the stack from
+> > of the calling function:
+> >
+> > base/test/property-entry-test.c:99:1: error: the frame size of 3032 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+> >
+> > As most assertions are binary, change those over to a direct function
+> > call that does not have this problem.  This can probably be improved
+> > further, I just went for a straightforward conversion, but a function
+> > call with 12 fixed arguments plus varargs it not great either.
 >
-> between commit:
+> Yeah, I am not exactly excited by maintaining such a set of functions.
+
+Ok.
+
+> I don't think anyone wants to go with the heap allocation route.
 >
->   f616c3bda47e ("usb: cdns3: Fix dequeue implementation.")
->
-> from Linus' tree and commit:
->
->   4f1fa63a6dc2 ("usb: cdns3: Add streams support to cadence USB3 DRD driver")
->
-> from the usb-gadget tree.
->
-> I have no idea how to handle this, so I just dropped the usb-gadget tree
-> for today - it clearly needs to be rebased on Linus' tree anyway (it
-> has a few shared patches that are different commits and there are
-> further changes to this file in Linus' tree as well.  rebasing onto
-> (or merging with) v5.5-rc6 may be useful.
+> Along the lines of the union/single copy idea[1]. What if we just put
+> a union of all the assertion types in the kunit struct? One is already
+> allocated for every test case and we only need one assertion object
+> for each test case at a time, so I imagine that sould work.
 
-For today's renesas-drivers, I'm using the attached conflict resolution.
+Ah right, that should work fine, and may also lead to better object
+code if the compiler can avoid repeated assignments of the same
+values, e.g. ".file = __FILE__".
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
-
---000000000000622738059c159180
-Content-Type: text/x-patch; charset="US-ASCII"; name="drivers_usb_cdns3_gadget.c.diff"
-Content-Disposition: attachment; filename="drivers_usb_cdns3_gadget.c.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k5dmnf820>
-X-Attachment-Id: f_k5dmnf820
-
-ZGlmZiAtLWNjIGRyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5jCmluZGV4IGU0ODIwYmQ0YjU3OTEz
-ODEsNGRhZGM4NWFkOTkyZjA4YS4uMDAwMDAwMDAwMDAwMDAwMAotLS0gYS9kcml2ZXJzL3VzYi9j
-ZG5zMy9nYWRnZXQuYworKysgYi9kcml2ZXJzL3VzYi9jZG5zMy9nYWRnZXQuYwpAQEAgLTExNDUs
-MzcgLTE0MzYsNTYgKzE0MzYsNjQgQEBAIHN0YXRpYyB2b2lkIGNkbnMzX3RyYW5zZmVyX2NvbXBs
-ZXRlZChzdAogIAkJcmVxdWVzdCA9IGNkbnMzX25leHRfcmVxdWVzdCgmcHJpdl9lcC0+cGVuZGlu
-Z19yZXFfbGlzdCk7CiAgCQlwcml2X3JlcSA9IHRvX2NkbnMzX3JlcXVlc3QocmVxdWVzdCk7CiAg
-CiArCQl0cmIgPSBwcml2X2VwLT50cmJfcG9vbCArIHByaXZfZXAtPmRlcXVldWU7CiArCiArCQkv
-KiBSZXF1ZXN0IHdhcyBkZXF1ZXVlZCBhbmQgVFJCIHdhcyBjaGFuZ2VkIHRvIFRSQl9MSU5LLiAq
-LwogKwkJaWYgKFRSQl9GSUVMRF9UT19UWVBFKHRyYi0+Y29udHJvbCkgPT0gVFJCX0xJTkspIHsK
-ICsJCQl0cmFjZV9jZG5zM19jb21wbGV0ZV90cmIocHJpdl9lcCwgdHJiKTsKICsJCQljZG5zM19t
-b3ZlX2RlcV90b19uZXh0X3RyYihwcml2X3JlcSk7CiArCQl9CiArCi0gCQkvKiBSZS1zZWxlY3Qg
-ZW5kcG9pbnQuIEl0IGNvdWxkIGJlIGNoYW5nZWQgYnkgb3RoZXIgQ1BVIGR1cmluZwotIAkJICog
-aGFuZGxpbmcgdXNiX2dhZGdldF9naXZlYmFja19yZXF1ZXN0LgotIAkJICovCi0gCQljZG5zM19z
-ZWxlY3RfZXAocHJpdl9kZXYsIHByaXZfZXAtPmVuZHBvaW50LmFkZHJlc3MpOworIAkJaWYgKCFy
-ZXF1ZXN0LT5zdHJlYW1faWQpIHsKKyAJCQkvKiBSZS1zZWxlY3QgZW5kcG9pbnQuIEl0IGNvdWxk
-IGJlIGNoYW5nZWQgYnkgb3RoZXIgQ1BVCisgCQkJICogZHVyaW5nIGhhbmRsaW5nIHVzYl9nYWRn
-ZXRfZ2l2ZWJhY2tfcmVxdWVzdC4KKyAJCQkgKi8KKyAJCQljZG5zM19zZWxlY3RfZXAocHJpdl9k
-ZXYsIHByaXZfZXAtPmVuZHBvaW50LmFkZHJlc3MpOwogIAotIAkJaWYgKCFjZG5zM19yZXF1ZXN0
-X2hhbmRsZWQocHJpdl9lcCwgcHJpdl9yZXEpKQotIAkJCWdvdG8gcHJlcGFyZV9uZXh0X3RkOwor
-IAkJCWlmICghY2RuczNfcmVxdWVzdF9oYW5kbGVkKHByaXZfZXAsIHByaXZfcmVxKSkKKyAJCQkJ
-Z290byBwcmVwYXJlX25leHRfdGQ7CiAgCi0gCQl0cmIgPSBwcml2X2VwLT50cmJfcG9vbCArIHBy
-aXZfZXAtPmRlcXVldWU7Ci0gCQl0cmFjZV9jZG5zM19jb21wbGV0ZV90cmIocHJpdl9lcCwgdHJi
-KTsKKyAJCQl0cmIgPSBwcml2X2VwLT50cmJfcG9vbCArIHByaXZfZXAtPmRlcXVldWU7CisgCQkJ
-dHJhY2VfY2RuczNfY29tcGxldGVfdHJiKHByaXZfZXAsIHRyYik7CisgCisgCQkJaWYgKHRyYiAh
-PSBwcml2X3JlcS0+dHJiKQorIAkJCQlkZXZfd2Fybihwcml2X2Rldi0+ZGV2LAorIAkJCQkJICJy
-ZXF1ZXN0X3RyYj0weCVwLCBxdWV1ZV90cmI9MHglcFxuIiwKKyAJCQkJCSBwcml2X3JlcS0+dHJi
-LCB0cmIpOwogIAotIAkJaWYgKHRyYiAhPSBwcml2X3JlcS0+dHJiKQotIAkJCWRldl93YXJuKHBy
-aXZfZGV2LT5kZXYsCi0gCQkJCSAicmVxdWVzdF90cmI9MHglcCwgcXVldWVfdHJiPTB4JXBcbiIs
-Ci0gCQkJCSBwcml2X3JlcS0+dHJiLCB0cmIpOworIAkJCXJlcXVlc3QtPmFjdHVhbCA9IFRSQl9M
-RU4obGUzMl90b19jcHUodHJiLT5sZW5ndGgpKTsKKyAJCQljZG5zM19tb3ZlX2RlcV90b19uZXh0
-X3RyYihwcml2X3JlcSk7CisgCQkJY2RuczNfZ2FkZ2V0X2dpdmViYWNrKHByaXZfZXAsIHByaXZf
-cmVxLCAwKTsKICAKLSAJCXJlcXVlc3QtPmFjdHVhbCA9IFRSQl9MRU4obGUzMl90b19jcHUodHJi
-LT5sZW5ndGgpKTsKLSAJCWNkbnMzX21vdmVfZGVxX3RvX25leHRfdHJiKHByaXZfcmVxKTsKLSAJ
-CWNkbnMzX2dhZGdldF9naXZlYmFjayhwcml2X2VwLCBwcml2X3JlcSwgMCk7CisgCQkJaWYgKHBy
-aXZfZXAtPnR5cGUgIT0gVVNCX0VORFBPSU5UX1hGRVJfSVNPQyAmJgorIAkJCSAgICBUUkJTX1BF
-Ul9TRUdNRU5UID09IDIpCisgCQkJCWJyZWFrOworIAkJfSBlbHNlIHsKKyAJCQkvKiBSZS1zZWxl
-Y3QgZW5kcG9pbnQuIEl0IGNvdWxkIGJlIGNoYW5nZWQgYnkgb3RoZXIgQ1BVCisgCQkJICogZHVy
-aW5nIGhhbmRsaW5nIHVzYl9nYWRnZXRfZ2l2ZWJhY2tfcmVxdWVzdC4KKyAJCQkgKi8KKyAJCQlj
-ZG5zM19zZWxlY3RfZXAocHJpdl9kZXYsIHByaXZfZXAtPmVuZHBvaW50LmFkZHJlc3MpOworIAor
-IAkJCXRyYiA9IHByaXZfZXAtPnRyYl9wb29sOworIAkJCXRyYWNlX2NkbnMzX2NvbXBsZXRlX3Ry
-Yihwcml2X2VwLCB0cmIpOwogIAotIAkJaWYgKHByaXZfZXAtPnR5cGUgIT0gVVNCX0VORFBPSU5U
-X1hGRVJfSVNPQyAmJgotIAkJICAgIFRSQlNfUEVSX1NFR01FTlQgPT0gMikKKyAJCQlpZiAodHJi
-ICE9IHByaXZfcmVxLT50cmIpCisgCQkJCWRldl93YXJuKHByaXZfZGV2LT5kZXYsCisgCQkJCQkg
-InJlcXVlc3RfdHJiPTB4JXAsIHF1ZXVlX3RyYj0weCVwXG4iLAorIAkJCQkJIHByaXZfcmVxLT50
-cmIsIHRyYik7CisgCisgCQkJcmVxdWVzdC0+YWN0dWFsICs9IFRSQl9MRU4obGUzMl90b19jcHUo
-dHJiLT5sZW5ndGgpKTsKKyAKKyAJCQlpZiAoIXJlcXVlc3QtPm51bV9zZ3MgfHwKKyAJCQkgICAg
-KHJlcXVlc3QtPm51bV9zZ3MgPT0gKHByaXZfZXAtPnN0cmVhbV9zZ19pZHggKyAxKSkpIHsKKyAJ
-CQkJcHJpdl9lcC0+c3RyZWFtX3NnX2lkeCA9IDA7CisgCQkJCWNkbnMzX2dhZGdldF9naXZlYmFj
-ayhwcml2X2VwLCBwcml2X3JlcSwgMCk7CisgCQkJfSBlbHNlIHsKKyAJCQkJcHJpdl9lcC0+c3Ry
-ZWFtX3NnX2lkeCsrOworIAkJCQljZG5zM19lcF9ydW5fc3RyZWFtX3RyYW5zZmVyKHByaXZfZXAs
-IHJlcXVlc3QpOworIAkJCX0KICAJCQlicmVhazsKKyAJCX0KICAJfQogIAlwcml2X2VwLT5mbGFn
-cyAmPSB+RVBfUEVORElOR19SRVFVRVNUOwogIAo=
---000000000000622738059c159180--
+          Arnd
