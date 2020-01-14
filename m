@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E545EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606BAC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF6124676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346B5207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996504;
-	bh=Zkne0qlY6NJIT3bKQZGPcYYlFRgfrwxG1in28LCITt0=;
+	s=default; t=1578996507;
+	bh=JqCYsh26Mk9/vcxTTruMptcg0CwCViC/wGsnxWhfASE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KiurUKPfTiDwBFus1Eay/Hc4GzOUySrUft3Q01aCZ72PsECiW+lb6E18eUZpJye00
-	 5xJHRlC7mJ6FhfN+vAQtiGEGgD9pevh2F5aUPsMYqlv/FKiuyQk9GyvIiRHv4FeRK5
-	 /WA8DHOlKcQ2mdH8ScynBxRIU/lfSXCu6EUpxers=
+	b=ttHkEQtFuDy4BIJiPmrx6U4kYMBmz8VnHLWJxBBnbf5PtIsEgXnvcvg570DVEx2Ex
+	 B6KPKJ3+kcEhH+lLIa8+wdc9AjDeGOP+drbxqQsKIJLkuoS11Qz0gzCSfrGmp6ziZu
+	 m37LvJrgeRv1vmpXJZyvn1joWP8uA4pKW6/Y3jVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgANKIX (ORCPT
+        id S1730987AbgANKI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729416AbgANKIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:20 -0500
+        id S1730960AbgANKIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65AF7207FF;
-        Tue, 14 Jan 2020 10:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF0020678;
+        Tue, 14 Jan 2020 10:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996500;
-        bh=Zkne0qlY6NJIT3bKQZGPcYYlFRgfrwxG1in28LCITt0=;
+        s=default; t=1578996502;
+        bh=JqCYsh26Mk9/vcxTTruMptcg0CwCViC/wGsnxWhfASE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UG4FDY5eeU4TQTFWEu9Ii1E/2lPuDJSikkEgzMWaFEpWTymYo99xQ5jzRjuk8G06B
-         NiDv8eDWjMm383/psVMGNlrLQC9g4B3/LV/varVunP7Bx0n67ctI717+NK/WwQA+/Y
-         lScQXAJUZvAl8AHnLV51YEzk7mSohD1qHHhOgdUY=
+        b=DyDRKRQXz15Z5OQaIePueWFkJBqGzTQ4bE1RuHYaoBYoW1VM/h4BOVRt5j30zdqNU
+         LYVXgC0jAz2wDu1xfD6fvJJBu5V4jwg8rb59dIsItjB1dQ7l4WAgKqSCQ9AuDDrDrz
+         8l0MYhf1z2AHI6XMbR+0XPlAcm6tyfp3lVGG5dSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com,
-        syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 14/46] Input: add safety guards to input_set_keycode()
-Date:   Tue, 14 Jan 2020 11:01:31 +0100
-Message-Id: <20200114094343.435861738@linuxfoundation.org>
+Subject: [PATCH 4.19 15/46] Input: input_event - fix struct padding on sparc64
+Date:   Tue, 14 Jan 2020 11:01:32 +0100
+Message-Id: <20200114094343.665406071@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -61,69 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit cb222aed03d798fc074be55e59d9a112338ee784 upstream.
+commit f729a1b0f8df7091cea3729fc0e414f5326e1163 upstream.
 
-If we happen to have a garbage in input device's keycode table with values
-too big we'll end up doing clear_bit() with offset way outside of our
-bitmaps, damaging other objects within an input device or even outside of
-it. Let's add sanity checks to the returned old keycodes.
+Going through all uses of timeval, I noticed that we screwed up
+input_event in the previous attempts to fix it:
 
-Reported-by: syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com
-Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20191207212757.GA245964@dtor-ws
+The time fields now match between kernel and user space, but all following
+fields are in the wrong place.
+
+Add the required padding that is implied by the glibc timeval definition
+to fix the layout, and use a struct initializer to avoid leaking kernel
+stack data.
+
+Fixes: 141e5dcaa735 ("Input: input_event - fix the CONFIG_SPARC64 mixup")
+Fixes: 2e746942ebac ("Input: input_event - provide override for sparc64")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191213204936.3643476-2-arnd@arndb.de
+Cc: stable@vger.kernel.org
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/input.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/input/evdev.c       |   14 +++++++-------
+ drivers/input/misc/uinput.c |   14 +++++++++-----
+ include/uapi/linux/input.h  |    1 +
+ 3 files changed, 17 insertions(+), 12 deletions(-)
 
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -858,16 +858,18 @@ static int input_default_setkeycode(stru
- 		}
+--- a/drivers/input/evdev.c
++++ b/drivers/input/evdev.c
+@@ -241,13 +241,13 @@ static void __pass_event(struct evdev_cl
+ 		 */
+ 		client->tail = (client->head - 2) & (client->bufsize - 1);
+ 
+-		client->buffer[client->tail].input_event_sec =
+-						event->input_event_sec;
+-		client->buffer[client->tail].input_event_usec =
+-						event->input_event_usec;
+-		client->buffer[client->tail].type = EV_SYN;
+-		client->buffer[client->tail].code = SYN_DROPPED;
+-		client->buffer[client->tail].value = 0;
++		client->buffer[client->tail] = (struct input_event) {
++			.input_event_sec = event->input_event_sec,
++			.input_event_usec = event->input_event_usec,
++			.type = EV_SYN,
++			.code = SYN_DROPPED,
++			.value = 0,
++		};
+ 
+ 		client->packet_head = client->tail;
  	}
+--- a/drivers/input/misc/uinput.c
++++ b/drivers/input/misc/uinput.c
+@@ -87,12 +87,16 @@ static int uinput_dev_event(struct input
+ 	struct uinput_device	*udev = input_get_drvdata(dev);
+ 	struct timespec64	ts;
  
--	__clear_bit(*old_keycode, dev->keybit);
--	__set_bit(ke->keycode, dev->keybit);
--
--	for (i = 0; i < dev->keycodemax; i++) {
--		if (input_fetch_keycode(dev, i) == *old_keycode) {
--			__set_bit(*old_keycode, dev->keybit);
--			break; /* Setting the bit twice is useless, so break */
-+	if (*old_keycode <= KEY_MAX) {
-+		__clear_bit(*old_keycode, dev->keybit);
-+		for (i = 0; i < dev->keycodemax; i++) {
-+			if (input_fetch_keycode(dev, i) == *old_keycode) {
-+				__set_bit(*old_keycode, dev->keybit);
-+				/* Setting the bit twice is useless, so break */
-+				break;
-+			}
- 		}
- 	}
+-	udev->buff[udev->head].type = type;
+-	udev->buff[udev->head].code = code;
+-	udev->buff[udev->head].value = value;
+ 	ktime_get_ts64(&ts);
+-	udev->buff[udev->head].input_event_sec = ts.tv_sec;
+-	udev->buff[udev->head].input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
++
++	udev->buff[udev->head] = (struct input_event) {
++		.input_event_sec = ts.tv_sec,
++		.input_event_usec = ts.tv_nsec / NSEC_PER_USEC,
++		.type = type,
++		.code = code,
++		.value = value,
++	};
++
+ 	udev->head = (udev->head + 1) % UINPUT_BUFFER_SIZE;
  
-+	__set_bit(ke->keycode, dev->keybit);
- 	return 0;
- }
- 
-@@ -923,9 +925,13 @@ int input_set_keycode(struct input_dev *
- 	 * Simulate keyup event if keycode is not present
- 	 * in the keymap anymore
- 	 */
--	if (test_bit(EV_KEY, dev->evbit) &&
--	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
--	    __test_and_clear_bit(old_keycode, dev->key)) {
-+	if (old_keycode > KEY_MAX) {
-+		dev_warn(dev->dev.parent ?: &dev->dev,
-+			 "%s: got too big old keycode %#x\n",
-+			 __func__, old_keycode);
-+	} else if (test_bit(EV_KEY, dev->evbit) &&
-+		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
-+		   __test_and_clear_bit(old_keycode, dev->key)) {
- 		struct input_value vals[] =  {
- 			{ EV_KEY, old_keycode, 0 },
- 			input_value_sync
+ 	wake_up_interruptible(&udev->waitq);
+--- a/include/uapi/linux/input.h
++++ b/include/uapi/linux/input.h
+@@ -34,6 +34,7 @@ struct input_event {
+ 	__kernel_ulong_t __sec;
+ #if defined(__sparc__) && defined(__arch64__)
+ 	unsigned int __usec;
++	unsigned int __pad;
+ #else
+ 	__kernel_ulong_t __usec;
+ #endif
 
 
