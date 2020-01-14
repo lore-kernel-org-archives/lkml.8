@@ -2,184 +2,136 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7149C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B95C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F5222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:58:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YjiMCMzP"
+	by mail.kernel.org (Postfix) with ESMTP id 67E3F2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:59:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579013980;
+	bh=JsWfRq3X3gD6BI5Jjp77gShsE9xbLIe4k4ACCqlIDUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=namVPLCUWWWS6Q28IFGabCwCiOKDBt8u6gM1DT+3WcGQkV905cYWtBUuCjMd3/Oxi
+	 EJYmD1l61J01WyLw28tXX5swO8y1IT2hEZbuYsDyuvnxQYOu/xN4Lsk7HLCyu0Jd8g
+	 5NfoGRzn9CpE3hJz9dWpr4jxdeEv77YPXtgQDyK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgANO61 (ORCPT
+        id S1729044AbgANO7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:58:27 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:25192 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANO60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:58:26 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: +4kfcO9oC7v5//xZeoPyzvDMthpLXL+UuT3qGkyYW7uU4QdKrkbSMmeF1oeArLRE6EMYroRBTb
- K2Egt52gPU5Uac04RWTmu10kIZQHb5cI9Hc193weMDLQjOFCR0CI4YWTJgV2gwRXYulE+shig9
- Wj/ZPENQgSt5Atr8ZhGiUeCGnn2fmJWRj5k5ZfElxK693fwOM/MWi1i/HntX6FqW/0GIfhczk9
- +MPwhvkkaLFb3OwZxBJubAhFWS8nq1soxX7cwKUQv4gIQz2uXZ4aUIgirczI+yrZ7k/1FlZW2J
- Coc=
-X-IronPort-AV: E=Sophos;i="5.69,433,1571727600"; 
-   d="scan'208";a="62573383"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jan 2020 07:58:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 Jan 2020 07:58:24 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Tue, 14 Jan 2020 07:58:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=geizsOP3SKgCwExC4ZLHrzvPMnkB2fy0rMg5+azzA071L9cA9BDpuQXxvBZoaC0DaR/WUsoMnU9DQnnP8L2mhmOon6AEsgp8gFyhUC4VE6o3hbaOWwQexGEh67y3wVGfNmKokpI6ksOtX8OUOOjdVQPHMp0xbO0Kqz0SL/LEZuVNpDA7TOGHyHoijxYXujEQ8DyAVZGFruinrb8TKapanNntwWXDWeWg0K81JL2W/+vh4w0LWcZKXj3+cg++Ct0JIT829zbUE+nUG3IDxGiuU+obcwtRRUEqsxPob+oG4dElE7/azQdRUjrDOFbeeKuq5BKes0f4igUAP2Uxp9W6CA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iwPDBA/JXrHpHd10XJ1yOZszLgTAO4rKFP8Z67jaYWo=;
- b=Ua7d1gs610VIiZVkDa49EyN6cH5flWx0/MOBDKS5Aw+LumfqKNnZPlnCSoNaV9tAz9XIqA6YQWuaul4t8fxwUGwyNaZ++1Whu3lRDKkdnoLSKqVx0dAKo0TJWkKlCC/cAYhyD0xU6Hpo8V6K0w9HJmDmCWOcM+VZm4auBNl60k37TfzmfRuPR/HQw7Tikn04UTfs06GkNnJqiGUjcrvrJBVfAi625RruWoHM3xWnPQT3UxqeJPa5N1wPAmO24nY1sKySDdLla33qHQDzvBEr+NxFClf42hfRV0WbMpWyNqzg8NRIFewuQ1aTZVuSaH0F6IW+90i9voH/ttl9QyN5ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iwPDBA/JXrHpHd10XJ1yOZszLgTAO4rKFP8Z67jaYWo=;
- b=YjiMCMzPFRSfj79C2ME9cAe01pTckqiclmk8MGkaB3YEIR07R6KS1OQYwfMF5f/ThLvOzgmCvP0fRP0/VMW+HvIL6Pizpkjzl1d/TEHvyw0MFzzSsUXsQcQWvnmTyX+d9pKkZaCRQVbmqTmtUQtHztWhfDMmNCyKrUzSt2pVV+E=
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.224) by
- DM6PR11MB3228.namprd11.prod.outlook.com (20.176.120.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 14:58:23 +0000
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::106f:424f:ac54:1dbb]) by DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::106f:424f:ac54:1dbb%7]) with mapi id 15.20.2623.015; Tue, 14 Jan 2020
- 14:58:23 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <robh+dt@kernel.org>, <lee.jones@linaro.org>,
-        <mark.rutland@arm.com>, <Nicolas.Ferre@microchip.com>,
-        <Ludovic.Desroches@microchip.com>, <radu_nicolae.pirea@upb.ro>,
-        <richard.genoud@gmail.com>, <a.zummo@towertech.it>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v3 4/7] dt-bindings: atmel-usart: remove wildcard
-Thread-Topic: [PATCH v3 4/7] dt-bindings: atmel-usart: remove wildcard
-Thread-Index: AQHVyssxad36L/lyDU2/n1XqgFNXSA==
-Date:   Tue, 14 Jan 2020 14:58:23 +0000
-Message-ID: <a7f9f8c6-7636-6c1d-ecd8-39e5a956b85a@microchip.com>
-References: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
- <1578997397-23165-5-git-send-email-claudiu.beznea@microchip.com>
- <20200114104237.GM3137@piout.net>
- <f3c4d460-cff6-2e14-428a-a732a6bffe38@microchip.com>
- <20200114111704.GN3137@piout.net>
-In-Reply-To: <20200114111704.GN3137@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e4d740b6-67a8-472e-5080-08d7990233ea
-x-ms-traffictypediagnostic: DM6PR11MB3228:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3228F3B9868F7DBA8D17887587340@DM6PR11MB3228.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(189003)(66946007)(76116006)(31686004)(66446008)(6506007)(53546011)(26005)(186003)(64756008)(66556008)(86362001)(91956017)(54906003)(66476007)(71200400001)(316002)(6512007)(4326008)(6916009)(2616005)(2906002)(6486002)(36756003)(81156014)(7416002)(966005)(31696002)(5660300002)(478600001)(8676002)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3228;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1Pd87UK+T6wnlaiwJ/HnFQT+JfV6ynzpebDEllz7/8QtBGuipRl3UyWG1voWvRtBXxVK2VRDim8XJh4nqJfRrdt/5T4SmJMvuuW7rbFGUokiPSaGWu7lcOVnye7lemhgpAFbu/hp/vMRQ5Lrrz50M8JesS7yENrENNRRqKEa0Whl3VaOsbsoO3qAALGvUOrnT/QpgKo0veRSCWcaf1ngQOnzkOQZ6rBPlwQ7TfE6OZqgNZaS9m3Ab1tiKajV2IDNfZI9y8lpV/2VXi7ZsCUxpsIIJzUqEaetB7xzxscEPtml+CMSXhohN+kMuMZSVJszn6UicnYkE5PYQDt8aXVWOj3Ig8u8I0+fJPsRUiR6E6oFuyVolLNzub7IewBMtDLc2r9mriqdYZEtawqONebTCMy8HsXTvEp3rAUM3elcqmBOvEPu7xaeYQo7z9IN838UZVrIJQtzBWeVJp+rAQpcEno7IK8k8F/Ovz14RE4XVfAftMCHEP+uQR/Eh6AQD3k6+lKiruos+/Jihp0RKNTN9A==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD33279CEB73A84684BB56835DC9D6F8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 Jan 2020 09:59:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgANO7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:59:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DDA222C4;
+        Tue, 14 Jan 2020 14:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579013977;
+        bh=JsWfRq3X3gD6BI5Jjp77gShsE9xbLIe4k4ACCqlIDUs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jUh8clVtpbFL6PQgYE4wIm+2XEKpZn2NscpzUMxJZsQAdvIISnx5yHyocs6hXUN9C
+         GGVkxtTHDzTHhgMuycAWt+4/A9wOFUGhZxM+JkceSC3lzD1GJovA1TP3c0IB6YMRP2
+         dd736FW18wIbuSp2jizlxsiVLT0vY2P1Aq5uAsE0=
+Date:   Tue, 14 Jan 2020 15:59:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v11 2/4] uacce: add uacce driver
+Message-ID: <20200114145934.GA1960403@kroah.com>
+References: <1578710919-12141-1-git-send-email-zhangfei.gao@linaro.org>
+ <1578710919-12141-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200111194006.GD435222@kroah.com>
+ <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4d740b6-67a8-472e-5080-08d7990233ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 14:58:23.2235
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Egllc5yUKitD0Pe697cx4bgy3xmrLoP9lwUdrdQ4j3VUsh3hdMnj23vdasFWechuQqc5lUjS4ME5lrsuCHxth0I4U3Umh+puTTrfv0/rwxs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3228
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDE0LjAxLjIwMjAgMTM6MTcsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFWFRF
-Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
-IHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIDE0LzAxLzIwMjAgMTE6MTA6
-MTQrMDAwMCwgQ2xhdWRpdS5CZXpuZWFAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4+DQo+Pg0KPj4g
-T24gMTQuMDEuMjAyMCAxMjo0MiwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+Pj4gRVhURVJO
-QUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5
-b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+Pj4NCj4+PiBPbiAxNC8wMS8yMDIwIDEyOjIz
-OjE0KzAyMDAsIENsYXVkaXUgQmV6bmVhIHdyb3RlOg0KPj4+PiBSZW1vdmUgY2hpcCB3aGlsZGNh
-cmQgYW5kIGludHJvZHVjZSB0aGUgbGlzdCBvZiBjb21wYXRpYmxlcyBpbnN0ZWFkLg0KPj4+Pg0K
-Pj4+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9j
-aGlwLmNvbT4NCj4+Pj4gLS0tDQo+Pj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWZkL2F0bWVsLXVzYXJ0LnR4dCB8IDcgKysrLS0tLQ0KPj4+PiAgMSBmaWxlIGNoYW5nZWQs
-IDMgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdXNhcnQudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbC11c2FydC50eHQNCj4+
-Pj4gaW5kZXggNjk5ZmQzYzlhY2U4Li43NzhlODMxMDYwNmEgMTAwNjQ0DQo+Pj4+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdXNhcnQudHh0DQo+Pj4+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdXNhcnQu
-dHh0DQo+Pj4+IEBAIC0xLDEwICsxLDkgQEANCj4+Pj4gICogQXRtZWwgVW5pdmVyc2FsIFN5bmNo
-cm9ub3VzIEFzeW5jaHJvbm91cyBSZWNlaXZlci9UcmFuc21pdHRlciAoVVNBUlQpDQo+Pj4+DQo+
-Pj4+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzIGZvciBVU0FSVDoNCj4+Pj4gLS0gY29tcGF0aWJsZTog
-U2hvdWxkIGJlICJhdG1lbCw8Y2hpcD4tdXNhcnQiIG9yICJhdG1lbCw8Y2hpcD4tZGJndSINCj4+
-Pj4gLSAgVGhlIGNvbXBhdGlibGUgPGNoaXA+IGluZGljYXRlZCB3aWxsIGJlIHRoZSBmaXJzdCBT
-b0MgdG8gc3VwcG9ydCBhbg0KPj4+PiAtICBhZGRpdGlvbmFsIG1vZGUgb3IgYW4gVVNBUlQgbmV3
-IGZlYXR1cmUuDQo+Pj4+IC0gIEZvciB0aGUgZGJndSBVQVJULCB1c2UgImF0bWVsLDxjaGlwPi1k
-Ymd1IiwgImF0bWVsLDxjaGlwPi11c2FydCINCj4+Pj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJl
-IG9uZSBvZiB0aGUgZm9sbG93aW5nOg0KPj4+PiArICAgICAtICJhdG1lbCxhdDkxcm05MjAwLWRi
-Z3UiLCAiYXRtZWwsYXQ5MXJtOTIwMC11c2FydCINCj4+Pj4gKyAgICAgLSAiYXRtZWwsYXQ5MXNh
-bTkyNjAtZGJndSIsICJhdG1lbCxhdDkxc2FtOTI2MC11c2FydCINCj4+Pg0KPj4+IEFsbCB0aGUg
-dWFydHMgYXJlIG5vdCBkYmd1cywgc28gdGhpcyBuZWVkIHRvIGJlOg0KPj4+DQo+Pj4gIC0gImF0
-bWVsLGF0OTFybTkyMDAtdXNhcnQiDQo+Pj4gIC0gImF0bWVsLGF0OTFzYW05MjYwLXVzYXJ0Ig0K
-Pj4+ICAtICJhdG1lbCxhdDkxcm05MjAwLWRiZ3UiLCAiYXRtZWwsYXQ5MXJtOTIwMC11c2FydCIN
-Cj4+PiAgLSAiYXRtZWwsYXQ5MXNhbTkyNjAtZGJndSIsICJhdG1lbCxhdDkxc2FtOTI2MC11c2Fy
-dCINCj4+DQo+PiBPayENCj4+DQo+Pj4NCj4+PiBBbHNvLCB5b3UgbmVlZCB0byB1cGRhdGUgZHJp
-dmVycy9zb2MvYXRtZWwvc29jLmMNCj4+DQo+PiBPSy4gRGlkIHlvdSByZWZlciB0byBDSURSLCBF
-WElEIHJlZ2lzdGVycz8gVGhleSBhcmUgYXQgdGhlIHNhbWUgb2Zmc2V0cyBhcw0KPj4gZm9yIHRo
-ZSBvbGQgcHJvZHVjdHMuIFNvIHdlIGNhbiByZWx5IG9uIG9sZCBjb21wYXRpYmxlIGZvciB0aGVt
-LiBJcyB0aGlzIE9LPw0KPj4NCj4gDQo+IFRoZW4sIHdoYXQgaXMgdGhlIHBvaW50IG9mIGFkZGlu
-ZyBtaWNyb2NoaXAsc2FtOXg2MC1kYmd1ID8NCg0KRGlmZmVyZW50IG1lYW5pbmcgZm9yIENJRFIg
-cmVnaXN0ZXIgYml0cy4gVmVyc2lvbiBpcyBrZXB0IG9uIGJpdHMgNCB0byAwDQpidXQgbm90IGRv
-Y3VtZW50ZWQgaW4gcHVibGljIGRhdGFzaGVldCwgc28gdmVyc2lvbiBkaXNwbGF5ZWQgYnkNCmRy
-aXZlcnMvc29jL2F0bWVsL3NvYy5jIHNob3VsZCB3b3JrLg0KDQpUaGFuayB5b3UsDQpDbGF1ZGl1
-IEJlem5lYQ0KDQo+IA0KPiANCj4gLS0NCj4gQWxleGFuZHJlIEJlbGxvbmksIEJvb3RsaW4NCj4g
-RW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZw0KPiBodHRwczovL2Jvb3RsaW4u
-Y29tDQo+IA==
+On Mon, Jan 13, 2020 at 11:34:55AM +0800, zhangfei wrote:
+> Hi, Greg
+> 
+> Thanks for the review.
+> 
+> On 2020/1/12 上午3:40, Greg Kroah-Hartman wrote:
+> > On Sat, Jan 11, 2020 at 10:48:37AM +0800, Zhangfei Gao wrote:
+> > > +static int uacce_fops_open(struct inode *inode, struct file *filep)
+> > > +{
+> > > +	struct uacce_mm *uacce_mm = NULL;
+> > > +	struct uacce_device *uacce;
+> > > +	struct uacce_queue *q;
+> > > +	int ret = 0;
+> > > +
+> > > +	uacce = xa_load(&uacce_xa, iminor(inode));
+> > > +	if (!uacce)
+> > > +		return -ENODEV;
+> > > +
+> > > +	if (!try_module_get(uacce->parent->driver->owner))
+> > > +		return -ENODEV;
+> > Why are you trying to grab the module reference of the parent device?
+> > Why is that needed and what is that going to help with here?
+> > 
+> > This shouldn't be needed as the module reference of the owner of the
+> > fileops for this module is incremented, and the "parent" module depends
+> > on this module, so how could it be unloaded without this code being
+> > unloaded?
+> > 
+> > Yes, if you build this code into the kernel and the "parent" driver is a
+> > module, then you will not have a reference, but when you remove that
+> > parent driver the device will be removed as it has to be unregistered
+> > before that parent driver can be removed from the system, right?
+> > 
+> > Or what am I missing here?
+> The refcount here is preventing rmmod "parent" module after fd is opened,
+> since user driver has mmap kernel memory to user space, like mmio, which may
+> still in-use.
+> 
+> With the refcount protection, rmmod "parent" module will fail until
+> application free the fd.
+> log like: rmmod: ERROR: Module hisi_zip is in use
+
+But if the "parent" module is to be unloaded, it has to unregister the
+"child" device and that will call the destructor in here and then you
+will tear everything down and all should be good.
+
+There's no need to "forbid" a module from being unloaded, even if it is
+being used.  Look at all networking drivers, they work that way, right?
+
+> > > +static void uacce_release(struct device *dev)
+> > > +{
+> > > +	struct uacce_device *uacce = to_uacce_device(dev);
+> > > +
+> > > +	kfree(uacce);
+> > > +	uacce = NULL;
+> > That line didn't do anything :)
+> Yes, this is a mistake.
+> It is up to caller to set to NULL to prevent release multi times.
+
+Release function is called by the driver core which will not touch the
+value again.
+
+thanks,
+
+greg k-h
