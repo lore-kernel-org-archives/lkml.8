@@ -2,112 +2,103 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF873C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6590206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D639206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MYlOh9JC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="CioDb35h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbgANLLO (ORCPT
+        id S1729138AbgANLNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:11:14 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42529 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANLLO (ORCPT
+        Tue, 14 Jan 2020 06:13:55 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51902 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgANLNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:11:14 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s64so6234483pgb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 03:11:13 -0800 (PST)
+        Tue, 14 Jan 2020 06:13:55 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so13267284wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 03:13:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XBZrfX8lefbqoC00uqxUIqwNp5iGop4pPam/KdlVaFk=;
-        b=MYlOh9JC9NAdMnXM2MBHckOrg9L7PtmZWQR1EHKqZTnAQkUW6ztN4gbv/7cjOS0rqh
-         1obsqbOBRJmZNZVXi4CI54+9cSBw/VZoneiX1Zy+OFSNSywEJyW0svuLthCEaei/bXO7
-         MKt34QBOOGpz8HBh5a7Kg934lWshPDyRqWrIUXt9FTeasQ6KnagCCDXvN/+6ne09FYqz
-         jviGn+mkd04b2qwFGUzHXqnay+kK+hTZ2eLncKPqsdZu7k+Infp4/FPX1/DSOxuQxl00
-         rDip6nMi0+8qfTYvf+41v0H/1Ok2L97+7ETuhXhj2lpuMJVu8R4wxAribW8Uso6Wk5BY
-         wL5w==
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O+cDkBW6JIICKtoyKdzmXOh6XDLBBnv4mqwogrYCbfc=;
+        b=CioDb35hyMGv8UWHjFSpoLKZDy9Q5v/GzmLIaCXf/dmJU8tO6BjKbuedIdYMkf8C1M
+         tdvHBvvkfx3ZCqRlKFU26SkHpUkZJLejOebZ2Ux+nkHRBL0DuerByEyJASW+XrnmbCVO
+         8lGmnh+68jJ7h9hVhMQW3wWgqF0U/24SIRhOQ6t8qpNutXt1cK9CUc6PgntAPrVD57vJ
+         S26oeLUYx5iEyacC/OhNFXaLMtpfEzJs8M8P3/04sBquk3P43AoeNISFX3iVB8l1tVur
+         fWYQHPQ/hc8lvpuRnsDxS7VzQSl3/IFGHCJybjuG43gJcH63jGwjvPnBLKroE/ys+Rvd
+         g9yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XBZrfX8lefbqoC00uqxUIqwNp5iGop4pPam/KdlVaFk=;
-        b=W6M71YIzDfJ9wK+q24TyCi0HikHwtXo1osYoZ2741upXlmudKZnJNu9gBtKhGnjLIi
-         va6/ebSAzfc8hw2USsOCluo0Ev1MhsyLvxm9XkZ0nCrWB4bC5PUDx+RKvJOGR67ZJ1M9
-         V1hSVe0jnVkRm/AoF0nW3dBDHZZz3TNkXDq6Lf1YkwcRwTGt1fn5qzMrBIvOtUWeIM6L
-         BaC72fMwXpn/9ABz4b/cgaWPwTyM/5vwFnGlMb7kvlotaEnmRneffuXbYHOEZ1Q0ttIk
-         QzEo1QGnHi4AHYoj3p19zQHBCyy9NKbDx/5/V9vR0qkq/Jr0DkmdNd2ompHd/XLHsdph
-         JSHQ==
-X-Gm-Message-State: APjAAAXQKWr0ZVC32QLxFrrrqU9vIu5By2DJw5FQZutLx0LnlL4ZV2K7
-        hBHiiEW+TY4LzNsZMaetY/8TfQ==
-X-Google-Smtp-Source: APXvYqx2MiRaW3twJGGHwRODGbxfq0eTPey+fYvLlQ3hvhqtZgptsPwym4I2ms5HfOar2j8f4QImhQ==
-X-Received: by 2002:a62:e912:: with SMTP id j18mr24978532pfh.4.1579000273517;
-        Tue, 14 Jan 2020 03:11:13 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id y203sm18478129pfb.65.2020.01.14.03.11.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jan 2020 03:11:12 -0800 (PST)
-Date:   Tue, 14 Jan 2020 16:41:10 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        cristian.marussi@arm.com, peng.fan@nxp.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH V2] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200114111110.jhkj2y47ncp5233r@vireshk-i7>
-References: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
- <CAK8P3a1MLyP4ooyEDiBF1fE0BJGocgDmO1f5Qrvn_W5eqahz8g@mail.gmail.com>
- <20200113064156.lt3xxpzygattz3he@vireshk-i7>
- <CAK8P3a2u6s4MAM_9bOqSt5NwVc4XrXs9W36tp-7rWWTXx0+pRg@mail.gmail.com>
- <20200114092615.nvj6mkwkplub5ul7@vireshk-i7>
- <CAK8P3a0jXyJArzQFd+u68iRvXNnXb_oHbWF9-abvvFuqhpi-NA@mail.gmail.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=O+cDkBW6JIICKtoyKdzmXOh6XDLBBnv4mqwogrYCbfc=;
+        b=W6i+KKyyPNqJLHmnaFXxUwIVSK4Oyf6DSsD6pbEqrJVFhjEgcaEzi+twEb3LdaxYq+
+         QmUsPEaafzTJMl2k5qnT9R1/LuYluJamk5kYYhReGAluaUdfcWbPHmE99MfiSIZEKQy3
+         GdzIMKOskGLw8/KDwutTXLDInm4BbvjR5J1hlvmhLW69CxP12ogTI+7wI7Fc7QJBzM4s
+         V22bLvX/AYPxf9RGV6P7XolGpqXv+WBnQc54y5rz3DS7PR+sx2cdQje0D/b5aNR+4QBT
+         YLwozZIayD2b8LnP1GU7idwng/Zq4rF3awfSoHq9H4UJEI87Q+WHES3Xpzt77zEBvxpT
+         rFpg==
+X-Gm-Message-State: APjAAAXLjyhFrm/RSsFGv/6G3r+npOG9AZFVa9QTpCVYgDdvLjTIb58e
+        V/kAIuBXGolH8E87ODkKJrE06hihm2Tm9A==
+X-Google-Smtp-Source: APXvYqymBMlBAbfOG1JjFtpZUlDo4yUROuXAQ0lbrRZ/8+8razVKCLi7dyZSsNhxo5Ll1z9vRwUsJQ==
+X-Received: by 2002:a05:600c:218b:: with SMTP id e11mr24814509wme.121.1579000433451;
+        Tue, 14 Jan 2020 03:13:53 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id z3sm19059144wrs.94.2020.01.14.03.13.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 03:13:52 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>
+Subject: [PATCH] microblaze: Sync defconfig with latest Kconfig layout
+Date:   Tue, 14 Jan 2020 12:13:46 +0100
+Message-Id: <4a229093aa94f3191810fc2671e43875bc1de3f5.1579000423.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0jXyJArzQFd+u68iRvXNnXb_oHbWF9-abvvFuqhpi-NA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-01-20, 10:56, Arnd Bergmann wrote:
-> My point was that you cannot mix __iomem accesses with pointer
-> accesses. As I understood it, the current version uses a pointer to a
+Layout was changed by commit 6210b6402f58
+("kernel-hacking: group sysrq/kgdb/ubsan into 'Generic Kernel Debugging Instruments'")
 
-The current version is stupid as I misunderstood the whole __iomem
-thing and just dropped it :)
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-> hardware mailbox with structured data, so you have to use ioremap()
-> to get a token you can pass into ioread(), but (some of) the new
-> transport types would just be backed by regular RAM, on which this
-> is not a well-defined operation and you have to use memremap()
-> and memcpy() instead.
+ arch/microblaze/configs/mmu_defconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Okay, I think I understand that a bit now. So here are the things
-which I may need to do now:
-
-- Maybe move payload to struct scmi_mailbox structure, as that is the
-  transport dependent structure..
-
-- Do ioremap, etc in mailbox.c only instead of driver.c
-
-- Provide more ops in struct scmi_transport_ops to provide read/write
-  helpers to the payload and implement the ones based on
-  ioread/iowrite in mailbox.c ..
-
-Am I thinking in the right direction now ?
-
+diff --git a/arch/microblaze/configs/mmu_defconfig b/arch/microblaze/configs/mmu_defconfig
+index 0e2f5e1fd1ef..dd63766c2d19 100644
+--- a/arch/microblaze/configs/mmu_defconfig
++++ b/arch/microblaze/configs/mmu_defconfig
+@@ -83,9 +83,9 @@ CONFIG_CIFS=y
+ CONFIG_CIFS_STATS2=y
+ CONFIG_ENCRYPTED_KEYS=y
+ CONFIG_DEBUG_INFO=y
+-CONFIG_DEBUG_SLAB=y
+-CONFIG_DETECT_HUNG_TASK=y
+-CONFIG_DEBUG_SPINLOCK=y
+ CONFIG_KGDB=y
+ CONFIG_KGDB_TESTS=y
+ CONFIG_KGDB_KDB=y
++CONFIG_DEBUG_SLAB=y
++CONFIG_DETECT_HUNG_TASK=y
++CONFIG_DEBUG_SPINLOCK=y
 -- 
-viresh
+2.24.0
+
