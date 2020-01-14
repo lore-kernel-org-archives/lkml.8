@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9D6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC54C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A7C24685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55C924685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996461;
-	bh=2m06gkz84QLde4drCqbnIjIW6b8Xjt+SP/Y7t00iEcI=;
+	s=default; t=1578996463;
+	bh=1b0Luv39zPdutEiUSX0IUUF9+gt/vZ658w3BW9a2FQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWNo+2kitr0g9nagd/kjP2Y21pnKPwiOrPKl5tMfFHJVYGPw3u7Ui6rq1iAoiBT0l
-	 hZOZ3s0eRBPEIuMhz06ZthhMFrc7mWYYlw96FIscEjMjV8UBU+xb9aAe9ERYyDvkBY
-	 3xG4qJhXy1H6joJ/nUI0J10y567m5i4MHffOqWfc=
+	b=t4aRH2AwL+L1ykKoS/DAl9sg+CqcwsqejPmsJLm8q5QqLiCvVwRHFXUkwYaNqOWU9
+	 3mBoraUVDkw/pFlEDkXOuVwJliGXbAXKveNuoxeakL//noABmUPdSfaxlS67No9Fv/
+	 6oTjFrhZLVZaxu54fixErDbCBW/6sO+4FQNPoKdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgANKHk (ORCPT
+        id S1730736AbgANKHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:07:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbgANKHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:24 -0500
+        id S1729074AbgANKHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:07:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C86724679;
-        Tue, 14 Jan 2020 10:07:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4874724680;
+        Tue, 14 Jan 2020 10:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996443;
-        bh=2m06gkz84QLde4drCqbnIjIW6b8Xjt+SP/Y7t00iEcI=;
+        s=default; t=1578996455;
+        bh=1b0Luv39zPdutEiUSX0IUUF9+gt/vZ658w3BW9a2FQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlsUGcifsQ1gu9Fv3T+VELcbB//ZWnIX+1zodjMrL3iNWqPbV3PgEA9b7aY9EEQ1E
-         uw8GognstJY66McirMB0PKdvhQ+UEzcV0xDsfQfCplMXZkrsNd2/phMwmKXx5HIdqQ
-         ywmmegWY0WHXULlt+NdkLS5YshxIlWaUWOwDH14k=
+        b=lxs4QmB5dpJikfFFN+hczaIxsb03Em0P7Og4SiEEQxsVXk55zATQvrfb6ghc1am3t
+         ggj3Wcv4zEhZFST9HgVY049ZtrDLdHgavE5+o3O6P8UJ0gCi1DnsGgwXzco1qFf6rR
+         kJyZ6eeVqIvxaRmfHOhBlFGeFo4xuvD48KK3JT3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jimmy Assarsson <extja@kvaser.com>,
-        Christer Beskow <chbe@kvaser.com>,
-        Nicklas Johansson <extnj@kvaser.com>,
-        Martin Henriksson <mh@kvaser.com>,
-        Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 19/46] can: kvaser_usb: fix interface sanity check
-Date:   Tue, 14 Jan 2020 11:01:36 +0100
-Message-Id: <20200114094344.407711257@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 23/46] gpiolib: acpi: Turn dmi_system_id table into a generic quirk table
+Date:   Tue, 14 Jan 2020 11:01:40 +0100
+Message-Id: <20200114094345.178892638@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -63,52 +62,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 5660493c637c9d83786f1c9297f403eae44177b6 upstream.
+commit 1ad1b54099c231aed8f6f257065c1b322583f264 upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
+into a generic quirk table, storing the quirks in the driver_data ptr.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+This is a preparation patch for adding other types of (DMI based) quirks.
 
-Fixes: aec5fb2268b7 ("can: kvaser_usb: Add support for Kvaser USB hydra family")
-Cc: stable <stable@vger.kernel.org>     # 4.19
-Cc: Jimmy Assarsson <extja@kvaser.com>
-Cc: Christer Beskow <chbe@kvaser.com>
-Cc: Nicklas Johansson <extnj@kvaser.com>
-Cc: Martin Henriksson <mh@kvaser.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: stable@vger.kernel.org
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200105160357.97154-2-hdegoede@redhat.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c |    2 +-
- drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpio/gpiolib-acpi.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-@@ -1590,7 +1590,7 @@ static int kvaser_usb_hydra_setup_endpoi
- 	struct usb_endpoint_descriptor *ep;
- 	int i;
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -24,6 +24,8 @@
  
--	iface_desc = &dev->intf->altsetting[0];
-+	iface_desc = dev->intf->cur_altsetting;
+ #include "gpiolib.h"
  
- 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
- 		ep = &iface_desc->endpoint[i].desc;
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-@@ -1310,7 +1310,7 @@ static int kvaser_usb_leaf_setup_endpoin
- 	struct usb_endpoint_descriptor *endpoint;
- 	int i;
++#define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
++
+ static int run_edge_events_on_boot = -1;
+ module_param(run_edge_events_on_boot, int, 0444);
+ MODULE_PARM_DESC(run_edge_events_on_boot,
+@@ -1263,7 +1265,7 @@ static int acpi_gpio_handle_deferred_req
+ /* We must use _sync so that this runs after the first deferred_probe run */
+ late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
  
--	iface_desc = &dev->intf->altsetting[0];
-+	iface_desc = dev->intf->cur_altsetting;
+-static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
++static const struct dmi_system_id gpiolib_acpi_quirks[] = {
+ 	{
+ 		/*
+ 		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
+@@ -1273,7 +1275,8 @@ static const struct dmi_system_id run_ed
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
+-		}
++		},
++		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
+ 	},
+ 	{
+ 		/*
+@@ -1285,15 +1288,23 @@ static const struct dmi_system_id run_ed
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Wortmann_AG"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "TERRA_PAD_1061"),
+-		}
++		},
++		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
+ 	},
+ 	{} /* Terminating entry */
+ };
  
- 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
- 		endpoint = &iface_desc->endpoint[i].desc;
+ static int acpi_gpio_setup_params(void)
+ {
++	const struct dmi_system_id *id;
++	long quirks = 0;
++
++	id = dmi_first_match(gpiolib_acpi_quirks);
++	if (id)
++		quirks = (long)id->driver_data;
++
+ 	if (run_edge_events_on_boot < 0) {
+-		if (dmi_check_system(run_edge_events_on_boot_blacklist))
++		if (quirks & QUIRK_NO_EDGE_EVENTS_ON_BOOT)
+ 			run_edge_events_on_boot = 0;
+ 		else
+ 			run_edge_events_on_boot = 1;
 
 
