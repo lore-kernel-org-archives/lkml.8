@@ -2,126 +2,125 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB77C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AE8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DCD222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CD12084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/ATddr3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tgOcFVfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgANXeC (ORCPT
+        id S1728874AbgANXgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:34:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39491 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728650AbgANXeC (ORCPT
+        Tue, 14 Jan 2020 18:36:25 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34105 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728746AbgANXgY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:34:02 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so7385106pfs.6;
-        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=yYq+18HeUcEIJUvMzPqlCK3z7OvqDSWg2p8T6vbs7w0=;
-        b=Z/ATddr3rviycwd3yUVGAxEfsWp9p9d0j4yq2F8R7+HmSNZg/V4ufcZhtmo42Mxycq
-         cyRTXv/rVg7PSpwHq1G52xEDDLzNfvZOhghVR4hGtXlf9eStOd/PhOIWt7rQRFG65YZa
-         zi5HQxX8eqw+DNq9qY4Q6LWpkRjLzs8i/Xe9qlJntc+4JlkLy4jgx2VrdSWWYAfC+bCc
-         Mi1KsOUh951Wsee0nIXBd8DfV6FGB7iWSny+PDHJUrNVH709XEcTPIZXOshoIDnr1x6F
-         1rZtEqpSK6FslwuMeDNkaBK5gbHbIhgxdXUkvheqzWoJvK2l7ds/Yl9O0jJFilwQFmkj
-         ACew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=yYq+18HeUcEIJUvMzPqlCK3z7OvqDSWg2p8T6vbs7w0=;
-        b=ZQih5S+ZKbBEk/NEsmt9tBI8vfTCpauTvH5zhDZgOiXWWOXg9u1JkVjFEf57qK2YUq
-         /p8dpRnheAyzY6d7GQjvAnpM1vG2dOY13rhVvN33g6e1gb98ZzKmXDbnOfqeZPQPCpLw
-         ThI3IuJy+VZHasnVXuv1xbop8/sO21QJIDkfwdSzAswUAWRfVDk4xgcjXTTxZyisFWcK
-         lvQIJGJv8P76Dqlo6y0eEgg2UTjLl3KtgXVBN7yxoDEeRyvHBXTufYHDvyZLjWV0ilYi
-         CKZgOkjfz5sKz1qR1kY4LFlND+LSrYr23Hjwm8XqC4llyNqrL0jxuqTWv+RRitGULAJZ
-         aVgA==
-X-Gm-Message-State: APjAAAU+9Vi/80sA/Y4V3IMtEeyuu88AivM7Mj/d3J7ZVniv55wb/ft0
-        yN4IydwWo91ePD0UwiQScZ4=
-X-Google-Smtp-Source: APXvYqyRgyNwX25uWnf/RhrIHpTOwItecu9mtenCGAl4NZ02AP5cSmmjCy7IyMVbtYFj8gUWZK3cJg==
-X-Received: by 2002:a62:ee11:: with SMTP id e17mr28449753pfi.48.1579044841465;
-        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:1:2ceb:5c73:b928:d080])
-        by smtp.gmail.com with ESMTPSA id t187sm19746078pfd.21.2020.01.14.15.34.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
-To:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac@vger.kernel.org, sashal@kernel.org, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        shji@microsoft.com, wangglei@gmail.com
-From:   Shiping Ji <shiping.linux@gmail.com>
-Subject: [PATCH v8 1/2] dt-bindings: edac: arm-dmc520.txt
-Message-ID: <acb3a312-5ccd-362c-02ae-beee461a5f4b@gmail.com>
-Date:   Tue, 14 Jan 2020 15:34:00 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 14 Jan 2020 18:36:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579044983; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7+8Ma8yfcl2diOB4I5famBBLS13KA3B5gNUsRjC85BE=; b=tgOcFVfA4qpnrmUsjd7xH5z4P2sUDqkFNJB4mR+hv2pzWC+6fi8zNMZkuZqgBPfnIxzU4bee
+ /ANYff1hnVWZ6QliXsc4eTr8i9rYf/jcdkimnV358QQjZ/E5unIX9XUNjvHJ43QX+Xz4JgtE
+ uqbe9mXmpmFjqEKe7aNS4zTo790=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1e5076.7fad57bb9960-smtp-out-n02;
+ Tue, 14 Jan 2020 23:36:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A47C1C4479F; Tue, 14 Jan 2020 23:36:21 +0000 (UTC)
+Received: from [10.46.162.237] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: daidavid1)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6722CC433CB;
+        Tue, 14 Jan 2020 23:36:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6722CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
+Subject: Re: [PATCH v1 0/4] Split SDM845 interconnect nodes and consolidate
+ RPMh support
+To:     Evan Green <evgreen@google.com>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
+        Lina Iyer <ilina@codeaurora.org>,
+        Sean Sweeney <seansw@qti.qualcomm.com>,
+        Alex Elder <elder@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
+ <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
+From:   David Dai <daidavid1@codeaurora.org>
+Message-ID: <df9e58ef-7b97-7456-09fb-c13f53207cbb@codeaurora.org>
+Date:   Tue, 14 Jan 2020 15:36:19 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the device tree bindings for new EDAC driver dmc520_edac.c.
+Hi Evan,
 
-Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+On 1/7/2020 3:45 PM, Evan Green wrote:
+> On Sun, Dec 15, 2019 at 9:59 PM David Dai <daidavid1@codeaurora.org> wrote:
+>> While there are no current consumers of the SDM845 interconnect device in
+>> devicetree, take this opportunity to redefine the interconnect device nodes
+>> as the previous definitions of using a single child node under the apps_rsc
+>> device did not accurately capture the description of the hardware.
+>> The Network-On-Chip (NoC) interconnect devices should be represented in a
+>> manner akin to QCS404 platforms[1] where there is a separation of NoC devices
+>> and its RPM/RPMh counterparts.
+>>
+>> The bcm-voter devices are representing the RPMh devices that the interconnect
+>> providers need to communicate with and there can be more than one instance of
+>> the Bus Clock Manager (BCM) which can live under different instances of Resource
+>> State Coordinators (RSC). There are display use cases where consumers may need
+>> to target a different bcm-voter (Some display specific RSC) than the default,
+>> and there needs to be a way to represent this connection in devicetree.
+> So for my own understanding, the problem here is that things want to
+> vote for interconnect bandwidth within a specific RSC context? Where
+> normally the RSC context is simply "Apps@EL1", we might also have
+> "Apps@EL3" for trustzone, or in the case we're coding for,
+> "display-specific RSC context". I guess this context might stay on
+> even if Apps@EL1 votes are entirely discounted or off?
+That's correct, the state of those votes are tied to the state of that 
+execution environment. So even if the Apps CPU goes into a low power 
+mode, other context specific vote will still stick.
+>   So then would
+> there be an additional interconnect provider for "display context RSC"
+> next to apps_bcm_voter? Would that expose all the same nodes as
+> apps_bcm_voter, or a different set of nodes?
 
----
-     Changes in v8:
-         - Replaced the vendor specific interrupt-config property with interrupt-names
+We trim down the topology to what each execution environment needs, so 
+each EE really only "sees" a subset of the entire SoC's topology. In 
+this specific case, the display context RSC would only expose a small 
+subset of the topology that Apps@EL1 would see.
 
----
- .../devicetree/bindings/edac/arm-dmc520.txt   | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>
+> Assuming it's exposing some of the same nodes as apps_bcm_voter, the
+> other way to do this would be increasing #interconnect-cells, and
+> putting the RSC context there. Did you choose not to go that way
+> because nearly all the clients would end up specifying the same thing
+> of "Apps@EL1"?
+That's correct, the majority of the consumers will stay with default 
+Apps@EL1 context.
 
-diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-new file mode 100644
-index 000000000000..4a673f091918
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
-@@ -0,0 +1,22 @@
-+* ARM DMC-520 EDAC node
-+
-+Required properties:
-+- compatible  : "brcm,dmc-520", "arm,dmc-520".
-+- reg   : Address range of the DMC-520 registers.
-+- interrupts  : DMC-520 interrupt numbers. The example below specifies
-+     two interrupt lines for dram_ecc_errc_int and
-+     dram_ecc_errd_int.
-+- interrupt-names : This is an array of names corresponding to the interrupt
-+     line numbers. The valid interrupt names are the followings:
-+     ram_ecc_errc, ram_ecc_errd, dram_ecc_errc, dram_ecc_errd,
-+     failed_access, failed_prog, link_err, temperature_event,
-+     arch_fsm, phy_request
-+
-+Example:
-+
-+dmc0: dmc@200000 {
-+ compatible = "brcm,dmc-520", "arm,dmc-520";
-+ reg = <0x200000 0x80000>;
-+ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
-+ interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
-+};
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
