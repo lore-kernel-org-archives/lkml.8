@@ -2,165 +2,327 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0EAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22981C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9B22084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D316B217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="jphHl9lO";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="eEZLCitA"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KZkuCY4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgANJSN (ORCPT
+        id S1728992AbgANJSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:18:13 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:61680 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725820AbgANJSM (ORCPT
+        Tue, 14 Jan 2020 04:18:30 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:43216 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727285AbgANJSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:18:12 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00E9FbTO022578;
-        Tue, 14 Jan 2020 01:18:00 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=5ETMuLUoI4E1q8oaU3MBE+EHgjyAiScJviXawI6jlBM=;
- b=jphHl9lO0E3iD4rZqlikPcGW+NVHx3LDwYXRWaQ2nABAcEFOjw57hrr+/9UhPB5HWBvf
- 1itAjpMh9XC+nltD8spq4vQIC8kfclPuOeV7n7mKDfUGfd9l5tOJ7Qk4Qpsckhj/EZHo
- SEKkh05wL27kuyMn7QlozeEadnXtfmrvXPEWvk0KddlfqZ3WZl/6RSTGTPdRlhNWqUqW
- HINWzSSo9ZfdAOl6lPL5Q9CW23KNYo/GrsE4OzJFY6Lb2Xdj8asdyGwCtCoywYQ4QgMA
- T1RI+/bMyrYEInKBzjsCFeU1Hkt+xQeBo940NORzzmXyaNlOSFoVtV6WN2ceUvpfWcF/ OQ== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2xfau2gtfn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 01:18:00 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F4gSBX+aoskhp+zZHjKorb01me8KmMQ1iFTZUPJcOm9ZOmKabpwxqVsd4MeWMjR1fFLI79u/CJ+Xz+id76av8vMSVeDQJYdQFBCOGmOMwisnLZru/HAhT7Eg5lVZO5THZeao2DRSwg3mERETYLTZNhRsEbscU5jWTPaqB6oUyCuYoUwIPAkKqdRvJN1Ql1W5jSd/ZCjGydsWChvuv1msDPiHRMJ7BHDNXZe+hQUps8mIJ0ahPebuwEVeYCmbyHG2uvtBdZhz0BHAXLX5wXLauLmE88kUjOmxnubX9+L6I8VSXd7QvyBRuPkg3yUHZvhKrbSydWRgp8EencNcKz+lJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ETMuLUoI4E1q8oaU3MBE+EHgjyAiScJviXawI6jlBM=;
- b=KmtAgeXVaI6rEIrhsZ16GkNCLESnL1L+42qBAzpGg7OLIiHqX6UrsQMTYcsVrSrlcWjMA6LM8O7fKLiVMP5x4wI8ue7XLzzwWvtGR3CBHwOielqttuDSjMhalmVdTyW0Y5PoZZ7olZOS9AJQ004Dm3EAyWwXyKab8mVfZoTt5TaQHqQCgHyG7KcpIvrERt+PjqjuC3luH/FeELPemvVJIpZ7NKJ3whdjl9W8u1rK/KMxEueWBnBAkOem4k59IGn/2wM94WL7ZQXw1vZfSJYMnDctBum/fCxr7YSq11jGHvLQI7zKMk8SaxKlckEK2Fj05p8edTBAuMnVROkiuRlkww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ETMuLUoI4E1q8oaU3MBE+EHgjyAiScJviXawI6jlBM=;
- b=eEZLCitAHOKEO8rmxAIPHSf3stjFYQAAYfVcXig5Vbiu/jxciPtPdZ3WjhH7+1Vsw6XshI6pCxPTTulJYyYX/h1U7ezj3Ru4RlIXNasbJg+qeDNirfns7vR6JKQrU0j6+8MLT0rJZ4C+6P7BE0T1a6WATzT/4cQvkRniG+ZZS/0=
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
- BYAPR07MB5590.namprd07.prod.outlook.com (20.177.231.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.13; Tue, 14 Jan 2020 09:17:58 +0000
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::d01d:9089:7310:db3a]) by BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::d01d:9089:7310:db3a%6]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 09:17:58 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Felipe Balbi <balbi@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rahul Kumar <kurahul@cadence.com>
-Subject: RE: linux-next: manual merge of the usb-gadget tree with Linus' tree
-Thread-Topic: linux-next: manual merge of the usb-gadget tree with Linus' tree
-Thread-Index: AQHVx27w6M0YTlJq4UO7zJ+7SWkmnqfp3heAgAACbCA=
-Date:   Tue, 14 Jan 2020 09:17:57 +0000
-Message-ID: <BYAPR07MB4709EC6AE89CFADC3E9B13FCDD340@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <20200110153207.70c888cd@canb.auug.org.au>
- <CAMuHMdVY2W1=9paE+WpJUHprocOdutRMcNUJenn+jz9A-iv90A@mail.gmail.com>
-In-Reply-To: <CAMuHMdVY2W1=9paE+WpJUHprocOdutRMcNUJenn+jz9A-iv90A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctYmYwOGNiZTUtMzZhZS0xMWVhLTg3NTItMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XGJmMDhjYmU2LTM2YWUtMTFlYS04NzUyLTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMjMyOCIgdD0iMTMyMjM0NjcwNzU1ODQ0NDY0IiBoPSJTN3ZPSCtTL2s0cHNuM0VSaHBrRk1VWW1PbjQ9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: da501d9f-478e-4070-f993-08d798d2a55c
-x-ms-traffictypediagnostic: BYAPR07MB5590:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR07MB5590068F5E821A664F1F6C4FDD340@BYAPR07MB5590.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(376002)(366004)(189003)(36092001)(199004)(186003)(316002)(86362001)(478600001)(81166006)(8676002)(33656002)(71200400001)(7696005)(66946007)(5660300002)(26005)(66446008)(6506007)(76116006)(66476007)(66556008)(64756008)(4326008)(8936002)(9686003)(55016002)(52536014)(107886003)(81156014)(54906003)(2906002)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5590;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pfRVBLyCykj2LxqAibeE4M2dXxn95GNP5WUt8xaZnx+HwLpxwEnHJxFXBHN4irTdt+rRwoHMvVCmud0rQ8W7zryQlgR+FQs9xkU6jzitz2fiOtgptn/ecmdkzC0E7rvrlXqC0VyUJJWBo7AdVDfemDcoJjRBd9nEvsnzcqb1bsZ/CZl1TV/okqC4gIB8rZ+nAvWwMnLIsRB42rM5oQLfLJaZDcXTWDWARl6kAsaIaDHM3G0BIpkW3f4VmMXkttciXE8ZgMVnMkosNdiADRx0kRHC8lItbFBM1HHopY3b2LV4hJAcbYa7ZuIFChXywdi8Tz+HoPYbQ6gC1BThP3oG5R9Hrj+DUt5EHIgrYvsXWmI8abYfsMHmbtJw1Jo84J65lwaHgen8VYp3XiE1ThVlce9DDFtJU09j9VkzmCoiyXb1Dm2DSk0140gP+z6bpkVbNc8ZlWtwFF3dVdsIeRinlFtkWqR0c4evTsB46EQprwk60T1uWpph/i3GZ2StinCEnFUM6QOf0KRlVWqGBBLr2Quzk3atiCti6rL6q6HpZ84=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 14 Jan 2020 04:18:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578993509; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=aJ2nPJJ1Z6ch4Jyf2yqJ9egXdRDFuWik+zmMYV1bwf0=; b=KZkuCY4a/6Pvpgs12K/6X0yHCtZOCTpRkbifgfajxxHtGP+fR2+wB373qTrwbPP7PH/BSyZV
+ OeqofsaBRj43HucVVa6Lf92PDtLpx9GvPl0JaoKLkf+TUPcXmSkG9FKeVcp4dJOeFBkGoejb
+ QRRlrkZBlz1BFjVnW94r0X1CB94=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1d8762.7f8c61513420-smtp-out-n01;
+ Tue, 14 Jan 2020 09:18:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB57DC433CB; Tue, 14 Jan 2020 09:18:25 +0000 (UTC)
+Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A6A8C43383;
+        Tue, 14 Jan 2020 09:18:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A6A8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
+To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org,
+        agross@kernel.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Ritesh Harjani <riteshh@codeaurora.org>
+References: <1576586233-28443-1-git-send-email-vbadigan@codeaurora.org>
+ <1c6a6749-68c3-ee16-2c1b-e7534dee4791@intel.com>
+ <9720d5fe-1bb0-8a88-1373-935a9abdb9e0@codeaurora.org>
+ <162d9ee1-2acf-f9ca-15e6-e8ab00c5c19e@codeaurora.org>
+ <1a6904aa-c7d3-c64b-c924-ec7b204b5527@intel.com>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <85c4d74f-70c8-13dc-57c4-d22a21883047@codeaurora.org>
+Date:   Tue, 14 Jan 2020 14:48:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da501d9f-478e-4070-f993-08d798d2a55c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 09:17:58.0432
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v7I7Po5xzDo8+TbiJ9/znURRdNgOTLPRwHYMxql28Wf3dgjTBgOtj5WTOa+g0PDl6eetrE7l7W/TzlvkfXEZu3CZv1emoQMxX00sL4LISsk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5590
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_02:2020-01-13,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- phishscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001140082
+In-Reply-To: <1a6904aa-c7d3-c64b-c924-ec7b204b5527@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkl0J3MgbG9va3MgbGlrZSB0aGUgc2FtZSBpc3N1ZSByZXBvcnRlZCBieSBTdGVwaGVu
-IFJvdGh3ZWxsIHNvbWUgZGF5cyBhZ28uIA0KDQpBcyBJIGtub3csIHRoZSBmaXJzdCB2ZXJzaW9u
-IG9mIHBhdGNoICJ1c2I6IGNkbnMzOiBBZGQgc3RyZWFtcyBzdXBwb3J0IHRvIGNhZGVuY2UgVVNC
-MyBEUkQgZHJpdmVyIiANCndhcyBnZW5lcmF0ZWQgYnkgSmF5c2hyaSBiYXNlZCBvbiBGZWxpcGUg
-cmVwb3NpdG9yeQ0KKGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwv
-Z2l0L2JhbGJpL3VzYi5naXQvbG9nLz9oPW5leHQgLSBicmFuY2ggbmV4dCkuIA0KDQpJIGRvbid0
-IGtub3cgd2h5LCBidXQgdGhlcmUgaXMgYSBsYWNrIG9mICAidXNiOiBjZG5zMzogRml4IGRlcXVl
-dWUgaW1wbGVtZW50YXRpb24uIi4gIA0KSXQncyBsb29rcyBsaWtlIGZyb20gc29tZSByZWFzb25z
-IEZlbGlwZSBtaXNzZWQgdGhpcyBwYXRjaCBpbiBoaXMgbmV4dCByZXBvLg0KDQpUaGUgbGF0ZXN0
-IHZlcnNpb24gIltQQVRDSCB2Ml0gdXNiOiBjZG5zMzogQWRkIHN0cmVhbXMgc3VwcG9ydCB0byBj
-YWRlbmNlIFVTQjMgRFJEIGRyaXZlciIgDQpoYXMgYmVlbiBjcmVhdGVkIGJhc2VkIG9uIHRvcCBv
-ZiBsaW51eC1uZXh0LmdpdCBtYXN0ZXIgYnJhbmNoLiANCg0KSW4gbXkgb3BpbmlvbiBGZWxpcGUg
-aGFzIHRvIHJldmVydCB0aGUgNGYxZmE2M2E2ZGMyICgidXNiOiBjZG5zMzogQWRkIHN0cmVhbXMg
-c3VwcG9ydCB0byBjYWRlbmNlIFVTQjMgRFJEIGRyaXZlciIpDQpjb21taXQgdGhlbiBzaG91bGQg
-YXBwbHkgZjYxNmMzYmRhNDdlICgidXNiOiBjZG5zMzogRml4IGRlcXVldWUgaW1wbGVtZW50YXRp
-b24uIikgYW5kIGFnYWluIGFwcGx5IA0KIG5ldyB2ZXJzaW9uIG9mICJ1c2I6IGNkbnMzOiBBZGQg
-c3RyZWFtcyBzdXBwb3J0IHRvIGNhZGVuY2UgVVNCMyBEUkQgZHJpdmVyIiBwYXRjaCAuIA0KDQpS
-ZWdhcmRzLA0KUGF3ZWxsDQoNCj4NCj5IaSBTdGVwaGVuLA0KPg0KPk9uIEZyaSwgSmFuIDEwLCAy
-MDIwIGF0IDU6MzMgQU0gU3RlcGhlbiBSb3Rod2VsbCA8c2ZyQGNhbmIuYXV1Zy5vcmcuYXU+IHdy
-b3RlOg0KPj4gVG9kYXkncyBsaW51eC1uZXh0IG1lcmdlIG9mIHRoZSB1c2ItZ2FkZ2V0IHRyZWUg
-Z290IGEgY29uZmxpY3QgaW46DQo+Pg0KPj4gICBkcml2ZXJzL3VzYi9jZG5zMy9nYWRnZXQuYw0K
-Pj4NCj4+IGJldHdlZW4gY29tbWl0Og0KPj4NCj4+ICAgZjYxNmMzYmRhNDdlICgidXNiOiBjZG5z
-MzogRml4IGRlcXVldWUgaW1wbGVtZW50YXRpb24uIikNCj4+DQo+PiBmcm9tIExpbnVzJyB0cmVl
-IGFuZCBjb21taXQ6DQo+Pg0KPj4gICA0ZjFmYTYzYTZkYzIgKCJ1c2I6IGNkbnMzOiBBZGQgc3Ry
-ZWFtcyBzdXBwb3J0IHRvIGNhZGVuY2UgVVNCMyBEUkQgZHJpdmVyIikNCj4+DQo+PiBmcm9tIHRo
-ZSB1c2ItZ2FkZ2V0IHRyZWUuDQo+Pg0KPj4gSSBoYXZlIG5vIGlkZWEgaG93IHRvIGhhbmRsZSB0
-aGlzLCBzbyBJIGp1c3QgZHJvcHBlZCB0aGUgdXNiLWdhZGdldCB0cmVlDQo+PiBmb3IgdG9kYXkg
-LSBpdCBjbGVhcmx5IG5lZWRzIHRvIGJlIHJlYmFzZWQgb24gTGludXMnIHRyZWUgYW55d2F5IChp
-dA0KPj4gaGFzIGEgZmV3IHNoYXJlZCBwYXRjaGVzIHRoYXQgYXJlIGRpZmZlcmVudCBjb21taXRz
-IGFuZCB0aGVyZSBhcmUNCj4+IGZ1cnRoZXIgY2hhbmdlcyB0byB0aGlzIGZpbGUgaW4gTGludXMn
-IHRyZWUgYXMgd2VsbC4gIHJlYmFzaW5nIG9udG8NCj4+IChvciBtZXJnaW5nIHdpdGgpIHY1LjUt
-cmM2IG1heSBiZSB1c2VmdWwuDQo+DQo+Rm9yIHRvZGF5J3MgcmVuZXNhcy1kcml2ZXJzLCBJJ20g
-dXNpbmcgdGhlIGF0dGFjaGVkIGNvbmZsaWN0IHJlc29sdXRpb24uDQo+DQo+R3J7b2V0amUsZWV0
-aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4tLQ0KPkdlZXJ0
-IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
-cnRAbGludXgtbTY4ay5vcmcNCj4NCj5JbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVj
-aG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+d2hlbiBJJ20gdGFs
-a2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcg
-bGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9y
-dmFsZHMNCg==
+
+On 1/13/2020 12:54 PM, Adrian Hunter wrote:
+> On 10/01/20 10:56 am, Veerabhadrarao Badiganti wrote:
+>> On 1/2/2020 5:00 PM, Veerabhadrarao Badiganti wrote:
+>>> On 12/20/2019 7:29 PM, Adrian Hunter wrote:
+>>>> On 17/12/19 2:37 pm, Veerabhadrarao Badiganti wrote:
+>>>>> From: Ritesh Harjani<riteshh@codeaurora.org>
+>>>>>
+>>>>> This adds CQHCI support for sdhci-msm platforms.
+>>>>>
+>>>>> Signed-off-by: Ritesh Harjani<riteshh@codeaurora.org>
+>>>>> Signed-off-by: Veerabhadrarao Badiganti<vbadigan@codeaurora.org>
+>>>>>
+>>>>> ---
+>>>>> This patch is based on RFC patch
+>>>>> https://lkml.org/lkml/2017/8/30/313
+>>>>>
+>>>>> Changes since RFC:
+>>>>>      - Updated settings so that TDLBA won't get reset when
+>>>>>        CQE is enabled.
+>>>>>      - Removed new compatible string and moved to supports-cqe
+>>>>>        dt flag to identify CQE support.
+>>>>>      - Incorporated review comments.
+>>>>>
+>>>>> Tested on: qcs404, sc7180
+>>>>> ---
+>>>>>    drivers/mmc/host/sdhci-msm.c | 115
+>>>>> ++++++++++++++++++++++++++++++++++++++++++-
+>>>>>    1 file changed, 114 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>>>>> index 3d0bb5e..a4e3507 100644
+>>>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>>>> @@ -15,6 +15,7 @@
+>>>>>    #include <linux/regulator/consumer.h>
+>>>>>      #include "sdhci-pltfm.h"
+>>>>> +#include "cqhci.h"
+>>>>>      #define CORE_MCI_VERSION        0x50
+>>>>>    #define CORE_VERSION_MAJOR_SHIFT    28
+>>>>> @@ -122,6 +123,10 @@
+>>>>>    #define msm_host_writel(msm_host, val, host, offset) \
+>>>>>        msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+>>>>>    +/* CQHCI vendor specific registers */
+>>>>> +#define CQHCI_VENDOR_CFG1    0xA00
+>>>>> +#define DISABLE_RST_ON_CMDQ_EN    (0x3 << 13)
+>>>>> +
+>>>>>    struct sdhci_msm_offset {
+>>>>>        u32 core_hc_mode;
+>>>>>        u32 core_mci_data_cnt;
+>>>>> @@ -1567,6 +1572,109 @@ static void sdhci_msm_set_clock(struct
+>>>>> sdhci_host *host, unsigned int clock)
+>>>>>        __sdhci_msm_set_clock(host, clock);
+>>>>>    }
+>>>>> +/*****************************************************************************\
+>>>>>
+>>>>> + * *
+>>>>> + * MSM Command Queue Engine
+>>>>> (CQE)                                            *
+>>>>> + * *
+>>>>> +\*****************************************************************************/
+>>>>>
+>>>>> +
+>>>>> +static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
+>>>>> +{
+>>>>> +    int cmd_error = 0;
+>>>>> +    int data_error = 0;
+>>>>> +
+>>>>> +    if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
+>>>>> +        return intmask;
+>>>>> +
+>>>>> +    cqhci_irq(host->mmc, intmask, cmd_error, data_error);
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
+>>>>> +{
+>>>>> +    struct sdhci_host *host = mmc_priv(mmc);
+>>>>> +    unsigned long flags;
+>>>>> +    u32 ctrl;
+>>>>> +
+>>>>> +    /*
+>>>>> +     * When CQE is halted, the legacy SDHCI path operates only
+>>>>> +     * on 128bit descriptors in 64bit mode.
+>>>>> +     */
+>>>>> +    if (host->flags & SDHCI_USE_64_BIT_DMA)
+>>>>> +        host->desc_sz = 16;
+>>>> The adma_table_sz depends on desc_sz, so it cannot be changed here.
+>>>> If you do something like below, then you can set desc_sz before calling
+>>>> sdhci_setup_host()
+>>>>
+>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>>> index f4540f9892ce..f1d3b70ff769 100644
+>>>> --- a/drivers/mmc/host/sdhci.c
+>>>> +++ b/drivers/mmc/host/sdhci.c
+>>>> @@ -3825,9 +3825,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>>>            void *buf;
+>>>>              if (host->flags & SDHCI_USE_64_BIT_DMA) {
+>>>> +            if (!host->desc_sz)
+>>>> +                host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+>>>>                host->adma_table_sz = host->adma_table_cnt *
+>>>> -                          SDHCI_ADMA2_64_DESC_SZ(host);
+>>>> -            host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
+>>>> +                          host->desc_sz;
+>>>>            } else {
+>>>>                host->adma_table_sz = host->adma_table_cnt *
+>>>>                              SDHCI_ADMA2_32_DESC_SZ;
+>>> Thanks Adrian for the suggestion. I will add this change.
+>>>
+>>> But even with this change, still i will have to override 'host->desc_sz'
+>>> variable since qcom sdhci controller expects/operates-on
+>>>
+>>> 12-byte descriptor as long was CQE is not enabled. When CQE is enabled, it
+>>> operates only on 16-bype descriptors (even when CQE is halted).
+>>>
+>>> If i fix "host->desc_sz" to 16 then all the data transfer commands during
+>>> card initialization (till CQE is enabled) would fail.
+>>>
+>>> I may have to update as below:
+>>>
+>>>      host->desc_sz = 16;
+>>>
+>>>      sdhci_add_host()  ;
+>>>
+>>>     host->desc_sz = 12;
+>>>
+>>> And then cqhci_host_ops->enable() -> host->desc_sz = 16;
+>>>
+>>> Please let me know if this is fine or if you have any other suggestion to
+>>> support this limitation of qcom controller w.r.t ADMA descriptors with CQE.
+>>>
+>> Hi Adrian,
+>>
+>> Do you have any suggestions on the way to support both the descriptor sizes?
+> How about we have 2 variables: alloc_desc_sz and desc_sz
+> Then, in sdhci_setup_host():
+>
+> 	host->alloc_desc_sz = SDHCI_ADMA2_64/32_DESC_SZ(host);
+> 	host->desc_sz = host->alloc_desc_sz;
+>
+> Then desc_sz can be changed (in between requests) so long as desc_sz <
+> alloc_desc_sz.
+
+Thanks Adrian.  Then I will update it with two variables.
+
+>>>>> +
+>>>>> +    spin_lock_irqsave(&host->lock, flags);
+>>>>> +
+>>>>> +    /*
+>>>>> +     * During CQE operation command complete bit gets latched.
+>>>>> +     * So s/w should clear command complete interrupt status when CQE is
+>>>>> +     * halted. Otherwise unexpected SDCHI legacy interrupt gets
+>>>>> +     * triggered when CQE is halted.
+>>>>> +     */
+>>>>> +    ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
+>>>>> +    ctrl |= SDHCI_INT_RESPONSE;
+>>>>> +    sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
+>>>>> +    sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
+>>>>> +
+>>>>> +    spin_unlock_irqrestore(&host->lock, flags);
+>>>>> +
+>>>>> +    sdhci_cqe_disable(mmc, recovery);
+>>>>> +}
+>>>>> +
+>>>>> +static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
+>>>>> +    .enable        = sdhci_cqe_enable,
+>>>>> +    .disable    = sdhci_msm_cqe_disable,
+>>>>> +};
+>>>>> +
+>>>>> +static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
+>>>>> +                struct platform_device *pdev)
+>>>>> +{
+>>>>> +    struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>>>> +    struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>>>>> +    struct cqhci_host *cq_host;
+>>>>> +    bool dma64;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    ret = sdhci_setup_host(host);
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>> +    cq_host = cqhci_pltfm_init(pdev);
+>>>>> +    if (IS_ERR(cq_host)) {
+>>>>> +        ret = PTR_ERR(cq_host);
+>>>>> +        dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
+>>>>> +        goto cleanup;
+>>>>> +    }
+>>>>> +
+>>>>> +    msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
+>>>>> +    cq_host->ops = &sdhci_msm_cqhci_ops;
+>>>>> +
+>>>>> +    dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
+>>>>> +
+>>>>> +    ret = cqhci_init(cq_host, host->mmc, dma64);
+>>>>> +    if (ret) {
+>>>>> +        dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
+>>>>> +                mmc_hostname(host->mmc), ret);
+>>>>> +        goto cleanup;
+>>>>> +    }
+>>>>> +
+>>>>> +    /* Disable cqe reset due to cqe enable signal */
+>>>>> +    cqhci_writel(cq_host, cqhci_readl(cq_host, CQHCI_VENDOR_CFG1) |
+>>>>> +               DISABLE_RST_ON_CMDQ_EN, CQHCI_VENDOR_CFG1);
+>>>>> +
+>>>>> +    ret = __sdhci_add_host(host);
+>>>>> +    if (ret)
+>>>>> +        goto cleanup;
+>>>>> +
+>>>>> +    dev_info(&pdev->dev, "%s: CQE init: success\n",
+>>>>> +            mmc_hostname(host->mmc));
+>>>>> +    return ret;
+>>>>> +
+>>>>> +cleanup:
+>>>>> +    sdhci_cleanup_host(host);
+>>>>> +    return ret;
+>>>>> +}
+>>>>> +
+>>>>>    /*
+>>>>>     * Platform specific register write functions. This is so that, if any
+>>>>>     * register write needs to be followed up by platform specific actions,
+>>>>> @@ -1731,6 +1839,7 @@ static void sdhci_msm_set_regulator_caps(struct
+>>>>> sdhci_msm_host *msm_host)
+>>>>>        .set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+>>>>>        .write_w = sdhci_msm_writew,
+>>>>>        .write_b = sdhci_msm_writeb,
+>>>>> +    .irq    = sdhci_msm_cqe_irq,
+>>>>>    };
+>>>>>      static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+>>>>> @@ -1754,6 +1863,7 @@ static int sdhci_msm_probe(struct platform_device
+>>>>> *pdev)
+>>>>>        u8 core_major;
+>>>>>        const struct sdhci_msm_offset *msm_offset;
+>>>>>        const struct sdhci_msm_variant_info *var_info;
+>>>>> +    struct device_node *node = pdev->dev.of_node;
+>>>>>          host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
+>>>>>        if (IS_ERR(host))
+>>>>> @@ -1952,7 +2062,10 @@ static int sdhci_msm_probe(struct platform_device
+>>>>> *pdev)
+>>>>>        pm_runtime_use_autosuspend(&pdev->dev);
+>>>>>          host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+>>>>> -    ret = sdhci_add_host(host);
+>>>>> +    if (of_property_read_bool(node, "supports-cqe"))
+>>>>> +        ret = sdhci_msm_cqe_add_host(host, pdev);
+>>>>> +    else
+>>>>> +        ret = sdhci_add_host(host);
+>>>>>        if (ret)
+>>>>>            goto pm_runtime_disable;
+>>>>>        sdhci_msm_set_regulator_caps(msm_host);
+>>>>>
+>> Thanks
+>>
+>> Veera
