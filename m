@@ -2,95 +2,109 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F293FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A699EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76032465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HocCrJwo"
+	by mail.kernel.org (Postfix) with ESMTP id 7D40E222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgANPxl (ORCPT
+        id S1729160AbgANPzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:53:41 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:29585 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgANPxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:53:41 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47xw3l0wKzz1p;
-        Tue, 14 Jan 2020 16:53:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1579017219; bh=WJES05a9q/Yz+/GLxjqe+7uuVcSWzHk5zQpuYKeJNvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HocCrJwo5pCvfNXW11D/biBMBOR3tsJQ9Ffa1+kPlqoUrQNfoiiCgwMw1uMNO0WQ+
-         bZXvvoiz6gz/kGZSiF3UeGMcIQyMNAqvyXHSbzo8Lv/GX3FMaZJK6piq3RXj83Vk+y
-         pYXke4w0o06OkSPFyVyvWau6j5WHIb1pD57He0So7d8BHqqACeyPeaqWXTCxj5zZrI
-         ttgajllrpHxqxFP9OL4BP9xB6OqrakEMsKUMzIn8723ckSI/4ALWfZjJ0YTtYz2nHD
-         CdQmkE4C92spzqwAQap2r5jeZL4/9PO9nMvCypgDZgRsTxhCZ09pZT9bmkvzfa81t2
-         JQcj+UgRdmw1A==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Tue, 14 Jan 2020 16:53:33 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci: fix minimum clock rate for v3 controller
-Message-ID: <20200114155333.GA29422@qmqm.qmqm.pl>
-References: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
- <4264051e-6126-83c3-e49e-3d9050ff35ce@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4264051e-6126-83c3-e49e-3d9050ff35ce@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 Jan 2020 10:55:52 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41674 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727073AbgANPzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:55:51 -0500
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 14 Jan 2020 17:55:45 +0200
+Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.134.136.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00EFtjvm015200;
+        Tue, 14 Jan 2020 17:55:45 +0200
+Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00EFtjh3019700;
+        Tue, 14 Jan 2020 17:55:45 +0200
+Received: (from moshe@localhost)
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00EFtjWo019699;
+        Tue, 14 Jan 2020 17:55:45 +0200
+From:   Moshe Shemesh <moshe@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Moshe Shemesh <moshe@mellanox.com>
+Subject: [PATCH net-next RFC 1/3] net/mlx5: Add structure layout and defines for MFRL register
+Date:   Tue, 14 Jan 2020 17:55:26 +0200
+Message-Id: <1579017328-19643-2-git-send-email-moshe@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
+References: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 03:08:08PM +0200, Adrian Hunter wrote:
-> On 2/01/20 12:51 pm, Micha³ Miros³aw wrote:
-> > For SDHCIv3+ with programmable clock mode, minimal clock frequency is
-> > still base clock / max(divider). Minimal programmable clock frequency is
-> > always greater than minimal divided clock frequency. Without this patch,
-> > SDHCI uses out-of-spec initial frequency when multiplier is big enough:
-> > 
-> > mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
-> > [for 480 MHz source clock divided by 1024]
-> 
-> The maximum divisor in programmable clock mode is 1024.  So I do not
-> understand what is wrong.  Can you explain some more?
+Add needed structure layouts and defines for MFRL (Management Firmware
+Reset Level) register. This structure will be used for the firmware
+upgrade and reset flow in the downstream patches.
 
-This part of code misses the fact, that you can choose (switch) between
-base clock mode and programmable clock mode. The code in
-sdhci_calc_clk() already does the choosing part. This is actually
-required on high programmable clock base to get conformant frequency for
-the card initialization phase.
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+---
+ include/linux/mlx5/driver.h   |  1 +
+ include/linux/mlx5/mlx5_ifc.h | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
 
-Best Regards,
-Micha³ Miros³aw
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index 583733a..268ecfd 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -130,6 +130,7 @@ enum {
+ 	MLX5_REG_NODE_DESC	 = 0x6001,
+ 	MLX5_REG_HOST_ENDIANNESS = 0x7004,
+ 	MLX5_REG_MCIA		 = 0x9014,
++	MLX5_REG_MFRL		 = 0x9028,
+ 	MLX5_REG_MLCR		 = 0x902b,
+ 	MLX5_REG_MTRC_CAP	 = 0x9040,
+ 	MLX5_REG_MTRC_CONF	 = 0x9041,
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 178757c..7684537 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -9584,6 +9584,22 @@ struct mlx5_ifc_mcda_reg_bits {
+ 	u8         data[0][0x20];
+ };
+ 
++enum {
++	MLX5_MFRL_REG_RESET_LEVEL0  = 0x1,
++	MLX5_MFRL_REG_RESET_LEVEL3  = 0x8,
++	MLX5_MFRL_REG_RESET_LEVEL6  = 0x40,
++};
++
++struct mlx5_ifc_mfrl_reg_bits {
++	u8         reserved_at_0[0x20];
++
++	u8         reserved_at_20[0x5];
++	u8         rst_type_sel[0x3];
++	u8         reserved_at_28[0x8];
++	u8         reset_type[0x8];
++	u8         reset_level[0x8];
++};
++
+ struct mlx5_ifc_mirc_reg_bits {
+ 	u8         reserved_at_0[0x18];
+ 	u8         status_code[0x8];
+@@ -9646,6 +9662,7 @@ struct mlx5_ifc_mirc_reg_bits {
+ 	struct mlx5_ifc_mcqi_reg_bits mcqi_reg;
+ 	struct mlx5_ifc_mcc_reg_bits mcc_reg;
+ 	struct mlx5_ifc_mcda_reg_bits mcda_reg;
++	struct mlx5_ifc_mfrl_reg_bits mfrl_reg;
+ 	struct mlx5_ifc_mirc_reg_bits mirc_reg;
+ 	u8         reserved_at_0[0x60e0];
+ };
+-- 
+1.8.3.1
 
-[...]
-> > index 275102c0a1bf..0036ddf85674 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -3902,11 +3902,9 @@ int sdhci_setup_host(struct sdhci_host *host)
-> >  	if (host->ops->get_min_clock)
-> >  		mmc->f_min = host->ops->get_min_clock(host);
-> >  	else if (host->version >= SDHCI_SPEC_300) {
-> > -		if (host->clk_mul) {
-> > -			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
-> > +		if (host->clk_mul)
-> >  			max_clk = host->max_clk * host->clk_mul;
-> > -		} else
-> > -			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-> > +		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-> >  	} else
-> >  		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
