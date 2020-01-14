@@ -2,169 +2,958 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C9FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA16AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9F124676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjvFavWX"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC8024658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579039042;
+	bh=damLtmL55uRnNqliZUZ0ZQklVLMWIvRsZuQ1pKuesjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MlVpi/iQpe6j8jrZUrns+p6DQqfU2ZPF8yt+N+S5W8znQoA1W2e71sLJqF/Eg6JWo
+	 Ra0zeChaqDjeYpXa4Dtm0lfbIwGfOb97dLFZt2TeH4TXopFdOyGOfweYISMOas7ivb
+	 kL5lVP2Eubx5BJQWPXaxxw3rvD/TnaWgYu0bN4Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgANV5O (ORCPT
+        id S1729017AbgANV5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:57:14 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32863 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANV5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:57:09 -0500
-Received: by mail-ed1-f67.google.com with SMTP id r21so13494310edq.0;
-        Tue, 14 Jan 2020 13:57:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dWX0qH3iccx0g4AYWNuVHAofcVC/hMHz2INt2O8t/GA=;
-        b=NjvFavWXuubzGh467wyrmrgu/taGZf/9CWRMDm1ZpUOXqXRtdphGeRW77uSbeyPQsv
-         v9pr+Wm0ouvQJd6o4bFZYTbOhr2X9wZImTpQLo0kwzRSaAlHcpfFp/fZfesfqF13kTA9
-         +HrHFyNAw9f4jA0z36wRvMGWbu2zORRVdvoz7ABCf909a86w+pYdSV7ENLBK55Dm78mw
-         6N+WC/1BK+1LGTw4agLY02HhgKGnAGKmZW6tGuf24wO8NjgYD0HjABo10jcidpYTb/ik
-         SUTR/B43SHq4fiUkUa41jymCwUKy9D2/ET/JF8rNE8nSRFDnIpBr6zhTK2J938OX2/pH
-         Ghjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dWX0qH3iccx0g4AYWNuVHAofcVC/hMHz2INt2O8t/GA=;
-        b=NIKmZq6xAS9UoMYaDZymIeYTGzk938LBc5CEuqS2B9BSUIDlh9U4rEB4DCB1T8aBli
-         BTGu1O573Vv6UV0yKSy3KkiNaoYUnsmb9JYF1KynKeUvdBT78qsIx2+J8bjqXuh22Vam
-         WOCO8hgLUw4h7a1jQtVBInLas/zyWN39uBfIJU+Ghw/8zVZY+v5j76Law0z2j8PTqtdo
-         Kq8FScFDd/6Tts64iaF6kU5OYj8qRBdSOMKT3ez2o+6X7b57ZzAD4FHplRT3iOaDXo5p
-         fS4eeu41HtE94JaKBI6KvwWjJCZR+5PofE6vJg5tkzk5Ms7LebKHPmolRAq8PcRENHw4
-         ggHQ==
-X-Gm-Message-State: APjAAAUAieDbufGcp7zk7LfBRuUYS+5E4XvOfsmjazIPmtUdCdE9zdKi
-        Qp15LgCWGOfVmfjj8YTX5eR2Xjul
-X-Google-Smtp-Source: APXvYqzSYmganXj/6DwiVipHB62E3FOeOHJ3lMar2NcWyAIMaP6N4qyIYkAfeJDBjRznzIDNewaV7g==
-X-Received: by 2002:a05:6402:609:: with SMTP id n9mr26283516edv.305.1579039027311;
-        Tue, 14 Jan 2020 13:57:07 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id lc20sm662295ejb.78.2020.01.14.13.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 13:57:06 -0800 (PST)
-Subject: Re: [PATCH RFC net-next 16/19] net: dsa: tag_qca: fix doubled Tx
- statistics
-To:     Andrew Lunn <andrew@lunn.ch>, Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20191230143028.27313-1-alobakin@dlink.ru>
- <20191230143028.27313-17-alobakin@dlink.ru> <20191230172345.GF13569@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <2a9bdadd-4724-bbad-a8c2-79066a03ba36@gmail.com>
-Date:   Tue, 14 Jan 2020 13:57:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 16:57:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729011AbgANV5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:57:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57F7624658;
+        Tue, 14 Jan 2020 21:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579039034;
+        bh=damLtmL55uRnNqliZUZ0ZQklVLMWIvRsZuQ1pKuesjY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RoHtRewx2ks+EKwwQ2PC18CmD9LXp3ruf8XT4ZpEkZbfrnoXFMfn49mLWgFOYkZgL
+         fdnRHqh8NBqOSH1vEpSmRloy2sGce2Id7DvfR5AWS3pnwfU868t6ZGCOFYAe2UvZ/s
+         i3O2OhmaUliMp/kq4em4fyrF+F2eyH/h0RLlr98w=
+Date:   Tue, 14 Jan 2020 22:57:10 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 4.9.210
+Message-ID: <20200114215710.GB2362297@kroah.com>
+References: <20200114215705.GA2362297@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191230172345.GF13569@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114215705.GA2362297@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 9:23 AM, Andrew Lunn wrote:
-> On Mon, Dec 30, 2019 at 05:30:24PM +0300, Alexander Lobakin wrote:
->> DSA core updates Tx stats for slaves in dsa_slave_xmit(), no need to do
->> it manually in .xmit() tagger callback.
->>
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Alexander, can you submit that separately from your GRO series and add a
-Fixes tag for this?
-
-Thanks!
--- 
-Florian
+diff --git a/Makefile b/Makefile
+index ed9a08ab3772..aa871ec44dd9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+ VERSION = 4
+ PATCHLEVEL = 9
+-SUBLEVEL = 209
++SUBLEVEL = 210
+ EXTRAVERSION =
+ NAME = Roaring Lionus
+ 
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index f68dcf5790ad..e05dda92398c 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -272,7 +272,7 @@ static void drm_dp_encode_sideband_req(struct drm_dp_sideband_msg_req_body *req,
+ 			memcpy(&buf[idx], req->u.i2c_read.transactions[i].bytes, req->u.i2c_read.transactions[i].num_bytes);
+ 			idx += req->u.i2c_read.transactions[i].num_bytes;
+ 
+-			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 5;
++			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 4;
+ 			buf[idx] |= (req->u.i2c_read.transactions[i].i2c_transaction_delay & 0xf);
+ 			idx++;
+ 		}
+diff --git a/drivers/gpu/drm/i915/intel_lrc.c b/drivers/gpu/drm/i915/intel_lrc.c
+index 62bcc770a181..b935d62be918 100644
+--- a/drivers/gpu/drm/i915/intel_lrc.c
++++ b/drivers/gpu/drm/i915/intel_lrc.c
+@@ -1017,6 +1017,8 @@ static int gen9_init_indirectctx_bb(struct intel_engine_cs *engine,
+ 	int ret;
+ 	struct drm_i915_private *dev_priv = engine->i915;
+ 	uint32_t index = wa_ctx_start(wa_ctx, *offset, CACHELINE_DWORDS);
++	u32 scratch_addr =
++			i915_ggtt_offset(engine->scratch) + 2 * CACHELINE_BYTES;
+ 
+ 	/* WaDisableCtxRestoreArbitration:skl,bxt */
+ 	if (IS_SKL_REVID(dev_priv, 0, SKL_REVID_D0) ||
+@@ -1036,22 +1038,17 @@ static int gen9_init_indirectctx_bb(struct intel_engine_cs *engine,
+ 			    GEN9_DISABLE_GATHER_AT_SET_SHADER_COMMON_SLICE));
+ 	wa_ctx_emit(batch, index, MI_NOOP);
+ 
+-	/* WaClearSlmSpaceAtContextSwitch:kbl */
++	/* WaClearSlmSpaceAtContextSwitch:skl,bxt,kbl,glk,cfl */
+ 	/* Actual scratch location is at 128 bytes offset */
+-	if (IS_KBL_REVID(dev_priv, 0, KBL_REVID_A0)) {
+-		u32 scratch_addr =
+-			i915_ggtt_offset(engine->scratch) + 2 * CACHELINE_BYTES;
+-
+-		wa_ctx_emit(batch, index, GFX_OP_PIPE_CONTROL(6));
+-		wa_ctx_emit(batch, index, (PIPE_CONTROL_FLUSH_L3 |
+-					   PIPE_CONTROL_GLOBAL_GTT_IVB |
+-					   PIPE_CONTROL_CS_STALL |
+-					   PIPE_CONTROL_QW_WRITE));
+-		wa_ctx_emit(batch, index, scratch_addr);
+-		wa_ctx_emit(batch, index, 0);
+-		wa_ctx_emit(batch, index, 0);
+-		wa_ctx_emit(batch, index, 0);
+-	}
++	wa_ctx_emit(batch, index, GFX_OP_PIPE_CONTROL(6));
++	wa_ctx_emit(batch, index, (PIPE_CONTROL_FLUSH_L3 |
++				   PIPE_CONTROL_GLOBAL_GTT_IVB |
++				   PIPE_CONTROL_CS_STALL |
++				   PIPE_CONTROL_QW_WRITE));
++	wa_ctx_emit(batch, index, scratch_addr);
++	wa_ctx_emit(batch, index, 0);
++	wa_ctx_emit(batch, index, 0);
++	wa_ctx_emit(batch, index, 0);
+ 
+ 	/* WaMediaPoolStateCmdInWABB:bxt */
+ 	if (HAS_POOLED_EU(engine->i915)) {
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index c89eb3c3965c..e382d6f23097 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -269,6 +269,12 @@ static int hid_add_field(struct hid_parser *parser, unsigned report_type, unsign
+ 	offset = report->size;
+ 	report->size += parser->global.report_size * parser->global.report_count;
+ 
++	/* Total size check: Allow for possible report index byte */
++	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
++		hid_err(parser->device, "report is too long\n");
++		return -1;
++	}
++
+ 	if (!parser->local.usage_index) /* Ignore padding fields */
+ 		return 0;
+ 
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 9f7b1cf726a8..26e967730997 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1026,9 +1026,15 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 	}
+ 
+ mapped:
+-	if (device->driver->input_mapped && device->driver->input_mapped(device,
+-				hidinput, field, usage, &bit, &max) < 0)
+-		goto ignore;
++	if (device->driver->input_mapped &&
++	    device->driver->input_mapped(device, hidinput, field, usage,
++					 &bit, &max) < 0) {
++		/*
++		 * The driver indicated that no further generic handling
++		 * of the usage is desired.
++		 */
++		return;
++	}
+ 
+ 	set_bit(usage->type, input->evbit);
+ 
+@@ -1087,9 +1093,11 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		set_bit(MSC_SCAN, input->mscbit);
+ 	}
+ 
+-ignore:
+ 	return;
+ 
++ignore:
++	usage->type = 0;
++	usage->code = 0;
+ }
+ 
+ void hidinput_hid_event(struct hid_device *hid, struct hid_field *field, struct hid_usage *usage, __s32 value)
+diff --git a/drivers/hid/uhid.c b/drivers/hid/uhid.c
+index d02ee5304217..d9b46da0e0aa 100644
+--- a/drivers/hid/uhid.c
++++ b/drivers/hid/uhid.c
+@@ -26,6 +26,7 @@
+ #include <linux/uhid.h>
+ #include <linux/wait.h>
+ #include <linux/uaccess.h>
++#include <linux/eventpoll.h>
+ 
+ #define UHID_NAME	"uhid"
+ #define UHID_BUFSIZE	32
+@@ -774,7 +775,7 @@ static unsigned int uhid_char_poll(struct file *file, poll_table *wait)
+ 	if (uhid->head != uhid->tail)
+ 		return POLLIN | POLLRDNORM;
+ 
+-	return 0;
++	return EPOLLOUT | EPOLLWRNORM;
+ }
+ 
+ static const struct file_operations uhid_fops = {
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index d95c34ee5dc1..5d94fc3fce0b 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -850,16 +850,18 @@ static int input_default_setkeycode(struct input_dev *dev,
+ 		}
+ 	}
+ 
+-	__clear_bit(*old_keycode, dev->keybit);
+-	__set_bit(ke->keycode, dev->keybit);
+-
+-	for (i = 0; i < dev->keycodemax; i++) {
+-		if (input_fetch_keycode(dev, i) == *old_keycode) {
+-			__set_bit(*old_keycode, dev->keybit);
+-			break; /* Setting the bit twice is useless, so break */
++	if (*old_keycode <= KEY_MAX) {
++		__clear_bit(*old_keycode, dev->keybit);
++		for (i = 0; i < dev->keycodemax; i++) {
++			if (input_fetch_keycode(dev, i) == *old_keycode) {
++				__set_bit(*old_keycode, dev->keybit);
++				/* Setting the bit twice is useless, so break */
++				break;
++			}
+ 		}
+ 	}
+ 
++	__set_bit(ke->keycode, dev->keybit);
+ 	return 0;
+ }
+ 
+@@ -915,9 +917,13 @@ int input_set_keycode(struct input_dev *dev,
+ 	 * Simulate keyup event if keycode is not present
+ 	 * in the keymap anymore
+ 	 */
+-	if (test_bit(EV_KEY, dev->evbit) &&
+-	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
+-	    __test_and_clear_bit(old_keycode, dev->key)) {
++	if (old_keycode > KEY_MAX) {
++		dev_warn(dev->dev.parent ?: &dev->dev,
++			 "%s: got too big old keycode %#x\n",
++			 __func__, old_keycode);
++	} else if (test_bit(EV_KEY, dev->evbit) &&
++		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
++		   __test_and_clear_bit(old_keycode, dev->key)) {
+ 		struct input_value vals[] =  {
+ 			{ EV_KEY, old_keycode, 0 },
+ 			input_value_sync
+diff --git a/drivers/net/can/mscan/mscan.c b/drivers/net/can/mscan/mscan.c
+index acb708fc1463..0a7d818a06f3 100644
+--- a/drivers/net/can/mscan/mscan.c
++++ b/drivers/net/can/mscan/mscan.c
+@@ -392,13 +392,12 @@ static int mscan_rx_poll(struct napi_struct *napi, int quota)
+ 	struct net_device *dev = napi->dev;
+ 	struct mscan_regs __iomem *regs = priv->reg_base;
+ 	struct net_device_stats *stats = &dev->stats;
+-	int npackets = 0;
+-	int ret = 1;
++	int work_done = 0;
+ 	struct sk_buff *skb;
+ 	struct can_frame *frame;
+ 	u8 canrflg;
+ 
+-	while (npackets < quota) {
++	while (work_done < quota) {
+ 		canrflg = in_8(&regs->canrflg);
+ 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
+ 			break;
+@@ -419,18 +418,18 @@ static int mscan_rx_poll(struct napi_struct *napi, int quota)
+ 
+ 		stats->rx_packets++;
+ 		stats->rx_bytes += frame->can_dlc;
+-		npackets++;
++		work_done++;
+ 		netif_receive_skb(skb);
+ 	}
+ 
+-	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
+-		napi_complete(&priv->napi);
+-		clear_bit(F_RX_PROGRESS, &priv->flags);
+-		if (priv->can.state < CAN_STATE_BUS_OFF)
+-			out_8(&regs->canrier, priv->shadow_canrier);
+-		ret = 0;
++	if (work_done < quota) {
++		if (likely(napi_complete_done(&priv->napi, work_done))) {
++			clear_bit(F_RX_PROGRESS, &priv->flags);
++			if (priv->can.state < CAN_STATE_BUS_OFF)
++				out_8(&regs->canrier, priv->shadow_canrier);
++		}
+ 	}
+-	return ret;
++	return work_done;
+ }
+ 
+ static irqreturn_t mscan_isr(int irq, void *dev_id)
+diff --git a/drivers/net/can/usb/gs_usb.c b/drivers/net/can/usb/gs_usb.c
+index 014b9ae3dc17..a65203e6ea5f 100644
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -927,7 +927,7 @@ static int gs_usb_probe(struct usb_interface *intf,
+ 			     GS_USB_BREQ_HOST_FORMAT,
+ 			     USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     hconf,
+ 			     sizeof(*hconf),
+ 			     1000);
+@@ -950,7 +950,7 @@ static int gs_usb_probe(struct usb_interface *intf,
+ 			     GS_USB_BREQ_DEVICE_CONFIG,
+ 			     USB_DIR_IN|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     dconf,
+ 			     sizeof(*dconf),
+ 			     1000);
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 38d45a77c06b..d0743bd25ba9 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -976,8 +976,10 @@ static int mwifiex_pcie_alloc_cmdrsp_buf(struct mwifiex_adapter *adapter)
+ 	}
+ 	skb_put(skb, MWIFIEX_UPLD_SIZE);
+ 	if (mwifiex_map_pci_memory(adapter, skb, MWIFIEX_UPLD_SIZE,
+-				   PCI_DMA_FROMDEVICE))
++				   PCI_DMA_FROMDEVICE)) {
++		kfree_skb(skb);
+ 		return -1;
++	}
+ 
+ 	card->cmdrsp_buf = skb;
+ 
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+index 478885afb6c6..be3be7a63cf0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -271,6 +271,14 @@ static int mwifiex_process_country_ie(struct mwifiex_private *priv,
+ 			    "11D: skip setting domain info in FW\n");
+ 		return 0;
+ 	}
++
++	if (country_ie_len >
++	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		mwifiex_dbg(priv->adapter, ERROR,
++			    "11D: country_ie_len overflow!, deauth AP\n");
++		return -EINVAL;
++	}
++
+ 	memcpy(priv->adapter->country_code, &country_ie[2], 2);
+ 
+ 	domain_info->country_code[0] = country_ie[2];
+@@ -314,8 +322,9 @@ int mwifiex_bss_start(struct mwifiex_private *priv, struct cfg80211_bss *bss,
+ 	priv->scan_block = false;
+ 
+ 	if (bss) {
+-		if (adapter->region_code == 0x00)
+-			mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00 &&
++		    mwifiex_process_country_ie(priv, bss))
++			return -EINVAL;
+ 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 6d34d442294a..e588a0365257 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5422,6 +5422,7 @@ static int rtl8xxxu_submit_int_urb(struct ieee80211_hw *hw)
+ 	ret = usb_submit_urb(urb, GFP_KERNEL);
+ 	if (ret) {
+ 		usb_unanchor_urb(urb);
++		usb_free_urb(urb);
+ 		goto error;
+ 	}
+ 
+diff --git a/drivers/scsi/bfa/bfad_attr.c b/drivers/scsi/bfa/bfad_attr.c
+index d0a504af5b4f..0a70d54a4df6 100644
+--- a/drivers/scsi/bfa/bfad_attr.c
++++ b/drivers/scsi/bfa/bfad_attr.c
+@@ -283,8 +283,10 @@ bfad_im_get_stats(struct Scsi_Host *shost)
+ 	rc = bfa_port_get_stats(BFA_FCPORT(&bfad->bfa),
+ 				fcstats, bfad_hcb_comp, &fcomp);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+-	if (rc != BFA_STATUS_OK)
++	if (rc != BFA_STATUS_OK) {
++		kfree(fcstats);
+ 		return NULL;
++	}
+ 
+ 	wait_for_completion(&fcomp.comp);
+ 
+diff --git a/drivers/staging/comedi/drivers/adv_pci1710.c b/drivers/staging/comedi/drivers/adv_pci1710.c
+index 2c1b6de30da8..385e14269870 100644
+--- a/drivers/staging/comedi/drivers/adv_pci1710.c
++++ b/drivers/staging/comedi/drivers/adv_pci1710.c
+@@ -45,8 +45,8 @@
+ #define PCI171X_RANGE_UNI	BIT(4)
+ #define PCI171X_RANGE_GAIN(x)	(((x) & 0x7) << 0)
+ #define PCI171X_MUX_REG		0x04	/* W:   A/D multiplexor control */
+-#define PCI171X_MUX_CHANH(x)	(((x) & 0xf) << 8)
+-#define PCI171X_MUX_CHANL(x)	(((x) & 0xf) << 0)
++#define PCI171X_MUX_CHANH(x)	(((x) & 0xff) << 8)
++#define PCI171X_MUX_CHANL(x)	(((x) & 0xff) << 0)
+ #define PCI171X_MUX_CHAN(x)	(PCI171X_MUX_CHANH(x) | PCI171X_MUX_CHANL(x))
+ #define PCI171X_STATUS_REG	0x06	/* R:   status register */
+ #define PCI171X_STATUS_IRQ	BIT(11)	/* 1=IRQ occurred */
+diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+index bfcf9e55f3c6..537a99eba6af 100644
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -45,6 +45,7 @@ static struct usb_device_id rtw_usb_id_tbl[] = {
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
++	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
+diff --git a/drivers/staging/vt6656/device.h b/drivers/staging/vt6656/device.h
+index 4832666cc580..5422ec1222ce 100644
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -269,6 +269,7 @@ struct vnt_private {
+ 	u8 mac_hw;
+ 	/* netdev */
+ 	struct usb_device *usb;
++	struct usb_interface *intf;
+ 
+ 	u64 tsf_time;
+ 	u8 rx_rate;
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
+index b1955378852a..78b09640bcf0 100644
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -972,6 +972,7 @@ vt6656_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 	priv = hw->priv;
+ 	priv->hw = hw;
+ 	priv->usb = udev;
++	priv->intf = intf;
+ 
+ 	vnt_set_options(priv);
+ 
+diff --git a/drivers/staging/vt6656/wcmd.c b/drivers/staging/vt6656/wcmd.c
+index 95faaeb7432a..4dc3521932ba 100644
+--- a/drivers/staging/vt6656/wcmd.c
++++ b/drivers/staging/vt6656/wcmd.c
+@@ -110,6 +110,7 @@ void vnt_run_command(struct work_struct *work)
+ 		if (vnt_init(priv)) {
+ 			/* If fail all ends TODO retry */
+ 			dev_err(&priv->usb->dev, "failed to start\n");
++			usb_set_intfdata(priv->intf, NULL);
+ 			ieee80211_free_hw(priv->hw);
+ 			return;
+ 		}
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index ae118e68b406..3701b240fcb3 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2795,6 +2795,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	port->console = uart_console(uport);
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 111b0e0b8698..2178fe7a417b 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -37,6 +37,7 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
+ 
+ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
++	bool enabled;
+ };
+ 
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+@@ -48,7 +49,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+ 	int ret = 0;
+ 	int port = HCS_N_PORTS(ehci->hcs_params);
+ 
+-	if (priv->reg_vbus) {
++	if (priv->reg_vbus && enable != priv->enabled) {
+ 		if (port > 1) {
+ 			dev_warn(dev,
+ 				"Not support multi-port regulator control\n");
+@@ -64,6 +65,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+ 				enable ? "enable" : "disable", ret);
+ 			return ret;
+ 		}
++		priv->enabled = enable;
+ 	}
+ 
+ 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
+diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
+index 32f5ccd5f2c7..edf66b2f916b 100644
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -387,12 +387,16 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
+ 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
+ 	}
+ 
+-	/* Validate the wMaxPacketSize field */
++	/*
++	 * Validate the wMaxPacketSize field.
++	 * Some devices have isochronous endpoints in altsetting 0;
++	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
++	 * (see the end of section 5.6.3), so don't warn about them.
++	 */
+ 	maxp = usb_endpoint_maxp(&endpoint->desc);
+-	if (maxp == 0) {
+-		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
++	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
++		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
+ 		    cfgno, inum, asnum, d->bEndpointAddress);
+-		goto skip_to_next_endpoint_or_interface_descriptor;
+ 	}
+ 
+ 	/* Find the highest legal maxpacket size for this endpoint */
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 579aa9accafc..c232229162e0 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1832,6 +1832,9 @@ static const struct attribute_group musb_attr_group = {
+ #define MUSB_QUIRK_B_INVALID_VBUS_91	(MUSB_DEVCTL_BDEVICE | \
+ 					 (2 << MUSB_DEVCTL_VBUS_SHIFT) | \
+ 					 MUSB_DEVCTL_SESSION)
++#define MUSB_QUIRK_B_DISCONNECT_99	(MUSB_DEVCTL_BDEVICE | \
++					 (3 << MUSB_DEVCTL_VBUS_SHIFT) | \
++					 MUSB_DEVCTL_SESSION)
+ #define MUSB_QUIRK_A_DISCONNECT_19	((3 << MUSB_DEVCTL_VBUS_SHIFT) | \
+ 					 MUSB_DEVCTL_SESSION)
+ 
+@@ -1854,6 +1857,11 @@ static void musb_pm_runtime_check_session(struct musb *musb)
+ 	s = MUSB_DEVCTL_FSDEV | MUSB_DEVCTL_LSDEV |
+ 		MUSB_DEVCTL_HR;
+ 	switch (devctl & ~s) {
++	case MUSB_QUIRK_B_DISCONNECT_99:
++		musb_dbg(musb, "Poll devctl in case of suspend after disconnect\n");
++		schedule_delayed_work(&musb->irq_work,
++				      msecs_to_jiffies(1000));
++		break;
+ 	case MUSB_QUIRK_B_INVALID_VBUS_91:
+ 		if (musb->quirk_retries--) {
+ 			musb_dbg(musb,
+@@ -2309,6 +2317,9 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
+ 	musb_platform_disable(musb);
+ 	musb_generic_disable(musb);
+ 
++	/* MUSB_POWER_SOFTCONN might be already set, JZ4740 does this. */
++	musb_writeb(musb->mregs, MUSB_POWER, 0);
++
+ 	/* Init IRQ workqueue before request_irq */
+ 	INIT_DELAYED_WORK(&musb->irq_work, musb_irq_work);
+ 	INIT_DELAYED_WORK(&musb->deassert_reset_work, musb_deassert_reset);
+diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
+index 512108e22d2b..1dc35ab31275 100644
+--- a/drivers/usb/musb/musbhsdma.c
++++ b/drivers/usb/musb/musbhsdma.c
+@@ -399,7 +399,7 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+ 	controller->controller.channel_abort = dma_channel_abort;
+ 
+ 	if (request_irq(irq, dma_controller_irq, 0,
+-			dev_name(musb->controller), &controller->controller)) {
++			dev_name(musb->controller), controller)) {
+ 		dev_err(dev, "request_irq %d failed!\n", irq);
+ 		musb_dma_controller_destroy(&controller->controller);
+ 
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 2d302ff62cc1..5ea4cd10abc7 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -566,6 +566,9 @@ static void option_instat_callback(struct urb *urb);
+ /* Interface is reserved */
+ #define RSVD(ifnum)	((BIT(ifnum) & 0xff) << 0)
+ 
++/* Device needs ZLP */
++#define ZLP		BIT(17)
++
+ 
+ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
+@@ -1193,6 +1196,8 @@ static const struct usb_device_id option_ids[] = {
+ 	  .driver_info = NCTRL(0) | RSVD(1) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
++	  .driver_info = NCTRL(0) | ZLP },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
+ 	  .driver_info = RSVD(1) },
+@@ -2097,6 +2102,9 @@ static int option_attach(struct usb_serial *serial)
+ 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
+ 		data->use_send_setup = 1;
+ 
++	if (device_flags & ZLP)
++		data->use_zlp = 1;
++
+ 	spin_lock_init(&data->susp_lock);
+ 
+ 	usb_set_serial_data(serial, data);
+diff --git a/drivers/usb/serial/usb-wwan.h b/drivers/usb/serial/usb-wwan.h
+index 44b25c08c68a..1d0e28538346 100644
+--- a/drivers/usb/serial/usb-wwan.h
++++ b/drivers/usb/serial/usb-wwan.h
+@@ -35,6 +35,7 @@ struct usb_wwan_intf_private {
+ 	spinlock_t susp_lock;
+ 	unsigned int suspended:1;
+ 	unsigned int use_send_setup:1;
++	unsigned int use_zlp:1;
+ 	int in_flight;
+ 	unsigned int open_ports;
+ 	void *private;
+diff --git a/drivers/usb/serial/usb_wwan.c b/drivers/usb/serial/usb_wwan.c
+index 3dfdfc81254b..93c696e2131f 100644
+--- a/drivers/usb/serial/usb_wwan.c
++++ b/drivers/usb/serial/usb_wwan.c
+@@ -495,6 +495,7 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
+ 				      void (*callback) (struct urb *))
+ {
+ 	struct usb_serial *serial = port->serial;
++	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
+ 	struct urb *urb;
+ 
+ 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
+@@ -505,6 +506,9 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
+ 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
+ 			  buf, len, callback, ctx);
+ 
++	if (intfdata->use_zlp && dir == USB_DIR_OUT)
++		urb->transfer_flags |= URB_ZERO_PACKET;
++
+ 	return urb;
+ }
+ 
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index a112a4745d8b..23e0477edf7d 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -336,7 +336,7 @@ static struct kobject *cdev_get(struct cdev *p)
+ 
+ 	if (owner && !try_module_get(owner))
+ 		return NULL;
+-	kobj = kobject_get(&p->kobj);
++	kobj = kobject_get_unless_zero(&p->kobj);
+ 	if (!kobj)
+ 		module_put(owner);
+ 	return kobj;
+diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
+index f7178f44825b..d2a497950639 100644
+--- a/include/linux/can/dev.h
++++ b/include/linux/can/dev.h
+@@ -17,6 +17,7 @@
+ #include <linux/can/error.h>
+ #include <linux/can/led.h>
+ #include <linux/can/netlink.h>
++#include <linux/can/skb.h>
+ #include <linux/netdevice.h>
+ 
+ /*
+@@ -81,6 +82,36 @@ struct can_priv {
+ #define get_can_dlc(i)		(min_t(__u8, (i), CAN_MAX_DLC))
+ #define get_canfd_dlc(i)	(min_t(__u8, (i), CANFD_MAX_DLC))
+ 
++/* Check for outgoing skbs that have not been created by the CAN subsystem */
++static inline bool can_skb_headroom_valid(struct net_device *dev,
++					  struct sk_buff *skb)
++{
++	/* af_packet creates a headroom of HH_DATA_MOD bytes which is fine */
++	if (WARN_ON_ONCE(skb_headroom(skb) < sizeof(struct can_skb_priv)))
++		return false;
++
++	/* af_packet does not apply CAN skb specific settings */
++	if (skb->ip_summed == CHECKSUM_NONE) {
++		/* init headroom */
++		can_skb_prv(skb)->ifindex = dev->ifindex;
++		can_skb_prv(skb)->skbcnt = 0;
++
++		skb->ip_summed = CHECKSUM_UNNECESSARY;
++
++		/* preform proper loopback on capable devices */
++		if (dev->flags & IFF_ECHO)
++			skb->pkt_type = PACKET_LOOPBACK;
++		else
++			skb->pkt_type = PACKET_HOST;
++
++		skb_reset_mac_header(skb);
++		skb_reset_network_header(skb);
++		skb_reset_transport_header(skb);
++	}
++
++	return true;
++}
++
+ /* Drop a given socketbuffer if it does not contain a valid CAN frame. */
+ static inline bool can_dropped_invalid_skb(struct net_device *dev,
+ 					  struct sk_buff *skb)
+@@ -98,6 +129,9 @@ static inline bool can_dropped_invalid_skb(struct net_device *dev,
+ 	} else
+ 		goto inval_skb;
+ 
++	if (!can_skb_headroom_valid(dev, skb))
++		goto inval_skb;
++
+ 	return false;
+ 
+ inval_skb:
+diff --git a/include/linux/kobject.h b/include/linux/kobject.h
+index 5957c6a3fd7f..d9d4485ebad2 100644
+--- a/include/linux/kobject.h
++++ b/include/linux/kobject.h
+@@ -108,6 +108,8 @@ extern int __must_check kobject_rename(struct kobject *, const char *new_name);
+ extern int __must_check kobject_move(struct kobject *, struct kobject *);
+ 
+ extern struct kobject *kobject_get(struct kobject *kobj);
++extern struct kobject * __must_check kobject_get_unless_zero(
++						struct kobject *kobj);
+ extern void kobject_put(struct kobject *kobj);
+ 
+ extern const void *kobject_namespace(struct kobject *kobj);
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index 9d4399b553a3..6403f45da9d5 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -625,7 +625,7 @@ static void start_wakeup_tracer(struct trace_array *tr)
+ 	if (ret) {
+ 		pr_info("wakeup trace: Couldn't activate tracepoint"
+ 			" probe to kernel_sched_migrate_task\n");
+-		return;
++		goto fail_deprobe_sched_switch;
+ 	}
+ 
+ 	wakeup_reset(tr);
+@@ -643,6 +643,8 @@ static void start_wakeup_tracer(struct trace_array *tr)
+ 		printk(KERN_ERR "failed to start wakeup tracer\n");
+ 
+ 	return;
++fail_deprobe_sched_switch:
++	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
+ fail_deprobe_wake_new:
+ 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
+ fail_deprobe:
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 2a1abbaca10e..5d2c08efd12f 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -201,6 +201,11 @@ check_stack(unsigned long ip, unsigned long *stack)
+ 	local_irq_restore(flags);
+ }
+ 
++/* Some archs may not define MCOUNT_INSN_SIZE */
++#ifndef MCOUNT_INSN_SIZE
++# define MCOUNT_INSN_SIZE 0
++#endif
++
+ static void
+ stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
+diff --git a/lib/kobject.c b/lib/kobject.c
+index f58c7f2b229c..bbbb067de8ec 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -599,12 +599,15 @@ struct kobject *kobject_get(struct kobject *kobj)
+ }
+ EXPORT_SYMBOL(kobject_get);
+ 
+-static struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj)
++struct kobject * __must_check kobject_get_unless_zero(struct kobject *kobj)
+ {
++	if (!kobj)
++		return NULL;
+ 	if (!kref_get_unless_zero(&kobj->kref))
+ 		kobj = NULL;
+ 	return kobj;
+ }
++EXPORT_SYMBOL(kobject_get_unless_zero);
+ 
+ /*
+  * kobject_cleanup - free kobject resources.
+diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
+index d35815e5967b..d819e91df90d 100644
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -403,10 +403,11 @@ next:		;
+ 	return 1;
+ }
+ 
+-static inline int check_target(struct arpt_entry *e, const char *name)
++static int check_target(struct arpt_entry *e, struct net *net, const char *name)
+ {
+ 	struct xt_entry_target *t = arpt_get_target(e);
+ 	struct xt_tgchk_param par = {
++		.net       = net,
+ 		.table     = name,
+ 		.entryinfo = e,
+ 		.target    = t->u.kernel.target,
+@@ -418,8 +419,9 @@ static inline int check_target(struct arpt_entry *e, const char *name)
+ 	return xt_check_target(&par, t->u.target_size - sizeof(*t), 0, false);
+ }
+ 
+-static inline int
+-find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
++static int
++find_check_entry(struct arpt_entry *e, struct net *net, const char *name,
++		 unsigned int size,
+ 		 struct xt_percpu_counter_alloc_state *alloc_state)
+ {
+ 	struct xt_entry_target *t;
+@@ -438,7 +440,7 @@ find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
+ 	}
+ 	t->u.kernel.target = target;
+ 
+-	ret = check_target(e, name);
++	ret = check_target(e, net, name);
+ 	if (ret)
+ 		goto err;
+ 	return 0;
+@@ -531,7 +533,9 @@ static inline void cleanup_entry(struct arpt_entry *e)
+ /* Checks and translates the user-supplied table segment (held in
+  * newinfo).
+  */
+-static int translate_table(struct xt_table_info *newinfo, void *entry0,
++static int translate_table(struct net *net,
++			   struct xt_table_info *newinfo,
++			   void *entry0,
+ 			   const struct arpt_replace *repl)
+ {
+ 	struct xt_percpu_counter_alloc_state alloc_state = { 0 };
+@@ -597,7 +601,7 @@ static int translate_table(struct xt_table_info *newinfo, void *entry0,
+ 	/* Finally, each sanity check must pass */
+ 	i = 0;
+ 	xt_entry_foreach(iter, entry0, newinfo->size) {
+-		ret = find_check_entry(iter, repl->name, repl->size,
++		ret = find_check_entry(iter, net, repl->name, repl->size,
+ 				       &alloc_state);
+ 		if (ret != 0)
+ 			break;
+@@ -987,7 +991,7 @@ static int do_replace(struct net *net, const void __user *user,
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, &tmp);
++	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1164,7 +1168,8 @@ compat_copy_entry_from_user(struct compat_arpt_entry *e, void **dstptr,
+ 	}
+ }
+ 
+-static int translate_compat_table(struct xt_table_info **pinfo,
++static int translate_compat_table(struct net *net,
++				  struct xt_table_info **pinfo,
+ 				  void **pentry0,
+ 				  const struct compat_arpt_replace *compatr)
+ {
+@@ -1230,7 +1235,7 @@ static int translate_compat_table(struct xt_table_info **pinfo,
+ 	repl.num_counters = 0;
+ 	repl.counters = NULL;
+ 	repl.size = newinfo->size;
+-	ret = translate_table(newinfo, entry1, &repl);
++	ret = translate_table(net, newinfo, entry1, &repl);
+ 	if (ret)
+ 		goto free_newinfo;
+ 
+@@ -1283,7 +1288,7 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_compat_table(&newinfo, &loc_cpu_entry, &tmp);
++	ret = translate_compat_table(net, &newinfo, &loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1559,7 +1564,7 @@ int arpt_register_table(struct net *net,
+ 	loc_cpu_entry = newinfo->entries;
+ 	memcpy(loc_cpu_entry, repl->entries, repl->size);
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, repl);
++	ret = translate_table(net, newinfo, loc_cpu_entry, repl);
+ 	if (ret != 0)
+ 		goto out_free;
+ 
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 4901d17a8e63..9644dcef5a2b 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -129,7 +129,8 @@ int sysctl_tcp_invalid_ratelimit __read_mostly = HZ/2;
+ #define REXMIT_LOST	1 /* retransmit packets marked lost */
+ #define REXMIT_NEW	2 /* FRTO-style transmit of unsent/new packets */
+ 
+-static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb)
++static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb,
++			     unsigned int len)
+ {
+ 	static bool __once __read_mostly;
+ 
+@@ -140,8 +141,9 @@ static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb)
+ 
+ 		rcu_read_lock();
+ 		dev = dev_get_by_index_rcu(sock_net(sk), skb->skb_iif);
+-		pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
+-			dev ? dev->name : "Unknown driver");
++		if (!dev || len >= dev->mtu)
++			pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
++				dev ? dev->name : "Unknown driver");
+ 		rcu_read_unlock();
+ 	}
+ }
+@@ -164,8 +166,10 @@ static void tcp_measure_rcv_mss(struct sock *sk, const struct sk_buff *skb)
+ 	if (len >= icsk->icsk_ack.rcv_mss) {
+ 		icsk->icsk_ack.rcv_mss = min_t(unsigned int, len,
+ 					       tcp_sk(sk)->advmss);
+-		if (unlikely(icsk->icsk_ack.rcv_mss != len))
+-			tcp_gro_dev_warn(sk, skb);
++		/* Account for possibly-removed options */
++		if (unlikely(len > icsk->icsk_ack.rcv_mss +
++				   MAX_TCP_OPTION_SPACE))
++			tcp_gro_dev_warn(sk, skb, len);
+ 	} else {
+ 		/* Otherwise, we make more careful check taking into account,
+ 		 * that SACKs block is variable.
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index fa5229fd3703..f64660e9ff87 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1634,6 +1634,7 @@ static int ip_set_utest(struct net *net, struct sock *ctnl, struct sk_buff *skb,
+ 	struct ip_set *set;
+ 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
+ 	int ret = 0;
++	u32 lineno;
+ 
+ 	if (unlikely(protocol_failed(attr) ||
+ 		     !attr[IPSET_ATTR_SETNAME] ||
+@@ -1650,7 +1651,7 @@ static int ip_set_utest(struct net *net, struct sock *ctnl, struct sk_buff *skb,
+ 		return -IPSET_ERR_PROTOCOL;
+ 
+ 	rcu_read_lock_bh();
+-	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
++	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
+ 	rcu_read_unlock_bh();
+ 	/* Userspace can't trigger element to be re-added */
+ 	if (ret == -EAGAIN)
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index da9fc08b20bb..a5299cbb09ba 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1141,6 +1141,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
+ 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
+ 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
+ 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
++	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
+ 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
+ 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
+ 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
