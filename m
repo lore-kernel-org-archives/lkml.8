@@ -2,74 +2,81 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21218C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8339C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E736A2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579014335;
-	bh=ydeBuosiltPcfsDEdZvc5kVp7iD71bPEmNOTm05qYEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M907+gqy0jCjEKHibvSAm5TZCkG0mONJ5yUQO0S8CuoUQ5Q4vz2v8EhUQFOMKf5R4
-	 u5iUitu+mh4eC8TAw7Obianf2VTCacJAwJTUn00l2oMQuHlMc9oBlUnDxZtMqPaofb
-	 3J1tHanlVH2efyofyh6cbOPQbhxy6FPLE+H+D3m0=
+	by mail.kernel.org (Postfix) with ESMTP id 9E9B924672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgANPFd (ORCPT
+        id S1729214AbgANPFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:05:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47242 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 10:05:38 -0500
+Received: from mga17.intel.com ([192.55.52.151]:46632 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANPFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:05:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 537E3222C4;
-        Tue, 14 Jan 2020 15:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579014332;
-        bh=ydeBuosiltPcfsDEdZvc5kVp7iD71bPEmNOTm05qYEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HkmdOP22cGskIQMD2YCPEllQ3MCdzu/35gtVL61fkqXuQE8lsI4X0vA0APRGqN9ET
-         ATbjZ+sON3udGwGI5lSEAqy3ZwHExS0sK9NJ6FF2rvFBNWPv5hj0MP1Y9qrE7UR75Q
-         WQLntYYqzHvl3hnUNtLzfRT0pYjZDpIMPXD9Qrtw=
-Date:   Tue, 14 Jan 2020 16:05:30 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     rafael@kernel.org, lduncan@suse.com, cleech@redhat.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        open-iscsi@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCH 1/3] drivers: base: Support atomic version of
- attribute_container_device_trigger
-Message-ID: <20200114150530.GA1975425@kroah.com>
-References: <20200106185817.640331-1-krisman@collabora.com>
- <20200106185817.640331-2-krisman@collabora.com>
+        id S1726450AbgANPFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:05:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 07:05:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,433,1571727600"; 
+   d="scan'208";a="305168940"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 14 Jan 2020 07:05:34 -0800
+Subject: Re: [PATCH 1/3] xhci: Ensure link state is U3 after setting
+ USB_SS_PORT_LS_U3
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200103084008.3579-1-kai.heng.feng@canonical.com>
+ <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
+ <CAAd53p5a2RFpZuHGvuNO_9kgv4dGhHCYU0jeq44FtKJv0Ky8uA@mail.gmail.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <7719f382-e36d-7d31-024c-459ca0fcd91b@linux.intel.com>
+Date:   Tue, 14 Jan 2020 17:07:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106185817.640331-2-krisman@collabora.com>
+In-Reply-To: <CAAd53p5a2RFpZuHGvuNO_9kgv4dGhHCYU0jeq44FtKJv0Ky8uA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:58:15PM -0500, Gabriel Krisman Bertazi wrote:
-> attribute_container_device_trigger invokes callbacks that may fail for
-> one or more classdev's, for instance, the transport_add_class_device
-> callback, called during transport creation, does memory allocation.
-> This information, though, is not propagated to upper layers, and any
-> driver using the attribute_container_device_trigger API will not know
-> whether any, some, or all callbacks succeeded.
+On 13.1.2020 11.10, Kai-Heng Feng wrote:
+> On Fri, Jan 10, 2020 at 5:33 PM Mathias Nyman
+> <mathias.nyman@linux.intel.com> wrote:
+>>> @@ -1316,9 +1317,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+>>>                        msleep(20); /* wait device to enter */
+>>>                        spin_lock_irqsave(&xhci->lock, flags);
+>>>
+>>> -                     temp = readl(ports[wIndex]->addr);
+>>> -                     if (link_state == USB_SS_PORT_LS_U3)
+>>> +                     if (link_state == USB_SS_PORT_LS_U3) {
+>>> +                             retval = xhci_handshake(ports[wIndex]->addr, PORT_PLS_MASK, XDEV_U3, 80 * 1000);
+>>> +                             if (retval)
+>>> +                                     xhci_dbg(xhci, "polling XDEV_U3 on port %d-%d timeout\n", hcd->self.busnum, wIndex + 1);
+>>
+>> In worst case we are busylooping for 80ms here, keeping the cpu busy.
+>> It should be ok to sleep here, so how about just reading the register
+>> every 10ms max 10 times, sleeping in between.
 > 
-> This patch implements a safe version of this dispatcher, to either
-> succeed all the callbacks or revert to the original state.
+> Ok. Is the polling safe outside of spin_lock_irqsave()?
 > 
-> Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Should be, we only read one 32 bit register, and we anyway used to release
+and re-acquire the lock right before this anyway.
+
+-Mathias
