@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A8FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBFB20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F11320678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996977;
-	bh=kj5oLprT9pQG69urIPM3UZ0hDiIFQcdBiSg9DXCNPXA=;
+	s=default; t=1578996980;
+	bh=JwV7d1BbX+/9gDwxCu7WXxNWnznGLGCuF71qbgZ6FdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GkQVdRa+SE7fD7tZILuTXUApFxZqWruAPRqXtgMaPUVvFH6jRy3fbG0QTT2zgOrBO
-	 2i0sJ8k/vDwdMmkc1clpBfKSFB2RAr/gJju33BzxAw6EceiBtmc0joM4BOriK20XAY
-	 xvnzbeTOp3Lc3TC6+y8o044lSuLRAR/xwJE3eXU8=
+	b=HceV60HW29eV1UNeSBf0JSPVVo0O3Y8oo0MWkZ6Ip5YBQKFFq7sPwuubsUNywWVk3
+	 0afnOqpoqOCOk4EAAeZzIVSq+xQQ1zMnWkBATjacy62ChWPgOSUWHV5UYcKst2IJ1h
+	 9oQsZsxrfQHHm2/UqVmqEQfBXBpk6zakGxaUKhoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgANKQQ (ORCPT
+        id S1730720AbgANKJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:09:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730743AbgANKJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:47 -0500
+        id S1729605AbgANKJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8019207FF;
-        Tue, 14 Jan 2020 10:09:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D0424676;
+        Tue, 14 Jan 2020 10:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996587;
-        bh=kj5oLprT9pQG69urIPM3UZ0hDiIFQcdBiSg9DXCNPXA=;
+        s=default; t=1578996577;
+        bh=JwV7d1BbX+/9gDwxCu7WXxNWnznGLGCuF71qbgZ6FdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swo++ogz1/UjAZGRYHcZnkvP0NRnFEnPFI4ZS+9aaHf1A3vQELto12kb3z6Zokjzz
-         HcTNTNINI74623lEFYEQIJBgEiHPnJOXU2F25D9mMBp1GqwRsD9N2MDwjFjYQc7jGV
-         11z6mGJHmQNZEMPrIEBvY+nZsGoZhqjz7LwNTxyI=
+        b=cT6hBdCUb9fNfikNsZ0MlKhHxzUFqTWDFECBMZDDM7xeVtVMWHzyYz5TYerSYoRrv
+         v5/TSIGAegHnCrkrILIcajM2EKW71XAegkRUUAFhViIWXncVFmZHQXydVkQaKZ/KMj
+         S27JXTLrANkEBAX7BGu0LdMJEARG/nBq/FxoDH2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 04/39] ALSA: hda/realtek - Add new codec supported for ALCS1200A
-Date:   Tue, 14 Jan 2020 11:01:38 +0100
-Message-Id: <20200114094338.882263254@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.14 18/39] usb: musb: Disable pullup at init
+Date:   Tue, 14 Jan 2020 11:01:52 +0100
+Message-Id: <20200114094343.179143771@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -59,48 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit 6d9ffcff646bbd0ede6c2a59f4cd28414ecec6e0 upstream.
+commit 96a0c12843109e5c4d5eb1e09d915fdd0ce31d25 upstream.
 
-Add ALCS1200A supported.
-It was similar as ALC900.
+The pullup may be already enabled before the driver is initialized. This
+happens for instance on JZ4740.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/a9bd3cdaa02d4fa197623448d5c51e50@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+It has to be disabled at init time, as we cannot guarantee that a gadget
+driver will be bound to the UDC.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Suggested-by: Bin Liu <b-liu@ti.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200107152625.857-3-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
+ drivers/usb/musb/musb_core.c |    3 +++
  1 file changed, 3 insertions(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -396,6 +396,7 @@ static void alc_fill_eapd_coef(struct hd
- 		break;
- 	case 0x10ec0899:
- 	case 0x10ec0900:
-+	case 0x10ec0b00:
- 	case 0x10ec1168:
- 	case 0x10ec1220:
- 		alc_update_coef_idx(codec, 0x7, 1<<1, 0);
-@@ -2389,6 +2390,7 @@ static int patch_alc882(struct hda_codec
- 	case 0x10ec0882:
- 	case 0x10ec0885:
- 	case 0x10ec0900:
-+	case 0x10ec0b00:
- 	case 0x10ec1220:
- 		break;
- 	default:
-@@ -8398,6 +8400,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0892, "ALC892", patch_alc662),
- 	HDA_CODEC_ENTRY(0x10ec0899, "ALC898", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec0900, "ALC1150", patch_alc882),
-+	HDA_CODEC_ENTRY(0x10ec0b00, "ALCS1200A", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec1168, "ALC1220", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec1220, "ALC1220", patch_alc882),
- 	{} /* terminator */
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -2328,6 +2328,9 @@ musb_init_controller(struct device *dev,
+ 	musb_disable_interrupts(musb);
+ 	musb_writeb(musb->mregs, MUSB_DEVCTL, 0);
+ 
++	/* MUSB_POWER_SOFTCONN might be already set, JZ4740 does this. */
++	musb_writeb(musb->mregs, MUSB_POWER, 0);
++
+ 	/* Init IRQ workqueue before request_irq */
+ 	INIT_DELAYED_WORK(&musb->irq_work, musb_irq_work);
+ 	INIT_DELAYED_WORK(&musb->deassert_reset_work, musb_deassert_reset);
 
 
