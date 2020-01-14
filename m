@@ -2,134 +2,171 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06056C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6693C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4772467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A191E24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579028294;
+	bh=tf/o2SOslhx05jLtLdGaZMcY/dh7CAZd9De5mDkeMf4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IRaqS6ZpbLaKEozc1fs2njojeAXaPRBC/Xmxv+W+46c1ZuO+6TEcqi0lNDBUnjmgU
+	 X1/cpFbqrabl+ijEa0yOSRabfKCs0pUeLiwl07RjBKMHghRYKG+sCfqMSQtp5FULcH
+	 ATZgsnISBYaiF1YoQHGHbwEz9cTniciWmUveAhE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgANS6J (ORCPT
+        id S1728842AbgANS6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:58:09 -0500
-Received: from mga04.intel.com ([192.55.52.120]:30876 "EHLO mga04.intel.com"
+        Tue, 14 Jan 2020 13:58:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgANS6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:58:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 10:58:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
-   d="scan'208";a="249500514"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Jan 2020 10:58:08 -0800
-Date:   Tue, 14 Jan 2020 10:58:08 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200114185808.GI16784@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
- <20200110180458.GG21485@linux.intel.com>
- <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
- <20200113173358.GC1175@linux.intel.com>
- <20200114030820.GA4583@local-michael-cet-test.sh.intel.com>
+        id S1726053AbgANS6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:58:12 -0500
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B93C524672;
+        Tue, 14 Jan 2020 18:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579028291;
+        bh=tf/o2SOslhx05jLtLdGaZMcY/dh7CAZd9De5mDkeMf4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rhHPwkDsEYo5s9OaBOs8zWlRq1ckApWqZBX6XG5ON2yMQCrS0rVFA3Oq4GbC81lMC
+         k4fdwcZntrM+DImSAtEzIlVzTcp8eX64KU/Lvq0wTsx4+p35gL9opG8cMGcRXj3riC
+         sTdrKifhnvYLTAsuwrV4+sJ9bMoEAkJLnsIEMt78=
+Received: by mail-lf1-f48.google.com with SMTP id y19so10664157lfl.9;
+        Tue, 14 Jan 2020 10:58:10 -0800 (PST)
+X-Gm-Message-State: APjAAAXCrQIPlnIk0EvCCBETpQkuoV/9CtFag35bpQ2EDdvstQA2HIjv
+        adfgYabIJznBapPNHZXnw2mIrk+IZjJ1hsMFP5k=
+X-Google-Smtp-Source: APXvYqwHQ2f4elu47X/7QicsiPxxCMwcNqD1zJyF4zqRmDXWzwTdd9U1U4qAAURR3V9bYvYPHyPXbFdnwTsZfi93v+4=
+X-Received: by 2002:a19:c80a:: with SMTP id y10mr2322353lff.177.1579028288854;
+ Tue, 14 Jan 2020 10:58:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114030820.GA4583@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191217055738.28445-1-cw00.choi@samsung.com> <CGME20191217055106epcas1p11f2bc81d6bb2db3fc4bc257d78c337b9@epcas1p1.samsung.com>
+ <20191217055738.28445-5-cw00.choi@samsung.com> <20191226210119.GA8706@bogus>
+ <a54e4275-012e-77d9-bdbe-1aab64b5c12b@samsung.com> <76616499-7c19-06b1-461a-28ae17a76c60@samsung.com>
+In-Reply-To: <76616499-7c19-06b1-461a-28ae17a76c60@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Wed, 15 Jan 2020 03:57:30 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH0K65ON0FQGUjQbr71_9VWJXTmRbih1gko6Pcuy+PL63Q@mail.gmail.com>
+Message-ID: <CAGTfZH0K65ON0FQGUjQbr71_9VWJXTmRbih1gko6Pcuy+PL63Q@mail.gmail.com>
+Subject: Re: [PATCH 4/9] PM / devfreq: exynos-bus: Replace deprecated
+ 'devfreq' property
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>, lukasz.luba@arm.com,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:08:20AM +0800, Yang Weijiang wrote:
-> On Mon, Jan 13, 2020 at 09:33:58AM -0800, Sean Christopherson wrote:
-> > On Mon, Jan 13, 2020 at 04:10:50PM +0800, Yang Weijiang wrote:
-> > > On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> > > > On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > > > > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> > > > >  		if ((error_code & PFERR_WRITE_MASK) &&
-> > > > >  		    spte_can_locklessly_be_made_writable(spte))
-> > > > >  		{
-> > > > > -			new_spte |= PT_WRITABLE_MASK;
-> > > > > +			/*
-> > > > > +			 * Record write protect fault caused by
-> > > > > +			 * Sub-page Protection, let VMI decide
-> > > > > +			 * the next step.
-> > > > > +			 */
-> > > > > +			if (spte & PT_SPP_MASK) {
-> > > > > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> > > > 
-> > > > There's got to be a better way to handle SPP exits than adding a helper
-> > > > to retrieve the instruction length.
-> > > >
-> > > The fault instruction was skipped by kvm_skip_emulated_instruction()
-> > > before, but Paolo suggested leave the re-do or skip option to user-space
-> > > to make it flexible for write protection or write tracking, so return
-> > > length to user-space.
-> > 
-> > Sorry, my comment was unclear.  I have no objection to punting the fault
-> > to userspace, it's the mechanics of how it's done that I dislike.
-> > 
-> > Specifically, (a) using run->exit_reason to propagate the SPP exit up the
-> > stack, e.g. instead of modifying affected call stacks to play nice with
-> > any exit to userspace, (b) assuming ->get_insn_len() will always be
-> > accurate, e.g. see the various caveats in skip_emulated_instruction() for
-> > both VMX and SVM, and (c) duplicating the state capture code in every
-> > location that can encounter a SPP fault.
+Hi Rob,
+
+On Mon, Jan 6, 2020 at 10:32 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
 >
-> How about calling skip_emulated_instruction() in KVM before exit to
+> Hi Rob,
+>
+> Gently Ping.
 
-I'm confused.  It sounds like KVM_EXIT_SPP provides the instruction length
-because it skips an instruction before exiting to userspace.  But if KVM
-is is emulating an instruction, it shouldn't be doing
-{kvm_}skip_emulated_instruction(), e.g. if emulation fails due to a SPP
-violation (returns KVM_EXIT_SPP) then GUEST_RIP should still point at the
-exiting instruction.  Ditto for the fast_page_fault() case, RIP shouldn't
-be advanced.
+Once again, ping. Could you please review?
 
-What am I missing?
+On v2[1], made separate patches for dt-binding.
+[1] https://patchwork.kernel.org/cover/11304545/
 
-> userspace, but still return the skipped instruction length, if userspace
-> would like to re-execute the instruction, it can unwind RIP or simply
-> rely on KVM?
-
-I'm not convinced the instruction length needs to be provided to userspace
-for this case.  Obviously it's not difficult to provide the info, I just
-don't understand the value added by doing so.  As above, RIP shouldn't
-need to be unwound, and blindly skipping an instruction seems like an odd
-thing for a VMI engine to do.
-
-> > What I'm hoping is that it's possible to modify the call stacks to
-> > explicitly propagate an exit to userspace and/or SPP fault, and shove all
-> > the state capture into a common location, e.g. handle_ept_violation().
+>
+> On 12/27/19 9:09 AM, Chanwoo Choi wrote:
+> > On 12/27/19 6:01 AM, Rob Herring wrote:
+> >> On Tue, Dec 17, 2019 at 02:57:33PM +0900, Chanwoo Choi wrote:
+> >>> In order to remove the deprecated 'devfreq' property, replace with
+> >>> new 'exynos,parent-bus' property in order to get the parent devfreq device
+> >>> in devicetree file instead of 'devfreq' property. But, to guarantee the
+> >>> backward-compatibility, keep the support 'devfreq' property.
+> >>>
+> >>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> >>> ---
+> >>>  .../bindings/devfreq/exynos-bus.txt           | 16 +++++++--------
+> >>>  drivers/devfreq/exynos-bus.c                  | 20 ++++++++++++-------
+> >>>  2 files changed, 21 insertions(+), 15 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> >>> index e71f752cc18f..c948cee01124 100644
+> >>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> >>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+> >>> @@ -45,7 +45,7 @@ Required properties only for parent bus device:
+> >>>    of buses.
+> >>>
+> >>>  Required properties only for passive bus device:
+> >>> -- devfreq: the parent bus device.
+> >>> +- exynos,parent-bus: the parent bus device.
+> >>
+> >> If you are going to do something new, why not use the interconnect
+> >> binding here?
 > >
-> The problem is, the state capture code in fast_page_fault() and
-> emulation case share different causes, the former is generic occurence
-> of SPP induced EPT violation, the latter is atually a "faked" one while
-> detecting emulation instruction is writing some SPP protected area, so I
-> seperated them.
-
-Can we make SPP dependent on unrestricted guest so that the only entry
-point to the emulator is through handle_ept_violation()?  And thus the
-only path to triggering KVM_EXIT_SPP would also be through
-handle_ept_violation(); (I think, might be forgetting a different emulation
-path).
-
+> > As I knew, interconnect make the data path among multiple nodes
+> > and set the average and peak bandwidth to the specific data path.
+> >
+> > It means that some data will be flowed from node_a to node_d
+> > or the reverse way because each node has the tightly coupled
+> > dependency for data flow.
+> >
+> >       node_a <-> node_b <-> node_c <-> node_d
+> >
+> >
+> > On the other hand, exynos-bus.c driver is not related to 'data path'.
+> > Each bus just need to control the their own frequency and voltage.
+> > But, share the power line (regulator) between exynos-bus device
+> > even if there are no any dependency of data flow.
+> >
+> > 'exynos,parent-bus' property just indicate the specific
+> > devfreq device(parent bus device) which controls
+> > the shared power line(regulator) in order to prevent
+> > the h/w problem due to the wrong pair of frequency and voltage.
+> >
+> > 'exynos,parent-bus' property is only used to catch
+> > the change timing of shared power line.
+> >
+> >
+> > And,
+> > as you commented, there are some data path among the exynos-bus
+> > devices for the display h/w as following:
+> >
+> >       bus_display -> bus_leftbus -> bus_dmc
+> >
+> > In order to make the data path between bus devices,
+> > interconnect binding is required. This approach[1] was posted.
+> > [1] https://patchwork.kernel.org/cover/11305265/
+> > - [RFC,v3,0/7] PM / devfreq: Simple QoS for exynos-bus using interconnect
+> >
 >
-> > Side topic, assuming the userspace VMI is going to be instrospecting the
-> > faulting instruction, won't it decode the instruction?  I.e. calculate
-> > the instruction length anyways?
+> Are there any other commentss?
+>
+>
+> --
+> Best Regards,
+> Chanwoo Choi
+> Samsung Electronics
+
+
+
+-- 
+Best Regards,
+Chanwoo Choi
