@@ -2,114 +2,78 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D31C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BD4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CC2207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DC3207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgANMyp (ORCPT
+        id S1728640AbgANMzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:54:45 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:56403 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728795AbgANMyo (ORCPT
+        Tue, 14 Jan 2020 07:55:09 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37789 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgANMzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:54:44 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Jan 2020 18:24:00 +0530
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Jan 2020 18:23:48 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id 046B33588; Tue, 14 Jan 2020 18:23:46 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH V4 1/4] arm64: dts: sc7180: Add Venus video codec DT node
-Date:   Tue, 14 Jan 2020 18:23:33 +0530
-Message-Id: <1579006416-11599-2-git-send-email-dikshita@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
-References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+        Tue, 14 Jan 2020 07:55:09 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TnjKHlv_1579006506;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnjKHlv_1579006506)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 Jan 2020 20:55:06 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/vmscan: remove prefetch_prev_lru_page
+Date:   Tue, 14 Jan 2020 20:55:00 +0800
+Message-Id: <1579006500-127143-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds Venus video codec DT node for sc7180.
+This macro are never used in git history. So better to remove.
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org> 
+Cc: linux-mm@kvack.org 
+Cc: linux-kernel@vger.kernel.org 
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ mm/vmscan.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 3676bfd..6ecacca 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/clock/qcom,videocc-sc7180.h>
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4e699ed3501e..033e7145061b 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -146,20 +146,6 @@ struct scan_control {
+ 	struct reclaim_state reclaim_state;
+ };
  
- / {
- 	interrupt-parent = <&intc>;
-@@ -66,6 +67,11 @@
- 			compatible = "qcom,cmd-db";
- 			no-map;
- 		};
-+
-+		venus_mem: memory@8f600000 {
-+			reg = <0 0x8f600000 0 0x500000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -1043,6 +1049,36 @@
- 			};
- 		};
- 
-+		venus: video-codec@aa00000 {
-+			compatible = "qcom,sc7180-venus";
-+			reg = <0 0x0aa00000 0 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>,
-+					<&videocc VCODEC0_GDSC>;
-+			power-domain-names = "venus", "vcodec0";
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+			clock-names = "core", "iface", "bus",
-+				      "vcodec0_core", "vcodec0_bus";
-+			iommus = <&apps_smmu 0x0c00 0x60>;
-+			memory-region = <&venus_mem>;
-+
-+			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
-+					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
-+			interconnect-names = "video-mem", "cpu-cfg";
-+
-+			video-decoder {
-+				compatible = "venus-decoder";
-+			};
-+
-+			video-encoder {
-+				compatible = "venus-encoder";
-+			};
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
+-#ifdef ARCH_HAS_PREFETCH
+-#define prefetch_prev_lru_page(_page, _base, _field)			\
+-	do {								\
+-		if ((_page)->lru.prev != _base) {			\
+-			struct page *prev;				\
+-									\
+-			prev = lru_to_page(&(_page->lru));		\
+-			prefetch(&prev->_field);			\
+-		}							\
+-	} while (0)
+-#else
+-#define prefetch_prev_lru_page(_page, _base, _field) do { } while (0)
+-#endif
+-
+ #ifdef ARCH_HAS_PREFETCHW
+ #define prefetchw_prev_lru_page(_page, _base, _field)			\
+ 	do {								\
 -- 
-1.9.1
+1.8.3.1
 
