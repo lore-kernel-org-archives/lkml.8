@@ -2,214 +2,169 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E30C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A12C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 836C224670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0E824670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X+or/FqQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IYJqCcsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgANTYF (ORCPT
+        id S1728863AbgANTYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:24:05 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40239 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANTYF (ORCPT
+        Tue, 14 Jan 2020 14:24:33 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45579 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbgANTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:24:05 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dp13so6208345qvb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:24:04 -0800 (PST)
+        Tue, 14 Jan 2020 14:24:32 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x1so13217360qkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:24:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DRjRPlux6wSyjnZ/ZJLi4YacFFAZNG6NTQbrGZ6UsVI=;
-        b=X+or/FqQvJcJefSyOeYni8dpHySKwCWrwsSVsIhbsd2LEAQqTsJigEzCCxPiiUY+8B
-         LPN/q5FC3o36GkAT/PIsyB4ODEabpJ8xupqyU3ogulJQ6cALyxu/PAqI4m7wOtXN9Gbi
-         jQijUtZ9/mrDcvmbd0KAt0nuXaWmmPRH9R9iI=
+        bh=SvPYpJ3+ZQRE3RpgnFrfhCFn0sFFgxXkJCxLs6MF/eU=;
+        b=IYJqCcsmY3UmyL4J7VlHj6X+04mwAifaJQcJmyH55kxjQnz3O0kpjx8n3NJEJmBsTF
+         A6z+04dTxFro/fimq/5FHbbV84ey+mcNMCB8tz5qWQh1qJyrf2xLzq9GP7b2sFYDk/JH
+         5WJuvUhKNCJWersYWsu23xIXLTyj4ZyRXMOk87R91DDIR/ji9sOCXBdqrQmVLaI8+39M
+         t8zZCGrUS8BRPouK5+RaZ2pJfpYG2NQODy7vGPeq2+144RmVjTr1zBiAGvLzCbEF8Spl
+         k+lNSL1rFhITVxZxNXOpZYX+mAfMp+pEalwX1tf8/BDvOqgUdiBfuDWADyxvAIJdsA7M
+         24PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DRjRPlux6wSyjnZ/ZJLi4YacFFAZNG6NTQbrGZ6UsVI=;
-        b=pJMrzA0wa77SCKUSjx0mVeHgBBke9XkKfsaHgZMHzNbR3JcRJ2vWzmOoKsD/auNm8n
-         lBi4HTnI7OFSAKBkAZoSQ8jtNYNNcjHsWwlOnc8DuaUktxtPX6cafWeUQDCtTfbeNiAj
-         MOj8HC3I5K0Do4/IXMBFWXPLsdY0onCuav9Cyav2/gyM0RMyEHwDBE1EwWO/YeWb2VDA
-         e8jVWUUhGMpe5IEJUXkZayvQyqqXPB1Kn9HkanB/Ywv0jP5mVjOu8pU2mRSWg/DHxbn7
-         HhYV2vtGghsYHU24cc/mel84h0Z4XnTuF9/r3IBGyJVSmkiPo3o3yS9Neii7O8I473SV
-         8IhA==
-X-Gm-Message-State: APjAAAUwFaXphcJmiUlWg5YVbZkkUyi3Fn4VgszSlm42APJzEpOsbWbX
-        N9nbopkQpkpTo/e7OqwV60cuuzp5bHMwY8l9DFoq/g==
-X-Google-Smtp-Source: APXvYqwdR4jVMhOXoIhk+YkbWUX8vs3i4ybb0/ki/48m/wXDZQdebSO2x8N5F5Nh9TtIjTyPxrmAI58J/5MU6b1NSX4=
-X-Received: by 2002:a0c:e790:: with SMTP id x16mr22050544qvn.18.1579029843997;
- Tue, 14 Jan 2020 11:24:03 -0800 (PST)
+        bh=SvPYpJ3+ZQRE3RpgnFrfhCFn0sFFgxXkJCxLs6MF/eU=;
+        b=uhxl6M2tHnjKl7cBZ/q5GGKyzbfpwvZNv14i+P0zTHL+kXecbJQUZoEShEf+TYeUVj
+         GD0Hd/C/rovKlXFGXtjBHr3oQBNR0aOIxdsHSZC5WT+p+Ey4olZv6gvjEIbgaoMNRAxq
+         fhvEd5LliMqWKTP546jGJC6UOOlFWenPbVdTIlb8/mq30Bn6tY1u/igXOVFbHYe53hh6
+         JFotvWvLM8FBz6QCxlU4+mbYobc8PabbiioyIxmM4XEhkU3Skd3Lm8nSOjukD3YyXaH4
+         rWbyA032Q9v1zLrUn7kc51Jg4pSDf5mMw+n6TAJEihISiVztdD/JovlXKIDkS+kPyMEB
+         Z2KQ==
+X-Gm-Message-State: APjAAAUaRqsihZzFzM4uQKemAYDRrKDvm0Ec/Krl4ANxJ4nth99KrBkU
+        I10qCH9ImHzEveiiXyEV1GcLun3wvNG7YkE6Y5wvYA==
+X-Google-Smtp-Source: APXvYqxoDWcLzvT0ADhs2MR76vNNs6QJsCex2oYZpKenCQQZGtkUzGotvNyOaTJOW9MjbW+61wHJoDBOo787DUOhabc=
+X-Received: by 2002:a05:620a:1010:: with SMTP id z16mr19021899qkj.237.1579029871343;
+ Tue, 14 Jan 2020 11:24:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20200114031056.44502-1-pmalani@chromium.org> <b39666db-38e4-c131-bfbb-077a53a8ef69@collabora.com>
-In-Reply-To: <b39666db-38e4-c131-bfbb-077a53a8ef69@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Tue, 14 Jan 2020 11:23:53 -0800
-Message-ID: <CACeCKacSiMQOA63c81deGHOvKZb=MEFQqjK=iQRmmot8GrjS+A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] platform: chrome: Add cros-usbpd-notify driver
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
+References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
+ <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com>
+ <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com> <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
+In-Reply-To: <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
+From:   Brian Vazquez <brianvv@google.com>
+Date:   Tue, 14 Jan 2020 11:24:20 -0800
+Message-ID: <CAMzD94Tf0B9nm7GJOQJ9XCz+yEDWDA4JrP0wwNFyLx42jif7Dw@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 9:07 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
+On Tue, Jan 14, 2020 at 11:13 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Hi Prashant,
->
-> On 14/1/20 4:10, Prashant Malani wrote:
-> > From: Jon Flatley <jflat@chromium.org>
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, cros_usbpd_acpi_device_ids);
-> Ops, there is a build error here, please make sure to build the driver before
-> sending.
-Hmm. That's odd, I did check  using arm64 defconfig. My apologies.
-Could you kindly share your build commands so that I can use this
-going forward?
->
-> s/cros_usbpd_acpi_device_ids/cros_usbpd_notify_acpi_device_ids/
->
-> Apart from this I'm getting build errors with my defconfig which has CONFIG_ACPI
-> and CONFIG_OF enabled.
->
-> Another problem that I have with this driver is that actually there is no user
-> for it. I'd really prefer have this included on a series that also introduces
-> the user of this notifier. If you are only testing the ACPI case you can focus
-> first on this use case and we add later the OF case (maybe is an easy way to
-> proceed).
-I'm testing with an arm64 device too locally. I will try to
-incorporate the new change which updates cros_usbpd-charger to use the
-notifier mechanism. I think we can try for the OF case simultaneously
-(it is probably just the build errors I need to check for)
-
-Thanks again!
->
-> Thanks,
->  Enric
->
-> > +
-> > +static struct acpi_driver cros_usbpd_notify_acpi_driver = {
-> > +     .name = DRV_NAME,
-> > +     .class = DRV_NAME,
-> > +     .ids = cros_usbpd_notify_acpi_device_ids,
-> > +     .ops = {
-> > +             .add = cros_usbpd_notify_add_acpi,
-> > +             .notify = cros_usbpd_notify_acpi,
-> > +     },
-> > +};
-> > +module_acpi_driver(cros_usbpd_notify_acpi_driver);
-> > +
-> > +#endif /* CONFIG_ACPI */
-> > +
-> > +#ifdef CONFIG_OF
-> > +
-> > +static int cros_usbpd_notify_plat(struct notifier_block *nb,
-> > +             unsigned long queued_during_suspend, void *data)
-> > +{
-> > +     struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
-> > +     u32 host_event = cros_ec_get_host_event(ec_dev);
-> > +
-> > +     if (!host_event)
-> > +             return NOTIFY_BAD;
-> > +
-> > +     if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
-> > +             blocking_notifier_call_chain(&cros_usbpd_notifier_list,
-> > +                             host_event, NULL);
-> > +             return NOTIFY_OK;
-> > +     }
-> > +     return NOTIFY_DONE;
-> > +}
-> > +
-> > +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> > +     struct notifier_block *nb;
-> > +     int ret;
-> > +
-> > +     nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-> > +     if (!nb)
-> > +             return -ENOMEM;
-> > +
-> > +     nb->notifier_call = cros_usbpd_notify_plat;
-> > +     dev_set_drvdata(dev, nb);
-> > +
-> > +     ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-> > +                                             nb);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "Failed to register notifier\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
-> > +     struct notifier_block *nb =
-> > +             (struct notifier_block *)dev_get_drvdata(dev);
-> > +
-> > +     blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-> > +                     nb);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static struct platform_driver cros_usbpd_notify_plat_driver = {
-> > +     .driver = {
-> > +             .name = DRV_NAME,
-> > +     },
-> > +     .probe = cros_usbpd_notify_probe_plat,
-> > +     .remove = cros_usbpd_notify_remove_plat,
-> > +};
-> > +module_platform_driver(cros_usbpd_notify_plat_driver);
-> > +
-> > +#endif /* CONFIG_OF */
-> > +
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
-> > +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-> > +MODULE_ALIAS("platform:" DRV_NAME);
-> > diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
-> > new file mode 100644
-> > index 0000000000000..4f2791722b6d3
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/cros_usbpd_notify.h
-> > @@ -0,0 +1,17 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * ChromeOS EC Power Delivery Notifier Driver
-> > + *
-> > + * Copyright 2020 Google LLC
-> > + */
-> > +
-> > +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> > +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> > +
-> > +#include <linux/notifier.h>
-> > +
-> > +int cros_usbpd_register_notify(struct notifier_block *nb);
-> > +
-> > +void cros_usbpd_unregister_notify(struct notifier_block *nb);
-> > +
-> > +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+> On Tue, Jan 14, 2020 at 10:54 AM Brian Vazquez <brianvv@google.com> wrote:
 > >
+> > On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
+> > > >
+> > > > From: Yonghong Song <yhs@fb.com>
+> > > >
+> > > > Added four libbpf API functions to support map batch operations:
+> > > >   . int bpf_map_delete_batch( ... )
+> > > >   . int bpf_map_lookup_batch( ... )
+> > > >   . int bpf_map_lookup_and_delete_batch( ... )
+> > > >   . int bpf_map_update_batch( ... )
+> > > >
+> > > > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > > > ---
+> > > >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
+> > > >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
+> > > >  tools/lib/bpf/libbpf.map |  4 +++
+> > > >  3 files changed, 86 insertions(+)
+> > > >
+> > > > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> > > > index 500afe478e94a..12ce8d275f7dc 100644
+> > > > --- a/tools/lib/bpf/bpf.c
+> > > > +++ b/tools/lib/bpf/bpf.c
+> > > > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
+> > > >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
+> > > >  }
+> > > >
+> > > > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
+> > > > +                               void *out_batch, void *keys, void *values,
+> > > > +                               __u32 *count,
+> > > > +                               const struct bpf_map_batch_opts *opts)
+> > > > +{
+> > > > +       union bpf_attr attr = {};
+> > > > +       int ret;
+> > > > +
+> > > > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
+> > > > +               return -EINVAL;
+> > > > +
+> > > > +       memset(&attr, 0, sizeof(attr));
+> > > > +       attr.batch.map_fd = fd;
+> > > > +       attr.batch.in_batch = ptr_to_u64(in_batch);
+> > > > +       attr.batch.out_batch = ptr_to_u64(out_batch);
+> > > > +       attr.batch.keys = ptr_to_u64(keys);
+> > > > +       attr.batch.values = ptr_to_u64(values);
+> > > > +       if (count)
+> > > > +               attr.batch.count = *count;
+> > > > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
+> > > > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
+> > > > +
+> > > > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
+> > > > +       if (count)
+> > > > +               *count = attr.batch.count;
+> > >
+> > > what if syscall failed, do you still want to assign *count then?
+> >
+> > Hi Andrii, thanks for taking a look.
+> >
+> > attr.batch.count should report the number of entries correctly
+> > processed before finding and error, an example could be when you
+> > provided a buffer for 3 entries and the map only has 1, ret is going
+> > to be -ENOENT meaning that you traversed the map and you still want to
+> > assign *count.
+>
+> ah, ok, tricky semantics :) if syscall failed before kernel got to
+> updating count, I'm guessing it is guaranteed to preserve old value?
+>
+I think for correctness as a first step inside the syscall we should
+update count to 0 and copy back to user, so we never preserve the old
+value and we can trust what count is reporting. WDYT?
+> >
+> > That being said, the condition 'if (count)' is wrong and I think it
+> > should be removed.
+>
+> So count is mandatory, right? In that case both `if (count)` checks are wrong.
+Yes, you are right. I'll remove them in next version.
+>
+> >
+> > >
+> > > > +
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > >
+> > > [...]
