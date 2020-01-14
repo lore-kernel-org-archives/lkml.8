@@ -2,112 +2,81 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FE4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADF7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0272467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579044629;
-	bh=njIt0QYXLBr1W9wgpPzxS+7c8cizvwPCx3Oe3IsRT9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RqDdyfNvjtFsKRcMfri5qNSILg9NUYxeaAfqgHT1wQshi7u2CSHe2/+whVIVUaOw3
-	 +131/nXBFtiVTA3Yo8xz1X4etoam1Gb9GNUIfjuJ7n/aNO9ak/Zgl39Fn9yjiIgQJH
-	 acVwkx8fPisanbX4OjZPQ/SeBa80UAw/jHXNrIqE=
+	by mail.kernel.org (Postfix) with ESMTP id 9B546222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgANXa2 (ORCPT
+        id S1728885AbgANXb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:30:28 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41994 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgANXa2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:30:28 -0500
-Received: by mail-pg1-f196.google.com with SMTP id s64so7144123pgb.9;
-        Tue, 14 Jan 2020 15:30:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xtay45JSoYDoBInOvIBkON2umcFhUQpYehz+90UqGzQ=;
-        b=TjpglJOOlC/4jLwV42ppWnmffTIgwiSgCGYqV636ES1IcvGsUupi4hBriH1agzg3J2
-         bdC5qkm1aVR0dWn86nMu2Nank7VGSMm5DQ4GfzxWnNKrVNKm9I2qmbOpu/Ggo419iBAh
-         1wgYJA0kkKbbPCWkK2rFIjllOp6s1OpwzLDdAoq7g+Krwn8EsLAibUmCTw0F5f0Up7Zx
-         9WIHcBsYRfFFEcE0aL+Rm2iX+tl0wQoISvJzoElVccPoc51HxZ1pI0VqE6Lv7Xgb5NBn
-         AKJwrIqlObTns8ph8iHIrxpWA6cNwK6bgYNaFee/A+GtaGCqoXM3DskWog4BkZ4OWXI5
-         dR5w==
-X-Gm-Message-State: APjAAAXnmuCHwnn7EbdsLQ+0sQjRLjHtRASAornxOPk4rABmqUZ6hx9N
-        BcA4cZrV/Z5lyOFLDcSp4MY=
-X-Google-Smtp-Source: APXvYqxfDRELNDfkiKLOjOnc8yn+X0p9GiSoBZA2079ouTSIRqhfvb98Ufu56YKWqXMwxsmfg6bA5g==
-X-Received: by 2002:a62:486:: with SMTP id 128mr28162928pfe.236.1579044627249;
-        Tue, 14 Jan 2020 15:30:27 -0800 (PST)
-Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id dw10sm14376039pjb.11.2020.01.14.15.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 15:30:26 -0800 (PST)
-Date:   Tue, 14 Jan 2020 15:30:25 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, chenhc@lemote.com,
-        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
-        maz@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irqchip: mips-cpu: Remove eoi operation
-Message-ID: <20200114233025.y4azwvivqo7kg7i5@pburton-laptop>
-References: <20200113101251.37471-1-jiaxun.yang@flygoat.com>
+        Tue, 14 Jan 2020 18:31:29 -0500
+Received: from mga17.intel.com ([192.55.52.151]:25736 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728759AbgANXb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 18:31:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 15:31:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="273461645"
+Received: from emkilgox-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.0.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2020 15:31:27 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH] soundwire: cadence: fix kernel-doc parameter descriptions
+Date:   Tue, 14 Jan 2020 17:31:24 -0600
+Message-Id: <20200114233124.13888-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200113101251.37471-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
+Fix previous update, bad git merge likely. oops.
 
-On Mon, Jan 13, 2020 at 06:12:51PM +0800, Jiaxun Yang wrote:
-> The eoi opreation in mips_cpu_irq_controller caused chained_irq_enter
-> falsely consider CPU IP interrupt as a FastEOI type IRQ. So the interrupt
-> won't be masked during in handler. Which might lead to spurious interrupt.
-> 
-> Thus we simply remove eoi operation for mips_cpu_irq_controller,
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/irqchip/irq-mips-cpu.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.c
-> index 95d4fd8f7a96..0ad7f1f9a58b 100644
-> --- a/drivers/irqchip/irq-mips-cpu.c
-> +++ b/drivers/irqchip/irq-mips-cpu.c
-> @@ -55,7 +55,6 @@ static struct irq_chip mips_cpu_irq_controller = {
->  	.irq_mask	= mask_mips_irq,
->  	.irq_mask_ack	= mask_mips_irq,
->  	.irq_unmask	= unmask_mips_irq,
-> -	.irq_eoi	= unmask_mips_irq,
->  	.irq_disable	= mask_mips_irq,
->  	.irq_enable	= unmask_mips_irq,
->  };
+Fixes: 39737a313085fa ("soundwire: cadence: update kernel-doc parameter descriptions")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ drivers/soundwire/cadence_master.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This one scares me; something doesn't seem right. The irq_eoi (née eoi)
-callback was first added way back in commit 1417836e81c0 ("[MIPS] use
-generic_handle_irq, handle_level_irq, handle_percpu_irq"). The commit
-message there states that the motivation was to allow use of
-handle_percpu_irq(), and indeed handle_percpu_irq() does:
+diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+index 12d3ac56e01b..9bec270d0fa4 100644
+--- a/drivers/soundwire/cadence_master.c
++++ b/drivers/soundwire/cadence_master.c
+@@ -819,7 +819,6 @@ EXPORT_SYMBOL(sdw_cdns_thread);
+ /**
+  * sdw_cdns_exit_reset() - Program reset parameters and start bus operations
+  * @cdns: Cadence instance
+- * @state: True if we are trying to enable interrupt.
+  */
+ int sdw_cdns_exit_reset(struct sdw_cdns *cdns)
+ {
+@@ -846,6 +845,7 @@ EXPORT_SYMBOL(sdw_cdns_exit_reset);
+ /**
+  * sdw_cdns_enable_interrupt() - Enable SDW interrupts
+  * @cdns: Cadence instance
++ * @state: True if we are trying to enable interrupt.
+  */
+ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
+ {
+-- 
+2.20.1
 
-    irq_ack() (ie. mask)
-    invoke the handler(s)
-    irq_eoi() (ie. unmask)
-
-By removing the irq_eoi callback I don't see how we'd ever unmask the
-interrupt again..?
-
-Thanks,
-    Paul
