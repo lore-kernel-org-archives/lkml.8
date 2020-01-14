@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824CDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C092CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDD6207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2A6207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997158;
-	bh=7ZGV6GHlhqUKpvmtRxXTMs1FxLez45+frSJo/QaGVos=;
+	s=default; t=1578997162;
+	bh=GSiPrkVh8W0BgVy8K+GW2cCWlYwb4Zxjg1e2YFJ5fdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FYmtw0rUMi+8Sn6WKpF3JnJGBXApPAjYKOh4SNd1pppcMIHOIvo3mXgg6EmIH0qQc
-	 GHg7k3+/nu5H7Voi2E0FUsxg9Xw4cmQ4iowJae/u5FclmwwU2wmZM/eZZ8Or+EYjS8
-	 xeeNyo7Nvvx8263Utz3VeDfXdhuE3ICLjHKOW9jE=
+	b=0/2rrYCFv8jRoxVjVK0rKqFlKIkKIaIk0f63qwDc2LSWfuaGgpnaAmkUf/a43BkA7
+	 AAGw+1kORxgZQhBoPTlajG8c89BafblisJ/ZFbRmOip06sryWeV3TczrU/+UlIVGfT
+	 fwdZq48uvIrheAwHfAVDWrQ2xaPWsA+0NbDaY62g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgANKGW (ORCPT
+        id S1730747AbgANKTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:19:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbgANKGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:17 -0500
+        id S1729950AbgANKGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D285A2467A;
-        Tue, 14 Jan 2020 10:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E26A724676;
+        Tue, 14 Jan 2020 10:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996377;
-        bh=7ZGV6GHlhqUKpvmtRxXTMs1FxLez45+frSJo/QaGVos=;
+        s=default; t=1578996380;
+        bh=GSiPrkVh8W0BgVy8K+GW2cCWlYwb4Zxjg1e2YFJ5fdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6pnJWBVf9LFd7DOi2qxfpDaut83Ly+V6X1E6C0jHZj8T77dpX6qX7KeXZyGbdmMJ
-         4QJebiqAzr3TD5bseLSnSQGSlWa7951Lipy6ADhkl4lOhOwyuNvuapRbxykF9gBM7M
-         0amJSN0gPnBFXbw834pKANZ+FD+QpfL/dqftwXxo=
+        b=HsraGOnax31+6y/iL9Mo8mjLdRxH0yJrXlZ0OB6sMC065fcbSqwHfYVaIHDX0+mto
+         H/Li0+gqhgvg68MKqHHBnywFq9p23ebiq54PueXhEXVbngiQWEACKI5CH0ZKs/9Fhe
+         iKoXZ38MGomZIHfoHGg4FXQwBBOsicBgkg5dWp+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
-        Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 75/78] phy: cpcap-usb: Fix flakey host idling and enumerating of devices
-Date:   Tue, 14 Jan 2020 11:01:49 +0100
-Message-Id: <20200114094403.390224776@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 76/78] netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
+Date:   Tue, 14 Jan 2020 11:01:50 +0100
+Message-Id: <20200114094403.522011249@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -65,48 +62,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 049226b9fd7442149dcbcf55f15408f5973cceda upstream.
+commit 1b789577f655060d98d20ed0c6f9fbd469d6ba63 upstream.
 
-We must let the USB host idle things properly before we switch to debug
-UART mode. Otherwise the USB host may never idle after disconnecting
-devices, and that causes the next enumeration to be flakey.
+We get crash when the targets checkentry function tries to make
+use of the network namespace pointer for arptables.
 
-Cc: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+When the net pointer got added back in 2010, only ip/ip6/ebtables were
+changed to initialize it, so arptables has this set to NULL.
+
+This isn't a problem for normal arptables because no existing
+arptables target has a checkentry function that makes use of par->net.
+
+However, direct users of the setsockopt interface can provide any
+target they want as long as its registered for ARP or UNPSEC protocols.
+
+syzkaller managed to send a semi-valid arptables rule for RATEEST target
+which is enough to trigger NULL deref:
+
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
+[..]
+ xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
+ check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
+ find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
+ translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
+ do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
+ do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/motorola/phy-cpcap-usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/netfilter/arp_tables.c |   27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
---- a/drivers/phy/motorola/phy-cpcap-usb.c
-+++ b/drivers/phy/motorola/phy-cpcap-usb.c
-@@ -283,13 +283,13 @@ static void cpcap_usb_detect(struct work
- 		return;
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -384,10 +384,11 @@ next:		;
+ 	return 1;
+ }
+ 
+-static inline int check_target(struct arpt_entry *e, const char *name)
++static int check_target(struct arpt_entry *e, struct net *net, const char *name)
+ {
+ 	struct xt_entry_target *t = arpt_get_target(e);
+ 	struct xt_tgchk_param par = {
++		.net       = net,
+ 		.table     = name,
+ 		.entryinfo = e,
+ 		.target    = t->u.kernel.target,
+@@ -399,8 +400,9 @@ static inline int check_target(struct ar
+ 	return xt_check_target(&par, t->u.target_size - sizeof(*t), 0, false);
+ }
+ 
+-static inline int
+-find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
++static int
++find_check_entry(struct arpt_entry *e, struct net *net, const char *name,
++		 unsigned int size,
+ 		 struct xt_percpu_counter_alloc_state *alloc_state)
+ {
+ 	struct xt_entry_target *t;
+@@ -419,7 +421,7 @@ find_check_entry(struct arpt_entry *e, c
+ 	}
+ 	t->u.kernel.target = target;
+ 
+-	ret = check_target(e, name);
++	ret = check_target(e, net, name);
+ 	if (ret)
+ 		goto err;
+ 	return 0;
+@@ -512,7 +514,9 @@ static inline void cleanup_entry(struct
+ /* Checks and translates the user-supplied table segment (held in
+  * newinfo).
+  */
+-static int translate_table(struct xt_table_info *newinfo, void *entry0,
++static int translate_table(struct net *net,
++			   struct xt_table_info *newinfo,
++			   void *entry0,
+ 			   const struct arpt_replace *repl)
+ {
+ 	struct xt_percpu_counter_alloc_state alloc_state = { 0 };
+@@ -569,7 +573,7 @@ static int translate_table(struct xt_tab
+ 	/* Finally, each sanity check must pass */
+ 	i = 0;
+ 	xt_entry_foreach(iter, entry0, newinfo->size) {
+-		ret = find_check_entry(iter, repl->name, repl->size,
++		ret = find_check_entry(iter, net, repl->name, repl->size,
+ 				       &alloc_state);
+ 		if (ret != 0)
+ 			break;
+@@ -974,7 +978,7 @@ static int do_replace(struct net *net, c
+ 		goto free_newinfo;
  	}
  
-+	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
-+
- 	/* Default to debug UART mode */
- 	error = cpcap_usb_set_uart_mode(ddata);
- 	if (error)
- 		goto out_err;
+-	ret = translate_table(newinfo, loc_cpu_entry, &tmp);
++	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
  
--	cpcap_usb_try_musb_mailbox(ddata, MUSB_VBUS_OFF);
--
- 	dev_dbg(ddata->dev, "set UART mode\n");
+@@ -1149,7 +1153,8 @@ compat_copy_entry_from_user(struct compa
+ 	}
+ }
  
- 	return;
+-static int translate_compat_table(struct xt_table_info **pinfo,
++static int translate_compat_table(struct net *net,
++				  struct xt_table_info **pinfo,
+ 				  void **pentry0,
+ 				  const struct compat_arpt_replace *compatr)
+ {
+@@ -1217,7 +1222,7 @@ static int translate_compat_table(struct
+ 	repl.num_counters = 0;
+ 	repl.counters = NULL;
+ 	repl.size = newinfo->size;
+-	ret = translate_table(newinfo, entry1, &repl);
++	ret = translate_table(net, newinfo, entry1, &repl);
+ 	if (ret)
+ 		goto free_newinfo;
+ 
+@@ -1270,7 +1275,7 @@ static int compat_do_replace(struct net
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_compat_table(&newinfo, &loc_cpu_entry, &tmp);
++	ret = translate_compat_table(net, &newinfo, &loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1546,7 +1551,7 @@ int arpt_register_table(struct net *net,
+ 	loc_cpu_entry = newinfo->entries;
+ 	memcpy(loc_cpu_entry, repl->entries, repl->size);
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, repl);
++	ret = translate_table(net, newinfo, loc_cpu_entry, repl);
+ 	if (ret != 0)
+ 		goto out_free;
+ 
 
 
