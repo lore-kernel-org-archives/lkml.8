@@ -2,138 +2,110 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB817C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B22C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8B42072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="EH4oqtkS"
+	by mail.kernel.org (Postfix) with ESMTP id CCC8E222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579026410;
+	bh=qnqGgrP8e9yV1OsuzVTzNXGikt0eU6jSP1VAIcJyBmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=woB8eKQdMaqqRPNOWiRSkMlMyPbrCOqtOeyIB0dALWxBt0JsF3ZBl4KBvS5qYjxbj
+	 K305xni7THBrnqAgwbVuqxdnNLMsKvuljX61VDbks96gSqMcRUnIWHkosXn0VlVQrR
+	 GFg3E0ZgLS25ztlepVUinU4OCVaKaoMIdrd4gtBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgANS0C (ORCPT
+        id S1728795AbgANS0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:26:02 -0500
-Received: from smtp104.ord1c.emailsrvr.com ([108.166.43.104]:51913 "EHLO
-        smtp104.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728909AbgANSZ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:25:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1579026358;
-        bh=x97t4sVCLec0AUkyNkrph7ut/gSYCSeAr+g7v3AiIVs=;
-        h=From:To:Subject:Date:From;
-        b=EH4oqtkSvIzVRUoYf9m/iInrr7YCBCTkZgHOPMDyXTpDEBvjCpoIjT5RlDVylKj+M
-         Bdl5aCHZeA7AsP7NNbm3bZR3yBXgzvTVJBBcjzbcmT5xKoCok1r2rK/xBiXDTXSEWC
-         KdPu3BBfoT2yW+FZ0IeWW3dZAZv8hjSlBEDmZLl4=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp6.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 06F8FA0108;
-        Tue, 14 Jan 2020 13:25:56 -0500 (EST)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Tue, 14 Jan 2020 13:25:58 -0500
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     devel@driverdev.osuosl.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Spencer E . Olson" <olsonse@umich.edu>
-Subject: [PATCH 2/2] staging: comedi: ni_routes: allow partial routing information
-Date:   Tue, 14 Jan 2020 18:25:32 +0000
-Message-Id: <20200114182532.132058-3-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114182532.132058-1-abbotti@mev.co.uk>
-References: <20200114182532.132058-1-abbotti@mev.co.uk>
+        Tue, 14 Jan 2020 13:26:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727556AbgANS0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:26:49 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C615C24672;
+        Tue, 14 Jan 2020 18:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579026408;
+        bh=qnqGgrP8e9yV1OsuzVTzNXGikt0eU6jSP1VAIcJyBmg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lrXuON6lNa/3kGMXfWgCZKeqToNfMEc/Bm81yU3i7YyzltzarzjHAYDGNnu+exqw5
+         BWS8V+7Xk+pe0HfRkw7crfwWY+Sy7P0uSpIjfo6TNo07VEnP4BztnoU+rYjHs0VLrh
+         fHeuTQaoSAjpIpBO2njoR8F/VNZT+HfKdUby0EI4=
+Date:   Tue, 14 Jan 2020 18:26:41 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, steve.capper@arm.com,
+        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+        james.morse@arm.com, vladimir.murzin@arm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, gregkh@linuxfoundation.org,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com,
+        sstabellini@kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
+        xen-devel@lists.xenproject.org, linux@armlinux.org.uk,
+        andrew.cooper3@citrix.com, julien@xen.org
+Subject: Re: [PATCH v5 5/6] arm64: move ARM64_HAS_CACHE_DIC/_IDC from asm to C
+Message-ID: <20200114182641.GI2579@willie-the-truck>
+References: <20200102211357.8042-1-pasha.tatashin@soleen.com>
+ <20200102211357.8042-6-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102211357.8042-6-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a regression on setting up asynchronous commands to use
-external trigger sources when board-specific routing information is
-missing.
+On Thu, Jan 02, 2020 at 04:13:56PM -0500, Pavel Tatashin wrote:
+> The assmbly functions __asm_flush_cache_user_range and
+> __asm_invalidate_icache_range have alternatives:
+> 
+> alternative_if ARM64_HAS_CACHE_DIC
+> ...
+> 
+> alternative_if ARM64_HAS_CACHE_IDC
+> ...
+> 
+> But, the implementation of those alternatives is trivial and therefore
+> can be done in the C inline wrappers.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/include/asm/cacheflush.h | 19 +++++++++++++++++++
+>  arch/arm64/mm/cache.S               | 27 +++++----------------------
+>  arch/arm64/mm/flush.c               |  1 +
+>  3 files changed, 25 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+> index 047af338ba15..fc5217a18398 100644
+> --- a/arch/arm64/include/asm/cacheflush.h
+> +++ b/arch/arm64/include/asm/cacheflush.h
+> @@ -77,8 +77,22 @@ static inline long __flush_cache_user_range(unsigned long start,
+>  {
+>  	int ret;
+>  
+> +	if (cpus_have_const_cap(ARM64_HAS_CACHE_IDC)) {
+> +		dsb(ishst);
+> +		if (cpus_have_const_cap(ARM64_HAS_CACHE_DIC)) {
+> +			isb();
+> +			return 0;
+> +		}
+> +	}
+> +
+>  	uaccess_ttbr0_enable();
+>  	ret = __asm_flush_cache_user_range(start, end);
 
-`ni_find_device_routes()` (called via `ni_assign_device_routes()`) finds
-the table of register values for the device family and the set of valid
-routes for the specific board.  If both are found,
-`tables->route_values` is set to point to the table of register values
-for the device family and `tables->valid_routes` is set to point to the
-list of valid routes for the specific board.  If either is not found,
-both `tables->route_values` and `tables->valid_routes` are left set at
-their initial null values (initialized by `ni_assign_device_routes()`)
-and the function returns `-ENODATA`.
+I don't understand this. Doesn't it mean a CPU with IDC but not DIC will
+end up with doing the D-cache maintenance?
 
-Returning an error results in some routing functionality being disabled.
-Unfortunately, leaving `table->route_values` set to `NULL` also breaks
-the setting up of asynchronous commands that are configured to use
-external trigger sources.  Calls to `ni_check_trigger_arg()` or
-`ni_check_trigger_arg_roffs()` while checking the asynchronous command
-set-up would result in a null pointer dereference if
-`table->route_values` is `NULL`.  The null pointer dereference is fixed
-in another patch, but it now results in failure to set up the
-asynchronous command.  That is a regression from the behavior prior to
-commit 347e244884c3 ("staging: comedi: tio: implement global tio/ctr
-routing") and commit 56d0b826d39f ("staging: comedi: ni_mio_common:
-implement new routing for TRIG_EXT").
-
-Change `ni_find_device_routes()` to set `tables->route_values` and/or
-`tables->valid_routes` to valid information even if the other one can
-only be set to `NULL` due to missing information.  The function will
-still return an error in that case.  This should result in
-`tables->valid_routes` being valid for all currently supported device
-families even if the board-specific routing information is missing.
-That should be enough to fix the regression on setting up asynchronous
-commands to use external triggers for boards with missing routing
-information.
-
-Fixes: 347e244884c3 ("staging: comedi: tio: implement global tio/ctr routing")
-Fixes: 56d0b826d39f ("staging: comedi: ni_mio_common: implement new routing for TRIG_EXT").
-Cc: <stable@vger.kernel.org> # 4.20+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- drivers/staging/comedi/drivers/ni_routes.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/staging/comedi/drivers/ni_routes.c b/drivers/staging/comedi/drivers/ni_routes.c
-index 9627bd1d2a78..8f398b30f5bf 100644
---- a/drivers/staging/comedi/drivers/ni_routes.c
-+++ b/drivers/staging/comedi/drivers/ni_routes.c
-@@ -72,9 +72,6 @@ static int ni_find_device_routes(const char *device_family,
- 		}
- 	}
- 
--	if (!rv)
--		return -ENODATA;
--
- 	/* Second, find the set of routes valid for this device. */
- 	for (i = 0; ni_device_routes_list[i]; ++i) {
- 		if (memcmp(ni_device_routes_list[i]->device, board_name,
-@@ -84,12 +81,12 @@ static int ni_find_device_routes(const char *device_family,
- 		}
- 	}
- 
--	if (!dr)
--		return -ENODATA;
--
- 	tables->route_values = rv;
- 	tables->valid_routes = dr;
- 
-+	if (!rv || !dr)
-+		return -ENODATA;
-+
- 	return 0;
- }
- 
--- 
-2.24.1
-
+Will
