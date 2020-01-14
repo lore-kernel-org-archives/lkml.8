@@ -2,69 +2,104 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DDFC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F35BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9442F24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAD32465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgANJ5r (ORCPT
+        id S1729094AbgANKCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:57:47 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:45733 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANJ5r (ORCPT
+        Tue, 14 Jan 2020 05:02:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgANKCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:57:47 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D8D49240019;
-        Tue, 14 Jan 2020 09:57:42 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 10:57:42 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 15/17] dt-bindings: arm: add sam9x60-ek board
-Message-ID: <20200114095742.GL3137@piout.net>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 14 Jan 2020 05:02:24 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EA2CpJ040439;
+        Tue, 14 Jan 2020 05:02:12 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xh8d3evj3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 05:02:12 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00EA06UR019477;
+        Tue, 14 Jan 2020 10:02:07 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02wdc.us.ibm.com with ESMTP id 2xf750ahs4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 10:02:07 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00EA26xA43254174
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 10:02:06 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ADB8C6059;
+        Tue, 14 Jan 2020 10:02:06 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB083C6055;
+        Tue, 14 Jan 2020 10:02:03 +0000 (GMT)
+Received: from skywalker.in.ibm.com (unknown [9.124.35.105])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Jan 2020 10:02:03 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v3 4/9] asm-gemeric/tlb: Remove stray function declarations
+Date:   Tue, 14 Jan 2020 15:31:40 +0530
+Message-Id: <20200114100145.365527-5-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
+References: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_02:2020-01-13,2020-01-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=597 spamscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001140090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 18:18:07+0200, Claudiu Beznea wrote:
-> Add documentation for SAM9X60-EK board.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-Applied, thanks.
+From: Peter Zijlstra <peterz@infradead.org>
 
+We removed the actual functions a while ago.
+
+Fixes: 1808d65b55e4 ("asm-generic/tlb: Remove arch_tlb*_mmu()")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ include/asm-generic/tlb.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index b36b3bef5661..1a4cea5f95df 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -285,11 +285,7 @@ struct mmu_gather {
+ #endif
+ };
+ 
+-void arch_tlb_gather_mmu(struct mmu_gather *tlb,
+-	struct mm_struct *mm, unsigned long start, unsigned long end);
+ void tlb_flush_mmu(struct mmu_gather *tlb);
+-void arch_tlb_finish_mmu(struct mmu_gather *tlb,
+-			 unsigned long start, unsigned long end, bool force);
+ 
+ static inline void __tlb_adjust_range(struct mmu_gather *tlb,
+ 				      unsigned long address,
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.24.1
+
