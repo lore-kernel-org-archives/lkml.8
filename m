@@ -2,120 +2,138 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E1AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C1FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3574D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC94207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eK2Dg5z/"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="JIpiz5Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgANKxd (ORCPT
+        id S1729412AbgANK7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:53:33 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44522 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANKxc (ORCPT
+        Tue, 14 Jan 2020 05:59:22 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39069 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728983AbgANK7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:53:32 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so12131901otj.11;
-        Tue, 14 Jan 2020 02:53:32 -0800 (PST)
+        Tue, 14 Jan 2020 05:59:21 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l2so13780479lja.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:59:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cn5oQa4AQw8CAHBLFyCfO9lTHCbEgvgO8kS0oRO7bOQ=;
-        b=eK2Dg5z/JYnAaAy6xwTmYeSjPvJjm0B44DIx4I1iEs+x7RetgpH2bxuRg9XU2ddA+s
-         yvJk4W4uXxtsjYY10pSPcdvwgzRXoTHfPNCjs7juDha99ypLF/CI+ZiR+1n+LF1MSI9e
-         IsUJNA/MwMJ4PjqXR7xQMKcK42h6yssTx3yuTskJ5v2NhyECfnKY9wcfTtuspvItViB+
-         xX8MeHMofmTJ4y9xpvMwrXV7olJeP/qyvpr3Ti6vgVGxlnDqDuIawEfZvrocueL5+wdk
-         5KyZ8gf//54ZLlPevCJT0IC4N6g1jXbzei+H0KkL/lOXS5WmOFrnu8M+HUuzgdONO/yt
-         kOvg==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EW8+gP2rKs+jXbNSD4aXu/n/AKA3IlQufSB8tHR0hpU=;
+        b=JIpiz5EzHfc1rirgM3SfKKD7NZ7xCQYzlJ6+GdvrzJUYHz0G/NH7/ld3OhUQ1HKJos
+         dit9ovo9dYZmngzGa0fLrVJtCCmge5pehCyJvukToG0Nuv+ggS+HyPkXxoj4gKNforWB
+         3vF25MkaWlPZp3UnVggalYxD8ki4V8KGg6l3zKEO7hi+CMZjcWQzClCziiB9qV4c0NQe
+         Vd5Jpf4zpbttEt6DWbC/XPpzESGs1GPdwXq70JoBVzV+q7XSQkIyCvpKAHFwKsHoCVuP
+         Nvz4qrWH2849lEWqK2y1WXBpyP5s8Rs1cgCWkK7IYT2NdUv0t9yYFPNKfdSFKUodOQC2
+         OwUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cn5oQa4AQw8CAHBLFyCfO9lTHCbEgvgO8kS0oRO7bOQ=;
-        b=VJsF5j1RR+yWjtX0pzztD4y8JJihtNgn4OOHAWeN0nOYxfxINDb1a34xGbt5FANsvt
-         VZxFUQZ5j6bJKBYvDby3MHf5j2VFqzymnQ+LkT4kPnpCg9TgPgFU6Ba7pIbgdpHMaqya
-         EMDn/mxzDrmQSc2+4xJjX0qRu+sovw/80rudRUyhdMzXEBmTKcBEoJV0+u4RNN6W1Uiu
-         DHRLooGTO1ghVeD8B7LzP8v5lEHU0RjfAuZtw/NJ5DBX0BUk9afaDYGnprcQ4cyaDKZs
-         qN7s//REqU3JrObizTUFbM2RW9beDBsVSJk5bLrg4RX+zLYOhY2o+3sKnAY8uYy8+fay
-         n8SQ==
-X-Gm-Message-State: APjAAAWITXqLw5LK0grORBZkCevBK1/1MC5Phv+VtAa7LGOIilo7pePr
-        46E/3gJiRBhPPfV9BwI+CvMGC/ZWTh+S0a1MCcw=
-X-Google-Smtp-Source: APXvYqxhttxJBOc2iHCA0/wkTwR5uKcaMUnB+U6b9v/qVX340MTbr4dC/XjtB54IGpNIS77ISdOm2hRgUkn+e+kY654=
-X-Received: by 2002:a05:6830:231d:: with SMTP id u29mr2091403ote.185.1578999212027;
- Tue, 14 Jan 2020 02:53:32 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EW8+gP2rKs+jXbNSD4aXu/n/AKA3IlQufSB8tHR0hpU=;
+        b=MXQZE1KcFr6gaEE6MN9Xu2bFyjZnjjY8gnO+CLN4Mz+o+Wg1mj22NI62jIRTwo8Ulh
+         +15bHiHMjqs3fsEDlvyd/LmGWblhKFXKwplqmGAM6Plvq+6BvikXMCX29e/GZIlEO19X
+         AOqPKWjwtwcwmzFREPV/173R8Qr6DoN+PjcFKEw462lXrqMwlz6z+PGyeLsa9t5NeV1B
+         8WF6g85G120qgyT/Nwe9RdfFh/sFN5rOjzWt4c/IQihX538mUp1mjaAOyuxwhjIZcm5O
+         7Ug91t/pLjShHrbTM7UrHvgrRcsOEJrTMaUxxT238og6lJs/xjuDX0PcF5coJh2knZKJ
+         uftg==
+X-Gm-Message-State: APjAAAVnbkVGMqJuFB8GMQkf+5h1uEcXyPMv/jyLkMjRbXsWVTS4vCxR
+        TGNJe0qu4WOAHXAJtw4c3JJhaw==
+X-Google-Smtp-Source: APXvYqwwU+OYYmkkbYwhplcfbTT3Ys1dRt6HFgh5JXt2IjPqFpNbmHJc/3aC3GIv3Rs57FEF4FvMYA==
+X-Received: by 2002:a2e:8755:: with SMTP id q21mr13841462ljj.156.1578999558693;
+        Tue, 14 Jan 2020 02:59:18 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n23sm7139469lfa.41.2020.01.14.02.59.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 02:59:17 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id C2A23100823; Tue, 14 Jan 2020 13:59:21 +0300 (+03)
+Date:   Tue, 14 Jan 2020 13:59:21 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com,
+        rientjes@google.com
+Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200114105921.eo2vdwikrvtt3gkb@box>
+References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
+ <20200111000352.efy6krudecpshezh@box>
+ <20200114093122.GH19428@dhcp22.suse.cz>
+ <20200114103112.o6ozdbkfnzdsc2ke@box>
 MIME-Version: 1.0
-References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
- <20200108155040.GB2827@hirez.programming.kicks-ass.net> <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
- <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
- <20200113104314.GU2844@hirez.programming.kicks-ass.net> <ee2b6da2-be8c-2540-29e9-ffbb9fdfd3fc@redhat.com>
- <20200113123558.GF2827@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200113123558.GF2827@hirez.programming.kicks-ass.net>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 14 Jan 2020 18:53:19 +0800
-Message-ID: <CANRm+Cz10Spq1mjBBa+RvgeUtNvWEXSfPzHy49gZbD-Z8+fh2A@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes mwait/hlt
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        KarimAllah <karahmed@amazon.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ankur Arora <ankur.a.arora@oracle.com>,
-        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
-        Len Brown <len.brown@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114103112.o6ozdbkfnzdsc2ke@box>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 at 20:36, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Jan 13, 2020 at 12:52:20PM +0100, Paolo Bonzini wrote:
-> > On 13/01/20 11:43, Peter Zijlstra wrote:
-> > > So the very first thing we need to get sorted is that MPERF/TSC ratio
-> > > thing. TurboStat does it, but has 'funny' hacks on like:
-> > >
-> > >   b2b34dfe4d9a ("tools/power turbostat: KNL workaround for %Busy and Avg_MHz")
-> > >
-> > > and I imagine that there's going to be more exceptions there. You're
-> > > basically going to have to get both Intel and AMD to commit to this.
-> > >
-> > > IFF we can get concensus on MPERF/TSC, then yes, that is a reasonable
-> > > way to detect a VCPU being idle I suppose. I've added a bunch of people
-> > > who seem to know about this.
-> > >
-> > > Anyone, what will it take to get MPERF/TSC 'working' ?
-> >
-> > Do we really need MPERF/TSC for this use case, or can we just track
-> > APERF as well and do MPERF/APERF to compute the "non-idle" time?
->
-> So MPERF runs at fixed frequency (when !IDLE and typically the same
-> frequency as TSC), APERF runs at variable frequency (when !IDLE)
-> depending on DVFS state.
->
-> So APERF/MPERF gives the effective frequency of the core, but since both
-> stop during IDLE, it will not be a good indication of IDLE.
->
-> Otoh, TSC doesn't stop in idle (.oO this depends on
-> X86_FEATURE_CONSTANT_TSC) and therefore the MPERF/TSC ratio gives how
-> much !idle time there was between readings.
+On Tue, Jan 14, 2020 at 01:31:12PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Jan 14, 2020 at 10:31:22AM +0100, Michal Hocko wrote:
+> > On Sat 11-01-20 03:03:52, Kirill A. Shutemov wrote:
+> > > On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
+> > > > As all the other places, we grab the lock before manipulate the defer list.
+> > > > Current implementation may face a race condition.
+> > > > 
+> > > > For example, the potential race would be:
+> > > > 
+> > > >     CPU1                      CPU2
+> > > >     mem_cgroup_move_account   split_huge_page_to_list
+> > > >       !list_empty
+> > > >                                 lock
+> > > >                                 !list_empty
+> > > >                                 list_del
+> > > >                                 unlock
+> > > >       lock
+> > > >       # !list_empty might not hold anymore
+> > > >       list_del_init
+> > > >       unlock
+> > > 
+> > > I don't think this particular race is possible. Both parties take page
+> > > lock before messing with deferred queue, but anytway:
+> > > 
+> > > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > 
+> > I am confused, if the above race is not possible then what would be a
+> > real race? We really do not want to have a patch with a misleading
+> > changelog, do we?
+> 
+> The alternative is to make sure that all page_deferred_list() called with
+> page lock taken.
+> 
+> I'll look into it.
 
-Do you have a better solution to penalty vCPU process which mwait/hlt
-executed inside? :)
+split_huge_page_to_list() has page lock taken.
 
-    Wanpeng
+free_transhuge_page() is in the free path and doesn't susceptible to the
+race.
+
+deferred_split_scan() is trickier. list_move() should be safe against
+list_empty() as it will not produce false-positive list_empty().
+list_del_init() *should* (correct me if I'm wrong) be safe because the page
+is freeing and memcg will not touch the page anymore.
+
+deferred_split_huge_page() is a problematic one. It called from
+page_remove_rmap() path witch does require page lock. I don't see any
+obvious way to exclude race with mem_cgroup_move_account() here.
+Anybody else?
+
+Wei, could you rewrite the commit message with deferred_split_huge_page()
+as a race source instead of split_huge_page_to_list()?
+
+-- 
+ Kirill A. Shutemov
