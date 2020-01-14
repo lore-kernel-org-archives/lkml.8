@@ -2,200 +2,96 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF6AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA51C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439B424679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0945D24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578997227;
+	bh=7lrQMTsQe47ViLM91pWK8ucocgIUyk6tGInDECp0ht4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OiaQVCnm3sskS8pcg13cJnRZ7DTFwGBNuzr+0db7NYt5PK58pIlzyIRtRSuurCHYk
+	 AvY6SlOH8XNfmlNF6gciPxjWu0XYAmRCIuLGaG/GGB90cvfKAw8/Z6ibrPR55YLQtF
+	 yIQlbI+aI7+a7QWSWZV3LZ755yKhNiARy1hEVXIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgANKDq (ORCPT
+        id S1729970AbgANKU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:03:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729067AbgANKDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:43 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EA3MjB123813;
-        Tue, 14 Jan 2020 05:03:33 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xh8d379xk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 05:03:30 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00EA1UHl022453;
-        Tue, 14 Jan 2020 10:01:59 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02dal.us.ibm.com with ESMTP id 2xf74p13k7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 10:01:59 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00EA1vdS49217992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 10:01:57 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 799B4C605F;
-        Tue, 14 Jan 2020 10:01:57 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1ED30C6055;
-        Tue, 14 Jan 2020 10:01:55 +0000 (GMT)
-Received: from skywalker.in.ibm.com (unknown [9.124.35.105])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jan 2020 10:01:54 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v3 1/9] powerpc/mmu_gather: Enable RCU_TABLE_FREE even for !SMP case
-Date:   Tue, 14 Jan 2020 15:31:37 +0530
-Message-Id: <20200114100145.365527-2-aneesh.kumar@linux.ibm.com>
+        Tue, 14 Jan 2020 05:20:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729635AbgANKDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:45 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B33B42467D;
+        Tue, 14 Jan 2020 10:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578996225;
+        bh=7lrQMTsQe47ViLM91pWK8ucocgIUyk6tGInDECp0ht4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A2j7Ju8l79GZHML/P4/uRFAKBnhEn3TyEsgAYa1YH6rMHyOzbeGUo+9V+4uTgO6F0
+         mDx0odnjtWGqb7awiooHHnJc9W5HnMSYiyg4W6Vngsk0OJR1TAXKnr+9YTPa+Tqi8E
+         NXf7K9OYnfCtBy1HTL8FcWyMSHy/1JKYiymW1S5A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 15/78] tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
+Date:   Tue, 14 Jan 2020 11:00:49 +0100
+Message-Id: <20200114094354.782557348@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
-References: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
+In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
+References: <20200114094352.428808181@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_02:2020-01-13,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- suspectscore=2 priorityscore=1501 mlxscore=0 bulkscore=0 malwarescore=0
- clxscore=1015 adultscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001140090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A follow up patch is going to make sure we correctly invalidate page walk cache
-before we free page table pages. In order to keep things simple enable
-RCU_TABLE_FREE even for !SMP so that we don't have to fixup the !SMP case
-differently in the followup patch
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-!SMP case is right now broken for radix translation w.r.t page walk cache flush.
-We can get interrupted in between page table free and that would imply we
-have page walk cache entries pointing to tables which got freed already.
+commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
+this makes the stack tracer fail to compile. Just define it to zero in this
+case.
+
+Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
+
+Cc: stable@vger.kernel.org
+Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/Kconfig                         | 2 +-
- arch/powerpc/include/asm/book3s/32/pgalloc.h | 8 --------
- arch/powerpc/include/asm/book3s/64/pgalloc.h | 2 --
- arch/powerpc/include/asm/nohash/pgalloc.h    | 8 --------
- arch/powerpc/mm/book3s64/pgtable.c           | 7 -------
- 5 files changed, 1 insertion(+), 26 deletions(-)
+ kernel/trace/trace_stack.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1ec34e16ed65..04240205f38c 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -222,7 +222,7 @@ config PPC
- 	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
--	select HAVE_RCU_TABLE_FREE		if SMP
-+	select HAVE_RCU_TABLE_FREE
- 	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
- 	select HAVE_MMU_GATHER_PAGE_SIZE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
-index 998317702630..dc5c039eb28e 100644
---- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
-@@ -49,7 +49,6 @@ static inline void pgtable_free(void *table, unsigned index_size)
- 
- #define get_hugepd_cache_index(x)  (x)
- 
--#ifdef CONFIG_SMP
- static inline void pgtable_free_tlb(struct mmu_gather *tlb,
- 				    void *table, int shift)
- {
-@@ -66,13 +65,6 @@ static inline void __tlb_remove_table(void *_table)
- 
- 	pgtable_free(table, shift);
- }
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb,
--				    void *table, int shift)
--{
--	pgtable_free(table, shift);
--}
--#endif
- 
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
- 				  unsigned long address)
-diff --git a/arch/powerpc/include/asm/book3s/64/pgalloc.h b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-index f6968c811026..a41e91bd0580 100644
---- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-@@ -19,9 +19,7 @@ extern struct vmemmap_backing *vmemmap_list;
- extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
- extern void pmd_fragment_free(unsigned long *);
- extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
--#ifdef CONFIG_SMP
- extern void __tlb_remove_table(void *_table);
--#endif
- void pte_frag_destroy(void *pte_frag);
- 
- static inline pgd_t *radix__pgd_alloc(struct mm_struct *mm)
-diff --git a/arch/powerpc/include/asm/nohash/pgalloc.h b/arch/powerpc/include/asm/nohash/pgalloc.h
-index 332b13b4ecdb..29c43665a753 100644
---- a/arch/powerpc/include/asm/nohash/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/pgalloc.h
-@@ -46,7 +46,6 @@ static inline void pgtable_free(void *table, int shift)
- 
- #define get_hugepd_cache_index(x)	(x)
- 
--#ifdef CONFIG_SMP
- static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
- {
- 	unsigned long pgf = (unsigned long)table;
-@@ -64,13 +63,6 @@ static inline void __tlb_remove_table(void *_table)
- 	pgtable_free(table, shift);
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -283,6 +283,11 @@ static void check_stack(unsigned long ip
+ 	local_irq_restore(flags);
  }
  
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
--{
--	pgtable_free(table, shift);
--}
--#endif
--
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
- 				  unsigned long address)
- {
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index 75483b40fcb1..2bf7e1b4fd82 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -378,7 +378,6 @@ static inline void pgtable_free(void *table, int index)
- 	}
- }
- 
--#ifdef CONFIG_SMP
- void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
- {
- 	unsigned long pgf = (unsigned long)table;
-@@ -395,12 +394,6 @@ void __tlb_remove_table(void *_table)
- 
- 	return pgtable_free(table, index);
- }
--#else
--void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
--{
--	return pgtable_free(table, index);
--}
--#endif
- 
- #ifdef CONFIG_PROC_FS
- atomic_long_t direct_pages_count[MMU_PAGE_COUNT];
--- 
-2.24.1
++/* Some archs may not define MCOUNT_INSN_SIZE */
++#ifndef MCOUNT_INSN_SIZE
++# define MCOUNT_INSN_SIZE 0
++#endif
++
+ static void
+ stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
+
 
