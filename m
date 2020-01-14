@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2BBC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A5C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790E1214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C878F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578961222;
-	bh=4fiixW2EB7t7wNVahtcaM/AyIKNE6SsJpV4VmYij+Rg=;
+	s=default; t=1578961232;
+	bh=8eR2k4N3/QElfnpXUzRtCjcysj33XTmq362d49xB6mg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S9zXDFQ0C4VjDMDSx95QQ624R1rv77LxJo2Dsl/I6K3bR1wiyejyc7leM9FdxH601
-	 2c1cy1cAeFwK8/t+BE8avUzRP7EJgxh3nFO7UVJVe76d4VmXCKzwlLJiK2YcJFI6h9
-	 LUMKlIHcSgQSE6206uJ8Sk8K7XZkDozO3MQoA5QI=
+	b=KnGdPJBmQgCIM62fXsj0GNLCz8JHubu/QsGNeOrJtCUXqvFiUZTctWXAQp0/QX6Q6
+	 2cPEcKyVx13TkkhAdq0ujNK6R/HOEbPocqwEWNoYSvk8amC+HpECKPfATNrZ+vXIOU
+	 Xft1bfEd9hFAjZy8zmiIyygFZ30upURLgc3YgyfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgANAUV (ORCPT
+        id S1729476AbgANAUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:20:21 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33636 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgANAUV (ORCPT
+        Mon, 13 Jan 2020 19:20:32 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35963 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgANAUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:20:21 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so10892165otp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 16:20:20 -0800 (PST)
+        Mon, 13 Jan 2020 19:20:31 -0500
+Received: by mail-ot1-f66.google.com with SMTP id m2so6005718otq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 16:20:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PuZkmizV0FjMntSV+5swUbzzYgbKg4dX9XcvnF9x9qQ=;
-        b=XsW+UL7qsAn5AVvYZXztjGSghsBJ6lNsqiDK9QfkX2qrVd/HEkRZxIYMJX64WwF+K3
-         iBmT6KafYGjRnC4x5YfBg5xZiDXHkoXtnomwH8HcA9LqpkkaY01BR1zRS/PhKwD+wDyU
-         KvCfH+TDYZd3w1zaAPWwvIjKoZeX/P3b6oIHviG4gYh6m46+O153Z1YAt8/USXHA+tlP
-         w7/1hYf2ykomJHbqqTdW7Wb/VsYRlIN9lUdf0BHHWtBzrgsPW9vxDrE9aaYG9UqnuCVC
-         fBdoLJQnauqK5rfZG2By7hOFyQw7zxSjnnd0s56eBOe7iWBcfrWCHChxE/usxkdWjm+v
-         8Wew==
-X-Gm-Message-State: APjAAAW3GOPzQRAvrqK5ckGWfbeUlhJ+FWh4Kr07yExaTM7p9gvhfCKU
-        LXrtEa2PXaeyiqod+zngcyZMnuYcUg==
-X-Google-Smtp-Source: APXvYqxQyHc5eQN3JBujKc0Rhs7V7KBbK5AbWkO8LcWnjx+5MZb4F1Pgu8XImBYnM1i9yJTbfsUaJQ==
-X-Received: by 2002:a05:6830:149a:: with SMTP id s26mr15499734otq.55.1578961220148;
-        Mon, 13 Jan 2020 16:20:20 -0800 (PST)
+        bh=E6IJAm/G2BZsEtWssBpYlld99L9pgrhy2OUvTYO1Gu4=;
+        b=iQBYJCYcobcNFcVvALpMfgcZBJyN5ztyeC4DlN4fZT21F9YxNu6+BmoJ8TgMXHzZ1e
+         5IWmDFLAZ9Y9K73IHQYMLzrGJaFOLeLyFHcEAwFd1HQIGmYXVvGKDA3K5WxGC4OmIOmc
+         0RO/UDM7B7idZhBqUapSJQ5CTtXCopNWbWcWEzJ6u3J/0QBglo6l8mcMDi/5aw2l8ZR2
+         mTgaJ3eA9/XIIIh4XHbuto+Xt1r8tCIlgF2TiUyjRDfviLcqbf/hqLD/wpOAS1//ctk7
+         uKWUMpt1R83PDlfadGVDLeIjuWWhWR7Y8P3dUEfAhMe3amJ4FNcSbH+EPZ82QWWi12B5
+         /CMA==
+X-Gm-Message-State: APjAAAUfh1EVw858NU9qycbdG0vj0RNM2z/Y2iGhsnfWii4n8It6N7I0
+        hUkJvkWRXOWACd5VBJEjOW6nslK6RQ==
+X-Google-Smtp-Source: APXvYqx+MBhxrlbusOd2/KAQkLg6DTMOwfHUZ898c9zg2r5s6EeMfuM2Om3ksNrBwX6MGiZ9ZI1MNQ==
+X-Received: by 2002:a05:6830:1d6a:: with SMTP id l10mr15816197oti.233.1578961230624;
+        Mon, 13 Jan 2020 16:20:30 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p24sm4744497oth.28.2020.01.13.16.20.19
+        by smtp.gmail.com with ESMTPSA id m11sm4060780oie.20.2020.01.13.16.20.29
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 16:20:19 -0800 (PST)
+        Mon, 13 Jan 2020 16:20:30 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 223d55
+        id 22198d
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 18:17:17 -0600
-Date:   Mon, 13 Jan 2020 18:17:17 -0600
+        Mon, 13 Jan 2020 18:16:27 -0600
+Date:   Mon, 13 Jan 2020 18:16:27 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
@@ -74,28 +74,28 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
         linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-can@vger.kernel.org, linux-rtc@vger.kernel.org,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 09/17] dt-bindings: atmel-sysreg: add
- microchip,sam9x60-ddramc
-Message-ID: <20200114001717.GA11996@bogus>
+Subject: Re: [PATCH v2 06/17] dt-bindings: at91-sama5d2_adc: add
+ microchip,sam9x60-adc
+Message-ID: <20200114001627.GA10411@bogus>
 References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-10-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578673089-3484-10-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 18:18:01 +0200, Claudiu Beznea wrote:
-> Add microchip,sam9x60-ddramc to DT bindings documentation.
+On Fri, 10 Jan 2020 18:17:58 +0200, Claudiu Beznea wrote:
+> Add microchip,sam9x60-adc to DT bindings documentation.
 > 
 > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  Documentation/devicetree/bindings/arm/atmel-sysregs.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
