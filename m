@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82C6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27842C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA2D2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE88124676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996828;
-	bh=qe+amIO6FsqBNpi7ZCNhfwA0gpWZnUNTGkxW7VB5bHw=;
+	s=default; t=1578996832;
+	bh=7+tDIkDKEgMJ/MxV6Y7r6xHMBAn2XLb88L/SHHq88rY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XuxZy6dqdpS44zAwA+szkzfNFKQ32iRhWZ61HctHk3bfMMZvqm5gK6DSGbIS3U6aQ
-	 KO43mueen1gsEPRRSUUiIlRwTweTs1KUNNRMe0ksxyqH2xqavkDljQldXa1IAO0Xbj
-	 v1gVgFFjVAa6MDQBQsbepFqafXkX0UluiJHuoIOk=
+	b=hzZzrV+joReFUkBOdEbtZY7v4iQMJ1lwYi69a1WsPfwKPtT46cFPvKfJ/KVA3cpS6
+	 jecEU+y3qrtjdtc6i5KlvILwcnk3HCeAQz9+rXREXLCV01n+J0BsGCochR857EwxHE
+	 nIKDm/LOajRl7LIPDMXNiufnoB+idIF13AjYY/2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733234AbgANKNr (ORCPT
+        id S1733241AbgANKNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:13:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:13:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733108AbgANKNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:13:45 -0500
+        id S1733108AbgANKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:13:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F22F24676;
-        Tue, 14 Jan 2020 10:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5572624676;
+        Tue, 14 Jan 2020 10:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996824;
-        bh=qe+amIO6FsqBNpi7ZCNhfwA0gpWZnUNTGkxW7VB5bHw=;
+        s=default; t=1578996828;
+        bh=7+tDIkDKEgMJ/MxV6Y7r6xHMBAn2XLb88L/SHHq88rY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lY/+flYmY86xiKKflXUEr9X7fMg029fCq/8yLSRvzKOD3b8Ugjwe/6d1xvSJWlVXV
-         szdTQwd//Uh5uTBHgSpY4fRMfflN2QnKhVML66TLFf42ESdHEMUBrlBidV2e/ylHuV
-         3sxGNGOSJ1qmZofmKJ6IGTZqzc8yqoqM5MwfLjOQ=
+        b=1VX1bCOB+B8n4wRAm/5P3LkR+k5kB+fkpQ+wicfSpVxwJRYJCqLafufaiP18k+rwM
+         bRQ6jO0IQLMDXi3bD6u7QxMVsJsK9MdSb42JKCt4T7Fa+jL71Owt5EzvxmW9U8RSDC
+         0iih5/ZWp3IiAEFNypSye81c2qFEn3eMFhUCLrx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
-        Wayne Lin <Wayne.Lin@amd.com>, Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 4.4 11/28] drm/dp_mst: correct the shifting in DP_REMOTE_I2C_READ
-Date:   Tue, 14 Jan 2020 11:02:13 +0100
-Message-Id: <20200114094341.718808413@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 28/28] netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
+Date:   Tue, 14 Jan 2020 11:02:30 +0100
+Message-Id: <20200114094345.119644409@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -59,52 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit c4e4fccc5d52d881afaac11d3353265ef4eccb8b upstream.
+commit 22dad713b8a5ff488e07b821195270672f486eb2 upstream.
 
-[Why]
-According to DP spec, it should shift left 4 digits for NO_STOP_BIT
-in REMOTE_I2C_READ message. Not 5 digits.
+The set uadt functions assume lineno is never NULL, but it is in
+case of ip_set_utest().
 
-In current code, NO_STOP_BIT is always set to zero which means I2C
-master is always generating a I2C stop at the end of each I2C write
-transaction while handling REMOTE_I2C_READ sideband message. This issue
-might have the generated I2C signal not meeting the requirement. Take
-random read in I2C for instance, I2C master should generate a repeat
-start to start to read data after writing the read address. This issue
-will cause the I2C master to generate a stop-start rather than a
-re-start which is not expected in I2C random read.
+syzkaller managed to generate a netlink message that calls this with
+LINENO attr present:
 
-[How]
-Correct the shifting value of NO_STOP_BIT for DP_REMOTE_I2C_READ case in
-drm_dp_encode_sideband_req().
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:hash_mac4_uadt+0x1bc/0x470 net/netfilter/ipset/ip_set_hash_mac.c:104
+Call Trace:
+ ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
 
-Changes since v1:(https://patchwork.kernel.org/patch/11312667/)
-* Add more descriptions in commit and cc to stable
+pass a dummy lineno storage, its easier than patching all set
+implementations.
 
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200103055001.10287-1-Wayne.Lin@amd.com
+This seems to be a day-0 bug.
+
+Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
+Fixes: a7b4f989a6294 ("netfilter: ipset: IP set core support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/ipset/ip_set_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -272,7 +272,7 @@ static void drm_dp_encode_sideband_req(s
- 			memcpy(&buf[idx], req->u.i2c_read.transactions[i].bytes, req->u.i2c_read.transactions[i].num_bytes);
- 			idx += req->u.i2c_read.transactions[i].num_bytes;
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1619,6 +1619,7 @@ ip_set_utest(struct sock *ctnl, struct s
+ 	struct ip_set *set;
+ 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
+ 	int ret = 0;
++	u32 lineno;
  
--			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 5;
-+			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 4;
- 			buf[idx] |= (req->u.i2c_read.transactions[i].i2c_transaction_delay & 0xf);
- 			idx++;
- 		}
+ 	if (unlikely(protocol_failed(attr) ||
+ 		     !attr[IPSET_ATTR_SETNAME] ||
+@@ -1635,7 +1636,7 @@ ip_set_utest(struct sock *ctnl, struct s
+ 		return -IPSET_ERR_PROTOCOL;
+ 
+ 	rcu_read_lock_bh();
+-	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
++	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
+ 	rcu_read_unlock_bh();
+ 	/* Userspace can't trigger element to be re-added */
+ 	if (ret == -EAGAIN)
 
 
