@@ -2,250 +2,137 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE68C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B694C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A9C2468B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579011622;
-	bh=OFpEwefnpEYnLJlkaDqaG2e00mfUcpERaZoWSf0IQ9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l12sCXNbdG+wkP/DOW8JiFMkTgPU8unB3pwG4dR4ElTpJhAudBIGPx3yxjNFsK9rU
-	 0hsbkKyNT5zETAitFIuZfygwzFrIDpalbgafdVjzry4Nsyj9FCQnpaEEMEt/v0A9gw
-	 gugORHen/zB5+1XXbn990BnbUZj178Le1Ztdje4w=
+	by mail.kernel.org (Postfix) with ESMTP id E175A24684
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eS83FUjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgANOUV (ORCPT
+        id S1728923AbgANOUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:20:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgANOUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:20:20 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9BD24680;
-        Tue, 14 Jan 2020 14:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579011619;
-        bh=OFpEwefnpEYnLJlkaDqaG2e00mfUcpERaZoWSf0IQ9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KZT4UwM6P3zkj7xli3D6jvIMfUDXuDUKQ+46p2yEUa/lV5dQ2z/WdlfkkocRvUC4E
-         aWvUg6moxNroZhZ0N1ek9WNPe6dS8wIBf2mOlzOd/fxfng5XbNuEPWADPLw4oEVstM
-         IhMsLiXJRK9lHfeGoSKyqs1Y93ecpqqsF25xDErw=
-Date:   Tue, 14 Jan 2020 15:20:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v3 2/2] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200114142017.GA1784266@kroah.com>
-References: <20200113135444.12027-1-roman.sudarikov@linux.intel.com>
- <20200113135444.12027-3-roman.sudarikov@linux.intel.com>
- <20200113143818.GB390411@kroah.com>
- <cdce3529-a953-41e4-740a-36193e7931b4@linux.intel.com>
+        Tue, 14 Jan 2020 09:20:30 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1365 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726115AbgANOUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:20:30 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EEDJ9I002429;
+        Tue, 14 Jan 2020 15:20:19 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=WTFGUCLWTDzRKhLgs2q+UxAA1l4yHovIjS8c0XHL7Ts=;
+ b=eS83FUjgp0iLFkBIkXcu/qIBlD3rdf4FW+3ea+xyHP71BDP3H/ICWz+eX+s0YAz4mjud
+ 05NJ1HvOgeFPWKYBkhAJPzKGvLgupHTzn4oNqI6Ek828o7VbY3b9irWi52Qlp3ht3l7E
+ NUaiCPJP+S8gsOXJsQuW6TBv5UWBZPpKuQlGNr85eIiaLxj5LmISYQKpDpCjSieW+Eb8
+ YTy1AG6LziF/fPIlLY+u40e7qx7lxbKPgPgh41Iq/77PDfENGSFwYR92Socl3SNKCEOo
+ 6bUkNG+adXmauv4zw4tfeaRPnSriPMCkzSu3h04bZvmzY5J7brDM49uJU360Lzh9UVBO AA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78s5xb5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 15:20:19 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CBD02100034;
+        Tue, 14 Jan 2020 15:20:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 85D832BC7AB;
+        Tue, 14 Jan 2020 15:20:14 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 14 Jan 2020 15:20:14
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] drm: fix parameters documentation style
+Date:   Tue, 14 Jan 2020 15:20:12 +0100
+Message-ID: <20200114142012.14389-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cdce3529-a953-41e4-740a-36193e7931b4@linux.intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_04:2020-01-13,2020-01-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 04:55:03PM +0300, Sudarikov, Roman wrote:
-> On 13.01.2020 17:38, Greg KH wrote:
-> > On Mon, Jan 13, 2020 at 04:54:44PM +0300, roman.sudarikov@linux.intel.com wrote:
-> > > From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> > > 
-> > > Current version supports a server line starting Intel® Xeon® Processor
-> > > Scalable Family and introduces mapping for IIO Uncore units only.
-> > > Other units can be added on demand.
-> > > 
-> > > IIO stack to PMON mapping is exposed through:
-> > >      /sys/devices/uncore_iio_<pmu_idx>/platform_mapping
-> > >      in the following format: domain:bus
-> > > 
-> > > For example, on a 4-die Intel Xeon® server platform:
-> > >      $ cat /sys/devices/uncore_iio_0/platform_mapping
-> > >      0000:00,0000:40,0000:80,0000:c0
-> > That's horrid to parse.  Sysfs should be one value per file, why not
-> > have individual files for all of these things?
-> > 
-> > > Which means:
-> > > IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
-> > > IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
-> > > IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
-> > > IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
-> > Where did you get the die number from the above data?
-> > 
-> Mapping algorithm requires domain:bus pair for each IO stack for each die.
+Remove old documentation style and use new one to avoid warnings when
+compiling with W=1
 
-mapping algorithm where?  In the kernel?  In userspace?  Somewhere else?
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/gpu/drm/drm_dma.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> Current implementation provides comma separated list of domain:bus pairs
-> for each stack where offset in the list corresponds to die index.
+diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
+index e45b07890c5a..f90bdd4ac69d 100644
+--- a/drivers/gpu/drm/drm_dma.c
++++ b/drivers/gpu/drm/drm_dma.c
+@@ -42,10 +42,10 @@
+ #include "drm_legacy.h"
+ 
+ /**
+- * Initialize the DMA data.
++ * drm_legacy_dma_setup() - Initialize the DMA data.
+  *
+- * \param dev DRM device.
+- * \return zero on success or a negative value on failure.
++ * @dev: DRM device.
++ * return zero on success or a negative value on failure.
+  *
+  * Allocate and initialize a drm_device_dma structure.
+  */
+@@ -71,9 +71,9 @@ int drm_legacy_dma_setup(struct drm_device *dev)
+ }
+ 
+ /**
+- * Cleanup the DMA resources.
++ * drm_legacy_dma_takedown() - Cleanup the DMA resources.
+  *
+- * \param dev DRM device.
++ * @dev: DRM device.
+  *
+  * Free all pages associated with DMA buffers, the buffers and pages lists, and
+  * finally the drm_device::dma structure itself.
+@@ -120,10 +120,10 @@ void drm_legacy_dma_takedown(struct drm_device *dev)
+ }
+ 
+ /**
+- * Free a buffer.
++ * drm_legacy_free_buffer() - Free a buffer.
+  *
+- * \param dev DRM device.
+- * \param buf buffer to free.
++ * @dev: DRM device.
++ * @buf: buffer to free.
+  *
+  * Resets the fields of \p buf.
+  */
+@@ -139,9 +139,10 @@ void drm_legacy_free_buffer(struct drm_device *dev, struct drm_buf * buf)
+ }
+ 
+ /**
+- * Reclaim the buffers.
++ * drm_legacy_reclaim_buffers() - Reclaim the buffers.
+  *
+- * \param file_priv DRM file private.
++ * @dev: DRM device.
++ * @file_priv: DRM file private.
+  *
+  * Frees each buffer associated with \p file_priv not already on the hardware.
+  */
+-- 
+2.15.0
 
-What does this mean?  Who uses this information?  What tools have been
-written for a sysfs attribute that isn't merged yet?
-
-totally confused...
-
-> Technically similar approach which was already implemented for the cpumask
-> attribute.
-> > 
-> > > Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-> > > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > > Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-> > > Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> > > ---
-> > >   arch/x86/events/intel/uncore.c       |   2 +-
-> > >   arch/x86/events/intel/uncore.h       |   1 +
-> > >   arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
-> > >   3 files changed, 164 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> > > index 2c53ad44b51f..c0d86bc8e786 100644
-> > > --- a/arch/x86/events/intel/uncore.c
-> > > +++ b/arch/x86/events/intel/uncore.c
-> > > @@ -16,7 +16,7 @@ struct pci_driver *uncore_pci_driver;
-> > >   DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
-> > >   struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
-> > >   struct pci_extra_dev *uncore_extra_pci_dev;
-> > > -static int max_dies;
-> > > +int max_dies;
-> > Horrible global variable name :(
-> > 
-> > "unicore_max_dies" instead please.
-> Sorry, not sure I get the point right - the intent is to iterate over
-> available
-> dies on the platform which physically are the same for core and uncore.
-
-My point is that "max_dies" is a horrible global symbol name.  Please
-name it more carefully as you are now in the "global namespace" of the
-kernel.  "unicore_max_dies" might be better, or if you can think of
-something else, great, but you need to make it _MUCH_ more unique and
-obvious as to what it is now that it is globally seen.
-
-> > >   /* mask of cpus that collect uncore events */
-> > >   static cpumask_t uncore_cpu_mask;
-> > > diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> > > index f52dd3f112a7..94eacca6f485 100644
-> > > --- a/arch/x86/events/intel/uncore.h
-> > > +++ b/arch/x86/events/intel/uncore.h
-> > > @@ -523,6 +523,7 @@ extern raw_spinlock_t pci2phy_map_lock;
-> > >   extern struct list_head pci2phy_map_head;
-> > >   extern struct pci_extra_dev *uncore_extra_pci_dev;
-> > >   extern struct event_constraint uncore_constraint_empty;
-> > > +extern int max_dies;
-> > >   /* uncore_snb.c */
-> > >   int snb_uncore_pci_init(void);
-> > > diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> > > index b10a5ec79e48..2562fde2e5b8 100644
-> > > --- a/arch/x86/events/intel/uncore_snbep.c
-> > > +++ b/arch/x86/events/intel/uncore_snbep.c
-> > > @@ -273,6 +273,30 @@
-> > >   #define SKX_CPUNODEID			0xc0
-> > >   #define SKX_GIDNIDMAP			0xd4
-> > > +/*
-> > > + * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-> > > + * that BIOS programmed. MSR has package scope.
-> > > + * |  Bit  |  Default  |  Description
-> > > + * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-> > > + *                       numbers have been initialized. (RO)
-> > > + * |[62:48]|    ---    | Reserved
-> > > + * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(5). (RO)
-> > > + * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(4). (RO)
-> > > + * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(3). (RO)
-> > > + * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(2). (RO)
-> > > + * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(1). (RO)
-> > > + * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-> > > + *                       CPUBUSNO(0). (RO)
-> > > + */
-> > > +#define SKX_MSR_CPU_BUS_NUMBER		0x300
-> > > +#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-> > > +#define BUS_NUM_STRIDE			8
-> > > +
-> > >   /* SKX CHA */
-> > >   #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
-> > >   #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-> > > @@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
-> > >   	.read_counter		= uncore_msr_read_counter,
-> > >   };
-> > > +static int skx_iio_get_topology(struct intel_uncore_type *type);
-> > > +static int skx_iio_set_mapping(struct intel_uncore_type *type);
-> > > +
-> > >   static struct intel_uncore_type skx_uncore_iio = {
-> > >   	.name			= "iio",
-> > >   	.num_counters		= 4,
-> > > @@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
-> > >   	.constraints		= skx_uncore_iio_constraints,
-> > >   	.ops			= &skx_uncore_iio_ops,
-> > >   	.format_group		= &skx_uncore_iio_format_group,
-> > > +	.get_topology		= skx_iio_get_topology,
-> > > +	.set_mapping		= skx_iio_set_mapping,
-> > >   };
-> > >   enum perf_uncore_iio_freerunning_type_id {
-> > > @@ -3780,6 +3809,139 @@ static int skx_count_chabox(void)
-> > >   	return hweight32(val);
-> > >   }
-> > > +static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-> > > +{
-> > > +	u64 msr_value;
-> > > +
-> > > +	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-> > > +			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-> > > +		return -1;
-> > > +
-> > > +	*topology = msr_value;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int skx_iio_get_topology(struct intel_uncore_type *type)
-> > > +{
-> > > +	int ret, cpu, die, current_die;
-> > > +	struct pci_bus *bus = NULL;
-> > > +
-> > > +	/*
-> > > +	 * Verified single-segment environments only; disabled for multiple
-> > > +	 * segment topologies for now.
-> > > +	 */
-> > > +	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
-> > > +		;
-> > > +	if (bus) {
-> > > +		pr_info("I/O stack mapping is not supported for multi-seg\n");
-> > > +		return -1;
-> > Do not make up random negative error values, use a #defined one please.
-> will be addressed in the next version.
-> > And shouldn't this be dev_err()?  What happens if a user gets this, who
-> > do they complain to, their BIOS vendor?
-> The mapping depends on BIOS support so yes, if BIOS doesn't provide required
-> information then the mapping will not be available but all other
-> functionalities remain the same.
-
-So what can a user do with this information?  If nothing, then don't
-print it out and just move on and keep the system working.  Only report
-things that someone can do something about.
-
-thanks,
-
-greg k-h
