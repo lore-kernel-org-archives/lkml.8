@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19098C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E75C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E466A2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325D124676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997195;
-	bh=MAlV+duEr8rc3TFIDMPW6PfMhcvKZUNZfrDrNpUsQj8=;
+	s=default; t=1578997202;
+	bh=nkghoqy5PO1R0vFhiLup2ZoVuVgw26sLl6ZOwSh8jKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uF5myf+HFJluP3Mzjn+UHbG25zFaiyy9VVHsHk3F3cHUyM5QqccH3Cf9GsG9XFVYf
-	 pg/Xp/0hKdOn4XJq6azhJTTSIrJ6otMZbIx7esbE0Jj24sHYnX++LJ0vsaoBQSTFRD
-	 wwFaoujGQNfM++I0nUw1ZHTsnBD7j5cU4JAcFjyk=
+	b=Peyp4rCzRftJChYKzF1q8SdOk03Zel4eRstNlTtPiJ8dvghRja3PkpmtTuzOgPhRM
+	 Y9gXGItgEsgcwPzJpMk4Af/9f0+zFSjSmlk3KBK7iC2RYwxEg6DpMvb/GoHp9I4Z5F
+	 osGtTUIlV7SUTkZrzR1dUSWePHaG6Nimfvj3uGIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgANKTx (ORCPT
+        id S1730741AbgANKUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:19:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:20:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbgANKEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:55 -0500
+        id S1729930AbgANKEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D79E72467E;
-        Tue, 14 Jan 2020 10:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731632465B;
+        Tue, 14 Jan 2020 10:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996295;
-        bh=MAlV+duEr8rc3TFIDMPW6PfMhcvKZUNZfrDrNpUsQj8=;
+        s=default; t=1578996284;
+        bh=nkghoqy5PO1R0vFhiLup2ZoVuVgw26sLl6ZOwSh8jKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEJ+3Y64zyDKNUzBAeqPG/AqHeZwSVaFPgl6zL8yBR2Kl3BTPFGZ0aRWUnNwOTlZv
-         jGZIpj/OVmjCwrQ1v7DkAihktrBT9MeG/CEqAJFvt1/IcXnHojrNBm94qSpprZ6NDl
-         PTOoi6JdTlHHppqXw8o/RQkNygayzWORhkeVY7i0=
+        b=Fuf4EhHfoWPDvIblSxtsrvXswuagIGkL416fh0FSWY/csCMnirhGsLe+J8FlLxcJG
+         FBjc16X4aiOJeHEVdRrMTWihoy0iUJqPBvEM+i8j/L+Fuxj5TmKjLDWl7nSQAlRH9c
+         UV7xiE5JKhADEziTwbKRF0uYd5HHm/+w0Hh4nF34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 5.4 47/78] usb: musb: Disable pullup at init
-Date:   Tue, 14 Jan 2020 11:01:21 +0100
-Message-Id: <20200114094359.836642366@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.vger.org,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Matt Atwood <matthew.s.atwood@intel.com>,
+        Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Subject: [PATCH 5.4 23/78] drm/i915: Add Wa_1408615072 and Wa_1407596294 to icl,ehl
+Date:   Tue, 14 Jan 2020 11:00:57 +0100
+Message-Id: <20200114094356.857631672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,37 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Matt Roper <matthew.d.roper@intel.com>
 
-commit 96a0c12843109e5c4d5eb1e09d915fdd0ce31d25 upstream.
+commit a7f3ad37f80d0d5eec9dad156964c0dac800a80e upstream.
 
-The pullup may be already enabled before the driver is initialized. This
-happens for instance on JZ4740.
+Workaround database indicates we should disable clock gating of both the
+vsunit and hsunit.
 
-It has to be disabled at init time, as we cannot guarantee that a gadget
-driver will be bound to the UDC.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Bin Liu <b-liu@ti.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200107152625.857-3-b-liu@ti.com
+Bspec: 33450
+Bspec: 33451
+Cc: stable@kernel.vger.org
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Matt Atwood <matthew.s.atwood@intel.com>
+Cc: Radhakrishna Sripada <radhakrishna.sripada@intel.com>
+Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191224012026.3157766-3-matthew.d.roper@intel.com
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+(cherry picked from commit b9cf9dac3dac4c1d2a47d34f30ec53c0423cecf8)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/musb/musb_core.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -2318,6 +2318,9 @@ musb_init_controller(struct device *dev,
- 	musb_disable_interrupts(musb);
- 	musb_writeb(musb->mregs, MUSB_DEVCTL, 0);
+---
+ drivers/gpu/drm/i915/i915_reg.h |    4 +++-
+ drivers/gpu/drm/i915/intel_pm.c |    8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+--- a/drivers/gpu/drm/i915/i915_reg.h
++++ b/drivers/gpu/drm/i915/i915_reg.h
+@@ -4049,7 +4049,9 @@ enum {
+ #define  GWUNIT_CLKGATE_DIS		(1 << 16)
  
-+	/* MUSB_POWER_SOFTCONN might be already set, JZ4740 does this. */
-+	musb_writeb(musb->mregs, MUSB_POWER, 0);
+ #define UNSLICE_UNIT_LEVEL_CLKGATE	_MMIO(0x9434)
+-#define  VFUNIT_CLKGATE_DIS		(1 << 20)
++#define   VFUNIT_CLKGATE_DIS		REG_BIT(20)
++#define   HSUNIT_CLKGATE_DIS		REG_BIT(8)
++#define   VSUNIT_CLKGATE_DIS		REG_BIT(3)
+ 
+ #define INF_UNIT_LEVEL_CLKGATE		_MMIO(0x9560)
+ #define   CGPSF_CLKGATE_DIS		(1 << 3)
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -9194,6 +9194,14 @@ static void icl_init_clock_gating(struct
+ 	/* WaEnable32PlaneMode:icl */
+ 	I915_WRITE(GEN9_CSFE_CHICKEN1_RCS,
+ 		   _MASKED_BIT_ENABLE(GEN11_ENABLE_32_PLANE_MODE));
 +
- 	/* Init IRQ workqueue before request_irq */
- 	INIT_DELAYED_WORK(&musb->irq_work, musb_irq_work);
- 	INIT_DELAYED_WORK(&musb->deassert_reset_work, musb_deassert_reset);
++	/*
++	 * Wa_1408615072:icl,ehl  (vsunit)
++	 * Wa_1407596294:icl,ehl  (hsunit)
++	 */
++	intel_uncore_rmw(&dev_priv->uncore, UNSLICE_UNIT_LEVEL_CLKGATE,
++			 0, VSUNIT_CLKGATE_DIS | HSUNIT_CLKGATE_DIS);
++
+ }
+ 
+ static void cnp_init_clock_gating(struct drm_i915_private *dev_priv)
 
 
