@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C6CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FBFC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE06E207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37ED24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996744;
-	bh=m+6CnTgFPLZVAN1JPjTJS+EawGXCA13mNcIhkE9Q0mw=;
+	s=default; t=1578996745;
+	bh=yv6Xm0dPM6fPLiIkYnk+bsptA0BWa59tQ/ddJJ+oGp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fsRWR+Me4pX7AJFHq7lXA+ZbGETAPpuZc/JnuQKOpcN26wtP1Xy3Ww/wUkHCRg+xC
-	 w3/hoLWUQANRQyJRbWm86HPl9nRH8XTlBp/SJ2JR0whvnQSmQBFDRFP7RNO+PxsTQA
-	 pYkwQEsHOCoZ/HyCcZ4m47TH8pREnoMRkqKzQ1dU=
+	b=OFJS6OTAAjwc9CWgZNxYlwQd9Ph4qnCsoAHtyggAw0dpXOmqHhb6I04xQISm6SfsI
+	 HruDu/v9XqCHEWsupKySeR7MaLCBco8XvXMcZa6KK/MfXwc+QsGbK2xodxJgJyyerT
+	 SPu5rFXbawxPiEkyiF1/Uy7Dd2xyl3T7sZbhMe8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgANKMX (ORCPT
+        id S1733030AbgANKMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48512 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732937AbgANKMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:18 -0500
+        id S1732970AbgANKMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6418624686;
-        Tue, 14 Jan 2020 10:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B5320678;
+        Tue, 14 Jan 2020 10:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996738;
-        bh=m+6CnTgFPLZVAN1JPjTJS+EawGXCA13mNcIhkE9Q0mw=;
+        s=default; t=1578996741;
+        bh=yv6Xm0dPM6fPLiIkYnk+bsptA0BWa59tQ/ddJJ+oGp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UzD0L4f9uyfJraffvE9+z8uk95Z3leZUnJ2b8NIckhXxXsq98jib9VAM7g/8UxJh/
-         /dIrNrxwwrDW/RGiNgzYb+RWEXps4F3BBTF6Yac+hZ0LmlEAkhj+cP4+J4/OVEizej
-         ByjbcHI2xPuS96JCHmIzk+65nnIZQBHPHItudaVQ=
+        b=xaZmofToBUrJhMIj6um1yYw/8qmRyAO0c3f/Fp/dKaqVkB3wUJNQAj2bF89/6vLHp
+         VqgqRTwh1euyIl6ySlP/RJbbSxir/wHm/BINsW5gBFWVsMBBurg0RboXOtUhN+6Tl8
+         wfVidpRS5DXkVb9P/T5PshtPSFNLkCSWkhYINrQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com,
+        syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
         Florian Westphal <fw@strlen.de>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 31/31] netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
-Date:   Tue, 14 Jan 2020 11:02:23 +0100
-Message-Id: <20200114094345.829995252@linuxfoundation.org>
+Subject: [PATCH 4.9 30/31] netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
+Date:   Tue, 14 Jan 2020 11:02:22 +0100
+Message-Id: <20200114094345.638189497@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -64,57 +64,146 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Westphal <fw@strlen.de>
 
-commit 22dad713b8a5ff488e07b821195270672f486eb2 upstream.
+commit 1b789577f655060d98d20ed0c6f9fbd469d6ba63 upstream.
 
-The set uadt functions assume lineno is never NULL, but it is in
-case of ip_set_utest().
+We get crash when the targets checkentry function tries to make
+use of the network namespace pointer for arptables.
 
-syzkaller managed to generate a netlink message that calls this with
-LINENO attr present:
+When the net pointer got added back in 2010, only ip/ip6/ebtables were
+changed to initialize it, so arptables has this set to NULL.
 
+This isn't a problem for normal arptables because no existing
+arptables target has a checkentry function that makes use of par->net.
+
+However, direct users of the setsockopt interface can provide any
+target they want as long as its registered for ARP or UNPSEC protocols.
+
+syzkaller managed to send a semi-valid arptables rule for RATEEST target
+which is enough to trigger NULL deref:
+
+kasan: GPF could be caused by NULL-ptr deref or user memory access
 general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: 0010:hash_mac4_uadt+0x1bc/0x470 net/netfilter/ipset/ip_set_hash_mac.c:104
-Call Trace:
- ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
- nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
- nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
+[..]
+ xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
+ check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
+ find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
+ translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
+ do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
+ do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
 
-pass a dummy lineno storage, its easier than patching all set
-implementations.
-
-This seems to be a day-0 bug.
-
-Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
-Fixes: a7b4f989a6294 ("netfilter: ipset: IP set core support")
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com
 Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/ipset/ip_set_core.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/netfilter/arp_tables.c |   27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1634,6 +1634,7 @@ static int ip_set_utest(struct net *net,
- 	struct ip_set *set;
- 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
- 	int ret = 0;
-+	u32 lineno;
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -403,10 +403,11 @@ next:		;
+ 	return 1;
+ }
  
- 	if (unlikely(protocol_failed(attr) ||
- 		     !attr[IPSET_ATTR_SETNAME] ||
-@@ -1650,7 +1651,7 @@ static int ip_set_utest(struct net *net,
- 		return -IPSET_ERR_PROTOCOL;
+-static inline int check_target(struct arpt_entry *e, const char *name)
++static int check_target(struct arpt_entry *e, struct net *net, const char *name)
+ {
+ 	struct xt_entry_target *t = arpt_get_target(e);
+ 	struct xt_tgchk_param par = {
++		.net       = net,
+ 		.table     = name,
+ 		.entryinfo = e,
+ 		.target    = t->u.kernel.target,
+@@ -418,8 +419,9 @@ static inline int check_target(struct ar
+ 	return xt_check_target(&par, t->u.target_size - sizeof(*t), 0, false);
+ }
  
- 	rcu_read_lock_bh();
--	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
-+	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
- 	rcu_read_unlock_bh();
- 	/* Userspace can't trigger element to be re-added */
- 	if (ret == -EAGAIN)
+-static inline int
+-find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
++static int
++find_check_entry(struct arpt_entry *e, struct net *net, const char *name,
++		 unsigned int size,
+ 		 struct xt_percpu_counter_alloc_state *alloc_state)
+ {
+ 	struct xt_entry_target *t;
+@@ -438,7 +440,7 @@ find_check_entry(struct arpt_entry *e, c
+ 	}
+ 	t->u.kernel.target = target;
+ 
+-	ret = check_target(e, name);
++	ret = check_target(e, net, name);
+ 	if (ret)
+ 		goto err;
+ 	return 0;
+@@ -531,7 +533,9 @@ static inline void cleanup_entry(struct
+ /* Checks and translates the user-supplied table segment (held in
+  * newinfo).
+  */
+-static int translate_table(struct xt_table_info *newinfo, void *entry0,
++static int translate_table(struct net *net,
++			   struct xt_table_info *newinfo,
++			   void *entry0,
+ 			   const struct arpt_replace *repl)
+ {
+ 	struct xt_percpu_counter_alloc_state alloc_state = { 0 };
+@@ -597,7 +601,7 @@ static int translate_table(struct xt_tab
+ 	/* Finally, each sanity check must pass */
+ 	i = 0;
+ 	xt_entry_foreach(iter, entry0, newinfo->size) {
+-		ret = find_check_entry(iter, repl->name, repl->size,
++		ret = find_check_entry(iter, net, repl->name, repl->size,
+ 				       &alloc_state);
+ 		if (ret != 0)
+ 			break;
+@@ -987,7 +991,7 @@ static int do_replace(struct net *net, c
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, &tmp);
++	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1164,7 +1168,8 @@ compat_copy_entry_from_user(struct compa
+ 	}
+ }
+ 
+-static int translate_compat_table(struct xt_table_info **pinfo,
++static int translate_compat_table(struct net *net,
++				  struct xt_table_info **pinfo,
+ 				  void **pentry0,
+ 				  const struct compat_arpt_replace *compatr)
+ {
+@@ -1230,7 +1235,7 @@ static int translate_compat_table(struct
+ 	repl.num_counters = 0;
+ 	repl.counters = NULL;
+ 	repl.size = newinfo->size;
+-	ret = translate_table(newinfo, entry1, &repl);
++	ret = translate_table(net, newinfo, entry1, &repl);
+ 	if (ret)
+ 		goto free_newinfo;
+ 
+@@ -1283,7 +1288,7 @@ static int compat_do_replace(struct net
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_compat_table(&newinfo, &loc_cpu_entry, &tmp);
++	ret = translate_compat_table(net, &newinfo, &loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1559,7 +1564,7 @@ int arpt_register_table(struct net *net,
+ 	loc_cpu_entry = newinfo->entries;
+ 	memcpy(loc_cpu_entry, repl->entries, repl->size);
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, repl);
++	ret = translate_table(net, newinfo, loc_cpu_entry, repl);
+ 	if (ret != 0)
+ 		goto out_free;
+ 
 
 
