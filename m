@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A121C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F66C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ECD24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52B224673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgANTtH (ORCPT
+        id S1728942AbgANTtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:49:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44695 "EHLO
+        Tue, 14 Jan 2020 14:49:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44728 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728869AbgANTtD (ORCPT
+        with ESMTP id S1728914AbgANTtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:49:03 -0500
+        Tue, 14 Jan 2020 14:49:07 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1irSBP-0005ZF-V9; Tue, 14 Jan 2020 20:49:00 +0100
-Message-Id: <20200114185946.765577901@linutronix.de>
+        id 1irSBU-0005Zy-TA; Tue, 14 Jan 2020 20:49:05 +0100
+Message-Id: <20200114185947.297142051@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 19:52:39 +0100
+Date:   Tue, 14 Jan 2020 19:52:44 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -46,7 +46,7 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [patch 02/15] lib/vdso: Update coarse timekeeper unconditionally
+Subject: [patch 07/15] clocksource: Cleanup struct clocksource and documentation
 References: <20200114185237.273005683@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,99 +55,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The low resolution parts of the VDSO, i.e.:
+Reformat the struct definition, add missing member documentation.
+No functional change.
 
-  clock_gettime(CLOCK_*_COARSE)
-  clock_getres()
-  time()
-
-can be used even if there is no VDSO capable clocksource. But if an
-architecture opts out of the VDSO data update then this information
-becomes stale. This affects ARM when there is no architected timer
-available. The lack of update causes userspace to use stale data
-forever.
-
-Make the update of the low resolution parts unconditional and only
-prevent the update of the high resolution parts if the architecture
-requests it.
-
-Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/vsyscall.c |   37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ include/linux/clocksource.h |   87 +++++++++++++++++++++++---------------------
+ 1 file changed, 47 insertions(+), 40 deletions(-)
 
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -28,11 +28,6 @@ static inline void update_vdso_data(stru
- 	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
- 	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
- 
--	/* CLOCK_REALTIME */
--	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
--	vdso_ts->sec	= tk->xtime_sec;
--	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
--
- 	/* CLOCK_MONOTONIC */
- 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
- 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
-@@ -70,12 +65,6 @@ static inline void update_vdso_data(stru
- 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
- 	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
- 	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
--
--	/*
--	 * Read without the seqlock held by clock_getres().
--	 * Note: No need to have a second copy.
--	 */
--	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
- }
- 
- void update_vsyscall(struct timekeeper *tk)
-@@ -84,20 +73,17 @@ void update_vsyscall(struct timekeeper *
- 	struct vdso_timestamp *vdso_ts;
- 	u64 nsec;
- 
--	if (!__arch_update_vdso_data()) {
--		/*
--		 * Some architectures might want to skip the update of the
--		 * data page.
--		 */
--		return;
--	}
--
- 	/* copy vsyscall data */
- 	vdso_write_begin(vdata);
- 
- 	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
- 	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
- 
-+	/* CLOCK_REALTIME also required for time() */
-+	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
-+	vdso_ts->sec	= tk->xtime_sec;
-+	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -32,9 +32,19 @@ struct module;
+  *	Provides mostly state-free accessors to the underlying hardware.
+  *	This is the structure used for system time.
+  *
+- * @name:		ptr to clocksource name
+- * @list:		list head for registration
+- * @rating:		rating value for selection (higher is better)
++ * @read:		Returns a cycle value, passes clocksource as argument
++ * @mask:		Bitmask for two's complement
++ *			subtraction of non 64 bit counters
++ * @mult:		Cycle to nanosecond multiplier
++ * @shift:		Cycle to nanosecond divisor (power of two)
++ * @max_idle_ns:	Maximum idle time permitted by the clocksource (nsecs)
++ * @maxadj:		Maximum adjustment value to mult (~11%)
++ * @archdata:		Optional arch-specific data
++ * @max_cycles:		Maximum safe cycle value which won't overflow on
++ *			multiplication
++ * @name:		Pointer to clocksource name
++ * @list:		List head for registration (internal)
++ * @rating:		Rating value for selection (higher is better)
+  *			To avoid rating inflation the following
+  *			list should give you a guide as to how
+  *			to assign your clocksource a rating
+@@ -49,27 +59,23 @@ struct module;
+  *			400-499: Perfect
+  *				The ideal clocksource. A must-use where
+  *				available.
+- * @read:		returns a cycle value, passes clocksource as argument
+- * @enable:		optional function to enable the clocksource
+- * @disable:		optional function to disable the clocksource
+- * @mask:		bitmask for two's complement
+- *			subtraction of non 64 bit counters
+- * @mult:		cycle to nanosecond multiplier
+- * @shift:		cycle to nanosecond divisor (power of two)
+- * @max_idle_ns:	max idle time permitted by the clocksource (nsecs)
+- * @maxadj:		maximum adjustment value to mult (~11%)
+- * @max_cycles:		maximum safe cycle value which won't overflow on multiplication
+- * @flags:		flags describing special properties
+- * @archdata:		arch-specific data
+- * @suspend:		suspend function for the clocksource, if necessary
+- * @resume:		resume function for the clocksource, if necessary
++ * @flags:		Flags describing special properties
++ * @enable:		Optional function to enable the clocksource
++ * @disable:		Optional function to disable the clocksource
++ * @suspend:		Optional suspend function for the clocksource
++ * @resume:		Optional resume function for the clocksource
+  * @mark_unstable:	Optional function to inform the clocksource driver that
+  *			the watchdog marked the clocksource unstable
+- * @owner:		module reference, must be set by clocksource in modules
++ * @tick_stable:        Optional function called periodically from the watchdog
++ *			code to provide stable syncrhonization points
++ * @wd_list:		List head to enqueue into the watchdog list (internal)
++ * @cs_last:		Last clocksource value for clocksource watchdog
++ * @wd_last:		Last watchdog value corresponding to @cs_last
++ * @owner:		Module reference, must be set by clocksource in modules
+  *
+  * Note: This struct is not used in hotpathes of the timekeeping code
+  * because the timekeeper caches the hot path fields in its own data
+- * structure, so no line cache alignment is required,
++ * structure, so no cache line alignment is required,
+  *
+  * The pointer to the clocksource itself is handed to the read
+  * callback. If you need extra information there you can wrap struct
+@@ -78,35 +84,36 @@ struct module;
+  * structure.
+  */
+ struct clocksource {
+-	u64 (*read)(struct clocksource *cs);
+-	u64 mask;
+-	u32 mult;
+-	u32 shift;
+-	u64 max_idle_ns;
+-	u32 maxadj;
++	u64			(*read)(struct clocksource *cs);
++	u64			mask;
++	u32			mult;
++	u32			shift;
++	u64			max_idle_ns;
++	u32			maxadj;
+ #ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
+ 	struct arch_clocksource_data archdata;
+ #endif
+-	u64 max_cycles;
+-	const char *name;
+-	struct list_head list;
+-	int rating;
+-	int (*enable)(struct clocksource *cs);
+-	void (*disable)(struct clocksource *cs);
+-	unsigned long flags;
+-	void (*suspend)(struct clocksource *cs);
+-	void (*resume)(struct clocksource *cs);
+-	void (*mark_unstable)(struct clocksource *cs);
+-	void (*tick_stable)(struct clocksource *cs);
++	u64			max_cycles;
++	const char		*name;
++	struct list_head	list;
++	int			rating;
++	unsigned long		flags;
 +
- 	/* CLOCK_REALTIME_COARSE */
- 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
- 	vdso_ts->sec	= tk->xtime_sec;
-@@ -110,7 +96,18 @@ void update_vsyscall(struct timekeeper *
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
- 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
++	int			(*enable)(struct clocksource *cs);
++	void			(*disable)(struct clocksource *cs);
++	void			(*suspend)(struct clocksource *cs);
++	void			(*resume)(struct clocksource *cs);
++	void			(*mark_unstable)(struct clocksource *cs);
++	void			(*tick_stable)(struct clocksource *cs);
  
--	update_vdso_data(vdata, tk);
-+	/*
-+	 * Read without the seqlock held by clock_getres().
-+	 * Note: No need to have a second copy.
-+	 */
-+	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
-+
-+	/*
-+	 * Architectures can opt out of updating the high resolution part
-+	 * of the VDSO.
-+	 */
-+	if (__arch_update_vdso_data())
-+		update_vdso_data(vdata, tk);
+ 	/* private: */
+ #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
+ 	/* Watchdog related data, used by the framework */
+-	struct list_head wd_list;
+-	u64 cs_last;
+-	u64 wd_last;
++	struct list_head	wd_list;
++	u64			cs_last;
++	u64			wd_last;
+ #endif
+-	struct module *owner;
++	struct module		*owner;
+ };
  
- 	__arch_update_vsyscall(vdata, tk);
- 
+ /*
 
