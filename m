@@ -2,271 +2,91 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A62BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C69C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7C62075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579023391;
-	bh=a9R3hUWXn3kAB+DS0N+9xFdgrpDwftcTX/kWypdj37U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oSBovdWwbbDxcgMEJyDnjbQHegJnSV9n6NhtegCY/YnQm7V1DrTxH3BWihnTXng6O
-	 o9XWJtckC0Lp76yIozAbe3h1yUozrjX/+VfIuFUsYS+XyiKMAVWfjx9d7DTgol1U9q
-	 u+th0W1/JRBhls3x8utXOIXjjoThtR4qzqr0bmnQ=
+	by mail.kernel.org (Postfix) with ESMTP id 32A4A2187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgANRga (ORCPT
+        id S1728876AbgANRge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:36:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47268 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 12:36:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:55544 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgANRg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:36:29 -0500
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBE02467C;
-        Tue, 14 Jan 2020 17:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579023388;
-        bh=a9R3hUWXn3kAB+DS0N+9xFdgrpDwftcTX/kWypdj37U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dYMr4g7yJ5aOXktTFjc1j2XEGesBlPo9euxdwpbPfcFul0dglZnApPzzchTHX40zn
-         MIsuubK1uTrkCyAj3aH9ygJGyv5fQQhLwrNFp3Xg1tPWohwQVGDL+edgGaTUk8kOs9
-         jQjVrzAsazVrPPQ/KkmurqpRN3vX0RaP4GX8PQaU=
-Received: by mail-lf1-f50.google.com with SMTP id r14so10486002lfm.5;
-        Tue, 14 Jan 2020 09:36:27 -0800 (PST)
-X-Gm-Message-State: APjAAAW1HjhLUKOZUF2k/LXzW4zdcV1K+ORFtyaIjInJ7zJfOSMi3vTi
-        yc3TJfTjCB7bt7ReLMO0pDiF9phTv9yTeVlSQQU=
-X-Google-Smtp-Source: APXvYqxsDsO+lIIfwcNPo350CZUzBBMBQ0YQ6cSV/DYGyUOUba2f/Vb0dvS/IajiFBdN2w69nUq9HITTtVYz4jSKItE=
-X-Received: by 2002:ac2:5582:: with SMTP id v2mr2461646lfg.183.1579023385769;
- Tue, 14 Jan 2020 09:36:25 -0800 (PST)
+        id S1726270AbgANRgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:36:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 086F71396;
+        Tue, 14 Jan 2020 09:36:33 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CD8F3F68E;
+        Tue, 14 Jan 2020 09:36:30 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:36:28 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v4 10/12] arm64: BTI: Reset BTYPE when skipping emulated
+ instructions
+Message-ID: <20200114173627.GM30444@arrakis.emea.arm.com>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-11-broonie@kernel.org>
 MIME-Version: 1.0
-References: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
- <CGME20200110174932epcas1p345b0e750b48cc9e351dca14e0dd4de86@epcas1p3.samsung.com>
- <20200110094913.2.Ie8eacf976ce7a13e421592f5c1ab8dbdc537da5c@changeid>
- <c793c2e5-dd0e-bff4-9769-26344afe914e@samsung.com> <VI1PR04MB702308C23513581F33EFE697EE340@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB702308C23513581F33EFE697EE340@VI1PR04MB7023.eurprd04.prod.outlook.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Wed, 15 Jan 2020 02:35:48 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
-Message-ID: <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PM / devfreq: Use exclusively PM QoS to determine
- frequency limits
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211154206.46260-11-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 1:08 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> On 13.01.2020 09:24, Chanwoo Choi wrote:
-> > Hi,
-> >
-> > Any device driver except for devfreq_cooling.c might
-> > use dev_pm_opp_enable/disable interface.
-> > So, don't need to remove the devfreq->scaling_max_freq
-> > and devfreq->scaling_min_freq for supporting OPP interface.
->
-> It seems that devfreq_cooling was the only upstream user of
-> dev_pm_opp_enable and the remaining callers of dev_pm_opp_disable are
-> probe-time checks.
+On Wed, Dec 11, 2019 at 03:42:04PM +0000, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
+> 
+> Since normal execution of any non-branch instruction resets the
+> PSTATE BTYPE field to 0, so do the same thing when emulating a
+> trapped instruction.
+> 
+> Branches don't trap directly, so we should never need to assign a
+> non-zero value to BTYPE here.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  arch/arm64/kernel/traps.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index bf79d8024fbe..9fc05ae500e6 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -332,6 +332,8 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+>  
+>  	if (regs->pstate & PSR_MODE32_BIT)
 
-OPP interface has still dev_pm_opp_enable and dev_pm_opp_disable
-function. As long as remains them, any device driver related to devfreq
-could call them at some time. The devfreq supports the OPP interface,
-not just for only devfreq_cooling.
+Same comment as on a previous patch, compat_user_mode() could be used.
 
->
-> > Regards,
-> > Chanwoo Choi
-> >
-> > On 1/11/20 2:49 AM, Matthias Kaehlcke wrote:
-> >> Traditionally devfreq cooling devices dynamically disabled OPPs
-> >> that shouldn't be used because of thermal pressure. Devfreq cooling
-> >> devices now use PM QoS to set frequency limits, hence the devfreq
-> >> code dealing that deals with disabled OPPs can be removed.
-> >>
-> >> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >> ---
-> >>
-> >>   drivers/devfreq/devfreq.c | 75 +++++----------------------------------
-> >>   include/linux/devfreq.h   |  4 ---
-> >>   2 files changed, 8 insertions(+), 71 deletions(-)
-> >>
-> >> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> >> index 57f6944d65a6..ec66e2c27cc4 100644
-> >> --- a/drivers/devfreq/devfreq.c
-> >> +++ b/drivers/devfreq/devfreq.c
-> >> @@ -73,34 +73,6 @@ static struct devfreq *find_device_devfreq(struct device *dev)
-> >>      return ERR_PTR(-ENODEV);
-> >>   }
-> >>
-> >> -static unsigned long find_available_min_freq(struct devfreq *devfreq)
-> >> -{
-> >> -    struct dev_pm_opp *opp;
-> >> -    unsigned long min_freq = 0;
-> >> -
-> >> -    opp = dev_pm_opp_find_freq_ceil(devfreq->dev.parent, &min_freq);
-> >> -    if (IS_ERR(opp))
-> >> -            min_freq = 0;
-> >> -    else
-> >> -            dev_pm_opp_put(opp);
-> >> -
-> >> -    return min_freq;
-> >> -}
-> >> -
-> >> -static unsigned long find_available_max_freq(struct devfreq *devfreq)
-> >> -{
-> >> -    struct dev_pm_opp *opp;
-> >> -    unsigned long max_freq = ULONG_MAX;
-> >> -
-> >> -    opp = dev_pm_opp_find_freq_floor(devfreq->dev.parent, &max_freq);
-> >> -    if (IS_ERR(opp))
-> >> -            max_freq = 0;
-> >> -    else
-> >> -            dev_pm_opp_put(opp);
-> >> -
-> >> -    return max_freq;
-> >> -}
-> >> -
-> >>   /**
-> >>    * get_freq_range() - Get the current freq range
-> >>    * @devfreq:       the devfreq instance
-> >> @@ -141,10 +113,6 @@ static void get_freq_range(struct devfreq *devfreq,
-> >>              *max_freq = min(*max_freq,
-> >>                              (unsigned long)HZ_PER_KHZ * qos_max_freq);
-> >>
-> >> -    /* Apply constraints from OPP interface */
-> >> -    *min_freq = max(*min_freq, devfreq->scaling_min_freq);
-> >> -    *max_freq = min(*max_freq, devfreq->scaling_max_freq);
-> >> -
-> >>      if (*min_freq > *max_freq)
-> >>              *min_freq = *max_freq;
-> >>   }
-> >> @@ -610,23 +578,10 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
-> >>                               void *devp)
-> >>   {
-> >>      struct devfreq *devfreq = container_of(nb, struct devfreq, nb);
-> >> -    int err = -EINVAL;
-> >> +    int err;
-> >>
-> >>      mutex_lock(&devfreq->lock);
-> >> -
-> >> -    devfreq->scaling_min_freq = find_available_min_freq(devfreq);
-> >> -    if (!devfreq->scaling_min_freq)
-> >> -            goto out;
-> >> -
-> >> -    devfreq->scaling_max_freq = find_available_max_freq(devfreq);
-> >> -    if (!devfreq->scaling_max_freq) {
-> >> -            devfreq->scaling_max_freq = ULONG_MAX;
-> >> -            goto out;
-> >> -    }
-> >> -
-> >>      err = update_devfreq(devfreq);
-> >> -
-> >> -out:
-> >>      mutex_unlock(&devfreq->lock);
-> >>      if (err)
-> >>              dev_err(devfreq->dev.parent,
-> >> @@ -781,19 +736,15 @@ struct devfreq *devfreq_add_device(struct device *dev,
-> >>              mutex_lock(&devfreq->lock);
-> >>      }
-> >>
-> >> -    devfreq->scaling_min_freq = find_available_min_freq(devfreq);
-> >> -    if (!devfreq->scaling_min_freq) {
-> >> -            mutex_unlock(&devfreq->lock);
-> >> -            err = -EINVAL;
-> >> +    err = dev_pm_qos_add_request(dev, &devfreq->user_min_freq_req,
-> >> +                                 DEV_PM_QOS_MIN_FREQUENCY, 0);
-> >> +    if (err < 0)
-> >>              goto err_dev;
-> >> -    }
-> >> -
-> >> -    devfreq->scaling_max_freq = find_available_max_freq(devfreq);
-> >> -    if (!devfreq->scaling_max_freq) {
-> >> -            mutex_unlock(&devfreq->lock);
-> >> -            err = -EINVAL;
-> >> +    err = dev_pm_qos_add_request(dev, &devfreq->user_max_freq_req,
-> >> +                                 DEV_PM_QOS_MAX_FREQUENCY,
-> >> +                                 PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
-> >> +    if (err < 0)
-> >>              goto err_dev;
-> >> -    }
-> >>
-> >>      devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
-> >>      atomic_set(&devfreq->suspend_count, 0);
-> >> @@ -834,16 +785,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
-> >>
-> >>      mutex_unlock(&devfreq->lock);
-> >>
-> >> -    err = dev_pm_qos_add_request(dev, &devfreq->user_min_freq_req,
-> >> -                                 DEV_PM_QOS_MIN_FREQUENCY, 0);
-> >> -    if (err < 0)
-> >> -            goto err_devfreq;
-> >> -    err = dev_pm_qos_add_request(dev, &devfreq->user_max_freq_req,
-> >> -                                 DEV_PM_QOS_MAX_FREQUENCY,
-> >> -                                 PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
-> >> -    if (err < 0)
-> >> -            goto err_devfreq;
-> >> -
->
-> Performing PM QoS initialization under devfreq->lock triggers lockdep
-> warnings for me. The warnings seem to be legitimate:
->
-> 1) At init time &dev_pm_qos_mtx is taken under &devfreq->lock;
-> 2) At update time &devfreq->lock is called under &dev_pm_qos_mtx (it's
-> held while notifiers are called).
->
-> It's not clear why you moved dev_pm_qos_add_request higher?
->
-> >>      devfreq->nb_min.notifier_call = qos_min_notifier_call;
-> >>      err = dev_pm_qos_add_notifier(devfreq->dev.parent, &devfreq->nb_min,
-> >>                                    DEV_PM_QOS_MIN_FREQUENCY);
-> >> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> >> index fb376b5b7281..cb75f23ad2f4 100644
-> >> --- a/include/linux/devfreq.h
-> >> +++ b/include/linux/devfreq.h
-> >> @@ -126,8 +126,6 @@ struct devfreq_dev_profile {
-> >>    *         touch this.
-> >>    * @user_min_freq_req:     PM QoS minimum frequency request from user (via sysfs)
-> >>    * @user_max_freq_req:     PM QoS maximum frequency request from user (via sysfs)
-> >> - * @scaling_min_freq:       Limit minimum frequency requested by OPP interface
-> >> - * @scaling_max_freq:       Limit maximum frequency requested by OPP interface
-> >>    * @stop_polling:   devfreq polling status of a device.
-> >>    * @suspend_freq:   frequency of a device set during suspend phase.
-> >>    * @resume_freq:    frequency of a device set in resume phase.
-> >> @@ -166,8 +164,6 @@ struct devfreq {
-> >>
-> >>      struct dev_pm_qos_request user_min_freq_req;
-> >>      struct dev_pm_qos_request user_max_freq_req;
-> >> -    unsigned long scaling_min_freq;
-> >> -    unsigned long scaling_max_freq;
-> >>      bool stop_polling;
-> >>
-> >>      unsigned long suspend_freq;
-> >>
-> >
->
+Other than this:
 
-
--- 
-Best Regards,
-Chanwoo Choi
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
