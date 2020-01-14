@@ -2,69 +2,140 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66872C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1318C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6792072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579026306;
-	bh=3dIXxEZ5TE6lzPhnFvYruQUU1Yp9xwpcyFtEXIjwllc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KGs5YlJ5tXgelkz1gf178uyLrakKVtwTu0twTGsljrmewA+WdB2BO2ZW8xkYQScYs
-	 TnXw7d8OhbTHIf33p/DSZpIejKKNegM4rWCUrqaHgEmWjUOjjc1QWcIMm8Gz5jQhBc
-	 nq6ZSeRJ0U2u+7kEVjFEm7SABhcsFnQVFs97IfQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 8744724682
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgANSZF (ORCPT
+        id S1728880AbgANSZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:25:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36414 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 13:25:12 -0500
+Received: from mga04.intel.com ([192.55.52.120]:28001 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANSZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:25:03 -0500
-Subject: Re: [GIT PULL] SCSI fixes for 5.5-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579026302;
-        bh=3dIXxEZ5TE6lzPhnFvYruQUU1Yp9xwpcyFtEXIjwllc=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=P0EU9CF5WSWJIcqlUWcPeVfqDfam/0AtLQys1oyy1EYgVkvqp/QjJWTvKWdJdTkUz
-         n/L7renMsGlSPjeQ7pqY2WFWGhlTVqvF1xo7GdknRKp9pC2ieCG01rnSeZtxVZ8ANB
-         wijl02+1l/zFcfvh99ki0hirQ9Et6e4fdXqik0Ys=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1579018551.3390.13.camel@HansenPartnership.com>
-References: <1579018551.3390.13.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1579018551.3390.13.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: 529244bd1afc102ab164429d338d310d5d65e60d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c21ed4d9a636500e66642221d3880c3f9569964f
-Message-Id: <157902630285.24051.1512701725885838577.pr-tracker-bot@kernel.org>
-Date:   Tue, 14 Jan 2020 18:25:02 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        id S1726491AbgANSZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:25:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 10:25:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
+   d="scan'208";a="225636474"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jan 2020 10:25:07 -0800
+Date:   Tue, 14 Jan 2020 10:25:07 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v4 16/19] KVM: Ensure validity of memslot with respect to
+ kvm_get_dirty_log()
+Message-ID: <20200114182506.GF16784@linux.intel.com>
+References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
+ <20191217204041.10815-17-sean.j.christopherson@intel.com>
+ <20191224181930.GC17176@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224181930.GC17176@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 14 Jan 2020 08:15:51 -0800:
+On Tue, Dec 24, 2019 at 01:19:30PM -0500, Peter Xu wrote:
+> On Tue, Dec 17, 2019 at 12:40:38PM -0800, Sean Christopherson wrote:
+> > +int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+> > +		      int *is_dirty, struct kvm_memory_slot **memslot)
+> >  {
+> >  	struct kvm_memslots *slots;
+> > -	struct kvm_memory_slot *memslot;
+> >  	int i, as_id, id;
+> >  	unsigned long n;
+> >  	unsigned long any = 0;
+> >  
+> > +	*memslot = NULL;
+> > +	*is_dirty = 0;
+> > +
+> >  	as_id = log->slot >> 16;
+> >  	id = (u16)log->slot;
+> >  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+> >  		return -EINVAL;
+> >  
+> >  	slots = __kvm_memslots(kvm, as_id);
+> > -	memslot = id_to_memslot(slots, id);
+> > -	if (!memslot->dirty_bitmap)
+> > +	*memslot = id_to_memslot(slots, id);
+> > +	if (!(*memslot)->dirty_bitmap)
+> >  		return -ENOENT;
+> >  
+> > -	n = kvm_dirty_bitmap_bytes(memslot);
+> > +	kvm_arch_sync_dirty_log(kvm, *memslot);
+> 
+> Should this line belong to previous patch?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+No.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c21ed4d9a636500e66642221d3880c3f9569964f
+The previous patch, "KVM: Provide common implementation for generic dirty
+log functions", is consolidating the implementation of dirty log functions
+for architectures with CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y.
 
-Thank you!
+This code is being moved from s390's kvm_vm_ioctl_get_dirty_log(), as s390
+doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.  It's functionally a nop
+as kvm_arch_sync_dirty_log() is empty for PowerPC, the only other arch that
+doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Arguably, the call to kvm_arch_sync_dirty_log() should be moved in a
+separate prep patch.  It can't be a follow-on patch as that would swap the
+ordering of kvm_arch_sync_dirty_log() and kvm_dirty_bitmap_bytes(), etc...
+
+My reasoning for not splitting it to a separate patch is that prior to this
+patch, the common code and arch specific code are doing separate memslot
+lookups via id_to_memslot(), i.e. moving the kvm_arch_sync_dirty_log() call
+would operate on a "different" memslot.   It can't actually be a different
+memslot because slots_lock is held, it just felt weird.
+
+All that being said, I don't have a strong opinion on moving the call to
+kvm_arch_sync_dirty_log() in a separate patch; IIRC, I vascillated between
+the two options when writing the code.  If anyone wants it to be a separate
+patch I'll happily split it out.
+
+> 
+> > +
+> > +	n = kvm_dirty_bitmap_bytes(*memslot);
+> >  
+> >  	for (i = 0; !any && i < n/sizeof(long); ++i)
+> > -		any = memslot->dirty_bitmap[i];
+> > +		any = (*memslot)->dirty_bitmap[i];
+> >  
+> > -	if (copy_to_user(log->dirty_bitmap, memslot->dirty_bitmap, n))
+> > +	if (copy_to_user(log->dirty_bitmap, (*memslot)->dirty_bitmap, n))
+> >  		return -EFAULT;
+> >  
+> >  	if (any)
+> > -- 
+> > 2.24.1
+> 
+> -- 
+> Peter Xu
+> 
