@@ -2,117 +2,79 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64004C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7487AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35937207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Op5S07B1"
+	by mail.kernel.org (Postfix) with ESMTP id 4BEA2217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgANJbo (ORCPT
+        id S1728868AbgANJeB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:31:44 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:46818 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:31:43 -0500
-Received: from zn.tnic (p200300EC2F0C7700ADC3CAC9BB95AB92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:adc3:cac9:bb95:ab92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A64AF1EC0C76;
-        Tue, 14 Jan 2020 10:31:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578994301;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=oVOv19JYih/7QBdhQIDrcxH7dJf1wRTSDlsNoAXaOY4=;
-        b=Op5S07B1bBe9uvsJbhwmhBQEjTQO/NCR8xUCHou3ZSrFKAX+wG5Tf6vbvL+7qyFBL/OmxC
-        PHOEsU9albCCnI2LsgCfGkS94dnIF/pSH1b+TKBWi8bA+gpaWrVZWGaixC6QAc9QstNw5e
-        AZNv5TI9m4WNJxduf+OlljIIB6zhMPk=
-Date:   Tue, 14 Jan 2020 10:31:38 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH] KVM: VMX: Rename define to CPU_BASED_USE_TSC_OFFSETTING
-Message-ID: <20200114093138.GB31032@zn.tnic>
-References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
- <20191221044513.21680-18-sean.j.christopherson@intel.com>
- <20200113183228.GO13310@zn.tnic>
- <20200113183705.GL1175@linux.intel.com>
- <20200113183823.GP13310@zn.tnic>
- <20200113184217.GA2216@linux.intel.com>
- <20200113185216.GQ13310@zn.tnic>
- <20200113201610.GE2322@linux.intel.com>
+        Tue, 14 Jan 2020 04:34:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42106 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgANJeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:34:01 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irIa7-0006V0-A2; Tue, 14 Jan 2020 10:33:51 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 90C00101DEE; Tue, 14 Jan 2020 10:33:50 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
+        salyzyn@android.com, 0x7f454c46@gmail.com, luto@kernel.org
+Subject: Re: [PATCH v2 2/8] lib: vdso: Build 32 bit specific functions in the right context
+In-Reply-To: <87tv4zq9dc.fsf@nanos.tec.linutronix.de>
+References: <20190830135902.20861-1-vincenzo.frascino@arm.com> <20190830135902.20861-3-vincenzo.frascino@arm.com> <87tv4zq9dc.fsf@nanos.tec.linutronix.de>
+Date:   Tue, 14 Jan 2020 10:33:50 +0100
+Message-ID: <87r202qt4x.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200113201610.GE2322@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 12:16:10PM -0800, Sean Christopherson wrote:
-> On Mon, Jan 13, 2020 at 07:52:16PM +0100, Borislav Petkov wrote:
-> > On Mon, Jan 13, 2020 at 10:42:17AM -0800, Sean Christopherson wrote:
-> > > > Doesn't bother me, I could do it in a patch ontop. But your call.
-> > > 
-> > > No objection here.
-> > 
-> > Something like this:
-> > 
-> > ---
-> > From: Borislav Petkov <bp@suse.de>
-> > 
-> > ... so that "offsetting" is spelled the same as the respective VMX feature
-> > bit VMX_FEATURE_TSC_OFFSETTING.
-> > 
-> > No functional changes.
-> > 
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > ---
-> 
-> Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-Yah, so I tried to do a test-merge with linux-next to see what surprises should
-I be prepared for and there's the first one:
+> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+>
+>> clock_gettime32 and clock_getres_time32 should be compiled only with a
+>> 32 bit vdso library.
+>>
+>> Exclude these symbols when BUILD_VDSO32 is not defined.
+>
+> This breaks the ARM build with:
+>
+> arch/arm/vdso/vgettimeofday.c: In function ‘__vdso_clock_gettime’:
+> arch/arm/vdso/vgettimeofday.c:15:9: error: implicit declaration of function ‘__cvdso_clock_gettime32’; did you mean ‘__cvdso_clock_gettime’? [-Werror=implicit-function-declaration]
+>   return __cvdso_clock_gettime32(clock, ts);
+>          ^~~~~~~~~~~~~~~~~~~~~~~
+>          __cvdso_clock_gettime
+> arch/arm/vdso/vgettimeofday.c: In function ‘__vdso_clock_getres’:
+> arch/arm/vdso/vgettimeofday.c:33:9: error: implicit declaration of function ‘__cvdso_clock_getres_time32’; did you mean ‘__cvdso_clock_getres_common’? [-Werror=implicit-function-declaration]
+>   return __cvdso_clock_getres_time32(clock_id, res);
+>          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>          __cvdso_clock_getres_common
+> cc1: some warnings being treated as errors
+>
+> The patch below 'fixes' at least the build. Can someone please confirm
+> the correctness?
 
-5e3d394fdd9e ("KVM: VMX: Fix the spelling of CPU_BASED_USE_TSC_OFFSETTING")
-
-which is already in Paolo's tree. Dropping it on my side.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Bah, it's not fixing it. That's what you get when you compile the wrong
+tree...
