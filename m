@@ -2,165 +2,418 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70D9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129CC2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51D824672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TVpnjz1B";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="SkQ5Lx71"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBHWWVAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgANVhJ (ORCPT
+        id S1728895AbgANViX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:37:09 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56924 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728656AbgANVhJ (ORCPT
+        Tue, 14 Jan 2020 16:38:23 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36147 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727102AbgANViW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:37:09 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 25C85C00B0;
-        Tue, 14 Jan 2020 21:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579037827; bh=IGoaseOLOTBBKU71cinrmDHmBLJIVMsgQKrQ4bcmKpY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=TVpnjz1Bjb27L7xLAwjRdLSCxwovOQe04GcniVIBP+2YLvvhUn5rbBfcPzzqJvJ0y
-         Cpo/jToeFpiDX8fceIhug5H3jPMGU1/odaZFeH2hFvqYdGzixcP37XA2nBTU9wcFZx
-         LxfygJDokzB57O+7a1jcGhXKCioAmesuF9w75J+tZXQvLVPRgl0dAQTz5Z7xqBSOU4
-         FuWFPL/iZjufYb4rZaG4aZHcyuiIR1Tmar8//6LjKnpOeYi7E6ZniSSn6E0lPDakJm
-         iDZtKJCfhX1WwrJO8URvuJpZzfnmJY/KxdvYIR+V6WJu/stGmaA1jWGzXbdLpoE584
-         GV/0vfBNu4zqA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A8082A0079;
-        Tue, 14 Jan 2020 21:36:47 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 14 Jan 2020 13:36:16 -0800
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 14 Jan 2020 13:36:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n0NakyKvXOomcyI1r0fP0U5VG1A2KRpa78fABrJz2aGDnPKLIBC5/t7BfjI/If8WWkgVPLmCzJupvE28BUg1Ju6PEGX5y9fepHCeC72RFtIvSelG7oUbbcB8pRQhblLdClgZE+AhpqIRgWp1yXFwQruKn4Z98BeacP7wCASctEE4kXN8qajkToWkmjk1gUIv92LojC/pdj8Axl6HYhTfA1FC2KCpBSA0HoiNVRnTNuwC+gz8Ym+2aTWbwgf8mIP27Y/IeIEsFqJJ2/qg5B5bJpKzKUQCQvbvA7NwU3wmB4zqiMu5L3SKe1M/fGZFFQeo6Le0pQtR/I3jpXAyaw9unw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGoaseOLOTBBKU71cinrmDHmBLJIVMsgQKrQ4bcmKpY=;
- b=ZgDqJaza5CkjHfeaMbi+rPAlCYX7rHHa625q1IZ0Ho8+D7r0SU8cINX3b5A1C1ugvkwZK8qO/prcESU4egYgq8RGQWvYXKjl1coHAmPnA/ZXBRAc6c2hlRQM9Pc6cADZT8JEov4DeN28R7Jfv2B1UHwMtY4b2wu2Lti4EiQTGf0t8A6rVnOE2JTHy31iPXtR294Yx2h6z43b8e+PiXc4sePuFizj5TFAyXqFPGLTAdTXPz7n6d9+X0BMuvDkYIgvXk3gFGoCJHW5cbYcOihwvabGiv1w91wKxD3cBotdjs7Syiu1zv2z2awn1nNDbBfG/ai3XFpSJNu/v99/NUIr5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+        Tue, 14 Jan 2020 16:38:22 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so15502911wma.1;
+        Tue, 14 Jan 2020 13:38:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGoaseOLOTBBKU71cinrmDHmBLJIVMsgQKrQ4bcmKpY=;
- b=SkQ5Lx710qH3QpmvNVEt4wc6gUFvlGGv//BUmBVNkfeDRR6SjZKisxa82uZ3q6JIf++/V6k4ir3t5pBFimelgy6rXqNQVgdDKxg+qdWpHDLjCK+zXwSrdLYa6zUoROlzIShte+GyWnpw45mKz87tV0bHq9g5fEYgVLX0DSCGfxI=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (20.178.54.89) by
- BYAPR12MB3430.namprd12.prod.outlook.com (20.178.196.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.11; Tue, 14 Jan 2020 21:36:15 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333%6]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 21:36:15 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Ingo Molnar" <mingo@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:SYNOPSYS ARC ARCHITECTURE" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [RFC 4/4] ARC: uaccess: use optimized generic
- __strnlen_user/__strncpy_from_user
-Thread-Topic: [RFC 4/4] ARC: uaccess: use optimized generic
- __strnlen_user/__strncpy_from_user
-Thread-Index: AQHVyxaGhnH3EiIrPUWW/UkFermp56fqoAiAgAAPFIA=
-Date:   Tue, 14 Jan 2020 21:36:15 +0000
-Message-ID: <3734021d-1756-3a09-6595-14ca58c64bf9@synopsys.com>
-References: <20200114200846.29434-1-vgupta@synopsys.com>
- <20200114200846.29434-5-vgupta@synopsys.com>
- <CAK8P3a2GUqmcA_q33=20OrK1+cU4f3mCrgci_bO3ho4B5PRODg@mail.gmail.com>
-In-Reply-To: <CAK8P3a2GUqmcA_q33=20OrK1+cU4f3mCrgci_bO3ho4B5PRODg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [149.117.75.13]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3419362c-b51a-4387-4f40-08d79939c866
-x-ms-traffictypediagnostic: BYAPR12MB3430:
-x-microsoft-antispam-prvs: <BYAPR12MB3430CF0F3406F0D49271B0EAB6340@BYAPR12MB3430.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(366004)(39860400002)(376002)(199004)(189003)(8676002)(66476007)(6486002)(7416002)(2616005)(71200400001)(66946007)(76116006)(54906003)(5660300002)(31696002)(66556008)(81156014)(81166006)(6512007)(8936002)(186003)(26005)(36756003)(2906002)(316002)(4326008)(64756008)(86362001)(478600001)(66446008)(31686004)(6506007)(53546011)(6916009)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3430;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LW3UdTWTvpqCLl0N1wxyBABjXzu9YFCveJM6ewNBb4BBc2aG8HEiy72thzsPL9chl69rVhl6KjrFQpwBvzQuTVuR6afgH2IqSuLz6pPeHnsF4bzdA92UhorXfkK8QIrE6eGje3IDJCMBhls//csxaHF15EcB5PMuYsyJTKra80mbNOLHS5I8Kyf9huY1aZQ5AkwH4FssREWbDZSQOWNi1JxBvRC0T+2ItrOaBO980FtNqNTfr7BgmdWhjVnEav2xiCRHAdH7ICCGZ97UOWEI3ylRiC7E73dwZyaMkfqyBAVKXUTGwpej1tQvfPQpx5IsWh9FxhwJ6+BHD4D7I9PHoav8AwX9vZG9ooZaB5mqEKi4AhtK00rKiGohfwHmgn5LeRammi9047JFSCBz/3GSscD95qKBMQYknLS5Iyb/lFEaIaBPH8ClEbURqR6vmGl+1EoeEfymkmnjrMb8CPxyxC91rP/dHCmoI4wM7e+b6EjhaSSJ7GGdng4X7tR4cU5J
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3F5200B14FC6254BA227563B1C09096A@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3419362c-b51a-4387-4f40-08d79939c866
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 21:36:15.0298
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HRzidHlpCTjetmq7iX4h0uw9eJ6RP1gGYeJSrUFVw2u/+Lwm4+B7RIlrk5m0WwiW28T/iGtvehJvYQzOhji5BQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3430
-X-OriginatorOrg: synopsys.com
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=lyq/c1AgxoTJINV62PbqBxPW5tduqNDJRviUR+FmcZw=;
+        b=TBHWWVAByHjO/Kk+MfYkgDgcXPrgROnYZ7wyB8tkL74IrZuXQH9DZYG1ZQfKK5fvyJ
+         XQr6wcCLEvFKNeb2t6eoQ8KeTKuCv7PQabxMXQOH4hP+kEfwW6AWK1MXR9tdPaNIsbmA
+         OWfGgmgtJHmmeyms+F6MpOVtq0k51GyVzFZgXPmd9vJsV7cy1PWVnsI6RSBpL2PUzA0N
+         wrvvwL84Yu0VFqsnA3XaTu1Sq+7Iyua6dl2f2Jyh6QjS1OXJ++e/PubmIcMLouQUINA7
+         Vj4AoJt1f8IQh6VLt3LDYKZ5rXGdGZo2iIl/h38Z3sRXNfgwJrQN9mUxN9EoX0yRxoe8
+         Zkig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=lyq/c1AgxoTJINV62PbqBxPW5tduqNDJRviUR+FmcZw=;
+        b=dg7aJja7+UQ9CPwMiTEot0cF4PfI1kaNCP5ufvRll+MZtlINz0/5NIxdEo27+LyvIc
+         4okjqbStNpWZusDl3c0YVHomavYwr49ZXVGUX3YTl4/eeU2CkRYio+6McwHvjXSidXj2
+         R+UDKG4ro8jIs42htoZrC8C3IL+xiKhjgdTzV/3nehmHSi+NDixxq+2imN25ovEex2GS
+         RJfy9gZisvNUdileDpZh/UMjDz8eRngMkP2+A3fTsaqcgOpC4vlMyLutT2IECZ6CGRwE
+         gHfhlDBLSXjuqE8cgGTcDbi7JguwXobZDGCQrxEWG+c7GsduCxv4V2hw2y0anti78GgJ
+         tY3w==
+X-Gm-Message-State: APjAAAXOD8z3LjcrLvAm53LOYT2m/Njp7BUqRlRMBEL3mVfk40xeRAOn
+        fxER47ni9WWxnQ6YQUXYCS8=
+X-Google-Smtp-Source: APXvYqye+1PquDTXjIE8bARitin7+TssZrCHdlXAha5Y+IZ8hxKiG8rZ6B8PEZrOd4sPq3lWA99Y0w==
+X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr30161927wmd.115.1579037898908;
+        Tue, 14 Jan 2020 13:38:18 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w17sm21639511wrt.89.2020.01.14.13.38.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 13:38:18 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     ulf.hansson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [RFC PATCH v1 2/3] dt-bindings: mmc: convert synopsys dw-mshc bindings to yaml
+Date:   Tue, 14 Jan 2020 22:38:08 +0100
+Message-Id: <20200114213809.27166-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200114213809.27166-1-jbx6244@gmail.com>
+References: <20200114213809.27166-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMS8xNC8yMCAxMjo0MiBQTSwgQXJuZCBCZXJnbWFubiB3cm90ZToNCj4gT24gVHVlLCBKYW4g
-MTQsIDIwMjAgYXQgOTowOCBQTSBWaW5lZXQgR3VwdGEgPFZpbmVldC5HdXB0YTFAc3lub3BzeXMu
-Y29tPiB3cm90ZToNCj4gDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvaW5jbHVkZS9hc20vd29y
-ZC1hdC1hLXRpbWUuaCBiL2FyY2gvYXJjL2luY2x1ZGUvYXNtL3dvcmQtYXQtYS10aW1lLmgNCj4+
-IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjAwZTkyYmU3MDk4
-Nw0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvYXJjaC9hcmMvaW5jbHVkZS9hc20vd29yZC1h
-dC1hLXRpbWUuaA0KPj4gQEAgLTAsMCArMSw0OSBAQA0KPj4gKy8qIFNQRFgtTGljZW5zZS1JZGVu
-dGlmaWVyOiBHUEwtMi4wLW9ubHkgKi8NCj4+ICsvKg0KPj4gKyAqIENvcHlyaWdodCAoQykgMjAy
-MCBTeW5vcHN5cyBJbmMuDQo+PiArICovDQo+PiArI2lmbmRlZiBfX0FTTV9BUkNfV09SRF9BVF9B
-X1RJTUVfSA0KPj4gKyNkZWZpbmUgX19BU01fQVJDX1dPUkRfQVRfQV9USU1FX0gNCj4+ICsNCj4+
-ICsjaWZkZWYgX19MSVRUTEVfRU5ESUFOX18NCj4+ICsNCj4+ICsjaW5jbHVkZSA8bGludXgva2Vy
-bmVsLmg+DQo+PiArDQo+PiArc3RydWN0IHdvcmRfYXRfYV90aW1lIHsNCj4+ICsgICAgICAgY29u
-c3QgdW5zaWduZWQgbG9uZyBvbmVfYml0cywgaGlnaF9iaXRzOw0KPj4gK307DQo+IA0KPiBXaGF0
-J3Mgd3Jvbmcgd2l0aCB0aGUgZ2VuZXJpYyB2ZXJzaW9uIG9uIGxpdHRsZS1lbmRpYW4/IEFueQ0K
-PiBjaGFuY2UgeW91IGNhbiBmaW5kIGEgd2F5IHRvIG1ha2UgaXQgd29yayBhcyB3ZWxsIGZvciB5
-b3UgYXMNCj4gdGhpcyBjb3B5Pw0KDQpmaW5kX3plcm8oKSBieSBkZWZhdWx0IGRvZXNuJ3QgdXNl
-IHBvcCBjb3VudCBpbnN0cnVjdGlvbnMuIEkgZGlkbid0IGxpa2UgdGhlIGNvcHkNCmVpdGhlciBi
-dXQgd2Fzbid0IHN1cmUgb2YgdGhlIGJlc3Qgd2F5IHRvIG1ha2UgdGhpcyA0IEFQSSBpbnRlcmZh
-Y2UgcmV1c2FibGUuIEFyZQ0KeW91IHN1Z2dlc3Rpbmcgd2UgYWxsb3cgcGFydGlhbCBvdmVyLXJp
-ZGUgc3RhcnRpbmcgd2l0aCAjaWZuZGVmIGZpbmRfemVybyA/DQoNCj4+ICtzdGF0aWMgaW5saW5l
-IHVuc2lnbmVkIGxvbmcgZmluZF96ZXJvKHVuc2lnbmVkIGxvbmcgbWFzaykNCj4+ICt7DQo+PiAr
-I2lmZGVmIENPTkZJR182NEJJVA0KPj4gKyAgICAgICByZXR1cm4gZmxzNjQobWFzaykgPj4gMzsN
-Cj4+ICsjZWxzZQ0KPj4gKyAgICAgICByZXR1cm4gZmxzKG1hc2spID4+IDM7DQo+PiArI2VuZGlm
-DQo+IA0KPiBUaGUgQ09ORklHXzY0QklUIGNoZWNrIG5vdCBiZSBuZWVkZWQsIHVubGVzcyB5b3Ug
-YXJlIGFkZGluZw0KPiBzdXBwb3J0IGZvciA2NC1iaXQgQVJDIHJlYWxseSBzb29uLg0KDQo6LSkg
-SW5kZWVkIHRoYXQgd2FzIHRoZSBwcmVtaXNlICENCg0KVGh4IGZvciB0aGUgcXVpY2sgcmV2aWV3
-Lg0KDQotVmluZWV0DQo=
+Convert the Synopsys designware mobile storage host controller
+device tree bindings to yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../bindings/mmc/synopsys-dw-mshc-common.yaml      |  81 ++++++++++++
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   | 141 ---------------------
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.yaml  |  88 +++++++++++++
+ 3 files changed, 169 insertions(+), 141 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+new file mode 100644
+index 000000000..aae84a4bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc-common.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys Designware Mobile Storage Host Controller Common Properties
++
++allOf:
++  - $ref: "mmc-controller-common.yaml"
++
++maintainers:
++  - Ulf Hansson <ulf.hansson@linaro.org>
++
++properties:
++  resets:
++    maxItems: 1
++    description:
++      phandle + reset specifier pair, intended to represent hardware
++      reset signal present internally in some host controller IC designs.
++      See Documentation/devicetree/bindings/reset/reset.txt for details.
++
++  reset-names:
++    const: reset
++    description:
++      Request name for using "resets" property.
++      (It will be used together with "resets" property.)
++
++  clock-frequency:
++    description:
++      Should be the frequency (in Hz) of the ciu clock.  If this
++      is specified and the ciu clock is specified then we'll try to set the ciu
++      clock to this at probe time.
++
++  fifo-depth:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The maximum size of the tx/rx fifo's. If this property is not
++      specified, the default value of the fifo size is determined from the
++      controller registers.
++
++  card-detect-delay:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - default: 0
++    description:
++      Delay in milli-seconds before detecting card after card
++      insert event. The default value is 0.
++
++  data-addr:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Override fifo address with value provided by DT. The default FIFO reg
++      offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A)
++      by driver. If the controller does not follow this rule, please use
++      this property to set fifo address in device tree.
++
++  fifo-watermark-aligned:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Data done irq is expected if data length is less than
++      watermark in PIO mode. But fifo watermark is requested to be aligned
++      with data length in some SoC so that TX/RX irq can be generated with
++      data done irq. Add this watermark quirk to mark this requirement and
++      force fifo watermark setting accordingly.
++
++  dmas:
++    maxItems: 1
++    description:
++      List of DMA specifiers with the controller specific format as described
++      in the generic DMA client binding.
++      Refer to dma-controller.yaml for details.
++
++  dma-names:
++    const: rx-tx
++    description:
++      Request names for generic DMA client binding.
++      Refer to dma-controller.yaml for details.
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+deleted file mode 100644
+index 7e5e427a2..000000000
+--- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
++++ /dev/null
+@@ -1,141 +0,0 @@
+-* Synopsys Designware Mobile Storage Host Controller
+-
+-The Synopsys designware mobile storage host controller is used to interface
+-a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+-differences between the core mmc properties described by mmc.txt and the
+-properties used by the Synopsys Designware Mobile Storage Host Controller.
+-
+-Required Properties:
+-
+-* compatible: should be
+-	- snps,dw-mshc: for controllers compliant with synopsys dw-mshc.
+-* #address-cells: should be 1.
+-* #size-cells: should be 0.
+-
+-# Slots (DEPRECATED): The slot specific information are contained within
+-  child-nodes with each child-node representing a supported slot. There should
+-  be atleast one child node representing a card slot. The name of the child node
+-  representing the slot is recommended to be slot@n where n is the unique number
+-  of the slot connected to the controller. The following are optional properties
+-  which can be included in the slot child node.
+-
+-	* reg: specifies the physical slot number. The valid values of this
+-	  property is 0 to (num-slots -1), where num-slots is the value
+-	  specified by the num-slots property.
+-
+-	* bus-width: as documented in mmc core bindings.
+-
+-	* wp-gpios: specifies the write protect gpio line. The format of the
+-	  gpio specifier depends on the gpio controller. If a GPIO is not used
+-	  for write-protect, this property is optional.
+-
+-	* disable-wp: If the wp-gpios property isn't present then (by default)
+-	  we'd assume that the write protect is hooked up directly to the
+-	  controller's special purpose write protect line (accessible via
+-	  the WRTPRT register).  However, it's possible that we simply don't
+-	  want write protect.  In that case specify 'disable-wp'.
+-	  NOTE: This property is not required for slots known to always
+-	  connect to eMMC or SDIO cards.
+-
+-Optional properties:
+-
+-* resets: phandle + reset specifier pair, intended to represent hardware
+-  reset signal present internally in some host controller IC designs.
+-  See Documentation/devicetree/bindings/reset/reset.txt for details.
+-
+-* reset-names: request name for using "resets" property. Must be "reset".
+-	(It will be used together with "resets" property.)
+-
+-* clocks: from common clock binding: handle to biu and ciu clocks for the
+-  bus interface unit clock and the card interface unit clock.
+-
+-* clock-names: from common clock binding: Shall be "biu" and "ciu".
+-  If the biu clock is missing we'll simply skip enabling it.  If the
+-  ciu clock is missing we'll just assume that the clock is running at
+-  clock-frequency.  It is an error to omit both the ciu clock and the
+-  clock-frequency.
+-
+-* clock-frequency: should be the frequency (in Hz) of the ciu clock.  If this
+-  is specified and the ciu clock is specified then we'll try to set the ciu
+-  clock to this at probe time.
+-
+-* fifo-depth: The maximum size of the tx/rx fifo's. If this property is not
+-  specified, the default value of the fifo size is determined from the
+-  controller registers.
+-
+-* card-detect-delay: Delay in milli-seconds before detecting card after card
+-  insert event. The default value is 0.
+-
+-* data-addr: Override fifo address with value provided by DT. The default FIFO reg
+-  offset is assumed as 0x100 (version < 0x240A) and 0x200(version >= 0x240A) by
+-  driver. If the controller does not follow this rule, please use this property
+-  to set fifo address in device tree.
+-
+-* fifo-watermark-aligned: Data done irq is expected if data length is less than
+-  watermark in PIO mode. But fifo watermark is requested to be aligned with data
+-  length in some SoC so that TX/RX irq can be generated with data done irq. Add this
+-  watermark quirk to mark this requirement and force fifo watermark setting
+-  accordingly.
+-
+-* vmmc-supply: The phandle to the regulator to use for vmmc.  If this is
+-  specified we'll defer probe until we can find this regulator.
+-
+-* dmas: List of DMA specifiers with the controller specific format as described
+-  in the generic DMA client binding. Refer to dma.txt for details.
+-
+-* dma-names: request names for generic DMA client binding. Must be "rx-tx".
+-  Refer to dma.txt for details.
+-
+-Aliases:
+-
+-- All the MSHC controller nodes should be represented in the aliases node using
+-  the following format 'mshc{n}' where n is a unique number for the alias.
+-
+-Example:
+-
+-The MSHC controller node can be split into two portions, SoC specific and
+-board specific portions as listed below.
+-
+-	dwmmc0@12200000 {
+-		compatible = "snps,dw-mshc";
+-		clocks = <&clock 351>, <&clock 132>;
+-		clock-names = "biu", "ciu";
+-		reg = <0x12200000 0x1000>;
+-		interrupts = <0 75 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		data-addr = <0x200>;
+-		fifo-watermark-aligned;
+-		resets = <&rst 20>;
+-		reset-names = "reset";
+-	};
+-
+-[board specific internal DMA resources]
+-
+-	dwmmc0@12200000 {
+-		clock-frequency = <400000000>;
+-		clock-freq-min-max = <400000 200000000>;
+-		broken-cd;
+-		fifo-depth = <0x80>;
+-		card-detect-delay = <200>;
+-		vmmc-supply = <&buck8>;
+-		bus-width = <8>;
+-		cap-mmc-highspeed;
+-		cap-sd-highspeed;
+-	};
+-
+-[board specific generic DMA request binding]
+-
+-	dwmmc0@12200000 {
+-		clock-frequency = <400000000>;
+-		clock-freq-min-max = <400000 200000000>;
+-		broken-cd;
+-		fifo-depth = <0x80>;
+-		card-detect-delay = <200>;
+-		vmmc-supply = <&buck8>;
+-		bus-width = <8>;
+-		cap-mmc-highspeed;
+-		cap-sd-highspeed;
+-		dmas = <&pdma 12>;
+-		dma-names = "rx-tx";
+-	};
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+new file mode 100644
+index 000000000..6f85a21d0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys Designware Mobile Storage Host Controller Binding
++
++allOf:
++  - $ref: "synopsys-dw-mshc-common.yaml"
++
++maintainers:
++  - Ulf Hansson <ulf.hansson@linaro.org>
++
++properties:
++  compatible:
++    const: snps,dw-mshc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 2
++    maxItems: 2
++    description:
++      Handle to "biu" and "ciu" clocks for the
++      bus interface unit clock and the card interface unit clock.
++
++  clock-names:
++    items:
++      - const: biu
++      - const: ciu
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  # The MSHC controller node can be split into two portions, SoC specific and
++  # board specific portions as listed below.
++  - |
++    dwmmc0@12200000 {
++      compatible = "snps,dw-mshc";
++      clocks = <&clock 351>, <&clock 132>;
++      clock-names = "biu", "ciu";
++      reg = <0x12200000 0x1000>;
++      interrupts = <0 75 0>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      data-addr = <0x200>;
++      fifo-watermark-aligned;
++      resets = <&rst 20>;
++      reset-names = "reset";
++    };
++  # [board specific internal DMA resources]
++  - |
++    dwmmc0@12200000 {
++      clock-frequency = <400000000>;
++      clock-freq-min-max = <400000 200000000>;
++      broken-cd;
++      fifo-depth = <0x80>;
++      card-detect-delay = <200>;
++      vmmc-supply = <&buck8>;
++      bus-width = <8>;
++      cap-mmc-highspeed;
++      cap-sd-highspeed;
++    };
++  # [board specific generic DMA request binding]
++  - |
++    dwmmc0@12200000 {
++      clock-frequency = <400000000>;
++      clock-freq-min-max = <400000 200000000>;
++      broken-cd;
++      fifo-depth = <0x80>;
++      card-detect-delay = <200>;
++      vmmc-supply = <&buck8>;
++      bus-width = <8>;
++      cap-mmc-highspeed;
++      cap-sd-highspeed;
++      dmas = <&pdma 12>;
++      dma-names = "rx-tx";
++    };
+-- 
+2.11.0
+
