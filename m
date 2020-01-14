@@ -2,164 +2,152 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4163EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF72C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1089D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:53:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fePzYw1z"
+	by mail.kernel.org (Postfix) with ESMTP id E4BD824679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgANBxf (ORCPT
+        id S1729409AbgANBzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:53:35 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:54910 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728838AbgANBxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:53:35 -0500
-Received: by mail-pj1-f68.google.com with SMTP id kx11so4969701pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 17:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WpuWvQQCJJpFhKDiMXRidEs1Erww4c/L/BGmOGdRJLs=;
-        b=fePzYw1z/qf7rVjlcXxiG56pBw0R4EgInEYnm0Cn6lscidAE10j62F9goBylbQGc/H
-         h5OccjYVR01qlZ2MKU1ix01NSalR1kG8P6rhLkRHEI0YLUYJ7ox8vdSMsjtGV9Hwz8tx
-         /qWhbfr5tDyn2Te+Ed1JpxVRRZyGrn3u1318s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WpuWvQQCJJpFhKDiMXRidEs1Erww4c/L/BGmOGdRJLs=;
-        b=ulJjQh4A06wUYB3AgPHS8x/xw0sWk3NrC+2M+q4SKOXDx/ZlMGLRXsgL8Lkr4k3i/M
-         RWRnSWS71XjiInXYnWM+UsFiMxXZjLIRLNPiOhfBxEaZoFln2VllnPbFZrTsNTXmgFHh
-         opZu5mvNs0u3Ttkco0c5WPcqsXxXpBcVtlVyom0y0GKThj1cD2kqmqGOFVpx6u8DGx6k
-         6HUolU9OEhJv/v+bwhYyteOOwScx1N/MDYBiyIGf/Vm0B/ue8ArthkPPqKLjAF7c/3rS
-         u+oQbHjhcrIUPyR5zEFIVWm/wNrJW1YQz4CS6MqmnbgC1MkJkCG1fjgegAggcnEU7Ed/
-         Z+eA==
-X-Gm-Message-State: APjAAAWht6bURk7PasYj0jhTRNgU5WS5iFQWxnWHEtfED8PhABH+ExF4
-        iGrFwIvySCIRGfdgn7ctaQmVBA==
-X-Google-Smtp-Source: APXvYqzbKLmAzVTESEqyPpUS/sBRLK6AqgTNXbxlpN35dd7tKE681uebOhzYmdWz16Cg9a4DekWGVw==
-X-Received: by 2002:a17:90a:5ac4:: with SMTP id n62mr26485294pji.59.1578966814268;
-        Mon, 13 Jan 2020 17:53:34 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y203sm16268125pfb.65.2020.01.13.17.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 17:53:33 -0800 (PST)
-Date:   Mon, 13 Jan 2020 17:53:32 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH v3] x86/vmlinux: Fix vmlinux.lds.S with pre-2.23 binutils
-Message-ID: <202001131750.C1B8468@keescook>
-References: <20200113161310.GA191743@rani.riverdale.lan>
- <20200113195337.604646-1-nivedita@alum.mit.edu>
+        Mon, 13 Jan 2020 20:55:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728838AbgANBzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:55:12 -0500
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5259207FF;
+        Tue, 14 Jan 2020 01:55:09 +0000 (UTC)
+Subject: Re: [PATCH] m68k: Implement copy_thread_tls()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Amanieu d'Antras <amanieu@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org
+References: <20200113103040.23661-1-geert@linux-m68k.org>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <f744a139-f2ae-a07f-e7e7-a1aaca946f8c@linux-m68k.org>
+Date:   Tue, 14 Jan 2020 11:55:06 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113195337.604646-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200113103040.23661-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:53:37PM -0500, Arvind Sankar wrote:
-> Prior to binutils-2.23, ld treats the location counter as absolute if
-> used outside an output section definition. From version 2.23 onwards,
-> the location counter is treated as relative to an adjacent output
-> section (usually the previous one, unless there isn't one or the
-> location counter has been assigned to previously, in which case the next
-> one).
+Hi Geert,
+
+On 13/1/20 8:30 pm, Geert Uytterhoeven wrote:
+> This is required for clone3(), which passes the TLS value through a
+> struct rather than a register.
 > 
-> The result is that a symbol definition in the linker script, such as
-> 	_etext = .;
-> that appears outside an output section definition makes _etext an
-> absolute symbol prior to binutils-2.23 and a relative symbol from
-> version 2.23 onwards. So when using a 2.21 or 2.22 vintage linker, the
-> build fails with
-> 	Invalid absolute R_X86_64_32S relocation: _etext
-> for x86-64, and a similar message with R_386_32 for x86-32.
+> As do_fork() is only available if CONFIG_HAVE_COPY_THREAD_TLS is set,
+> m68k_clone() must be changed to call _do_fork() directly.
 > 
-> This can be reproduced with the official 2.21.1 and 2.22 binutils
-> releases.
-> 
-> Commit b907693883fd ("x86/vmlinux: Actually use _etext for the end of
-> the text segment") moved _etext out of the .text section to place it
-> after the exception table, however since commit f0d7ee17d57c
-> ("x86/vmlinux: Move EXCEPTION_TABLE to RO_DATA segment") this is no
-> longer needed. Move _etext back inside .text to make it relative even
-> with older linkers.
-> 
-> Commit c603a309cc75 ("x86/mm: Identify the end of the kernel area to be
-> reserved") defines __end_of_kernel_reserve using the location counter
-> outside an output section definition. Use __bss_stop instead of the
-> location counter for the definition to make it relative with older
-> linkers.
-> 
-> Fixes: b907693883fd ("x86/vmlinux: Actually use _etext for the end of the text segment")
-> Fixes: c603a309cc75 ("x86/mm: Identify the end of the kernel area to be reserved")
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Looks good for ColdFire too. I compiled for both MMU and non-MMU
+targets and no regressions (I did not test clone3() itself though).
+
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
+
+Regards
+Greg
+
+
 > ---
-> v3: Modify vmlinux.lds.S instead of adding more workarounds to tools/relocs.c
+> This is a dependency for the combination of commits
+> e8bb2a2a1d51511e ("m68k: Wire up clone3() syscall") in m68k/for-next,
+> dd499f7a7e342702 ("clone3: ensure copy_thread_tls is implemented") in
+> v5.5-rc6.
+> ---
+>   arch/m68k/Kconfig          |  1 +
+>   arch/m68k/kernel/process.c | 31 ++++++++++++++++++++++---------
+>   2 files changed, 23 insertions(+), 9 deletions(-)
 > 
->  arch/x86/kernel/vmlinux.lds.S | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 3a1a819da137..bad4e22384dc 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -144,10 +144,12 @@ SECTIONS
->  		*(.text.__x86.indirect_thunk)
->  		__indirect_thunk_end = .;
->  #endif
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index 6663f1741798e83f..6ad6cdac74b3dc42 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -14,6 +14,7 @@ config M68K
+>   	select HAVE_AOUT if MMU
+>   	select HAVE_ASM_MODVERSIONS
+>   	select HAVE_DEBUG_BUGVERBOSE
+> +	select HAVE_COPY_THREAD_TLS
+>   	select GENERIC_IRQ_SHOW
+>   	select GENERIC_ATOMIC64
+>   	select HAVE_UID16
+> diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
+> index 22e6b8f4f9582aa4..8f0d9140700f09ad 100644
+> --- a/arch/m68k/kernel/process.c
+> +++ b/arch/m68k/kernel/process.c
+> @@ -108,16 +108,28 @@ void flush_thread(void)
+>    * on top of pt_regs, which means that sys_clone() arguments would be
+>    * buried.  We could, of course, copy them, but it's too costly for no
+>    * good reason - generic clone() would have to copy them *again* for
+> - * do_fork() anyway.  So in this case it's actually better to pass pt_regs *
+> - * and extract arguments for do_fork() from there.  Eventually we might
+> - * go for calling do_fork() directly from the wrapper, but only after we
+> - * are finished with do_fork() prototype conversion.
+> + * _do_fork() anyway.  So in this case it's actually better to pass pt_regs *
+> + * and extract arguments for _do_fork() from there.  Eventually we might
+> + * go for calling _do_fork() directly from the wrapper, but only after we
+> + * are finished with _do_fork() prototype conversion.
+>    */
+>   asmlinkage int m68k_clone(struct pt_regs *regs)
+>   {
+>   	/* regs will be equal to current_pt_regs() */
+> -	return do_fork(regs->d1, regs->d2, 0,
+> -		       (int __user *)regs->d3, (int __user *)regs->d4);
+> +	struct kernel_clone_args args = {
+> +		.flags		= regs->d1 & ~CSIGNAL,
+> +		.pidfd		= (int __user *)regs->d3,
+> +		.child_tid	= (int __user *)regs->d4,
+> +		.parent_tid	= (int __user *)regs->d3,
+> +		.exit_signal	= regs->d1 & CSIGNAL,
+> +		.stack		= regs->d2,
+> +		.tls		= regs->d5,
+> +	};
 > +
-> +		/* End of text section */
-> +		_etext = .;
->  	} :text =0xcccc
->  
-> -	/* End of text section, which should occupy whole number of pages */
-> -	_etext = .;
-> +	/* .text should occupy whole number of pages */
->  	. = ALIGN(PAGE_SIZE);
-
-NAK: linkers can add things at the end of .text that will go missing from
-the kernel if _etext isn't _outside_ the .text section, truly beyond the
-end of the .text section. This patch will break Control Flow Integrity
-checking since the jump tables are at the end of .text.
-
-Boris, we're always working around weird linker problems; I don't see a
-problem with the v2 patch to fix up old binutils...
-
--Kees
-
->  
->  	X86_ALIGN_RODATA_BEGIN
-> @@ -372,7 +374,7 @@ SECTIONS
->  	 * explicitly reserved using memblock_reserve() or it will be discarded
->  	 * and treated as available memory.
->  	 */
-> -	__end_of_kernel_reserve = .;
-> +	__end_of_kernel_reserve = __bss_stop;
->  
->  	. = ALIGN(PAGE_SIZE);
->  	.brk : AT(ADDR(.brk) - LOAD_OFFSET) {
-> -- 
-> 2.24.1
+> +	if (!legacy_clone_args_valid(&args))
+> +		return -EINVAL;
+> +
+> +	return _do_fork(&args);
+>   }
+>   
+>   /*
+> @@ -130,8 +142,9 @@ asmlinkage int m68k_clone3(struct pt_regs *regs)
+>   	return sys_clone3((struct clone_args __user *)regs->d1, regs->d2);
+>   }
+>   
+> -int copy_thread(unsigned long clone_flags, unsigned long usp,
+> -		 unsigned long arg, struct task_struct *p)
+> +int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+> +		    unsigned long arg, struct task_struct *p,
+> +		    unsigned long tls)
+>   {
+>   	struct fork_frame {
+>   		struct switch_stack sw;
+> @@ -166,7 +179,7 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
+>   	p->thread.usp = usp ?: rdusp();
+>   
+>   	if (clone_flags & CLONE_SETTLS)
+> -		task_thread_info(p)->tp_value = frame->regs.d5;
+> +		task_thread_info(p)->tp_value = tls;
+>   
+>   #ifdef CONFIG_FPU
+>   	if (!FPU_IS_EMU) {
 > 
-
--- 
-Kees Cook
