@@ -2,116 +2,81 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CC5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497F6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9AD424672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="J1SA/EVX"
+	by mail.kernel.org (Postfix) with ESMTP id 21BD72467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgANPDH (ORCPT
+        id S1729255AbgANPDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:03:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45767 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbgANPDA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:03:00 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so12452745wrj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 07:02:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HIqjqYnUNYC6xaFfZJXPmBMgwbD3vdDEMlsV0H3SJ/M=;
-        b=J1SA/EVXpekAUyQtQL9GA9mqROIbfPpkW2dVRKXu7EoIolIojcPxdnUis5zZ2jjfkP
-         /iNE42kjv311m4HWlgCaIxzvQN+o2Ew56lWvyScq5D6nhkMXBctcLaKcJHTWkKCIhjWK
-         H4fVZlbDix9InRhQ8uWkjj4H/zo1B0mcxbJOV654w+KOxY4Jfr22ZLhdW9gw3CMESFgg
-         oYolVqoi5klUmBlN9VrzoodLh+i2kumyEfCaLam1pwS8nmwACNz9QzeahS8e2hzwm0ER
-         GjxnIKakA6oO0iymakRbrfWQ8772gAyf9HfGUwuwZo6kXrbNHU93lpI5ER7eyEcnhqQU
-         cjNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HIqjqYnUNYC6xaFfZJXPmBMgwbD3vdDEMlsV0H3SJ/M=;
-        b=FHhIqaj2cbT3kfJOUKgsfyKsbptJjWs3IswMTp7RoTHVn9xhnHi1zQNRWJz8tJf/iy
-         LW53B529MNPoubzjmlw9IM/6h0OO49ITTHVWI2xSfYGvVahCy3WZ7tgftJvA+uQjd4MY
-         5GA7N2CIqD/K3wFIl7/iWdA+GJkHti/Hr/XV1FibjdF/oeKy9F+Q8mpQtT0rbJ0anvnP
-         WppU+BessbX5KJO2X8AERm2RnpchmVymi3vLoUSvtjljhsmeh0GdbvTH9yu5w0CrDVy+
-         dLDD6AM+HoA5Fw4pklm5pLnlJqEO1OLn6MGwhWEUxFZJaGaEEjqCR3AeYm5cmNrqcA6W
-         IiUQ==
-X-Gm-Message-State: APjAAAXv8lqJhKaN9BA3t7vqUa3HQGAv4EEpH+d/Xycm6pEDjC2bMiWu
-        hzfZhPOGca36w9GrF3WquFsvNg==
-X-Google-Smtp-Source: APXvYqzQYZXZmnCuYM9hZZtxSNdRMUvX/Yf4k/r6u64zSyCjXNZDZGHB7BnEJM7mRRzhv8OqBBSLqw==
-X-Received: by 2002:adf:e6d2:: with SMTP id y18mr26535796wrm.262.1579014179025;
-        Tue, 14 Jan 2020 07:02:59 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id i10sm20311539wru.16.2020.01.14.07.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 07:02:58 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/2] gpio: mockup: sort headers alphabetically
-Date:   Tue, 14 Jan 2020 16:02:53 +0100
-Message-Id: <20200114150253.28716-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200114150253.28716-1-brgl@bgdev.pl>
-References: <20200114150253.28716-1-brgl@bgdev.pl>
+        Tue, 14 Jan 2020 10:03:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:53392 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728977AbgANPDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:03:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66E371396;
+        Tue, 14 Jan 2020 07:03:17 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87D7A3F68E;
+        Tue, 14 Jan 2020 07:03:14 -0800 (PST)
+Date:   Tue, 14 Jan 2020 15:03:12 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v4 01/12] ELF: UAPI and Kconfig additions for ELF program
+ properties
+Message-ID: <20200114150311.GC30444@arrakis.emea.arm.com>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-2-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211154206.46260-2-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, Dec 11, 2019 at 03:41:55PM +0000, Mark Brown wrote:
+> From: Dave Martin <Dave.Martin@arm.com>
+> 
+> Pull the basic ELF definitions relating to the
+> NT_GNU_PROPERTY_TYPE_0 note from Yu-Cheng Yu's earlier x86 shstk
+> series.
+> 
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-For consistency and easier maintenance: sort the headers alphabetically.
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpio-mockup.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Also, this patch should be posted to linux-fsdevel as well for the
+corresponding acks.
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 5f81f087103f..7d343bea784a 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -7,18 +7,18 @@
-  * Copyright (C) 2017 Bartosz Golaszewski <brgl@bgdev.pl>
-  */
- 
--#include <linux/init.h>
--#include <linux/module.h>
--#include <linux/gpio/driver.h>
-+#include <linux/debugfs.h>
- #include <linux/gpio/consumer.h>
--#include <linux/platform_device.h>
--#include <linux/slab.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irq_sim.h>
--#include <linux/debugfs.h>
--#include <linux/uaccess.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
- 
- #include "gpiolib.h"
- 
 -- 
-2.23.0
-
+Catalin
