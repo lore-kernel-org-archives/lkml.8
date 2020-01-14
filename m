@@ -2,133 +2,111 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B67C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705C1C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C5C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579016607;
-	bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OqOatmhlT4oDy6ZWDQuB8H2cJXvSnXL6RJI8VW3/cpZ0EKEAbr9guUjr4Ic50kC7Z
-	 tkwGAnEe0PFP6E8gHrkCxR6f8pzac6Wwd7D9X6lh3sPzlpN/+ZxrHQI8XslRj5zDqM
-	 Bv5xQd7SvH+W//twQ3u2lF+7tsHdc3LX3SvpkCjc=
+	by mail.kernel.org (Postfix) with ESMTP id 44303207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oN1q3vz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgANPn0 (ORCPT
+        id S1729108AbgANPnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:43:26 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49900 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPn0 (ORCPT
+        Tue, 14 Jan 2020 10:43:40 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3047 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:43:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=; b=UpQ1WewlV5QqhtFdaZ8w6ORpF
-        8M9iXrAUdbtW9g5RYjBjRrjEDY4WYvrb7K/SZOdWF5OskeoDuNHqszDZeK8AHaoLAH7unGua0Uiuf
-        Onsb4Voox3RhmYdBl7MgsARFkeAKvNV6JjYHwLu3CouBWfw4L+7XUAqTJXgQDH0Sexj5g=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irOLa-0000KP-L6; Tue, 14 Jan 2020 15:43:14 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 2CE91D002CB; Tue, 14 Jan 2020 15:43:14 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 15:43:14 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200114154314.GZ3897@sirena.org.uk>
-References: <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
- <20200107130911.GD4877@sirena.org.uk>
- <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
+        Tue, 14 Jan 2020 10:43:40 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1de1740000>; Tue, 14 Jan 2020 07:42:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 14 Jan 2020 07:43:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:43:39 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 15:43:37 +0000
+Subject: Re: [PATCH v4 05/14] dmaengine: tegra-apb: Prevent race conditions of
+ tasklet vs free list
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-6-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1331b7c1-3839-69cb-4de2-16771c652d41@nvidia.com>
+Date:   Tue, 14 Jan 2020 15:43:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yhqQ34TVR4fE8mPU"
-Content-Disposition: inline
-In-Reply-To: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200112173006.29863-6-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579016564; bh=TOxcfPb22CxCMWcfOogB2CSM8aUSAE1trXziDRi5ilw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oN1q3vz+2upl5Id8/Ezu9QGXscK1EDXlatHEjHm92sS3Sgz3M/8hykNnkNL1LGVKy
+         GhzHjpvpgb8xzu0TrZB6xwM23YSezV3NDesny5xhQYPgJvQzWRJ9NoOxxQEcDbXBQv
+         s1Y8Av7MbeV49VHdMwlaf6ZWLwRkQ9Rvcf5lReG/vXBpEnZOaJTBI0GvE1oL7uPBwc
+         qZ7+jOdIwjjNPOjwVaDmA3HTMlqOmydvRD1L1Iv52k8Q6o42PCXmogIwaVjrmTy5zq
+         xARprz5pRqvfwRoQ+fiV+a5e++fagBamDmGwkJLL9ahXs5AeD/zxWw4jevDpZxtoTQ
+         0nU16Tz2jPBzA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---yhqQ34TVR4fE8mPU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 12/01/2020 17:29, Dmitry Osipenko wrote:
+> The interrupt handler puts a half-completed DMA descriptor on a free list
+> and then schedules tasklet to process bottom half of the descriptor that
+> executes client's callback, this creates possibility to pick up the busy
+> descriptor from the free list. Thus let's disallow descriptor's re-use
+> until it is fully processed.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 1b8a11804962..aafad50d075e 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
+>  
+>  	/* Do not allocate if desc are waiting for ack */
+>  	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+> -		if (async_tx_test_ack(&dma_desc->txd)) {
+> +		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+>  			list_del(&dma_desc->node);
+>  			spin_unlock_irqrestore(&tdc->lock, flags);
+>  			dma_desc->txd.flags = 0;
+> 
 
-On Tue, Jan 07, 2020 at 02:38:11PM +0100, Marco Felsch wrote:
-> On 20-01-07 13:09, Mark Brown wrote:
-> > On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-> > > The input signal is routed trough the da9062 gpio block to the
-> > > regualtors. You can't set any voltage value using a gpio instead you
-> > > decide which voltage setting is applied. The voltage values for
-> > > runtime/suspend comes from the dt-data. No it's not just a fast
-> > > switching option imagine the system suspend case where the cpu and soc
-> > > voltage can be reduced to a very low value. Older soc's like the imx6
-> > > signaling this state by a hard wired gpio line because the soc and
-> > > cpu cores don't work properly on such low voltage values. This is
-> > > my use case and I can't use the sequencer.
+Cheers
+Jon
 
-> > My point is that I can't tell any of this from the description.
-
-> Therefore I want to discuss the dt-binding documentation with you and
-> the others to get this done. Is the above description better to
-> understand the dt-binding?
-
-That text really doesn't feel like text that'd be idiomatic
-directly in a binding document but some of those ideas probably
-do need to be in the text I think.
-
---yhqQ34TVR4fE8mPU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d4ZEACgkQJNaLcl1U
-h9CJjAf+Lyl6pKu3ywfkP8t2CeYxi0Fz9ndEKvYqp7nK6CZxn8OgX9Jjem3iwm4w
-vhgB2B06edcnP8wIDEgk8YUMirzG0/Rc475SlTvVg/1BYOaGftqksTiEZfHJf0qt
-4mcWgT+Agw3YzPMkM6kahAu243KxKHAwojM3iVV7gb9PX/rOVtInStggPxzdcxtk
-jQQo2RvYBo2mEBArehWE+PGGT2/JElQGTLyhRVx3BrhuAXXoNKuwkS9fUrVAnyk5
-m5kKBygRDyY4MdZ/a53/E8URMDJbctEtveN03mzI+QQ//PMDTufBPqSmURaODb5c
-PAal49kxIE8ZAfvvCgimhdhS3yzmTg==
-=m6uy
------END PGP SIGNATURE-----
-
---yhqQ34TVR4fE8mPU--
+-- 
+nvpublic
