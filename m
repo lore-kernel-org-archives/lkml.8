@@ -2,116 +2,176 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B42C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53893C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2016321556
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SQvzCTBn"
+	by mail.kernel.org (Postfix) with ESMTP id 2852E207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbgANBKQ (ORCPT
+        id S1729335AbgANBKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:10:16 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43074 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729088AbgANBKQ (ORCPT
+        Mon, 13 Jan 2020 20:10:55 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:38100 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgANBKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:10:16 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k197so5557174pga.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 17:10:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MuIq//wCZduhaibSe5/7hJSdzVgRZqtQMOj1BjJPoMI=;
-        b=SQvzCTBn4LLS8Q9CzT8sA1qDOJ8VkKjMfUwbVDNSUA0tX3hZrm0WkpV/WhqdmjAHPD
-         brbBybX4G9nflXxIIEAeoUxh5cWc5hbsn7sPNyXTeTgGiibchfrwdufAZRtYC5VFFUZ6
-         cQbhcCGEZyeGCEKBK6hnZZxW5ngpun0A8PvTgqCgArxzzgDhEjkIWSzwnVSKnSYBW5Uo
-         pba2KL34YtVeP783g46fUUVCefzyytk+Xq0/rRz2AukRa04uGt/tOXd59NqRh6esJsnK
-         +q5+guqlvIgYo/J20T8aqnyQF8xGgSXuQEk5vDN1q+taj0OApxeRz8a6uBShVF2KtM8Z
-         ezqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MuIq//wCZduhaibSe5/7hJSdzVgRZqtQMOj1BjJPoMI=;
-        b=r3kfRS1vee9078c0iSD1xkjDYelekTbjHe25GxqaoBCHNZp+mlZlm9DGhPb62utaTb
-         FM2QM1V37heyeMG7NGFRQzzNhixj9G38WjtLW6fTBOC4f73lSr95H5IULRj1uRAyCuyD
-         ZEo3ECQAJGuy5RgUvSc0JY+AD2pNyzga453i9rUtpzk5gZz1uBMyyTjRWj11olbJlJ7V
-         DAtYuihV2U5hQ9UkurGbUXhgI8ITKgrE/SHzft6JpU8sJBu9AMBWszzHGonZY9ObIs+1
-         d3QYy+aGBfGD8Cw9PqxIX0qy65TO1NWlg3bzHM6t2ATr56GYpm4Lvau3rd94VNBa+ksA
-         p75g==
-X-Gm-Message-State: APjAAAUwJlBbiM/DqyYAEPHS1OfWbfzF4t2ft/VUoWSnvSoQRHx6Ts/3
-        sFUsN7uh3JNHzbjj5/Q09lgvOf+2i9M4IuiMY8wb5g==
-X-Google-Smtp-Source: APXvYqxTzPsgCrp/FhpOnGVwtu5xXbBt+F5nJ89uUP7Tfv62ZdI+z61Ccr6Na7E1+73rp1o09IfvgjZk9cycnSFTC44=
-X-Received: by 2002:a63:597:: with SMTP id 145mr23090242pgf.384.1578964214716;
- Mon, 13 Jan 2020 17:10:14 -0800 (PST)
+        Mon, 13 Jan 2020 20:10:54 -0500
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 670F81819008D2;
+        Tue, 14 Jan 2020 01:10:52 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 14 Jan 2020 01:10:51 +0000 (UTC)
+Message-ID: <b9a733496f4c56584281c7496bb66bef084b3973.camel@archlinux.org>
+Subject: Re: [PATCH v2] HID: logitech-hidpp: add support for the Powerplay
+ mat/receiver
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAO-hwJJJYRc8_kRiGGu9E4Dx-WpSADro4b28D8QoE87FBUTnOA@mail.gmail.com>
+References: <20200112220612.3448741-1-lains@archlinux.org>
+         <CAO-hwJJJYRc8_kRiGGu9E4Dx-WpSADro4b28D8QoE87FBUTnOA@mail.gmail.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-H9i3sQ2eRn8lTBV7X6Yc"
+Date:   Tue, 14 Jan 2020 01:10:50 +0000
 MIME-Version: 1.0
-References: <20200113181457.209ab4a5@canb.auug.org.au> <eddaa93c-3bde-a9ed-5ee7-766f3cd51a43@infradead.org>
- <20200114104049.5244f612@canb.auug.org.au>
-In-Reply-To: <20200114104049.5244f612@canb.auug.org.au>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 13 Jan 2020 17:10:03 -0800
-Message-ID: <CAFd5g454Xgb-tnG-rBQ3fkCe2bsO7M8_dauOTpG3bxDjnxOX9A@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jan 13 (drivers/base/test/property-entry-test.o)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        KUnit Development <kunit-dev@googlegroups.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+KUnit Development
-+open list:KERNEL SELFTEST FRAMEWORK
 
-On Mon, Jan 13, 2020 at 3:40 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Randy,
->
-> On Mon, 13 Jan 2020 14:59:54 -0800 Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > on i386:
-> >
-> > WARNING: modpost: missing MODULE_LICENSE() in drivers/base/test/property-entry-test.o
-> > see include/linux/module.h for more information
->
-> Sorry, I missed that yesterday.
->
-> Caused by commit
->
->   c032ace71c29 ("software node: add basic tests for property entries")
->
-> from the pm tree interacting with commit
->
->   9fe124bf1b77 ("kunit: allow kunit to be loaded as a module")
->
-> from the kunit-next tree.
+--=-H9i3sQ2eRn8lTBV7X6Yc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, the problem seems to be that the property-entry-test is turned on
-when CONFIG_KUNIT is y or m.
+On Tue, 2020-01-14 at 21:03 +1000, Benjamin Tissoires wrote:
+> Hi Filipe,
+>=20
+> On Mon, Jan 13, 2020 at 8:07 AM Filipe La=C3=ADns <lains@archlinux.org> w=
+rote:
+> > The Logitech G Powerplay has a lightspeed receiver with a static HID++
+> > device with ID 7 attached to it to. It is used to configure the led on
+> > the mat. For this reason I increased the max number of devices.
+> >=20
+> > I also marked all lightspeed devices as HID++ compatible. As the
+> > internal powerplay device does not have REPORT_TYPE_KEYBOARD or
+> > REPORT_TYPE_MOUSE it was not being marked as HID++ compatible in
+> > logi_hidpp_dev_conn_notif_equad.
+> >=20
+> > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> > ---
+> >  drivers/hid/hid-logitech-dj.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-d=
+j.c
+> > index bb50d6e7745b..732380b55b15 100644
+> > --- a/drivers/hid/hid-logitech-dj.c
+> > +++ b/drivers/hid/hid-logitech-dj.c
+> > @@ -16,11 +16,11 @@
+> >  #include <asm/unaligned.h>
+> >  #include "hid-ids.h"
+> >=20
+> > -#define DJ_MAX_PAIRED_DEVICES                  6
+> > +#define DJ_MAX_PAIRED_DEVICES                  7
+> >  #define DJ_MAX_NUMBER_NOTIFS                   8
+> >  #define DJ_RECEIVER_INDEX                      0
+> >  #define DJ_DEVICE_INDEX_MIN                    1
+> > -#define DJ_DEVICE_INDEX_MAX                    6
+> > +#define DJ_DEVICE_INDEX_MAX                    7
+> >=20
+> >  #define DJREPORT_SHORT_LENGTH                  15
+> >  #define DJREPORT_LONG_LENGTH                   32
+> > @@ -971,7 +971,7 @@ static void logi_hidpp_recv_queue_notif(struct hid_=
+device *hdev,
+> >         case 0x0c:
+> >                 device_type =3D "eQUAD Lightspeed 1";
+> >                 logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report, &wo=
+rkitem);
+> > -               workitem.reports_supported |=3D STD_KEYBOARD;
+> > +               workitem.reports_supported |=3D STD_KEYBOARD | HIDPP;
+>=20
+> This feels wrong. The whole initial code was hack-ish, and now this is
+> even more hack-ish.
+>=20
+> I don't have a simple solution right now (at a conference this week),
+> but I will need to be convinced this is the only sane solution :/
+>=20
+> Cheers,
+> Benjamin
 
-From drivers/base/test/Makefile:
-...
-obj-$(CONFIG_KUNIT) += property-entry-test.o
+Yeah, I understand. I just addressed this in a reply to the previous
+patch:
 
-It seems we can fix it just by adding the missing MODULE_LICENSE, but
-I think there is a bigger question of whether we should let people do
-this. Do we want to just let people have their tests run whenever
-CONFIG_KUNIT is enabled? I am inclined to think no. It should be
-possible for people to run their test and their test only.
+On Tue, 2020-01-14 at 00:55 +0000, Filipe La=C3=ADns wrote:
+> Okay, then is maybe better if I add HIDPP to reports_supported based
+> on
+> the device ID (7). This is the only product to my knowledge that
+> exports a device with ID 7. It's a better solution than setting HIDPP
+> on all lightspeed devices.
+>=20
+> I will send a new patch if you agree with this approach.
+
+What do you think?
+
+Maybe we will have to rework the driver but the method I proposed above
+doesn't seem that hack-ish, at least considering the current code :P
+
+> >                 break;
+> >         case 0x0d:
+> >                 device_type =3D "eQUAD Lightspeed 1_1";
+> > @@ -1850,6 +1850,10 @@ static const struct hid_device_id
+> > logi_dj_receivers[] =3D {
+> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+> >                 USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1
+> > ),
+> >          .driver_data =3D recvr_type_gaming_hidpp},
+> > +       { /* Logitech powerplay mat/receiver (0xc539) */
+> > +         HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+> > +               0xc53a),
+> > +        .driver_data =3D recvr_type_gaming_hidpp},
+> >         { /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
+> >           HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+> > USB_DEVICE_ID_MX3000_RECEIVER),
+> >          .driver_data =3D recvr_type_27mhz},
+> > --
+> > 2.24.1
+> >=20
+--=20
+Filipe La=C3=ADns
+
+--=-H9i3sQ2eRn8lTBV7X6Yc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl4dFRUACgkQ+JPGdIFq
+qV2FmhAAr5G57hFORS3d+Qiw7zl2SLYO/opxqwu6lWxXTnhhnBK3OoaknXTi3iyO
+9GsS/113WIJT0zq1ixzjSJP3DMsom5Rx6CrXljRWCS/TolIeU1/VqQIJ+ANR1NHE
+0k1XSGdRorgMRdZj6XukmSw9nwgC++AT5VrYAspo01M4cavEZNDnw2fwhzwPZFlt
+RxnjhMwrBmVb5vAJLVXntz37wXdNS6O5+PzuF5IQ9ugp6hom7zz/Bfm6VLhPTrtB
+taUvr/2EdxXqTP+csV2vwJLLXnRmFead3HM/NHlo8j8KOESmrzUuO+tvl/SOS00V
+tj+uXvye2YqJVnPqGAgl2WW5tKQ5eqE7LMKDwC37tLJX0R3CQB2QkYkd43xPAUs2
+n00tt7pS6k2b4TcusScjnLxTL1MtoBjESzK/qHF0N8XcX0Y4jgfyaKsr/sZYZcO0
+mhj9tSjFKuRD5taY8F4BOnGyy3ex9iZNEHDWOo0UY5/0Lsugh9nlKKZ6Kmmfs6fL
+ORVKzngZrIaHXGsBGNeXNe2oQVojxuqAaqCEon6l0MXIeJRS3HszO5aMsHvVfN0R
+B1uTTunGWVJC9B5tVd9ZnqI8AA4URANNq9aWPgTZMv315duZTQwQAyt+0MVEhcDh
+mqUat+cP48ZC3kVbFsY5ceABCdqLckg7RaMnj71/7JqAOXZiJQ4=
+=f3MK
+-----END PGP SIGNATURE-----
+
+--=-H9i3sQ2eRn8lTBV7X6Yc--
