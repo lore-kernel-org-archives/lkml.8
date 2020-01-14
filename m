@@ -2,92 +2,195 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9A1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E063AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4031424673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579044425;
-	bh=PPRKWQ5QDWXOR83RKwXIekU7AQc4h2uVttMnr+Mvuvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JdxgfFUP1G4eMXKK8+DQU77qIkSODv/2xH2GQsFPIQU9U13zx038xWMe+yMjWUHjW
-	 NSOJf7ridvqWSIeTjB5yJpp8h1S9eOj/g4pJadl47PIfMsmzjxwoi3dAK0II1iKyNN
-	 c4W7bbJ9eVD8Ux1M4/ZVNXWh1RBHCNpn9PyWSmLk=
+	by mail.kernel.org (Postfix) with ESMTP id B373524673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBSNJE45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgANX1E (ORCPT
+        id S1728905AbgANX1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:27:04 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42405 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgANX1C (ORCPT
+        Tue, 14 Jan 2020 18:27:45 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44471 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728757AbgANX1o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:27:02 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so14404304otd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 15:27:02 -0800 (PST)
+        Tue, 14 Jan 2020 18:27:44 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 62so731102pfu.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 15:27:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FjlR2GDiNviLLUnZLpM2xF4e4vLYisf90J5psoo45v0=;
+        b=gBSNJE45auewf9yu41Jxx90LA/dvCD7dhGxGpC0eEVxntCV/YQ1saVcFOQRaaeA7cl
+         K7kwv+IypGXC1ddYEe/94PFryKsx+mNaK26ojYkMpzLutPE8YylmoKQN40y8pW6gcPPo
+         mayG3BljWAw0auet19NA/z1PwsDttjdENN8T4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ttZMLAqDhxSTsHlfd8sLeyc9soxLzGATxjf7nZzKPPw=;
-        b=oc++Qy1ydxir8V8MInt3cnVFzHGNZCJzwzZNIm5WnFk0aU3n2RGDhWJqPkYsRVQaxZ
-         uh8uzd0hoLWpEEUoxGooxyA9jtAZB9Mmxcef0AkiGrYzwU30sgsCXl6POE8lvZ8ANwiG
-         GthMSUl59S/Qzpfmu6sCXpkSKPiz0k/w+W5jSVEfZQCUscslh1N202NbuOfX31qmp23Z
-         6T9RlzGReu/lDqb9pUXO4lp+bXijEPkC8gyARKS751k1364M8JKA77PU3ZnXv1mfmARD
-         vHpGySLdfyu81kv4LQr8c3qeIyFJjdgEwnnzQzSuzeNntOUAeLOy09V4blGKPTTW9UoB
-         g2GQ==
-X-Gm-Message-State: APjAAAXSy2WnF/f4N4FaeJiDNaOrk+2BTcJxlHGjfH+z/pzhGHkHnPqv
-        GmMrRkC227qh/hOt+dgPieZJH7U=
-X-Google-Smtp-Source: APXvYqxDsN5FkUMyo6QVPa+7Uh4itS/NxQkvwY/TuFxVWHQjaMmeAx315uDEnmBdPpOLDD7/zwY+0w==
-X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr711195oto.30.1579044422035;
-        Tue, 14 Jan 2020 15:27:02 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm5847316otk.51.2020.01.14.15.27.00
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FjlR2GDiNviLLUnZLpM2xF4e4vLYisf90J5psoo45v0=;
+        b=pQ/UDnBP64c6hmot39KmwogGiggLAEYplg9gFvGXnR8Kp4F+alUdU0mcuPOcz2pvTe
+         9BY3zl9UfswvZ0pikTM924pp+ksWThA2caX+LAx0TlsK9lgj134gO9ABgZ56zSIBi7Qz
+         57O0aeK/Wu2yTffJXyjtAEoEUaIElzeJwBWlBumYUssswEHcnPLKUKo4Fmi6820TVgVo
+         Nim8zACWPIzwI8oWQPBpeHTyJAnOq3wIZuk/3i7WXq2Bmqf2OwUzQ3KqjRvP0q0GQu2x
+         +GU+gKksvTlB/eNU0ZyfYx5XlNEm8wvsEelpOfYMdm8gxVwcK0PclMmKWdysknRRZjZh
+         9Q2w==
+X-Gm-Message-State: APjAAAXwSPjS97JcB1VK10/jo2KVAhskHajSYJvRI3lcxSsZxKsYa+bn
+        6NAKIT2uTKtRlPCKsnEGsTLhcg==
+X-Google-Smtp-Source: APXvYqwDndS4zrqzZ5mZ3UDWbotPnktd3lqLLQgqXHTAGMncnphjRT6TtzP6jzd9nW4y1L/PNIqsCw==
+X-Received: by 2002:a63:484b:: with SMTP id x11mr30224921pgk.148.1579044463438;
+        Tue, 14 Jan 2020 15:27:43 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id u18sm18521839pgn.9.2020.01.14.15.27.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 15:27:00 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 221a3a
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 17:26:59 -0600
-Date:   Tue, 14 Jan 2020 17:26:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, radu_nicolae.pirea@upb.ro,
-        richard.genoud@gmail.com, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-rtc@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v3 2/7] dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
-Message-ID: <20200114232659.GA16642@bogus>
-References: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
- <1578997397-23165-3-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 14 Jan 2020 15:27:43 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Jon Flatley <jflat@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v6 3/3] power: supply: cros-ec-usbpd-charger: Fix host events
+Date:   Tue, 14 Jan 2020 15:22:22 -0800
+Message-Id: <20200114232219.93171-3-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200114232219.93171-1-pmalani@chromium.org>
+References: <20200114232219.93171-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578997397-23165-3-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 12:23:12 +0200, Claudiu Beznea wrote:
-> Add microchip,sam9x60-tcb to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mfd/atmel-tcb.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+From: Jon Flatley <jflat@chromium.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+There's a bug on ACPI platforms where host events from the ECPD ACPI
+device never make their way to the cros-ec-usbpd-charger driver. This
+makes it so the only time the charger driver updates its state is when
+user space accesses its sysfs attributes.
+
+Now that these events have been unified into a single notifier chain on
+both ACPI and non-ACPI platforms, update the charger driver to use this
+new notifier.
+
+Signed-off-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
+
+Changes in v6(pmalani@chromium.org):
+- Patch first introduced into the series in v6.
+
+ drivers/power/supply/Kconfig              |  2 +-
+ drivers/power/supply/cros_usbpd-charger.c | 50 ++++++++---------------
+ 2 files changed, 19 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 27164a1d3c7c4..ba74ddd793c3d 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -659,7 +659,7 @@ config CHARGER_RT9455
+ 
+ config CHARGER_CROS_USBPD
+ 	tristate "ChromeOS EC based USBPD charger"
+-	depends on CROS_EC
++	depends on CROS_USBPD_NOTIFY
+ 	default n
+ 	help
+ 	  Say Y here to enable ChromeOS EC based USBPD charger
+diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
+index 6cc7c3910e098..7f7e051262170 100644
+--- a/drivers/power/supply/cros_usbpd-charger.c
++++ b/drivers/power/supply/cros_usbpd-charger.c
+@@ -8,6 +8,7 @@
+ #include <linux/mfd/cros_ec.h>
+ #include <linux/module.h>
+ #include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_usbpd_notify.h>
+ #include <linux/platform_data/cros_ec_proto.h>
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
+@@ -524,32 +525,21 @@ static int cros_usbpd_charger_property_is_writeable(struct power_supply *psy,
+ }
+ 
+ static int cros_usbpd_charger_ec_event(struct notifier_block *nb,
+-				       unsigned long queued_during_suspend,
++				       unsigned long host_event,
+ 				       void *_notify)
+ {
+-	struct cros_ec_device *ec_device;
+-	struct charger_data *charger;
+-	u32 host_event;
++	struct charger_data *charger = container_of(nb, struct charger_data,
++						    notifier);
+ 
+-	charger = container_of(nb, struct charger_data, notifier);
+-	ec_device = charger->ec_device;
+-
+-	host_event = cros_ec_get_host_event(ec_device);
+-	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+-		cros_usbpd_charger_power_changed(charger->ports[0]->psy);
+-		return NOTIFY_OK;
+-	} else {
+-		return NOTIFY_DONE;
+-	}
++	cros_usbpd_charger_power_changed(charger->ports[0]->psy);
++	return NOTIFY_OK;
+ }
+ 
+ static void cros_usbpd_charger_unregister_notifier(void *data)
+ {
+ 	struct charger_data *charger = data;
+-	struct cros_ec_device *ec_device = charger->ec_device;
+ 
+-	blocking_notifier_chain_unregister(&ec_device->event_notifier,
+-					   &charger->notifier);
++	cros_usbpd_unregister_notify(&charger->notifier);
+ }
+ 
+ static int cros_usbpd_charger_probe(struct platform_device *pd)
+@@ -683,21 +673,17 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
+ 		goto fail;
+ 	}
+ 
+-	if (ec_device->mkbp_event_supported) {
+-		/* Get PD events from the EC */
+-		charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
+-		ret = blocking_notifier_chain_register(
+-						&ec_device->event_notifier,
+-						&charger->notifier);
+-		if (ret < 0) {
+-			dev_warn(dev, "failed to register notifier\n");
+-		} else {
+-			ret = devm_add_action_or_reset(dev,
+-					cros_usbpd_charger_unregister_notifier,
+-					charger);
+-			if (ret < 0)
+-				goto fail;
+-		}
++	/* Get PD events from the EC */
++	charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
++	ret = cros_usbpd_register_notify(&charger->notifier);
++	if (ret < 0) {
++		dev_warn(dev, "failed to register notifier\n");
++	} else {
++		ret = devm_add_action_or_reset(dev,
++				cros_usbpd_charger_unregister_notifier,
++				charger);
++		if (ret < 0)
++			goto fail;
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.0.341.g760bfbb309-goog
+
