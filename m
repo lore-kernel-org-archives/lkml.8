@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849F3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B976DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B36F20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAF020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996971;
-	bh=otAkdyOj/yWKhsgb0O1ZTTUXCLP9jOd+1Jir8Krge+A=;
+	s=default; t=1578996972;
+	bh=Zkne0qlY6NJIT3bKQZGPcYYlFRgfrwxG1in28LCITt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9INlvoS7iSIKghQ5JWJw/Ukcg5YwKRnUdDLb4YjCMphFO9K/zD7tCyoe0D9QHpsX
-	 XK8ncjfkW1O16ko7OuJxPyzhfqECzYAyIVgq8QFYMIDK32D6IX+Y7kbnabr06XE4hJ
-	 Pm+hP7cfX8UKNDZQgtKVHcUthyyRnoK/gDctmDio=
+	b=ge+BcBXbhFYKsc9N0YVcc2+rbd+8azRKW3brcZPfhBdC/3LVWz/j9rBGNGjzsQdgH
+	 d7X0NRViwAY7dKg9mcAZD2C6IEquHvWwwh7beNrmPCQyrpNoAqYqA0ufvilIaPlmiH
+	 tgi86SrT6mk3OcHVkbz028NODVUr7BIgPR9O9/vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbgANKJ4 (ORCPT
+        id S1731476AbgANKJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbgANKJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 05:09:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731015AbgANKJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E708E20678;
-        Tue, 14 Jan 2020 10:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C31A24676;
+        Tue, 14 Jan 2020 10:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996592;
-        bh=otAkdyOj/yWKhsgb0O1ZTTUXCLP9jOd+1Jir8Krge+A=;
+        s=default; t=1578996589;
+        bh=Zkne0qlY6NJIT3bKQZGPcYYlFRgfrwxG1in28LCITt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hlDx3thdXmqVWsv6Ji9c6WLUk0QTzd3L7mOuVZVAQJvs9iax7MpZefAtKkQi+Wn6U
-         nDVczY+Kf7veEyhHDekj8tj8rqPz6kpuxx+SbmK7YXeTAdbycjx0j8SYoRqqHgJcYe
-         O7HPepRiD3yTN8BfuDOZ3sVuBm4Msu9tzNsAJ96o=
+        b=VuFS4h1dokh8pk7/etWWcWfKRrrQ2vquVwl3y/9C9ikzCThi9UxqA3VumBkiu5k3l
+         j2MqX14Pf9PIVLRcWt/eQapd2VRJsdI96wUBxqpfF1a/frp96z1R6UmwEE5YkmbbpP
+         qZhGAHJ3CWEvtVAj4By82J2teNTiYbQodVMlMuKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 4.14 23/39] drm/fb-helper: Round up bits_per_pixel if possible
-Date:   Tue, 14 Jan 2020 11:01:57 +0100
-Message-Id: <20200114094344.125349345@linuxfoundation.org>
+        syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com,
+        syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.14 22/39] Input: add safety guards to input_set_keycode()
+Date:   Tue, 14 Jan 2020 11:01:56 +0100
+Message-Id: <20200114094343.920636759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -60,58 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit f30e27779d3031a092c2a177b7fb76adccc45241 upstream.
+commit cb222aed03d798fc074be55e59d9a112338ee784 upstream.
 
-When userspace requests a video mode parameter value that is not
-supported, frame buffer device drivers should round it up to a supported
-value, if possible, instead of just rejecting it.  This allows
-applications to quickly scan for supported video modes.
+If we happen to have a garbage in input device's keycode table with values
+too big we'll end up doing clear_bit() with offset way outside of our
+bitmaps, damaging other objects within an input device or even outside of
+it. Let's add sanity checks to the returned old keycodes.
 
-Currently this rule is not followed for the number of bits per pixel,
-causing e.g. "fbset -depth N" to fail, if N is smaller than the current
-number of bits per pixel.
-
-Fix this by returning an error only if bits per pixel is too large, and
-setting it to the current value otherwise.
-
-See also Documentation/fb/framebuffer.rst, Section 2 (Programmer's View
-of /dev/fb*").
-
-Fixes: 865afb11949e5bf4 ("drm/fb-helper: reject any changes to the fbdev")
-Cc: stable@vger.kernel.org
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191230132734.4538-1-geert+renesas@glider.be
+Reported-by: syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com
+Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191207212757.GA245964@dtor-ws
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_fb_helper.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/input/input.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1590,7 +1590,7 @@ int drm_fb_helper_check_var(struct fb_va
- 	 * Changes struct fb_var_screeninfo are currently not pushed back
- 	 * to KMS, hence fail if different settings are requested.
- 	 */
--	if (var->bits_per_pixel != fb->format->cpp[0] * 8 ||
-+	if (var->bits_per_pixel > fb->format->cpp[0] * 8 ||
- 	    var->xres > fb->width || var->yres > fb->height ||
- 	    var->xres_virtual > fb->width || var->yres_virtual > fb->height) {
- 		DRM_DEBUG("fb requested width/height/bpp can't fit in current fb "
-@@ -1616,6 +1616,11 @@ int drm_fb_helper_check_var(struct fb_va
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -858,16 +858,18 @@ static int input_default_setkeycode(stru
+ 		}
  	}
  
- 	/*
-+	 * Likewise, bits_per_pixel should be rounded up to a supported value.
-+	 */
-+	var->bits_per_pixel = fb->format->cpp[0] * 8;
-+
-+	/*
- 	 * drm fbdev emulation doesn't support changing the pixel format at all,
- 	 * so reject all pixel format changing requests.
+-	__clear_bit(*old_keycode, dev->keybit);
+-	__set_bit(ke->keycode, dev->keybit);
+-
+-	for (i = 0; i < dev->keycodemax; i++) {
+-		if (input_fetch_keycode(dev, i) == *old_keycode) {
+-			__set_bit(*old_keycode, dev->keybit);
+-			break; /* Setting the bit twice is useless, so break */
++	if (*old_keycode <= KEY_MAX) {
++		__clear_bit(*old_keycode, dev->keybit);
++		for (i = 0; i < dev->keycodemax; i++) {
++			if (input_fetch_keycode(dev, i) == *old_keycode) {
++				__set_bit(*old_keycode, dev->keybit);
++				/* Setting the bit twice is useless, so break */
++				break;
++			}
+ 		}
+ 	}
+ 
++	__set_bit(ke->keycode, dev->keybit);
+ 	return 0;
+ }
+ 
+@@ -923,9 +925,13 @@ int input_set_keycode(struct input_dev *
+ 	 * Simulate keyup event if keycode is not present
+ 	 * in the keymap anymore
  	 */
+-	if (test_bit(EV_KEY, dev->evbit) &&
+-	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
+-	    __test_and_clear_bit(old_keycode, dev->key)) {
++	if (old_keycode > KEY_MAX) {
++		dev_warn(dev->dev.parent ?: &dev->dev,
++			 "%s: got too big old keycode %#x\n",
++			 __func__, old_keycode);
++	} else if (test_bit(EV_KEY, dev->evbit) &&
++		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
++		   __test_and_clear_bit(old_keycode, dev->key)) {
+ 		struct input_value vals[] =  {
+ 			{ EV_KEY, old_keycode, 0 },
+ 			input_value_sync
 
 
