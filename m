@@ -2,296 +2,102 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02392C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6276AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BE620678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379D020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fhkoDSuR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaQmMXSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgANPGd (ORCPT
+        id S1729144AbgANPG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:06:33 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:46228 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPGd (ORCPT
+        Tue, 14 Jan 2020 10:06:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36166 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:06:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1579014390; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=BvjxXIepNx0mvNesr/9RNNIfuKuiwR0fPltZa2H6Xhg=;
-        b=fhkoDSuRwh+LXfXPVfRhqr12UIMtlJkqYCYIMQahdwi69mjKPY6C+xJoNsJzyweN9Rxr4m
-        /TQ5lvFpLNg0uQUYHvs2vOy/re2HNQuEybnlwGRMDdyCaYUb+JEld5NEYFllL6KdwElHNq
-        EpeaeDJemdlfN99Pz7712Yx/Ko+4/9E=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v3] clocksource: Add driver for the Ingenic JZ47xx OST
-Date:   Tue, 14 Jan 2020 12:06:19 -0300
-Message-Id: <20200114150619.14611-1-paul@crapouillou.net>
+        Tue, 14 Jan 2020 10:06:58 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so12519392wru.3;
+        Tue, 14 Jan 2020 07:06:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1LO+o2liqei6dOj4tGd2yyWf59KLYzNggmwA3IlFMvg=;
+        b=VaQmMXSeGJjA5ZfjvqpKmYtlwdf6Euog7KwKOqwpaKdNgl4qxhZXUDWxgZhFeFlh76
+         6XbwBqkhmlDlNq2FO02wfrvLWEMGnaM6A6YXiAcbih9JmaDpUH5q3hQIMJKOiTQbR5Dx
+         J1731CLg0tfFTJ+0+9VJScXTx1MgwbOceUGEp6OnNe3nPpF9wwz6EiWfb/UdtLxYEiK1
+         DB+YTkj0oROCBXEVcnx6a9wf9gH4k2tutyDO30MsYlcLpJeiSNHjUze8eXOy1013k6VZ
+         pBQ/JTuJw6E4GTo32rxtvMFMGnURC1/azsNspW7lAMUiTBCZOl3I2aP27XWxBWGS+wG4
+         3eqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1LO+o2liqei6dOj4tGd2yyWf59KLYzNggmwA3IlFMvg=;
+        b=Od+V0Tcf3iBXY0Z9gLPwwwIS0GmQsH7lNA1XyhEMC1pSdNmdQhIaljHvOAYJFWX3sC
+         EdPGI8/Gnxb7MhTjACTynjxIaaoVWUh3LJnLRm1Qzjr3kD8NBlzRB2FuRGk3IHuCsgiI
+         yk776SIugdR+2mtdyUlrAuYbai7nFo7r+rK2XUX5yQiQk6sO3WS35zL4IekOPti536YR
+         Cge7zvXIifqQvTY6K3PfCq0M+AqWboNK+7qBv/QV7QhA3dLIvNdUGGDcq5eBpqNh8TFk
+         MmHswhCx/793MuDMQPcr950KONHtZ5AcgNae1rfxCegWrcryjSJnwlltWe4c6hWU2/S9
+         d5vQ==
+X-Gm-Message-State: APjAAAXBqZyg2hCTLMnhR3sYRBEx4hZlutZPzZsWVOLkMkf5bG889J59
+        hEXot4vauaTS3bJO00lPkVM=
+X-Google-Smtp-Source: APXvYqzVuGEDmJd7nEVOmzbMFhwmZKqUffjufxViIM3/GgxAoq/HIv3D0/dxucVGqCV5re3Nn97LVg==
+X-Received: by 2002:adf:f606:: with SMTP id t6mr24938904wrp.85.1579014415886;
+        Tue, 14 Jan 2020 07:06:55 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id c17sm19929654wrr.87.2020.01.14.07.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 07:06:54 -0800 (PST)
+Date:   Tue, 14 Jan 2020 16:06:52 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: sun8i: a83t: Fix incorrect clk and reset
+ macros for EMAC device
+Message-ID: <20200114150652.GA32269@Red>
+References: <20200114094252.8908-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114094252.8908-1-wens@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+On Tue, Jan 14, 2020 at 05:42:52PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> When the raw numbers used for clk and reset indices in the EMAC device
+> node were converted to the new macros, the order of the clk and reset
+> properties was overlooked, and thus the incorrect macros were used.
+> This results in the EMAC being non-responsive, as well as an oops due
+> to incorrect usage of the reset control.
+> 
+> Correct the macro types, and also reorder the clk and reset properties
+> to match all the other device nodes.
+> 
+> Fixes: 765866edb16a ("ARM: dts: sunxi: Use macros for references to CCU clocks")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+> 
+> Error on my part. Hope no one was affected for too long.
+> 
 
-OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
-JZ4780 have a 64-bit OST.
+I saw this today and with this patch the board is back normal.
 
-This driver will register both a clocksource and a sched_clock to the
-system.
-
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
-
-Notes:
-    v2: local_irq_save/restore were moved within sched_clock_register
-    v3: Only register as 32-bit clocksource to simplify things
-
- drivers/clocksource/Kconfig       |   8 ++
- drivers/clocksource/Makefile      |   1 +
- drivers/clocksource/ingenic-ost.c | 183 ++++++++++++++++++++++++++++++
- 3 files changed, 192 insertions(+)
- create mode 100644 drivers/clocksource/ingenic-ost.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5fdd76cb1768..5be2f876f64f 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -697,4 +697,12 @@ config INGENIC_TIMER
- 	help
- 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
- 
-+config INGENIC_OST
-+	bool "Ingenic JZ47xx Operating System Timer"
-+	depends on MIPS || COMPILE_TEST
-+	depends on COMMON_CLK
-+	select MFD_SYSCON
-+	help
-+	  Support for the OS Timer of the Ingenic JZ4770 or similar SoC.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 4dfe4225ece7..6bc97a6fd229 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
- obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
- obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
- obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
-+obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
- obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
-diff --git a/drivers/clocksource/ingenic-ost.c b/drivers/clocksource/ingenic-ost.c
-new file mode 100644
-index 000000000000..2c91e3b34572
---- /dev/null
-+++ b/drivers/clocksource/ingenic-ost.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * JZ47xx SoCs TCU Operating System Timer driver
-+ *
-+ * Copyright (C) 2016 Maarten ter Huurne <maarten@treewalker.org>
-+ * Copyright (C) 2020 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clocksource.h>
-+#include <linux/mfd/ingenic-tcu.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/regmap.h>
-+#include <linux/sched_clock.h>
-+
-+#define TCU_OST_TCSR_MASK	0xffc0
-+#define TCU_OST_TCSR_CNT_MD	BIT(15)
-+
-+#define TCU_OST_CHANNEL		15
-+
-+struct ingenic_ost_soc_info {
-+	bool is64bit;
-+};
-+
-+struct ingenic_ost {
-+	struct regmap *map;
-+	struct clk *clk;
-+
-+	struct clocksource cs;
-+};
-+
-+static struct ingenic_ost *ingenic_ost;
-+
-+static u64 notrace ingenic_ost_read_cntl(void)
-+{
-+	u32 val;
-+
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTL, &val);
-+
-+	return val;
-+}
-+
-+static u64 notrace ingenic_ost_read_cnth(void)
-+{
-+	u32 val;
-+
-+	regmap_read(ingenic_ost->map, TCU_REG_OST_CNTH, &val);
-+
-+	return val;
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_readl(struct clocksource *cs)
-+{
-+	return ingenic_ost_read_cntl();
-+}
-+
-+static u64 notrace ingenic_ost_clocksource_readh(struct clocksource *cs)
-+{
-+	return ingenic_ost_read_cnth();
-+}
-+
-+static int __init ingenic_ost_probe(struct platform_device *pdev)
-+{
-+	const struct ingenic_ost_soc_info *soc_info;
-+	struct device *dev = &pdev->dev;
-+	struct ingenic_ost *ost;
-+	struct clocksource *cs;
-+	unsigned long rate;
-+	int err;
-+
-+	soc_info = device_get_match_data(dev);
-+	if (!soc_info)
-+		return -EINVAL;
-+
-+	ost = devm_kzalloc(dev, sizeof(*ost), GFP_KERNEL);
-+	if (!ost)
-+		return -ENOMEM;
-+
-+	ingenic_ost = ost;
-+
-+	ost->map = device_node_to_regmap(dev->parent->of_node);
-+	if (!ost->map) {
-+		dev_err(dev, "regmap not found\n");
-+		return -EINVAL;
-+	}
-+
-+	ost->clk = devm_clk_get(dev, "ost");
-+	if (IS_ERR(ost->clk))
-+		return PTR_ERR(ost->clk);
-+
-+	err = clk_prepare_enable(ost->clk);
-+	if (err)
-+		return err;
-+
-+	/* Clear counter high/low registers */
-+	if (soc_info->is64bit)
-+		regmap_write(ost->map, TCU_REG_OST_CNTL, 0);
-+	regmap_write(ost->map, TCU_REG_OST_CNTH, 0);
-+
-+	/* Don't reset counter at compare value. */
-+	regmap_update_bits(ost->map, TCU_REG_OST_TCSR,
-+			   TCU_OST_TCSR_MASK, TCU_OST_TCSR_CNT_MD);
-+
-+	rate = clk_get_rate(ost->clk);
-+
-+	/* Enable OST TCU channel */
-+	regmap_write(ost->map, TCU_REG_TESR, BIT(TCU_OST_CHANNEL));
-+
-+	cs = &ost->cs;
-+	cs->name	= "ingenic-ost";
-+	cs->rating	= 320;
-+	cs->flags	= CLOCK_SOURCE_IS_CONTINUOUS;
-+	cs->mask	= CLOCKSOURCE_MASK(32);
-+
-+	if (soc_info->is64bit)
-+		cs->read = ingenic_ost_clocksource_readl;
-+	else
-+		cs->read = ingenic_ost_clocksource_readh;
-+
-+	err = clocksource_register_hz(cs, rate);
-+	if (err) {
-+		dev_err(dev, "clocksource registration failed: %d\n", err);
-+		clk_disable_unprepare(ost->clk);
-+		return err;
-+	}
-+
-+	if (soc_info->is64bit)
-+		sched_clock_register(ingenic_ost_read_cntl, 32, rate);
-+	else
-+		sched_clock_register(ingenic_ost_read_cnth, 32, rate);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_suspend(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	clk_disable(ost->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ingenic_ost_resume(struct device *dev)
-+{
-+	struct ingenic_ost *ost = dev_get_drvdata(dev);
-+
-+	return clk_enable(ost->clk);
-+}
-+
-+static const struct dev_pm_ops __maybe_unused ingenic_ost_pm_ops = {
-+	/* _noirq: We want the OST clock to be gated last / ungated first */
-+	.suspend_noirq = ingenic_ost_suspend,
-+	.resume_noirq  = ingenic_ost_resume,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4725b_ost_soc_info = {
-+	.is64bit = false,
-+};
-+
-+static const struct ingenic_ost_soc_info jz4770_ost_soc_info = {
-+	.is64bit = true,
-+};
-+
-+static const struct of_device_id ingenic_ost_of_match[] = {
-+	{ .compatible = "ingenic,jz4725b-ost", .data = &jz4725b_ost_soc_info, },
-+	{ .compatible = "ingenic,jz4770-ost", .data = &jz4770_ost_soc_info, },
-+	{ }
-+};
-+
-+static struct platform_driver ingenic_ost_driver = {
-+	.driver = {
-+		.name = "ingenic-ost",
-+#ifdef CONFIG_PM_SUSPEND
-+		.pm = &ingenic_ost_pm_ops,
-+#endif
-+		.of_match_table = ingenic_ost_of_match,
-+	},
-+};
-+builtin_platform_driver_probe(ingenic_ost_driver, ingenic_ost_probe);
--- 
-2.24.1
-
+Thanks
