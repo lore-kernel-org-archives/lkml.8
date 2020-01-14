@@ -2,327 +2,113 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F250BC33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD711C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5512214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae2/ZpxL"
+	by mail.kernel.org (Postfix) with ESMTP id AFC5F2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgANAqE (ORCPT
+        id S1729277AbgANAqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:46:04 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40901 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728883AbgANAqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:46:04 -0500
-Received: by mail-vk1-f193.google.com with SMTP id c129so3134459vkh.7;
-        Mon, 13 Jan 2020 16:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5gV2R3Ixh954iDDkX0/3sL6lriDWXRsCN/lGpeZTPDc=;
-        b=Ae2/ZpxL7fCLzR07ewdAZzfF6zv0hgrMulsQk6hBjzkRY2R3ni9cLvphMhfN0zFm9U
-         bXVgXzMZf8dakJlgfvmfl1kMEuPUGiiTVRQkDA7orrFVyOefuo4+g8r3pI2k3xxkesof
-         lVR00q56O/gui25Ejs3Rs7IIid5tJye7uL/BJipl6utSvBupumWfLRSCaW4tmBZzBlTL
-         /o/qKNvR83SgSNqKYDIo8U6AHdWpnk19/htXse5/eHl/pF+/eenbsSicE3YCZNtiRf66
-         ucjiWMV2gekghCUZe5YlAEY3zyj47kQ98HYW9A0LRpzVrcubsDHV2LzE00mH8tVl/132
-         pEhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5gV2R3Ixh954iDDkX0/3sL6lriDWXRsCN/lGpeZTPDc=;
-        b=o87qk3dxRsCZLGEk+JbKGiotJy36piipAx0fJHurYbYFYbAM4uXi+4yQmg/DXspVVN
-         dWfH7VCooZM+KWkSL0j+Z6XpGyKRtByjKoWUEoSKAue49ADnKbLcIQENXCN33oE41Ml0
-         55+X3INiuqkcko2GZDVGj91Cupxd/z5TmyssN7eEzoG7cAweHDDtBCVbPvWg20HkqJSG
-         1/yDyGMzfB3AGdo++v+1zvqWyrddyJLFld6k30hJnSzGylIfq5O9r/nH3bn5sxpuC6qr
-         io6oS7ogZEYFuO0WrHLTGn/bodwVs8Rq+eXIAh3q6ymP7kILpqNO56oTAZvnsRWrwTtP
-         CYew==
-X-Gm-Message-State: APjAAAV27wA7Natv1jdF4zpbIBWdKEZ1NAHo86EImw4AMbHt5qbPmRGf
-        rE95NhDW6LPGVCw48UxwaDRuTN71dmetLd4ceMk=
-X-Google-Smtp-Source: APXvYqytrAmAqZ1DZJZHtOKbPoD4M2PzlcYb4C2dq0T5kKCR4DnU0ejkGLTzL3HmE6wVsnhESA6wMV+h8oh/AkIFo6Y=
-X-Received: by 2002:a1f:2910:: with SMTP id p16mr9214513vkp.71.1578962762480;
- Mon, 13 Jan 2020 16:46:02 -0800 (PST)
+        Mon, 13 Jan 2020 19:46:12 -0500
+Received: from mga01.intel.com ([192.55.52.88]:44320 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbgANAqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:46:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 16:46:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
+   d="scan'208";a="247869908"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 13 Jan 2020 16:46:10 -0800
+Date:   Mon, 13 Jan 2020 16:46:10 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
+Message-ID: <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-10-ira.weiny@intel.com>
+ <20200113222212.GO8247@magnolia>
 MIME-Version: 1.0
-References: <20200113153605.52350-1-brian@brkho.com> <20200113153605.52350-3-brian@brkho.com>
- <CAJs_Fx48B-C8GEeAmPaqGAqAOTR2dT0csg8W=TRyULOfy=1=VQ@mail.gmail.com>
- <CAOPc6Tn8CWVzcLoJOGmn3CW6B9FMKf_-NzE8TpwDHsPfoQDaQQ@mail.gmail.com>
- <20200113225516.GA157345@google.com> <CAJs_Fx5i-cZ0qXk_jNo=JGfZRc7uuvUcTZ2TE1ppuYUfNLymKQ@mail.gmail.com>
-In-Reply-To: <CAJs_Fx5i-cZ0qXk_jNo=JGfZRc7uuvUcTZ2TE1ppuYUfNLymKQ@mail.gmail.com>
-From:   =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@gmail.com>
-Date:   Mon, 13 Jan 2020 16:45:51 -0800
-Message-ID: <CAOeoa-eLpuJ7Bf8FiZS+YyxUK5c8h7oA9qVMnqr1TDRXh2TpNA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Brian Ho <brian@brkho.com>, David Airlie <airlied@linux.ie>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Kristian Kristensen <hoegsberg@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        hoegsberg <hoegsberg@chromium.org>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113222212.GO8247@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 3:17 PM Rob Clark <robdclark@chromium.org> wrote:
->
-> On Mon, Jan 13, 2020 at 2:55 PM Brian Ho <brian@brkho.com> wrote:
-> >
-> > On Mon, Jan 13, 2020 at 09:57:43AM -0800, Kristian Kristensen wrote:
-> > > On Mon, Jan 13, 2020 at 8:25 AM Rob Clark <robdclark@chromium.org> wrote:
-> > >
-> > > > On Mon, Jan 13, 2020 at 7:37 AM Brian Ho <brian@brkho.com> wrote:
-> > > > >
-> > > > > Implements an ioctl to wait until a value at a given iova is greater
-> > > > > than or equal to a supplied value.
-> > > > >
-> > > > > This will initially be used by turnip (open-source Vulkan driver for
-> > > > > QC in mesa) for occlusion queries where the userspace driver can
-> > > > > block on a query becoming available before continuing via
-> > > > > vkGetQueryPoolResults.
-> > > > >
-> > > > > Signed-off-by: Brian Ho <brian@brkho.com>
-> > > > > ---
-> > > > >  drivers/gpu/drm/msm/msm_drv.c | 63 +++++++++++++++++++++++++++++++++--
-> > > > >  include/uapi/drm/msm_drm.h    | 13 ++++++++
-> > > > >  2 files changed, 74 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/msm/msm_drv.c
-> > > > b/drivers/gpu/drm/msm/msm_drv.c
-> > > > > index c84f0a8b3f2c..dcc46874a5a2 100644
-> > > > > --- a/drivers/gpu/drm/msm/msm_drv.c
-> > > > > +++ b/drivers/gpu/drm/msm/msm_drv.c
-> > > > > @@ -36,10 +36,11 @@
-> > > > >   *           MSM_GEM_INFO ioctl.
-> > > > >   * - 1.4.0 - softpin, MSM_RELOC_BO_DUMP, and GEM_INFO support to set/get
-> > > > >   *           GEM object's debug name
-> > > > > - * - 1.5.0 - Add SUBMITQUERY_QUERY ioctl
-> > > > > + * - 1.5.0 - Add SUBMITQUEUE_QUERY ioctl
-> > > > > + * - 1.6.0 - Add WAIT_IOVA ioctl
-> > > > >   */
-> > > > >  #define MSM_VERSION_MAJOR      1
-> > > > > -#define MSM_VERSION_MINOR      5
-> > > > > +#define MSM_VERSION_MINOR      6
-> > > > >  #define MSM_VERSION_PATCHLEVEL 0
-> > > > >
-> > > > >  static const struct drm_mode_config_funcs mode_config_funcs = {
-> > > > > @@ -952,6 +953,63 @@ static int msm_ioctl_submitqueue_close(struct
-> > > > drm_device *dev, void *data,
-> > > > >         return msm_submitqueue_remove(file->driver_priv, id);
-> > > > >  }
-> > > > >
-> > > > > +static int msm_ioctl_wait_iova(struct drm_device *dev, void *data,
-> > > > > +               struct drm_file *file)
-> > > > > +{
-> > > > > +       struct msm_drm_private *priv = dev->dev_private;
-> > > > > +       struct drm_gem_object *obj;
-> > > > > +       struct drm_msm_wait_iova *args = data;
-> > > > > +       ktime_t timeout = to_ktime(args->timeout);
-> > > > > +       unsigned long remaining_jiffies = timeout_to_jiffies(&timeout);
-> > > > > +       struct msm_gpu *gpu = priv->gpu;
-> > > > > +       void *base_vaddr;
-> > > > > +       uint64_t *vaddr;
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       if (args->pad)
-> > > > > +               return -EINVAL;
-> > > > > +
-> > > > > +       if (!gpu)
-> > > > > +               return 0;
-> > > >
-> > > > hmm, I'm not sure we should return zero in this case.. maybe -ENODEV?
-> > > >
-> > > > > +
-> > > > > +       obj = drm_gem_object_lookup(file, args->handle);
-> > > > > +       if (!obj)
-> > > > > +               return -ENOENT;
-> > > > > +
-> > > > > +       base_vaddr = msm_gem_get_vaddr(obj);
-> > > > > +       if (IS_ERR(base_vaddr)) {
-> > > > > +               ret = PTR_ERR(base_vaddr);
-> > > > > +               goto err_put_gem_object;
-> > > > > +       }
-> > > > > +       if (args->offset + sizeof(*vaddr) > obj->size) {
-> > > > > +               ret = -EINVAL;
-> > > > > +               goto err_put_vaddr;
-> > > > > +       }
-> > > > > +
-> > > > > +       vaddr = base_vaddr + args->offset;
-> > > > > +
-> > > > > +       /* Assumes WC mapping */
-> > > > > +       ret = wait_event_interruptible_timeout(
-> > > > > +                       gpu->event, *vaddr >= args->value,
-> > > > remaining_jiffies);
-> > > >
-> > >
-> > > This needs to do the awkward looking
-> > >
-> > >   (int64_t)(*data - value) >= 0
-> > >
-> > > to properly handle the wraparound case.
-> > >
-> >
-> > I think this comparison will run into issues if we allow for 64-bit
-> > reference values. For example, if value is ULLONG_MAX, and *data
-> > starts at 0 on the first comparison, we'll immediately return.
+On Mon, Jan 13, 2020 at 02:22:12PM -0800, Darrick J. Wong wrote:
+> On Fri, Jan 10, 2020 at 11:29:39AM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
 
-The comparison will have to account of the number of bits in the
-serial number. The (int64_t) (*data - value) works for 64 bit unsigned
-serial numbers, but for 32 bit serials as suggested below, we need to
-cast to int32_t. It does work though, in the case where value is
-ULLONG_MAX and and *data is 0, 0 - ULLONG_MAX is one, which is
-correct. The serial numbers wrap around and the distance is computed
-modulo 2^64. See
-https://en.wikipedia.org/wiki/Serial_number_arithmetic.
+[snip]
 
-> >
-> > It's not too much of an issue in fence_completed (msm_fence.c), but
-> > in this ioctl, *data can grow at an arbitrary rate. Are we concerned
-> > about this?
-> >
-> > > > +
-> > > > > +       if (ret == 0) {
-> > > > > +               ret = -ETIMEDOUT;
-> > > > > +               goto err_put_vaddr;
-> > > > > +       } else if (ret == -ERESTARTSYS) {
-> > > > > +               goto err_put_vaddr;
-> > > > > +       }
-> > > >
-> > > > maybe:
-> > > >
-> > > >  } else {
-> > > >    ret = 0;
-> > > >  }
-> > > >
-> > > > and then drop the next three lines?
-> > > >
-> > > > > +
-> > > > > +       msm_gem_put_vaddr(obj);
-> > > > > +       drm_gem_object_put_unlocked(obj);
-> > > > > +       return 0;
-> > > > > +
-> > > > > +err_put_vaddr:
-> > > > > +       msm_gem_put_vaddr(obj);
-> > > > > +err_put_gem_object:
-> > > > > +       drm_gem_object_put_unlocked(obj);
-> > > > > +       return ret;
-> > > > > +}
-> > > > > +
-> > > > >  static const struct drm_ioctl_desc msm_ioctls[] = {
-> > > > >         DRM_IOCTL_DEF_DRV(MSM_GET_PARAM,    msm_ioctl_get_param,
-> > > > DRM_RENDER_ALLOW),
-> > > > >         DRM_IOCTL_DEF_DRV(MSM_GEM_NEW,      msm_ioctl_gem_new,
-> > > > DRM_RENDER_ALLOW),
-> > > > > @@ -964,6 +1022,7 @@ static const struct drm_ioctl_desc msm_ioctls[] = {
-> > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_NEW,
-> > > >  msm_ioctl_submitqueue_new,   DRM_RENDER_ALLOW),
-> > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_CLOSE,
-> > > > msm_ioctl_submitqueue_close, DRM_RENDER_ALLOW),
-> > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_QUERY,
-> > > > msm_ioctl_submitqueue_query, DRM_RENDER_ALLOW),
-> > > > > +       DRM_IOCTL_DEF_DRV(MSM_WAIT_IOVA, msm_ioctl_wait_iova,
-> > > > DRM_RENDER_ALLOW),
-> > > > >  };
-> > > > >
-> > > > >  static const struct vm_operations_struct vm_ops = {
-> > > > > diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
-> > > > > index 0b85ed6a3710..8477f28a4ee1 100644
-> > > > > --- a/include/uapi/drm/msm_drm.h
-> > > > > +++ b/include/uapi/drm/msm_drm.h
-> > > > > @@ -298,6 +298,17 @@ struct drm_msm_submitqueue_query {
-> > > > >         __u32 pad;
-> > > > >  };
-> > > > >
-> > > > > +/* This ioctl blocks until the u64 value at bo + offset is greater than
-> > > > or
-> > > > > + * equal to the reference value.
-> > > > > + */
-> > > > > +struct drm_msm_wait_iova {
-> > > > > +       __u32 handle;          /* in, GEM handle */
-> > > > > +       __u32 pad;
-> > > > > +       struct drm_msm_timespec timeout;   /* in */
-> > > > > +       __u64 offset;          /* offset into bo */
-> > > > > +       __u64 value;           /* reference value */
-> > > >
-> > > > Maybe we should go ahead and add a __u64 mask;
-> > > >
-> > > > that would let us wait for 32b values as well, and wait for bits in a
-> > > > bitmask
-> > > >
-> > >
-> > > I think we'd be OK to just default to 32 bit values instead, since most of
-> > > the CP commands that this is intended to work with (CP_EVENT_WRITE,
-> > > CP_WAIT_MEM_GTE etc) operate on 32 bit values. We could move 'value' to the
-> > > slot right after 'handle' but then we'd not have any pad/reserved fields.
-> > > Maybe we keep 'value' 64 bit but restrict it to 32 bits, with an option to
-> > > add a 64 bit flag in 'pad' later on?
-> > >
-> >
-> > FWIW, the current usage of this in my mesa MR uses a 64 bit value.
-> > There's no super great reason that the available bit is 64 bits and
-> > not 32 bits (I think it made the addressing math a bit simpler), but
-> > I'm fine with whatever you all decide on here.
-> >
->
-> I assume you are waiting for a fence value written w/ CP_EVENT_WRITE?
-> Or at least that is what I'd recommend.  That would be 32b
->
-> BR,
-> -R
->
-> > > >
-> > > > Other than those minor comments, it looks pretty good to me
-> > > >
-> > > > BR,
-> > > > -R
-> > > >
-> > > > > +};
-> > > > > +
-> > > > >  #define DRM_MSM_GET_PARAM              0x00
-> > > > >  /* placeholder:
-> > > > >  #define DRM_MSM_SET_PARAM              0x01
-> > > > > @@ -315,6 +326,7 @@ struct drm_msm_submitqueue_query {
-> > > > >  #define DRM_MSM_SUBMITQUEUE_NEW        0x0A
-> > > > >  #define DRM_MSM_SUBMITQUEUE_CLOSE      0x0B
-> > > > >  #define DRM_MSM_SUBMITQUEUE_QUERY      0x0C
-> > > > > +#define DRM_MSM_WAIT_IOVA      0x0D
-> > > > >
-> > > > >  #define DRM_IOCTL_MSM_GET_PARAM        DRM_IOWR(DRM_COMMAND_BASE +
-> > > > DRM_MSM_GET_PARAM, struct drm_msm_param)
-> > > > >  #define DRM_IOCTL_MSM_GEM_NEW          DRM_IOWR(DRM_COMMAND_BASE +
-> > > > DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
-> > > > > @@ -327,6 +339,7 @@ struct drm_msm_submitqueue_query {
-> > > > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW    DRM_IOWR(DRM_COMMAND_BASE +
-> > > > DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
-> > > > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE +
-> > > > DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
-> > > > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_QUERY  DRM_IOW (DRM_COMMAND_BASE +
-> > > > DRM_MSM_SUBMITQUEUE_QUERY, struct drm_msm_submitqueue_query)
-> > > > > +#define DRM_IOCTL_MSM_WAIT_IOVA        DRM_IOW (DRM_COMMAND_BASE +
-> > > > DRM_MSM_WAIT_IOVA, struct drm_msm_wait_iova)
-> > > > >
-> > > > >  #if defined(__cplusplus)
-> > > > >  }
-> > > > > --
-> > > > > 2.25.0.rc1.283.g88dfdc4193-goog
-> > > > >
-> > > >
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> >  
+> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > index bc3654fe3b5d..1ab0906c6c7f 100644
+> > --- a/fs/xfs/xfs_ioctl.c
+> > +++ b/fs/xfs/xfs_ioctl.c
+> > @@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
+> >  		goto out_unlock;
+> >  	}
+> >  
+> > +	/*
+> > +	 * If there is a mapping in place we must remain in our current mode.
+> > +	 */
+> > +	if (atomic64_read(&inode->i_mapped)) {
+> 
+> Urk, should we really be messing around with the address space
+> internals?
+
+I contemplated a function call instead of checking i_mapped directly?  Is that
+what you mean?
+
+
+> 
+> > +		error = -EBUSY;
+> > +		goto out_unlock;
+> > +	}
+> > +
+> >  	error = filemap_write_and_wait(inode->i_mapping);
+> >  	if (error)
+> >  		goto out_unlock;
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 631f11d6246e..6e7dc626b657 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -740,6 +740,7 @@ struct inode {
+> >  #endif
+> >  
+> >  	void			*i_private; /* fs or device private pointer */
+> > +	atomic64_t               i_mapped;
+> 
+> I would have expected to find this in struct address_space since the
+> mapping count is a function of the address space, right?
+
+I suppose but the only external call (above) would be passing an inode.  So to
+me it seemed better here.
+
+Ira
+
+> 
+> --D
+> 
