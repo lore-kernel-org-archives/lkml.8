@@ -2,73 +2,111 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE1FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AAFC33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1537324658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BED2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:04:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KKp4Lez6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgANDE2 (ORCPT
+        id S1729643AbgANDEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 22:04:28 -0500
-Received: from mga12.intel.com ([192.55.52.136]:31656 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbgANDE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 22:04:28 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 19:04:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
-   d="scan'208";a="397354511"
-Received: from unknown (HELO chenyu-office) ([10.239.158.173])
-  by orsmga005.jf.intel.com with ESMTP; 13 Jan 2020 19:04:25 -0800
-Date:   Tue, 14 Jan 2020 11:04:00 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI/PM: Print the pci config space of devices before
- suspend
-Message-ID: <20200114030400.GA5065@chenyu-office>
-References: <20200113060724.19571-1-yu.c.chen@intel.com>
- <CAJZ5v0jgdfAG_BDefdSQFV9hM61o68Aj31PxShNxxcpsYFpxgw@mail.gmail.com>
+        Mon, 13 Jan 2020 22:04:37 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53130 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729224AbgANDEh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 22:04:37 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E33f0n181167;
+        Tue, 14 Jan 2020 03:04:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=keJibTsJRKKM7cxbY4WBKFccqeBdlACR5qxE4hPJX+4=;
+ b=KKp4Lez6+ddRjoyGpUtf4VWNMY+B3LVFG52sUGwtjh/9v2zq9CcRmH5IV/3gDWj5mZtz
+ vtHWtkVgOr9rmKfQxdB0jYdPL/to+TFrSl9ZTbeCy3U/1mpQr/MTZhX21WFF906elohQ
+ 3uYqtdf8jy0Gx3EJK12rwmZQWLhRY4muOJxdMLAGLUdWTQBVg1nRqLQF24zQmFZrfxb5
+ YsItUNOOvMmrWiiL8jxwVN/qEQ4u8NVwcagtESmfF0uwtd9oJSYxG3XSVn2wp8ouGWxW
+ foe1SEaAWDhbVfQwjVifj0LHDkRKXT0R9o23x5DRMluQRi4sOtEwsYa28K2897yOJBA5 rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xf73tk4a4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 03:04:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E33E1L194107;
+        Tue, 14 Jan 2020 03:04:00 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xfrgjss6w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 03:03:59 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00E33vjH010007;
+        Tue, 14 Jan 2020 03:03:57 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 19:03:57 -0800
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191215174509.1847-1-linux@roeck-us.net>
+        <20191215174509.1847-2-linux@roeck-us.net>
+        <yq1r211dvck.fsf@oracle.com>
+        <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+        <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+        <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
+Date:   Mon, 13 Jan 2020 22:03:54 -0500
+In-Reply-To: <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net> (Guenter
+        Roeck's message of "Sat, 11 Jan 2020 12:22:57 -0800")
+Message-ID: <yq1r202spr9.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jgdfAG_BDefdSQFV9hM61o68Aj31PxShNxxcpsYFpxgw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=643
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001140026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=704 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-On Mon, Jan 13, 2020 at 11:01:28AM +0100, Rafael J. Wysocki wrote:
-> On Mon, Jan 13, 2020 at 7:08 AM Chen Yu <yu.c.chen@intel.com> wrote:
-> >
-> > The pci config space was found to be insane during resume
-> 
-> I wouldn't call it "insane".
-> 
-> It probably means that the device was not present or not accessible
-> during hibernation and now it appears to be present (maybe the restore
-> kernel found it and configured it).
-> 
-Right, thanks for the hint. If this is the case, it should not
-save any pci config settings if that device is not accessible,
-otherwise there's risk of pci config hard confliction after resumed.
-I've applied the patch and wait for the issue to be reproduced
-(not 100%) and will send the result later.
 
-Thanks,
-Chenyu
+Hi Guenter!
+
+> I tried again, this time with v5.5-rc5. Loading and unloading ahci and
+> drivetemp in any order does not cause any problems for me.
+
+I tried your hwmon-next branch and it still happens for me. Both in qemu
+and on real hw. I'm really low on bandwidth the next couple of days.
+Will try to look later this week unless you beat me to it. I get lots of
+these warnings after modprobe drivetemp; modprobe ahci:
+
+[ 1055.611922] WARNING: CPU: 3 PID: 3233 at drivers/base/dd.c:519 really_probe+0x436/0x4f0
+
+A quick test forcing synchronous SCSI scanning made no difference.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
+
