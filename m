@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66888C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA7AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4612075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE5F2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgANRej (ORCPT
+        id S1728795AbgANRfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:34:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:55460 "EHLO foss.arm.com"
+        Tue, 14 Jan 2020 12:35:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:55500 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgANRej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:34:39 -0500
+        id S1726270AbgANRfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:35:12 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF31F1396;
-        Tue, 14 Jan 2020 09:34:38 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F28CD1396;
+        Tue, 14 Jan 2020 09:35:11 -0800 (PST)
 Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E58F83F68E;
-        Tue, 14 Jan 2020 09:34:35 -0800 (PST)
-Date:   Tue, 14 Jan 2020 17:34:33 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22D9F3F68E;
+        Tue, 14 Jan 2020 09:35:09 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:35:07 +0000
 From:   Catalin Marinas <catalin.marinas@arm.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
@@ -46,40 +46,30 @@ Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
         Sudakshina Das <sudi.das@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v4 07/12] arm64: BTI: Decode BYTPE bits when printing
- PSTATE
-Message-ID: <20200114173433.GK30444@arrakis.emea.arm.com>
+Subject: Re: [PATCH v4 09/12] arm64: traps: Shuffle code to eliminate forward
+ declarations
+Message-ID: <20200114173506.GL30444@arrakis.emea.arm.com>
 References: <20191211154206.46260-1-broonie@kernel.org>
- <20191211154206.46260-8-broonie@kernel.org>
+ <20191211154206.46260-10-broonie@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211154206.46260-8-broonie@kernel.org>
+In-Reply-To: <20191211154206.46260-10-broonie@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:42:01PM +0000, Mark Brown wrote:
+On Wed, Dec 11, 2019 at 03:42:03PM +0000, Mark Brown wrote:
 > From: Dave Martin <Dave.Martin@arm.com>
 > 
-> The current code to print PSTATE symbolically when generating
-> backtraces etc., does not include the BYTPE field used by Branch
-> Target Identification.
+> Hoist the IT state handling code earlier in traps.c, to avoid
+> accumulating forward declarations.
 > 
-> So, decode BYTPE and print it too.
-> 
-> In the interests of human-readability, print the classes of BTI
-> matched.  The symbolic notation, BYTPE (PSTATE[11:10]) and
-> permitted classes of subsequent instruction are:
-> 
->     -- (BTYPE=0b00): any insn
->     jc (BTYPE=0b01): BTI jc, BTI j, BTI c, PACIxSP
->     -c (BYTPE=0b10): BTI jc, BTI c, PACIxSP
->     j- (BTYPE=0b11): BTI jc, BTI j
+> No functional change.
 > 
 > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 > Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
