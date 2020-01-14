@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A5FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611BFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2812724672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A54E24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4ZkRTKJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y+HAAWqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgANT5w (ORCPT
+        id S1728931AbgANT5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:57:52 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44451 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728865AbgANT5q (ORCPT
+        Tue, 14 Jan 2020 14:57:53 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43154 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728894AbgANT5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:57:46 -0500
-Received: by mail-qv1-f68.google.com with SMTP id n8so6260823qvg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:57:46 -0800 (PST)
+        Tue, 14 Jan 2020 14:57:51 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so13581138qtj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:57:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=loHHHS6V4PQc7Kof40yPX25pxix99gLrH/VUREm5tXI=;
-        b=p4ZkRTKJulQfgPDkvEIxmKubrz472Dr5NTI5HlB7LYQ6604xHHnLTcEMYGhLoKjsr2
-         ka1AbeV68kBI3xAZmU/5Hi3t/ReWXEZwzWiFSgl81IMCnB2uctFS9qzDhAE5lwDERYT4
-         C1XDtFbAKhNdzZkY1AgYuUdynQGd7pl/zQ3Z5ZypuIYWnSw+oPvywMcVto1al1adhfZh
-         K41XiCcDwByHOVFloWmhuSzgKcHIMK3Y5ooS92eFPayXhLazgCzNqsFsd2CH2f0H/jZY
-         F8rxMrNoaBzZvy315OKAAEBj5l/w313S1L8sPcI5pBYh4sc1dyzNMvm2KkSkTxTyMfvj
-         9Fyg==
+        bh=D0skf/6By7/rqfJ4BHcoMon/wG4Iy6pSq8JDg2nxI/M=;
+        b=y+HAAWqWNOZ8iYPKBST7TKp8xvS29vpdjc3VJNuLHXm+CQwifHOAcDRI7i34dmcJgF
+         jVq+csa77pceFTHmVv1c6+Cyf/Y2krfYWdykp5CXfey+c9NEK5SVOBDf4LGXOB7HLXB9
+         QQzVbtQQKOWRtcgL+yvn6mnp0TuQm7bj11S8EhwKp3Mj/GnwfbeecUbK3WVTWexxipeP
+         Xp3RkATUWXTvhP0rpkys30ScGDjgfo5tDic+FcJVciLUmD6ij3+SUVVxp+WVHQyQx2e+
+         WtI5IVWhlZS/Qxsr7GK0rhVSHc/wrlsaOG3F+W3VhJtuRUbWpuFW+Rg/peb4mOV/NHBb
+         A0Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=loHHHS6V4PQc7Kof40yPX25pxix99gLrH/VUREm5tXI=;
-        b=L4U/ZdG3TGchOyuvMOakDRwcBeTuE6txJfjy15xvMELs4Q9s5uZ0UVtYOX/S9so+Vn
-         qbLEVxiyvL7BttKz+0tI3mWwfwGKg1sMj9j9jqN45U16QbObodk+JM7aEg+121gIDXFE
-         rh/h9Zp5goyNbqv0oYN2DFXjFyA1Sj6E8OL9SJbO1qwir7rBBAjgvCwlQ4YadOMbY7UV
-         gtAx7u1Vv/LWmKTXXw9eAjSElukNcTRzr4mnz8t0W/cWUzTHmI1BIs5GaqS7NJYbjpG2
-         /1nPxkCQpFZukP9ftsoh29YHag+0RVBKNbMcFJ0iuRmBEaRkmB+HVsDflr7c3+phaXBG
-         5MBw==
-X-Gm-Message-State: APjAAAWV9dDy7mvYKpVPffDAB4NTze1U5R1zmvWCcjE41T0zPTrLn3D5
-        EaDH/TP7kkXjO5jG7eSZSJiXYg==
-X-Google-Smtp-Source: APXvYqxcCIDEkJskRq7s63gbOAYytQGDsu95rgwhHcv1jUSzQGPqCKtSzE5sOjFTTwVSbHZsoy2dQA==
-X-Received: by 2002:a0c:8bd2:: with SMTP id a18mr22177922qvc.38.1579031865881;
-        Tue, 14 Jan 2020 11:57:45 -0800 (PST)
+        bh=D0skf/6By7/rqfJ4BHcoMon/wG4Iy6pSq8JDg2nxI/M=;
+        b=O9dcJU9FbI7V0wdQbqEyXnNsvqm5PPwwcaSuTxVIZabUFctI8r2cArUqGxZFELS9zw
+         LGdJ83KMGJt/4CVaGl+ko/Suyrq10dNkSs/JTT9XwPFgzUWxoZHjolk9vrpHfDbAIs64
+         boQ/rnBUnFbI9gWdKzUwy5hsfVyD4i1kmlCtLIsPzQL8As5dGvxWScVYzu9sjWyv3K7M
+         bLxATvfRX+PM1Vtvsjqm/CIF+n+ZXPYcq7r6BPf2Dw2utjsL6MCxooLVmKq3JMv9HtHF
+         P3wUyZ4OxMKEYDmq3tBQukeFnePHCDT0kHZ62o9iUBXFEB8G1FpOc9CgOyw8yUzNVbQJ
+         cVuA==
+X-Gm-Message-State: APjAAAXw9A5xBYr+5tPXeAU5usQAMqJSQZgiVZPZcRRNElC2ua4AwD5A
+        SxEgfziy8MtdPlSdazGduGKvuA==
+X-Google-Smtp-Source: APXvYqxfS1LrTPVKpQ8yGbqnCXmadDYhDoHKxZ0X3wm6x9sxk08+zVMxUznHHXVpvu4YfXbKIG+fBg==
+X-Received: by 2002:ac8:958:: with SMTP id z24mr298822qth.40.1579031870419;
+        Tue, 14 Jan 2020 11:57:50 -0800 (PST)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id b81sm7183497qkc.135.2020.01.14.11.57.44
+        by smtp.googlemail.com with ESMTPSA id b81sm7183497qkc.135.2020.01.14.11.57.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 14 Jan 2020 11:57:45 -0800 (PST)
+        Tue, 14 Jan 2020 11:57:49 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
@@ -62,9 +62,9 @@ To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         viresh.kumar@linaro.org
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v8 2/7] sched/topology: Add hook to read per cpu thermal pressure.
-Date:   Tue, 14 Jan 2020 14:57:34 -0500
-Message-Id: <1579031859-18692-3-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v8 4/7] sched/fair: Enable periodic update of average thermal pressure
+Date:   Tue, 14 Jan 2020 14:57:36 -0500
+Message-Id: <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
 References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
@@ -73,37 +73,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce arch_cpu_thermal_pressure to retrieve per cpu thermal
-pressure.
+Introduce support in CFS periodic tick and other bookkeeping apis
+to trigger the process of computing average thermal pressure for a
+cpu. Also consider avg_thermal.load_avg in others_have_blocked
+which allows for decay of pelt signals.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
- include/linux/sched/topology.h | 8 ++++++++
+ kernel/sched/fair.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-v6->v7:
-	- Renamed arch_scale_thermal_capacity to arch_cpu_thermal_pressure
-	  as per review comments from Peter, Dietmar and Ionela.
-
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index f341163..850b3bf 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -225,6 +225,14 @@ unsigned long arch_scale_cpu_capacity(int cpu)
- }
- #endif
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 8da0222..311bb0b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7470,6 +7470,9 @@ static inline bool others_have_blocked(struct rq *rq)
+ 	if (READ_ONCE(rq->avg_dl.util_avg))
+ 		return true;
  
-+#ifndef arch_cpu_thermal_pressure
-+static __always_inline
-+unsigned long arch_cpu_thermal_pressure(int cpu)
-+{
-+	return 0;
-+}
-+#endif
++	if (READ_ONCE(rq->avg_thermal.load_avg))
++		return true;
 +
- static inline int task_node(const struct task_struct *p)
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ 	if (READ_ONCE(rq->avg_irq.util_avg))
+ 		return true;
+@@ -7495,6 +7498,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
  {
- 	return cpu_to_node(task_cpu(p));
+ 	const struct sched_class *curr_class;
+ 	u64 now = rq_clock_pelt(rq);
++	unsigned long thermal_pressure = arch_cpu_thermal_pressure(cpu_of(rq));
+ 	bool decayed;
+ 
+ 	/*
+@@ -7505,6 +7509,8 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ 
+ 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+ 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
++		  update_thermal_load_avg(rq_clock_task(rq), rq,
++					  thermal_pressure) 			|
+ 		  update_irq_load_avg(rq, 0);
+ 
+ 	if (others_have_blocked(rq))
+@@ -10275,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ {
+ 	struct cfs_rq *cfs_rq;
+ 	struct sched_entity *se = &curr->se;
++	unsigned long thermal_pressure = arch_cpu_thermal_pressure(cpu_of(rq));
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+@@ -10286,6 +10293,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 
+ 	update_misfit_status(curr, rq);
+ 	update_overutilized_status(task_rq(curr));
++	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
+ }
+ 
+ /*
 -- 
 2.1.4
 
