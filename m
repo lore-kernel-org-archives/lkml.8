@@ -2,91 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C607C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F11C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A6D24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QJCtwaWy"
+	by mail.kernel.org (Postfix) with ESMTP id B1F3624672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgANO5I (ORCPT
+        id S1729057AbgANO5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:57:08 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:15057 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727092AbgANO5I (ORCPT
+        Tue, 14 Jan 2020 09:57:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2486 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727092AbgANO5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:57:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579013827; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=/wDQzX9drwe6MnLxKEd1wgdmQ0ROFJy34Icy9JXF50Q=; b=QJCtwaWyhz8NxuKFgQID9vjN+t+e1K3ysfYSiiSWH6kHI5jn8ymiuXaYQRjVlV9e4CRPsADe
- gTfl2H6ghWXxns3Lbast6UomutGHo2qXDmqHUVM9XP0CnzGImWOG5PcYsLHDVnWwPrlAQOlD
- pTREJ5s2WaKrt+eRgmTBNfeiqwM=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1dd6be.7fba760c6f48-smtp-out-n01;
- Tue, 14 Jan 2020 14:57:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 655D2C4479F; Tue, 14 Jan 2020 14:57:01 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2370AC43383;
-        Tue, 14 Jan 2020 14:56:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2370AC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        stable <stable@vger.kernel.org>, huangwen <huangwenabc@gmail.com>
-Subject: Re: [PATCH] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-References: <20200106224212.189763-1-briannorris@chromium.org>
-        <CA+ASDXNN5=97nhN99rPneLGSQAmQ4ULS6Kim1oxCzKWNtPkWFw@mail.gmail.com>
-Date:   Tue, 14 Jan 2020 16:56:54 +0200
-In-Reply-To: <CA+ASDXNN5=97nhN99rPneLGSQAmQ4ULS6Kim1oxCzKWNtPkWFw@mail.gmail.com>
-        (Brian Norris's message of "Mon, 6 Jan 2020 14:51:02 -0800")
-Message-ID: <87imle13yh.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 14 Jan 2020 09:57:11 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EEqqEV103289
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:57:11 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw04g1g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:57:09 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 Jan 2020 14:56:59 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Jan 2020 14:56:55 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00EEusPu65208380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 14:56:54 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C0F552051;
+        Tue, 14 Jan 2020 14:56:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.223.52])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 47F0A5204F;
+        Tue, 14 Jan 2020 14:56:53 +0000 (GMT)
+Subject: Re: inconsistent lock state in ima_process_queued_keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Date:   Tue, 14 Jan 2020 09:56:52 -0500
+In-Reply-To: <CACT4Y+av-ipjsdtsXs4d55w=inNHJqho3s3XKfU0Jo7f98yi8w@mail.gmail.com>
+References: <000000000000486474059c19f4d7@google.com>
+         <CACT4Y+av-ipjsdtsXs4d55w=inNHJqho3s3XKfU0Jo7f98yi8w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011414-0020-0000-0000-000003A09735
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011414-0021-0000-0000-000021F80C57
+Message-Id: <1579013812.12230.21.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_04:2020-01-14,2020-01-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001140128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+On Tue, 2020-01-14 at 14:58 +0100, Dmitry Vyukov wrote:
+> On Tue, Jan 14, 2020 at 2:56 PM syzbot
+> <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    1b851f98 Add linux-next specific files for 20200114
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=12bcbb25e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3e7d9cf7ebfa08ad
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a4a503d7f37292ae1664
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
+> 
+> +Lakshmi, you seem to have submitted a number of changes to this file recently.
+> 
+> This completely breaks linux-next testing for us, every kernel crashes
+> a few minutes after boot.
+> 
+> 2020/01/14 14:45:00 vm-26: crash: inconsistent lock state in
+> ima_process_queued_keys
 
-> On Mon, Jan 6, 2020 at 2:43 PM Brian Norris <briannorris@chromium.org> wrote:
->>
->> We called rcu_read_lock(), so we need to call rcu_read_unlock() before
->> we return.
->>
->> Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
->> Cc: stable@vger.kernel.org
->> Cc: huangwen <huangwenabc@gmail.com>
->> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
->> Signed-off-by: Brian Norris <briannorris@chromium.org>
->
-> I probably should have mentioned somewhere here: the bug is currently
-> in 5.5-rc and is being ported to -stable already (I'll try to head
-> that off). So this probably should have said [PATCH 5.5]. Sorry about
-> that.
+Yikes!  Are you running with an IMA policy?  I assume this is being
+caused by commit 8f5d2d06f217 ("IMA: Defined timer to free queued
+keys".  Does reverting it prevent this from happening?
 
-Ok, I'll queue this to v5.5.
+Mimi
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
