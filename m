@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F15C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A49CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2BB24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DCF24681
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996416;
-	bh=JNfAoog5+ccTMuc9E8lvj6TYLMclB4+LV964XkJSShc=;
+	s=default; t=1578996420;
+	bh=OXyqQH10ZLVxHbYwnykAef1fBUxIFazmjrSJQ9tTu9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0L4F9JVOFjh497CS+PD1peG93RlB6lL1DVPjvBMcdJEOFevYhB2ycy+k3oF+7NKW8
-	 xfFMvUuixlhBMS8s5NtOujEc25bDwUUky+rc5AhkyDhAQzi4y2A7tquhRgh1qSCJrs
-	 +8jVN9ob6vCh1lUuclu14RWDaLferoDk7JEiMUGM=
+	b=EsUM141E69NQRoVPJNvZRqUHHSGZvVr4PJgNhCpUug4QXHgqi2iR4nT50y8IXi6DW
+	 H4IyUAJ0wxdUuqtfdC7kel+N41NWB7dX96euaityRf+dxdDvXqC+31FaN8ATjI4gf1
+	 XQR34I9V1e4dDOpdPCXX7BVyZOgNRkOk042yoBCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbgANKGz (ORCPT
+        id S1730540AbgANKG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgANKGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:51 -0500
+        id S1729503AbgANKG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0B9D24676;
-        Tue, 14 Jan 2020 10:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854D124679;
+        Tue, 14 Jan 2020 10:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996411;
-        bh=JNfAoog5+ccTMuc9E8lvj6TYLMclB4+LV964XkJSShc=;
+        s=default; t=1578996417;
+        bh=OXyqQH10ZLVxHbYwnykAef1fBUxIFazmjrSJQ9tTu9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8+SEGPvdh/+fktnvsBkHJUvcOJT6sxw7B7fyv8KGDfZDP/66Y0HdPCMlYm+Ime1W
-         5nY6fmHLlduEFRMvvpAc6WDqtRv596RtByjF+29B412Weg5C+bgNPFUOAjpiGjZ2kD
-         VM/JaZf4ofEzl9uBUEryf/O0Fbz5HP7+qWa3P7U4=
+        b=mY7SGzJ2EvH8Ma/rs2tNhZXQDy09+mso+jaCXdWGOkkU498sG7su/RDJqlyzADiWF
+         YD5Kdd6nNjFS0S5sXycNTIZCNWoPks4mXZTF2ZhKJQ7t4of86s+4vCarW6rkBXVAsv
+         p7pdBBXcJEvDVXgKRimUyGcF++x1BqqDqbNNBe1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
-        linux-xtensa@linux-xtensa.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 62/78] xtensa: Implement copy_thread_tls
-Date:   Tue, 14 Jan 2020 11:01:36 +0100
-Message-Id: <20200114094401.746640870@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 02/46] i2c: fix bus recovery stop mode timing
+Date:   Tue, 14 Jan 2020 11:01:19 +0100
+Message-Id: <20200114094340.919318891@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-References: <20200114094352.428808181@linuxfoundation.org>
+In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
+References: <20200114094339.608068818@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,59 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amanieu d'Antras <amanieu@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit c346b94f8c5d1b7d637522c908209de93305a8eb upstream.
+commit cf8ce8b80f8bf9669f6ec4e71e16668430febdac upstream.
 
-This is required for clone3 which passes the TLS value through a
-struct rather than a register.
+The I2C specification states that tsu:sto for standard mode timing must
+be at minimum 4us. Pictographically, this is:
 
-Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-Cc: linux-xtensa@linux-xtensa.org
-Cc: <stable@vger.kernel.org> # 5.3.x
-Link: https://lore.kernel.org/r/20200102172413.654385-7-amanieu@gmail.com
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+SCL: ____/~~~~~~~~~
+SDA: _________/~~~~
+       ->|    |<- 4us minimum
+
+We are currently waiting 2.5us between asserting SCL and SDA, which is
+in violation of the standard. Adjust the timings to ensure that we meet
+what is stipulated as the minimum timings to ensure that all devices
+correctly interpret the STOP bus transition.
+
+This is more important than trying to generate a square wave with even
+duty cycle.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/Kconfig          |    1 +
- arch/xtensa/kernel/process.c |    8 ++++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core-base.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/arch/xtensa/Kconfig
-+++ b/arch/xtensa/Kconfig
-@@ -22,6 +22,7 @@ config XTENSA
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_KASAN if MMU
- 	select HAVE_ARCH_TRACEHOOK
-+	select HAVE_COPY_THREAD_TLS
- 	select HAVE_DEBUG_KMEMLEAK
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_EXIT_THREAD
---- a/arch/xtensa/kernel/process.c
-+++ b/arch/xtensa/kernel/process.c
-@@ -202,8 +202,9 @@ int arch_dup_task_struct(struct task_str
-  * involved.  Much simpler to just not copy those live frames across.
-  */
- 
--int copy_thread(unsigned long clone_flags, unsigned long usp_thread_fn,
--		unsigned long thread_fn_arg, struct task_struct *p)
-+int copy_thread_tls(unsigned long clone_flags, unsigned long usp_thread_fn,
-+		unsigned long thread_fn_arg, struct task_struct *p,
-+		unsigned long tls)
- {
- 	struct pt_regs *childregs = task_pt_regs(p);
- 
-@@ -264,9 +265,8 @@ int copy_thread(unsigned long clone_flag
- 			       &regs->areg[XCHAL_NUM_AREGS - len/4], len);
- 		}
- 
--		/* The thread pointer is passed in the '4th argument' (= a5) */
- 		if (clone_flags & CLONE_SETTLS)
--			childregs->threadptr = childregs->areg[5];
-+			childregs->threadptr = tls;
- 	} else {
- 		p->thread.ra = MAKE_RA_FOR_CALL(
- 				(unsigned long)ret_from_kernel_thread, 1);
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -194,10 +194,11 @@ int i2c_generic_scl_recovery(struct i2c_
+ 	 * If we can set SDA, we will always create a STOP to ensure additional
+ 	 * pulses will do no harm. This is achieved by letting SDA follow SCL
+ 	 * half a cycle later. Check the 'incomplete_write_byte' fault injector
+-	 * for details.
++	 * for details. Note that we must honour tsu:sto, 4us, but lets use 5us
++	 * here for simplicity.
+ 	 */
+ 	bri->set_scl(adap, scl);
+-	ndelay(RECOVERY_NDELAY / 2);
++	ndelay(RECOVERY_NDELAY);
+ 	if (bri->set_sda)
+ 		bri->set_sda(adap, scl);
+ 	ndelay(RECOVERY_NDELAY / 2);
+@@ -219,7 +220,13 @@ int i2c_generic_scl_recovery(struct i2c_
+ 		scl = !scl;
+ 		bri->set_scl(adap, scl);
+ 		/* Creating STOP again, see above */
+-		ndelay(RECOVERY_NDELAY / 2);
++		if (scl)  {
++			/* Honour minimum tsu:sto */
++			ndelay(RECOVERY_NDELAY);
++		} else {
++			/* Honour minimum tf and thd:dat */
++			ndelay(RECOVERY_NDELAY / 2);
++		}
+ 		if (bri->set_sda)
+ 			bri->set_sda(adap, scl);
+ 		ndelay(RECOVERY_NDELAY / 2);
 
 
