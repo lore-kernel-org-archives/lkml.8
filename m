@@ -2,165 +2,113 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47392C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FE5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EEF222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579018175;
-	bh=drMdijTGvxJG4NOsLdXsZFrWu3D3PY4M1/FwrIn+cNY=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=uykN/hsHcPkRQ667EITObrHG9FK9kShKd78ofv13bwInjvAP2Z4lKdyWkoEqZjtZ+
-	 VoTahKTlbp/Hl7evIAdv4FK4jU+5yk0tkcJKVFL5zTcgrPs0YMGSDeKXSV3NPaX+V1
-	 FlEzSjbsBirwUWDSykf6xUz9l81xRpNXuosGVsfw=
+	by mail.kernel.org (Postfix) with ESMTP id E8E46222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="C8wENoLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgANQJe (ORCPT
+        id S1729339AbgANQJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:09:34 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37844 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbgANQJd (ORCPT
+        Tue, 14 Jan 2020 11:09:45 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:40740 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728879AbgANQJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:09:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KnzzFRQVAj4uXpCR1TI5559XQTFDEbE+udZJZl8tRkY=; b=AjgZBkR4/z+z
-        z9IwW85L2iFBz4XQgi88yrN8+2uSRMke8qAS0fKmlyr6fgo39TSJGcxaMKfbgs3uOpv4STGJqGpWr
-        n3XmYbqbm0UOuw/Ae6LMTNLUvFwjP0SfJyhFd1hCa2Li3xfgI/ldJ+pXhKS/2051zCPM0j/YZYUkf
-        0vlss=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irOkv-0001ZG-7m; Tue, 14 Jan 2020 16:09:25 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id EB622D02C77; Tue, 14 Jan 2020 16:09:24 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: fsl: simplify error path in of_fsl_spi_probe()" to the spi tree
-In-Reply-To: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
-Message-Id: <applied-2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
-X-Patchwork-Hint: ignore
-Date:   Tue, 14 Jan 2020 16:09:24 +0000 (GMT)
+        Tue, 14 Jan 2020 11:09:39 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8D9B4C0623;
+        Tue, 14 Jan 2020 16:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579018178; bh=SATy7ndJEIOBEqXRG+bt0KtbNZXEPfoL4GDzHGjf0uE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=C8wENoLnQk0kfxeOxzbHVodoBqbIP2P0Gm53bCX8t5qxrIWoSloaUxjR6/I/faQ6O
+         sLvH0mEREQo57rWGgh71HGdo1+VWns9oo9TsUlzuM3jIUy+smkOb8Fn+USgRq/CBOR
+         reWDvENZ1mK1v/LA6ObAD1cn7+AdlwYnvLQVjjwXpYQNlRtNzM2Igc9S6OCHjGqyZU
+         5Ftk2G+EpcTsMx4UvzCeyb1GeWsEjr/55B8wJWLtDFnClg558bSVPkT/nVDEjdODYx
+         lruSdDM8zkrcyAF4ytaoJpJjD2v7T3QRiiiqAOe0GoCQxGHuZ8uFWCL+35+PVyDiEg
+         pkwv2M5FzZClA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 28468A006C;
+        Tue, 14 Jan 2020 16:09:35 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH net 2/4] net: stmmac: selftests: Mark as fail when received VLAN ID != expected
+Date:   Tue, 14 Jan 2020 17:09:22 +0100
+Message-Id: <2d9e75a94a3e4c120ff7e2135c6f0976ab9d0708.1579017787.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1579017787.git.Jose.Abreu@synopsys.com>
+References: <cover.1579017787.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1579017787.git.Jose.Abreu@synopsys.com>
+References: <cover.1579017787.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+When the VLAN ID does not match the expected one it means filter failed
+in HW. Fix it.
 
-   spi: fsl: simplify error path in of_fsl_spi_probe()
+Fixes: 94e18382003c ("net: stmmac: selftests: Add selftest for VLAN TX Offload")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 2f3d8035b0f7a8e781b60e0884551dd8a1173a75 Mon Sep 17 00:00:00 2001
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Date: Tue, 14 Jan 2020 16:02:40 +0000
-Subject: [PATCH] spi: fsl: simplify error path in of_fsl_spi_probe()
-
-No need to 'goto err;' for just doing a return.
-return directly from where the error happens.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-spi.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index fb4159ad6bf6..3b81772fea0d 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -706,8 +706,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 	struct device_node *np = ofdev->dev.of_node;
- 	struct spi_master *master;
- 	struct resource mem;
--	int irq = 0, type;
--	int ret = -ENOMEM;
-+	int irq, type;
-+	int ret;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 6516d65e84b8..7edee3c87ac9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -853,8 +853,12 @@ static int stmmac_test_vlan_validate(struct sk_buff *skb,
+ 	if (tpriv->vlan_id) {
+ 		if (skb->vlan_proto != htons(proto))
+ 			goto out;
+-		if (skb->vlan_tci != tpriv->vlan_id)
++		if (skb->vlan_tci != tpriv->vlan_id) {
++			/* Means filter did not work. */
++			tpriv->ok = false;
++			complete(&tpriv->comp);
+ 			goto out;
++		}
+ 	}
  
- 	ret = of_mpc8xxx_spi_probe(ofdev);
- 	if (ret)
-@@ -722,10 +722,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 		if (spisel_boot) {
- 			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
--			if (!pinfo->immr_spi_cs) {
--				ret = -ENOMEM;
--				goto err;
--			}
-+			if (!pinfo->immr_spi_cs)
-+				return -ENOMEM;
- 		}
- #endif
- 		/*
-@@ -744,24 +742,15 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 	ret = of_address_to_resource(np, 0, &mem);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	irq = platform_get_irq(ofdev, 0);
--	if (irq < 0) {
--		ret = irq;
--		goto err;
--	}
-+	if (irq < 0)
-+		return irq;
- 
- 	master = fsl_spi_probe(dev, &mem, irq);
--	if (IS_ERR(master)) {
--		ret = PTR_ERR(master);
--		goto err;
--	}
--
--	return 0;
- 
--err:
--	return ret;
-+	return PTR_ERR_OR_ZERO(master);
- }
- 
- static int of_fsl_spi_remove(struct platform_device *ofdev)
+ 	ehdr = (struct ethhdr *)skb_mac_header(skb);
 -- 
-2.20.1
+2.7.4
 
