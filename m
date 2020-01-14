@@ -2,119 +2,159 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10BCC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD64F222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:08:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kS4cMATD"
+	by mail.kernel.org (Postfix) with ESMTP id C039124681
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgANPIc (ORCPT
+        id S1729148AbgANPJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:08:32 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42521 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgANPIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:08:31 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so5340906plk.9;
-        Tue, 14 Jan 2020 07:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8rpa2DTMKBUpU7PSeVZCOwWKjfcl4QZLI8268nb9OR8=;
-        b=kS4cMATDa920zQP8KA/lx981IvG+CXVpSkc3ZJlJ1Ks9JvZdBHh8aSSkFhVL0VUtTG
-         jsnSfIOqN3G3C2Fj2ZZ+Nntre/yPcKxof2GVsDNBEM1LxOny7J9SnLimP4mDegbVgw2f
-         LWfDSqXZSDCMbVlziyz4HooiolDkY0AX0F1y5dtlElraiXky49ppMZhim3Zy3fHgVkMm
-         zQ0JGPC7QpXsXmgGIJtXFINWGPLj193T0oci+P4j1ophKfUbhsWhUq9qsvOUBJ4XIExn
-         CRaRAIS4BEIIEeJ06r4Um4bfMQZJ3o3pIFy6pVyHgMzZ+ziXBm1tBEV0eHAUvh3rmIYG
-         V/5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8rpa2DTMKBUpU7PSeVZCOwWKjfcl4QZLI8268nb9OR8=;
-        b=RQZMEVn/QgullKlAzZwD0dEc5QOClMhoDOTfSbhck+x09QiyRj9c+1zxOLYmmnZS49
-         KQ66c2FSccbqjzjYbDGHCjkLuHMyMTgW8TCSpr0PQa5YCMzm4bUrA13UjUTD6ms9gkT9
-         6GEEFoInFUmzpiiXWJe/JjlTP/+gV2YNjSUSdt/RIisQZFJADvFkO5A/vWpT4Fm7TUss
-         NBrrHSFKu1y5ME5hi10k+z6P1vxfzj+lVFWpMvFqvKwhRaklB3XFAxN5E576izg302SG
-         XEY//R5tsrVnjTlJSWidVAr68ghbGU6uGBYAW7A1FRq4Bg4l/udjApT8vmFyM0rw2768
-         TemQ==
-X-Gm-Message-State: APjAAAUa1XsN3a4Al4N8VlJ0fHmeQHN9y9mCCQZlST7nthC78YJjVsip
-        M0OkFiF+f9Pub3lE9jhQtrcZ2WFa
-X-Google-Smtp-Source: APXvYqyDn+HL5CnYDQ8AsxYxY/88v+ejGsozlp0bvsuT6W2fd+zvkxwg2c1UX5ValvbuAnNoBO/GZw==
-X-Received: by 2002:a17:902:9698:: with SMTP id n24mr20469473plp.312.1579014510423;
-        Tue, 14 Jan 2020 07:08:30 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id 100sm16964654pjo.17.2020.01.14.07.08.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 14 Jan 2020 07:08:29 -0800 (PST)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        linux-next@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <stf_xl@wp.pl>
-Subject: [PATCH v2 -mm] iwlegacy: fix build warnings with format string
-Date:   Wed, 15 Jan 2020 00:08:03 +0900
-Message-Id: <1579014483-9226-1-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 Jan 2020 10:09:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55364 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728977AbgANPJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:09:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DE52DAD22;
+        Tue, 14 Jan 2020 15:09:01 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 15:09:02 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Gregory Farnum <gfarnum@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v4] ceph: use 'copy-from2' operation in
+ copy_file_range
+Message-ID: <20200114150902.GA28556@brahms.Home>
+References: <20200108100353.23770-1-lhenriques@suse.com>
+ <913eb28e6bb698f27f1831f75ea5250497ee659c.camel@kernel.org>
+ <CAJ4mKGb-Qo281_HW8bEDtbF+B-v_AbwaH0QyQbk+asti-qn=Vg@mail.gmail.com>
+ <20200114095555.GA17907@brahms.Home>
+ <46c92e6678906fa065b18e418044647e7cdb47e1.camel@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <46c92e6678906fa065b18e418044647e7cdb47e1.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes build warnings introduced by commit "iwlegacy: use
-<linux/units.h> helpers" (iwlegacy-use-linux-unitsh-helpers.patch in -mm)
+On Tue, Jan 14, 2020 at 06:57:56AM -0500, Jeff Layton wrote:
+> On Tue, 2020-01-14 at 09:55 +0000, Luis Henriques wrote:
+> > On Mon, Jan 13, 2020 at 09:10:01AM -0800, Gregory Farnum wrote:
+> > > On Thu, Jan 9, 2020 at 5:06 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > On Wed, 2020-01-08 at 10:03 +0000, Luis Henriques wrote:
+> > > > > Instead of using the 'copy-from' operation, switch copy_file_range to the
+> > > > > new 'copy-from2' operation, which allows to send the truncate_seq and
+> > > > > truncate_size parameters.
+> > > > > 
+> > > > > If an OSD does not support the 'copy-from2' operation it will return
+> > > > > -EOPNOTSUPP.  In that case, the kernel client will stop trying to do
+> > > > > remote object copies for this fs client and will always use the generic
+> > > > > VFS copy_file_range.
+> > > > > 
+> > > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > > ---
+> > > > > Hi Jeff,
+> > > > > 
+> > > > > This is a follow-up to the discussion in [1].  Since PR [2] has been
+> > > > > merged, it's now time to change the kernel client to use the new
+> > > > > 'copy-from2'.  And that's what this patch does.
+> > > > > 
+> > > > > [1] https://lore.kernel.org/lkml/20191118120935.7013-1-lhenriques@suse.com/
+> > > > > [2] https://github.com/ceph/ceph/pull/31728
+> > > > > 
+> > > > >  fs/ceph/file.c                  | 13 ++++++++++++-
+> > > > >  fs/ceph/super.c                 |  1 +
+> > > > >  fs/ceph/super.h                 |  3 +++
+> > > > >  include/linux/ceph/osd_client.h |  1 +
+> > > > >  include/linux/ceph/rados.h      |  2 ++
+> > > > >  net/ceph/osd_client.c           | 18 ++++++++++++------
+> > > > >  6 files changed, 31 insertions(+), 7 deletions(-)
+> > > > > 
+> > > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > > > index 11929d2bb594..1e6cdf2dfe90 100644
+> > > > > --- a/fs/ceph/file.c
+> > > > > +++ b/fs/ceph/file.c
+> > > > > @@ -1974,6 +1974,10 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > > >       if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+> > > > >               return -EOPNOTSUPP;
+> > > > > 
+> > > > > +     /* Do the OSDs support the 'copy-from2' operation? */
+> > > > > +     if (!src_fsc->have_copy_from2)
+> > > > > +             return -EOPNOTSUPP;
+> > > > > +
+> > > > >       /*
+> > > > >        * Striped file layouts require that we copy partial objects, but the
+> > > > >        * OSD copy-from operation only supports full-object copies.  Limit
+> > > > > @@ -2101,8 +2105,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > > >                       CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> > > > >                       &dst_oid, &dst_oloc,
+> > > > >                       CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > > -                     CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+> > > > > +                     CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > > +                     dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > > +                     CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > > >               if (err) {
+> > > > > +                     if (err == -EOPNOTSUPP) {
+> > > > > +                             src_fsc->have_copy_from2 = false;
+> > > > > +                             pr_notice("OSDs don't support 'copy-from2'; "
+> > > > > +                                       "disabling copy_file_range\n");
+> > > > > +                     }
+> > > > >                       dout("ceph_osdc_copy_from returned %d\n", err);
+> > > > >                       if (!ret)
+> > > > >                               ret = err;
+> > > > 
+> > > > The patch itself looks fine to me. I'll not merge yet, since you sent it
+> > > > as an RFC, but I don't have any objection to it at first glance. The
+> > > > only other comment I'd make is that you should probably split this into
+> > > > two patches -- one for the libceph changes and one for cephfs.
+> > > > 
+> > > > On a related note, I wonder if we'd get better performance out of large
+> > > > copy_file_range calls here if you were to move the wait for all of these
+> > > > osd requests after issuing them all in parallel?
+> > > > 
+> > > > Currently we're doing:
+> > > > 
+> > > > copy_from
+> > > > wait
+> > > > copy_from
+> > > > wait
+> > > > 
+> > > > ...but figure that the second copy_from might very well be between osds
+> > > > that are not involved in the first copy. There's no reason to do them
+> > > > sequentially. It'd be better to issue all of the OSD requests first, and
+> > > > then wait on all of the replies in turn:
+> > > 
+> > > If this is added (good idea in general) it should be throttled — we
+> > > don’t want users accidentally trying to copy a 1TB file and setting
+> > > off 250000 simultaneous copy_from2 requests!
+> > 
+> > Good point, thanks for the input Greg.  I'll have this in consideration.
+> > That'll probably require another kernel module knob for setting this
+> > throttling value.
+> > 
+> > 
+> 
+> Yes, we probably do need some sort of limit here. It'd be nice to avoid
+> adding new knobs for it though. Maybe we could make this value some
+> multiple of min(rsize,wsize) ?
 
-The format '%d' has to be changed to '%ld' because the return type of
-kelvin_to_celsius() is 'long'.
+Yeah, that's probably a reasonable approach.  I'll see what I can come up
+with, once I get to it.  First, /me wants to find out if this will
+_really_ improve performance.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Link: https://lore.kernel.org/r/20200106171452.201c3b4c@canb.auug.org.au
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v2
-- fix subject line (s/iwlwifi/iwlegacy/)
-
- drivers/net/wireless/intel/iwlegacy/4965.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965.c b/drivers/net/wireless/intel/iwlegacy/4965.c
-index 31b346c..34d0579 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965.c
-@@ -1611,7 +1611,7 @@ il4965_hw_get_temperature(struct il_priv *il)
- 	temperature =
- 	    (temperature * 97) / 100 + TEMPERATURE_CALIB_KELVIN_OFFSET;
- 
--	D_TEMP("Calibrated temperature: %dK, %dC\n", temperature,
-+	D_TEMP("Calibrated temperature: %dK, %ldC\n", temperature,
- 	       kelvin_to_celsius(temperature));
- 
- 	return temperature;
-@@ -1671,11 +1671,11 @@ il4965_temperature_calib(struct il_priv *il)
- 
- 	if (il->temperature != temp) {
- 		if (il->temperature)
--			D_TEMP("Temperature changed " "from %dC to %dC\n",
-+			D_TEMP("Temperature changed " "from %ldC to %ldC\n",
- 			       kelvin_to_celsius(il->temperature),
- 			       kelvin_to_celsius(temp));
- 		else
--			D_TEMP("Temperature " "initialized to %dC\n",
-+			D_TEMP("Temperature " "initialized to %ldC\n",
- 			       kelvin_to_celsius(temp));
- 	}
- 
--- 
-2.7.4
-
+Cheers,
+--
+Luís
