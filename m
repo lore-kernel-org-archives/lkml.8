@@ -2,139 +2,177 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF230C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597C8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24CA2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="I2KNDFPf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FvAfXkVh"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA08207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgANAZa (ORCPT
+        id S1728896AbgANA2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:25:30 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34495 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726536AbgANAZ3 (ORCPT
+        Mon, 13 Jan 2020 19:28:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53574 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgANA2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:25:29 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7F7657699;
-        Mon, 13 Jan 2020 19:25:28 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 13 Jan 2020 19:25:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        XFMTDBtfZHyOed7ZfNLbmx3RNw8tsdJDO4d09AfyreM=; b=I2KNDFPfO4++5woh
-        Cv9+FYDbg0wzwLTavX3kLx+EHn8Q18NuIs+jqQWuarjw1NE+Zr5ih3Aqffp5KVvZ
-        kDOiTi6mlgNgi2nc9al6pJgd+oLGc0vkHEREjILC+Va3hddW/B98Mg4b9DqBXQGZ
-        ashy5rq75a3k85pz3ZxNirx/Sih4BWJhq8ck4j+LeFyHum/4jHodx2gXZdTJHyyF
-        DYBJMTKR4x0Jz5WY3jCeiDSEmRMGh0KK3Ji3CGXQ8s0RYEV6KPX4FYMMre05AAqi
-        D6Y5h5R7wxUt1oztN99McV+kgUrg82l+XrLd+0TaAvk2j1KL4ahYlpGewQQsrTJ9
-        hdix3w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=XFMTDBtfZHyOed7ZfNLbmx3RNw8tsdJDO4d09Afyr
-        eM=; b=FvAfXkVhBHwCnEjEnIhffwPCShG13/kCORFDhQUOK8FfZVCXc3t4co4rU
-        kwFyOB7c3TSO347gZaoWx6HiCp/hSHVnGtixPTiM75Cv3RHuC5R4uYXOZHl1+cqX
-        oaAEF/1RWSCvuXqnM7JkyubPOrN5vDHeDo2sDzfFvFH3yX1LylQLMIemTnvofyW5
-        khaaXwkhBL3U9BE4tL60xIJXYCTojno+VysAQ90vHEAYNcH8/cgVQNXTuUjpKMd6
-        M9Ukdh4ZTi6+6lXUrBw04KyMavKgBOYNfN6Ii+QHcetTfv6xjbW0E84eisU4euOt
-        FHIjykuHyaccKrUitVlB1qjxwIyrQ==
-X-ME-Sender: <xms:dwodXpWP-PAZ8T_JYYRYRU5ZMicpYKidZXY3DZlDytKoUsePwM5oDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdejuddgvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
-    drudejhedrvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgr
-    fidrnhgvthenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:dwodXsAsuu8nva3t4h-3fEN2U5lV_ZCnBr8eIrbfceQMO4BDdzz1Lg>
-    <xmx:dwodXjFvriQIKE7K-SUPP8Ps_oonmO-5papqb1mtcOMHocMhw2ZHhA>
-    <xmx:dwodXrdOPsxQaFwEHjUakg6WPVod0GWiD2M_YPTQq2ZEcTySZggaCg>
-    <xmx:eAodXivqthC1ZIwAIcCOasT42x8LlItV_-Uw9j_7c7lwa7hFyX1giA>
-Received: from mickey.themaw.net (unknown [118.209.175.25])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B008E30607B4;
-        Mon, 13 Jan 2020 19:25:22 -0500 (EST)
-Message-ID: <19fa114ef619057c0d14dc1a587d0ae9ad67dc6d.camel@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 14 Jan 2020 08:25:19 +0800
-In-Reply-To: <800d36a0dccd43f1b61cab6332a6252ab9aab73c.camel@themaw.net>
-References: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
-         <20200101234009.GB8904@ZenIV.linux.org.uk>
-         <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
-         <20200103014901.GC8904@ZenIV.linux.org.uk>
-         <20200108031314.GE8904@ZenIV.linux.org.uk>
-         <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
-         <20200108213444.GF8904@ZenIV.linux.org.uk>
-         <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
-         <20200110041523.GK8904@ZenIV.linux.org.uk>
-         <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
-         <20200112213352.GP8904@ZenIV.linux.org.uk>
-         <800d36a0dccd43f1b61cab6332a6252ab9aab73c.camel@themaw.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 13 Jan 2020 19:28:53 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 70C25291454
+Received: by earth.universe (Postfix, from userid 1000)
+        id A1F453C0C7C; Tue, 14 Jan 2020 01:28:47 +0100 (CET)
+Date:   Tue, 14 Jan 2020 01:28:47 +0100
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] power: supply: max17040: Correct IRQ wake handling
+Message-ID: <20200114002847.3wzj7j3y422fgrfz@earth.universe>
+References: <CGME20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57@eucas1p1.samsung.com>
+ <20200110100540.27371-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s7x5qyghxj2shd5k"
+Content-Disposition: inline
+In-Reply-To: <20200110100540.27371-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-01-13 at 10:59 +0800, Ian Kent wrote:
-> 
-> > 3) is _anything_ besides root directory ever created in direct
-> > autofs
-> > superblocks by anyone?  If not, why does autofs_lookup() even
-> > bother
-> > to
-> > do anything there?  IOW, why not have it return ERR_PTR(-ENOENT)
-> > immediately
-> > for direct ones?  Or am I missing something and it is, in fact,
-> > possible
-> > to have the daemon create something in those?
-> 
-> Short answer is no, longer answer is directories "shouldn't" ever
-> be created inside direct mount points.
-> 
-> The thing is that the multi-mount map construct can be used with
-> direct mounts too, but they must always have a real mount at the
-> base because they are direct mounts. So processes should not be
-> able to walk into them while they are being mounted (constructed).
-> 
-> But I'm pretty sure it's rare (maybe not done at all) that this
-> map construct is used with direct mounts.
 
-This isn't right.
+--s7x5qyghxj2shd5k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There's actually nothing stopping a user from using a direct map
-entry that's a multi-mount without an actual mount at its root.
-So there could be directories created under these, it's just not
-usually done.
+Hi,
 
-I'm pretty sure I don't check and disallow this.
+On Fri, Jan 10, 2020 at 11:05:40AM +0100, Marek Szyprowski wrote:
+> Don't disable IRQ wake feature without prior enabling it.
 
-Ian
+Thanks, queued to power-supply's for-next branch.
 
+-- Sebastian
+
+>=20
+> This fixes following warning observed on Exynos3250-based Rinato board:
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1288 at kernel/irq/manage.c:724 irq_set_irq_wake+0xf=
+c/0x134
+> Unbalanced IRQ 83 wake disable
+> Modules linked in:
+> CPU: 0 PID: 1288 Comm: rtcwake Not tainted 5.5.0-rc5-next-20200110-00031-=
+g6289fffbb3f5 #7266
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> [<c0112e48>] (unwind_backtrace) from [<c010e090>] (show_stack+0x10/0x14)
+> [<c010e090>] (show_stack) from [<c0b25b28>] (dump_stack+0xa4/0xd0)
+> [<c0b25b28>] (dump_stack) from [<c0128088>] (__warn+0xf4/0x10c)
+> [<c0128088>] (__warn) from [<c0128114>] (warn_slowpath_fmt+0x74/0xb8)
+> [<c0128114>] (warn_slowpath_fmt) from [<c019e9a0>] (irq_set_irq_wake+0xfc=
+/0x134)
+> [<c019e9a0>] (irq_set_irq_wake) from [<c0772708>] (max17040_suspend+0x50/=
+0x58)
+> [<c0772708>] (max17040_suspend) from [<c05f55ac>] (dpm_run_callback+0xb4/=
+0x400)
+> [<c05f55ac>] (dpm_run_callback) from [<c05f5e38>] (__device_suspend+0x140=
+/0x814)
+> [<c05f5e38>] (__device_suspend) from [<c05f9548>] (dpm_suspend+0x16c/0x56=
+4)
+> [<c05f9548>] (dpm_suspend) from [<c05fa2e4>] (dpm_suspend_start+0x90/0x98)
+> [<c05fa2e4>] (dpm_suspend_start) from [<c01977f4>] (suspend_devices_and_e=
+nter+0xec/0xc0c)
+> [<c01977f4>] (suspend_devices_and_enter) from [<c019862c>] (pm_suspend+0x=
+318/0x3e8)
+> [<c019862c>] (pm_suspend) from [<c01963cc>] (state_store+0x68/0xc8)
+> [<c01963cc>] (state_store) from [<c03531a4>] (kernfs_fop_write+0x10c/0x22=
+0)
+> [<c03531a4>] (kernfs_fop_write) from [<c02b44c4>] (__vfs_write+0x2c/0x1c4)
+> [<c02b44c4>] (__vfs_write) from [<c02b7288>] (vfs_write+0xa4/0x180)
+> [<c02b7288>] (vfs_write) from [<c02b74d0>] (ksys_write+0x58/0xcc)
+> [<c02b74d0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+> Exception stack(0xd6e83fa8 to 0xd6e83ff0)
+> ...
+> irq event stamp: 18028
+> hardirqs last  enabled at (18027): [<c014b99c>] cancel_delayed_work+0x84/=
+0xf8
+> hardirqs last disabled at (18028): [<c0b49b1c>] _raw_spin_lock_irqsave+0x=
+1c/0x58
+> softirqs last  enabled at (17876): [<c01026d8>] __do_softirq+0x4f0/0x5e4
+> softirqs last disabled at (17869): [<c0130d34>] irq_exit+0x16c/0x170
+> ---[ end trace 0728005730004e60 ]---
+>=20
+> Fixes: 2e17ed94de68 ("power: supply: max17040: Add IRQ handler for low SO=
+C alert")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/power/supply/max17040_battery.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
+ly/max17040_battery.c
+> index c1188e94cf54..8a1f0ee493aa 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -351,12 +351,8 @@ static int max17040_suspend(struct device *dev)
+> =20
+>  	cancel_delayed_work(&chip->work);
+> =20
+> -	if (client->irq) {
+> -		if (device_may_wakeup(dev))
+> -			enable_irq_wake(client->irq);
+> -		else
+> -			disable_irq_wake(client->irq);
+> -	}
+> +	if (client->irq && device_may_wakeup(dev))
+> +		enable_irq_wake(client->irq);
+> =20
+>  	return 0;
+>  }
+> @@ -369,12 +365,8 @@ static int max17040_resume(struct device *dev)
+>  	queue_delayed_work(system_power_efficient_wq, &chip->work,
+>  			   MAX17040_DELAY);
+> =20
+> -	if (client->irq) {
+> -		if (device_may_wakeup(dev))
+> -			disable_irq_wake(client->irq);
+> -		else
+> -			enable_irq_wake(client->irq);
+> -	}
+> +	if (client->irq && device_may_wakeup(dev))
+> +		disable_irq_wake(client->irq);
+> =20
+>  	return 0;
+>  }
+> --=20
+> 2.17.1
+>=20
+
+--s7x5qyghxj2shd5k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4dCzoACgkQ2O7X88g7
++poxbxAAhVoW4/5o/KXxFRNGik5QZkyYMCO6eWd5xYFy0ONasfKgvFJx3MUM3pb9
+alVeDGgJMARZWQwfzxMhhf+JFh4YM5S9iNLCYayPHZNT04avnF1GDiIvolGsmq76
+UqY5x7t00U57Q6rWppV+eZPaSWDf5yn7QXSy5+wY9Tyxui16JNH4nw+fZKoLBFZI
+3jNaTmvSbK7cFJr3Nd9MQf0iRuOjI0u4yyPvL4jzSQVatyIu64jEd2/j+UwQoc3F
+0jd351w/8KaKwRH4KfBFV7Bjwb9lUH2Q9zFpk5xMoYOVM0dWWjoCX6csgh/EWmme
+Ul6LTRnyoXsOBdosV0eY8DMNR0a9DGEwDr+z7pLVivKr1Ij1kvGczz1F6LX6af50
+Y7hl7txqHkZXovAhQXXAD/YMy3HA3B1zNg2FyfucA5fehyeQcX5Q8Plz+g0JNnRY
+lifkJlz3GhGnNSQBPXrya5kiQC0XGgS+jG4WN3x23EcXKSt1BPBQ7hxXO3+hGpbv
+D8i6tDC4TQkac8ck+tOy2DT4NCbQDGZMi3ttQTONRA/e69LhbRBUAgkLT+gxSjzJ
+RbiTMzT4plXDZbasgS6dblTCAa/BVYKJWuDE/3Up7sf+be6NFgt47IxZ3m2Qj5lZ
+WIYNVf40YaWIKOnH8Jna2FmHSrdK6CQ1pfRISgxPTwmrVTRffSw=
+=3Lbd
+-----END PGP SIGNATURE-----
+
+--s7x5qyghxj2shd5k--
