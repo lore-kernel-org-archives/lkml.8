@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA188C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD230C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964B624676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCAD24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996509;
-	bh=VspWGomgS76X8lVDq+qOmUYynAz+7FxKT9rWHeesm6I=;
+	s=default; t=1578996512;
+	bh=cJ6wEibUShMousPc+02xkZVy1kRYitQYZDUUI9Aah7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RhuFNDL2Zc7g5HWHmo6iZZRn4+4N8lA2W8oUdC/8uLrw/xMDkSX667bTib5gzbXDM
-	 s/Nt1Guf6f1T3yUWiz2t1/mFTV/74Yh6fcxqVWocPVfF67ZBYV2lr2Y7AtfBMiglxz
-	 +bhwSxYq28vySC0mJIjD17VwgrPpqinFeavBdvu8=
+	b=IrXX+2K87f3P1deyyDG1WnrbReVodvwznU9EhotR8WuqVJDhbGWFEcgglcyxsmdca
+	 +26SptXEIXdTS/uJzvnveCr9TPG1lq04GcBz8TIwrkQfCbTuVgXyEJZbaeHGd82PYw
+	 3mVCckcEuH4U0nrB4TFCINwORKymqSW2pnNcQI94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbgANKI2 (ORCPT
+        id S1731011AbgANKIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39818 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbgANKI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:26 -0500
+        id S1729094AbgANKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CF5020678;
-        Tue, 14 Jan 2020 10:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E9F207FF;
+        Tue, 14 Jan 2020 10:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996505;
-        bh=VspWGomgS76X8lVDq+qOmUYynAz+7FxKT9rWHeesm6I=;
+        s=default; t=1578996508;
+        bh=cJ6wEibUShMousPc+02xkZVy1kRYitQYZDUUI9Aah7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qUdDob/WxkY6lIZtopiJORpG+f5KnjZYFBFsF6wjcadzU39fhQOKTdpTdNAAeJWTJ
-         jpBMBJMwxyBwonZGK+dcXygFrJEcWcFjJ5tjc9k33gUo9sNSFN93LllW65ZR4H+SuR
-         pS3BKG0rI08OOmjVD6Cs4P4DdaSlpyToKbrpC5Bo=
+        b=HHFbVyUcpAy/QCVZG9n6y6FjiVqJ3MKEtWH8RlGvgYpOy1Ht0iv2AuuHZPytWtoqa
+         CYcy7pGX4WKvC/7LzmKiNzG8lkt223JzrGuGwCEQb47OR1/A20TevU3nBbAavWZMwM
+         18+nmPvjJT6EPjm5JygSRpObpxkTcH32J1GO1ShI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 06/46] ALSA: hda/realtek - Set EAPD control to default for ALC222
-Date:   Tue, 14 Jan 2020 11:01:23 +0100
-Message-Id: <20200114094341.708820909@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH 4.19 33/46] tty: link tty and port before configuring it as console
+Date:   Tue, 14 Jan 2020 11:01:50 +0100
+Message-Id: <20200114094346.995735914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -59,30 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit 9194a1ebbc56d7006835e2b4cacad301201fb832 upstream.
+commit fb2b90014d782d80d7ebf663e50f96d8c507a73c upstream.
 
-Set EAPD control to verb control.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
+
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
+
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
+
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
+
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191212131602.29504-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/serial_core.c |    1 +
+ drivers/tty/tty_port.c           |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -424,6 +424,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0672:
- 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
- 		break;
-+	case 0x10ec0222:
- 	case 0x10ec0623:
- 		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
- 		break;
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2786,6 +2786,7 @@ int uart_add_one_port(struct uart_driver
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	port->console = uart_console(uport);
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_por
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
+ 
 
 
