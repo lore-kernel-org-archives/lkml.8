@@ -2,94 +2,123 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5108C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71AFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA4F2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A237B2187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YiMq0hIm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vxydxJ9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgANNlO (ORCPT
+        id S1728851AbgANNl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:41:14 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:63883 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgANNlO (ORCPT
+        Tue, 14 Jan 2020 08:41:27 -0500
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:54266 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgANNl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:41:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579009273; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=XgsptuF1PzYyDRBhyFpT7E0jFEYQTfHc3/giWQnRSk0=; b=YiMq0hIm3PWeSdkOWJfWo1g1DgeCGFtG24ngSLjAx1iN/+4P4Z/DQEdhHqZqUt/Nqme8OREY
- fgAi2tIt309XZogFhoKKtyedAs9On44B4ZtCluWbQsRxWb6wfTCBggGLe3+28HmNZs793WY+
- UgeJDSjOf5rFzQyOiDFwxd5dxAQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1dc4f4.7f93cbd7bbc8-smtp-out-n02;
- Tue, 14 Jan 2020 13:41:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0C998C447A2; Tue, 14 Jan 2020 13:41:08 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (85-76-19-103-nat.elisa-mobile.fi [85.76.19.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB5F5C43383;
-        Tue, 14 Jan 2020 13:41:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB5F5C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Solar Designer <solar@openwall.com>,
-        qize wang <wangqize888888888@gmail.com>
-Subject: Re: [PATCH] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
-References: <20191206194535.150179-1-briannorris@chromium.org>
-        <0101016eea4fa7f5-e04b23cd-17a0-4306-8100-7761f1161da3-000000@us-west-2.amazonses.com>
-        <CA+ASDXNCzyRfZs0D6_+j0Tyqai4PaFk50HpF_LqC-GuOTYJCmA@mail.gmail.com>
-Date:   Tue, 14 Jan 2020 15:41:02 +0200
-In-Reply-To: <CA+ASDXNCzyRfZs0D6_+j0Tyqai4PaFk50HpF_LqC-GuOTYJCmA@mail.gmail.com>
-        (Brian Norris's message of "Mon, 13 Jan 2020 11:05:36 -0800")
-Message-ID: <87sgkiqhox.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 14 Jan 2020 08:41:26 -0500
+Received: by mail-pf1-f201.google.com with SMTP id k26so8787943pfp.20
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:41:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=d+VdQ2mgKVufPtzjAPQVlGG6NNayGmHdnWPr+cE7Zlg=;
+        b=vxydxJ9xqFxpwBc2+UwfYvzeeJpgLwd/1r3pppsJwIBl+STg3q0/MMmyu1axqmnaru
+         xm1giynSu1419J1y6kfH0IL7f14D7iMnLFgrdvN+uW/rFSqIUTfQAJDX1TX/hOqcTFk2
+         /N/tVvCsqfdw3ynNPIdX6QiaX/K3m0u4q5S1gZD4BZHVw0bNyLZAxfxEPRMSodC14qHM
+         gwe4snUrF2jaul+wVyR65CvZh8lJtSp3kvPq8aenqxz5Y7ME575tTVtSPalakIOnqUFa
+         OvhOat5LFFF83Ushb6mvW3v5Pf/9ysaOK6jgFLm8UQ06wvVXwtxrVSps2GRn2YfUIpal
+         3iKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=d+VdQ2mgKVufPtzjAPQVlGG6NNayGmHdnWPr+cE7Zlg=;
+        b=UXFwZ6227Jew4Yru82yr2pw1SGray2N6sYbJOe3+GUCuVWwpGO86si6+voEeC37+8L
+         5JQoZv48DvLyVNZ95Iz8qtTt20Z4r9TSi/Ilrfbt/av6/GVqpc5VwU6DByfgNyHa1V2N
+         gxUyvnCGWtNvFXhn1CQrakb25+B9ty/rWw0Tj2wq+7YsjqPUnuKWpgwdpyNbz050nb7g
+         y4kfNKkD95Nj+/erIOQO2CNcjtmhgkfSsHL2NL/IKpfbLyqQwMnXaFAo2ZHjZWAO5qqy
+         n6od0Kllf49lkQvg+I0SDgv7GwAgLuiFfcNQ0/0uvBw/h+HAfaXF3NKkmGQWYd7YpMpF
+         MNcQ==
+X-Gm-Message-State: APjAAAVORKD8jhupMcRyher6vtnVC+4fzc4OZV2UkpyQFry1ecGT2f3T
+        Ped6QZuVnnH8JfxgC3rAMbl1VvXLMj3dNBI=
+X-Google-Smtp-Source: APXvYqxPytptLgvCOeDIY8GJeYREKZybdYA2zNzqFDpmj8uJG4bTWCrOZJ7jIuAoqRo47+i8Apc/fTaIZr2pw90=
+X-Received: by 2002:a63:9d85:: with SMTP id i127mr25739436pgd.186.1579009285567;
+ Tue, 14 Jan 2020 05:41:25 -0800 (PST)
+Date:   Tue, 14 Jan 2020 21:41:01 +0800
+Message-Id: <20200114134101.159194-1-liumartin@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+Subject: [PATCH] dma-buf: support 32bit DMA_BUF_SET_NAME ioctl
+From:   Martin Liu <liumartin@google.com>
+To:     sumit.semwal@linaro.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liumartin@google.com, jenhaochen@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+This commit adds SET_NAME ioctl coversion to
+support 32 bit ioctl.
 
-> On Mon, Dec 9, 2019 at 2:58 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->>
->> Brian Norris <briannorris@chromium.org> writes:
->>
->> > AFAICT, the existing commit (1e58252e334d) isn't wrong, per se -- just
->> > very poorly styled -- so this probably doesn't need to go to -stable.
->> > Not sure if it's a candidate for wireless-drivers (where the original
->> > commit currently sites) vs. wireless-drivers-next.
->>
->> I'll try to do so that I'll put this patch to "Awaiting Upstream" state
->> and apply it to w-d-next once 1e58252e334d is merged to w-d-next. Feel
->> free to remind me then that happens :)
->
-> It's that time!
+Signed-off-by: Martin Liu <liumartin@google.com>
+---
+ drivers/dma-buf/dma-buf.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Thanks, changed the state to 'Under Review' which means this is back in
-my queue.
-
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index ce41cd9b758a..a73048b34843 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -25,6 +25,7 @@
+ #include <linux/mm.h>
+ #include <linux/mount.h>
+ #include <linux/pseudo_fs.h>
++#include <linux/compat.h>
+ 
+ #include <uapi/linux/dma-buf.h>
+ #include <uapi/linux/magic.h>
+@@ -409,13 +410,32 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	dma_resv_unlock(dmabuf->resv);
+ }
+ 
++#ifdef CONFIG_COMPAT
++static long dma_buf_ioctl_compat(struct file *file, unsigned int cmd,
++				 unsigned long arg)
++{
++	switch (_IOC_NR(cmd)) {
++	case _IOC_NR(DMA_BUF_SET_NAME):
++		/* Fix up pointer size*/
++		if (_IOC_SIZE(cmd) == sizeof(compat_uptr_t)) {
++			cmd &= ~IOCSIZE_MASK;
++			cmd |= sizeof(void *) << IOCSIZE_SHIFT;
++		}
++		break;
++	}
++	return dma_buf_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static const struct file_operations dma_buf_fops = {
+ 	.release	= dma_buf_release,
+ 	.mmap		= dma_buf_mmap_internal,
+ 	.llseek		= dma_buf_llseek,
+ 	.poll		= dma_buf_poll,
+ 	.unlocked_ioctl	= dma_buf_ioctl,
+-	.compat_ioctl	= compat_ptr_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= dma_buf_ioctl_compat,
++#endif
+ 	.show_fdinfo	= dma_buf_show_fdinfo,
+ };
+ 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.0.rc1.283.g88dfdc4193-goog
+
