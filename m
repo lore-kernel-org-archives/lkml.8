@@ -2,144 +2,87 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EABC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681A6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2909524658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bNQcHd+k"
+	by mail.kernel.org (Postfix) with ESMTP id 33A4E24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579033201;
+	bh=DL+90P/EWaKpgjQhzELm1QtcKaipMjhpGWKnAdLZJzw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rCa4XWOt4BqiAYmKb8I3D6U0XUeAdxalZGu8Jv5t8MYQ7P0RRikOV/viYxfCCHgnb
+	 QFP3lEKplO0aKL7skphJPrpUFV8ohEoUAIMQ4fPORkoKDcDO8ep8wrivbzFJT7Q4Jk
+	 1fC+tAyjfQnHgzBtMtKa6qXSkZOq+pPv5/kGN8KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgANUPM (ORCPT
+        id S1728761AbgANUUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:15:12 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13500 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgANUPL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:15:11 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1e21390001>; Tue, 14 Jan 2020 12:14:49 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jan 2020 12:15:09 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jan 2020 12:15:09 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 20:15:09 +0000
-Subject: Re: [PATCH v12 00/22] mm/gup: prereqs to track dma-pinned pages:
- FOLL_PIN
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200107224558.2362728-1-jhubbard@nvidia.com>
- <2a9145d4-586e-6489-64e4-0c54f47afaa1@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <9d7f3c1a-6020-bdec-c513-80c5399e55d7@nvidia.com>
-Date:   Tue, 14 Jan 2020 12:15:08 -0800
+        Tue, 14 Jan 2020 15:20:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727102AbgANUUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 15:20:00 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FDC24658;
+        Tue, 14 Jan 2020 20:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579033199;
+        bh=DL+90P/EWaKpgjQhzELm1QtcKaipMjhpGWKnAdLZJzw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=REMMLXfRfstTi3AjDBsMPU9gAQ2pFjtmKTZzTvGeueeO0j2vLt3b091Yw61VbgJeL
+         xM+4SIE94YeSVAFJXk0ELfPhac+pFjjfHMsCQ/VyrnHHw47Da5blCKCE5U700EOZU5
+         O1yWDR9KY3mGdF5Ep0BhSznPx//b++SPnEApkz94=
+Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200114094352.428808181@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0c5ca0ba-fac2-03e6-72b8-3d1a4a52f346@kernel.org>
+Date:   Tue, 14 Jan 2020 13:19:41 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <2a9145d4-586e-6489-64e4-0c54f47afaa1@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579032890; bh=wLxNzNFRStaOZ7jAQIV4tH1wBKaWmBKZBOUdkq/PVGQ=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bNQcHd+kt2S6qArSD90PMkNX5LSRoo2toPf1fdY/D3ysgVjnnuMPbcBLvU4mGjBbT
-         LR4uZiIEi3/mAViybdXB1PH001dny/ndD230xDMGlhs7NAYpQR6mGLaj5Fl0H44uol
-         s/WH8SaFGbiYHrC+Jf2F7bChe3A2NqguquLvhseggPHll2epR/FoT6c0YMA6JGSKkp
-         eSDWR40pps95gbxdKKvy2DClT3lBSMdUwcemTQnf2Jrxy6nLuQLIDhcegQ+kyGcscI
-         uknj/1R1Mw2ETSzcXASW/vo/Q3g+SHupTZUPph9j3ZAnq/QlpAxhi10ckpA46Ke/0I
-         HjefW3dJ5Akvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 2:07 PM, John Hubbard wrote:
-> On 1/7/20 2:45 PM, John Hubbard wrote:
->> Hi,
->>
->> The "track FOLL_PIN pages" would have been the very next patch, but it is
->> not included here because I'm still debugging a bug report from Leon.
->> Let's get all of the prerequisite work (it's been reviewed) into the tree
->> so that future reviews are easier. It's clear that any fixes that are
->> required to the tracking patch, won't affect these patches here.
->>
->> This implements an API naming change (put_user_page*() -->
->> unpin_user_page*()), and also adds FOLL_PIN page support, up to
->> *but not including* actually tracking FOLL_PIN pages. It extends
->> the FOLL_PIN support to a few select subsystems. More subsystems will
->> be added in follow up work.
->>
+On 1/14/20 3:00 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.12 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hi Andrew and all,
+> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> Anything received after that time might be too late.
 > 
-> To clarify: I'm hoping that this series can go into 5.6.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
 > 
-> Meanwhile, I'm working on tracking down and solving the problem that Leon
-> reported, in the "track FOLL_PIN pages" patch, and that patch is not part of
-> this series.
+> thanks,
+> 
+> greg k-h
 > 
 
-Hi Andrew and all,
-
-Any thoughts on this?
-
-As for the not-included-yet tracking patch, my local testing still suggests the
-need to allow for larger refcounts of huge pages (in other words, I can write a test
-to pin huge pages many times, and overflow with the same backtrace that Leon has
-reported).
-
-The second struct page (I recall Jan suggested) can hold those, so I'm going to proceed
-with that approach, while waiting to see if Leon has any more test data for me.
-
-Again, I think this series is worth getting out of the way, in the meantime.
-
+Compiled and booted on my test system. No dmesg regressions.
 
 thanks,
--- 
-John Hubbard
-NVIDIA
+-- Shuah
