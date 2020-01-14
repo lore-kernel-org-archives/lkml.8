@@ -2,148 +2,119 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED43FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0302C33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF01A24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579029752;
-	bh=mKLOd2xmuYtb73s/4dD84EKQ2MMEkc1ge3ZF5InQbH8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=GWlUwA5NPardygypXaD4f2NppePch72xmfBH+tqqNAKUMZey8WYNNIVHlHyQauDxG
-	 vAq//5ACTh6opLB3eLF9fK/qbmRVCpWQmEjk9RHJXGML2nUxBySjdkzBsCpG62aay+
-	 477ZU5Boie5c7TPM8AncftFls31DVo8ox2UDLwOo=
+	by mail.kernel.org (Postfix) with ESMTP id A034F24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgANTWb (ORCPT
+        id S1728813AbgANTWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:22:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 14:22:33 -0500
+Received: from mga18.intel.com ([134.134.136.126]:48042 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgANTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728851AbgANTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 14:22:22 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9888124658;
-        Tue, 14 Jan 2020 19:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579029740;
-        bh=mKLOd2xmuYtb73s/4dD84EKQ2MMEkc1ge3ZF5InQbH8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=117MId6Fz76RZor5q9TDLOOoMgry1k3C0QHZUjZIdh92Cr0Y66vkwVY4G+FR6cfpv
-         BIBczBS/bbgKByRPmw3XmuYD/Ayq9MiHEziGem3GpZoV1tAE9hrhlFPzNXPZF0Ldve
-         dtbxedSQL5fov2WMA872xeXZ/jl8mPcSM/6v5OrA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3FB583522798; Tue, 14 Jan 2020 11:22:20 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:22:20 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Marco Elver <elver@google.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20200114192220.GS2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CANpmjNOC2PYFsE_TK2SYmKcHxyG+2arWc8x_fmeWPOMi0+ot8g@mail.gmail.com>
- <53F6B915-AC53-41BB-BF32-33732515B3A0@lca.pw>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 11:22:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
+   d="scan'208";a="423259154"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Jan 2020 11:22:20 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andriy.shevchenko@intel.com, prarit@redhat.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 4/5] tools/power/x86/intel-speed-select: Change the order for clos disable
+Date:   Tue, 14 Jan 2020 11:22:16 -0800
+Message-Id: <20200114192217.580364-5-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
+References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53F6B915-AC53-41BB-BF32-33732515B3A0@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 06:08:29AM -0500, Qian Cai wrote:
-> 
-> 
-> > On Jan 6, 2020, at 7:47 AM, Marco Elver <elver@google.com> wrote:
-> > 
-> > Thanks, I'll look into KCSAN + lockdep compatibility. It's probably
-> > missing some KCSAN_SANITIZE := n in some Makefile.
-> 
-> Can I have a update on fixing this? It looks like more of a problem that kcsan_setup_watchpoint() will disable IRQs and then dive into the page allocator where it would complain because it might sleep.
-> 
-> BTW, I saw Paul sent a pull request for 5.6 but it is ugly to have everybody could trigger a deadlock (sleep function called in atomic context) like this during boot once this hits the mainline not to mention about only recently it is possible to test this feature (thanks to warning ratelimit) with the existing debugging options because it was unable to boot due to the brokenness with debug_pagealloc as mentioned in this thread, so this does sounds like it needs more soak time for the mainline to me.
+In turbo-freq or base-freq auto mode, for disable, first disable the feature and
+then disable clos.
 
-Just so I understand...  Does this problem happen even in CONFIG_KCSAN=n
-kernels?
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../x86/intel-speed-select/isst-config.c      | 30 +++++++++----------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
-I have been running extensive CONFIG_KSCAN=y rcutorture tests for quite
-awhile now, so even if this only happens for CONFIG_KSCAN=y, it is not
-like it affects everyone.
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index e22a694e6410..84baba34d311 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -1384,14 +1384,10 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 		goto disp_result;
+ 	}
+ 
+-	if (auto_mode) {
+-		if (status) {
+-			ret = set_pbf_core_power(cpu);
+-			if (ret)
+-				goto disp_result;
+-		} else {
+-			isst_pm_qos_config(cpu, 0, 0);
+-		}
++	if (auto_mode && status) {
++		ret = set_pbf_core_power(cpu);
++		if (ret)
++			goto disp_result;
+ 	}
+ 
+ 	ret = isst_set_pbf_fact_status(cpu, 1, status);
+@@ -1408,6 +1404,9 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 		}
+ 	}
+ 
++	if (auto_mode && !status)
++		isst_pm_qos_config(cpu, 0, 0);
++
+ disp_result:
+ 	if (status)
+ 		isst_display_result(cpu, outf, "base-freq", "enable",
+@@ -1496,14 +1495,10 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	int ret;
+ 	int status = *(int *)arg4;
+ 
+-	if (auto_mode) {
+-		if (status) {
+-			ret = isst_pm_qos_config(cpu, 1, 1);
+-			if (ret)
+-				goto disp_results;
+-		} else {
+-			isst_pm_qos_config(cpu, 0, 0);
+-		}
++	if (auto_mode && status) {
++		ret = isst_pm_qos_config(cpu, 1, 1);
++		if (ret)
++			goto disp_results;
+ 	}
+ 
+ 	ret = isst_set_pbf_fact_status(cpu, 0, status);
+@@ -1524,6 +1519,9 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 			ret = isst_set_trl(cpu, fact_trl);
+ 		if (ret && auto_mode)
+ 			isst_pm_qos_config(cpu, 0, 0);
++	} else {
++		if (auto_mode)
++			isst_pm_qos_config(cpu, 0, 0);
+ 	}
+ 
+ disp_results:
+-- 
+2.24.1
 
-Yes, it should be fixed, and Marco does have a patch on the way.
-
-							Thanx, Paul
-
-> 0000000000000400
-> [   13.416814][    T1] Call Trace:
-> [   13.416814][    T1]  lock_is_held_type+0x66/0x160
-> [   13.416814][    T1]  ___might_sleep+0xc1/0x1d0
-> [   13.416814][    T1]  __might_sleep+0x5b/0xa0
-> [   13.416814][    T1]  slab_pre_alloc_hook+0x7b/0xa0
-> [   13.416814][    T1]  __kmalloc_node+0x60/0x300
-> [   13.416814   T1]  ? alloc_cpumask_var_node+0x44/0x70
-> [   13.416814][    T1]  ? topology_phys_to_logical_die+0x7e/0x180
-> [   13.416814][    T1]  alloc_cpumask_var_node+0x44/0x70
-> [   13.416814][    T1]  zalloc_cpumask_var+0x2a/0x40
-> [   13.416814][    T1]  native_smp_prepare_cpus+0x246/0x425
-> [   13.416814][    T1]  kernel_init_freeable+0x1b8/0x496
-> [   13.416814][    T1]  ? rest_init+0x381/0x381
-> [   13.416814][    T1]  kernel_init+0x18/0x17f
-> [   13.416814][    T1]  ? rest_init+0x381/0x381
-> [   13.416814][    T1]  ret_from_fork+0x3a/0x50
-> [   13.416814][    T1] irq event stamp: 910
-> [   13.416814][    T1] hardirqs last  enabled at (909): [<ffffffff8d1240f3>] _raw_write_unlock_irqrestore+0x53/0x57
-> [   13.416814][    T1] hardirqs last disabled at (910): [<ffffffff8c8bba76>] kcsan_setup_watchpoint+0x96/0x460
-> [   13.416814][    T1] softirqs last  enabled at (0): [<ffffffff8c6b697a>] copy_process+0x11fa/0x34f0
-> [   13.416814][    T1] softirqs last disabled at (0): [<0000000000000000>] 0x0
-> [   13.416814][    T1] ---[ end trace 7d1df66da055aa92 ]---
-> [   13.416814][    T1] possible reason: unannotated irqs-on.
-> [   13.416814][ent stamp: 910
-> [   13.416814][    T1] hardirqs last  enabled at (909): [<ffffffff8d1240f3>] _raw_write_unlock_irqrestore+0x53/0x57
-> [   13.416814][    T1] hardirqs last disabled at (910): [<ffffffff8c8bba76>] kcsan_setup_watchpoint+0x96/0x460
-> [   13.416814][    T1] softirqs last  enabled at (0): [<ffffffff8c6b697a>] copy_process+0x11fa/0x34f0
-> [   13.416814][    T1] softirqs last disabled at (0): [<0000000000000000>] 0x0
