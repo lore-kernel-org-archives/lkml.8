@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005B4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F52C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C669A222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A48C222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579018164;
-	bh=faTRHh+bcvRrhOjGBJd7xe1b1/kzt+dXal4VH2s7aSw=;
+	s=default; t=1579018166;
+	bh=VRJMnUlsoIYQaKMaQAY/tcd6eEft1LLaHLXOyKEdGXE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=gqxT0QCYlrrEL4j/rpO5/FhMh86j82Igys2Qi39ataWDGj1zer4YOUBSE9A3Fn+1f
-	 GZ++lmGxt+KAEN7NJwYugLx4sVXKODtFfY4nQS0U2qEsG6kWg9TKs4hHfKapac6M5Q
-	 eS6sK1jE7yzsferifsIoVhVRNBwuNTuFYMyQegjM=
+	b=2iQoPBeMo626ISvOT987ITgJ1zXLE5g1nvZ4dyZgv3AHO2D9QXbGXlrkEPh8c8+Lk
+	 yzQQCnGR9/qpUpIQePq2wvTJsat7puuPjWnaUOX20PN43hKm/aC8jTUF8yaJW3qMD9
+	 6AaOIAH6JAu2hKAUdx1qshZav0BPvwRPNiQthcME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgANQJY (ORCPT
+        id S1729203AbgANQJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 14 Jan 2020 11:09:24 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37410 "EHLO
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37508 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgANQJW (ORCPT
+        with ESMTP id S1728929AbgANQJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:09:22 -0500
+        Tue, 14 Jan 2020 11:09:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Pq8REMESzpH6q41kFJ7Xdz/mnGbbiWifWQ5pOJY+B+Q=; b=OHnhLjdjRfDE
-        kHG9H27H5hJUUcJEp0KyT9sVJyzX6cjHyOJWj4gQGxmIj4whuU4H4uDSeymP86e03vIWog6BZzEaU
-        JgmQDDltYrFCLUFhX3chRHWM2fDzk+uSgUkfTIDNTxDCD3qz5p1m6f5NVvHJURx4hjjC3/Kh0W5Kf
-        on50A=;
+        List-Archive; bh=FtjWDnF1Kar+1LXTdsMn9cWyX+PRtDjdGAMpdHfwvE8=; b=jiEvTaqdwpuW
+        W8ZkPAlaLTiEgNqB77n1RVV7SsDhjNmfDziA2hpK3fdwMzr11UdxaphfK+85J3WYToBOyQVvwh9Vo
+        W5+aIuf3vhXASqQ9TYSM3ZyB2fEFwKmPwUoYeHZzGPNA6rDBYgQHqSSPkHo1MHgf6TU/iJXPGI5M4
+        rzn80=;
 Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1irOkb-0001Ul-Ic; Tue, 14 Jan 2020 16:09:05 +0000
+        id 1irOkq-0001Yd-40; Tue, 14 Jan 2020 16:09:20 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 40A1AD02C7B; Tue, 14 Jan 2020 16:09:05 +0000 (GMT)
+        id C77ECD02C77; Tue, 14 Jan 2020 16:09:19 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, nicoleotsuka@gmail.com, perex@perex.cz,
-        robh+dt@kernel.org, Rob Herring <robh@kernel.org>,
-        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm & imx8qxp" to the asoc tree
-In-Reply-To: <b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
-Message-Id: <applied-b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mantas Pucka <mantas@8devices.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: vqmmc-ipq4019: Trivial clean up" to the regulator tree
+In-Reply-To: <20200114065847.31667-2-axel.lin@ingics.com>
+Message-Id: <applied-20200114065847.31667-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Date:   Tue, 14 Jan 2020 16:09:05 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 16:09:19 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm & imx8qxp
+   regulator: vqmmc-ipq4019: Trivial clean up
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,57 +87,53 @@ to this mail.
 Thanks,
 Mark
 
-From 8441f87eadf6d6bba542e7a5bf3888595248d888 Mon Sep 17 00:00:00 2001
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Date: Wed, 4 Dec 2019 20:00:18 +0800
-Subject: [PATCH] ASoC: dt-bindings: fsl_asrc: add compatible string for imx8qm
- & imx8qxp
+From f72c5835509109715a8d8f0d98fddef089b3a4d8 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 14 Jan 2020 14:58:47 +0800
+Subject: [PATCH] regulator: vqmmc-ipq4019: Trivial clean up
 
-Add compatible string "fsl,imx8qm-asrc" for imx8qm platform,
-"fsl,imx8qxp-asrc" for imx8qxp platform.
+A few trivial clean up:
+* Make ipq4019_regulator_voltage_ops and vmmc_regulator const
+* Make ipq4019_vmmcq_regmap_config static
+* Use regulator_map_voltage_ascend
 
-There are two asrc modules in imx8qm & imx8qxp, the clock mapping is
-different for each other, so add new property "fsl,asrc-clk-map"
-to distinguish them.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/b9352edb014c1ee8530c0fd8829c2b044b3da649.1575452454.git.shengjiu.wang@nxp.com
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20200114065847.31667-2-axel.lin@ingics.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/fsl,asrc.txt | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/regulator/vqmmc-ipq4019-regulator.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-index 1d4d9f938689..cb9a25165503 100644
---- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-@@ -8,7 +8,12 @@ three substreams within totally 10 channels.
+diff --git a/drivers/regulator/vqmmc-ipq4019-regulator.c b/drivers/regulator/vqmmc-ipq4019-regulator.c
+index 42a2368e9ef7..685b585b39a1 100644
+--- a/drivers/regulator/vqmmc-ipq4019-regulator.c
++++ b/drivers/regulator/vqmmc-ipq4019-regulator.c
+@@ -18,13 +18,14 @@ static const unsigned int ipq4019_vmmc_voltages[] = {
+ 	1500000, 1800000, 2500000, 3000000,
+ };
  
- Required properties:
+-static struct regulator_ops ipq4019_regulator_voltage_ops = {
++static const struct regulator_ops ipq4019_regulator_voltage_ops = {
+ 	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_ascend,
+ 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+ 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+ };
  
--  - compatible		: Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
-+  - compatible		: Compatible list, should contain one of the following
-+			  compatibles:
-+			  "fsl,imx35-asrc",
-+			  "fsl,imx53-asrc",
-+			  "fsl,imx8qm-asrc",
-+			  "fsl,imx8qxp-asrc",
+-static struct regulator_desc vmmc_regulator = {
++static const struct regulator_desc vmmc_regulator = {
+ 	.name		= "vmmcq",
+ 	.ops		= &ipq4019_regulator_voltage_ops,
+ 	.type		= REGULATOR_VOLTAGE,
+@@ -35,7 +36,7 @@ static struct regulator_desc vmmc_regulator = {
+ 	.vsel_mask	= 0x3,
+ };
  
-   - reg			: Offset and length of the register set for the device.
- 
-@@ -35,6 +40,11 @@ Required properties:
- 
-    - fsl,asrc-width	: Defines a mutual sample width used by DPCM Back Ends.
- 
-+   - fsl,asrc-clk-map   : Defines clock map used in driver. which is required
-+			  by imx8qm/imx8qxp platform
-+			  <0> - select the map for asrc0 in imx8qm/imx8qxp
-+			  <1> - select the map for asrc1 in imx8qm/imx8qxp
-+
- Optional properties:
- 
-    - big-endian		: If this property is absent, the little endian mode
+-const struct regmap_config ipq4019_vmmcq_regmap_config = {
++static const struct regmap_config ipq4019_vmmcq_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.reg_stride	= 4,
+ 	.val_bits	= 32,
 -- 
 2.20.1
 
