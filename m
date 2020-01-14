@@ -2,57 +2,57 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FFC33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02234C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1931D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6CA24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0iyokzQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YahZMu4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgANHQJ (ORCPT
+        id S1728945AbgANHQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:16:09 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41547 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgANHQJ (ORCPT
+        Tue, 14 Jan 2020 02:16:13 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37512 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728855AbgANHQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:16:09 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x8so5959343pgk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:16:08 -0800 (PST)
+        Tue, 14 Jan 2020 02:16:12 -0500
+Received: by mail-pj1-f68.google.com with SMTP id m13so5450903pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PgN1A3/jcSNW9U7ZQPj+hV6TF/FYO27/H6WZlglC4Rc=;
-        b=L0iyokzQjznU7jd7+4yRIjZG4W+Kh/QVfHxO9R/YomTTvZh7b8xaC5TCZUUYDfVDXN
-         P2IwRlrn+TbuhVEJfj6oijTp7NO3dd3UJHVeEFZdgB8J3r0aXarKK7Nsjb9D57P/urEw
-         WzCncn51xRlztqYXPBSbDrfgKBb5vo2D7zGwA=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EoATaCn4ot7/fRXVyyupWqTUK/J3grtKGGD0GZimmTI=;
+        b=YahZMu4jUSx+kdGsktVd/kysOsca1+L1cDz6GC/y3EdchGBL4lmkZC+vd2F+RyK0A7
+         cSFw3LO7hgNpta3FVyHm971uhVjHwJ2SCe+7L/g+HAE+Ip5mi3Zg2ITUK1YM0hs9vyPL
+         bojXkbovYxxTJydqmr/V1/I5IiLD5C/gKkXm8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PgN1A3/jcSNW9U7ZQPj+hV6TF/FYO27/H6WZlglC4Rc=;
-        b=lOTnJ3MO5F6ZA9tO2sDOPTzfCT+rYTzex168//pMAtfn18VDDZDXNoYtjIlXgK+d+z
-         u5DUNEfRlduuwCatlHVvI/oTbuXV5okukgFSFER+1suX0Vyzb5otf1eSWG1Uapd26QP5
-         TbA1wiEscypD6WvENxgN7/JqPOE+zIKMbKgkJeD0HWKHZYtniJlIT81ekJnGzV1Ae22R
-         HShaUI8ZEVtAqJcuU34tBb1aWM0DbguqzN7pCqEELE03AFvlc8WVeAThhwZqmRO3p4g2
-         3IkwlsHPKTXeKMkX2seC30XGE3kxDWjHr0MluFKYizAjTzOCeHYY+jN4gwcuhYI5mP2A
-         A0Zw==
-X-Gm-Message-State: APjAAAUK609hOFAFHgc1/H/QCBz7n32m7Uu/BUdLzr755BknzaHADL0D
-        DARpw4jXNJAk9n2nM0MRk/4t/g==
-X-Google-Smtp-Source: APXvYqzMqBBdzwBKGKEOl+Tc4G0Gj7LZPgMyixK0fqjyI+joZwzSNKerDHvLgKupoGqp6US/0o9C2A==
-X-Received: by 2002:a63:ed4a:: with SMTP id m10mr22776522pgk.99.1578986168173;
-        Mon, 13 Jan 2020 23:16:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EoATaCn4ot7/fRXVyyupWqTUK/J3grtKGGD0GZimmTI=;
+        b=R0VL4zIygfNVwGVBlwlfxFRSplkMLQF18+a4DjtmKPjVr+Qn8vg1+MQXEUMKx/4dx9
+         cm8I5q+HSb7rib+FSSZoGMGHUjKwicmh0BuwfBFqXqFGk5164LsH0C78Hz698rKOnYAk
+         Qb7sOEkwc7VqRGuHDV0VViYFcjP0OfMTHR32AfMjgvGIuc/GvBoJV+d0gj61RGxueXfB
+         Zv6bg2Kpig/wF8Plkz3Lo5+IQ1y8tHInzEn+4/CkCluvl/oKXy512ewsS3pnlUdfiAwi
+         VwR90+YKskLWzGBKUEJmeSSuQgKYz2X0N0WFgK9Sw16LAJm+hST9R8vuwASkN2RUhBXJ
+         te8w==
+X-Gm-Message-State: APjAAAVkcDEoN+aNqzY/x9ssXkuf8o0Y49PMODJ+3WveB1zHQtCQpmtN
+        FigJjhuN8ZW13q2hQ0AN95fbwA==
+X-Google-Smtp-Source: APXvYqzQuE+WVs1Zt0wpcg6768ZyfON0VW874YYaBtjWl2nYKw4EH/znBkyBISA8PcAG89pGqwd32g==
+X-Received: by 2002:a17:902:d68e:: with SMTP id v14mr25504465ply.36.1578986171223;
+        Mon, 13 Jan 2020 23:16:11 -0800 (PST)
 Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.05
+        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 23:16:07 -0800 (PST)
+        Mon, 13 Jan 2020 23:16:10 -0800 (PST)
 From:   Nicolas Boichat <drinkcat@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -66,10 +66,12 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v3 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
-Date:   Tue, 14 Jan 2020 15:15:55 +0800
-Message-Id: <20200114071602.47627-1-drinkcat@chromium.org>
+Subject: [PATCH v3 1/7] dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+Date:   Tue, 14 Jan 2020 15:15:56 +0800
+Message-Id: <20200114071602.47627-2-drinkcat@chromium.org>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+In-Reply-To: <20200114071602.47627-1-drinkcat@chromium.org>
+References: <20200114071602.47627-1-drinkcat@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,75 +79,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Define a compatible string for the Mali Bifrost GPU found in
+Mediatek's MT8183 SoCs.
 
-Follow-up on the v2: https://patchwork.kernel.org/cover/11322801/ .
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+---
 
-The main purpose of this series is to upstream the dts change and the binding
-document, but I wanted to see how far I could probe the GPU, to check that the
-binding is indeed correct. The rest of the patches are RFC/work-in-progress, but
-I think some of them could already be picked up.
+v3:
+ - No change
 
-So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
-backports to get the latest panfrost driver (I should probably try on
-linux-next at some point but this was the path of least resistance).
+ .../bindings/gpu/arm,mali-bifrost.yaml         | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-I tested it as a module as it's more challenging (originally probing would
-work built-in, on boot, but not as a module, as I didn't have the power
-domain changes, and all power domains are on by default during boot).
-
-Probing logs looks like this, currently. They look sane.
-[  501.319728] panfrost 13040000.gpu: clock rate = 511999970
-[  501.320041] panfrost 13040000.gpu: Linked as a consumer to regulator.14
-[  501.320102] panfrost 13040000.gpu: Linked as a consumer to regulator.31
-[  501.320651] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
-[  501.320954] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
-[  501.321062] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
-[  501.321734] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
-[  501.321741] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
-[  501.321747] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
-[  501.321752] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
-[  501.324951] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
-
-Some more changes are still required to get devfreq working, and of course
-I do not have a userspace driver to test this with.
-
-Thanks!
-
-Nicolas
-
-v3 (see individual patches, too):
- - Match a specific mediatek,mt8183-mali instead of the generic bifrost,
-   as this instance requires 2 special cases:
-    - 2 regulators
-    - 3 power domains
-
-v2:
- - Use sram instead of mali_sram as SRAM supply name.
- - Rename mali@ to gpu@.
- - Add dt-bindings changes
- - Stacking patches after the device tree change that allow basic
-   probing (still incomplete and broken).
-
-Nicolas Boichat (7):
-  dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
-  arm64: dts: mt8183: Add node for the Mali GPU
-  drm/panfrost: Improve error reporting in panfrost_gpu_power_on
-  drm/panfrost: Add support for multiple regulators
-  drm/panfrost: Add support for multiple power domains
-  RFC: drm/panfrost: Add mt8183-mali compatible string
-  RFC: drm/panfrost: devfreq: Add support for 2 regulators
-
- .../bindings/gpu/arm,mali-bifrost.yaml        |  18 +++
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 +
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  17 +++
- drivers/gpu/drm/panfrost/panfrost_device.c    | 120 +++++++++++++++---
- drivers/gpu/drm/panfrost/panfrost_device.h    |  25 +++-
- drivers/gpu/drm/panfrost/panfrost_drv.c       |  38 ++++--
- drivers/gpu/drm/panfrost/panfrost_gpu.c       |  11 +-
- 8 files changed, 310 insertions(+), 30 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+index 4ea6a8789699709..9e095608d2d98f0 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+@@ -17,6 +17,7 @@ properties:
+     items:
+       - enum:
+           - amlogic,meson-g12a-mali
++          - mediatek,mt8183-mali
+           - realtek,rtd1619-mali
+           - rockchip,px30-mali
+       - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
+@@ -62,6 +63,23 @@ allOf:
+           minItems: 2
+       required:
+         - resets
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mediatek,mt8183-mali
++    then:
++      properties:
++        sram-supply: true
++        power-domains:
++          description:
++            List of phandle and PM domain specifier as documented in
++            Documentation/devicetree/bindings/power/power_domain.txt
++          minItems: 3
++          maxItems: 3
++      required:
++        - sram-supply
++        - power-domains
+ 
+ examples:
+   - |
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
