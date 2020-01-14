@@ -2,48 +2,105 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5930C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5790C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB2C24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8666324679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qfNdLg3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgANU3b (ORCPT
+        id S1728787AbgANUa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:29:31 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35586 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANU3b (ORCPT
+        Tue, 14 Jan 2020 15:30:56 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35707 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANUa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:29:31 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9CD84292AAB
-Subject: Re: [PATCH v5 1/2] platform: chrome: Add cros-usbpd-notify driver
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-References: <20200114031056.44502-1-pmalani@chromium.org>
- <b39666db-38e4-c131-bfbb-077a53a8ef69@collabora.com>
- <CACeCKacSiMQOA63c81deGHOvKZb=MEFQqjK=iQRmmot8GrjS+A@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <4ddf93f1-fe0c-763c-25d6-144bdce5cd4c@collabora.com>
-Date:   Tue, 14 Jan 2020 21:29:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <CACeCKacSiMQOA63c81deGHOvKZb=MEFQqjK=iQRmmot8GrjS+A@mail.gmail.com>
+        Tue, 14 Jan 2020 15:30:56 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z76so13494527qka.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:30:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=GM2cmKJLGIw00BnTkj1dcmxxtlMk1WYpnp+HW9nEczc=;
+        b=qfNdLg3kkuNI6cLLk03N289br06VFc6cqXJqoyJLg1KprL1vXCIrhjDgtVLFvs1Lwb
+         AGCRxsxBhq8RqUyn380ItGPioew6bRYplCRy7vK2et+jGpulMqjnLkOTPeNz/33eXrDq
+         0vFaoz7vDSh5K80ynQpMr5rMy8tA7f6nYDRq/e+wt1l6rr9+6nNEBxx8MmmB3Qm7R4Cl
+         TNl5xvJuy5W6ApqyVP/ggRMHAYLrtnXI4E8Xv7pyFWREaYmrxqRLCzpVXVmBV7MZyEXE
+         U3rJZrXfsMTvsHDdbHIlb8doOnexZCFIYMkSwEi0SRMSCJOxOWAm5Dg1RaK67s/foSTo
+         ZGxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=GM2cmKJLGIw00BnTkj1dcmxxtlMk1WYpnp+HW9nEczc=;
+        b=KmwczXxSqFCA9i3zCBrb2jI9RlgmEKDw/Q11Sw8TqQt+3dfvSmywq7kJbgwRSL+Wgi
+         aoh3f2jg8RTjiT8SodiuiKd2lLMRZXwc0YyrHmhK62ZQkPzSpsBbBwnybsQ338LSXlwI
+         RAnHj1Ef1OVaSBNGtyu+OBhSfNZj6SxS04TyLiTCTYv0FDLG5TNvj03CaoZmQcYnIvoq
+         B8WV7A7Cy//HClx54tgnY9RhHf/yeT+78JK/D6FyKGAoDkyn0chULWxeK0Hwa7g7yhtH
+         k/1/ZpH8TzGW7apgzmNpkKP1wXHQOoHBWnyMdjr3sVBbR1F/D1yEG+jwqdYca8Xw2g7y
+         EG6w==
+X-Gm-Message-State: APjAAAU/Wc+PdDeuyz6ZGLYtced2hgyp9Cvk9YrsRbJkAJndxBaUs2hH
+        7QPc5rH2qsv3ta3Gh9Odx383pQ==
+X-Google-Smtp-Source: APXvYqySWPhc8cNWPW6ZR1czJUmUILrXAmHD502QnwiMjSkfcnjRHGogwSncB5M2bJhCbEL2kLY/AQ==
+X-Received: by 2002:ae9:c104:: with SMTP id z4mr18665764qki.418.1579033855079;
+        Tue, 14 Jan 2020 12:30:55 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 68sm7357546qkj.102.2020.01.14.12.30.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 12:30:54 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+Date:   Tue, 14 Jan 2020 15:30:53 -0500
+Message-Id: <F185919B-2D86-43B6-9BEC-D14D72871A58@lca.pw>
+References: <20200114192220.GS2935@paulmck-ThinkPad-P72>
+Cc:     Marco Elver <elver@google.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+In-Reply-To: <20200114192220.GS2935@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -51,164 +108,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 14/1/20 20:23, Prashant Malani wrote:
-> On Tue, Jan 14, 2020 at 9:07 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
->>
->> Hi Prashant,
->>
->> On 14/1/20 4:10, Prashant Malani wrote:
->>> From: Jon Flatley <jflat@chromium.org>
->>> +};
->>> +MODULE_DEVICE_TABLE(acpi, cros_usbpd_acpi_device_ids);
->> Ops, there is a build error here, please make sure to build the driver before
->> sending.
-> Hmm. That's odd, I did check  using arm64 defconfig. My apologies.
-> Could you kindly share your build commands so that I can use this
-> going forward?
->>
->> s/cros_usbpd_acpi_device_ids/cros_usbpd_notify_acpi_device_ids/
->>
+> On Jan 14, 2020, at 2:22 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+>=20
+> Just so I understand...  Does this problem happen even in CONFIG_KCSAN=3Dn=
 
-one problem is the above^
+> kernels?
 
-drivers/platform/chrome/cros_usbpd_notify.c:67:27: error:
-‘cros_usbpd_acpi_device_ids’ undeclared here (not in a function); did you mean
-‘cros_usbpd_notify_acpi_device_ids’?
+No.
 
-The others I didn't dig in. My build commands are the common.
+>=20
+> I have been running extensive CONFIG_KSCAN=3Dy rcutorture tests for quite
+> awhile now, so even if this only happens for CONFIG_KSCAN=3Dy, it is not
+> like it affects everyone.
+>=20
+> Yes, it should be fixed, and Marco does have a patch on the way.
 
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- defconfig
-# Enable the new cros_usbpd_notify driver
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j4
-
-Cheers,
- Enric
-
->> Apart from this I'm getting build errors with my defconfig which has CONFIG_ACPI
->> and CONFIG_OF enabled.
->>
->> Another problem that I have with this driver is that actually there is no user
->> for it. I'd really prefer have this included on a series that also introduces
->> the user of this notifier. If you are only testing the ACPI case you can focus
->> first on this use case and we add later the OF case (maybe is an easy way to
->> proceed).
-> I'm testing with an arm64 device too locally. I will try to
-> incorporate the new change which updates cros_usbpd-charger to use the
-> notifier mechanism. I think we can try for the OF case simultaneously
-> (it is probably just the build errors I need to check for)
-> 
-> Thanks again!
->>
->> Thanks,
->>  Enric
->>
->>> +
->>> +static struct acpi_driver cros_usbpd_notify_acpi_driver = {
->>> +     .name = DRV_NAME,
->>> +     .class = DRV_NAME,
->>> +     .ids = cros_usbpd_notify_acpi_device_ids,
->>> +     .ops = {
->>> +             .add = cros_usbpd_notify_add_acpi,
->>> +             .notify = cros_usbpd_notify_acpi,
->>> +     },
->>> +};
->>> +module_acpi_driver(cros_usbpd_notify_acpi_driver);
->>> +
->>> +#endif /* CONFIG_ACPI */
->>> +
->>> +#ifdef CONFIG_OF
->>> +
->>> +static int cros_usbpd_notify_plat(struct notifier_block *nb,
->>> +             unsigned long queued_during_suspend, void *data)
->>> +{
->>> +     struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
->>> +     u32 host_event = cros_ec_get_host_event(ec_dev);
->>> +
->>> +     if (!host_event)
->>> +             return NOTIFY_BAD;
->>> +
->>> +     if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
->>> +             blocking_notifier_call_chain(&cros_usbpd_notifier_list,
->>> +                             host_event, NULL);
->>> +             return NOTIFY_OK;
->>> +     }
->>> +     return NOTIFY_DONE;
->>> +}
->>> +
->>> +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
->>> +{
->>> +     struct device *dev = &pdev->dev;
->>> +     struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
->>> +     struct notifier_block *nb;
->>> +     int ret;
->>> +
->>> +     nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
->>> +     if (!nb)
->>> +             return -ENOMEM;
->>> +
->>> +     nb->notifier_call = cros_usbpd_notify_plat;
->>> +     dev_set_drvdata(dev, nb);
->>> +
->>> +     ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
->>> +                                             nb);
->>> +     if (ret < 0) {
->>> +             dev_err(dev, "Failed to register notifier\n");
->>> +             return ret;
->>> +     }
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
->>> +{
->>> +     struct device *dev = &pdev->dev;
->>> +     struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
->>> +     struct notifier_block *nb =
->>> +             (struct notifier_block *)dev_get_drvdata(dev);
->>> +
->>> +     blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
->>> +                     nb);
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static struct platform_driver cros_usbpd_notify_plat_driver = {
->>> +     .driver = {
->>> +             .name = DRV_NAME,
->>> +     },
->>> +     .probe = cros_usbpd_notify_probe_plat,
->>> +     .remove = cros_usbpd_notify_remove_plat,
->>> +};
->>> +module_platform_driver(cros_usbpd_notify_plat_driver);
->>> +
->>> +#endif /* CONFIG_OF */
->>> +
->>> +MODULE_LICENSE("GPL");
->>> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
->>> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
->>> +MODULE_ALIAS("platform:" DRV_NAME);
->>> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
->>> new file mode 100644
->>> index 0000000000000..4f2791722b6d3
->>> --- /dev/null
->>> +++ b/include/linux/platform_data/cros_usbpd_notify.h
->>> @@ -0,0 +1,17 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * ChromeOS EC Power Delivery Notifier Driver
->>> + *
->>> + * Copyright 2020 Google LLC
->>> + */
->>> +
->>> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
->>> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
->>> +
->>> +#include <linux/notifier.h>
->>> +
->>> +int cros_usbpd_register_notify(struct notifier_block *nb);
->>> +
->>> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
->>> +
->>> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
->>>
+The concern is really about setting KSCAN=3Dy in a distro debug kernel where=
+ it has other debug options. I=E2=80=99ll try to dig into more of those issu=
+es in the next few days.=
