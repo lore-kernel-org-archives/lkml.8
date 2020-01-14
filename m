@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E17C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EAAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6AD2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024692467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996763;
-	bh=znToujCv4gKXyI2WE/bFFctzaBTLhDmy1kAXPqx8/Ys=;
+	s=default; t=1578996768;
+	bh=y3hojQXEA8XV+d/pNvuWwQg0+T/RPwpbZaLgU7memec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVCtDeBpi6E+sZguwku1E1OOWluUkMwJg0N7fMXatpc72cF7oOXGUtd3hYnTpDY5r
-	 ip2fBxkclcxKcnxebHCT+vwrTB/ZtKluFECib6eM6w49PndmlE9/8zRNgLMDR5Z7FL
-	 xStfOhaYmaxPBp6/K5U60MW8ay0e/aVEYzCxZLwI=
+	b=ud35mlal2+wEJDsDJ/7b+w4TEPc2mpzIz2gDyHCUs17gDlo13gk/4gKt0jo6x7Ubn
+	 N0An6Wvdt+vrq44TKsZSTN3Zw1fLOJ16dStxjeMVUFRSCzrEfibMbAobLJ0r/OS5Qm
+	 Gy/zQFPclytLROq1qdAk6jUPCmgEOa/m41it9c5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbgANKMn (ORCPT
+        id S1731753AbgANKMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733089AbgANKMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:40 -0500
+        id S1733104AbgANKMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD0EA24676;
-        Tue, 14 Jan 2020 10:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89DF207FF;
+        Tue, 14 Jan 2020 10:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996760;
-        bh=znToujCv4gKXyI2WE/bFFctzaBTLhDmy1kAXPqx8/Ys=;
+        s=default; t=1578996765;
+        bh=y3hojQXEA8XV+d/pNvuWwQg0+T/RPwpbZaLgU7memec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKE3iQWsEJcHc2KFNFpxDQN8e1DKotZfJUTxnM8Ac9aJzqeYRm9YOb4dyxRPLO13y
-         bHW1L/i9NHCz1ijuSW9vmLczxc7oxGkC7qf6sIYVgqv2KNNeGB97n1udfAjHsSC50p
-         uRnex2paiNpuGzpFJDmSBVnR7UVAXjBYMo2JS7dI=
+        b=T0EtPfJSRN7mWsGIf3ZcxEcMEWkR0lybkoeTQ0oIhlSdwXdTFzO190ZZGN25+uZ/3
+         I+aWlNmZ8f6661hlvrrlyZ2emQg5HmGQdmQ0/GLhlGIQ2gpXEgs1MOWZUUqUjnX/PG
+         u5aY1qjc4pF8t9pWKvcRgizDaDZtI2byl9uFGaBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 06/28] tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
-Date:   Tue, 14 Jan 2020 11:02:08 +0100
-Message-Id: <20200114094340.793885089@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 08/28] HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
+Date:   Tue, 14 Jan 2020 11:02:10 +0100
+Message-Id: <20200114094341.152658288@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -59,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
+commit be54e7461ffdc5809b67d2aeefc1ddc9a91470c7 upstream.
 
-On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
-this makes the stack tracer fail to compile. Just define it to zero in this
-case.
+Always return EPOLLOUT from uhid_char_poll to allow polling /dev/uhid
+for writable state.
 
-Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
-
+Fixes: 1f9dec1e0164 ("HID: uhid: allow poll()'ing on uhid devices")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Cc: stable@vger.kernel.org
-Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_stack.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/hid/uhid.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -197,6 +197,11 @@ check_stack(unsigned long ip, unsigned l
- 	local_irq_restore(flags);
+--- a/drivers/hid/uhid.c
++++ b/drivers/hid/uhid.c
+@@ -26,6 +26,7 @@
+ #include <linux/uhid.h>
+ #include <linux/wait.h>
+ #include <linux/uaccess.h>
++#include <linux/eventpoll.h>
+ 
+ #define UHID_NAME	"uhid"
+ #define UHID_BUFSIZE	32
+@@ -774,7 +775,7 @@ static unsigned int uhid_char_poll(struc
+ 	if (uhid->head != uhid->tail)
+ 		return POLLIN | POLLRDNORM;
+ 
+-	return 0;
++	return EPOLLOUT | EPOLLWRNORM;
  }
  
-+/* Some archs may not define MCOUNT_INSN_SIZE */
-+#ifndef MCOUNT_INSN_SIZE
-+# define MCOUNT_INSN_SIZE 0
-+#endif
-+
- static void
- stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
+ static const struct file_operations uhid_fops = {
 
 
