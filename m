@@ -2,138 +2,130 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C1FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DFCC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC94207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="JIpiz5Ez"
+	by mail.kernel.org (Postfix) with ESMTP id B250F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgANK7W (ORCPT
+        id S1729456AbgANK7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:59:22 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39069 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728983AbgANK7V (ORCPT
+        Tue, 14 Jan 2020 05:59:55 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:45611 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728868AbgANK7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:59:21 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l2so13780479lja.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:59:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EW8+gP2rKs+jXbNSD4aXu/n/AKA3IlQufSB8tHR0hpU=;
-        b=JIpiz5EzHfc1rirgM3SfKKD7NZ7xCQYzlJ6+GdvrzJUYHz0G/NH7/ld3OhUQ1HKJos
-         dit9ovo9dYZmngzGa0fLrVJtCCmge5pehCyJvukToG0Nuv+ggS+HyPkXxoj4gKNforWB
-         3vF25MkaWlPZp3UnVggalYxD8ki4V8KGg6l3zKEO7hi+CMZjcWQzClCziiB9qV4c0NQe
-         Vd5Jpf4zpbttEt6DWbC/XPpzESGs1GPdwXq70JoBVzV+q7XSQkIyCvpKAHFwKsHoCVuP
-         Nvz4qrWH2849lEWqK2y1WXBpyP5s8Rs1cgCWkK7IYT2NdUv0t9yYFPNKfdSFKUodOQC2
-         OwUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EW8+gP2rKs+jXbNSD4aXu/n/AKA3IlQufSB8tHR0hpU=;
-        b=MXQZE1KcFr6gaEE6MN9Xu2bFyjZnjjY8gnO+CLN4Mz+o+Wg1mj22NI62jIRTwo8Ulh
-         +15bHiHMjqs3fsEDlvyd/LmGWblhKFXKwplqmGAM6Plvq+6BvikXMCX29e/GZIlEO19X
-         AOqPKWjwtwcwmzFREPV/173R8Qr6DoN+PjcFKEw462lXrqMwlz6z+PGyeLsa9t5NeV1B
-         8WF6g85G120qgyT/Nwe9RdfFh/sFN5rOjzWt4c/IQihX538mUp1mjaAOyuxwhjIZcm5O
-         7Ug91t/pLjShHrbTM7UrHvgrRcsOEJrTMaUxxT238og6lJs/xjuDX0PcF5coJh2knZKJ
-         uftg==
-X-Gm-Message-State: APjAAAVnbkVGMqJuFB8GMQkf+5h1uEcXyPMv/jyLkMjRbXsWVTS4vCxR
-        TGNJe0qu4WOAHXAJtw4c3JJhaw==
-X-Google-Smtp-Source: APXvYqwwU+OYYmkkbYwhplcfbTT3Ys1dRt6HFgh5JXt2IjPqFpNbmHJc/3aC3GIv3Rs57FEF4FvMYA==
-X-Received: by 2002:a2e:8755:: with SMTP id q21mr13841462ljj.156.1578999558693;
-        Tue, 14 Jan 2020 02:59:18 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n23sm7139469lfa.41.2020.01.14.02.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 02:59:17 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C2A23100823; Tue, 14 Jan 2020 13:59:21 +0300 (+03)
-Date:   Tue, 14 Jan 2020 13:59:21 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com,
-        rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200114105921.eo2vdwikrvtt3gkb@box>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
- <20200114093122.GH19428@dhcp22.suse.cz>
- <20200114103112.o6ozdbkfnzdsc2ke@box>
+        Tue, 14 Jan 2020 05:59:55 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MVdUQ-1jGiYn0RfA-00RdML for <linux-kernel@vger.kernel.org>; Tue, 14 Jan
+ 2020 11:59:53 +0100
+Received: by mail-qt1-f173.google.com with SMTP id d5so12052491qto.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:59:52 -0800 (PST)
+X-Gm-Message-State: APjAAAWUwx1uP5/Fy+kTCiTnjbd12gb0A+RTYjxntsD5m3Xm/iq0YW9h
+        hl4Z6qV4jhL2u2Hmre0jratCPsFJUmNbEhzX/pg=
+X-Google-Smtp-Source: APXvYqy7DVQeNpwjj8/PcKvWd95l2BRRTtcYFTLWs1RZ+YhziEOQD5McLfFwTnVEhhx5R0yRDJ/gghU9Y+a5TCN65G8=
+X-Received: by 2002:ac8:6153:: with SMTP id d19mr2975529qtm.18.1578999591888;
+ Tue, 14 Jan 2020 02:59:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114103112.o6ozdbkfnzdsc2ke@box>
-User-Agent: NeoMutt/20180716
+References: <1578989048-10162-1-git-send-email-peng.fan@nxp.com>
+ <20200114081751.3wjbbnaem7lbnn3v@pengutronix.de> <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 14 Jan 2020 11:59:36 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
+Message-ID: <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
+Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:cE0A+PnSYgySMGJC6R6kvE52gv2pSNLSoRnLGEpf61gFOrhWkmX
+ f08AEHMtRfEkuc7hitJwpz0A9rwkXxjodQxT1uYaoS+QhpWrnQ+lSX5eGNl5QUub0VkBHe9
+ 7HIlb6nD2AzlurBxnh9KzqVq/B3kXfV6CkuSApmC9QktImwsszpXAAJ6ELxe58mo2PG5AQI
+ ABWL3qEDTZ1qARZk8Oh4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:njkbmezlBps=:rB2AmmCVywC4eKHL9ohjnZ
+ Y/Fit45mtwwJ7hsRtdC1M4fPt+nRdgUPk5vUpJ/WSTF/jBEroHF6QeVq+9769OMw+lBHNAd0M
+ 4jFFippfptC9fGpyGUUA90HSJOXxNeofuie/USXS08c3ek8Hilj/tNrrmWSAZtG7H0uhz2ry6
+ 7iupsp/lR7RtaItYPSsVKva5RGsrmt87v9gQJlbJ2Cx5QKqL1+chcgcSowxHiU4ajXz9O833Q
+ 8fIDR/v7YcxJugz98T5BbsuDDE0FpV4pAArQRgpTnsnCOapdh1ycqLniUHUyGFq8Jb5VETNoc
+ gMVOHdjx1ZI1lc4/x34rve8hEmUSaSrKOA9AIydaSQk9CM+B19YzyYaB9OI1oWbhPVk88kGKU
+ xrMk+EHJnILeV0jKL++tUZP/n0A/uxT8x+Oc3mWUJb26VhjzEM5YZx7xLl9iHSZkUPUQxS0iK
+ +4cEaTDmSwoFK3BFEH0RMBAAgUEu9TRNAImG4kDbW9J23j5zCYx+fP3hkwGWzTWUS+d2F/hgc
+ h384hyh3LBobKtcesA1Qm20KeJwA3p6bhXrPKR8kOXSUX/rrqgn86n1K0L7kw4dJ0GdLX/bqn
+ +2NlY6Uelq4Wndv9IudgTwFScZmEqP3msJaQvN2iR730+WrRsxSZfzyHIriOecK4LbId77mxh
+ yPWeXpNUUxGHzCGInzxbLw9myejcVImuv4pwoFIb4QvqgnOujLh//x7vEcD0bKOHltywmqsos
+ P0MWoG+sn+5DTZQJcl5ziX7zMOv4mEsMFmUUwNmpNAD6yItFUXEhfb9QUQ3yK5MYopOv1luNA
+ hR6JZuorufUchYpWyH4lxV2HgTFSgbIJU9V+JXZ5PdkHn3IFSZNIc7rOKi5XJeK2C4KC/redc
+ z7aWpjPWRTvcZYaSJHpQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:31:12PM +0300, Kirill A. Shutemov wrote:
-> On Tue, Jan 14, 2020 at 10:31:22AM +0100, Michal Hocko wrote:
-> > On Sat 11-01-20 03:03:52, Kirill A. Shutemov wrote:
-> > > On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
-> > > > As all the other places, we grab the lock before manipulate the defer list.
-> > > > Current implementation may face a race condition.
-> > > > 
-> > > > For example, the potential race would be:
-> > > > 
-> > > >     CPU1                      CPU2
-> > > >     mem_cgroup_move_account   split_huge_page_to_list
-> > > >       !list_empty
-> > > >                                 lock
-> > > >                                 !list_empty
-> > > >                                 list_del
-> > > >                                 unlock
-> > > >       lock
-> > > >       # !list_empty might not hold anymore
-> > > >       list_del_init
-> > > >       unlock
-> > > 
-> > > I don't think this particular race is possible. Both parties take page
-> > > lock before messing with deferred queue, but anytway:
-> > > 
-> > > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > 
-> > I am confused, if the above race is not possible then what would be a
-> > real race? We really do not want to have a patch with a misleading
-> > changelog, do we?
-> 
-> The alternative is to make sure that all page_deferred_list() called with
-> page lock taken.
-> 
-> I'll look into it.
+On Tue, Jan 14, 2020 at 9:32 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
+> > CONFIG_ARM64
+> >
+> > On Tue, Jan 14, 2020 at 08:08:45AM +0000, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Only need to build soc-imx8.c when CONFIG_ARM64 defined, no need to
+> > > build it for CONFIG_ARM32 currently.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/soc/imx/Makefile | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile index
+> > > cf9ca42ff739..cfcbc62b11d7 100644
+> > > --- a/drivers/soc/imx/Makefile
+> > > +++ b/drivers/soc/imx/Makefile
+> > > @@ -1,5 +1,7 @@
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > >  obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
+> > >  obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
+> > > +ifdef CONFIG_ARM64
+> > >  obj-$(CONFIG_ARCH_MXC) += soc-imx8.o
+> > > +endif
+> >
+> > For earlier SoCs we had kconfig symbols like SOC_IMX25. Actually
+> > SOC_IMX8 would be the right one to decide about soc-imx8.c to be compiled,
+> > it would be easier to read and verify than the suggested
+> > "ARM64 && ARCH_MXC" and it would stay right once NXP presents it's next
+> > 64-bit SoC i.MX9.
+>
+> There is no SOC_IMX8 currently. Need to introduce one in
+> arch/arm64/Kconfig.platforms. But I not see other vendors
+> introduce options like SOC_XX. Is this the right direction to
+> add one in Kconfig.platforms?
 
-split_huge_page_to_list() has page lock taken.
+I think it would be more consistent with the other platforms to have
+a symbol in drivers/soc/imx/Kconfig to control whether we build
+that driver.
 
-free_transhuge_page() is in the free path and doesn't susceptible to the
-race.
+If the driver is well written, it should be possible to allow compile
+testing it on any architecture (please test this, at least on x86).
 
-deferred_split_scan() is trickier. list_move() should be safe against
-list_empty() as it will not produce false-positive list_empty().
-list_del_init() *should* (correct me if I'm wrong) be safe because the page
-is freeing and memcg will not touch the page anymore.
+For some SoCs, we also allow running 32-bit kernels, so it would
+not be wrong to allow enabling the symbol on 32-bit ARM as
+well, but this is probably something where you want to consider
+the bigger picture to see if you want to support that configuration
+or not.
 
-deferred_split_huge_page() is a problematic one. It called from
-page_remove_rmap() path witch does require page lock. I don't see any
-obvious way to exclude race with mem_cgroup_move_account() here.
-Anybody else?
-
-Wei, could you rewrite the commit message with deferred_split_huge_page()
-as a race source instead of split_huge_page_to_list()?
-
--- 
- Kirill A. Shutemov
+      Arnd
