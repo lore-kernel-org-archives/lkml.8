@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE9AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26DC24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8775524679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996215;
-	bh=KO1LMfSNYFhXb5SrAcMNc2bgMl7s6FqsGaDUJVVkP9Y=;
+	s=default; t=1578996218;
+	bh=eV9ragD86Gc2Yi6uTd63+F/7ojeVK+/rS3dTtLjsLLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dYGHnwyk3ogJ/e1R1veEahRuuGuRy9VS3OW3nFkFVeRlPMmn7bDtemvEvOy8ocImW
-	 Zg6GENr4cVdqD1WqxaoiqlE5wYIGsn+mIXenDy0ws7faQgBmsC6+Xz/robnBMgsbw2
-	 pt5SFqYNBvuQx/mUZpO5gTYyIc8HJ2rtEFBaqlBk=
+	b=Gq8jtrFdu7X/u4RkV3wjPQ5TudbgqpClztby8SoCjYDEinDANpnn2VBdV4KFP8/dO
+	 e7jHd57FbkyY+sDaQmJ0SAd++dzhaeswfgKNdpi896vrSNdUqDi36U0MW9lHCKcr/8
+	 MEYWny2001nnfgAAWg91aKya7ZDlNDTaaCk3DKqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgANKDe (ORCPT
+        id S1729610AbgANKDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbgANKDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:32 -0500
+        id S1729067AbgANKDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A8124672;
-        Tue, 14 Jan 2020 10:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 624DE24672;
+        Tue, 14 Jan 2020 10:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996211;
-        bh=KO1LMfSNYFhXb5SrAcMNc2bgMl7s6FqsGaDUJVVkP9Y=;
+        s=default; t=1578996215;
+        bh=eV9ragD86Gc2Yi6uTd63+F/7ojeVK+/rS3dTtLjsLLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v01bQkLS1IHnsXp7jevzbOkqzbzcJep5MZ31PkJuRwEj6xx58S0Y4+2VOYUwIQeqY
-         6d+PXzl+Y/jja2xwBVxdut193rl/zOsHHO2eODKemqQOKhzeoXA3ehx2U2j8dQAs+w
-         GMZeHmu3eDMSmNM937R7eRQMK5TMj+arNFCePX0I=
+        b=RjoaHGd2FFwuh5URmzDVCC+orqCjGRUpG4YmYjSD1lIF9b4fZMJfhekQd5xjma7YK
+         HniIMcB/LtDTjEH7gmC86C3AM40SrJ6e1bH2wukZagbOUFau0hIalw1jVonJm7h818
+         VI0gxYvBN7SxHAkHCUpSGyNdLi7MyIdrBdt7W0/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 07/78] ALSA: hda/realtek - Set EAPD control to default for ALC222
-Date:   Tue, 14 Jan 2020 11:00:41 +0100
-Message-Id: <20200114094353.565937062@linuxfoundation.org>
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 08/78] ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 7th gen
+Date:   Tue, 14 Jan 2020 11:00:42 +0100
+Message-Id: <20200114094353.718501594@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,11 +61,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kailang Yang <kailang@realtek.com>
 
-commit 9194a1ebbc56d7006835e2b4cacad301201fb832 upstream.
+commit 54a6a7dc107da0492a9e84fd7e9a107b3c58138d upstream.
 
-Set EAPD control to verb control.
+Add quirk to ALC285_FIXUP_SPEAKER2_TO_DAC1, which is the same fixup
+applied for X1 Carbon 7th gen in commit d2cd795c4ece ("ALSA: hda -
+fixup for the bass speaker on Lenovo Carbon X1 7th gen").
 
 Signed-off-by: Kailang Yang <kailang@realtek.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -76,13 +79,13 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -412,6 +412,7 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0672:
- 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
- 		break;
-+	case 0x10ec0222:
- 	case 0x10ec0623:
- 		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
- 		break;
+@@ -7260,6 +7260,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
++	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
 
 
