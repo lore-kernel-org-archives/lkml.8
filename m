@@ -2,118 +2,122 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D7DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95396C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139592467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="CWwvQIMa"
+	by mail.kernel.org (Postfix) with ESMTP id 70669207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgANKbN (ORCPT
+        id S1729485AbgANKbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:31:13 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43409 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgANKbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:31:12 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so13695634ljm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:31:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gH2onGwJqIgSVIVO9iF6x/48+kAkgINLPogWn+IxdXo=;
-        b=CWwvQIMaFeGbGcccImhlvs+GWFEMa+s41DfLTdi1dEYXmM/c9ttvKpEVFZ3dqVHpAZ
-         J1ZSto4Ma/A2rGpMzgBYWcSOtodiUWd8S/F3Qs5FtRli34jgB7d8FirhpsFA09NtKmiL
-         7wggFVGtiFPUYJIFhzWaKeeGtyqMEDkyRMWSqSJBQzTt3IG/infOvP9BWGKVH9rGn/k0
-         yXN0lMiLBlXfnNRVSj6EykH/yYhTGG3+qiiJ7+LK9ocNN9jYW+lId5t9wGBLib03Lyv/
-         J4G7pK3IEIDviBleMQLqtKlxPxv0OcSo4pVcwadkegBN/Uwrg3xsYNLaBTHmyFqcX+uh
-         ut3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gH2onGwJqIgSVIVO9iF6x/48+kAkgINLPogWn+IxdXo=;
-        b=ImdAmo2rY/GseTtJGYN5CzbUw1V0UV4IbJgmiQ2phbzchlUgsLjobcZjomg0Qje9kI
-         IlLxZENKXmK6tOtAJtcrU3XCBxFhIgwLKqDa4zvgtrzSD8F4yiya59mYTOnmESN5wPxO
-         YzsUYoRlFbDyEWOzUjpQfEH2tSJkKsupIuAvFCnbNfDiZprsoVQ20w8I2Fe/QfvSknUv
-         y1RKlO/YkBD2MxAargYY0jz4TU69B+6fyJmrddZNVTSkyjqUcAvKiGdRgaiNwZS/YppM
-         q5x9aVGTDXs4Pt8m8iLeA70Jnc+RZeElsTDp/nzu4B1wARHl7TxXe/TE7fu0b/vHqOIx
-         /QlA==
-X-Gm-Message-State: APjAAAWbW8oBuKCvQSs016EEwGGidX6/OPTw9GbMNFN7nEEr4Yp9HySM
-        nN9U4b3oUAL3FJDSGI2efr3YYg==
-X-Google-Smtp-Source: APXvYqysJMZ2wctkZa481wCr4cDEEoTAjvmfbiYs1X+0OFb3uAQSoP+nU4jvncbrrWPLPosgB3gMvQ==
-X-Received: by 2002:a2e:b010:: with SMTP id y16mr13956962ljk.238.1578997870606;
-        Tue, 14 Jan 2020 02:31:10 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id c189sm7081166lfg.75.2020.01.14.02.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 02:31:09 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A0F64100823; Tue, 14 Jan 2020 13:31:12 +0300 (+03)
-Date:   Tue, 14 Jan 2020 13:31:12 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com,
-        rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200114103112.o6ozdbkfnzdsc2ke@box>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
- <20200114093122.GH19428@dhcp22.suse.cz>
+        Tue, 14 Jan 2020 05:31:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41612 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgANKbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:31:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E3F33ACE0;
+        Tue, 14 Jan 2020 10:31:20 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id CDB791E0D0E; Tue, 14 Jan 2020 11:31:19 +0100 (CET)
+Date:   Tue, 14 Jan 2020 11:31:19 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Kai Li <li.kai4@h3c.com>
+Cc:     jack@suse.cz, tytso@mit.edu, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+        gechangwei@live.cn, wang.yongd@h3c.com, wang.xibo@h3c.com
+Subject: Re: [PATCH] jbd2: clear JBD2_ABORT flag before journal_reset to
+ update log tail info when load journal
+Message-ID: <20200114103119.GE6466@quack2.suse.cz>
+References: <20200111022542.5008-1-li.kai4@h3c.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114093122.GH19428@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200111022542.5008-1-li.kai4@h3c.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:31:22AM +0100, Michal Hocko wrote:
-> On Sat 11-01-20 03:03:52, Kirill A. Shutemov wrote:
-> > On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
-> > > As all the other places, we grab the lock before manipulate the defer list.
-> > > Current implementation may face a race condition.
-> > > 
-> > > For example, the potential race would be:
-> > > 
-> > >     CPU1                      CPU2
-> > >     mem_cgroup_move_account   split_huge_page_to_list
-> > >       !list_empty
-> > >                                 lock
-> > >                                 !list_empty
-> > >                                 list_del
-> > >                                 unlock
-> > >       lock
-> > >       # !list_empty might not hold anymore
-> > >       list_del_init
-> > >       unlock
-> > 
-> > I don't think this particular race is possible. Both parties take page
-> > lock before messing with deferred queue, but anytway:
-> > 
-> > Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Thanks for the patch! Just some small comments below:
+
+On Sat 11-01-20 10:25:42, Kai Li wrote:
+> Fixes: 85e0c4e89c1b "jbd2: if the journal is aborted then don't allow update of the log tail"
+
+This tag should come at the bottom of the changelog (close to your
+Signed-off-by).
+
+> If journal is dirty when mount, it will be replayed but jbd2 sb
+> log tail cannot be updated to mark a new start because
+> journal->j_flags has already been set with JBD2_ABORT first
+> in journal_init_common.
+> When a new transaction is committed, it will be recorded in block 1
+> first(journal->j_tail is set to 1 in journal_reset). If emergency
+> restart again before journal super block is updated unfortunately,
+> the new recorded trans will not be replayed in the next mount.
+> It is danerous which may lead to metadata corruption for file system.
+
+I'd slightly rephrase the text here so that it is more easily readable and
+correct some grammar mistakes. Something like:
+
+If the journal is dirty when the filesystem is mounted, jbd2 will replay
+the journal but the journal superblock will not be updated by
+journal_reset() because JBD2_ABORT flag is still set (it was set in
+journal_init_common()). This is problematic because when a new transaction
+is then committed, it will be recorded in block 1 (journal->j_tail was set
+to 1 in journal_reset()). If unclean shutdown happens again before the
+journal superblock is updated, the new recorded transaction will not be
+replayed during the next mount (because of stale sb->s_start and
+sb->s_sequence values) which can lead to filesystem corruption.
+
+Otherwise the patch looks good to me so feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+(again this is added to the bottom of the changelog like the 'Fixes' tag or
+'Signed-off-by' tag).
+
+								Honza
+
 > 
-> I am confused, if the above race is not possible then what would be a
-> real race? We really do not want to have a patch with a misleading
-> changelog, do we?
-
-The alternative is to make sure that all page_deferred_list() called with
-page lock taken.
-
-I'll look into it.
-
+> Signed-off-by: Kai Li <li.kai4@h3c.com>
+> ---
+>  fs/jbd2/journal.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+> index 5e408ee24a1a..069b22eba795 100644
+> --- a/fs/jbd2/journal.c
+> +++ b/fs/jbd2/journal.c
+> @@ -1710,6 +1710,11 @@ int jbd2_journal_load(journal_t *journal)
+>  		       journal->j_devname);
+>  		return -EFSCORRUPTED;
+>  	}
+> +	/*
+> +	 * clear JBD2_ABORT flag initialized in journal_init_common
+> +	 * here to update log tail information with the newest seq.
+> +	 */
+> +	journal->j_flags &= ~JBD2_ABORT;
+>  
+>  	/* OK, we've finished with the dynamic journal bits:
+>  	 * reinitialise the dynamic contents of the superblock in memory
+> @@ -1717,7 +1722,6 @@ int jbd2_journal_load(journal_t *journal)
+>  	if (journal_reset(journal))
+>  		goto recovery_error;
+>  
+> -	journal->j_flags &= ~JBD2_ABORT;
+>  	journal->j_flags |= JBD2_LOADED;
+>  	return 0;
+>  
+> -- 
+> 2.24.0.windows.2
+> 
 -- 
- Kirill A. Shutemov
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
