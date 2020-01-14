@@ -2,125 +2,99 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TO_MALFORMED,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C10C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF46EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA12A2080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578961820;
-	bh=l2r4AlqX7DIu8a1vCjrQQY2nUvcTBGVepDbO5HswZfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=laxXcMs+xfNPNI4zW6tARGCHiUJ/dIfVbdRgcSIa6CqcqHXP4uTScLwNfJt255P5Y
-	 wp6tYRdjkT99DioaPVrqPLYvM92h6iDfRY98M31cjPWD5JEIzC29BPBYo0Pua6xC70
-	 v1Z1FVOAW9S0fW4klm7RBhZkC0YnjyPTzzYBLVuw=
+	by mail.kernel.org (Postfix) with ESMTP id 923462080D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:31:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Cgc4VRZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgANAaU (ORCPT
+        id S1729121AbgANAbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:30:20 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37627 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgANAaT (ORCPT
+        Mon, 13 Jan 2020 19:31:03 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:4948 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728838AbgANAbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:30:19 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k14so10892639otn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 16:30:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fTr7T7GJceLoLFzB5OjtrxDOobOt56IiyvMJHYGzl0w=;
-        b=ugkEd3IL0pF+1nUpxO7KEYhAIB2uLDld0KuSZ4/TtTVx+P+vHOxfWTRjxNjfSuOkIG
-         uWwjHyR0D7avFkxYRWoZWlZdd288a6kRiUt3THiQUvadM8rSmH9KmC3y0Mo1oB3Q3Yjk
-         SzS9+JEIoAoCPJFbdVogdao21/fInopH8Rurjp9euR74rpsY1Yg9p4Ua0fjJkLEjFrOs
-         F7WoMLIq7517czWj9AzbV68nWzVk80Pt6kAHOg49U8ltDtajqKXIzn1tr5y9iKd4Xjse
-         DM2VogNiFCfwolyf9ESvANiuAfMWvok4pb0DVudy6wqEstMeeSFOwJ2IOQUNuMHDTN6b
-         k8Eg==
-X-Gm-Message-State: APjAAAXO85xoG9UnqtzMFv4ElknpTb/jSmFulfeaS+HAJZdYMi7T80xt
-        AMK72gogaAiXjDAQTgAbDyFuMLDtJg==
-X-Google-Smtp-Source: APXvYqwaDEwe8dwKgTEuyVExUTpL9d68u600aB7rNgMBVJbjVzYkufIiNpzTq/nqw5kx7cJ3KN00Ww==
-X-Received: by 2002:a05:6830:451:: with SMTP id d17mr14322624otc.53.1578961818586;
-        Mon, 13 Jan 2020 16:30:18 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm4118401oic.45.2020.01.13.16.30.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 16:30:18 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 223ddc
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 18:24:15 -0600
-Date:   Mon, 13 Jan 2020 18:24:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 13/17] dt-bindings: atmel-usart: remove wildcard
-Message-ID: <20200114002415.GA18336@bogus>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-14-git-send-email-claudiu.beznea@microchip.com>
+        Mon, 13 Jan 2020 19:31:03 -0500
+X-UUID: b64d3bbc8486442fb8107ded0c55dc3a-20200114
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9hc72qii6aEbO5HSZ/JJr0ZnpKxriy/nHTRZcH5uTGc=;
+        b=Cgc4VRZi2oDVXSOd1pVglWjNlQ2CSP8IRlENBYgN8jcFHuJ9CJccjI3v9bbaPhyGX6oELFonJdA4X07hTEY/OKTiQ2cQ6fTZ0HxfMYco6+J7SlHE6dtj+zBouiV7wXdUK5fCV7S0iJnTovpXARSS47Gw5+5fHqRe6tl/pqX2wss=;
+X-UUID: b64d3bbc8486442fb8107ded0c55dc3a-20200114
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 545209942; Tue, 14 Jan 2020 08:30:55 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 14 Jan
+ 2020 08:30:00 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 14 Jan 2020 08:30:09 +0800
+Message-ID: <1578961847.21256.27.camel@mhfsdcap03>
+Subject: Re: [RESEND PATCH v5 01/11] dt-bindings: phy-mtk-tphy: add two
+ optional properties for u2phy
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@a0393678ub>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 08:30:47 +0800
+In-Reply-To: <20200110111006.GB2220@a0393678ub>
+References: <1578448326-27455-1-git-send-email-chunfeng.yun@mediatek.com>
+         <20200110111006.GB2220@a0393678ub>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578673089-3484-14-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: AF61AF8D6FD7E89E3E467A138EA30DB0D5E4DFF88A35929018A5237C3BB832952000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 06:18:05PM +0200, Claudiu Beznea wrote:
-> Remove chip whildcard and introduce the list of compatibles instead.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mfd/atmel-usart.txt | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-usart.txt b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-> index 699fd3c9ace8..09013c49f6cc 100644
-> --- a/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-> @@ -1,10 +1,11 @@
->  * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
->  
->  Required properties for USART:
-> -- compatible: Should be "atmel,<chip>-usart" or "atmel,<chip>-dbgu"
-> -  The compatible <chip> indicated will be the first SoC to support an
-> -  additional mode or an USART new feature.
-> -  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart"
-> +- compatible: Should be one of the following:
-> +	- "atmel,at91rm9200-usart"
-> +	- "atmel,at91sam9260-usart"
-> +	- "atmel,at91rm9200-dbgu"
-> +	- "atmel,at91sam9260-dbgu"
+T24gRnJpLCAyMDIwLTAxLTEwIGF0IDE2OjQwICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJ
+IHdyb3RlOg0KPiBIaSwNCj4gDQo+IE9uIFdlZCwgSmFuIDA4LCAyMDIwIGF0IDA5OjUxOjU2QU0g
+KzA4MDAsIENodW5mZW5nIFl1biB3cm90ZToNCj4gPiBBZGQgdHdvIG9wdGlvbmFsIHByb3BlcnRp
+ZXMsIG9uZSBmb3IgdHVuaW5nIEotSyB2b2x0YWdlIGJ5IElOVFIsDQo+ID4gYW5vdGhlciBmb3Ig
+ZGlzY29ubmVjdCB0aHJlc2hvbGQsIGJvdGggb2YgdGhlbSBhcmUgcmVsYXRlZCB3aXRoDQo+ID4g
+Y29ubmVjdCBkZXRlY3Rpb24NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4g
+PGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+DQo+IA0KPiBQYXRjaCBkb2VzIG5vdCBhcHBseS4gSSBnZXQgdGhlIGZv
+bGxvd2luZyBlcnJvcnMNCj4gZXJyb3I6IHBhdGNoIGZhaWxlZDogRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0OjUyDQo+IGVycm9yOiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdGstdHBoeS50eHQ6IHBhdGNoIGRv
+ZXMgbm90IGFwcGx5DQo+IGVycm9yOiBEaWQgeW91IGhhbmQgZWRpdCB5b3VyIHBhdGNoPw0KPiAN
+Cj4gQ2FuIHlvdSBzZW5kIHRoZW0gYWdhaW4gaW4gdGhlIHJpZ2h0IGZvcm1hdD8NClNvcnJ5LCBJ
+J2xsIGNoZWNrIGl0Lg0KDQo+IA0KPiBUaGFua3MNCj4gS2lzaG9uDQo+ID4gLS0tDQo+ID4gdjU6
+IGFkZCBhY2tlZC1ieSBSb2INCj4gPiANCj4gPiB2NDogbm8gY2hhbmdlcw0KPiA+IA0KPiA+IHYz
+OiBjaGFuZ2UgY29tbWl0IGxvZw0KPiA+IA0KPiA+IHYyOiBjaGFuZ2UgZGVzY3JpcHRpb24NCj4g
+PiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRr
+LXRwaHkudHh0IHwgMiArKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+
+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+aHkvcGh5LW10ay10cGh5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+aHkvcGh5LW10ay10cGh5LnR4dA0KPiA+IGluZGV4IGE1ZjdhNGYwZGJjMS4uY2U2YWJmYmRmYmUx
+IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
+cGh5LW10ay10cGh5LnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waHkvcGh5LW10ay10cGh5LnR4dA0KPiA+IEBAIC01Miw2ICs1Miw4IEBAIE9wdGlvbmFs
+IHByb3BlcnRpZXMgKFBIWV9UWVBFX1VTQjIgcG9ydCAoY2hpbGQpIG5vZGUpOg0KPiA+ICAtIG1l
+ZGlhdGVrLGV5ZS12cnQJOiB1MzIsIHRoZSBzZWxlY3Rpb24gb2YgVlJUIHJlZmVyZW5jZSB2b2x0
+YWdlDQo+ID4gIC0gbWVkaWF0ZWssZXllLXRlcm0JOiB1MzIsIHRoZSBzZWxlY3Rpb24gb2YgSFNf
+VFggVEVSTSByZWZlcmVuY2Ugdm9sdGFnZQ0KPiA+ICAtIG1lZGlhdGVrLGJjMTIJOiBib29sLCBl
+bmFibGUgQkMxMiBvZiB1MnBoeSBpZiBzdXBwb3J0IGl0DQo+ID4gKy0gbWVkaWF0ZWssZGlzY3Ro
+CTogdTMyLCB0aGUgc2VsZWN0aW9uIG9mIGRpc2Nvbm5lY3QgdGhyZXNob2xkDQo+ID4gKy0gbWVk
+aWF0ZWssaW50cgk6IHUzMiwgdGhlIHNlbGVjdGlvbiBvZiBpbnRlcm5hbCBSIChyZXNpc3RhbmNl
+KQ0KPiA+ICANCj4gPiAgRXhhbXBsZToNCj4gPiAgDQo+ID4gLS0gDQo+ID4gMi4yNC4wDQoNCg==
 
-Should be:
-
-"atmel,at91rm9200-dbgu", "atmel,at91rm9200-usart"
-"atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart"
-
->  - reg: Should contain registers location and length
->  - interrupts: Should contain interrupt
->  - clock-names: tuple listing input clock names.
-> -- 
-> 2.7.4
-> 
