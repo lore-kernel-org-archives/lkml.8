@@ -2,239 +2,96 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D345BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A6624673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579042120;
-	bh=BTo+94oGmlvczeWFI8XW1gn0MmSS6cijy7Lt787VDxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ip13Y2UU+b84GqcjqQdxCSC5XEfcK5jwFusJ+emeIURztH1Z6BzNvvwkRvc51k07i
-	 Yp3zySfPQXRMUf3PXuI79oEazUxILyF/iXxxZ627v+rxceOQ/YXrw0aZxT+po1nfQe
-	 hnJkGu0SQJQtsPFmcxWwulTKr62qoqgQEOfNfGqg=
+	by mail.kernel.org (Postfix) with ESMTP id B05E32072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgANWsj (ORCPT
+        id S1728877AbgANWvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:48:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbgANWsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:48:39 -0500
-Received: from localhost (unknown [104.132.0.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6746B24658;
-        Tue, 14 Jan 2020 22:48:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579042118;
-        bh=BTo+94oGmlvczeWFI8XW1gn0MmSS6cijy7Lt787VDxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1wqhr/zvIyoptz3YKW4ycHTYco8ysZnxCeKZko3DdvqL4vQ67ayBHHvXgHUIax/As
-         KiiQfd+YeZc/P2rFIN6hAERYdTuGSap4Iy7OB44xQSXGQYlrwVFFtGWwJD6zLLepJM
-         5/URMDqqWf93k1OQb7FdhqTf3I471hlX2x/8Bh6Y=
-Date:   Tue, 14 Jan 2020 14:48:37 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
-Message-ID: <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
- <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
- <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
- <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
- <20200110235214.GA25700@jaegeuk-macbookpro.roam.corp.google.com>
- <3776cb0b-4b18-ae0d-16a7-a591bec77a5e@huawei.com>
- <20200111180200.GA36424@jaegeuk-macbookpro.roam.corp.google.com>
- <72418aa5-7d2a-de26-f0b5-9c839f0c3404@huawei.com>
- <20200113161120.GA49290@jaegeuk-macbookpro.roam.corp.google.com>
- <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
+        Tue, 14 Jan 2020 17:51:02 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:33606 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728746AbgANWvB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:51:01 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-108.corp.google.com [104.133.0.108] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00EMnH2t015142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 17:49:18 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 441C34207DF; Tue, 14 Jan 2020 17:49:17 -0500 (EST)
+Date:   Tue, 14 Jan 2020 17:49:17 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, hch@lst.de,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Problems with determining data presence by examining extents?
+Message-ID: <20200114224917.GA165687@mit.edu>
+References: <4467.1579020509@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <4467.1579020509@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/14, Chao Yu wrote:
-> On 2020/1/14 0:11, Jaegeuk Kim wrote:
-> > On 01/13, Chao Yu wrote:
-> >> On 2020/1/12 2:02, Jaegeuk Kim wrote:
-> >>> On 01/11, Chao Yu wrote:
-> >>>> On 2020/1/11 7:52, Jaegeuk Kim wrote:
-> >>>>> On 01/06, Jaegeuk Kim wrote:
-> >>>>>> On 01/06, Chao Yu wrote:
-> >>>>>>> On 2020/1/3 14:50, Chao Yu wrote:
-> >>>>>>>> This works to me. Could you run fsstress tests on compressed root directory?
-> >>>>>>>> It seems still there are some bugs.
-> >>>>>>>
-> >>>>>>> Jaegeuk,
-> >>>>>>>
-> >>>>>>> Did you mean running por_fsstress testcase?
-> >>>>>>>
-> >>>>>>> Now, at least I didn't hit any problem for normal fsstress case.
-> >>>>>>
-> >>>>>> Yup. por_fsstress
-> >>>>>
-> >>>>> Please check https://github.com/jaegeuk/f2fs/commits/g-dev-test.
-> >>>>> I've fixed
-> >>>>> - truncation offset
-> >>>>> - i_compressed_blocks and its lock coverage
-> >>>>> - error handling
-> >>>>> - etc
-> >>>>
-> >>>> I changed as below, and por_fsstress stops panic the system.
-> >>>>
-> >>>> Could you merge all these fixes into original patch?
-> >>>
-> >>> Yup, let m roll up some early patches first once test results become good.
-> >>
-> >> I didn't encounter issue any more, how about por_fsstress test result in your
-> >> enviornment? If there is, please share the call stack with me.
-> > 
-> > Sure, will do, once I hit an issue. BTW, I'm hitting another unreacheable nat
-> > entry issue during por_stress without compression. :(
+On Tue, Jan 14, 2020 at 04:48:29PM +0000, David Howells wrote:
+> Again with regard to my rewrite of fscache and cachefiles:
 > 
-> Did you enable any features during por_fsstress test?
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
 > 
-> I only hit below warning during por_fsstress test on image w/o compression.
+> I've got rid of my use of bmap()!  Hooray!
 > 
-> ------------[ cut here ]------------
-> WARNING: CPU: 10 PID: 33483 at fs/fs-writeback.c:1448 __writeback_single_inode+0x28c/0x340
-> Call Trace:
->  writeback_single_inode+0xad/0x120
->  sync_inode_metadata+0x3d/0x60
->  f2fs_sync_inode_meta+0x90/0xe0 [f2fs]
->  block_operations+0x17c/0x360 [f2fs]
->  f2fs_write_checkpoint+0x101/0xff0 [f2fs]
->  f2fs_sync_fs+0xa8/0x130 [f2fs]
->  f2fs_do_sync_file+0x19c/0x880 [f2fs]
->  do_fsync+0x38/0x60
->  __x64_sys_fsync+0x10/0x20
->  do_syscall_64+0x5f/0x220
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> However, I'm informed that I can't trust the extent map of a backing file to
+> tell me accurately whether content exists in a file because:
+> 
+>  (a) Not-quite-contiguous extents may be joined by insertion of blocks of
+>      zeros by the filesystem optimising itself.  This would give me a false
+>      positive when trying to detect the presence of data.
+> 
+>  (b) Blocks of zeros that I write into the file may get punched out by
+>      filesystem optimisation since a read back would be expected to read zeros
+>      there anyway, provided it's below the EOF.  This would give me a false
+>      negative.
+> 
+> Is there some setting I can use to prevent these scenarios on a file - or can
+> one be added?
 
-Does gc_mutex patch fix this?
+I don't think there's any way to do this in a portable way, at least
+today.  There is a hack we could be use that would work for ext4
+today, at least with respect to (a), but I'm not sure we would want to
+make any guarantees with respect to (b).
 
-> 
-> Thanks,
-> 
-> > 
-> > Thanks,
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>
-> >>>>
-> >>>> >From bb17d7d77fe0b8a3e3632a7026550800ab9609e9 Mon Sep 17 00:00:00 2001
-> >>>> From: Chao Yu <yuchao0@huawei.com>
-> >>>> Date: Sat, 11 Jan 2020 16:58:20 +0800
-> >>>> Subject: [PATCH] f2fs: compress: fix f2fs_put_rpages_mapping()
-> >>>>
-> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >>>> ---
-> >>>>  fs/f2fs/compress.c | 30 +++++++++++++++---------------
-> >>>>  1 file changed, 15 insertions(+), 15 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> >>>> index 502cd0ddc2a7..5c6a31d84ce4 100644
-> >>>> --- a/fs/f2fs/compress.c
-> >>>> +++ b/fs/f2fs/compress.c
-> >>>> @@ -74,18 +74,10 @@ static void f2fs_put_compressed_page(struct page *page)
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_drop_rpages(struct compress_ctx *cc,
-> >>>> -		struct address_space *mapping, int len, bool unlock)
-> >>>> +					int len, bool unlock)
-> >>>>  {
-> >>>>  	unsigned int i;
-> >>>>  	for (i = 0; i < len; i++) {
-> >>>> -		if (mapping) {
-> >>>> -			pgoff_t start = start_idx_of_cluster(cc);
-> >>>> -			struct page *page = find_get_page(mapping, start + i);
-> >>>> -
-> >>>> -			put_page(page);
-> >>>> -			put_page(page);
-> >>>> -			cc->rpages[i] = NULL;
-> >>>> -		}
-> >>>>  		if (!cc->rpages[i])
-> >>>>  			continue;
-> >>>>  		if (unlock)
-> >>>> @@ -97,18 +89,25 @@ static void f2fs_drop_rpages(struct compress_ctx *cc,
-> >>>>
-> >>>>  static void f2fs_put_rpages(struct compress_ctx *cc)
-> >>>>  {
-> >>>> -	f2fs_drop_rpages(cc, NULL, cc->cluster_size, false);
-> >>>> +	f2fs_drop_rpages(cc, cc->cluster_size, false);
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_unlock_rpages(struct compress_ctx *cc, int len)
-> >>>>  {
-> >>>> -	f2fs_drop_rpages(cc, NULL, len, true);
-> >>>> +	f2fs_drop_rpages(cc, len, true);
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_put_rpages_mapping(struct compress_ctx *cc,
-> >>>> -				struct address_space *mapping, int len)
-> >>>> +				struct address_space *mapping,
-> >>>> +				pgoff_t start, int len)
-> >>>>  {
-> >>>> -	f2fs_drop_rpages(cc, mapping, len, false);
-> >>>> +	int i;
-> >>>> +	for (i = 0; i < len; i++) {
-> >>>> +		struct page *page = find_get_page(mapping, start + i);
-> >>>> +
-> >>>> +		put_page(page);
-> >>>> +		put_page(page);
-> >>>> +	}
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_put_rpages_wbc(struct compress_ctx *cc,
-> >>>> @@ -680,7 +679,8 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
-> >>>>
-> >>>>  		if (!PageUptodate(page)) {
-> >>>>  			f2fs_unlock_rpages(cc, i + 1);
-> >>>> -			f2fs_put_rpages_mapping(cc, mapping, cc->cluster_size);
-> >>>> +			f2fs_put_rpages_mapping(cc, mapping, start_idx,
-> >>>> +					cc->cluster_size);
-> >>>>  			f2fs_destroy_compress_ctx(cc);
-> >>>>  			goto retry;
-> >>>>  		}
-> >>>> @@ -714,7 +714,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
-> >>>>  unlock_pages:
-> >>>>  	f2fs_unlock_rpages(cc, i);
-> >>>>  release_pages:
-> >>>> -	f2fs_put_rpages_mapping(cc, mapping, i);
-> >>>> +	f2fs_put_rpages_mapping(cc, mapping, start_idx, i);
-> >>>>  	f2fs_destroy_compress_ctx(cc);
-> >>>>  	return ret;
-> >>>>  }
-> >>>> -- 
-> >>>> 2.18.0.rc1
-> >>>>
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> One another fix in f2fs-tools as well.
-> >>>>> https://github.com/jaegeuk/f2fs-tools
-> >>>>>
-> >>>>>>
-> >>>>>>>
-> >>>>>>> Thanks,
-> >>>>> .
-> >>>>>
-> >>> .
-> >>>
-> > .
-> > 
+I suspect I understand why you want this; I've fielded some requests
+for people wanting to do something very like this at $WORK, for what I
+assume to be for the same reason you're seeking to do this; to create
+do incremental caching of files and letting the file system track what
+has and hasn't been cached yet.
+
+If we were going to add such a facility, what we could perhaps do is
+to define a new flag indicating that a particular file should have no
+extent mapping optimization applied, such that FIEMAP would return a
+mapping if and only if userspace had written to a particular block, or
+had requested that a block be preallocated using fallocate().  The
+flag could only be set on a zero-length file, and this might disable
+certain advanced file system features, such as reflink, at the file
+system's discretion; and there might be unspecified performance
+impacts if this flag is set on a file.
+
+File systems which do not support this feature would not allow this
+flag to be set.
+
+				- Ted
