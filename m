@@ -2,167 +2,184 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48503C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270F9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1A624656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579036950;
-	bh=2NV40hDC/nYVy8Guf3WBpLHbOgoEkir++JBqumbWgVU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W3ZLPno5+frpHBRP8FdOqk32hWMvVYlqVlrTXl/+r2mCwIIorgwnjHVXbXt8u47p8
-	 10i73TKmpRchNFORRYHadLRbj57C00WhCDR0sahGt5Om436tjLmNcTaY35CbjtPT7N
-	 4b+gA26p6vmlzTLondxR2S0NPhEARLu2thPDaRzE=
+	by mail.kernel.org (Postfix) with ESMTP id DA69524670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:28:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAxbJx2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgANVW3 (ORCPT
+        id S1728892AbgANV2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:22:29 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34391 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgANVW2 (ORCPT
+        Tue, 14 Jan 2020 16:28:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37754 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726491AbgANV2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:22:28 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z22so16089344ljg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 13:22:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sA09QfXfHalAafAysRZFEbl/WyLTN07MU6TFhyXENpY=;
-        b=ZuB9kWPAPxoZGiuuomw2iudECT1rt4Q/HncS4ElvHzHC6yUT2oQ0HUnEnUGkTmGfs5
-         jSF+DX0BEvuJ4HATwr4M5/u+JM7dyP0AtYM8/eZRZWfxVC069BAzSr0Gdwlw9jjgh6al
-         CCB0j1K9REL8bGh8CtUBoa4q17ax6w7GJvMoo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sA09QfXfHalAafAysRZFEbl/WyLTN07MU6TFhyXENpY=;
-        b=eDyHQgSclguGfaOiR4Bp20NzrafVENF9sIdhc/dZwo6JcRjPRozdB3Z215QmoaIqiP
-         LCmYG5/XoOAbaZWmON9F3FOMMGZHiO/LjEHKWeGhnui1bmyGHdQnWk3iU+K3M21APAgi
-         eUuyeZFwra9nNSyykMGJi5CcY3AW569fWyscssYj979Hn4pmJEd5ECsPX3Yh+dTMha2+
-         /l74EWyhR8UzrCOLqADqEM8RpLzFXjG4w4GOqnyDvisb7Eq6qhQdB2+ZP0nHGwBKQyaI
-         XnWOOAr76QAIjfFwm/kHIPorH3l7cA89SExAzNgr3nY13w1+c9uqR3CDat9/sldwXq8V
-         RmRw==
-X-Gm-Message-State: APjAAAV1SKFL3U/70m2d2vcUdo0neSMmvvITKkUkihQbT9dSJsCC0VeL
-        D/iZWamRl/AucaGvae/6yPI5LZlSj2E=
-X-Google-Smtp-Source: APXvYqyTFIbyAuX1d+60dXZRYRZJhbdb6pjGY7TypI0cIhoQOV2Ua1KwwW0r3VfOi/F6F2StSk1UcQ==
-X-Received: by 2002:a05:651c:1214:: with SMTP id i20mr15985224lja.107.1579036945706;
-        Tue, 14 Jan 2020 13:22:25 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id l5sm8199136lje.1.2020.01.14.13.22.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 13:22:24 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id h23so16053121ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 13:22:24 -0800 (PST)
-X-Received: by 2002:a2e:800b:: with SMTP id j11mr15632652ljg.126.1579036943823;
- Tue, 14 Jan 2020 13:22:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20200114200846.29434-1-vgupta@synopsys.com> <20200114200846.29434-3-vgupta@synopsys.com>
-In-Reply-To: <20200114200846.29434-3-vgupta@synopsys.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 14 Jan 2020 13:22:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgoc5DaF6=WxsAcft_Lp4XUYTiRhhCJGcmM5PwEDXY6Gw@mail.gmail.com>
-Message-ID: <CAHk-=wgoc5DaF6=WxsAcft_Lp4XUYTiRhhCJGcmM5PwEDXY6Gw@mail.gmail.com>
-Subject: Re: [RFC 2/4] lib/strncpy_from_user: Remove redundant user space
- pointer range check
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-snps-arc@lists.infradead.org,
+        Tue, 14 Jan 2020 16:28:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579037296;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CmEl4tOAlf+q1dssiqaydOdwINh9FE1HPfFzHT2TJms=;
+        b=RAxbJx2DYUNoQz47bEidt5YOfffdqrwh9z1ngL0OsJOS3wleSQriPOGSmMs/bmT1BvD2yw
+        bMJIpQ6XuvLVfyxh3qluIrhDBiZ65W4l34VTVWUvE4j8Bta1Kifbwzfa75LLVbHkjqKYxk
+        hyMvbUutosrAwE4JaSJJ1wjOhTiqL4c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-ulhA3bQmN5-1R1ohd67YdA-1; Tue, 14 Jan 2020 16:28:12 -0500
+X-MC-Unique: ulhA3bQmN5-1R1ohd67YdA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B0CE100728F;
+        Tue, 14 Jan 2020 21:28:10 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2C7B10372F3;
+        Tue, 14 Jan 2020 21:28:05 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 47D7B220A24; Tue, 14 Jan 2020 16:28:05 -0500 (EST)
+Date:   Tue, 14 Jan 2020 16:28:05 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20200114212805.GB3145@redhat.com>
+References: <20200107170731.GA472641@magnolia>
+ <CAPcyv4ggH7-QhYg+YOOWn_m25uds+-0L46=N09ap-LALeGuU_A@mail.gmail.com>
+ <20200107180101.GC15920@redhat.com>
+ <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
+ <20200107183307.GD15920@redhat.com>
+ <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
+ <20200109112447.GG27035@quack2.suse.cz>
+ <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
+ <20200114203138.GA3145@redhat.com>
+ <CAPcyv4iXKFt207Pen+E1CnqCFtC1G85fxw5EXFVx+jtykGWMXA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iXKFt207Pen+E1CnqCFtC1G85fxw5EXFVx+jtykGWMXA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:09 PM Vineet Gupta
-<Vineet.Gupta1@synopsys.com> wrote:
->
-> This came up when switching ARC to word-at-a-time interface and using
-> generic/optimized strncpy_from_user
->
-> It seems the existing code checks for user buffer/string range multiple
-> times and one of tem cn be avoided.
+On Tue, Jan 14, 2020 at 12:39:00PM -0800, Dan Williams wrote:
+> On Tue, Jan 14, 2020 at 12:31 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >
+> > On Thu, Jan 09, 2020 at 12:03:01PM -0800, Dan Williams wrote:
+> > > On Thu, Jan 9, 2020 at 3:27 AM Jan Kara <jack@suse.cz> wrote:
+> > > >
+> > > > On Tue 07-01-20 10:49:55, Dan Williams wrote:
+> > > > > On Tue, Jan 7, 2020 at 10:33 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > > > > W.r.t partitioning, bdev_dax_pgoff() seems to be the pain point where
+> > > > > > dax code refers back to block device to figure out partition offset in
+> > > > > > dax device. If we create a dax object corresponding to "struct block_device"
+> > > > > > and store sector offset in that, then we could pass that object to dax
+> > > > > > code and not worry about referring back to bdev. I have written some
+> > > > > > proof of concept code and called that object "dax_handle". I can post
+> > > > > > that code if there is interest.
+> > > > >
+> > > > > I don't think it's worth it in the end especially considering
+> > > > > filesystems are looking to operate on /dev/dax devices directly and
+> > > > > remove block entanglements entirely.
+> > > > >
+> > > > > > IMHO, it feels useful to be able to partition and use a dax capable
+> > > > > > block device in same way as non-dax block device. It will be really
+> > > > > > odd to think that if filesystem is on /dev/pmem0p1, then dax can't
+> > > > > > be enabled but if filesystem is on /dev/mapper/pmem0p1, then dax
+> > > > > > will work.
+> > > > >
+> > > > > That can already happen today. If you do not properly align the
+> > > > > partition then dax operations will be disabled. This proposal just
+> > > > > extends that existing failure domain to make all partitions fail to
+> > > > > support dax.
+> > > >
+> > > > Well, I have some sympathy with the sysadmin that has /dev/pmem0 device,
+> > > > decides to create partitions on it for whatever (possibly misguided)
+> > > > reason and then ponders why the hell DAX is not working? And PAGE_SIZE
+> > > > partition alignment is so obvious and widespread that I don't count it as a
+> > > > realistic error case sysadmins would be pondering about currently.
+> > > >
+> > > > So I'd find two options reasonably consistent:
+> > > > 1) Keep status quo where partitions are created and support DAX.
+> > > > 2) Stop partition creation altogether, if anyones wants to split pmem
+> > > > device further, he can use dm-linear for that (i.e., kpartx).
+> > > >
+> > > > But I'm not sure if the ship hasn't already sailed for option 2) to be
+> > > > feasible without angry users and Linus reverting the change.
+> > >
+> > > Christoph? I feel myself leaning more and more to the "keep pmem
+> > > partitions" camp.
+> > >
+> > > I don't see "drop partition support" effort ending well given the long
+> > > standing "ext4 fails to mount when dax is not available" precedent.
+> > >
+> > > I think the next least bad option is to have a dax_get_by_host()
+> > > variant that passes an offset and length pair rather than requiring a
+> > > later bdev_dax_pgoff() to recall the offset. This also prevents
+> > > needing to add another dax-device object representation.
+> >
+> > I am wondering what's the conclusion on this. I want to this to make
+> > progress in some direction so that I can make progress on virtiofs DAX
+> > support.
+> 
+> I think we should at least try to delete the partition support and see
+> if anyone screams. Have a module option to revert the behavior so
+> people are not stuck waiting for the revert to land, but if it stays
+> quiet then we're in a better place with that support pushed out of the
+> dax core.
 
-NO!
+Hi Dan,
 
-DO NOT DO THIS.
+So basically keep partition support code just that disable it by default
+and it is enabled by some knob say kernel command line option/module
+option.
 
-This is seriously buggy.
+At what point of time will we remove that code completely. I mean what
+if people scream after two kernel releases, after we have removed the
+code.
 
->  long strncpy_from_user(char *dst, const char __user *src, long count)
->  {
-> -       unsigned long max_addr, src_addr;
-> -
->         if (unlikely(count <= 0))
->                 return 0;
->
-> -       max_addr = user_addr_max();
-> -       src_addr = (unsigned long)untagged_addr(src);
-> -       if (likely(src_addr < max_addr)) {
-> -               unsigned long max = max_addr - src_addr;
-> +       kasan_check_write(dst, count);
-> +       check_object_size(dst, count, false);
-> +       if (user_access_begin(src, count)) {
+Also, from distribution's perspective, we might not hear from our
+customers for a very long time (till we backport that code in to
+existing releases or release this new code in next major release). From
+that view point I will not like to break existing user visible behavior.
 
-You can't do that "user_access_begin(src, count)", because "count" is
-the maximum _possible_ length, but it is *NOT* necessarily the actual
-length of the string we really get from user space!
+How bad it is to keep partition support around. To me it feels reasonaly
+simple where we just have to store offset into dax device into another
+dax object and pass that object around (instead of dax_device). If that's
+the case, I am not sure why to even venture into a direction where some
+user's setup might be broken.
 
-Think of this situation:
+Also from an application perspective, /dev/pmem is a block device, so it
+should behave like a block device, (including kernel partition table support).
+From that view, dax looks like just an additional feature of that device
+which can be enabled by passing option "-o dax".
 
- - user has a 5-byte string at the end of the address space
+IOW, can we reconsider the idea of not supporting kernel partition tables
+for dax capable block devices. I can only see downsides of removing kernel
+partition table support and only upside seems to be little cleanup of dax
+core code.
 
- - kernel does a
+Thanks
+Vivek
 
-     n = strncpy_from_user(uaddr, page, PAGE_SIZE)
-
-now your "user_access_begin(src, count)" will _fail_, because "uaddr"
-is close to the end of the user address space, and there's not room
-for PAGE_SIZE bytes any more.
-
-But "count" isn't actually how many bytes we will access from user
-space, it's only the maximum limit on the *target*. IOW, it's about a
-kernel buffer size, not about the user access size.
-
-Because we'll only access that 5-byte string, which fits just fine in
-the user space, and doing that "user_access_begin(src, count)" gives
-the wrong answer.
-
-The fact is, copying a string from user space is *very* different from
-copying a fixed number of bytes, and that whole dance with
-
-        max_addr = user_addr_max();
-
-is absolutely required and necessary.
-
-You completely broke string copying.
-
-It is very possible that string copying was horribly broken on ARC
-before too - almost nobody ever gets this right, but the generic
-routine does.
-
-So the generic routine is not only faster, it is *correct*, and your
-change broke it.
-
-Don't touch generic code. If you want to use the generic code, please
-do so. But DO NOT TOUCH IT. It is correct, your patch is wrong.
-
-The exact same issue is true in strnlen_user(). Don't break it.
-
-              Linus
