@@ -2,144 +2,205 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CFAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F15C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AB724672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B166A24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579003506;
+	bh=zy01w1f2KOWBgVwZ9IgRyq6zJNbdRHGb5iIvsu0kB+U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GGgFYMrr6W2nFr/CMv47DQ1ztBpO7ghWG53JKMPLHV14xIjUa+DhnRrjVYECLEyK3
+	 9DgIzMWZ0j0frNKz6jZzpDfD8DZrWSi/U7YNOtHyYS665MsjfT8k0RYm7r5Ajo4kb/
+	 awp2aqqm3SM5QYSqFBfaDZ+6u5g8T8g0l0nDcDAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgANMEf (ORCPT
+        id S1729692AbgANMFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:04:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41866 "EHLO mx2.suse.de"
+        Tue, 14 Jan 2020 07:05:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgANMEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:04:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9E1C9AE34;
-        Tue, 14 Jan 2020 12:04:32 +0000 (UTC)
-Subject: [PATCH] mm, debug: always print flags in dump_page()
-To:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Hildenbrand <david@redhat.com>, Qian Cai <cai@lca.pw>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        linux-kernel@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>
-References: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
- <6A58E80B-7A5F-4CAD-ACF1-89BCCBE4D3B1@lca.pw>
- <a0bfcebe-a0f4-95ef-0973-8edd3780d013@redhat.com>
- <f6487dc1-c962-67aa-131e-2eec4f6ca686@arm.com>
- <20200114091013.GD19428@dhcp22.suse.cz>
- <1f3ff7fc-2f6b-d8e5-85a5-078f0e1a0daf@suse.cz>
- <20200114113230.GM19428@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <9f884d5c-ca60-dc7b-219c-c081c755fab6@suse.cz>
-Date:   Tue, 14 Jan 2020 13:04:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200114113230.GM19428@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1725956AbgANMFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:05:05 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D59F2467A;
+        Tue, 14 Jan 2020 12:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579003503;
+        bh=zy01w1f2KOWBgVwZ9IgRyq6zJNbdRHGb5iIvsu0kB+U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qKMRyYqnCxilxstSlRIO22OfQQZ8Rzr7gF1y0v2MqMJsPCIOHpGKM1cs1xZiTy6mB
+         UFDCP6HYzBYt/SIEphcB2LTNCFDzyeZiVCZH2ftM8/HnqENr9WdDC9aYd74mWuO+Cr
+         2dgPTZ6aEgvQlFknXCdbkrMsC8sIVnKNxZTK0umU=
+Date:   Tue, 14 Jan 2020 21:04:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Message-Id: <20200114210456.c9e098d18ccb77cdf6b6c633@kernel.org>
+In-Reply-To: <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+        <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+        <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+        <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+        <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+        <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
+        <20200110164531.GA2598@kernel.org>
+        <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
+        <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+        <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+        <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+        <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
+        <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 12:32 PM, Michal Hocko wrote:
-> On Tue 14-01-20 11:23:52, Vlastimil Babka wrote:
->> On 1/14/20 10:10 AM, Michal Hocko wrote:
->> > [Cc Ralph]
->> >> The reason is dump_page() does not print page->flags universally
->> >> and only does so for KSM, Anon and File pages while excluding
->> >> reserved pages at boot. Wondering should not we make printing
->> >> page->flags universal ?
->> > 
->> > We used to do that and this caught me as a surprise when looking again.
->> > This is a result of 76a1850e4572 ("mm/debug.c: __dump_page() prints an
->> > extra line") which is a cleanup patch and I suspect this result was not
->> > anticipated.
->> > 
->> > The following will do the trick but I cannot really say I like the code
->> > duplication. pr_cont in this case sounds like a much cleaner solution to
->> > me.
->> 
->> How about this then?
+On Mon, 13 Jan 2020 21:17:49 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> On Mon, Jan 13, 2020 at 7:25 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Sat, 11 Jan 2020 12:57:18 +0300
+> > Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
+> >
+> > >
+> > > On 11.01.2020 3:35, arnaldo.melo@gmail.com wrote:
+> >
+> > > > Message-ID: <A7F0BF73-9189-44BA-9264-C88F2F51CBF3@kernel.org>
+> > > >
+> > > > On January 10, 2020 9:23:27 PM GMT-03:00, Song Liu <songliubraving@fb.com> wrote:
+> > > >>
+> > > >>
+> > > >>> On Jan 10, 2020, at 3:47 PM, Masami Hiramatsu <mhiramat@kernel.org>
+> > > >> wrote:
+> > > >>>
+> > > >>> On Fri, 10 Jan 2020 13:45:31 -0300
+> > > >>> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > >>>
+> > > >>>> Em Sat, Jan 11, 2020 at 12:52:13AM +0900, Masami Hiramatsu escreveu:
+> > > >>>>> On Fri, 10 Jan 2020 15:02:34 +0100 Peter Zijlstra
+> > > >> <peterz@infradead.org> wrote:
+> > > >>>>>> Again, this only allows attaching to previously created kprobes,
+> > > >> it does
+> > > >>>>>> not allow creating kprobes, right?
+> > > >>>>
+> > > >>>>>> That is; I don't think CAP_SYS_PERFMON should be allowed to create
+> > > >>>>>> kprobes.
+> > > >>>>
+> > > >>>>>> As might be clear; I don't actually know what the user-ABI is for
+> > > >>>>>> creating kprobes.
+> > > >>>>
+> > > >>>>> There are 2 ABIs nowadays, ftrace and ebpf. perf-probe uses ftrace
+> > > >> interface to
+> > > >>>>> define new kprobe events, and those events are treated as
+> > > >> completely same as
+> > > >>>>> tracepoint events. On the other hand, ebpf tries to define new
+> > > >> probe event
+> > > >>>>> via perf_event interface. Above one is that interface. IOW, it
+> > > >> creates new kprobe.
+> > > >>>>
+> > > >>>> Masami, any plans to make 'perf probe' use the perf_event_open()
+> > > >>>> interface for creating kprobes/uprobes?
+> > > >>>
+> > > >>> Would you mean perf probe to switch to perf_event_open()?
+> > > >>> No, perf probe is for setting up the ftrace probe events. I think we
+> > > >> can add an
+> > > >>> option to use perf_event_open(). But current kprobe creation from
+> > > >> perf_event_open()
+> > > >>> is separated from ftrace by design.
+> > > >>
+> > > >> I guess we can extend event parser to understand kprobe directly.
+> > > >> Instead of
+> > > >>
+> > > >>    perf probe kernel_func
+> > > >>    perf stat/record -e probe:kernel_func ...
+> > > >>
+> > > >> We can just do
+> > > >>
+> > > >>    perf stat/record -e kprobe:kernel_func ...
+> > > >
+> > > >
+> > > > You took the words from my mouth, exactly, that is a perfect use case, an alternative to the 'perf probe' one of making a disabled event that then gets activated via record/stat/trace, in many cases it's better, removes the explicit probe setup case.
+> > >
+> > > Arnaldo, Masami, Song,
+> > >
+> > > What do you think about making this also open to CAP_SYS_PERFMON privileged processes?
+> > > Could you please also review and comment on patch 5/9 for bpf_trace.c?
+> >
+> > As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
+> > to open it for enabling/disabling kprobes, not for creation.
+> >
+> > If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
+> > to shoot their foot by their own risk, I'm OK to allow it. (Even though,
+> > it should check the max number of probes to be created by something like
+> > ulimit)
+> > I think nowadays we have fixed all such kernel crash problems on x86,
+> > but not sure for other archs, especially on the devices I can not reach.
+> > I need more help to stabilize it.
 > 
-> Yes makes sense as well.
+> I don't see how enable/disable is any safer than creation.
+> If there are kernel bugs in kprobes the kernel will crash anyway.
 
-Ok here's a proper formatted patch
+Why? admin can test the probes before using it via bpf.
 
-----8<----
-From 7b673c45bc16526586ae8ea6fba416a547baa04e Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Tue, 14 Jan 2020 12:52:48 +0100
-Subject: [PATCH] mm, debug: always print flags in dump_page()
+My point was only admin can make a dicision to allow (or delegate) the
+priviledge to a user, and if it is OK, I don't mind it.
+(Maybe it is better to give a knob to allow this CAP only for admin.)
 
-Commit 76a1850e4572 ("mm/debug.c: __dump_page() prints an extra line")
-inadvertently removed printing of page flags for pages that are neither
-anon nor ksm nor have a mapping. Fix that.
+> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
+> CAP_* is about delegation of root privileges to non-root.
+> Delegating some of it is ok, but disallowing creation makes it useless
+> for bpf tracing, so we would need to add another CAP later.
+> Hence I suggest to do it right away instead of breaking
+> sys_perf_even_open() access into two CAPs.
 
-Using pr_cont() again would be a solution, but the commit explicitly removed
-its use. Avoiding the danger of mixing up split lines from multiple CPUs might
-be beneficial for near-panic dumps like this, so fix this without reintroducing
-pr_cont().
+I understand that the single strong CAP will useful anyway (even if
+it is CAP_SYS_ADMIN). I just concern that causes any issue and when
+someone wants to mitigate it, it is sad if there is only way to disable
+all tracing facilities.
 
-Reported-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Reported-by: Michal Hocko <mhocko@kernel.org>
-Fixes: 76a1850e4572 ("mm/debug.c: __dump_page() prints an extra line")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/debug.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+What about providing a sysctl to control the power of the CAP? maybe
+it is also good from the viewpoint of system security.
 
-diff --git a/mm/debug.c b/mm/debug.c
-index 0461df1207cb..6a52316af839 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -47,6 +47,7 @@ void __dump_page(struct page *page, const char *reason)
- 	struct address_space *mapping;
- 	bool page_poisoned = PagePoisoned(page);
- 	int mapcount;
-+	char *type = "";
- 
- 	/*
- 	 * If struct page is poisoned don't access Page*() functions as that
-@@ -78,9 +79,9 @@ void __dump_page(struct page *page, const char *reason)
- 			page, page_ref_count(page), mapcount,
- 			page->mapping, page_to_pgoff(page));
- 	if (PageKsm(page))
--		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
-+		type = "ksm ";
- 	else if (PageAnon(page))
--		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
-+		type = "anon ";
- 	else if (mapping) {
- 		if (mapping->host && mapping->host->i_dentry.first) {
- 			struct dentry *dentry;
-@@ -88,10 +89,11 @@ void __dump_page(struct page *page, const char *reason)
- 			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
- 		} else
- 			pr_warn("%ps\n", mapping->a_ops);
--		pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
- 	}
- 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
- 
-+	pr_warn("%sflags: %#lx(%pGp)\n", type, page->flags, &page->flags);
-+
- hex_only:
- 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
- 			sizeof(unsigned long), page,
+Thank you,
+
 -- 
-2.24.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
