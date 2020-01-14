@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C148AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EE4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94ADA24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748C624676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997204;
-	bh=HJyKb3ufKZ8IOVfXFQ3wbJVp9+703THq2r4/pcSxkfw=;
+	s=default; t=1578997214;
+	bh=0iI60ASd7ulC+qFe2HUEyy2qnyANXMoRKWE6iE05tXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRWqozvVKnwYcJXgc+LT4U8qECfeD7dFKNDYMalH5GHgy0tpLnxmDah64fy34ruNt
-	 Vp+Vy8awDhAlooLNNtvsbsKAEL75FB2BSOust0ow4Z1rbhA3paTRl8uCIFvYGJxTIM
-	 Ag8viI5YcnpJC+YzVYD+0EXdCBizRUqu7T2CW6/I=
+	b=J0oV+MeNEAAMHGM9IQKh+PpNIdvh9dJ1qvfZUJ3XySK8ojxfrDw290M/E/Dgzh8fr
+	 dGoLgefBd85Ag4sTeqVUntchflLZX3/SYmzm0ttgHxM5WxNrAjX6M0y9tHDfpV0zym
+	 yOM6NnuGF2G0yPfEM/TShMTjvLRM6Dy+AHZllZsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgANKEn (ORCPT
+        id S1729692AbgANKD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANKEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:38 -0500
+        id S1727556AbgANKDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8207124673;
-        Tue, 14 Jan 2020 10:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB8E62465B;
+        Tue, 14 Jan 2020 10:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996278;
-        bh=HJyKb3ufKZ8IOVfXFQ3wbJVp9+703THq2r4/pcSxkfw=;
+        s=default; t=1578996234;
+        bh=0iI60ASd7ulC+qFe2HUEyy2qnyANXMoRKWE6iE05tXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfkkUefQ2ex/tSXAHrdy/SOYsLuf8VUiidxGqFx5JecjuMT68Onxv617Tj7/2rq7I
-         ih4MYIOvpfvERXB7VhF8GnWSiRGts9k6GYL0BGJ1+qMwGIyPzFQlr3oxWa6ieJ4jUc
-         Q3+9mKPTfI7BuivFdqleJK8B5Y5CYLQBlaD4ylIE=
+        b=hMVYEgbbiTeEyDF5s8qdeEOu9cfdTdo3NoH1Mcb6JGmLlf9+szpFTIk0PNauUPJpY
+         93cxz4u/n9vP9HuB4ofGSdcRMn1/XxjVanuDyJyrfrvp9zsemOr75acWLrzUf84fAW
+         x36wpVbnFr55K5fnuasY4EgWSDJnOzjq9CfGhnTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com,
-        syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.4 21/78] Input: add safety guards to input_set_keycode()
-Date:   Tue, 14 Jan 2020 11:00:55 +0100
-Message-Id: <20200114094356.618225454@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH 5.4 26/78] drm/sun4i: tcon: Set RGB DCLK min. divider based on hardware model
+Date:   Tue, 14 Jan 2020 11:01:00 +0100
+Message-Id: <20200114094357.220171582@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,69 +59,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit cb222aed03d798fc074be55e59d9a112338ee784 upstream.
+commit 4396393fb96449c56423fb4b351f76e45a6bcaf6 upstream.
 
-If we happen to have a garbage in input device's keycode table with values
-too big we'll end up doing clear_bit() with offset way outside of our
-bitmaps, damaging other objects within an input device or even outside of
-it. Let's add sanity checks to the returned old keycodes.
+In commit 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK
+to 1.") it was assumed that all TCON variants support a minimum divider
+of 1 if only DCLK was used.
 
-Reported-by: syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com
-Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20191207212757.GA245964@dtor-ws
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+However, the oldest generation of hardware only supports minimum divider
+of 4 if only DCLK is used. If a divider of 1 was used on this old
+hardware, some scrolling artifact would appear. A divider of 2 seemed
+OK, but a divider of 3 had artifacts as well.
+
+Set the minimum divider when outputing to parallel RGB based on the
+hardware model, with a minimum of 4 for the oldest (A10/A10s/A13/A20)
+hardware, and a minimum of 1 for the rest. A value is not set for the
+TCON variants lacking channel 0.
+
+This fixes the scrolling artifacts seen on my A13 tablet.
+
+Fixes: 0b8e7bbde5e7 ("drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.")
+Cc: <stable@vger.kernel.org> # 5.4.x
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200107070113.28951-1-wens@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/input.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c |   15 ++++++++++++---
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |    1 +
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -878,16 +878,18 @@ static int input_default_setkeycode(stru
- 		}
- 	}
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -488,7 +488,7 @@ static void sun4i_tcon0_mode_set_rgb(str
  
--	__clear_bit(*old_keycode, dev->keybit);
--	__set_bit(ke->keycode, dev->keybit);
--
--	for (i = 0; i < dev->keycodemax; i++) {
--		if (input_fetch_keycode(dev, i) == *old_keycode) {
--			__set_bit(*old_keycode, dev->keybit);
--			break; /* Setting the bit twice is useless, so break */
-+	if (*old_keycode <= KEY_MAX) {
-+		__clear_bit(*old_keycode, dev->keybit);
-+		for (i = 0; i < dev->keycodemax; i++) {
-+			if (input_fetch_keycode(dev, i) == *old_keycode) {
-+				__set_bit(*old_keycode, dev->keybit);
-+				/* Setting the bit twice is useless, so break */
-+				break;
-+			}
- 		}
- 	}
+ 	WARN_ON(!tcon->quirks->has_channel_0);
  
-+	__set_bit(ke->keycode, dev->keybit);
- 	return 0;
- }
+-	tcon->dclk_min_div = 1;
++	tcon->dclk_min_div = tcon->quirks->dclk_min_div;
+ 	tcon->dclk_max_div = 127;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
  
-@@ -943,9 +945,13 @@ int input_set_keycode(struct input_dev *
- 	 * Simulate keyup event if keycode is not present
- 	 * in the keymap anymore
- 	 */
--	if (test_bit(EV_KEY, dev->evbit) &&
--	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
--	    __test_and_clear_bit(old_keycode, dev->key)) {
-+	if (old_keycode > KEY_MAX) {
-+		dev_warn(dev->dev.parent ?: &dev->dev,
-+			 "%s: got too big old keycode %#x\n",
-+			 __func__, old_keycode);
-+	} else if (test_bit(EV_KEY, dev->evbit) &&
-+		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
-+		   __test_and_clear_bit(old_keycode, dev->key)) {
- 		struct input_value vals[] =  {
- 			{ EV_KEY, old_keycode, 0 },
- 			input_value_sync
+@@ -1425,12 +1425,14 @@ static int sun8i_r40_tcon_tv_set_mux(str
+ static const struct sun4i_tcon_quirks sun4i_a10_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
++	.dclk_min_div		= 4,
+ 	.set_mux		= sun4i_a10_tcon_set_mux,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
++	.dclk_min_div		= 4,
+ 	.set_mux		= sun5i_a13_tcon_set_mux,
+ };
+ 
+@@ -1439,6 +1441,7 @@ static const struct sun4i_tcon_quirks su
+ 	.has_channel_1		= true,
+ 	.has_lvds_alt		= true,
+ 	.needs_de_be_mux	= true,
++	.dclk_min_div		= 1,
+ 	.set_mux		= sun6i_tcon_set_mux,
+ };
+ 
+@@ -1446,11 +1449,13 @@ static const struct sun4i_tcon_quirks su
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.needs_de_be_mux	= true,
++	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
++	.dclk_min_div		= 4,
+ 	/* Same display pipeline structure as A10 */
+ 	.set_mux		= sun4i_a10_tcon_set_mux,
+ };
+@@ -1458,11 +1463,13 @@ static const struct sun4i_tcon_quirks su
+ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_lvds_alt		= true,
++	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+ 	.supports_lvds		= true,
+ 	.has_channel_0		= true,
++	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+@@ -1476,11 +1483,13 @@ static const struct sun4i_tcon_quirks su
+ 
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+ 	.has_channel_0		= true,
++	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun9i_a80_tcon_lcd_quirks = {
+-	.has_channel_0	= true,
+-	.needs_edp_reset = true,
++	.has_channel_0		= true,
++	.needs_edp_reset	= true,
++	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun9i_a80_tcon_tv_quirks = {
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -224,6 +224,7 @@ struct sun4i_tcon_quirks {
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+ 	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
+ 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
++	u8	dclk_min_div;	/* minimum divider for TCON0 DCLK */
+ 
+ 	/* callback to handle tcon muxing options */
+ 	int	(*set_mux)(struct sun4i_tcon *, const struct drm_encoder *);
 
 
