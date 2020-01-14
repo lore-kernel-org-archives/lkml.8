@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8470C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112FDC33CB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC4E207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE36824676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996999;
-	bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+	s=default; t=1578997003;
+	bh=kB1L74TlvDMGZNdZbMZCzMOLo91EZxuBQcBTJaaGIwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vr4f0Rox8D0rMKvQxYqCoxXJByCGRl31GNUR+91yCPKzcenrScMeRLccBpTW3uUhX
-	 okheVMesqWo8+VUm3O+lE4iQWsBxRSI7u38uAntWiuoWcapNqZHoJkC/lqLKDOr52j
-	 FyCvsU5awbZ0lmlCcQCf3tUx3K/nT/gORARTBUO4=
+	b=QHDaw5aOFy9ag/WVJByJRBEIIwdJwYzA3xTE/S3TqrLyf8hUMen+nhlhkag79IHS0
+	 z/zB+3NxKn+sRPuXWcijA0ovusdWzPnki8KLZ7dWBsVLH2MXZIzszvP1lykQjDDXir
+	 h1U6gjiadSw/K3cIYS/enuCVrsqx049aHD9cSqnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbgANKQj (ORCPT
+        id S1730735AbgANKIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:16:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbgANKJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:02 -0500
+        id S1731104AbgANKIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E5AE20678;
-        Tue, 14 Jan 2020 10:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4B724679;
+        Tue, 14 Jan 2020 10:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996542;
-        bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+        s=default; t=1578996530;
+        bh=kB1L74TlvDMGZNdZbMZCzMOLo91EZxuBQcBTJaaGIwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0/Pn6Ba2keUVUEZohGeLMXc8UG4xNv5Mmki8J0VYOVQ/i1F5RpFns7BPzqEwhe/eD
-         kGzokRK67XI93JxnFJAN1zlWwTlk5tZsAs55DZOcvi9PU7dWBhhJjC/F7ojaRdFL1Q
-         3k5UO72wMagS/81SuambEq0iuhPZ/BWMLCPdUsM8=
+        b=Rs+WLyB4S0wUOBSo8mcjyjoF6Nmn6e4r+i0EVqcvpwwWxSqnGhsVcNhKW7nZLIKD4
+         B0C+fIKm2SUa2bJN++w4CFTQV/ww4QcwcTUzQbkL5UtiMaPeAfWOPocQyyoJk8J+4E
+         52laClrKp2UMaXEKgfyXqNX3rE12GVR2pEBKq7F8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 4.19 40/46] HID: hiddev: fix mess in hiddev_open()
-Date:   Tue, 14 Jan 2020 11:01:57 +0100
-Message-Id: <20200114094348.101474810@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 36/46] mwifiex: pcie: Fix memory leak in mwifiex_pcie_alloc_cmdrsp_buf
+Date:   Tue, 14 Jan 2020 11:01:53 +0100
+Message-Id: <20200114094347.405281500@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -60,157 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 18a1b06e5b91d47dc86c0a66a762646ea7c5d141 upstream.
+commit db8fd2cde93227e566a412cf53173ffa227998bc upstream.
 
-The open method of hiddev handler fails to bring the device out of
-autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
-blocks that try to start the transport (call hid_hw_open()) with both
-being guarded by the "open" counter, so the 2nd block is never executed as
-the first block increments the counter so it is never at 0 when we check
-it for the second block.
+In mwifiex_pcie_alloc_cmdrsp_buf, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release is added.
 
-Additionally hiddev_open() was leaving counter incremented on errors,
-causing the device to never be reopened properly if there was ever an
-error.
-
-Let's fix all of this by factoring out code that creates client structure
-and powers up the device into a separate function that is being called
-from usbhid_open() with the "existancelock" being held.
-
-Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Fixes: fc3314609047 ("mwifiex: use pci_alloc/free_consistent APIs for PCIe")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/usbhid/hiddev.c |   97 +++++++++++++++++++-------------------------
- 1 file changed, 42 insertions(+), 55 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/pcie.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -254,12 +254,51 @@ static int hiddev_release(struct inode *
- 	return 0;
- }
- 
-+static int __hiddev_open(struct hiddev *hiddev, struct file *file)
-+{
-+	struct hiddev_list *list;
-+	int error;
-+
-+	lockdep_assert_held(&hiddev->existancelock);
-+
-+	list = vzalloc(sizeof(*list));
-+	if (!list)
-+		return -ENOMEM;
-+
-+	mutex_init(&list->thread_lock);
-+	list->hiddev = hiddev;
-+
-+	if (!hiddev->open++) {
-+		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
-+		if (error < 0)
-+			goto err_drop_count;
-+
-+		error = hid_hw_open(hiddev->hid);
-+		if (error < 0)
-+			goto err_normal_power;
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -1036,8 +1036,10 @@ static int mwifiex_pcie_alloc_cmdrsp_buf
+ 	}
+ 	skb_put(skb, MWIFIEX_UPLD_SIZE);
+ 	if (mwifiex_map_pci_memory(adapter, skb, MWIFIEX_UPLD_SIZE,
+-				   PCI_DMA_FROMDEVICE))
++				   PCI_DMA_FROMDEVICE)) {
++		kfree_skb(skb);
+ 		return -1;
 +	}
-+
-+	spin_lock_irq(&hiddev->list_lock);
-+	list_add_tail(&list->node, &hiddev->list);
-+	spin_unlock_irq(&hiddev->list_lock);
-+
-+	file->private_data = list;
-+
-+	return 0;
-+
-+err_normal_power:
-+	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
-+err_drop_count:
-+	hiddev->open--;
-+	vfree(list);
-+	return error;
-+}
-+
- /*
-  * open file op
-  */
- static int hiddev_open(struct inode *inode, struct file *file)
- {
--	struct hiddev_list *list;
- 	struct usb_interface *intf;
- 	struct hid_device *hid;
- 	struct hiddev *hiddev;
-@@ -268,66 +307,14 @@ static int hiddev_open(struct inode *ino
- 	intf = usbhid_find_interface(iminor(inode));
- 	if (!intf)
- 		return -ENODEV;
-+
- 	hid = usb_get_intfdata(intf);
- 	hiddev = hid->hiddev;
  
--	if (!(list = vzalloc(sizeof(struct hiddev_list))))
--		return -ENOMEM;
--	mutex_init(&list->thread_lock);
--	list->hiddev = hiddev;
--	file->private_data = list;
--
--	/*
--	 * no need for locking because the USB major number
--	 * is shared which usbcore guards against disconnect
--	 */
--	if (list->hiddev->exist) {
--		if (!list->hiddev->open++) {
--			res = hid_hw_open(hiddev->hid);
--			if (res < 0)
--				goto bail;
--		}
--	} else {
--		res = -ENODEV;
--		goto bail;
--	}
--
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_add_tail(&list->node, &hiddev->list);
--	spin_unlock_irq(&list->hiddev->list_lock);
--
- 	mutex_lock(&hiddev->existancelock);
--	/*
--	 * recheck exist with existance lock held to
--	 * avoid opening a disconnected device
--	 */
--	if (!list->hiddev->exist) {
--		res = -ENODEV;
--		goto bail_unlock;
--	}
--	if (!list->hiddev->open++)
--		if (list->hiddev->exist) {
--			struct hid_device *hid = hiddev->hid;
--			res = hid_hw_power(hid, PM_HINT_FULLON);
--			if (res < 0)
--				goto bail_unlock;
--			res = hid_hw_open(hid);
--			if (res < 0)
--				goto bail_normal_power;
--		}
--	mutex_unlock(&hiddev->existancelock);
--	return 0;
--bail_normal_power:
--	hid_hw_power(hid, PM_HINT_NORMAL);
--bail_unlock:
-+	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
- 	mutex_unlock(&hiddev->existancelock);
- 
--	spin_lock_irq(&list->hiddev->list_lock);
--	list_del(&list->node);
--	spin_unlock_irq(&list->hiddev->list_lock);
--bail:
--	file->private_data = NULL;
--	vfree(list);
- 	return res;
- }
+ 	card->cmdrsp_buf = skb;
  
 
 
