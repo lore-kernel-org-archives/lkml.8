@@ -2,58 +2,167 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA5DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9EAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E019D24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8151424679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579003080;
+	bh=5Bw7s4iKAYRrhuyMQno1P9vsg0fdrKi98Q4Rl79D4Ck=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=baAo0iu9AJBFbx4Va1XJ81SdSCeHZsg7/ZrzqtrFj7/+mEccTyihnHKlGxE4Js/cL
+	 bB45dQy4AsiZoJ5lBMvuqi8c+abdMPhuc7/kGPWj/UGAvUnkQyzm2Pt0WC+GgpScDy
+	 JP9GwhzuJpGlC2a36Kn6RV7a2/rlvvFw/0arpLNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgANL5f (ORCPT
+        id S1729764AbgANL57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:57:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:51374 "EHLO foss.arm.com"
+        Tue, 14 Jan 2020 06:57:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgANL5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:57:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C5A7B1435;
-        Tue, 14 Jan 2020 03:57:34 -0800 (PST)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B83493F6C4;
-        Tue, 14 Jan 2020 03:57:33 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:57:31 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, maz@kernel.org, ard.biesheuvel@linaro.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v3 6/7] arm64: signal: nofpsimd: Handle fp/simd context
- for signal frames
-Message-ID: <20200114115730.GE2289@mbp>
-References: <20200113233023.928028-1-suzuki.poulose@arm.com>
- <20200113233023.928028-7-suzuki.poulose@arm.com>
+        id S1725956AbgANL57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:57:59 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B811724672;
+        Tue, 14 Jan 2020 11:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579003078;
+        bh=5Bw7s4iKAYRrhuyMQno1P9vsg0fdrKi98Q4Rl79D4Ck=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=bbl+mMSRydkKE4I2sc4Ih6wawFRbbGiDyy8RaTP5ciGUHdp0dW+ed8oLUmXdVF/a8
+         BF+ewaotoSauonb2T37TgpWBYcedNPYIUiDE+TTsq8t9JroQCfUSoxz6JYyiez8R9K
+         0fMgkBgoeMBpbKRQwPw8BRqzgr0s+XigXOX6iRxU=
+Message-ID: <46c92e6678906fa065b18e418044647e7cdb47e1.camel@kernel.org>
+Subject: Re: [RFC PATCH v4] ceph: use 'copy-from2' operation in
+ copy_file_range
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        Gregory Farnum <gfarnum@redhat.com>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 06:57:56 -0500
+In-Reply-To: <20200114095555.GA17907@brahms.Home>
+References: <20200108100353.23770-1-lhenriques@suse.com>
+         <913eb28e6bb698f27f1831f75ea5250497ee659c.camel@kernel.org>
+         <CAJ4mKGb-Qo281_HW8bEDtbF+B-v_AbwaH0QyQbk+asti-qn=Vg@mail.gmail.com>
+         <20200114095555.GA17907@brahms.Home>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113233023.928028-7-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:30:22PM +0000, Suzuki K Poulose wrote:
-> Make sure we try to save/restore the vfp/fpsimd context for signal
-> handling only when the fp/simd support is available. Otherwise, skip
-> the frames.
+On Tue, 2020-01-14 at 09:55 +0000, Luis Henriques wrote:
+> On Mon, Jan 13, 2020 at 09:10:01AM -0800, Gregory Farnum wrote:
+> > On Thu, Jan 9, 2020 at 5:06 AM Jeff Layton <jlayton@kernel.org> wrote:
+> > > On Wed, 2020-01-08 at 10:03 +0000, Luis Henriques wrote:
+> > > > Instead of using the 'copy-from' operation, switch copy_file_range to the
+> > > > new 'copy-from2' operation, which allows to send the truncate_seq and
+> > > > truncate_size parameters.
+> > > > 
+> > > > If an OSD does not support the 'copy-from2' operation it will return
+> > > > -EOPNOTSUPP.  In that case, the kernel client will stop trying to do
+> > > > remote object copies for this fs client and will always use the generic
+> > > > VFS copy_file_range.
+> > > > 
+> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > ---
+> > > > Hi Jeff,
+> > > > 
+> > > > This is a follow-up to the discussion in [1].  Since PR [2] has been
+> > > > merged, it's now time to change the kernel client to use the new
+> > > > 'copy-from2'.  And that's what this patch does.
+> > > > 
+> > > > [1] https://lore.kernel.org/lkml/20191118120935.7013-1-lhenriques@suse.com/
+> > > > [2] https://github.com/ceph/ceph/pull/31728
+> > > > 
+> > > >  fs/ceph/file.c                  | 13 ++++++++++++-
+> > > >  fs/ceph/super.c                 |  1 +
+> > > >  fs/ceph/super.h                 |  3 +++
+> > > >  include/linux/ceph/osd_client.h |  1 +
+> > > >  include/linux/ceph/rados.h      |  2 ++
+> > > >  net/ceph/osd_client.c           | 18 ++++++++++++------
+> > > >  6 files changed, 31 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > > index 11929d2bb594..1e6cdf2dfe90 100644
+> > > > --- a/fs/ceph/file.c
+> > > > +++ b/fs/ceph/file.c
+> > > > @@ -1974,6 +1974,10 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >       if (ceph_test_mount_opt(src_fsc, NOCOPYFROM))
+> > > >               return -EOPNOTSUPP;
+> > > > 
+> > > > +     /* Do the OSDs support the 'copy-from2' operation? */
+> > > > +     if (!src_fsc->have_copy_from2)
+> > > > +             return -EOPNOTSUPP;
+> > > > +
+> > > >       /*
+> > > >        * Striped file layouts require that we copy partial objects, but the
+> > > >        * OSD copy-from operation only supports full-object copies.  Limit
+> > > > @@ -2101,8 +2105,15 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >                       CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> > > >                       &dst_oid, &dst_oloc,
+> > > >                       CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > -                     CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+> > > > +                     CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > +                     dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > +                     CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > >               if (err) {
+> > > > +                     if (err == -EOPNOTSUPP) {
+> > > > +                             src_fsc->have_copy_from2 = false;
+> > > > +                             pr_notice("OSDs don't support 'copy-from2'; "
+> > > > +                                       "disabling copy_file_range\n");
+> > > > +                     }
+> > > >                       dout("ceph_osdc_copy_from returned %d\n", err);
+> > > >                       if (!ret)
+> > > >                               ret = err;
+> > > 
+> > > The patch itself looks fine to me. I'll not merge yet, since you sent it
+> > > as an RFC, but I don't have any objection to it at first glance. The
+> > > only other comment I'd make is that you should probably split this into
+> > > two patches -- one for the libceph changes and one for cephfs.
+> > > 
+> > > On a related note, I wonder if we'd get better performance out of large
+> > > copy_file_range calls here if you were to move the wait for all of these
+> > > osd requests after issuing them all in parallel?
+> > > 
+> > > Currently we're doing:
+> > > 
+> > > copy_from
+> > > wait
+> > > copy_from
+> > > wait
+> > > 
+> > > ...but figure that the second copy_from might very well be between osds
+> > > that are not involved in the first copy. There's no reason to do them
+> > > sequentially. It'd be better to issue all of the OSD requests first, and
+> > > then wait on all of the replies in turn:
+> > 
+> > If this is added (good idea in general) it should be throttled — we
+> > don’t want users accidentally trying to copy a 1TB file and setting
+> > off 250000 simultaneous copy_from2 requests!
 > 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Good point, thanks for the input Greg.  I'll have this in consideration.
+> That'll probably require another kernel module knob for setting this
+> throttling value.
+> 
+> 
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Yes, we probably do need some sort of limit here. It'd be nice to avoid
+adding new knobs for it though. Maybe we could make this value some
+multiple of min(rsize,wsize) ?
+-- 
+Jeff Layton <jlayton@kernel.org>
+
