@@ -2,93 +2,92 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEADDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF904C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CE7214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579025718;
-	bh=ByaNJKCgek99Dwuc8WcR2GybN9NUZcgpiS+ahOxmjIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZHlV56BMtty3QnZKewv0WR+bNZKh7YDPR3xdKRjxrSdSgg6/apaPPOfSunJqAzjeJ
-	 T/UlKdjSpZRSEs/wvM/9FfnRT2wuGNYQG23/87vj/rR0XoqH3AHqKc5jH+UQI8TQGD
-	 oX58q5xxIHDWzN0AOiK0PV0hmHPeiv4ogCYpghMs=
+	by mail.kernel.org (Postfix) with ESMTP id 8FD82214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxLTNQpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgANSPR (ORCPT
+        id S1728869AbgANSPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:15:17 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44368 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728809AbgANSPR (ORCPT
+        Tue, 14 Jan 2020 13:15:32 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34854 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728844AbgANSPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:15:17 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so13496841otj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:15:16 -0800 (PST)
+        Tue, 14 Jan 2020 13:15:32 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i23so6967658pfo.2;
+        Tue, 14 Jan 2020 10:15:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g5liutGVodCeMPrPRgXIgzO9PdXNpl/iPD6hzc+IzBk=;
+        b=rxLTNQpBwAntwITIdv29qfbVB6ItlM+fPmNpDwDe3kzjhHz9jWz6CBTVSR1TX5DyL9
+         Km3Jv3fyTaFDtPhPythZLFiaFu/VLz83ICQjcmZtCZAmzmLuh6NvYabjUhOkHPl7CvT+
+         QvFPJsN2+traNNhy5pKTuS1/0fbpAXUD21kpzdtrfdqU3VeJOILgDoeQngjYYEpzALdn
+         8m7YH6e9zPNVUi6BCh4vv1n/oIg6LOAYKCZjdCYtBqzbpZB7G05l//8CPw2Q9KIZHOVj
+         VsGYDxDinyQ67BGysOCYK1YGbGG8/sYRHujQr7EKQhQV64uw27MA4jfqPMJWXlrdJIW4
+         wrHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5LSZFhjvkBvH4Jm+XH1uoBzxnQKONQoyfsFilqe6/1E=;
-        b=GV3hixZ6AQySL2JcqNUjEtOR/4gXhFViHlB9kQs2hXvsHrE9wZMgxLM+bBMauDfy61
-         7Z51eYs+BjgX9kguHUn7FNAF+6gvKzdw7yDi46b1Bq1n6j0W/sOPDJ7I3BeKzCmaf0Ry
-         /dDZRnW3dCd8fzTMOkR+WKJdF+ZNkmnZ/bvYWoDjy5fiqFPQGUJccvFpl0I7PYR2lIoI
-         aOwK+rjsoChIrwecCO3diX7o3lNw53JIYPlndsBtMJFpysZhOBFoEOznbMV0m+5LgQJ/
-         xM78aZvoef1Gb9XYkpddsL1+g22mMQBK65az11cIbcUqN0Rw8U6sTYEn0+2Z2AD/Lu/p
-         lQNg==
-X-Gm-Message-State: APjAAAVkFkmUVHQMb0eFoTFeFfxSv6r4jKdM5p2rKk4JLAjdPM32asYU
-        x5tiILZTmBei4KrJB3od7r1QVYI=
-X-Google-Smtp-Source: APXvYqzZHhE3H7BgvkbaX/ZI/p+kRJ2RVpY+QesGlytgbvD0n4zUCLWB9JeQ7N30t5z+X/SsHCHGKg==
-X-Received: by 2002:a05:6830:1bd5:: with SMTP id v21mr19007940ota.154.1579025716229;
-        Tue, 14 Jan 2020 10:15:16 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i20sm5625274otp.14.2020.01.14.10.15.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 10:15:15 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 22090b
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 12:15:14 -0600
-Date:   Tue, 14 Jan 2020 12:15:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     linux-iio@vger.kernel.org, Michael.Hennerich@analog.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        biabeniamin@outlook.com, knaack.h@gmx.de, lars@metafoo.de,
-        robh@kernel.org, Jonathan.Cameron@huawei.com,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: Re: [PATCH] dt-bindings: iio: adc: ad7606: Fix wrong maxItems value
-Message-ID: <20200114181514.GA4529@bogus>
-References: <20200114132401.14117-1-beniamin.bia@analog.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g5liutGVodCeMPrPRgXIgzO9PdXNpl/iPD6hzc+IzBk=;
+        b=UzWmCH7trZyKWXZTsccSx0e5mC4bYKAE9BvKH61oaUzi5LbUT3r6Q7I3qd278cKR5k
+         Yx296PFzZ8u2cJeUuMljkXWom/bB8XJxOBEVviXmHcOBo2ZsTGh9BKb8LSb+ANpiZve0
+         7RzVSdL3Hb5bRwhn091H995pllrn3KaHlAipnrsy9D0uApS08FJ8yn1Xe+LczXa64Hta
+         jzrpO4aGhhipfkoqI7OqbOBCou11VxS+TX7U5dy9yAo9QxgD8QnEelDUP67eCtN223q0
+         FoN8m6CbmdX91rmP/E2pdLY2ZtLUyrP+vCd28FFYTzKnKiIzjiqu68Lm7YnVkR2w0QvY
+         QN4g==
+X-Gm-Message-State: APjAAAWUJ7btSfgLt75pUEVqZE15qSob0IYEp/EBTYRXgFlgzSkwGG2c
+        aJwHuGViXepkIgw4xhlx2a8fGjzZ
+X-Google-Smtp-Source: APXvYqzGqYreTjMh4VWTeRrPhmkFs+Y51jhON4biFaKxpgLbutpjV8+eHnqhKdTsSCqXvSwuTmEy5w==
+X-Received: by 2002:a62:be09:: with SMTP id l9mr26074494pff.57.1579025731545;
+        Tue, 14 Jan 2020 10:15:31 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v13sm19592436pgc.54.2020.01.14.10.15.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 10:15:31 -0800 (PST)
+Date:   Tue, 14 Jan 2020 10:15:30 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/39] 4.14.165-stable review
+Message-ID: <20200114181530.GB18872@roeck-us.net>
+References: <20200114094336.210038037@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114132401.14117-1-beniamin.bia@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 15:24:01 +0200, Beniamin Bia wrote:
-> This patch set the correct value for oversampling maxItems. In the
-> original example, appears 3 items for oversampling while the maxItems
-> is set to 1, this patch fixes those issues.
+On Tue, Jan 14, 2020 at 11:01:34AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.165 release.
+> There are 39 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Fixes: 416f882c3b40 ("dt-bindings: iio: adc: Migrate AD7606 documentation to yaml")
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> Anything received after that time might be too late.
 > 
 
-Applied, thanks.
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 375 pass: 375 fail: 0
 
-Rob
+Guenter
