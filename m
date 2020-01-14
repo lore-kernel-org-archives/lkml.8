@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC6FC33CB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8147FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6AE24676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A55207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996865;
-	bh=YK3CJYZemEg2rQGzQFkQQ62C9aHq0ZvdV48ceFQasXs=;
+	s=default; t=1578996870;
+	bh=8W7dvBwMRQLuHVRZsMPvivPXSG58cKKOr57Wv6sdDI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X2TV3ew5AdDoW7mQP74fQkGLlKeD7bIRIduomY1TXLpDJ7mbvi/X1ZAiLSdYamOUB
-	 m/In3ad7kDWfvirpnuGzoWdu19UOGxiFqmfuBNSxze8vXq63ei+ZBtbbe6x+ZmDOl+
-	 AS3c6yoS8IH7M7+gyJ1YAQA/G5/HHIwomlsHiyYs=
+	b=a+SmHARuo5Ol+2flwSmVM4osnu21n2+oKmXc7f+HB8LklyVEsin3OKiEVD6PvgXxi
+	 MdixLFfyem+iAqVnDpzC+3Yhl/PkuGmzP/UCkgWkCjrFSpDjhuXyjnQPf3HeMALbTS
+	 EkeM7Jb1GinHyJE7bUDx2O4syqCcMNGeXgTiym4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgANKMp (ORCPT
+        id S1733096AbgANKMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731337AbgANKMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:43 -0500
+        id S1733081AbgANKMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F4C207FF;
-        Tue, 14 Jan 2020 10:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07DC820678;
+        Tue, 14 Jan 2020 10:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996762;
-        bh=YK3CJYZemEg2rQGzQFkQQ62C9aHq0ZvdV48ceFQasXs=;
+        s=default; t=1578996757;
+        bh=8W7dvBwMRQLuHVRZsMPvivPXSG58cKKOr57Wv6sdDI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stahU4UYbRw8e+ZPo94Hbp4OB52ikCtW80M5ws45VwPJVsUy7kJLzvFqaLd/HSRbl
-         GSiUxWQnV2TmnLpsrVrJTF390JedbpdUvAdOlkA6zryf1phIefd4BAh9hcLyuoe5xi
-         SHApGer9q8gmUWUXOmDPdhqNJprC/XTdd0M3Np2U=
+        b=h/F/OrS+53d4w98T41LhAVyga53cNAxym9pSDQw9MVYGI5NG8OORtVtSbHMdiV6ai
+         FdFfYaDDZgjpWh1skrWzjlaSz23GZXbjrPffFhZ1C0L9JRj4B5aihS91bGmqWo0Xsr
+         PKya9Nc3t1TODbxQvL4MKMnI84rpt5wN3R2CYXow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
-        syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 07/28] HID: Fix slab-out-of-bounds read in hid_field_extract
-Date:   Tue, 14 Jan 2020 11:02:09 +0100
-Message-Id: <20200114094340.971996952@linuxfoundation.org>
+        stable@vger.kernel.org, Kaitao Cheng <pilgrimtao@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 05/28] kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
+Date:   Tue, 14 Jan 2020 11:02:07 +0100
+Message-Id: <20200114094340.513473929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -60,52 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
+commit 50f9ad607ea891a9308e67b81f774c71736d1098 upstream.
 
-The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
-handler.  The bug was caused by a report descriptor which included a
-field with size 12 bits and count 4899, for a total size of 7349
-bytes.
+In the function, if register_trace_sched_migrate_task() returns error,
+sched_switch/sched_wakeup_new/sched_wakeup won't unregister. That is
+why fail_deprobe_sched_switch was added.
 
-The usbhid driver uses at most a single-page 4-KB buffer for reports.
-In the test there wasn't any problem about overflowing the buffer,
-since only one byte was received from the device.  Rather, the bug
-occurred when the HID core tried to extract the data from the report
-fields, which caused it to try reading data beyond the end of the
-allocated buffer.
+Link: http://lkml.kernel.org/r/20191231133530.2794-1-pilgrimtao@gmail.com
 
-This patch fixes the problem by rejecting any report whose total
-length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
-for a possible report index).  In theory a device could have a report
-longer than that, but if there was such a thing we wouldn't handle it
-correctly anyway.
-
-Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: stable@vger.kernel.org
+Fixes: 478142c39c8c2 ("tracing: do not grab lock in wakeup latency function tracing")
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/trace_sched_wakeup.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -269,6 +269,12 @@ static int hid_add_field(struct hid_pars
- 	offset = report->size;
- 	report->size += parser->global.report_size * parser->global.report_count;
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -625,7 +625,7 @@ static void start_wakeup_tracer(struct t
+ 	if (ret) {
+ 		pr_info("wakeup trace: Couldn't activate tracepoint"
+ 			" probe to kernel_sched_migrate_task\n");
+-		return;
++		goto fail_deprobe_sched_switch;
+ 	}
  
-+	/* Total size check: Allow for possible report index byte */
-+	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
-+		hid_err(parser->device, "report is too long\n");
-+		return -1;
-+	}
-+
- 	if (!parser->local.usage_index) /* Ignore padding fields */
- 		return 0;
+ 	wakeup_reset(tr);
+@@ -643,6 +643,8 @@ static void start_wakeup_tracer(struct t
+ 		printk(KERN_ERR "failed to start wakeup tracer\n");
  
+ 	return;
++fail_deprobe_sched_switch:
++	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
+ fail_deprobe_wake_new:
+ 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
+ fail_deprobe:
 
 
