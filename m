@@ -2,95 +2,106 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ABCC33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9E5C33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1D12187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06F4222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOqzHS5I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eGZGbzyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgANE0V (ORCPT
+        id S1729112AbgANE2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 23:26:21 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34377 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728795AbgANE0U (ORCPT
+        Mon, 13 Jan 2020 23:28:45 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41044 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbgANE2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 23:26:20 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so5948753pfc.1;
-        Mon, 13 Jan 2020 20:26:20 -0800 (PST)
+        Mon, 13 Jan 2020 23:28:44 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bd4so4705166plb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 20:28:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=2KUHq2WXOjKK2jLm9wk0AGdw/pEX7ndYWZH2qpSDTzc=;
-        b=SOqzHS5I9vSPFY8xZKc65/zhaEMR9q0tiSZ0UD5lMlsVMyWn1fA0/EMa205IbKFU5E
-         P0F/vRDsvhq7C/3BTf4aK2zDH9VTzRA2UetHHDu4jP2sxfKTRVp3W5z0zuB4mGlNUzU1
-         HmeX7vrou8VIqQTPCtFsc+2Q7ACAzO5cm+DfTf3OQyfSu8zuYAId33tpl2Lo5dBvuiIi
-         sPxvR0ChQs50pAgrTClZxyEjktnX/5Dqj6r2v8KhNpDmeK2l4f84vJ4ciQjteOfC25/R
-         I0jpQU6RZyBtwLMQEYROdva0zp9Ng4mzUGmrFksIfNSzNtyzHC02KOjk3PvyZQnINP0p
-         PehA==
+        bh=cjNQBXAbjFbE6tB4pDxkpITB7JxRdTd+FwpRJxrl7BI=;
+        b=eGZGbzyfpHfjOyV2U6dtgilWBwHrm44sbUbDGrsqNbCY36O8cArrB3L/CvMBbmlCqz
+         43ZKHLde++61dO93BR52Jm3Nmk+v2wyjifurrEAJN+JYbDj9x/NS1ZbIMg4BOFHeuVKz
+         LxQCh8Vy/1OfoWPTREd+8uKS5CwIdls3VxV0raxLOTP9l3Bptv1Lnb8WDgXSpYW/g0zV
+         FN5hGKjH8WkbpNCB+t4gf+Ej5UeIeBjEe4x6ZpDNKH/q3xMVuMuupVyhh2ddfjhvnJPu
+         FrTV/80BV24cQUe2UGaRr7HHHsmvv5Or6rKLjClMuTPItSczkB85q+n7bs1XVBI3OzYr
+         BG4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2KUHq2WXOjKK2jLm9wk0AGdw/pEX7ndYWZH2qpSDTzc=;
-        b=AOv4Y2eiHr5WxPKmSdqQxyNpwS2VgxVNskJ4BgukJoIlmT+3DDJrJd0Q7hOm3nV2Rv
-         yi9TPk3p5EMTVlC9S23wqtSHSRDvg0P/Cdktl+ecz7FpNgbTL5M5Z9/Ko0ur4czW6pKd
-         hahNhs2jiAYP+etPeHbf2gQA/I/52GgB4fCIgtDwc2OPpJcuh0e95WKC18J2t02wCiRt
-         qnDNGkMj5AK5d0K1/tLbBwLU27rrkCKZ+e13gjpm6FYOUjN18N+R86Cm3gAact4GBNtr
-         AoYdEb5N7fvjV2CkZ7PBU/Bv8Z4BRVTYaEj8k1ThtAWG0c0aQH5yZLpbYR4Kwkx8kZOA
-         Tnsw==
-X-Gm-Message-State: APjAAAWL4xPs2i46xGCFbn6nFeCh9ne+rPR/VN3m/jOCN9KdSq8bdoNB
-        CTHRq5lU1Xh2R6fMfsjYGlA=
-X-Google-Smtp-Source: APXvYqyFE2nlkVhSYfgbiHs/QLE7+qhUpRExWPVTXDztfJsxAKhzJ+Q7pdP4VOuzKQQKiugDCg8ypQ==
-X-Received: by 2002:a62:ddd0:: with SMTP id w199mr22806813pff.1.1578975979931;
-        Mon, 13 Jan 2020 20:26:19 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id j9sm15697386pff.6.2020.01.13.20.26.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 20:26:19 -0800 (PST)
-Date:   Mon, 13 Jan 2020 20:26:16 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladis Dronov <vdronov@redhat.com>
-Cc:     Antti Laakso <antti.laakso@intel.com>, netdev@vger.kernel.org,
-        sjohnsto@redhat.com, vlovejoy@redhat.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        artem.bityutskiy@intel.com
-Subject: Re: [PATCH] ptp: free ptp device pin descriptors properly
-Message-ID: <20200114042616.GA1459@localhost>
-References: <3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com>
- <20200113130009.2938-1-vdronov@redhat.com>
+        bh=cjNQBXAbjFbE6tB4pDxkpITB7JxRdTd+FwpRJxrl7BI=;
+        b=NdPbJcDg2kTghBbrqs/EKc8e+aNAxMw26Mwg+oyVf5dgOwVEsAwHv6B1x7djznBVD9
+         JKoh6WEq6HduSEk8XXyCti3/rXtl6TyocF1K8Y3of9k2wARpX6y3MPmvH0QA+4GzBqyj
+         QOPogH9NKCBUOM99bD4ZAdkUnvd2wNlpMqDW30F8jL+gTD7ngbYSqLStijIXescge52r
+         0iVqv4TWiGOgeqQFLJNdAVcE/S1DIHIu19N1cCYCUp0Tg6EjvrVAOchspkhmXT8/ZnCM
+         cb7qdHGezwE2ImJjxCUBZk24mQbwp0kULFcbEwwCw0o+uT913cTQ28sQ3zKfK5+hgJv2
+         VUWg==
+X-Gm-Message-State: APjAAAUa5/pJ0aUVXqPkZPRfr+EVdz+BY+GOOaa7iJBS6vGReFvtIGmA
+        NncWSEpp3t2sYCJwqhdwLIYKTEyt15I=
+X-Google-Smtp-Source: APXvYqyW3QS3GtTgvX7yU8z6nfGYUoQwtwZf2offWJy0BKb5ZOQQbjkKRh8mpF70LnQNLE2xDutVhA==
+X-Received: by 2002:a17:90a:a05:: with SMTP id o5mr26815301pjo.77.1578976123966;
+        Mon, 13 Jan 2020 20:28:43 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id w38sm15645044pgk.45.2020.01.13.20.28.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jan 2020 20:28:43 -0800 (PST)
+Date:   Tue, 14 Jan 2020 09:58:40 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Harry Pan <harry.pan@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, gs0622@gmail.com,
+        linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH] cpufreq: intel_pstate: fix spelling mistake: "Whethet"
+ -> "Whether"
+Message-ID: <20200114042840.swqanxtymyxottcu@vireshk-i7>
+References: <20200113182228.1.I3c4155635fe990891a2c98c874cc4a270c82fe1b@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113130009.2938-1-vdronov@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200113182228.1.I3c4155635fe990891a2c98c874cc4a270c82fe1b@changeid>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:00:09PM +0100, Vladis Dronov wrote:
-> There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
-> first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
-> them to destroy a related sysfs device.
+On 13-01-20, 18:22, Harry Pan wrote:
+> Fix a spelling typo in the comment, no function change.
 > 
-> These functions can not be just swapped, as posix_clock_unregister() frees
-> ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
-> ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
+> Signed-off-by: Harry Pan <harry.pan@intel.com>
 > 
-> This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
+> ---
 > 
-> Reported-by: Antti Laakso <antti.laakso@intel.com>
-> Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-> Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
-> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+>  drivers/cpufreq/intel_pstate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 8ab31702cf6a..4bd9cb33132c 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -172,7 +172,7 @@ struct vid_data {
+>  /**
+>   * struct global_params - Global parameters, mostly tunable via sysfs.
+>   * @no_turbo:		Whether or not to use turbo P-states.
+> - * @turbo_disabled:	Whethet or not turbo P-states are available at all,
+> + * @turbo_disabled:	Whether or not turbo P-states are available at all,
+>   *			based on the MSR_IA32_MISC_ENABLE value and whether or
+>   *			not the maximum reported turbo P-state is different from
+>   *			the maximum reported non-turbo one.
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
