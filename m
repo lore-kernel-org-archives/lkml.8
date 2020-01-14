@@ -2,115 +2,93 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB663C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400BEC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE85124672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130DA24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BishUw6R"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="S0tONOx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgANVkm (ORCPT
+        id S1728912AbgANVkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:40:42 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39412 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANVkm (ORCPT
+        Tue, 14 Jan 2020 16:40:53 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:43066 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANVkw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:40:42 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a67so13381117oib.6;
-        Tue, 14 Jan 2020 13:40:41 -0800 (PST)
+        Tue, 14 Jan 2020 16:40:52 -0500
+Received: by mail-qv1-f67.google.com with SMTP id p2so6415311qvo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 13:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B2X/3u52wahb7NGy1ojTFR4c4yUjd1i5XgPJPjD8koM=;
-        b=BishUw6RdDy3BtA5hJJ/yzahdPhOrLYKOXBAabjCh4MDn8huO8LALML38GACHX4RfW
-         6LJyxE/IRPWFgqEN3ZCbwZDOuJjzz06AADj0HIiAaOOkffmHYdSGCuSYmQevUMSLsFnW
-         exJ3aGniAjvaLOq0laLSAOQ3mmpEyFHANl1oE9DbIRgS2TUpBM02VKlQ9zINmgNvD1up
-         Ldw/vP6Tl1g+OKv7JfCNy25dVgZum3Ic7rSkUPfyZi9+OPsWrdeYmwg9lArIA80E11CM
-         6xJE2ZkO1JcNLRHAxMlbq5aY3tdCAUDf/XTwcqdXzkO/FshCyYkbaG3td3ZjdS9QdLla
-         n10A==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=NMsxULS8JIYUQ4GpBoOy1UacwKzyAvhrhWEl22Ed1qk=;
+        b=S0tONOx/3050MVDYc5FincULF6fDMlK7tHM94OpIxWu0s9AIw9lo8j/YtyVPgCORJb
+         nhOLYg9mTx9Ze2Z+GMhLKneglELmrF4CihqpPADmyaRuQT6yaFxIO/cM+uyL4sWdiFD/
+         R+l8MN/jjahzpcoLsVaP552uanr22llVy6X5xTvHa2+0QWbhNNXUBFTlaHrko38NrehG
+         UYz9s7759/IipXVwKpLDre7Y0hhOjUP4IAFGjVlNTLEM6I7jr4VzE+APWyE5s/YZRHRV
+         QBjXpKXoG3/icklK4J7qvbbfL7Kc1NhWzzCUm/YkDUmHfj5kOlyuMKDZqpQU5MzV7kzs
+         ov3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B2X/3u52wahb7NGy1ojTFR4c4yUjd1i5XgPJPjD8koM=;
-        b=MCzNznLGwPccxeJVa/8EGNfmZaSIaUjNHYvqF/3L3U1Fy56e+GhmoZ3XtCVk9GDjOF
-         5Zrlys8AN4ITCaFZC5JP+KaKsORAckp3rkR5RLX0GhBns9c4G5bd25WGmxiNFftt20oI
-         Ou0Fpn3vTcSNSGTEPbUwZfwP0UOS9W3j2Zp5DfW2n+De/i2jw5OcPDbsOu+gyJJoRpaH
-         bFiF/mpUjMqHt4n5hjOJZbJ21xQQKX/EkXGRn7EpoP6LMbOoZMBtX/AogOCejqTfRcKg
-         DGiK/mS2KbPIQGQ9Xc+F1TwxSYvyjIiyXDO4FguaDKWxNHUQFA51rNVyBZm22GjzcRXu
-         q/Bg==
-X-Gm-Message-State: APjAAAXw6pE2fTy/HlhsHV9x83hw3S40VwmQo8U+oQcUXs6TXcbqUeF3
-        3pN3G84RrvUbk51EDz7V3D+nTyScL2MW1oZ3i+g=
-X-Google-Smtp-Source: APXvYqyGtqmUfz782Nh+91u6hWzKZM0F7xbelpycsO7fFRwkr7uh3ZKCe4ZONjmOCjA5kJ0fL31PByYcSAIVpLWHQ+4=
-X-Received: by 2002:aca:f445:: with SMTP id s66mr17313773oih.95.1579038041363;
- Tue, 14 Jan 2020 13:40:41 -0800 (PST)
-MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
- <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
-In-Reply-To: <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Tue, 14 Jan 2020 23:40:29 +0200
-Message-ID: <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=NMsxULS8JIYUQ4GpBoOy1UacwKzyAvhrhWEl22Ed1qk=;
+        b=httHAgcBAkgZr1Cg3M7tmNaSYXuUFcOcH2NqaZ2fxGAGbErJACmfVq6P0GAVZTZ7Iz
+         g+U9e1Yrx9hqKoLSImjWr4FXk/vgN9Trtu8YKNzA4YeAoVSe9kRZaJbZD7srhmkzPmwp
+         5kPzUWzuvWiMM1O43E7dZddK68zzeXESBu287Aa5wLbipnVGxtqRcS2ef6s7Y9SnNeT0
+         x77v+Lko3bFe7v7KFL6aoTAkHrIFu5/mFeaGryu5Jqaso75Fp3UcFGVyejBBSQDJPgWC
+         yhgC2itwT4ATlMu0KU7WH9yc4k+l+SVyUjkl2weP//ridJ2zg850Mg72flExxthd/0ep
+         0J8Q==
+X-Gm-Message-State: APjAAAWVfQ+FHnd4+Sg/WRyqyK9GzI7u6UHs5yptPZc/6rwJzQj+qMtZ
+        o2q3CRShsBydvcJBIuI2twOnBJTUc+KXAA==
+X-Google-Smtp-Source: APXvYqzw+CGWM405M2fdbsikthFCM4NDJ0cRrCpbEhrfFGbAecsyp5jSpDNfOsmWTEB6kSvsHsxO3Q==
+X-Received: by 2002:a0c:d60e:: with SMTP id c14mr18693105qvj.76.1579038051186;
+        Tue, 14 Jan 2020 13:40:51 -0800 (PST)
+Received: from ?IPv6:2600:1000:b029:6649:f4b1:4b94:dfb9:77cf? ([2600:1000:b029:6649:f4b1:4b94:dfb9:77cf])
+        by smtp.gmail.com with ESMTPSA id a14sm91508qta.97.2020.01.14.13.40.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 13:40:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next] mm/hotplug: silence a lockdep splat with printk()
+Date:   Tue, 14 Jan 2020 16:40:49 -0500
+Message-Id: <D5CC7C52-1F08-401E-BDCA-DF617909BB9D@lca.pw>
+References: <20200114210215.GQ19428@dhcp22.suse.cz>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200114210215.GQ19428@dhcp22.suse.cz>
+To:     Michal Hocko <mhocko@kernel.org>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
->
-> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Ramon Fried <rfried.dev@gmail.com> writes:
-> > > While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
-> > > that because of the line:
-> > >     info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
-> > > in pci_msi_create_irq_domain()
-> > >
-> > > The IRQF_ONESHOT is ignored, especially when requesting IRQ through
-> > > pci_request_threaded_irq() where handler is NULL.
-> >
-> > Which is perfectly fine.
-> >
-> > > The problem is that the MSI masking now only surrounds the HW handler,
-> > > and all additional MSI that occur before the threaded handler is
-> > > complete are considered by the note_interrupt() as spurious.
-> >
-> > Which is not a problem as long as the thread finishes before 100k MSIs
-> > arrived on that line. If that happens then there is something really
-> > wrong. Either the device fires MSIs like crazy or the threaded handler
-> > is stuck somewhere.
-> >
-> > > Besides the side effect of that, I don't really understand the logic
-> > > of not masking the MSI until the threaded handler is complete,
-> > > especially when there's no HW handler and only threaded handler.
-> >
-> > What's wrong with having another interrupt firing while the threaded
-> > handler is running? Nothing, really. It actually can be desired because
-> > the threaded handler is allowed to sleep.
-> What do you mean, isn't it the purpose IRQ masking ?
-> Interrupt coalescing is done to mitigate these IRQ's, these HW
-> interrupts just consume
-> CPU cycles and don't do anything useful (scheduling an already
-> scheduled thread).
-Additionally, in this case there isn't even an HW IRQ handler, it's
-passed as NULL in the request IRQ function in this scenario.
-> Thanks,
-> Ramon.
-> >
-> > Thanks,
-> >
-> >         tglx
+
+
+> On Jan 14, 2020, at 4:02 PM, Michal Hocko <mhocko@kernel.org> wrote:
+>=20
+> Yeah, that was a long discussion with a lot of lockdep false positives.
+> I believe I have made it clear that the console code shouldn't depend on
+> memory allocation because that is just too fragile. If that is not
+> possible for some reason then it has to be mentioned in the changelog.
+> I really do not want us to add kludges to the MM code just because of
+> printk deficiencies unless that is absolutely inevitable.
+
+I don=E2=80=99t know how to convince you, but both random number generator a=
+nd printk() maintainers agreed to get ride of printk() with zone->lock held a=
+s you can see in the approved commit mentioned in this patch description bec=
+ause it is a whac-a-mole to fix other places. In other word, the patch alone=
+ fixes quite a few false positives and potential real deadlocks. Maybe Andre=
+w please has a look at this directly?=
