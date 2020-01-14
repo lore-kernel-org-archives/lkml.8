@@ -2,133 +2,115 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88055C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C51DC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA6F2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 03:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6783721556
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jha953gw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oymZxqri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgAND7C (ORCPT
+        id S1728720AbgANEIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 22:59:02 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40475 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgAND7C (ORCPT
+        Mon, 13 Jan 2020 23:08:16 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36910 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728558AbgANEIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 22:59:02 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so5069371qvb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 19:59:01 -0800 (PST)
+        Mon, 13 Jan 2020 23:08:16 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w47so11304237qtk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 20:08:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ztJ1V0LnCB/uV/QxWONsGT2VGSCtiLH36uJ9ZnQL11k=;
-        b=Jha953gwcEctikRVgy1BwWSp1AOSzwFroA4riLAgjF0Ca759v22jbjV6iiC+XaTfXd
-         whRDyHz7vYanB9Kbv1TaGdNr20mF5tma/3L64IpziirlGRzyNL+TUUsyRxFx3ZzbBAkX
-         Q3pLbZ06A91feXTg5mHcE6vEHdcNDYbo5qR3zLa+atvldUi4GwpZ2K/VH1/6GQaT1qxK
-         qPJ258Ob6IzYE0d33dlAXW+8diQ6lSN4BFImIbf616k9h7tl+hlSAJXKYh9DMY+5qnFv
-         CyCaaeGsZYWARlUSH178E286UJxnp3dn/E7c5yst3iFbuyU/VuBPpQ8tPp3UTJrfrq3v
-         SPVQ==
+        bh=QNtmqVWbAOjUDHLbU1JCi3aKgbul5T2rh8pths+pE7w=;
+        b=oymZxqrihFL3YmpIhDckL7mg3PzqoVq4ec9gBVmoGi5ub7OKrYTSerEU/LhIgUoYIF
+         d1jYOoM5uC75vzyMt/se2T0tPgxQqVBCyYY4necJXtTsUODdy63vPnWSbD9F0RKVkGRr
+         Fy9CklL2UZZNHfiqb8SvM/Y8OErZ8yWkcs6YODzz/AsZRLXIVEHukwEuDj/QKJjjDWv1
+         Lw+2MwPO253p3NoGiiJsuz8I2ltNJJoCl+r/RUTUy0N3GP6+BZo0pfTKVlN1UHYZ089m
+         PlaEtf0YHwc73fqCRM31C/Ez2N+xlH1cQe0XlBOxjFOCJOnK+E4BBoP0UBUsFJBdLo+J
+         Qccg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ztJ1V0LnCB/uV/QxWONsGT2VGSCtiLH36uJ9ZnQL11k=;
-        b=O5tk/nGRUU1MxrQ4FaNnACqXdlUoEr5doHEaafqb7JXdS/F4zxQOe4MtXKxTQqj5TK
-         muiLcsY1wiWeiTdT/hj9IyeUIM8ZwHfjGWXi7pMp9xLXDCYyKeEqNbQ6iPPtpsJ23GMe
-         umX6HUEAUe3KWIx7U8W6P3i937QUB1ppp8+0HcWN31JtKZY4bhiVMBfgjZgei+Dsylx9
-         uVQz5r+dkVJ+uY1mDUPRAFZzy5S8jAxBmE94dKJiH0G+0AQ0Bi1ReiKKqi3tKaK8Mfq5
-         BCXJ1FeAhq8HNZC/VXW9K41tgaL2GLSZ7LOOgF5bGvcNJfxODDx1lctdNslkL4u7U2A8
-         +s5Q==
-X-Gm-Message-State: APjAAAUGV5qk47/MWuEyCz/V4V+VkIzFA1BtlxCTRdS+qLJ5UE7uV1jp
-        orOv98nje1vRuDdzyrPBNOc=
-X-Google-Smtp-Source: APXvYqz9gZeO73r+YapWUNO12FvABCSxxgvUlTyOdaZTIzFZx9NEBcrgmHJ1I7Pe2uYL5BAt5sHtQw==
-X-Received: by 2002:ad4:4dc3:: with SMTP id cw3mr18642276qvb.130.1578974341294;
-        Mon, 13 Jan 2020 19:59:01 -0800 (PST)
+        bh=QNtmqVWbAOjUDHLbU1JCi3aKgbul5T2rh8pths+pE7w=;
+        b=S3ZAhOZIGhzuDQAITJwSqaU3MqyPWqaFWw0/KLcoe2lJ4JbM+59ESXG8o3F+s7xQ0X
+         pT11Lp/1gQWA9ZF9O4nH5bAbz8drfVMrH7GrN36aQjKsv5PuZNcHGIzok1TNK038ZZ3C
+         IUxWzFF1C04JufPLrX9kGPECjmGlUrXFEiJOfj4H84lkOXxml0bYtBLrefLt3ICbBfYe
+         GE54D5Kq111yY/y8MidBmNOrVfsm+t/k8MgWHZ+dijSCbX8EuOt7wV5kg1WibxixbLfG
+         Co6/EkVHmAVJKgcp0n3/fv8dvMe51are4uV0WJi7/nHrvkbNnkWNXD2XZ/BjyQP1ipLF
+         Vq0A==
+X-Gm-Message-State: APjAAAW0nHubH/Bb9g9JQbilm6TvY9hp5bagMmruK/7TA4VfAnquaGqh
+        qWGFm4IpIY19rGaScLHOeGw=
+X-Google-Smtp-Source: APXvYqxWLXUjYjYQLbIYilETh56sVPwldMspTUOxKHEeFza4KHArtcHVyD7dKd5nXB/wg3IFYVQ7tA==
+X-Received: by 2002:ac8:66c5:: with SMTP id m5mr1886832qtp.356.1578974895063;
+        Mon, 13 Jan 2020 20:08:15 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v5sm6967439qth.70.2020.01.13.19.59.00
+        by smtp.gmail.com with ESMTPSA id d51sm6853425qtc.67.2020.01.13.20.08.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 19:59:00 -0800 (PST)
+        Mon, 13 Jan 2020 20:08:14 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 13 Jan 2020 22:58:59 -0500
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
+Date:   Mon, 13 Jan 2020 23:08:13 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
         Michael Matz <matz@suse.de>
-Subject: Re: [PATCH v3] x86/vmlinux: Fix vmlinux.lds.S with pre-2.23 binutils
-Message-ID: <20200114035858.GA2536335@rani.riverdale.lan>
-References: <20200113161310.GA191743@rani.riverdale.lan>
- <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook>
- <261ae869-4169-296e-f673-5c08ff34bdde@zytor.com>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200114040812.GB2536335@rani.riverdale.lan>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
+ <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
+ <20200111172047.GA2688392@rani.riverdale.lan>
+ <20200113134306.GF13310@zn.tnic>
+ <20200113161310.GA191743@rani.riverdale.lan>
+ <20200113163855.GK13310@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <261ae869-4169-296e-f673-5c08ff34bdde@zytor.com>
+In-Reply-To: <20200113163855.GK13310@zn.tnic>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 05:57:23PM -0800, H. Peter Anvin wrote:
-> On 2020-01-13 17:53, Kees Cook wrote:>>
-> >> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> >> index 3a1a819da137..bad4e22384dc 100644
-> >> --- a/arch/x86/kernel/vmlinux.lds.S
-> >> +++ b/arch/x86/kernel/vmlinux.lds.S
-> >> @@ -144,10 +144,12 @@ SECTIONS
-> >>  		*(.text.__x86.indirect_thunk)
-> >>  		__indirect_thunk_end = .;
-> >>  #endif
-> >> +
-> >> +		/* End of text section */
-> >> +		_etext = .;
-> >>  	} :text =0xcccc
-> >>  
-> >> -	/* End of text section, which should occupy whole number of pages */
-> >> -	_etext = .;
-> >> +	/* .text should occupy whole number of pages */
-> >>  	. = ALIGN(PAGE_SIZE);
-> > 
-> > NAK: linkers can add things at the end of .text that will go missing from
-> > the kernel if _etext isn't _outside_ the .text section, truly beyond the
-> > end of the .text section. This patch will break Control Flow Integrity
-> > checking since the jump tables are at the end of .text.
-> > 
-> > Boris, we're always working around weird linker problems; I don't see a
-> > problem with the v2 patch to fix up old binutils...
-> > 
+On Mon, Jan 13, 2020 at 05:38:55PM +0100, Borislav Petkov wrote:
+> On Mon, Jan 13, 2020 at 11:13:10AM -0500, Arvind Sankar wrote:
+> > I will note that the purpose of S_REL in relocs.c was originally to
+> > handle exactly this case of symbols defined outside output sections:
 > 
-> Why not add the marker into a separate section instead of leaving it as an
-> absolute "floater"? Very old binutils would botch that case, but I think that
-> has been long since addressed well below our current minimum version.
-> 
-> 	-hpa
-> 
-> 
+> And we should try not to do hacks, if it can be fixed properly, as
+> binutils expects symbols to be usually relative to a section.
 > 
 
-Kees, thanks, I noted in the other email that you had mentioned this in
-a since-reverted commit, but you did not mention in the most recent
-commit.
+I've poked around a bit more, and all the hacks in relocs.c in S_REL,
+other than init_per_cpu__.*, are only there to work around old and/or
+buggy binutils versions from the 2.21-2.22 days.
 
-hpa, I think this runs afoul of the bug you noted in commit fd952815307f
-("x86-32, relocs: Whitelist more symbols for ld bug workaround"), ld
-version 2.22.52.0.[12] can incorrectly promote relative symbols to
-absolute, if the output section they appear in is otherwise empty.
+The current code is *not* broken for binutils-2.23+, where none of these
+symbols are marked as absolute. IOW, the current code is perfectly fine
+and generates relative symbols for any binutils not of 2.21-2.22
+vintage.
 
-That's 2.22, which is more recent than the 2.21 that the kernel
-documents as supported.
+So we have the following choices:
+* bump minimum supported binutils version to 2.23, and remove all the
+  hacks for earlier versions.
+* add a couple of hacks to relocs.c to account for new symbols, as in v2
+* complicate regular code, as in v3, which Kees says might break new
+  code [1] and Tom says is bad for future kernel hackers [2]
+
+[1] https://lore.kernel.org/lkml/202001131750.C1B8468@keescook/
+[2] https://lore.kernel.org/lkml/3e46154d-6e5e-1c16-90fe-f2c5daa44b60@amd.com/
