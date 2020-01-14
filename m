@@ -6,93 +6,87 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797B1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2051C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555A9206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889A724685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgANNFq (ORCPT
+        id S1726197AbgANNJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:05:46 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33596 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728057AbgANNFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:05:46 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 16B3622E53E8E50BEE1A;
-        Tue, 14 Jan 2020 21:05:43 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
- 21:04:45 +0800
-Subject: Re: [PATCH] cgroup: remove for_each_e_css
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-References: <1579003772-46038-1-git-send-email-alex.shi@linux.alibaba.com>
-CC:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <285c371f-da93-1bf1-4ace-5a74bb08ca5b@hisilicon.com>
-Date:   Tue, 14 Jan 2020 21:04:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Tue, 14 Jan 2020 08:09:02 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11756 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgANNJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:09:02 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 05:09:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="256295592"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 05:09:00 -0800
+Subject: Re: [PATCH] mmc: sdhci: fix minimum clock rate for v3 controller
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-mmc@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org
+References: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <4264051e-6126-83c3-e49e-3d9050ff35ce@intel.com>
+Date:   Tue, 14 Jan 2020 15:08:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1579003772-46038-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+In-Reply-To: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-https://spinics.net/lists/cgroups/msg23131.html
-
-Thanks,
-
-On 2020/1/14 20:09, Alex Shi wrote:
-> After commit 37ff9f8f4742 ("cgroup: make cgroup[_taskset]_migrate()
-> take cgroup_r', No one use this macro.
-> So it'e better to remove.
+On 2/01/20 12:51 pm, Michał Mirosław wrote:
+> For SDHCIv3+ with programmable clock mode, minimal clock frequency is
+> still base clock / max(divider). Minimal programmable clock frequency is
+> always greater than minimal divided clock frequency. Without this patch,
+> SDHCI uses out-of-spec initial frequency when multiplier is big enough:
 > 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Li Zefan <lizefan@huawei.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
+> [for 480 MHz source clock divided by 1024]
+
+The maximum divisor in programmable clock mode is 1024.  So I do not
+understand what is wrong.  Can you explain some more?
+
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 > ---
->  kernel/cgroup/cgroup.c | 15 ---------------
->  1 file changed, 15 deletions(-)
+>  drivers/mmc/host/sdhci.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index 735af8f15f95..7d916ad33e59 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -663,21 +663,6 @@ struct cgroup_subsys_state *of_css(struct kernfs_open_file *of)
->  		else
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 275102c0a1bf..0036ddf85674 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3902,11 +3902,9 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	if (host->ops->get_min_clock)
+>  		mmc->f_min = host->ops->get_min_clock(host);
+>  	else if (host->version >= SDHCI_SPEC_300) {
+> -		if (host->clk_mul) {
+> -			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
+> +		if (host->clk_mul)
+>  			max_clk = host->max_clk * host->clk_mul;
+> -		} else
+> -			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+> +		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+>  	} else
+>  		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
 >  
->  /**
-> - * for_each_e_css - iterate all effective css's of a cgroup
-> - * @css: the iteration cursor
-> - * @ssid: the index of the subsystem, CGROUP_SUBSYS_COUNT after reaching the end
-> - * @cgrp: the target cgroup to iterate css's of
-> - *
-> - * Should be called under cgroup_[tree_]mutex.
-> - */
-> -#define for_each_e_css(css, ssid, cgrp)					    \
-> -	for ((ssid) = 0; (ssid) < CGROUP_SUBSYS_COUNT; (ssid)++)	    \
-> -		if (!((css) = cgroup_e_css_by_mask(cgrp,		    \
-> -						   cgroup_subsys[(ssid)]))) \
-> -			;						    \
-> -		else
-> -
-> -/**
->   * do_each_subsys_mask - filter for_each_subsys with a bitmask
->   * @ss: the iteration cursor
->   * @ssid: the index of @ss, CGROUP_SUBSYS_COUNT after reaching the end
 > 
 
