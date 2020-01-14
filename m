@@ -2,66 +2,106 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4012CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F478C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2215C24655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B1424670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728852AbgANTqF (ORCPT
+        id S1728879AbgANTqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:46:05 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:47028 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbgANTqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:46:05 -0500
-Received: from localhost (unknown [63.64.162.234])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9ABA41549340A;
-        Tue, 14 Jan 2020 11:46:03 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:46:03 -0800 (PST)
-Message-Id: <20200114.114603.2006132483826469750.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v6 00/10] net: macsec: initial support for
- hardware offloading
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200113223148.746096-1-antoine.tenart@bootlin.com>
-References: <20200113223148.746096-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jan 2020 11:46:04 -0800 (PST)
+        Tue, 14 Jan 2020 14:46:55 -0500
+Received: from mga03.intel.com ([134.134.136.65]:46993 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727102AbgANTqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:46:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 11:46:54 -0800
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="213448748"
+Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.201.179]) ([10.254.201.179])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Jan 2020 11:46:52 -0800
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     madhuparnabhowmik04@gmail.com, mike.marciniszyn@intel.com,
+        paulmck@kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
+ <20200114165740.GB22037@ziepe.ca>
+ <74adec84-ec5b-ea1b-7adf-3f8608838259@intel.com>
+ <25133367-6544-d0af-ae30-5178909748b1@intel.com>
+ <20200114194148.GD22037@ziepe.ca>
+From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
+Message-ID: <7959316e-7647-9ba3-5f1a-10c8d31a2994@intel.com>
+Date:   Tue, 14 Jan 2020 14:46:50 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200114194148.GD22037@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Mon, 13 Jan 2020 23:31:38 +0100
+On 1/14/2020 2:41 PM, Jason Gunthorpe wrote:
+> On Tue, Jan 14, 2020 at 01:24:00PM -0500, Dennis Dalessandro wrote:
+>> On 1/14/2020 12:00 PM, Dennis Dalessandro wrote:
+>>> On 1/14/2020 11:57 AM, Jason Gunthorpe wrote:
+>>>> On Tue, Jan 14, 2020 at 09:53:45PM +0530,
+>>>> madhuparnabhowmik04@gmail.com wrote:
+>>>>> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>>>>>
+>>>>> list_for_each_entry_rcu has built-in RCU and lock checking.
+>>>>> Pass cond argument to list_for_each_entry_rcu.
+>>>>>
+>>>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>>>>>    drivers/infiniband/hw/hfi1/verbs.c | 2 +-
+>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/infiniband/hw/hfi1/verbs.c
+>>>>> b/drivers/infiniband/hw/hfi1/verbs.c
+>>>>> index 089e201d7550..22f2d4fd2577 100644
+>>>>> +++ b/drivers/infiniband/hw/hfi1/verbs.c
+>>>>> @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct
+>>>>> hfi1_packet *packet,
+>>>>>                           opa_get_lid(packet->dlid, 9B));
+>>>>>            if (!mcast)
+>>>>>                goto drop;
+>>>>> -        list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+>>>>> +        list_for_each_entry_rcu(p, &mcast->qp_list, list,
+>>>>> lockdep_is_held(&(ibp->rvp.lock))) {
+>>>>
+>>>> Okay, this looks reasonable
+>>>>
+>>>> Mike, Dennis, is this the right lock to test?
+>>>>
+>>>
+>>> I'm looking at that right now actually, I don't think this is correct.
+>>> Wanted to talk to Mike before I send a response though.
+>>>
+>>> -Denny
+>>
+>> That's definitely going to throw a ton of lock dep messages. It's not really
+>> the right lock either. Instead what we probably need to do is what we do in
+>> the non-multicast part of the code and take the rcu_read_lock().
+> 
+> Uh.. why is this using the _rcu varient without holding the rcu lock?
+> That is quite wrong already.
+>
 
-> This series intends to add support for offloading MACsec transformations
-> to hardware enabled devices. The series adds the necessary
-> infrastructure for offloading MACsec configurations to hardware drivers,
-> in patches 1 to 5; then introduces MACsec offloading support in the
-> Microsemi MSCC PHY driver, in patches 6 to 10.
- ...
+Yep, seems like a bug to me. Patch forthcoming.
 
-Series applied to net-next.
+-Denny
 
-I'll push this out after build testing.
-
-Thanks.
