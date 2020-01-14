@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2F7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11D7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A8124680
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFA424676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996362;
-	bh=NNPL/5vO9M1U6KCQtxB3LBrt8nXgwNKAIzbwvvAykA8=;
+	s=default; t=1578996368;
+	bh=LmySiv9v38Hu478RVBjfEARaYj4GudwdzSzApzt0T2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0MemMmt3mjHvfwkLdo6fDNZVG8Mvp2xpV/WBo3MwiG67mtO+0lSlWQbMdEcyCdOt
-	 afSeHK2sOkumOaJNyXW0isrycFgcQYrjENlKGFW8pAUcgfSKuDLrEJaVETpA+TJEh+
-	 ZScQcugvoa2hBe0XENTZZo/a4Ajwl7McBTIuR7Ws=
+	b=vFXfFTGsDvs5KEXkTJve2SF3MF76UgTcjXRCsQiHEhquE2LPPUZit6Vm/hc29rmFQ
+	 NmvVKkKOaKs0uSb/U5vEuNPhnE5FFhPktbM7EG4aBNiKDlWksclnZui2HJAGfI0lKp
+	 /qfxDT1f+DITA6exJn/cLR95y/A4BPhqDMHS+fTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgANKGB (ORCPT
+        id S1729900AbgANKGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34630 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbgANKF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:59 -0500
+        id S1730291AbgANKGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2722467A;
-        Tue, 14 Jan 2020 10:05:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F22224680;
+        Tue, 14 Jan 2020 10:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996359;
-        bh=NNPL/5vO9M1U6KCQtxB3LBrt8nXgwNKAIzbwvvAykA8=;
+        s=default; t=1578996364;
+        bh=LmySiv9v38Hu478RVBjfEARaYj4GudwdzSzApzt0T2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+IeIsTezpXYvfxM8BVxkXj3B8uX474eDWEb01g9lkWVKjosQpZorZQCZYQ8DIrJl
-         HMF3vqYAFqBmzjUrjVOxF1dOcC5VgxSvma/u+CMmiVHErMOIK9zW1d+pjlKk0nhQWB
-         ITaMj3d9mAadvZKIkJkpmib+k7fnvtoku9/XISL0=
+        b=FQeaCtiRJuc8Fbgc1u+H808++Cr47X2jxy2yylvNdkgR2WkBiXJjL/9Jny3PKxK0e
+         3HRvX//DEPcH5l714PSMw1P0TglRKH2tcqaQRxFxzsfxyOEyHKWAUwn0Xhd8QCub02
+         wJ0yLzrxLSvpnHk062F1L5MPAY5c8gRHJlr7sibM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 45/78] USB: serial: option: add ZLP support for 0x1bc7/0x9010
-Date:   Tue, 14 Jan 2020 11:01:19 +0100
-Message-Id: <20200114094359.591729220@linuxfoundation.org>
+        stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 63/78] clone3: ensure copy_thread_tls is implemented
+Date:   Tue, 14 Jan 2020 11:01:37 +0100
+Message-Id: <20200114094401.878025357@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,85 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Amanieu d'Antras <amanieu@gmail.com>
 
-commit 2438c3a19dec5e98905fd3ffcc2f24716aceda6b upstream.
+commit dd499f7a7e34270208350a849ef103c0b3ae477f upstream.
 
-Telit FN980 flashing device 0x1bc7/0x9010 requires zero packet
-to be sent if out data size is is equal to the endpoint max size.
+copy_thread implementations handle CLONE_SETTLS by reading the TLS
+value from the registers containing the syscall arguments for
+clone. This doesn't work with clone3 since the TLS value is passed
+in clone_args instead.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-[ johan: switch operands in conditional ]
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+Cc: <stable@vger.kernel.org> # 5.3.x
+Link: https://lore.kernel.org/r/20200102172413.654385-8-amanieu@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c   |    8 ++++++++
- drivers/usb/serial/usb-wwan.h |    1 +
- drivers/usb/serial/usb_wwan.c |    4 ++++
- 3 files changed, 13 insertions(+)
+ kernel/fork.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -567,6 +567,9 @@ static void option_instat_callback(struc
- /* Interface must have two endpoints */
- #define NUMEP2		BIT(16)
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2513,6 +2513,16 @@ SYSCALL_DEFINE5(clone, unsigned long, cl
+ #endif
  
-+/* Device needs ZLP */
-+#define ZLP		BIT(17)
+ #ifdef __ARCH_WANT_SYS_CLONE3
 +
- 
- static const struct usb_device_id option_ids[] = {
- 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
-@@ -1198,6 +1201,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
- 	  .driver_info = NCTRL(0) },
-+	{ USB_DEVICE(TELIT_VENDOR_ID, 0x9010),				/* Telit SBL FN980 flashing device */
-+	  .driver_info = NCTRL(0) | ZLP },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, ZTE_PRODUCT_MF622, 0xff, 0xff, 0xff) }, /* ZTE WCDMA products */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x0002, 0xff, 0xff, 0xff),
- 	  .driver_info = RSVD(1) },
-@@ -2099,6 +2104,9 @@ static int option_attach(struct usb_seri
- 	if (!(device_flags & NCTRL(iface_desc->bInterfaceNumber)))
- 		data->use_send_setup = 1;
- 
-+	if (device_flags & ZLP)
-+		data->use_zlp = 1;
++/*
++ * copy_thread implementations handle CLONE_SETTLS by reading the TLS value from
++ * the registers containing the syscall arguments for clone. This doesn't work
++ * with clone3 since the TLS value is passed in clone_args instead.
++ */
++#ifndef CONFIG_HAVE_COPY_THREAD_TLS
++#error clone3 requires copy_thread_tls support in arch
++#endif
 +
- 	spin_lock_init(&data->susp_lock);
- 
- 	usb_set_serial_data(serial, data);
---- a/drivers/usb/serial/usb-wwan.h
-+++ b/drivers/usb/serial/usb-wwan.h
-@@ -38,6 +38,7 @@ struct usb_wwan_intf_private {
- 	spinlock_t susp_lock;
- 	unsigned int suspended:1;
- 	unsigned int use_send_setup:1;
-+	unsigned int use_zlp:1;
- 	int in_flight;
- 	unsigned int open_ports;
- 	void *private;
---- a/drivers/usb/serial/usb_wwan.c
-+++ b/drivers/usb/serial/usb_wwan.c
-@@ -461,6 +461,7 @@ static struct urb *usb_wwan_setup_urb(st
- 				      void (*callback) (struct urb *))
- {
- 	struct usb_serial *serial = port->serial;
-+	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
- 	struct urb *urb;
- 
- 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
-@@ -471,6 +472,9 @@ static struct urb *usb_wwan_setup_urb(st
- 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
- 			  buf, len, callback, ctx);
- 
-+	if (intfdata->use_zlp && dir == USB_DIR_OUT)
-+		urb->transfer_flags |= URB_ZERO_PACKET;
-+
- 	return urb;
- }
- 
+ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 					      struct clone_args __user *uargs,
+ 					      size_t usize)
 
 
