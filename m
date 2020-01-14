@@ -2,100 +2,148 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ECEC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13E7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C114214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98136217BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578961016;
-	bh=ty5zfQkiRhAx57Hwj6NCRKyc2kPTZbupHVXQsQn3t5M=;
+	s=default; t=1578961052;
+	bh=PtgZWKN3HLoAj4bzYvKrd3jaasZfRYVf+RTzNAmTs2E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gDbKE9hPam/URe/BPDlAM1btDsFlxBkLlP526kj21l7eNeq6i8jeSYvPjOzyjshj0
-	 GRle3AcTphI2WRG2/1iGYqsBQZ9RABFnQs8WX9Jb8FotLICNx4QrWlyExyqSR88M9J
-	 xynpSR4e/ys7EBYhRcZbffbxkjvfZ6vgOFbR89co=
+	b=ishEwGPYwclCS185U/pSjW83yMEp3YwAnZr6FkpcVpaf0kPGLpHoTdkQZhhet3EXM
+	 STd1TYzwzmjr7aLCAy6BG9u9EhwdnsSdu1jkqPnIDaUhgSNFdHKleKoYqgpXEwWCrr
+	 olVBLSaBate3u6kLFyst3kQ0QaaNJ5GbGYI7LV6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgANAQy (ORCPT
+        id S1729413AbgANARc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:16:54 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40822 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729352AbgANAQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:16:54 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c77so10140182oib.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 16:16:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nnCP/oi7Z0mxzEO5kxr1fVYeBOYXbt9IQu/uVhgHHc8=;
-        b=boKf+K1RSDYTNdC/+J+p81agZYBat17UPaNmg3pqqgbjHielqW0j2TV/IdkfBlPDlj
-         UIa4Ns3Ha/tXa/++u0StaHG8jSNZp2JX5U985ydeyeWWn7l97TWn37/8yL7Dty3f0LI2
-         uFE1fMRNXTet234EomXbYdH9Dzo7ICSDe/OmgGCegEuiwmxYiWr1tjeIalzcesazgXKo
-         WmcZYogrT43D1q8TRt2FNzYM/hCTzoTHShJj5tkPjd97aJmZtBPYQC2K2z+/b0mUHnLS
-         iFxXFN6ZI8N1iX3qgdE4CvRW9AfHacN769Od0FOTEUWwk8Zwtk9dsu7wQ1Or87XXyDrW
-         s59Q==
-X-Gm-Message-State: APjAAAXCWURRdcSBYjddc3yqsn1w37VzCUn/ZvFJpZYflFzoQ+sqRaA/
-        und6SEPaGuzEiFpF+6BY/H9Eun0b8g==
-X-Google-Smtp-Source: APXvYqyeY9FolZqWIosTUsU4tBSFcMI/9eynOsBt8o/cvodMA+7km2UwTyJV7uEOmD/bASOVTQAiVQ==
-X-Received: by 2002:aca:ec50:: with SMTP id k77mr15430737oih.114.1578961012173;
-        Mon, 13 Jan 2020 16:16:52 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z21sm4723079oto.52.2020.01.13.16.16.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 16:16:51 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219cf
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 18:16:49 -0600
-Date:   Mon, 13 Jan 2020 18:16:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, vkoul@kernel.org,
-        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
-        lee.jones@linaro.org, radu_nicolae.pirea@upb.ro,
-        richard.genoud@gmail.com, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 07/17] dt-bindings: atmel-matrix: add
- microchip,sam9x60-matrix
-Message-ID: <20200114001649.GA11024@bogus>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-8-git-send-email-claudiu.beznea@microchip.com>
+        Mon, 13 Jan 2020 19:17:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729274AbgANARb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:17:31 -0500
+Received: from earth.universe (dyndsl-091-096-060-001.ewe-ip-backbone.de [91.96.60.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04320214AF;
+        Tue, 14 Jan 2020 00:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578961051;
+        bh=PtgZWKN3HLoAj4bzYvKrd3jaasZfRYVf+RTzNAmTs2E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QteWwwAH8b5g/+NP79H3E25fFvu8uK40gphEPX/MrT/Xbxfisl6JWPxpiIjSnsIG/
+         aaHU/LUYo70sDosPXCAB6+ZUcO65vo4sK0tu5auxRWD0JCJrGLCKapUnIFjwnBKKam
+         SsqC3CqipYoNGEfrjKd+JtvVmppxCti25nmg+BVU=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 3B08F3C0C7C; Tue, 14 Jan 2020 01:17:29 +0100 (CET)
+Date:   Tue, 14 Jan 2020 01:17:29 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Oskari Lemmela <oskari@lemmela.net>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 0/8] X-Powers Power Supply Improvements
+Message-ID: <20200114001729.dgozjk4eaxjp7fzz@earth.universe>
+References: <20200113035310.18950-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sqzuoh7u67ekm2kz"
 Content-Disposition: inline
-In-Reply-To: <1578673089-3484-8-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200113035310.18950-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 18:17:59 +0200, Claudiu Beznea wrote:
-> Add microchip,sam9x60-matrix to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mfd/atmel-matrix.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--sqzuoh7u67ekm2kz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+I queued patches 1-4, patch 5 does not apply and seems to be based
+on an older tree.
+
+-- Sebastian
+
+On Sun, Jan 12, 2020 at 09:53:02PM -0600, Samuel Holland wrote:
+> This series adds some improvements to the axp20x* power supply drivers
+> to better support suspend/resume and use on mobile devices.
+>=20
+> The first two patches fix bugs I found while testing the ONLINE control
+> added in later patches.
+>=20
+> Patches 3 and 7 allow userspace to take the power supplies offline.
+> Patches 4 and 8 allow userspace to control the wakeup behavior.
+>=20
+> Patch 9 avoids polling USB VBUS presence when possible. While working on
+> the RSB driver, I was seeing ~50 transfers per second, while idle and
+> tracked it down to this VBUS polling (20 reads/second). The polling
+> often caused the CPU to clock up and back down, which triggered the
+> remaining transfers (changes to the CPU voltage).
+>=20
+> Unfortunately, I don't see a way to avoid the polling when running on
+> battery (where it matters most), other than to move the polling back to
+> the USB PHY driver.
+>=20
+> Changes since v2:
+>  - Patch 1 was merged
+>  - Only check ACIN_PATH_SEL when necessary (1)
+>  - Update commit message (5)
+>  - Avoided reordering lines until/unless necessary (5, 7)
+>  - Update comment and add ID check in axp20x_usb_power_set_property
+>    (it seemed more correct than adding another comment) (6)
+>  - Add Reviewed-by where there were no comments (2-4, 7-8)
+>=20
+> Changes since v1:
+>  - Add patches 1-2
+>  - Shift value properly in calls to regmap_update_bits (3, 7)
+>  - Use #ifdef instead of #if to avoid -Wundef warnings (4, 8)
+>  - Poll once after an IRQ, instead of setting power->online in the IRQ (9)
+>  - Poll once on resume, in case the state changed during suspend (9)
+>=20
+> Samuel Holland (8):
+>   power: supply: axp20x_ac_power: Fix reporting online status
+>   power: supply: axp20x_ac_power: Allow offlining
+>   power: supply: axp20x_ac_power: Add wakeup control
+>   power: supply: axp20x_usb_power: Remove unused device_node
+>   power: supply: axp20x_usb_power: Use a match structure
+>   power: supply: axp20x_usb_power: Allow offlining
+>   power: supply: axp20x_usb_power: Add wakeup control
+>   power: supply: axp20x_usb_power: Only poll while offline
+>=20
+>  drivers/power/supply/axp20x_ac_power.c  | 131 +++++++++++---
+>  drivers/power/supply/axp20x_usb_power.c | 219 ++++++++++++++++++------
+>  2 files changed, 276 insertions(+), 74 deletions(-)
+>=20
+> --=20
+> 2.23.0
+>=20
+
+--sqzuoh7u67ekm2kz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4dCJEACgkQ2O7X88g7
++poyhBAAnNnSwxvQGB617t1H1P7IT/YIV8ip8AASUUZrCjrICzsyBVlUur0gYnpx
+TZlGnd/kjQk9ZMuPjdEMwhCWaprfZElCZqacKNWdPM9F1/7BGAc4sfaStWjkc2MI
+yw4QH+qL6mSexEQRksxUd4LvjlGMxNkmUhH41vN1LNkvdSsD4l7Tv0I4281Fjwpk
+xSp9ld6eItYp43JVo8zFa6UDaZQO18D1nVPOMHvrGv3AFaBGTf3XIvSbq6FwaMJq
+8l3R9YIOdczB1AKLP5dneIR8w8t6sM6Ta0RwmMs2B70LOM31+i6HV0mnxjPNr+/e
+y4YA5Q2tTA6EWR/zKMcGC6Sd/TA8eYeJ5LKS1WyBADHolHDvhmqJp9uhxxrS3otP
+acXuujRMpr/dGVmb3KWAyjcMDp4WlHuZzhTxOJCXIqt2ZiKy+rLpyXccLHT2o6Bo
+imKge3VQTK9R2A01zJ/eVyzK/PntgLGHJD+WmJ7m5w8kTQJiAXnr+rKXolXvjqlP
+eAh7wLNVracG7Qu4WOl8kLBuk3tYCor95uxDO7esCLrL1118biXvVxcLRg8JfOxh
+KRd8hEjwNA5CAWKFAnvc0jW0m0ScT5PSh4e6A+aFGOIbJ2QNvwai11KKkiY60g8l
+ohqjjzPtCMVP4dNcI5KGCy4BtjtqXrie4LsaiWYa/THt7m/Rcl8=
+=3fN1
+-----END PGP SIGNATURE-----
+
+--sqzuoh7u67ekm2kz--
