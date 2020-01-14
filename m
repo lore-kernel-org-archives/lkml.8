@@ -2,94 +2,90 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08B1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1B924679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="F70YThTI"
+	by mail.kernel.org (Postfix) with ESMTP id 9AAA42187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgANNoL (ORCPT
+        id S1728869AbgANNoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:44:11 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38829 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANNoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:44:10 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so13767918wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:44:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+KDdpEda72c8Z0y+Uj5w7oRFnZJtRQ2x+bj/uoKma6Y=;
-        b=F70YThTIPBalEBh5BaB4WYK/iNuuMLjbLJDtK9u8ERnymTv/m3y7Re0n1+rWrQZdse
-         r7eMfhF8ZvnUCa0Al3k1LX4TB/pTbLTJKcf1mrisc7CdbfM/HB6VZigFvcmCSwT5Cz9r
-         DlR2LOTxSUwDvHEqXqE+9WHog4PHqPKNOH2jj3tpCBoqQtBcAURrIlNEFixlt2C40MxX
-         MbQqWthaVKlKqeGaKphwsJYHqxuN2otetm7rMUa/hKlpV/N622Z+TfWbkvqd2KLNo6rk
-         V0yvs73Dx5RHISY1Fi0vA3O/Quozqv7cLSrWTyhYPOwUMv/BRy7beLR4Wi1riAJ2eJH+
-         gvhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=+KDdpEda72c8Z0y+Uj5w7oRFnZJtRQ2x+bj/uoKma6Y=;
-        b=E7PIskGxZKah0qvDjWgypBBf72pRMUPGS/E1cn2jViNlxI1BieORxEBLzh2NxVDY5D
-         jG72go2lTB64Wd74P0/j402yONxBcrmG5yM7GGYOzZgxzkONOK5xRG78LNcji55p1VCU
-         g6xWcl+k00HM74v4DogDsx4QdjQJ+rXEqMgVqpu7KOMA0Tvbeylg35DdjC6WcPl94hsX
-         6qFdkdyqmh7h+AATcc1wj8Zr0WGFcGRoCDK6/+tyFN2y6kKM4jE6GrE5kNahmPF4p2+F
-         UGQSZrg0kIJL5VqsoxzeTGqYSdK15vHIxHeRMIveqTkx07wP95h0CER4RCX0S08N6cJe
-         exqA==
-X-Gm-Message-State: APjAAAU5i+rAZyQLlJj2NU42vO+8YPe3iqSOEpWs4OE2Riale1diGxe4
-        4io2E7hinVE/txaGahmkSdmmhTAKo1Hp0g==
-X-Google-Smtp-Source: APXvYqz6pQGuJ8RWbU3QjpoUZVeVLsYzd8lQ0OC99bXw2E3+C16tX3Covj6I95Wpi3TV8OXwLOjZQg==
-X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr27350242wmg.163.1579009448141;
-        Tue, 14 Jan 2020 05:44:08 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id d8sm20094697wre.13.2020.01.14.05.44.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 05:44:07 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Subject: [PATCH] microblaze: Add ID for Microblaze v11
-Date:   Tue, 14 Jan 2020 14:44:06 +0100
-Message-Id: <5e56ec0090bceb711dbab145ffffa52f60c23d87.1579009444.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 14 Jan 2020 08:44:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:52428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728809AbgANNoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:44:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6841435;
+        Tue, 14 Jan 2020 05:44:31 -0800 (PST)
+Received: from [240.8.37.10] (unknown [10.37.8.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DA943F534;
+        Tue, 14 Jan 2020 05:44:27 -0800 (PST)
+Subject: Re: [PATCH] arm: Fix Kexec compilation issue.
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux@armlinux.org.uk
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200110123125.51092-1-vincenzo.frascino@arm.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <27d511d6-90de-02f1-733b-e177462dffab@arm.com>
+Date:   Tue, 14 Jan 2020 13:44:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200110123125.51092-1-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-List Microblaze v11 from PVR.
+On 1/10/20 12:31 PM, Vincenzo Frascino wrote:
+> To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+> find a memblock in a range.
+> SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+> these conditions results in a build error:
+> 
+>   linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+>   linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+>      (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+>              crash_size, SECTION_SIZE);
+>                          ^~~~~~~~~~~~
+>                          SECTIONS_WIDTH
+>   linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+>      is reported only once for each function it appears in
+>   linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+>      failed
+> 
+> Make KEXEC depend on MMU to fix the compilation issue.
+> 
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index ba75e3661a41..bc99582bdc85 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1904,7 +1904,7 @@ config XIP_DEFLATED_DATA
+>  config KEXEC
+>  	bool "Kexec system call (EXPERIMENTAL)"
+>  	depends on (!SMP || PM_SLEEP_SMP)
+> -	depends on !CPU_V7M
+> +	depends on MMU
+>  	select KEXEC_CORE
+>  	help
+>  	  kexec is a system call that implements the ability to shutdown your
+> 
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+Reviewed-by: Vladimir Murzin <vladimir.murzin@arm.com>
 
- arch/microblaze/kernel/cpu/cpuinfo.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/microblaze/kernel/cpu/cpuinfo.c b/arch/microblaze/kernel/cpu/cpuinfo.c
-index ef2f49471a2a..cd9b4450763b 100644
---- a/arch/microblaze/kernel/cpu/cpuinfo.c
-+++ b/arch/microblaze/kernel/cpu/cpuinfo.c
-@@ -51,6 +51,7 @@ const struct cpu_ver_key cpu_ver_lookup[] = {
- 	{"9.5", 0x22},
- 	{"9.6", 0x23},
- 	{"10.0", 0x24},
-+	{"11.0", 0x25},
- 	{NULL, 0},
- };
- 
--- 
-2.24.0
-
+Cheers
+Vladimir
