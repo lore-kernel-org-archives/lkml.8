@@ -7,43 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A749AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8973BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63ED624687
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D3B24685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgANNCp (ORCPT
+        id S1729125AbgANNCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:02:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43242 "EHLO
+        Tue, 14 Jan 2020 08:02:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43264 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgANNCh (ORCPT
+        with ESMTP id S1729035AbgANNCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:02:37 -0500
+        Tue, 14 Jan 2020 08:02:43 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLq5-0004ny-Cn; Tue, 14 Jan 2020 14:02:33 +0100
+        id 1irLq7-0004mi-JL; Tue, 14 Jan 2020 14:02:38 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B0F31C0852;
-        Tue, 14 Jan 2020 14:02:22 +0100 (CET)
-Date:   Tue, 14 Jan 2020 13:02:22 -0000
-From:   "tip-bot2 for Christophe Leroy" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 01CBE1C07FA;
+        Tue, 14 Jan 2020 14:02:21 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:20 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Avoid duplication in __cvdso_clock_getres()
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: timers/core] time: Add timens_offsets to be used for tasks in
+ time namespace
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3Cfdf1a968a8f7edd61456f1689ac44082ebb19c15=2E15771?=
- =?utf-8?q?11367=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
-References: =?utf-8?q?=3Cfdf1a968a8f7edd61456f1689ac44082ebb19c15=2E157711?=
- =?utf-8?q?1367=2Egit=2Echristophe=2Eleroy=40c-s=2Efr=3E?=
+In-Reply-To: <20191112012724.250792-5-dima@arista.com>
+References: <20191112012724.250792-5-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157900694207.396.9782329695399222834.tip-bot2@tip-bot2>
+Message-ID: <157900694083.396.6789904611289992625.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,51 +57,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     cdb7c5a9c897ab2e5c56df647dd84c84e150e925
-Gitweb:        https://git.kernel.org/tip/cdb7c5a9c897ab2e5c56df647dd84c84e150e925
-Author:        Christophe Leroy <christophe.leroy@c-s.fr>
-AuthorDate:    Mon, 23 Dec 2019 14:31:09 
+Commit-ID:     af993f58d69ee9c1f421dfc87c3ed231c113989c
+Gitweb:        https://git.kernel.org/tip/af993f58d69ee9c1f421dfc87c3ed231c113989c
+Author:        Andrei Vagin <avagin@openvz.org>
+AuthorDate:    Tue, 12 Nov 2019 01:26:53 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Jan 2020 12:20:47 +01:00
+CommitterDate: Tue, 14 Jan 2020 12:20:49 +01:00
 
-lib/vdso: Avoid duplication in __cvdso_clock_getres()
+time: Add timens_offsets to be used for tasks in time namespace
 
-VDSO_HRES and VDSO_RAW clocks are handled the same way.
+Introduce offsets for time namespace. They will contain an adjustment
+needed to convert clocks to/from host's.
 
-Avoid the code duplication.
+A new namespace is created with the same offsets as the time namespace
+of the current process.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lore.kernel.org/r/fdf1a968a8f7edd61456f1689ac44082ebb19c15.1577111367.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/20191112012724.250792-5-dima@arista.com
 
 
 ---
- lib/vdso/gettimeofday.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ include/linux/time_namespace.h | 22 ++++++++++++++++++++++
+ kernel/time/namespace.c        |  2 ++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 5a5ec89..fac9e86 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -193,7 +193,7 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 	 * clocks are handled in the VDSO directly.
- 	 */
- 	msk = 1U << clock;
--	if (msk & VDSO_HRES) {
-+	if (msk & (VDSO_HRES | VDSO_RAW)) {
- 		/*
- 		 * Preserves the behaviour of posix_get_hrtimer_res().
- 		 */
-@@ -203,11 +203,6 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 		 * Preserves the behaviour of posix_get_coarse_res().
- 		 */
- 		ns = LOW_RES_NSEC;
--	} else if (msk & VDSO_RAW) {
--		/*
--		 * Preserves the behaviour of posix_get_hrtimer_res().
--		 */
--		ns = hrtimer_res;
- 	} else {
- 		return -1;
- 	}
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index 8c74cc1..d7e3b49 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -12,11 +12,17 @@
+ struct user_namespace;
+ extern struct user_namespace init_user_ns;
+ 
++struct timens_offsets {
++	struct timespec64 monotonic;
++	struct timespec64 boottime;
++};
++
+ struct time_namespace {
+ 	struct kref		kref;
+ 	struct user_namespace	*user_ns;
+ 	struct ucounts		*ucounts;
+ 	struct ns_common	ns;
++	struct timens_offsets	offsets;
+ } __randomize_layout;
+ 
+ extern struct time_namespace init_time_ns;
+@@ -39,6 +45,20 @@ static inline void put_time_ns(struct time_namespace *ns)
+ 	kref_put(&ns->kref, free_time_ns);
+ }
+ 
++static inline void timens_add_monotonic(struct timespec64 *ts)
++{
++	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
++
++	*ts = timespec64_add(*ts, ns_offsets->monotonic);
++}
++
++static inline void timens_add_boottime(struct timespec64 *ts)
++{
++	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
++
++	*ts = timespec64_add(*ts, ns_offsets->boottime);
++}
++
+ #else
+ static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
+ {
+@@ -66,6 +86,8 @@ static inline int timens_on_fork(struct nsproxy *nsproxy,
+ 	return 0;
+ }
+ 
++static inline void timens_add_monotonic(struct timespec64 *ts) { }
++static inline void timens_add_boottime(struct timespec64 *ts) { }
+ #endif
+ 
+ #endif /* _LINUX_TIMENS_H */
+diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+index 2662a69..c2a58e4 100644
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/cred.h>
+ #include <linux/err.h>
++#include <linux/mm.h>
+ 
+ static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
+ {
+@@ -60,6 +61,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+ 	ns->ucounts = ucounts;
+ 	ns->ns.ops = &timens_operations;
+ 	ns->user_ns = get_user_ns(user_ns);
++	ns->offsets = old_ns->offsets;
+ 	return ns;
+ 
+ fail_free:
