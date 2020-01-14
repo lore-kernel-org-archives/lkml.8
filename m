@@ -2,127 +2,152 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF88C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BDCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C7D217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570B0206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7KEAGOq"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mA7N7Op7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgANHot (ORCPT
+        id S1729169AbgANHpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:44:49 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38925 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgANHot (ORCPT
+        Tue, 14 Jan 2020 02:45:04 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36891 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729139AbgANHpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:44:49 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so6173298pfs.6;
-        Mon, 13 Jan 2020 23:44:48 -0800 (PST)
+        Tue, 14 Jan 2020 02:45:04 -0500
+Received: by mail-io1-f68.google.com with SMTP id k24so12766440ioc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:45:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ji4/GGpTpCHtZjwRvAzGm3fytTn1eM1/uYYEuqSMvlo=;
-        b=V7KEAGOqYjfGtkT+aweWULgGvMOzq6GY5wvsDR1sJdb64//nhwfaSD0nOvGnCLEjl2
-         0KPkZx6/HX96zUi+9gxvqP5LwKvkIs5UfgdB8qCsGkaBClX/eqik4m7nYTYdoWz1D0Vw
-         pNOg/HJuG7UUFBMV6O8o73HCTlMrhBq07//BJdsnfXERnQ5bnfooehnVtlCTB9EOjLIx
-         aPqNfPG2EdrmsmDWPJaVQybqDQ9x0YymC5mSFSZuyqwPKmO0SuWKXAlcaSZSz7Hvd4AE
-         a6mLXqGH7cdyVKn1hiLPmbTAG7lYKIcL4xlUu1mJjSCnjNZxHmGGHQKbMY7+Cv5For94
-         LxCg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
+        b=mA7N7Op7kUYgfpqMfsIfTlX26LjxQVJpfur8Qz8Am9Fdl58faZZCbRNKYDT8QW+gu+
+         uFfp00SRawjC1/hrMV4gbk9M0o/fhjbTP60+MehfuI/f0xSBQeHCSaRsrldNW7IDQbHl
+         8ELO4afCsPg5Y6+uWRzqCWDGYWIFcU5guMdwaUZdCQq/45OnfNap2ex8+zlC+q3ejZIc
+         CqeoPo2QkT7v21V4x11CnD8ID1WNywo+1J6GM0uyi22KyTrMCAJvo5HPnNhP8KmhKHmg
+         e31nceuhNOrDr34Q7W98Dz+yllEak1r8Ge5/RC9/EcLNFz++oPcj7ZLOM/5PJPQa/mrp
+         F3wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ji4/GGpTpCHtZjwRvAzGm3fytTn1eM1/uYYEuqSMvlo=;
-        b=bF3PrXUh0+4TCWH0Gl+nbNRu8TeYARjKqXknAbgk8RDt9hkhm08GfPFLOPnsNbUeTz
-         xS/D1uuiPUtHJNN/Pgtea2/UvtlWIXf2WNXEmt/xdlTiO3wwGj+EmZSVuzCf1KifwBLd
-         WX7sh7kDp9bBlvsJ9DzWR9ADAcX44Do83FCgM14hQIaqfEHwEUld1YvwzgDvPrL6WMb0
-         zmh1wU7xffoIa8j3y6yt/MrvgAntGqkvaM+oOR0mCAPHutGtDidZKuFWqRgIW5X2aGcg
-         5MvXk0NeeGPpMpvzb2uvYsLJT7q0rMZ0aaGREoN00ijKQdPzZig41sVw6wTGxIydEry2
-         kAyw==
-X-Gm-Message-State: APjAAAXxkTLvOle9AvtEfE6Rdmyfxp+Lw/ZEkpCchZ3nwXnamgITqqzd
-        BnqIw/NiMYN3gwJmeiYNXBQ=
-X-Google-Smtp-Source: APXvYqyR5qwh+EUVMQkFPgPEHQisjOpHIgs/mjN2cccTS/mUHiwuYt7H2FWIoKBjBCSftyqoVQPsNg==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr24349821pfl.32.1578987888490;
-        Mon, 13 Jan 2020 23:44:48 -0800 (PST)
-Received: from localhost.corp.microsoft.com ([167.220.255.5])
-        by smtp.googlemail.com with ESMTPSA id k3sm16350745pgc.3.2020.01.13.23.44.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jan 2020 23:44:47 -0800 (PST)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        akpm@linux-foundation.org, michael.h.kelley@microsoft.com,
-        decui@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-mm@kvack.org, vkuznets@redhat.com, stable@vger.kernel.org
-Subject: [PATCH] x86/Hyper-V: Balloon up according to request page number
-Date:   Tue, 14 Jan 2020 15:44:35 +0800
-Message-Id: <20200114074435.12732-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
+        b=Mfs9H/GzDoMcEYW4bWvEC3WsdVbZsdsUhKVgqD7LX+KUztuNkIuUJjKw6+LKj8lUdv
+         TiZIhzx4pKajOUeZRMd4/DZf/+maYB87oRoWzy1X8vlOwb9cEa88fxmc5NE3+DERwnpA
+         CEDIpnLBPGwfzvxu6VP8tW/ZURwdEAc+NLCqsol7/mCtOwbC6zEonYPN9iO1O7+Qitxy
+         0RRslX9nohJJ2HqRor1HrYxw7VL6rtDs08jWNYzdUBy8WnyQ2RvlqKsqqBByPykjSSlW
+         Q9LvMpCzMYphme/OF/5rcq0lv3w31arKTQamnzRwgfyYvfu1FoU6iru83Gi/qxlxpBmV
+         cnvg==
+X-Gm-Message-State: APjAAAU+aERnP+R7XZvxjwnjHsDvyKOn8kWUPZ1+feZ5Wlj3eJZQh4BN
+        Ol5IrFIgNrVCD0k+x1haeYvZhL09QjpOgjZcVZdTHQ==
+X-Google-Smtp-Source: APXvYqzAh2T2cAKb3Cs79hOXveFHjbvjhUfIyQdCCAoBmuB7aXLxMczzgL7HSLXmWyrIPcGsg4iXgsEzHnFBDxb1JV4=
+X-Received: by 2002:a05:6602:220b:: with SMTP id n11mr16743494ion.6.1578987903228;
+ Mon, 13 Jan 2020 23:45:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20200109115010.27814-1-brgl@bgdev.pl>
+In-Reply-To: <20200109115010.27814-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 14 Jan 2020 08:44:52 +0100
+Message-ID: <CAMRc=Mf34JTo-mCCb-ubdY9=YsGQp-YrkhQMp811_wXyVtW-=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line status changes
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+czw., 9 sty 2020 o 12:50 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> When discussing the recent user-space changes with Kent and while working
+> on dbus API for libgpiod I noticed that we really don't have any way of
+> keeping the line info synchronized between the kernel and user-space
+> processes. We can of course periodically re-read the line information or
+> even do it every time we want to read a property but this isn't optimal.
+>
+> This series adds a new ioctl() that allows user-space to set up a watch o=
+n
+> the GPIO chardev file-descriptor which can then be polled for events
+> emitted by the kernel when the line is requested, released or its status
+> changed. This of course doesn't require the line to be requested. Multipl=
+e
+> user-space processes can watch the same lines.
+>
+> This series also includes a variety of minor tweaks & fixes for problems
+> discovered during development. For instance it addresses a race-condition
+> in current line event fifo.
+>
+> First two patches add new helpers to kfifo, that are used in the later
+> parts of the series.
+>
+> v1: https://lkml.org/lkml/2019/11/27/327
+>
+> v1 -> v2:
+> - rework the main patch of the series: re-use the existing file-descripto=
+r
+>   associated with an open character device
+> - add a patch adding a debug message when the line event kfifo is full an=
+d
+>   we're discarding another event
+> - rework the locking mechanism for lineevent kfifo: reuse the spinlock
+>   from the waitqueue structure
+> - other minor changes
+>
+> v2 -> v3:
+> - added patches providing new implementation for some kfifo macros
+> - fixed a regression in the patch reworking the line event fifo: reading
+>   multiple events is now still possible
+> - reworked the structure for new ioctl: it's now padded such that there
+>   be no alignment issues if running a 64-bit kernel on 32-bit userspace
+> - fixed a bug where one process could disable the status watch of another
+> - use kstrtoul() instead of atoi() in gpio-watch for string validation
+>
+> v3 -> v4:
+> - removed a binary file checked in by mistake
+> - drop __func__ from debug messages
+> - restructure the code in the notifier call
+> - add comments about the alignment of the new uAPI structure
+> - remove a stray new line that doesn't belong in this series
+> - tested the series on 32-bit user-space with 64-bit kernel
+>
+> v4 -> v5:
+> - dropped patches already merged upstream
+> - collected review tags
+>
+> Bartosz Golaszewski (7):
+>   kfifo: provide noirqsave variants of spinlocked in and out helpers
+>   kfifo: provide kfifo_is_empty_spinlocked()
+>   gpiolib: rework the locking mechanism for lineevent kfifo
+>   gpiolib: emit a debug message when adding events to a full kfifo
+>   gpiolib: provide a dedicated function for setting lineinfo
+>   gpiolib: add new ioctl() for monitoring changes in line info
+>   tools: gpio: implement gpio-watch
 
-Current code has assumption that balloon request memory size aligns
-with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-balloon driver receives non-aligned balloon request, it produces warning
-and balloon up more memory than requested in order to keep 2MB alignment.
-Remove the warning and balloon up memory according to actual requested
-memory size.
+Hi Andrew,
 
-Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- drivers/hv/hv_balloon.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+could you Ack the first two patches in this series if you're fine with
+them? The code they modify lives in lib/ and doesn't have an assigned
+maintainer, so I've been told to Cc you on this series. It would be
+great if we could get it in for v5.6 merge window.
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 7f3e7ab22d5d..38ad0e44e927 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 	if (num_pages < alloc_unit)
- 		return 0;
- 
--	for (i = 0; (i * alloc_unit) < num_pages; i++) {
-+	for (i = 0; i < num_pages / alloc_unit; i++) {
- 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
- 			HV_HYP_PAGE_SIZE)
- 			return i * alloc_unit;
-@@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
- 
- 	}
- 
--	return num_pages;
-+	return i * alloc_unit;
- }
- 
- static void balloon_up(union dm_msg_info *msg_info)
-@@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
- 	long avail_pages;
- 	unsigned long floor;
- 
--	/* The host balloons pages in 2M granularity. */
--	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
--
- 	/*
- 	 * We will attempt 2M allocations. However, if we fail to
- 	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
--- 
-2.14.5
-
+Best regards,
+Bartosz Golaszewski
