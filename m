@@ -2,103 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE40C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64004C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C48A7207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578994286;
-	bh=FDX+6sUPhI0zSx2t7/frgTEa6vCzNQaaRUtHxOQi8w8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vYpshurkWnC89KdG/4q2KPQVar4nCinj93oga/fkqOsO7NPYsAS9IQaPIFSDy2NLp
-	 0K7JpIUtKakroEmN9Zpn/7NGBBPWWC3PzWAXWqtGK47Trq7NYt0nvKs79TEzHIxX7S
-	 zzII920FjeEDQeTjxraX6Wumkj/TLJz7Ixd+270E=
+	by mail.kernel.org (Postfix) with ESMTP id 35937207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Op5S07B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgANJb0 (ORCPT
+        id S1729031AbgANJbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:31:26 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40399 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgANJbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:31:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so12831835wmi.5;
-        Tue, 14 Jan 2020 01:31:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QU2E8oF5JNAbYAlglR/3BSATG0M/9oeZpEn5cOfx658=;
-        b=dTbjrvDYZFckqKtBKudHY/wanT9oRcRmu4cjV/a682HzEzAyq/phigDGXrIGdRNAWX
-         Xmj65hrbyMh88uIlkVYCJ9C0bWzzjqOXF3T1fAeHlTIyvTgSt9our1d8v+FIPYRavm44
-         taCE3FK0oQe65Rmyivv4y0S6Bq7N8CK10H79Uz6JFa1imu6cf3fpE7uDq/RBCmWHUxj7
-         vWK3n++WEKeCWbufBHhlwlAbKdcZ3ax89Eo6Xb4LUPA1FWcaUVs3KC28/OJCZIrY+tIW
-         H69aRpDOImg+Dtyzh6fGcL68gdrk5lRPsdLdcPFx1uN9kqpFgAWWYmbkIJoepEKIoogW
-         NXpw==
-X-Gm-Message-State: APjAAAVSPTJ8GyAWIICK6MDLGafPARBDjPup5sv0WpALUaUmbI3bTZRW
-        vm1ZAmlp3tJb0+MYjICx5lw=
-X-Google-Smtp-Source: APXvYqyHQjRYFKVsyb9fpuM9++YKCCEEOy55sI8xBmbf3cq9wfSBTTHMHKmx0zsXhNHLCf2m37p1ww==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr26849300wmb.137.1578994283622;
-        Tue, 14 Jan 2020 01:31:23 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id e16sm18915745wrs.73.2020.01.14.01.31.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 01:31:22 -0800 (PST)
-Date:   Tue, 14 Jan 2020 10:31:22 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com,
-        rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200114093122.GH19428@dhcp22.suse.cz>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
+        Tue, 14 Jan 2020 04:31:44 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:46818 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgANJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:31:43 -0500
+Received: from zn.tnic (p200300EC2F0C7700ADC3CAC9BB95AB92.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:adc3:cac9:bb95:ab92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A64AF1EC0C76;
+        Tue, 14 Jan 2020 10:31:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578994301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oVOv19JYih/7QBdhQIDrcxH7dJf1wRTSDlsNoAXaOY4=;
+        b=Op5S07B1bBe9uvsJbhwmhBQEjTQO/NCR8xUCHou3ZSrFKAX+wG5Tf6vbvL+7qyFBL/OmxC
+        PHOEsU9albCCnI2LsgCfGkS94dnIF/pSH1b+TKBWi8bA+gpaWrVZWGaixC6QAc9QstNw5e
+        AZNv5TI9m4WNJxduf+OlljIIB6zhMPk=
+Date:   Tue, 14 Jan 2020 10:31:38 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH] KVM: VMX: Rename define to CPU_BASED_USE_TSC_OFFSETTING
+Message-ID: <20200114093138.GB31032@zn.tnic>
+References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
+ <20191221044513.21680-18-sean.j.christopherson@intel.com>
+ <20200113183228.GO13310@zn.tnic>
+ <20200113183705.GL1175@linux.intel.com>
+ <20200113183823.GP13310@zn.tnic>
+ <20200113184217.GA2216@linux.intel.com>
+ <20200113185216.GQ13310@zn.tnic>
+ <20200113201610.GE2322@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200111000352.efy6krudecpshezh@box>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200113201610.GE2322@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 11-01-20 03:03:52, Kirill A. Shutemov wrote:
-> On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
-> > As all the other places, we grab the lock before manipulate the defer list.
-> > Current implementation may face a race condition.
+On Mon, Jan 13, 2020 at 12:16:10PM -0800, Sean Christopherson wrote:
+> On Mon, Jan 13, 2020 at 07:52:16PM +0100, Borislav Petkov wrote:
+> > On Mon, Jan 13, 2020 at 10:42:17AM -0800, Sean Christopherson wrote:
+> > > > Doesn't bother me, I could do it in a patch ontop. But your call.
+> > > 
+> > > No objection here.
 > > 
-> > For example, the potential race would be:
+> > Something like this:
 > > 
-> >     CPU1                      CPU2
-> >     mem_cgroup_move_account   split_huge_page_to_list
-> >       !list_empty
-> >                                 lock
-> >                                 !list_empty
-> >                                 list_del
-> >                                 unlock
-> >       lock
-> >       # !list_empty might not hold anymore
-> >       list_del_init
-> >       unlock
+> > ---
+> > From: Borislav Petkov <bp@suse.de>
+> > 
+> > ... so that "offsetting" is spelled the same as the respective VMX feature
+> > bit VMX_FEATURE_TSC_OFFSETTING.
+> > 
+> > No functional changes.
+> > 
+> > Signed-off-by: Borislav Petkov <bp@suse.de>
+> > ---
 > 
-> I don't think this particular race is possible. Both parties take page
-> lock before messing with deferred queue, but anytway:
-> 
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-I am confused, if the above race is not possible then what would be a
-real race? We really do not want to have a patch with a misleading
-changelog, do we?
+Yah, so I tried to do a test-merge with linux-next to see what surprises should
+I be prepared for and there's the first one:
+
+5e3d394fdd9e ("KVM: VMX: Fix the spelling of CPU_BASED_USE_TSC_OFFSETTING")
+
+which is already in Paolo's tree. Dropping it on my side.
+
 -- 
-Michal Hocko
-SUSE Labs
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
