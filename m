@@ -2,92 +2,215 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFE5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8470C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BAE207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC4E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578996999;
+	bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vr4f0Rox8D0rMKvQxYqCoxXJByCGRl31GNUR+91yCPKzcenrScMeRLccBpTW3uUhX
+	 okheVMesqWo8+VUm3O+lE4iQWsBxRSI7u38uAntWiuoWcapNqZHoJkC/lqLKDOr52j
+	 FyCvsU5awbZ0lmlCcQCf3tUx3K/nT/gORARTBUO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbgANKJF (ORCPT
+        id S1731012AbgANKQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44983 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbgANKJA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:00 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1irJ85-00031o-H6; Tue, 14 Jan 2020 11:08:57 +0100
-Message-ID: <d1f969346ad1758943e8f898244c69673f93f129.camel@pengutronix.de>
-Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix
- intel,global-reset schema
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Date:   Tue, 14 Jan 2020 11:08:57 +0100
-In-Reply-To: <20200113214515.3950-1-robh@kernel.org>
-References: <20200113214515.3950-1-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 14 Jan 2020 05:16:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729472AbgANKJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:02 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E5AE20678;
+        Tue, 14 Jan 2020 10:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578996542;
+        bh=BFxh46HFy9ySY4mUcKY0PvlwJXW3zNmemXO2wpQrlu4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0/Pn6Ba2keUVUEZohGeLMXc8UG4xNv5Mmki8J0VYOVQ/i1F5RpFns7BPzqEwhe/eD
+         kGzokRK67XI93JxnFJAN1zlWwTlk5tZsAs55DZOcvi9PU7dWBhhJjC/F7ojaRdFL1Q
+         3k5UO72wMagS/81SuambEq0iuhPZ/BWMLCPdUsM8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.19 40/46] HID: hiddev: fix mess in hiddev_open()
+Date:   Tue, 14 Jan 2020 11:01:57 +0100
+Message-Id: <20200114094348.101474810@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
+References: <20200114094339.608068818@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Mon, 2020-01-13 at 15:45 -0600, Rob Herring wrote:
-> The intel,rcu-gw binding example has an error:
-> 
-> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
->   reset-controller@e0000000: intel,global-reset: [[16, 30]] is too short
-> 
-> The error isn't really correct as the problem is in how the data is
-> encoded and the schema is not fixed up by the tooling correctly.
-> However, array properties should describe the elements in the array, so
-> lets do that which fixes the error in the process.
-> 
-> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the Intel Reset controller")
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Dilip Kota <eswara.kota@linux.intel.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> index 246dea8a2ec9..8ac437282659 100644
-> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> @@ -23,7 +23,11 @@ properties:
->      description: Global reset register offset and bit offset.
->      allOf:
->        - $ref: /schemas/types.yaml#/definitions/uint32-array
-> -      - maxItems: 2
-> +    items:
-> +      - description: Register offset
-> +      - description: Register bit offset
-> +        minimum: 0
-> +        maximum: 31
->  
->    "#reset-cells":
->      minimum: 2
+commit 18a1b06e5b91d47dc86c0a66a762646ea7c5d141 upstream.
 
-Thank you, applied to reset/next.
+The open method of hiddev handler fails to bring the device out of
+autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
+blocks that try to start the transport (call hid_hw_open()) with both
+being guarded by the "open" counter, so the 2nd block is never executed as
+the first block increments the counter so it is never at 0 when we check
+it for the second block.
 
-regards
-Philipp
+Additionally hiddev_open() was leaving counter incremented on errors,
+causing the device to never be reopened properly if there was ever an
+error.
+
+Let's fix all of this by factoring out code that creates client structure
+and powers up the device into a separate function that is being called
+from usbhid_open() with the "existancelock" being held.
+
+Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hid/usbhid/hiddev.c |   97 +++++++++++++++++++-------------------------
+ 1 file changed, 42 insertions(+), 55 deletions(-)
+
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -254,12 +254,51 @@ static int hiddev_release(struct inode *
+ 	return 0;
+ }
+ 
++static int __hiddev_open(struct hiddev *hiddev, struct file *file)
++{
++	struct hiddev_list *list;
++	int error;
++
++	lockdep_assert_held(&hiddev->existancelock);
++
++	list = vzalloc(sizeof(*list));
++	if (!list)
++		return -ENOMEM;
++
++	mutex_init(&list->thread_lock);
++	list->hiddev = hiddev;
++
++	if (!hiddev->open++) {
++		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
++		if (error < 0)
++			goto err_drop_count;
++
++		error = hid_hw_open(hiddev->hid);
++		if (error < 0)
++			goto err_normal_power;
++	}
++
++	spin_lock_irq(&hiddev->list_lock);
++	list_add_tail(&list->node, &hiddev->list);
++	spin_unlock_irq(&hiddev->list_lock);
++
++	file->private_data = list;
++
++	return 0;
++
++err_normal_power:
++	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
++err_drop_count:
++	hiddev->open--;
++	vfree(list);
++	return error;
++}
++
+ /*
+  * open file op
+  */
+ static int hiddev_open(struct inode *inode, struct file *file)
+ {
+-	struct hiddev_list *list;
+ 	struct usb_interface *intf;
+ 	struct hid_device *hid;
+ 	struct hiddev *hiddev;
+@@ -268,66 +307,14 @@ static int hiddev_open(struct inode *ino
+ 	intf = usbhid_find_interface(iminor(inode));
+ 	if (!intf)
+ 		return -ENODEV;
++
+ 	hid = usb_get_intfdata(intf);
+ 	hiddev = hid->hiddev;
+ 
+-	if (!(list = vzalloc(sizeof(struct hiddev_list))))
+-		return -ENOMEM;
+-	mutex_init(&list->thread_lock);
+-	list->hiddev = hiddev;
+-	file->private_data = list;
+-
+-	/*
+-	 * no need for locking because the USB major number
+-	 * is shared which usbcore guards against disconnect
+-	 */
+-	if (list->hiddev->exist) {
+-		if (!list->hiddev->open++) {
+-			res = hid_hw_open(hiddev->hid);
+-			if (res < 0)
+-				goto bail;
+-		}
+-	} else {
+-		res = -ENODEV;
+-		goto bail;
+-	}
+-
+-	spin_lock_irq(&list->hiddev->list_lock);
+-	list_add_tail(&list->node, &hiddev->list);
+-	spin_unlock_irq(&list->hiddev->list_lock);
+-
+ 	mutex_lock(&hiddev->existancelock);
+-	/*
+-	 * recheck exist with existance lock held to
+-	 * avoid opening a disconnected device
+-	 */
+-	if (!list->hiddev->exist) {
+-		res = -ENODEV;
+-		goto bail_unlock;
+-	}
+-	if (!list->hiddev->open++)
+-		if (list->hiddev->exist) {
+-			struct hid_device *hid = hiddev->hid;
+-			res = hid_hw_power(hid, PM_HINT_FULLON);
+-			if (res < 0)
+-				goto bail_unlock;
+-			res = hid_hw_open(hid);
+-			if (res < 0)
+-				goto bail_normal_power;
+-		}
+-	mutex_unlock(&hiddev->existancelock);
+-	return 0;
+-bail_normal_power:
+-	hid_hw_power(hid, PM_HINT_NORMAL);
+-bail_unlock:
++	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
+ 	mutex_unlock(&hiddev->existancelock);
+ 
+-	spin_lock_irq(&list->hiddev->list_lock);
+-	list_del(&list->node);
+-	spin_unlock_irq(&list->hiddev->list_lock);
+-bail:
+-	file->private_data = NULL;
+-	vfree(list);
+ 	return res;
+ }
+ 
+
 
