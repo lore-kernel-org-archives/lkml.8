@@ -2,205 +2,121 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D70C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB9BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D20524656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B42B24655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:29:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="R8IHlH5q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZATTa1i1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANQ2q (ORCPT
+        id S1728757AbgANQ3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:28:46 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:48592 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgANQ2p (ORCPT
+        Tue, 14 Jan 2020 11:29:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53941 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725904AbgANQ3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:28:45 -0500
-Received: from [46.226.52.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id 9F/47-19890-A3CED1E5; Tue, 14 Jan 2020 16:28:42 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRWlGSWpSXmKPExsWSoc9hrGv1Rjb
-  OYPdXRov5R86xWqyaupPF4v7Xo4wWl3fNYbO4sW4fu8WThWeYLD7susps0br3CLsDh8emVZ1s
-  Hneu7WHz6P9r4LHzewO7x+dNcgGsUayZeUn5FQmsGS///2QpWCRUMeveRuYGxsV8XYxcHIwCS
-  5klzqy9zALhHGORuLihiwnC2cwo8bv3JxuIwyJwglniYfNzMEdIoJ9J4uvlg8wQzl1Gicdfrg
-  NlODnYBCwkJp94AGaLCMRLHJ97FqyIWeAes8TS1c1MIAlhAReJSw+OM0EUuUpcX3gCqsFJYs2
-  6vcwgNouAKlDNYiCbg4NXIFZiyqNAiGWfGCU27+hjB6nhFLCVmPJ7ISuIzSggK/GlcTVYL7OA
-  uMStJ/PB5ksICEgs2XOeGcIWlXj5+B9UfarEyaYbjBBxHYmz159A2UoS8+YegbJlJS7N74ayf
-  SW27PjFAmFrSey7fw9qpoXEku5WFpA7JQRUJP4dqoQI50gcaNkMVaIm8fnpFShbRqL/7AxWkF
-  8kBNawSGxefodtAqP+LCRnQ9g6Egt2f2KDsLUlli18zQxi8woISpyc+YRlASPLKkaLpKLM9Iy
-  S3MTMHF1DAwNdQ0MjXUNLc10jQzO9xCrdJL3UUt3y1OISXUO9xPJiveLK3OScFL281JJNjMBk
-  llJw9MYOxt9f3uodYpTkYFIS5RXZIxsnxJeUn1KZkVicEV9UmpNafIhRhoNDSYK3/BVQTrAoN
-  T21Ii0zB5hYYdISHDxKIryir4HSvMUFibnFmekQqVOMuhwTXs5dxCzEkpeflyolzlsJMkMApC
-  ijNA9uBCzJX2KUlRLmZWRgYBDiKUgtys0sQZV/xSjOwagkzNsDMoUnM68EbtMroCOYgI6Yfwr
-  siJJEhJRUA1ONiU1pt7n8tyeOG+ssmoTmi9rp/ZA8zWEq4Ph15VXmsETTS6VXLD6Zy89dO2Ou
-  6p/ew19r36tWvdM0rrNs4RXJ7X6XziomePygYx9DAee9iSaXHnlM/yxRMY1ff7vpl/0WJ/d1O
-  puzL2nyT7nUJ/vMi0d9Wmqrke39Y8UV2f/WMOi4nvPIbYsQ3ZwptVzLIKjgYOCRfGGG5EUSXq
-  n5WzXszm9UmyT/M2zPXc8JojpPjrU1r91l87ufK9VZ/8vy7nvc5n1Rj3VuvhGslBRb3tX18rH
-  6Tta3N2Ykputq/FC5yBF2/GZunzND93rV1as2e1hrFK7kj3la+G+K3dzpyx6qWfyZu2xCzNTO
-  sqwVSizFGYmGWsxFxYkAvpYdrm0EAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-19.tower-292.messagelabs.com!1579019321!428579!1
-X-Originating-IP: [104.47.8.51]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 17206 invoked from network); 14 Jan 2020 16:28:41 -0000
-Received: from mail-am5eur03lp2051.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.51)
-  by server-19.tower-292.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Jan 2020 16:28:41 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gndyR8QQzCU7RLVdPi30QMHtx0JrWsW1RmBbVZjeSMSqf4Ft+H4tnDAZC8StyP5nS7eN4sBFhfazGeTE+LCeu07NNgMthTBx6STJOHOn696xi5z8RmNbCVb1AY7NyR7yq+vHGWbLIfc5hc5pAfDDA94mmuEYDd+e2RYvwogbmA8XG1G1yuDH9byfsFC8cJbvabcx/45QZ5Hq3LxfRF8HsmJ+Re3lJT1OlBkNR2hKQfgS3RIbbqZZ5yRaTELTySYnYnnQ9g5rLEbTk2saNPuVcrMFxmDR1zpZGKIEF9f6Ykcj/eyistEthR4qI36jDs65YuMPCcGrhTLQL/rCt/R8aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
- b=L0GMxE3t9alfS96F5lOkKWgUpuBQgKJp7BzjKqfJgE72OxJDqRsnwYaN3CW18A1jDZNw6F1UW3kB2Veo6E4N3SmxHeiGCpkj2m9vsiSTkhnIVwJmfUTuRIH8IOrUIFNxx1vPi0KhFHIXonrL50BZVybF61GlNZZFK75AN7SmqkVQ780cMaP9VMx4RPwT5g7POQNaQUT5lG0jbz6U4Xki5k1glL/ZlA4kG0F+SrFy8BircLy6s/eXSx8VAhQFxp5oiVR2y5u3wsB13M8ZVzz7cp8Y+Xgtc1M3UMEJ+HABzTirUgdyYVvt+cg9Mk2gq1nva1Ayu50eQFli8H7gwxj/0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
- b=R8IHlH5qGfBz3temhV0ALz87hYnhcxA5uFYtkE2celxXe9KyLCKyfyTheWHK7D/rtoXON3EhXDSZHKizEQkPV3N+Kum7Hc/915WJeRWx2EKrNQILsU1OcRS9jIGbpcTaSvBZrduBSkheuyaHgjKNxtLVWM5ases4omgqfTuY12A=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM (20.179.2.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 16:28:40 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 16:28:40 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     Support Opensource <Support.Opensource@diasemi.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Thread-Topic: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Thread-Index: AQHVxgoH+VEwCd0goUCdzD0vjKNBfafqYIMggAABdYCAAACmIA==
-Date:   Tue, 14 Jan 2020 16:28:40 +0000
-Message-ID: <AM6PR10MB22632546AC9A4466B642BEFD80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-2-m.felsch@pengutronix.de>
- <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200114162359.weoirknje6yhcmds@pengutronix.de>
-In-Reply-To: <20200114162359.weoirknje6yhcmds@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
-x-ms-traffictypediagnostic: AM6PR10MB2726:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2726222D05CF0690C4049704A7340@AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(189003)(199004)(64756008)(966005)(478600001)(2906002)(4326008)(66556008)(66476007)(66446008)(66946007)(316002)(110136005)(54906003)(76116006)(55236004)(52536014)(26005)(8936002)(6506007)(53546011)(5660300002)(81156014)(8676002)(86362001)(81166006)(186003)(55016002)(9686003)(71200400001)(7696005)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2726;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UY0ETwwWB1NC4jQJjjIyRfZgLyPA0HocCW7OweiydhtyjTfulqfcb6Gii7m9AGLpur6kaPBFzdeuwN6ZFDolbywaB6FSkyOzJuA6mh/OPe2s+J3oduf2O9k1JQn1itn+IWTiyK+IMLfRsuVKEAcLynyiLdjH5KQkBEJku/+OJxAwXOO0Q7OtSR3n11sWbOOiK8JMecT4PXCnbm3HO679+TvehW+sW057MarOt3imA+6cwnALlRXfT4ZIEAEcSZ+/ahOFiNFa5de91/AO15shTLd7T1qsmcb/dNbqBQucQkxpWg/eMXFbafmCw/KHVGAHARfs6oI0QC+W8kZ4cac+Csor21+FlEbskNUj7JOSIeeQ5GIwG1cnaX8modneSBT9fDScmAZQTIHl6/qqDKybKO8Z++25cx7AxXkjRBB0oCZbIi/s39FFIhWfQ0xkdh9tOho9tFwibhOVvJNznRMDOsWLPuzjPgpEISB0AAkh0qDB3otgvVndRQwE/KSDPAs8A1P61u37IuY5ED5Jn0BeRQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jan 2020 11:29:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579019343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IPYT5vQh2Yd4w7szH352o1kr3SakRWqAyBbk7sSmaIs=;
+        b=ZATTa1i1ovuqN7g7acAoF8nX1tK2R9PgT10vbIVVEEcGyhG/+ouKzm2R/5O9QZKsNDlq6b
+        nzqxlLQx9p+cEk2bvt5uV9/ZxEqOrW9VhvPPhNUkiP+We7V+dAnHpB9VSd3VUlIOwGnjaf
+        +BNEZBS7xjOnHGbP2i4Pp5oFQKyFalM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-jZQy2EB5PPidwbylHzvu8Q-1; Tue, 14 Jan 2020 11:29:02 -0500
+X-MC-Unique: jZQy2EB5PPidwbylHzvu8Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63A771143798;
+        Tue, 14 Jan 2020 16:29:00 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-20.phx2.redhat.com [10.3.112.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C395550A8F;
+        Tue, 14 Jan 2020 16:28:59 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 78A26119; Tue, 14 Jan 2020 13:28:55 -0300 (BRT)
+Date:   Tue, 14 Jan 2020 13:28:55 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andres Freund <andres@anarazel.de>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] perf c2c: Fix sorting.
+Message-ID: <20200114162855.GD3115@redhat.com>
+References: <20200109043030.233746-1-andres@anarazel.de>
+ <20200109084822.GD52936@krava>
+ <20200109170041.wgvxcci3mkjh4uee@alap3.anarazel.de>
+ <20200109214611.GC82989@krava>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:28:40.7757
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xrlcAF6X62ThIJJxqBw3QYFfX5s1g24k7hBeL1xqlEqPTAq6iNRJY+NV2Gm49gsomItKfz42l63GrwV/ET5k3CKQcNHmyuqV1InPQcYzhdI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2726
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109214611.GC82989@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14 January 2020 16:24, Marco Felsch wrote:
+Em Thu, Jan 09, 2020 at 10:46:11PM +0100, Jiri Olsa escreveu:
+> On Thu, Jan 09, 2020 at 09:00:41AM -0800, Andres Freund wrote:
+> 
+> SNIP
+> 
+> > > >  tools/perf/builtin-c2c.c | 10 ++++++----
+> > > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > > > index e69f44941aad..f2e9d2b1b913 100644
+> > > > --- a/tools/perf/builtin-c2c.c
+> > > > +++ b/tools/perf/builtin-c2c.c
+> > > > @@ -595,8 +595,8 @@ tot_hitm_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> > > >  {
+> > > >  	struct c2c_hist_entry *c2c_left;
+> > > >  	struct c2c_hist_entry *c2c_right;
+> > > > -	unsigned int tot_hitm_left;
+> > > > -	unsigned int tot_hitm_right;
+> > > > +	uint64_t tot_hitm_left;
+> > > > +	uint64_t tot_hitm_right;
+> > > 
+> > > that change looks right, but I can't see how that could
+> > > happened because of change in Fixes: tag
+> > > 
+> > > was the return statement of this function:
+> > > 
+> > >         return tot_hitm_left - tot_hitm_right;
+> > > 
+> > > considered to be 'unsigned int' and then converted to int64_t,
+> > > which would treat negative 'unsigned int' as big positive 'int64_t'?
+> > 
+> > Correct. So e.g. when comparing 1 and 2 tot_hitm, we'd get (int64_t)
+> > UINT_MAX as a result, which is obviously wrong. However, due to
+> > hist_entry__sort() returning int at the time, this was masked, as the
+> > int64_t was cast to int. Thereby again yielding a negative number for
+> > the comparisons of hist_entry__sort()'s result.  After
+> > hist_entry__sort() was fixed however, there never could be negative
+> > return values (but 0's are possible) of hist_entry__sort() for c2c.
+> 
+> I see.. ok
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-> On 20-01-14 16:19, Adam Thomson wrote:
-> > On 08 January 2020 09:57, Marco Felsch wrote:
-> >
-> > > The watchdog driver compatible is "dlg,da9062-watchdog" and not
-> > > "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node a=
-nd
-> > > fwnode. As result the watchdog driver can't parse the devicetree.
-> > >
-> >
-> > I do agree there's a mismatch between the documentation and the MFD cod=
-e.
-> > So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9=
-062-wdt'
-> > hence the issue? Are there any existing users who are using 'dlg,da9062=
--wdt' in
-> > their DT instead?
->=20
-> Yes the upstream available DT I'm currently using is:
-> arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi.
->=20
-> I grep the code and found no _upstream_ user of 'dlg,da9062-wdt' also
-> using this compatible would be a missmatch with the binding
-> documentation. So those DT's assuming a wrong binding. Therefore I fixed
-> it here and not within the watchdog driver.
+Thanks, applied.
 
-Ok, no problem. Just wanted to be clear. In which case:
+- Arnaldo
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
->=20
-> Regards,
->   Marco
->=20
-> > > Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > >  drivers/mfd/da9062-core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> > > index e69626867c26..9143de7b77b8 100644
-> > > --- a/drivers/mfd/da9062-core.c
-> > > +++ b/drivers/mfd/da9062-core.c
-> > > @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] =3D {
-> > >  		.name		=3D "da9062-watchdog",
-> > >  		.num_resources	=3D ARRAY_SIZE(da9062_wdt_resources),
-> > >  		.resources	=3D da9062_wdt_resources,
-> > > -		.of_compatible  =3D "dlg,da9062-wdt",
-> > > +		.of_compatible  =3D "dlg,da9062-watchdog",
-> > >  	},
-> > >  	{
-> > >  		.name		=3D "da9062-thermal",
-> > > --
-> > > 2.20.1
-> >
-> >
->=20
-> --
-> Pengutronix e.K.                           |                             =
-|
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  =
-|
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    =
-|
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
-|
