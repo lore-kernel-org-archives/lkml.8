@@ -2,129 +2,80 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C686FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FE6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58D024658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265FF24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="dPsIjRXH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OVJUbcVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANSnz (ORCPT
+        id S1728721AbgANSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:43:55 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41157 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgANSnz (ORCPT
+        Tue, 14 Jan 2020 13:47:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55594 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANSrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:43:55 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x8so6786963pgk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:43:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EDQt/cQPOA137MrPt5eSVBozZBl/+1BwFFxlqLBKbOc=;
-        b=dPsIjRXHMSHLSJgKJS6IlOKG45mt4OickHQCbNPv2Y1az5i+Fjoa4XnxpannAjAkYW
-         u3iX4BtqDbExD+jyJgMJZtLHTZJO0pEhs9jcOKFy0Nyxk1u4WdkB8/gyXT58mE2ggi8D
-         GCetuAvTy3lEWf0Untzov4pQKK740ZJwW+7LkknNJMG74pEludMT7DGpv2Em8WqVMxx6
-         7BlgJKaPxg3EBeNXsQIpV4/NVGhDk7cGGaX3BJb/qfh6B2bYknfH75XF0c7L9rF8Wonn
-         N0lW9/A8H+VHpCCYStdaEKz79PMeqztbdDLG1txXjSeteK3wiFNNEx2qTgG9f23XLk45
-         ZK2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDQt/cQPOA137MrPt5eSVBozZBl/+1BwFFxlqLBKbOc=;
-        b=NbP7E6vMLJpD0GWkdDhCgwzBid/wDH3pfsCNzu3+dPXVMiYkEm0SPG0BdMSFzQ9Fa5
-         g2fvXcqDNp23ig7IWX0XPYROb06DVsNShQ7Q5s+g0XfWXnyd7Ci+lphTN/rwzZxmOFOY
-         q6+ufZQLAsF/waYZVTVZtDp3pBERMRdsM9kiE5k8VEV7YS91wp8NPePByhYKVpvU57x8
-         9JmPzMXkloBs4PiWP/ef0hkMUUfzzCyqTppdKHlILN/6FL1Dxcd5IqbJMAcwsl3ZdveU
-         ZUgC0pqebxfJG3uDVbQDOOpjicpudlqGV/6D4fEUgGLxXVm7EXqoROpF7qTjdc/aMkwd
-         JVzA==
-X-Gm-Message-State: APjAAAVqZw1y1XtEOmZAMViob310rlBhBpgsl/ElYT48Oxic0pxIgA2l
-        hKSlTStlB3KCCSkeMF7LfApLvw==
-X-Google-Smtp-Source: APXvYqzWPbLeu1M7MD0gjc1MsfdtZch9eGBK94JXAMePruRkq0w/DODcH78ZkVC/dqzIm/evPe3WsA==
-X-Received: by 2002:a63:181a:: with SMTP id y26mr29235053pgl.423.1579027434446;
-        Tue, 14 Jan 2020 10:43:54 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id w20sm18920336pfi.86.2020.01.14.10.43.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 10:43:53 -0800 (PST)
-Subject: Re: [PATCHv2-next 3/3] serial_core: Remove unused member in uart_port
-To:     Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-References: <20200114171912.261787-1-dima@arista.com>
- <20200114171912.261787-4-dima@arista.com>
- <e1b3cccb0814ba4b0c99592715776ed48f343795.camel@perches.com>
- <8f11e2fa-495d-fe25-f5e4-52c9580240d7@arista.com>
- <20200114175647.GA2055173@kroah.com>
- <805e5dbb1f28e8f8b8f2599adb56294d3225c2d0.camel@perches.com>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <4290527b-0d67-1b92-3820-2fd519099e6d@arista.com>
-Date:   Tue, 14 Jan 2020 18:43:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 14 Jan 2020 13:47:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4Puk4Pgh+JhY8rl1OTT+GzFNEp0YuWY6wSf3flBS7Ow=; b=OVJUbcVFDftKB5Eo3F2KjOn/c
+        eTVxMFe3bAKYYiMsJZC4Yu+o8V1cEc3oTyou++4dL3yqQzkTr0fqY3uCgydpp0xhnS34GDKpYPPdB
+        J2TZMMYEWcn1XQR2Xjrn/UeOPjrNVLlBokSa22SxrQPQGeWNXW8bgiueP94uPIwXcBtn2mlfl4zvU
+        psdND3rkQqFxgSup4Uphqkehw+zeDMkzfpEJytWJSSPwy5ehu26ZS06+63HhzlDc29Y+1NAjkd5jC
+        BG+XXj4w257y2aYtcuSsXEQ3VYr2FTHDQ/5BwAVvthAg0HM+L0ryMcn36U3a37N2tHlEFX6ObooKf
+        Bw4p2nuKA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irRDX-0006t8-Mm; Tue, 14 Jan 2020 18:47:07 +0000
+Date:   Tue, 14 Jan 2020 10:47:07 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200114184707.GA10467@bombadil.infradead.org>
+References: <20200114161225.309792-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <805e5dbb1f28e8f8b8f2599adb56294d3225c2d0.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114161225.309792-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 6:32 PM, Joe Perches wrote:
-> On Tue, 2020-01-14 at 18:56 +0100, Greg Kroah-Hartman wrote:
->> On Tue, Jan 14, 2020 at 05:47:33PM +0000, Dmitry Safonov wrote:
->>> On 1/14/20 5:36 PM, Joe Perches wrote:
->>>> On Tue, 2020-01-14 at 17:19 +0000, Dmitry Safonov wrote:
->>>>> It should remove the align-padding before @name.
->>>> []
->>>>> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
->>>> []
->>>>> @@ -247,7 +247,6 @@ struct uart_port {
->>>>>  
->>>>>  	unsigned char		hub6;			/* this should be in the 8250 driver */
->>>>>  	unsigned char		suspended;
->>>>> -	unsigned char		unused;
->>>>
->>>> I suggest this not be applied as this is just to let
->>>> readers know that there is an unused 1 byte alignment
->>>> hole here that could be used for something else.
->>>
->>> Heh, 2/3 adds another `unsigned char`, so the neighbours look like:
->>>
->>> : unsigned long sysrq;		/* sysrq timeout */
->>> : unsigned int	sysrq_ch;	/* char for sysrq */
->>> : unsigned char	has_sysrq;
->>> : unsigned char	sysrq_seq;	/* index in sysrq_toggle_seq */
->>> :
->>> : unsigned char	hub6;		/* this should be in the 8250 driver */
->>> : unsigned char	suspended;
->>> : unsigned char	unused;
->>> : const char	*name;		/* port name */
->>>
->>> So the hole became 4 bytes on 64-bit.
-> 
-> Ah, perhaps the commit message could state that
-> there is no longer an alignment hole instead.
+On Tue, Jan 14, 2020 at 05:12:13PM +0100, Christoph Hellwig wrote:
+> Second I/O
+> completions often come from interrupt context, which means the re-acquire
+> is recorded as from irq context, leading to warnings about incorrect
+> contexts.  I wonder if we could just have a bit in lockdep that says
+> returning to userspace is ok for this particular lock?  That would also
+> clean up the fsfreeze situation a lot.
 
-Fair enough, slowly improving in my commit message skills :-)
+It would be helpful if we could also use the same lockdep logic
+for PageLocked.  Again, it's a case where returning to userspace with
+PageLock held is fine, because we're expecting an interrupt to come in
+and drop the lock for us.
 
-Thanks,
-          Dmitry
+Perhaps the right answer is, from lockdep's point of view, to mark the
+lock as being released at the point where we submit the I/O.  Then
+in the completion path release the lock without telling lockdep we
+released it.
+
+That would catch cases where we inadvertently returned to userspace
+without submitting the I/O, for example.
