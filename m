@@ -2,119 +2,252 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C16C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2871C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFF724658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F9EA24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTO8GWrT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H8aaMpsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgANVC1 (ORCPT
+        id S1728900AbgANVCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:02:27 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43540 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANVC1 (ORCPT
+        Tue, 14 Jan 2020 16:02:35 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45878 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANVCf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:02:27 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 9so10948170lfq.10;
-        Tue, 14 Jan 2020 13:02:25 -0800 (PST)
+        Tue, 14 Jan 2020 16:02:35 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x1so13540606qkl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 13:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SmAx2f7k3Ij3neL/MyfZDa8+WsebXDA2adTqPGqEPIM=;
-        b=MTO8GWrT4GitWr4OxLHGYRHo+3id3P63o270W53od3VO//wseGrpecPk/IuPo6lLT4
-         vJSp+m2Bci9gw/06PdhSUXvclMwd/u86UanjNjI1uTM6nNqq+lekDNlm3OyHPqC36e5c
-         hQ3U94tLG6OyudadRdBNF3PfOnZUHMESc9fVDHMtfZGbRBpB28MCwpHXUckG+d98Wd3M
-         VQ+6cbX2IQFRwbUm51dpgXFeYhp2UNE1aUrGiGyGj/RFvt6Bl6zgBmhUdF07jPA6Jzm/
-         aF04nFsq/ZxvYrq1+YQKoQtKSqHwd6RKm70r0wz5Zepe9iWpc2PwBI8FeGA80SJre8rC
-         4MeA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pHjVpCObkuuSiH3NFxvbDr510hiG3gp34w0TWxngRqM=;
+        b=H8aaMpsXwTyJtfAF2XxwLoDVguXNNSc6FPcI9JDgIRp+RSmsjUSpoDqmftnW2qJn8h
+         ioj+eoGQzk4iUyg+C3Y7AOt4h4nRlOzUfP0XNNjyFW36tWiSeGKrWia4Q+4fFUI9zxII
+         b1oA3wm/4OX8k5l41BBSvIWiae129IntY0Ifk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SmAx2f7k3Ij3neL/MyfZDa8+WsebXDA2adTqPGqEPIM=;
-        b=ASqU1tazX1wBoVoXBYUWn0gbRVuPpK0rhBi0hMrOvYXoqP0fe8/kmLAVa/x+nZb4KL
-         4iZH/gfbQ7upy0/hfOMB1n/1otJepkphQiuwcRBro50fltD0yhvvvWVqJnEvi+3ey/ve
-         VKjcQ0HiCnUFL6puieXeAZNZlhKuqgB/HBehRWOzk165MqBlszlBKmrpvePnaviFlvG2
-         QxcPBmZ0peGruoY2lYnOj9CLwc6dXoen3b52PYvNopcBeJwrOCUJqwWcgca1hEj25P8y
-         /pmeCtuLWdZBK6FqSsP4Ak6tw/eoqx3nvN0m4aO7tygG2wdu/6paaY05QZ4VqE9TUmoV
-         fAHw==
-X-Gm-Message-State: APjAAAUa9DJkjdEz5U92XXgHsQvFl5lxYGQhznNGdiSIzgF+/24yxMxn
-        ydBCOh4k5A13Kc9OykK/QmvG5jb8
-X-Google-Smtp-Source: APXvYqzVT22BVrFVVB1quzA9X/JLpkt6ig0KghbFMTU+n1gTpGc+KGQsfTCwAn8TL0uwFzXXqU/tGQ==
-X-Received: by 2002:a19:491a:: with SMTP id w26mr2849845lfa.98.1579035744481;
-        Tue, 14 Jan 2020 13:02:24 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id l7sm7698307lfc.80.2020.01.14.13.02.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 13:02:23 -0800 (PST)
-Subject: Re: [PATCH v4 02/14] dmaengine: tegra-apb: Implement synchronization
- callback
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-3-digetx@gmail.com>
- <c225399c-f032-8001-e67b-b807dcda748c@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <627f996c-1487-1b9a-e953-f5737f3ad32a@gmail.com>
-Date:   Wed, 15 Jan 2020 00:02:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pHjVpCObkuuSiH3NFxvbDr510hiG3gp34w0TWxngRqM=;
+        b=q18b0Cgd+dK6RTKxLh7QrVBGv4KOMDUJm121Totk0XqSiwnjR002bUiWbTwczTNPWe
+         D6Q2dww6E6limN6GuZO4h98Y4TVBpUWGORcpLbKKphUOPNlyfY+43N6rXpNT2mT5LF21
+         O3Td7UWan+miBSCSZvrRsJQHnZQyz6bHZCVd8p7QibNQbZDp3aVuqVVvpF7WQCumaJkx
+         ehmvxjoK9BCspYvCJxoXkkc0vtqXfUHL8y6ZUdwWToywr3Ec30bpKz/9+UOy2f8ae+sz
+         H0zVDxgtu/RrrVGLU5o+ca7La235dE0UWDtF1JZPlaLkuMpRAHI9DjuVUwqtSRpMV0uX
+         ZoOA==
+X-Gm-Message-State: APjAAAWZgFHujXaPsE8RlAumkc2H+4F0kKxS8JDRmj1PxYEKNP3qxy+2
+        cE834wxt+SgEWwNrQQlWpVwHsVYDxup5uvc9wwmGUA==
+X-Google-Smtp-Source: APXvYqxIERByJU81GnxhBLPNSWBVBVmzomBQHzwjnYGX65Uv/Qxt1w8f1rn1WjdtdaSXSTLuXjEPX0yfZHMmt2i2BSc=
+X-Received: by 2002:a37:9186:: with SMTP id t128mr22545558qkd.180.1579035753628;
+ Tue, 14 Jan 2020 13:02:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <c225399c-f032-8001-e67b-b807dcda748c@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200114031056.44502-1-pmalani@chromium.org> <b39666db-38e4-c131-bfbb-077a53a8ef69@collabora.com>
+ <CACeCKacSiMQOA63c81deGHOvKZb=MEFQqjK=iQRmmot8GrjS+A@mail.gmail.com> <4ddf93f1-fe0c-763c-25d6-144bdce5cd4c@collabora.com>
+In-Reply-To: <4ddf93f1-fe0c-763c-25d6-144bdce5cd4c@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Tue, 14 Jan 2020 13:02:22 -0800
+Message-ID: <CACeCKafFD94EaiCPkJOosQzfRaApsMnh3ciZyUyNCfczmTxGiw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] platform: chrome: Add cros-usbpd-notify driver
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jon Flatley <jflat@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 18:15, Jon Hunter пишет:
-> 
-> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->> The ISR tasklet could be kept scheduled after DMA transfer termination,
->> let's add synchronization callback which blocks until tasklet is finished.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index 319f31d27014..664e9c5df3ba 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -798,6 +798,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>  	return 0;
->>  }
->>  
->> +static void tegra_dma_synchronize(struct dma_chan *dc)
->> +{
->> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->> +
->> +	tasklet_kill(&tdc->tasklet);
->> +}
->> +
-> 
-> Wouldn't there need to be some clean-up here? If the tasklet is
-> scheduled, seems that there would be some other house-keeping that needs
-> to be done after killing it.
-
-I'm not seeing anything to clean-up, could you please clarify?
+On Tue, Jan 14, 2020 at 12:29 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+>
+>
+> On 14/1/20 20:23, Prashant Malani wrote:
+> > On Tue, Jan 14, 2020 at 9:07 AM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> >>
+> >> Hi Prashant,
+> >>
+> >> On 14/1/20 4:10, Prashant Malani wrote:
+> >>> From: Jon Flatley <jflat@chromium.org>
+> >>> +};
+> >>> +MODULE_DEVICE_TABLE(acpi, cros_usbpd_acpi_device_ids);
+> >> Ops, there is a build error here, please make sure to build the driver=
+ before
+> >> sending.
+> > Hmm. That's odd, I did check  using arm64 defconfig. My apologies.
+> > Could you kindly share your build commands so that I can use this
+> > going forward?
+> >>
+> >> s/cros_usbpd_acpi_device_ids/cros_usbpd_notify_acpi_device_ids/
+> >>
+>
+> one problem is the above^
+>
+> drivers/platform/chrome/cros_usbpd_notify.c:67:27: error:
+> =E2=80=98cros_usbpd_acpi_device_ids=E2=80=99 undeclared here (not in a fu=
+nction); did you mean
+> =E2=80=98cros_usbpd_notify_acpi_device_ids=E2=80=99?
+>
+> The others I didn't dig in. My build commands are the common.
+>
+> make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- defconfig
+> # Enable the new cros_usbpd_notify driver
+> make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -j4
+This is helpful. Thanks Enric!
+>
+> Cheers,
+>  Enric
+>
+> >> Apart from this I'm getting build errors with my defconfig which has C=
+ONFIG_ACPI
+> >> and CONFIG_OF enabled.
+> >>
+> >> Another problem that I have with this driver is that actually there is=
+ no user
+> >> for it. I'd really prefer have this included on a series that also int=
+roduces
+> >> the user of this notifier. If you are only testing the ACPI case you c=
+an focus
+> >> first on this use case and we add later the OF case (maybe is an easy =
+way to
+> >> proceed).
+> > I'm testing with an arm64 device too locally. I will try to
+> > incorporate the new change which updates cros_usbpd-charger to use the
+> > notifier mechanism. I think we can try for the OF case simultaneously
+> > (it is probably just the build errors I need to check for)
+> >
+> > Thanks again!
+> >>
+> >> Thanks,
+> >>  Enric
+> >>
+> >>> +
+> >>> +static struct acpi_driver cros_usbpd_notify_acpi_driver =3D {
+> >>> +     .name =3D DRV_NAME,
+> >>> +     .class =3D DRV_NAME,
+> >>> +     .ids =3D cros_usbpd_notify_acpi_device_ids,
+> >>> +     .ops =3D {
+> >>> +             .add =3D cros_usbpd_notify_add_acpi,
+> >>> +             .notify =3D cros_usbpd_notify_acpi,
+> >>> +     },
+> >>> +};
+> >>> +module_acpi_driver(cros_usbpd_notify_acpi_driver);
+> >>> +
+> >>> +#endif /* CONFIG_ACPI */
+> >>> +
+> >>> +#ifdef CONFIG_OF
+> >>> +
+> >>> +static int cros_usbpd_notify_plat(struct notifier_block *nb,
+> >>> +             unsigned long queued_during_suspend, void *data)
+> >>> +{
+> >>> +     struct cros_ec_device *ec_dev =3D (struct cros_ec_device *)data=
+;
+> >>> +     u32 host_event =3D cros_ec_get_host_event(ec_dev);
+> >>> +
+> >>> +     if (!host_event)
+> >>> +             return NOTIFY_BAD;
+> >>> +
+> >>> +     if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+> >>> +             blocking_notifier_call_chain(&cros_usbpd_notifier_list,
+> >>> +                             host_event, NULL);
+> >>> +             return NOTIFY_OK;
+> >>> +     }
+> >>> +     return NOTIFY_DONE;
+> >>> +}
+> >>> +
+> >>> +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev=
+)
+> >>> +{
+> >>> +     struct device *dev =3D &pdev->dev;
+> >>> +     struct cros_ec_dev *ecdev =3D dev_get_drvdata(dev->parent);
+> >>> +     struct notifier_block *nb;
+> >>> +     int ret;
+> >>> +
+> >>> +     nb =3D devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
+> >>> +     if (!nb)
+> >>> +             return -ENOMEM;
+> >>> +
+> >>> +     nb->notifier_call =3D cros_usbpd_notify_plat;
+> >>> +     dev_set_drvdata(dev, nb);
+> >>> +
+> >>> +     ret =3D blocking_notifier_chain_register(&ecdev->ec_dev->event_=
+notifier,
+> >>> +                                             nb);
+> >>> +     if (ret < 0) {
+> >>> +             dev_err(dev, "Failed to register notifier\n");
+> >>> +             return ret;
+> >>> +     }
+> >>> +
+> >>> +     return 0;
+> >>> +}
+> >>> +
+> >>> +static int cros_usbpd_notify_remove_plat(struct platform_device *pde=
+v)
+> >>> +{
+> >>> +     struct device *dev =3D &pdev->dev;
+> >>> +     struct cros_ec_dev *ecdev =3D dev_get_drvdata(dev->parent);
+> >>> +     struct notifier_block *nb =3D
+> >>> +             (struct notifier_block *)dev_get_drvdata(dev);
+> >>> +
+> >>> +     blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifi=
+er,
+> >>> +                     nb);
+> >>> +
+> >>> +     return 0;
+> >>> +}
+> >>> +
+> >>> +static struct platform_driver cros_usbpd_notify_plat_driver =3D {
+> >>> +     .driver =3D {
+> >>> +             .name =3D DRV_NAME,
+> >>> +     },
+> >>> +     .probe =3D cros_usbpd_notify_probe_plat,
+> >>> +     .remove =3D cros_usbpd_notify_remove_plat,
+> >>> +};
+> >>> +module_platform_driver(cros_usbpd_notify_plat_driver);
+> >>> +
+> >>> +#endif /* CONFIG_OF */
+> >>> +
+> >>> +MODULE_LICENSE("GPL");
+> >>> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
+> >>> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
+> >>> +MODULE_ALIAS("platform:" DRV_NAME);
+> >>> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/includ=
+e/linux/platform_data/cros_usbpd_notify.h
+> >>> new file mode 100644
+> >>> index 0000000000000..4f2791722b6d3
+> >>> --- /dev/null
+> >>> +++ b/include/linux/platform_data/cros_usbpd_notify.h
+> >>> @@ -0,0 +1,17 @@
+> >>> +// SPDX-License-Identifier: GPL-2.0-only
+> >>> +/*
+> >>> + * ChromeOS EC Power Delivery Notifier Driver
+> >>> + *
+> >>> + * Copyright 2020 Google LLC
+> >>> + */
+> >>> +
+> >>> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+> >>> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
+> >>> +
+> >>> +#include <linux/notifier.h>
+> >>> +
+> >>> +int cros_usbpd_register_notify(struct notifier_block *nb);
+> >>> +
+> >>> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
+> >>> +
+> >>> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+> >>>
