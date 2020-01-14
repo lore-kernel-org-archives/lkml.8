@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14408C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF5FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEDC24681
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C4324684
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996295;
-	bh=X+fsnytZ/AYfGoQ9SNEu2h5oaol5j7XqnNAnJHFH/48=;
+	s=default; t=1578996299;
+	bh=fPvff8lqbwF7B9D9FjXp9TM/QjGIZzgMn+/M5kWPjTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fp3aKbyOh7i4dQi+m3R3MERqum5piRPoTNpy9Yn+ABjhWmycO3R4MNzusgJ/TJHcr
-	 f/M2g73E3grNYRuTK9029qRM4oWWtUm2GYLbDBaQHbyBHaC9RVPxqIr/+Tbl/HqCfp
-	 w5DqBGSnbWwnWl7cLkDvPE4WfpElOoCvSmNBuIWg=
+	b=Nz/GsW0NJNdAIs1jZ/hRMsilpmvydpz1YIxvvr2rV3dKlikRf2zc6Vmf0G55qv/EQ
+	 TtNs/jgU4D6TbhaCbK/7Cz7li9VBNQ5J5+t1I/RYM9CC8KkRL/fAEh0ryh4Pp7dzCU
+	 GT8wl5+lAoBl5bDiAza9w+mat2Ck14MDWzrs/HiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgANKEz (ORCPT
+        id S1729996AbgANKE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60700 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgANKEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:50 -0500
+        id S1729961AbgANKEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36F3024685;
-        Tue, 14 Jan 2020 10:04:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0268824684;
+        Tue, 14 Jan 2020 10:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996289;
-        bh=X+fsnytZ/AYfGoQ9SNEu2h5oaol5j7XqnNAnJHFH/48=;
+        s=default; t=1578996292;
+        bh=fPvff8lqbwF7B9D9FjXp9TM/QjGIZzgMn+/M5kWPjTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqFJxMuMFLljDR7YRkL8m4wkZYGuxYea/ID/UICBdSnGsCCniS+UHMokTOwj5z3XY
-         jGL8ww+mcwctwaegE3ey9YEBE9DvCOFP4eQ+Z4++FBUnDBK5BkJp+W8eNwraMrg17a
-         7sbAGhvr8nn9/4LHt3YPYhHxYSCoUZisei7DF/A8=
+        b=Npc1d73tRf/vjX6NYInOYidFIQIKJvYIlZ5s+LhYxA4QNx6sdbMSOCoFYWaEJXWEb
+         L8sLL0mae0/7UgZJwKSBEixeX2UgctCNzv1WCuXqBd2GfkipAmNGUSmVYE27XpWVcz
+         SrqeSlQUCFSGZnJGECPKpaIWOoxBbbL2XiW66x54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 37/78] gpiolib: acpi: Turn dmi_system_id table into a generic quirk table
-Date:   Tue, 14 Jan 2020 11:01:11 +0100
-Message-Id: <20200114094358.583461980@linuxfoundation.org>
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.4 46/78] usb: musb: fix idling for suspend after disconnect interrupt
+Date:   Tue, 14 Jan 2020 11:01:20 +0100
+Message-Id: <20200114094359.717460015@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -62,82 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 1ad1b54099c231aed8f6f257065c1b322583f264 upstream.
+commit 5fbf7a2534703fd71159d3d71504b0ad01b43394 upstream.
 
-Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
-into a generic quirk table, storing the quirks in the driver_data ptr.
+When disconnected as USB B-device, suspend interrupt should come before
+diconnect interrupt, because the DP/DM pins are shorter than the
+VBUS/GND pins on the USB connectors. But we sometimes get a suspend
+interrupt after disconnect interrupt. In that case we have devctl set to
+99 with VBUS still valid and musb_pm_runtime_check_session() wrongly
+thinks we have an active session. We have no other interrupts after
+disconnect coming in this case at least with the omap2430 glue.
 
-This is a preparation patch for adding other types of (DMI based) quirks.
+Let's fix the issue by checking the interrupt status again with
+delayed work for the devctl 99 case. In the suspend after disconnect
+case the devctl session bit has cleared by then and musb can idle.
+For a typical USB B-device connect case we just continue with normal
+interrupts.
 
+Fixes: 467d5c980709 ("usb: musb: Implement session bit based runtime PM for musb-core")
+
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
 Cc: stable@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200105160357.97154-2-hdegoede@redhat.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200107152625.857-2-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/usb/musb/musb_core.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -21,6 +21,8 @@
- #include "gpiolib.h"
- #include "gpiolib-acpi.h"
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1840,6 +1840,9 @@ ATTRIBUTE_GROUPS(musb);
+ #define MUSB_QUIRK_B_INVALID_VBUS_91	(MUSB_DEVCTL_BDEVICE | \
+ 					 (2 << MUSB_DEVCTL_VBUS_SHIFT) | \
+ 					 MUSB_DEVCTL_SESSION)
++#define MUSB_QUIRK_B_DISCONNECT_99	(MUSB_DEVCTL_BDEVICE | \
++					 (3 << MUSB_DEVCTL_VBUS_SHIFT) | \
++					 MUSB_DEVCTL_SESSION)
+ #define MUSB_QUIRK_A_DISCONNECT_19	((3 << MUSB_DEVCTL_VBUS_SHIFT) | \
+ 					 MUSB_DEVCTL_SESSION)
  
-+#define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
-+
- static int run_edge_events_on_boot = -1;
- module_param(run_edge_events_on_boot, int, 0444);
- MODULE_PARM_DESC(run_edge_events_on_boot,
-@@ -1302,7 +1304,7 @@ static int acpi_gpio_handle_deferred_req
- /* We must use _sync so that this runs after the first deferred_probe run */
- late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
- 
--static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
-+static const struct dmi_system_id gpiolib_acpi_quirks[] = {
- 	{
- 		/*
- 		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
-@@ -1312,7 +1314,8 @@ static const struct dmi_system_id run_ed
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
--		}
-+		},
-+		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
- 	{
- 		/*
-@@ -1324,15 +1327,23 @@ static const struct dmi_system_id run_ed
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Wortmann_AG"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TERRA_PAD_1061"),
--		}
-+		},
-+		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
- 	{} /* Terminating entry */
- };
- 
- static int acpi_gpio_setup_params(void)
- {
-+	const struct dmi_system_id *id;
-+	long quirks = 0;
-+
-+	id = dmi_first_match(gpiolib_acpi_quirks);
-+	if (id)
-+		quirks = (long)id->driver_data;
-+
- 	if (run_edge_events_on_boot < 0) {
--		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-+		if (quirks & QUIRK_NO_EDGE_EVENTS_ON_BOOT)
- 			run_edge_events_on_boot = 0;
- 		else
- 			run_edge_events_on_boot = 1;
+@@ -1862,6 +1865,11 @@ static void musb_pm_runtime_check_sessio
+ 	s = MUSB_DEVCTL_FSDEV | MUSB_DEVCTL_LSDEV |
+ 		MUSB_DEVCTL_HR;
+ 	switch (devctl & ~s) {
++	case MUSB_QUIRK_B_DISCONNECT_99:
++		musb_dbg(musb, "Poll devctl in case of suspend after disconnect\n");
++		schedule_delayed_work(&musb->irq_work,
++				      msecs_to_jiffies(1000));
++		break;
+ 	case MUSB_QUIRK_B_INVALID_VBUS_91:
+ 		if (musb->quirk_retries && !musb->flush_irq_work) {
+ 			musb_dbg(musb,
 
 
