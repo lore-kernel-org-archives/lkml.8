@@ -2,110 +2,95 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2073C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96ABCC33CAE
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74896217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1D12187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgYe4mmo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SOqzHS5I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgANER2 (ORCPT
+        id S1729057AbgANE0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 23:17:28 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34701 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbgANER2 (ORCPT
+        Mon, 13 Jan 2020 23:26:21 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34377 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728795AbgANE0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 23:17:28 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j9so10989391qkk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 20:17:27 -0800 (PST)
+        Mon, 13 Jan 2020 23:26:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so5948753pfc.1;
+        Mon, 13 Jan 2020 20:26:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=OOWT581SMcLvqtksjZAqGDB1CoHKgQ7UwVVk0O0Vz5w=;
-        b=dgYe4mmonSdSZinqVmpggI4Kmkyh06SQWboomRcm3rxx/iLbThhInClzdMGY3D0dK1
-         QEi/sbj06YUsLTS2l3KVU1ypM1JFqIwOvtqmIDN12VFZIxvP+BjrbW3aunLthUqKYZQX
-         Kt3I3V9F+q0F4l9+81lzhsHXWlnAtzSopb10X0L4h/hoj6h7R0Qtytp/seoDR05kG8X7
-         L2tztvbl/gyTqxYaQBNk/9+xfyBTEkGmWu43LajPzoOJLCHdi+JT/XeTESRZW2GtOSQp
-         8Nr9bkAs5hs51FS1FncfnN8+uIxEAapp0vwmf3Aw+sJgEdA5jxm3p4vz82DzFi1Whxzt
-         rgxg==
+        bh=2KUHq2WXOjKK2jLm9wk0AGdw/pEX7ndYWZH2qpSDTzc=;
+        b=SOqzHS5I9vSPFY8xZKc65/zhaEMR9q0tiSZ0UD5lMlsVMyWn1fA0/EMa205IbKFU5E
+         P0F/vRDsvhq7C/3BTf4aK2zDH9VTzRA2UetHHDu4jP2sxfKTRVp3W5z0zuB4mGlNUzU1
+         HmeX7vrou8VIqQTPCtFsc+2Q7ACAzO5cm+DfTf3OQyfSu8zuYAId33tpl2Lo5dBvuiIi
+         sPxvR0ChQs50pAgrTClZxyEjktnX/5Dqj6r2v8KhNpDmeK2l4f84vJ4ciQjteOfC25/R
+         I0jpQU6RZyBtwLMQEYROdva0zp9Ng4mzUGmrFksIfNSzNtyzHC02KOjk3PvyZQnINP0p
+         PehA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OOWT581SMcLvqtksjZAqGDB1CoHKgQ7UwVVk0O0Vz5w=;
-        b=iKfLJmyTLj05ShyiHyhQBX69Bwbfak3wnBBZ2oeQ8oQU8lFhdxj16y/AA3NgH2YyRc
-         Cp+KvKsJH7jKiLRqLnzgawNVy3DzOrww8zzRqTL6Jad8puDWfoHQWe/UCiuMS7TSo8Tv
-         bGVlK0BqbvM3H3ZizRJptXSBTdxAMjCz3qdphm2efVAUzaO4vIT/lFlX0QCgRsiUiTk1
-         ohCeUI/8o6qDfmgw78f1U0qZ2GlZb4gs5c58dIwCQ5yWPmaAVfixF+TOAIDBuqA4Po5r
-         6tqEAJHJJ1VAXMFi2CZVzgi0vdszB+92CmM0o/gzrZRZtB63V4VL4pzeH6USCF8ZSB93
-         YICg==
-X-Gm-Message-State: APjAAAXma80JXi8ITqCzUU53eHQT7lGOsDU37UyuSchUKtB7TqNyKE/w
-        l26EUf19VDKZ4OGtvMGLURY=
-X-Google-Smtp-Source: APXvYqyYlP3UFYzWoF+ESFqpLMu38Q+xYtt7QDsQx5WlOpIjxUeAo7sfKtiWWaYSjUK4mVzYVRfRkQ==
-X-Received: by 2002:a37:644:: with SMTP id 65mr19916895qkg.309.1578975447132;
-        Mon, 13 Jan 2020 20:17:27 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o7sm6026451qkd.119.2020.01.13.20.17.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2KUHq2WXOjKK2jLm9wk0AGdw/pEX7ndYWZH2qpSDTzc=;
+        b=AOv4Y2eiHr5WxPKmSdqQxyNpwS2VgxVNskJ4BgukJoIlmT+3DDJrJd0Q7hOm3nV2Rv
+         yi9TPk3p5EMTVlC9S23wqtSHSRDvg0P/Cdktl+ecz7FpNgbTL5M5Z9/Ko0ur4czW6pKd
+         hahNhs2jiAYP+etPeHbf2gQA/I/52GgB4fCIgtDwc2OPpJcuh0e95WKC18J2t02wCiRt
+         qnDNGkMj5AK5d0K1/tLbBwLU27rrkCKZ+e13gjpm6FYOUjN18N+R86Cm3gAact4GBNtr
+         AoYdEb5N7fvjV2CkZ7PBU/Bv8Z4BRVTYaEj8k1ThtAWG0c0aQH5yZLpbYR4Kwkx8kZOA
+         Tnsw==
+X-Gm-Message-State: APjAAAWL4xPs2i46xGCFbn6nFeCh9ne+rPR/VN3m/jOCN9KdSq8bdoNB
+        CTHRq5lU1Xh2R6fMfsjYGlA=
+X-Google-Smtp-Source: APXvYqyFE2nlkVhSYfgbiHs/QLE7+qhUpRExWPVTXDztfJsxAKhzJ+Q7pdP4VOuzKQQKiugDCg8ypQ==
+X-Received: by 2002:a62:ddd0:: with SMTP id w199mr22806813pff.1.1578975979931;
+        Mon, 13 Jan 2020 20:26:19 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id j9sm15697386pff.6.2020.01.13.20.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 20:17:27 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 13 Jan 2020 23:17:25 -0500
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
- to S_REL
-Message-ID: <20200114041725.GC2536335@rani.riverdale.lan>
-References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
- <20200110203828.GK19453@zn.tnic>
- <20200110205028.GA2012059@rani.riverdale.lan>
- <20200111130243.GA23583@zn.tnic>
- <20200111172047.GA2688392@rani.riverdale.lan>
- <20200113134306.GF13310@zn.tnic>
- <20200113161310.GA191743@rani.riverdale.lan>
- <20200113163855.GK13310@zn.tnic>
- <20200113175937.GA428553@rani.riverdale.lan>
- <20200113180826.GN13310@zn.tnic>
+        Mon, 13 Jan 2020 20:26:19 -0800 (PST)
+Date:   Mon, 13 Jan 2020 20:26:16 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vladis Dronov <vdronov@redhat.com>
+Cc:     Antti Laakso <antti.laakso@intel.com>, netdev@vger.kernel.org,
+        sjohnsto@redhat.com, vlovejoy@redhat.com,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        artem.bityutskiy@intel.com
+Subject: Re: [PATCH] ptp: free ptp device pin descriptors properly
+Message-ID: <20200114042616.GA1459@localhost>
+References: <3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com>
+ <20200113130009.2938-1-vdronov@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113180826.GN13310@zn.tnic>
+In-Reply-To: <20200113130009.2938-1-vdronov@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 07:08:26PM +0100, Borislav Petkov wrote:
-> On Mon, Jan 13, 2020 at 12:59:38PM -0500, Arvind Sankar wrote:
-> > How is "breaks with binutils before version 2.23" not clear enough? It
+On Mon, Jan 13, 2020 at 02:00:09PM +0100, Vladis Dronov wrote:
+> There is a bug in ptp_clock_unregister(), where ptp_cleanup_pin_groups()
+> first frees ptp->pin_{,dev_}attr, but then posix_clock_unregister() needs
+> them to destroy a related sysfs device.
 > 
-> Nevermind, I'll write it myself if/when I end up applying some version
-> of it. I've wasted enough time trying to get my point across.
+> These functions can not be just swapped, as posix_clock_unregister() frees
+> ptp which is needed in the ptp_cleanup_pin_groups(). Fix this by calling
+> ptp_cleanup_pin_groups() in ptp_clock_release(), right before ptp is freed.
 > 
+> This makes this patch fix an UAF bug in a patch which fixes an UAF bug.
+> 
+> Reported-by: Antti Laakso <antti.laakso@intel.com>
+> Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
+> Link: https://lore.kernel.org/netdev/3d2bd09735dbdaf003585ca376b7c1e5b69a19bd.camel@intel.com/
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
 
-You're wasting time, because you're not _listening_ to the other guy.
-There is nothing special about how to repro this bug. It can be repro'd
-by building binutils-2.21.1 from source, it can be repro'd by building
-with a distro that packaged 2.21 -- such as OpenSUSE 12.1 [1], it can be
-repro'd by Mauro doing an Android build [2].
-
-The common thread in all that, is that the kernel is being built with a
-binutils prior to version 2.23, which is what is noted in the commit log
-as it stands.
-
-[1] https://lore.kernel.org/lkml/20200113233829.GB2000869@rani.riverdale.lan/
-[2] https://lore.kernel.org/lkml/CAEQFVGbWKf2ksMrMmtymewArSF=ztNgeuieEQ3wvKrX1r759Aw@mail.gmail.com/
+Acked-by: Richard Cochran <richardcochran@gmail.com>
