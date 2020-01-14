@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2093BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7845C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CBE2465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841D52465B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996268;
-	bh=78T+bpLA7/RmBMo8dSWS9SOZnKlKwg5JEWcCQl/VvCM=;
+	s=default; t=1578996270;
+	bh=WqD2Us02xrSuoy6mpu73fSbZ4IxiJuvY/HXOclXffyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ckKZDqoqO4rPHZB8Xyepn1dc3K9xqa6mJwfTuoknTV0KX8Hp4ZjsBSUQVOPXYRmvK
-	 MVBevlHhdcTHK5zLCmieYgt9WMWC4grFomi2B8rQL2ZzLBI7obcXprFwGEgV772oFF
-	 gUq+nZueBQ6p/n2N6XfwyoNtpsFN8/3owFnDcWx4=
+	b=GyZnAnB359h5IV+dNBi5xZtqy+j3371PlZ3L7ZHZm/rdOtrcL8faySEQdnBNCUVV1
+	 cQsXinAN/2pAbYR7h/gZbczIUajds4JU6WuVZpQNcjJhjXYWV/H2z9t1AXppJ6VBgy
+	 61CvdAISZlOmWrLsHQqmOPVOe3vD+4HL1Gtott58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729874AbgANKE1 (ORCPT
+        id S1729883AbgANKE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgANKEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:24 -0500
+        id S1729873AbgANKE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A23B2467D;
-        Tue, 14 Jan 2020 10:04:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AEFD24673;
+        Tue, 14 Jan 2020 10:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996264;
-        bh=78T+bpLA7/RmBMo8dSWS9SOZnKlKwg5JEWcCQl/VvCM=;
+        s=default; t=1578996267;
+        bh=WqD2Us02xrSuoy6mpu73fSbZ4IxiJuvY/HXOclXffyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s79UoxgYbGe95gf33bicFloLfeYz0vLPw7mnznJ2G4RPIyYwHbJYcHn2SxoUKsZYX
-         BWKv712mbHGFlFamVOGj3/58Q7177rg0YjnwAvEMo9tqrsZin3oWJ/bwzkU3rdECwc
-         A4m6gkYjhj0WUd4BxQrmcZdPjqpqwflD7BIWTZLA=
+        b=S4sDllkZnm8j/XVmPisniS/j98lJdJuolYnUpj5JR+j6v5HmeZRZASiNUwEmPi8bj
+         Ss2KkZ7Md2Uf5Mion727mVEYyiy1Y3CvEsIUvPgjWdLtIa73XcD26H18zJrydyDVIl
+         KgjQEQOWD1mEhC7wrMTVNPVM634pmskIJpe20IB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Faber <faber@faberman.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 35/78] can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
-Date:   Tue, 14 Jan 2020 11:01:09 +0100
-Message-Id: <20200114094358.333077052@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 17/78] HID: Fix slab-out-of-bounds read in hid_field_extract
+Date:   Tue, 14 Jan 2020 11:00:51 +0100
+Message-Id: <20200114094356.028051662@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,75 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Faber <faber@faberman.de>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 2d77bd61a2927be8f4e00d9478fe6996c47e8d45 upstream.
+commit 8ec321e96e056de84022c032ffea253431a83c3c upstream.
 
-Under load, the RX side of the mscan driver can get stuck while TX still
-works. Restarting the interface locks up the system. This behaviour
-could be reproduced reliably on a MPC5121e based system.
+The syzbot fuzzer found a slab-out-of-bounds bug in the HID report
+handler.  The bug was caused by a report descriptor which included a
+field with size 12 bits and count 4899, for a total size of 7349
+bytes.
 
-The patch fixes the return value of the NAPI polling function (should be
-the number of processed packets, not constant 1) and the condition under
-which IRQs are enabled again after polling is finished.
+The usbhid driver uses at most a single-page 4-KB buffer for reports.
+In the test there wasn't any problem about overflowing the buffer,
+since only one byte was received from the device.  Rather, the bug
+occurred when the HID core tried to extract the data from the report
+fields, which caused it to try reading data beyond the end of the
+allocated buffer.
 
-With this patch, no more lockups were observed over a test period of ten
-days.
+This patch fixes the problem by rejecting any report whose total
+length exceeds the HID_MAX_BUFFER_SIZE limit (minus one byte to allow
+for a possible report index).  In theory a device could have a report
+longer than that, but if there was such a thing we wouldn't handle it
+correctly anyway.
 
-Fixes: afa17a500a36 ("net/can: add driver for mscan family & mpc52xx_mscan")
-Signed-off-by: Florian Faber <faber@faberman.de>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Reported-and-tested-by: syzbot+09ef48aa58261464b621@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/mscan/mscan.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/hid/hid-core.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/can/mscan/mscan.c
-+++ b/drivers/net/can/mscan/mscan.c
-@@ -381,13 +381,12 @@ static int mscan_rx_poll(struct napi_str
- 	struct net_device *dev = napi->dev;
- 	struct mscan_regs __iomem *regs = priv->reg_base;
- 	struct net_device_stats *stats = &dev->stats;
--	int npackets = 0;
--	int ret = 1;
-+	int work_done = 0;
- 	struct sk_buff *skb;
- 	struct can_frame *frame;
- 	u8 canrflg;
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -288,6 +288,12 @@ static int hid_add_field(struct hid_pars
+ 	offset = report->size;
+ 	report->size += parser->global.report_size * parser->global.report_count;
  
--	while (npackets < quota) {
-+	while (work_done < quota) {
- 		canrflg = in_8(&regs->canrflg);
- 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
- 			break;
-@@ -408,18 +407,18 @@ static int mscan_rx_poll(struct napi_str
++	/* Total size check: Allow for possible report index byte */
++	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
++		hid_err(parser->device, "report is too long\n");
++		return -1;
++	}
++
+ 	if (!parser->local.usage_index) /* Ignore padding fields */
+ 		return 0;
  
- 		stats->rx_packets++;
- 		stats->rx_bytes += frame->can_dlc;
--		npackets++;
-+		work_done++;
- 		netif_receive_skb(skb);
- 	}
- 
--	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
--		napi_complete(&priv->napi);
--		clear_bit(F_RX_PROGRESS, &priv->flags);
--		if (priv->can.state < CAN_STATE_BUS_OFF)
--			out_8(&regs->canrier, priv->shadow_canrier);
--		ret = 0;
-+	if (work_done < quota) {
-+		if (likely(napi_complete_done(&priv->napi, work_done))) {
-+			clear_bit(F_RX_PROGRESS, &priv->flags);
-+			if (priv->can.state < CAN_STATE_BUS_OFF)
-+				out_8(&regs->canrier, priv->shadow_canrier);
-+		}
- 	}
--	return ret;
-+	return work_done;
- }
- 
- static irqreturn_t mscan_isr(int irq, void *dev_id)
 
 
