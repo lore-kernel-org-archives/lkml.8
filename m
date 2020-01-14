@@ -2,114 +2,100 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B861C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667CDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE272080D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C8921569
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:58:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="USd0rVW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgANA5j (ORCPT
+        id S1729273AbgANA6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:57:39 -0500
-Received: from mga01.intel.com ([192.55.52.88]:45175 "EHLO mga01.intel.com"
+        Mon, 13 Jan 2020 19:58:02 -0500
+Received: from ozlabs.org ([203.11.71.1]:39397 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728778AbgANA5j (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:57:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 16:57:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
-   d="scan'208";a="304999196"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.238.4.71]) ([10.238.4.71])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 16:57:36 -0800
-Subject: Re: [PATCH v3 3/4] perf util: Flexible to set block info output
- formats
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200107230354.30132-1-yao.jin@linux.intel.com>
- <20200107230354.30132-3-yao.jin@linux.intel.com>
- <20200113101037.GF35080@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <6b42909a-5c3a-42b4-a67f-5c10f97b9e0d@linux.intel.com>
-Date:   Tue, 14 Jan 2020 08:57:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1728733AbgANA6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:58:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47xXBJ17NPz9sPW;
+        Tue, 14 Jan 2020 11:58:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578963480;
+        bh=xzhfYEl3jUECW13fzefYrZJhju/7UmLdpLux5euJGFM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=USd0rVW7ARBCjdekxDeQdctiLB8pFaG7s4ICwxkSR6rFZFgSvp6nAiKOcoOC2AQcY
+         Oo0KO0iEbJWTWyBxt2wQwx9J9LDNlBk7aeYMtDTL1s4UWS5zcrN3J9j/e035Hfh0n1
+         JvDEX/Q+prkfG3PVfYFNxC3Bk1aP5mJmiZu+er++1voc2AjjrVQoOpl1hQQxDS3sI6
+         dbxCCV0SJZvtIAvf4HwNdnlGvCCIomWgb+q/U+4tKl9gwWc4Co4XdrycTO/B3sKkzc
+         UCWhSP+tGYAPbXTGX5lUZBd056M+DvMfruyphKr1IJ7zE8Im/V225eTxYeO6P9AOTn
+         jTmAQIG3gnDkw==
+Date:   Tue, 14 Jan 2020 11:57:59 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jack Yu <jack.yu@realtek.com>
+Subject: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20200114115759.123d5b80@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200113101037.GF35080@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/r9A53FvEKgyzy5X4JAG711J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/r9A53FvEKgyzy5X4JAG711J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 1/13/2020 6:10 PM, Jiri Olsa wrote:
-> On Wed, Jan 08, 2020 at 07:03:53AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>   int report__browse_block_hists(struct block_hist *bh, float min_percent,
->>   			       struct evsel *evsel, struct perf_env *env,
->> -			       struct annotation_options *annotation_opts)
->> +			       struct annotation_options *annotation_opts,
->> +			       bool release)
->>   {
->>   	int ret;
->>   
->> @@ -451,13 +477,17 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
->>   		symbol_conf.report_individual_block = true;
->>   		hists__fprintf(&bh->block_hists, true, 0, 0, min_percent,
->>   			       stdout, true);
->> -		hists__delete_entries(&bh->block_hists);
->> +		if (release)
->> +			hists__delete_entries(&bh->block_hists);
->> +
->>   		return 0;
->>   	case 1:
->>   		symbol_conf.report_individual_block = true;
->>   		ret = block_hists_tui_browse(bh, evsel, min_percent,
->>   					     env, annotation_opts);
->> -		hists__delete_entries(&bh->block_hists);
->> +		if (release)
->> +			hists__delete_entries(&bh->block_hists);
->> +
->>   		return ret;
->>   	default:
->>   		return -1;
->> diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
->> index bfa22c59195d..0bf01e3a423d 100644
->> --- a/tools/perf/util/block-info.h
->> +++ b/tools/perf/util/block-info.h
->> @@ -44,7 +44,8 @@ enum {
->>   struct block_report {
->>   	struct block_hist	hist;
->>   	u64			cycles;
->> -	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
->> +	struct block_fmt	*fmts;
-> 
-> hum, couldn't you just keep the array and use it instead of allocating it?
-> it will never be bigger than PERF_HPP_REPORT__BLOCK_MAX_INDEX, no?
-> 
-> we could get rid of that release code
-> 
+After merging the sound-asoc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Yes, that makes sense. I will keep the array.
+sound/soc/codecs/rt715-sdw.c: In function 'rt715_dev_resume':
+sound/soc/codecs/rt715-sdw.c:568:28: error: implicit declaration of functio=
+n 'to_sdw_slave_device' [-Werror=3Dimplicit-function-declaration]
+  568 |  struct sdw_slave *slave =3D to_sdw_slave_device(dev);
+      |                            ^~~~~~~~~~~~~~~~~~~
+sound/soc/codecs/rt715-sdw.c:568:28: warning: initialization of 'struct sdw=
+_slave *' from 'int' makes pointer from integer without a cast [-Wint-conve=
+rsion]
 
-Thanks
-Jin Yao
+Caused by commit
 
-> 
-> jirka
-> 
+  d1ede0641b05 ("ASoC: rt715: add RT715 codec driver")
+
+I have used the sound-asoc tree from next-20200113 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/r9A53FvEKgyzy5X4JAG711J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4dEhcACgkQAVBC80lX
+0GzVTQf/eGIocbfUE2GrOBBcfRa8TO3qvyX/pnVOXWPUZLiuqkiFj3MCXpqEkIG5
+3QJJ1xcDBGEDIf/zSwJCmfGdFnuUfRL1M98BMlX/ifBY/LuZ3SGXnmsaNpG1No95
+kBaTvs5bmZxeZ2+Kx7v+7acB0uiaBvBQwFZ9xe8oegCQi++IUfxZ5cgAe6Bta45C
+qmQDX5WwVnxKoBQYlsILySVnGkPQSqfVUjU/spx14ENbjpdgEJtCj3Dbr6NYFa8g
+mnXoxaluKHETF/uDBfBEsqXxrmXFCkuQl5wTRMeZrQgwY3vHKr6kI1fbWptPiOcm
+in9Yf42mPeQ/YCDIrz2pzFD51hJwcA==
+=Cq6z
+-----END PGP SIGNATURE-----
+
+--Sig_/r9A53FvEKgyzy5X4JAG711J--
