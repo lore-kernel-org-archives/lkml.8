@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C168C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C6CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1C924676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE06E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996742;
-	bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
+	s=default; t=1578996744;
+	bh=m+6CnTgFPLZVAN1JPjTJS+EawGXCA13mNcIhkE9Q0mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=re26LKyiM06Q7WO9tn0upZtSXmdBtHLqmqK0zBEHDH6AKut9eU6UPhLxoAlll8nBH
-	 P1CS6yAZ+y6bA1pTPrndL/XrkAuIKpbSEHezPZ3pvBT4/m65DfIfop9tFKfqewEUlm
-	 SCPUm8IC9aLiy1Ue0Hwvod/bdUWSB6nb5wLG1mfc=
+	b=fsRWR+Me4pX7AJFHq7lXA+ZbGETAPpuZc/JnuQKOpcN26wtP1Xy3Ww/wUkHCRg+xC
+	 w3/hoLWUQANRQyJRbWm86HPl9nRH8XTlBp/SJ2JR0whvnQSmQBFDRFP7RNO+PxsTQA
+	 pYkwQEsHOCoZ/HyCcZ4m47TH8pREnoMRkqKzQ1dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbgANKMV (ORCPT
+        id S1732981AbgANKMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732908AbgANKMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:13 -0500
+        id S1732937AbgANKMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47B19207FF;
-        Tue, 14 Jan 2020 10:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6418624686;
+        Tue, 14 Jan 2020 10:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996732;
-        bh=k18qRjP/nywpIHZ3grDId+QnddItalWgK5eGRgAKNkk=;
+        s=default; t=1578996738;
+        bh=m+6CnTgFPLZVAN1JPjTJS+EawGXCA13mNcIhkE9Q0mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2dRy8DIc4r3NOWH6D2FFXi9oHOovTIcY+bDmbxkyxf66tMM6Y0QtDfG4KmX1cZQM
-         nFNoVgfhf3d/jtDnmJfHd4g/yBuOWG1EVhTCoRYorIZ2Ni9RsZDQFCJ7NgIUz+/NnY
-         RpWV/13yzYvKGBGQ4M7y/3l2PhPdHXKncWF5ity0=
+        b=UzD0L4f9uyfJraffvE9+z8uk95Z3leZUnJ2b8NIckhXxXsq98jib9VAM7g/8UxJh/
+         /dIrNrxwwrDW/RGiNgzYb+RWEXps4F3BBTF6Yac+hZ0LmlEAkhj+cP4+J4/OVEizej
+         ByjbcHI2xPuS96JCHmIzk+65nnIZQBHPHItudaVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Faber <faber@faberman.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 14/31] can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
-Date:   Tue, 14 Jan 2020 11:02:06 +0100
-Message-Id: <20200114094342.408517831@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.9 31/31] netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
+Date:   Tue, 14 Jan 2020 11:02:23 +0100
+Message-Id: <20200114094345.829995252@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -59,75 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Faber <faber@faberman.de>
+From: Florian Westphal <fw@strlen.de>
 
-commit 2d77bd61a2927be8f4e00d9478fe6996c47e8d45 upstream.
+commit 22dad713b8a5ff488e07b821195270672f486eb2 upstream.
 
-Under load, the RX side of the mscan driver can get stuck while TX still
-works. Restarting the interface locks up the system. This behaviour
-could be reproduced reliably on a MPC5121e based system.
+The set uadt functions assume lineno is never NULL, but it is in
+case of ip_set_utest().
 
-The patch fixes the return value of the NAPI polling function (should be
-the number of processed packets, not constant 1) and the condition under
-which IRQs are enabled again after polling is finished.
+syzkaller managed to generate a netlink message that calls this with
+LINENO attr present:
 
-With this patch, no more lockups were observed over a test period of ten
-days.
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:hash_mac4_uadt+0x1bc/0x470 net/netfilter/ipset/ip_set_hash_mac.c:104
+Call Trace:
+ ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
 
-Fixes: afa17a500a36 ("net/can: add driver for mscan family & mpc52xx_mscan")
-Signed-off-by: Florian Faber <faber@faberman.de>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+pass a dummy lineno storage, its easier than patching all set
+implementations.
+
+This seems to be a day-0 bug.
+
+Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
+Fixes: a7b4f989a6294 ("netfilter: ipset: IP set core support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/mscan/mscan.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ net/netfilter/ipset/ip_set_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/mscan/mscan.c
-+++ b/drivers/net/can/mscan/mscan.c
-@@ -392,13 +392,12 @@ static int mscan_rx_poll(struct napi_str
- 	struct net_device *dev = napi->dev;
- 	struct mscan_regs __iomem *regs = priv->reg_base;
- 	struct net_device_stats *stats = &dev->stats;
--	int npackets = 0;
--	int ret = 1;
-+	int work_done = 0;
- 	struct sk_buff *skb;
- 	struct can_frame *frame;
- 	u8 canrflg;
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1634,6 +1634,7 @@ static int ip_set_utest(struct net *net,
+ 	struct ip_set *set;
+ 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
+ 	int ret = 0;
++	u32 lineno;
  
--	while (npackets < quota) {
-+	while (work_done < quota) {
- 		canrflg = in_8(&regs->canrflg);
- 		if (!(canrflg & (MSCAN_RXF | MSCAN_ERR_IF)))
- 			break;
-@@ -419,18 +418,18 @@ static int mscan_rx_poll(struct napi_str
+ 	if (unlikely(protocol_failed(attr) ||
+ 		     !attr[IPSET_ATTR_SETNAME] ||
+@@ -1650,7 +1651,7 @@ static int ip_set_utest(struct net *net,
+ 		return -IPSET_ERR_PROTOCOL;
  
- 		stats->rx_packets++;
- 		stats->rx_bytes += frame->can_dlc;
--		npackets++;
-+		work_done++;
- 		netif_receive_skb(skb);
- 	}
- 
--	if (!(in_8(&regs->canrflg) & (MSCAN_RXF | MSCAN_ERR_IF))) {
--		napi_complete(&priv->napi);
--		clear_bit(F_RX_PROGRESS, &priv->flags);
--		if (priv->can.state < CAN_STATE_BUS_OFF)
--			out_8(&regs->canrier, priv->shadow_canrier);
--		ret = 0;
-+	if (work_done < quota) {
-+		if (likely(napi_complete_done(&priv->napi, work_done))) {
-+			clear_bit(F_RX_PROGRESS, &priv->flags);
-+			if (priv->can.state < CAN_STATE_BUS_OFF)
-+				out_8(&regs->canrier, priv->shadow_canrier);
-+		}
- 	}
--	return ret;
-+	return work_done;
- }
- 
- static irqreturn_t mscan_isr(int irq, void *dev_id)
+ 	rcu_read_lock_bh();
+-	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
++	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
+ 	rcu_read_unlock_bh();
+ 	/* Userspace can't trigger element to be re-added */
+ 	if (ret == -EAGAIN)
 
 
