@@ -6,81 +6,79 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C10C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281E1C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFDD42187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A281A207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cse.ust.hk header.i=@cse.ust.hk header.b="3rAIBlDI"
+	dkim=pass (1024-bit key) header.d=cse.ust.hk header.i=@cse.ust.hk header.b="Jnvujlut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgANGmC (ORCPT
+        id S1728746AbgANGtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:42:02 -0500
-Received: from cssvr7.cse.ust.hk ([143.89.41.157]:59525 "EHLO cse.ust.hk"
+        Tue, 14 Jan 2020 01:49:19 -0500
+Received: from cssvr7.cse.ust.hk ([143.89.41.157]:59902 "EHLO cse.ust.hk"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726995AbgANGmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:42:00 -0500
-X-Greylist: delayed 456 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jan 2020 01:41:30 EST
+        id S1726995AbgANGtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:49:19 -0500
 Received: from imail.cse.ust.hk (cssvr7.cse.ust.hk [143.89.41.157])
-        by cse.ust.hk (8.15.2/8.12.5) with ESMTP id 00E6fKZN011643;
-        Tue, 14 Jan 2020 14:41:21 +0800
-ARC-Seal: i=1; a=rsa-sha256; d=cse.ust.hk; s=arccse; t=1578984081; cv=none;
-        b=cbTIfwmtXSwTRlUva/y9mbBxwTqitVw0OW/aTCWNRtVeaRVkcwDOFYXKcB8dPXg/wyj5oFh+i7MMmS8OqROranKvAwySPxnmC9s6rFbVBPsRQCCpPkFmViupC93SYo/Yn5DfjIMM9l7Ytn46FERuG7JpIcldsxXDb8ojHNuG004=
+        by cse.ust.hk (8.15.2/8.12.5) with ESMTP id 00E6XhjF010932;
+        Tue, 14 Jan 2020 14:33:44 +0800
+ARC-Seal: i=1; a=rsa-sha256; d=cse.ust.hk; s=arccse; t=1578983624; cv=none;
+        b=ACtrVfxur7pl2jb4aDyqZNGEHmJnJuzWVy/TseAdhrozX3/XvnT4Zvjoa2/1sDTZRnuA9CqA1kfyftgK7HXfg2+DRmB3o41lc5ZzchYJL9Q5vnsgUOILEV+Eo3W36KDYM1pP+MLKvfvyeLl/JIHHbOsqFTCPScfZi7SyAnXbJGc=
 ARC-Message-Signature: i=1; a=rsa-sha256; d=cse.ust.hk; s=arccse;
-        t=1578984081; c=relaxed/relaxed;
-        bh=lj2T8ECez/OwWIhotl4aFtPbiPiPn/f9eseqe+MRWPk=;
-        h=DKIM-Signature:Message-ID:Date:Subject:From:To:MIME-Version; b=yJXmLB7LskVMXRanxlQrdoKsZv3/CntMHO0aRpycvSs0iSCD0MIsGKo0f7rxjEaQDzR6hBCIeUbis885th6NzGB3EwIi0dk70VDxSojUdX6tx9cS9MuFjXIsHfO6o3Td09CuNFjB+C4TxIkpDAR/49LiM/J5TrybgpFKuSFO1hI=
+        t=1578983624; c=relaxed/relaxed;
+        bh=5TLbU7uDJQSy5VZCYAKtn2uPGBoyp+C1KymdjdqEZdI=;
+        h=DKIM-Signature:Message-ID:Date:Subject:From:To:MIME-Version; b=m3kxh05jKb2+CZs2g+Ah0//nC3qO9eTUSjOmY2pePR5Bm+taEiUi5ytwwiw3PkVyebWOKc7SOrohXJRUD2VhSLcC8G8qbj1agGwUJKwCiDaAWZxOh/cYdkkOfpaTIX4kbnX18XhufWxURVBzWvvNfnFd9vBJwXlP9U/S58QKyyg=
 ARC-Authentication-Results: i=1; cse.ust.hk
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cse.ust.hk;
-        s=cseusthk; t=1578984081;
-        bh=lj2T8ECez/OwWIhotl4aFtPbiPiPn/f9eseqe+MRWPk=;
+        s=cseusthk; t=1578983624;
+        bh=5TLbU7uDJQSy5VZCYAKtn2uPGBoyp+C1KymdjdqEZdI=;
         h=Date:Subject:From:To:Cc:From;
-        b=3rAIBlDI+P6LrPhvlz8gCbgHoeWRraBPaxzu+fT8HozzkdFPdzcodEGWBK9bQC4O/
-         3R8Z18OP6RZP9UPuxWjRoDEXzCaQzmIt7XlGzw/vRXD0IZaCEQvBpzB4+k+KGfh2ii
-         7Fzu6OO/dCuI4D8YKxSQYLH84XsXt6q9oey+NkRE=
+        b=JnvujlutQVu780NFzLhVniGQPLlpRA5z3qKDYaTEVxJhTMFcYmPx4WctmZAvbH7dH
+         LrKLV4wFh4uFI9aay0PEpWvFuA6FXN9DE/X92Zk/Mrx6aHEGNcTqQ+OBrPXEWnNr+I
+         57Xk9y8f7QjqVlsRVLQLN5MCgtRmUctoyIu94mLU=
 Received: from 175.159.124.235
         (SquirrelMail authenticated user wchenbt)
         by imail.cse.ust.hk with HTTP;
-        Tue, 14 Jan 2020 14:41:21 +0800
-Message-ID: <7c316748f8a8413b466236fa28eb1e31.squirrel@imail.cse.ust.hk>
-Date:   Tue, 14 Jan 2020 14:41:21 +0800
-Subject: KASAN: use-after-free Read in vc_do_resize
+        Tue, 14 Jan 2020 14:33:44 +0800
+Message-ID: <8645e64d639e9213bf68d0fdbee0c297.squirrel@imail.cse.ust.hk>
+Date:   Tue, 14 Jan 2020 14:33:44 +0800
+Subject: KASAN: use-after-free Read in screen_glyph_unicode
 From:   wchenbt@cse.ust.hk
 To:     linux-kernel@vger.kernel.org
 Cc:     syzkaller@googlegroups.com
 User-Agent: SquirrelMail/1.4.22
 MIME-Version: 1.0
-Content-Type: multipart/mixed;boundary="----=_20200114144121_53323"
-X-Priority: 3 (Normal)
-Importance: Normal
+Content-Type: multipart/mixed;boundary="----=_20200114143344_32865"
+X-Priority: 1 (Highest)
+Importance: High
 X-Env-From: wchenbt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-------=_20200114144121_53323
+------=_20200114143344_32865
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8bit
 
 Dear Linux kernel developers,
 
-I found the crash “KASAN: use-after-free Read in vc_do_resize” when
-running syzkaller, hope it’s unknown:
+I found the crash “KASAN: use-after-free Read in screen_glyph_unicode”
+when running syzkaller, hope it’s unknown:
 
 Linux version: 1c163f4c7b3f Linux 5.0
-Branch: KASAN: use-after-free in vc_do_resize+0x870/0x1250
-drivers/tty/vt/vt.c:1239
+Branch: KASAN: use-after-free in screen_glyph drivers/tty/vt/vt.c:4566
 
-Please get C repo and crash log generated by syzkaller from google drive
-https://drive.google.com/drive/folders/1PUY4XW0ToBxgYuxYgkyGrEAEph7YZ-Xf?usp=sharing,
+Please get rhe C repo and crash log generated by syzkaller from google
+drive https://drive.google.com/drive/folders/1zolqAlgnweSbr2-OzFFH2Neot4RGMBiV?usp=sharing,
 as well as the .config I used for linux kernel from the attachment.
 Thanks.
 
 Thanks,
 Wei
-------=_20200114144121_53323
+------=_20200114143344_32865
 Content-Type: application/octet-stream; name="config"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="config"
@@ -2198,6 +2196,6 @@ IENPTkZJR19ERUJVR19FTlRSWSBpcyBub3Qgc2V0CiMgQ09ORklHX0RFQlVHX05NSV9TRUxGVEVT
 VCBpcyBub3Qgc2V0CkNPTkZJR19YODZfREVCVUdfRlBVPXkKIyBDT05GSUdfUFVOSVRfQVRPTV9E
 RUJVRyBpcyBub3Qgc2V0CkNPTkZJR19VTldJTkRFUl9PUkM9eQojIENPTkZJR19VTldJTkRFUl9G
 UkFNRV9QT0lOVEVSIGlzIG5vdCBzZXQK
-------=_20200114144121_53323--
+------=_20200114143344_32865--
 
 
