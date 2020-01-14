@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85564C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9125C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6440424658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F6424658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgANVDj (ORCPT
+        id S1729299AbgANVEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:03:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 16:04:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbgANVDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728925AbgANVDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 16:03:38 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AB3F2467C;
-        Tue, 14 Jan 2020 21:03:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167E324676;
+        Tue, 14 Jan 2020 21:03:38 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1irTLc-000D1i-He; Tue, 14 Jan 2020 16:03:36 -0500
-Message-Id: <20200114210336.423422704@goodmis.org>
+        id 1irTLd-000D3G-07; Tue, 14 Jan 2020 16:03:37 -0500
+Message-Id: <20200114210336.887523301@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 16:03:21 -0500
+Date:   Tue, 14 Jan 2020 16:03:24 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 05/26] bootconfig: Load boot config from the tail of initrd
+Subject: [for-next][PATCH 08/26] proc: bootconfig: Add /proc/bootconfig to show boot config list
 References: <20200114210316.450821675@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,112 +46,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Load the extended boot config data from the tail of initrd
-image. If there is an SKC data there, it has
-[(u32)size][(u32)checksum] header (in really, this is a
-footer) at the end of initrd. If the checksum (simple sum
-of bytes) is match, this starts parsing it from there.
+Add /proc/bootconfig which shows the list of key-value pairs
+in boot config. Since after boot, all boot configs and tree
+are removed, this interface just keep a copy of key-value
+pairs in text.
 
-Link: http://lkml.kernel.org/r/157867222435.17873.9936667353335606867.stgit@devnote2
+Link: http://lkml.kernel.org/r/157867225967.17873.12155805787236073787.stgit@devnote2
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- init/Kconfig |  1 +
- init/main.c  | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+ MAINTAINERS          |  1 +
+ fs/proc/Makefile     |  1 +
+ fs/proc/bootconfig.c | 89 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 91 insertions(+)
+ create mode 100644 fs/proc/bootconfig.c
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 63450d3bbf12..ffd240fb88c3 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1217,6 +1217,7 @@ endif
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 06005006de7c..903e8a7ed0bf 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15774,6 +15774,7 @@ EXTRA BOOT CONFIG
+ M:	Masami Hiramatsu <mhiramat@kernel.org>
+ S:	Maintained
+ F:	lib/bootconfig.c
++F:	fs/proc/bootconfig.c
+ F:	include/linux/bootconfig.h
+ F:	tools/bootconfig/*
  
- config BOOT_CONFIG
- 	bool "Boot config support"
-+	depends on BLK_DEV_INITRD
- 	select LIBXBC
- 	default y
- 	help
-diff --git a/init/main.c b/init/main.c
-index 2cd736059416..59c418a57f92 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -28,6 +28,7 @@
- #include <linux/initrd.h>
- #include <linux/memblock.h>
- #include <linux/acpi.h>
+diff --git a/fs/proc/Makefile b/fs/proc/Makefile
+index ead487e80510..bd08616ed8ba 100644
+--- a/fs/proc/Makefile
++++ b/fs/proc/Makefile
+@@ -33,3 +33,4 @@ proc-$(CONFIG_PROC_KCORE)	+= kcore.o
+ proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
+ proc-$(CONFIG_PRINTK)	+= kmsg.o
+ proc-$(CONFIG_PROC_PAGE_MONITOR)	+= page.o
++proc-$(CONFIG_BOOT_CONFIG)	+= bootconfig.o
+diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
+new file mode 100644
+index 000000000000..9955d75c0585
+--- /dev/null
++++ b/fs/proc/bootconfig.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * /proc/bootconfig - Extra boot configuration
++ */
++#include <linux/fs.h>
++#include <linux/init.h>
++#include <linux/printk.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
 +#include <linux/bootconfig.h>
- #include <linux/console.h>
- #include <linux/nmi.h>
- #include <linux/percpu.h>
-@@ -245,6 +246,58 @@ static int __init loglevel(char *str)
- 
- early_param("loglevel", loglevel);
- 
-+#ifdef CONFIG_BOOT_CONFIG
-+u32 boot_config_checksum(unsigned char *p, u32 size)
++#include <linux/slab.h>
++
++static char *saved_boot_config;
++
++static int boot_config_proc_show(struct seq_file *m, void *v)
 +{
-+	u32 ret = 0;
-+
-+	while (size--)
-+		ret += *p++;
-+
-+	return ret;
++	if (saved_boot_config)
++		seq_puts(m, saved_boot_config);
++	return 0;
 +}
 +
-+static void __init setup_boot_config(void)
++/* Rest size of buffer */
++#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
++
++/* Return the needed total length if @size is 0 */
++static int __init copy_xbc_key_value_list(char *dst, size_t size)
 +{
-+	u32 size, csum;
-+	char *data, *copy;
-+	u32 *hdr;
++	struct xbc_node *leaf, *vnode;
++	const char *val;
++	char *key, *end = dst + size;
++	int ret = 0;
 +
-+	if (!initrd_end)
-+		return;
++	key = kzalloc(XBC_KEYLEN_MAX, GFP_KERNEL);
 +
-+	hdr = (u32 *)(initrd_end - 8);
-+	size = hdr[0];
-+	csum = hdr[1];
++	xbc_for_each_key_value(leaf, val) {
++		ret = xbc_node_compose_key(leaf, key, XBC_KEYLEN_MAX);
++		if (ret < 0)
++			break;
++		ret = snprintf(dst, rest(dst, end), "%s = ", key);
++		if (ret < 0)
++			break;
++		dst += ret;
++		vnode = xbc_node_get_child(leaf);
++		if (vnode && xbc_node_is_array(vnode)) {
++			xbc_array_for_each_value(vnode, val) {
++				ret = snprintf(dst, rest(dst, end), "\"%s\"%s",
++					val, vnode->next ? ", " : "\n");
++				if (ret < 0)
++					goto out;
++				dst += ret;
++			}
++		} else {
++			ret = snprintf(dst, rest(dst, end), "\"%s\"\n", val);
++			if (ret < 0)
++				break;
++			dst += ret;
++		}
++	}
++out:
++	kfree(key);
 +
-+	if (size >= XBC_DATA_MAX)
-+		return;
++	return ret < 0 ? ret : dst - (end - size);
++}
 +
-+	data = ((void *)hdr) - size;
-+	if ((unsigned long)data < initrd_start)
-+		return;
++static int __init proc_boot_config_init(void)
++{
++	int len;
 +
-+	if (boot_config_checksum((unsigned char *)data, size) != csum)
-+		return;
++	len = copy_xbc_key_value_list(NULL, 0);
++	if (len < 0)
++		return len;
 +
-+	copy = memblock_alloc(size + 1, SMP_CACHE_BYTES);
-+	if (!copy) {
-+		pr_err("Failed to allocate memory for boot config\n");
-+		return;
++	if (len > 0) {
++		saved_boot_config = kzalloc(len + 1, GFP_KERNEL);
++		if (!saved_boot_config)
++			return -ENOMEM;
++
++		len = copy_xbc_key_value_list(saved_boot_config, len + 1);
++		if (len < 0) {
++			kfree(saved_boot_config);
++			return len;
++		}
 +	}
 +
-+	memcpy(copy, data, size);
-+	copy[size] = '\0';
++	proc_create_single("bootconfig", 0, NULL, boot_config_proc_show);
 +
-+	if (xbc_init(copy) < 0)
-+		pr_err("Failed to parse boot config\n");
-+	else
-+		pr_info("Load boot config: %d bytes\n", size);
++	return 0;
 +}
-+#else
-+#define setup_boot_config()	do { } while (0)
-+#endif
-+
- /* Change NUL term back to "=", to make "param" the whole string. */
- static int __init repair_env_string(char *param, char *val,
- 				    const char *unused, void *arg)
-@@ -595,6 +648,7 @@ asmlinkage __visible void __init start_kernel(void)
- 	pr_notice("%s", linux_banner);
- 	early_security_init();
- 	setup_arch(&command_line);
-+	setup_boot_config();
- 	setup_command_line(command_line);
- 	setup_nr_cpu_ids();
- 	setup_per_cpu_areas();
++fs_initcall(proc_boot_config_init);
 -- 
 2.24.1
 
