@@ -2,105 +2,91 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AC7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33ADC33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBDE2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AEF207FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 00:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Btp5Nfuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgANAkt (ORCPT
+        id S1729113AbgANAlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 19:40:49 -0500
-Received: from mga06.intel.com ([134.134.136.31]:49386 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728778AbgANAks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 19:40:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 16:40:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
-   d="scan'208";a="219440214"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Jan 2020 16:40:47 -0800
-Date:   Mon, 13 Jan 2020 16:40:47 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 10/12] fs/xfs: Fix truncate up
-Message-ID: <20200114004047.GC29860@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-11-ira.weiny@intel.com>
- <20200113222755.GP8247@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113222755.GP8247@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Mon, 13 Jan 2020 19:41:46 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44170 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbgANAlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 19:41:46 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E0cqwv065758;
+        Tue, 14 Jan 2020 00:41:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=xqsf6ckW2iSZpQMx8EIfUWF7V/K4/38oY1N43NbDuV0=;
+ b=Btp5NfufyotUpB3sCKItejZ9pGvhrFM9OUUVsiXtqV0+6jh9wI3DVlmcyUqFPFQ3EkjN
+ W0dpoCfP63n1c0rn1VgFzTiG37JLwWkbkIxw9orDWteUrn1gfQ2uK6R2/zO3yWeY5Jm+
+ iQHd30s0nX62DvRd4o/VF9kGcqAkPdcfd8DLeKf61vG9s9xFQcOBJHhdj8zufJ3+4Q6K
+ L3zUtAxpbWhOzrq0qxGKTRa4QPVZxTihdprPMCV40RpB9r1Vp9hYWb7T/3m2LxbfoRz9
+ 2FjSwtapsQ6MNoB9Pb9jIrGxl5BY/6y54VuQsf6GrIL3A5dqYpHWagZd6wf9aGclxo76 qA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xf73tjfn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 00:41:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E0d6sl057212;
+        Tue, 14 Jan 2020 00:41:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2xfrgjmaek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jan 2020 00:41:38 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id 00E0fbfh067024;
+        Tue, 14 Jan 2020 00:41:37 GMT
+Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
+        by userp3020.oracle.com with ESMTP id 2xfrgjmae0-1;
+        Tue, 14 Jan 2020 00:41:37 +0000
+From:   rao Shoaib <rao.shoaib@oracle.com>
+To:     linux-rdma@vger.kernel.org
+Cc:     jgg@ziepe.ca, monis@mellanox.com, dledford@redhat.com,
+        sean.hefty@intel.com, hal.rosenstock@gmail.com,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>
+Subject: [PATCH v3 0/2] rxe should use same buffer size for SGE's and inline data
+Date:   Mon, 13 Jan 2020 16:41:18 -0800
+Message-Id: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=880 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:27:55PM -0800, Darrick J. Wong wrote:
-> On Fri, Jan 10, 2020 at 11:29:40AM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > When zeroing the end of a file we must account for bytes contained in
-> > the final page which are past EOF.
-> > 
-> > Extend the range passed to iomap_zero_range() to reach LLONG_MAX which
-> > will include all bytes of the final page.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > ---
-> >  fs/xfs/xfs_iops.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index a2f2604c3187..a34b04e8ac9c 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -910,7 +910,7 @@ xfs_setattr_size(
-> >  	 */
-> >  	if (newsize > oldsize) {
-> >  		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
-> > -		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
-> > +		error = iomap_zero_range(inode, oldsize, LLONG_MAX - oldsize,
-> 
-> Huh?  Won't this cause the file size to be set to LLONG_MAX?
+From: Rao Shoaib <rao.shoaib@oracle.com>
 
-Not as I understand the code.  But as I said in the cover I am not 100% sure of
-this fix.
+I have incorportaed suggestions from Jason. There are two patches.
+Patch #1 introduces max WQE size as suggested by Jason
+Patch #2 allocates resources requested and makes sure that the buffer size
+         is same for SG entries and inline data, maximum of the two values
+	 requested is used.
 
-From what I can tell xfs_ioctl_setattr_dax_invalidate() should invalidate the
-mappings and the page cache and the traces I have indicate that the DAX mode
-is not changing or was properly held off.
+Rao Shoaib (2):
+  Introduce maximum WQE size to check limits
+  SGE buffer and max_inline data must have same size
 
-Any other suggestions as to the problem are welcome.
+ drivers/infiniband/sw/rxe/rxe_param.h |  7 ++++++-
+ drivers/infiniband/sw/rxe/rxe_qp.c    | 23 +++++++++++------------
+ 2 files changed, 17 insertions(+), 13 deletions(-)
 
-Ira
+-- 
+1.8.3.1
 
-
-> 
-> --D
-> 
-> >  				&did_zeroing, &xfs_buffered_write_iomap_ops);
-> >  	} else {
-> >  		error = iomap_truncate_page(inode, newsize, &did_zeroing,
-> > -- 
-> > 2.21.0
-> > 
