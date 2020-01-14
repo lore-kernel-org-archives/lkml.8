@@ -2,111 +2,179 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27AAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AB3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B118424672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F4924672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgANLRr (ORCPT
+        id S1729442AbgANLSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:17:47 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:49183 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgANLRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:17:47 -0500
-Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1McGtA-1jN6BR3ans-00cdtS for <linux-kernel@vger.kernel.org>; Tue, 14 Jan
- 2020 12:17:46 +0100
-Received: by mail-qv1-f53.google.com with SMTP id z3so5460700qvn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 03:17:45 -0800 (PST)
-X-Gm-Message-State: APjAAAWXuovQ9UOgj7HTrrPjfne4KrFKCu33o3bunG8/Okej3L0FIIdI
-        oxotZn2n14pRpapePg+U5XCuoNJcpBHiAedde6M=
-X-Google-Smtp-Source: APXvYqxewBOBWhfpEFWxrE82cB8j/GRSkMj0uZDNDoV/o4MauOIMLjl2H1Czfs8TY0PBzifQFmfdxNh+O2jjxtNVCWw=
-X-Received: by 2002:a0c:ead1:: with SMTP id y17mr15513188qvp.210.1579000664506;
- Tue, 14 Jan 2020 03:17:44 -0800 (PST)
+        Tue, 14 Jan 2020 06:18:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49342 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgANLST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:18:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D7A85AC54;
+        Tue, 14 Jan 2020 11:18:17 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id AB5771E0D0E; Tue, 14 Jan 2020 12:18:17 +0100 (CET)
+Date:   Tue, 14 Jan 2020 12:18:17 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [WIP PATCH 2/4] udf: Fix reading numFiles and numDirs from UDF
+ 2.00+ VAT discs
+Message-ID: <20200114111817.GF6466@quack2.suse.cz>
+References: <20200112175933.5259-1-pali.rohar@gmail.com>
+ <20200112175933.5259-3-pali.rohar@gmail.com>
+ <20200113115822.GE23642@quack2.suse.cz>
+ <20200113181138.iqmo33ml2kpnmsfo@pali>
 MIME-Version: 1.0
-References: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
- <CAK8P3a1MLyP4ooyEDiBF1fE0BJGocgDmO1f5Qrvn_W5eqahz8g@mail.gmail.com>
- <20200113064156.lt3xxpzygattz3he@vireshk-i7> <CAK8P3a2u6s4MAM_9bOqSt5NwVc4XrXs9W36tp-7rWWTXx0+pRg@mail.gmail.com>
- <20200114092615.nvj6mkwkplub5ul7@vireshk-i7> <CAK8P3a0jXyJArzQFd+u68iRvXNnXb_oHbWF9-abvvFuqhpi-NA@mail.gmail.com>
- <20200114111110.jhkj2y47ncp5233r@vireshk-i7>
-In-Reply-To: <20200114111110.jhkj2y47ncp5233r@vireshk-i7>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jan 2020 12:17:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1cByQrhKV=8gRASNy74p8=WKfi1ZU13S2OpFQRjohUsg@mail.gmail.com>
-Message-ID: <CAK8P3a1cByQrhKV=8gRASNy74p8=WKfi1ZU13S2OpFQRjohUsg@mail.gmail.com>
-Subject: Re: [PATCH V2] firmware: arm_scmi: Make scmi core independent of
- transport type
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        cristian.marussi@arm.com, peng.fan@nxp.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:++IQvtTspzRE29UBi6vKzQmPn++cVPobveGFppCp1HlcB9IDD9l
- nhWpmZ4fbdhWSuGqx0xQlhEcFGoP49+gzvUF9DxTQQiZ0IzgJFvJIynx1Ey2k7OilWXDfKR
- QI59JnnftB77TzszUjOFuN8OgeqU1vcIxzRN/LwQCQg6ZlqI834rr7dQzr7eDos+8U5TTlj
- Qw61eY0YRNesID+aTIlAg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lGCghHztiNE=:WvVOeayv+u0dt/9LImrsQ8
- wjBV48dMe2D5wnKKFs5QV2J1aMny4XeMWKTPFMotxPVre4r5OpANfRlyNIuKqPGhBJXz+RwvF
- tRBGtin0sjINLmw+Id/N+9ffW7DJMYybPcjiKiiPLN1QqvYDGQn6ig80reftWJddNBur4jTy1
- Pm6QyylniGbDGZsOL8S1Z9BeWWc4uHU03IN4dJULCb8jnyqTWb9JQ9DIBznCsR3vz8nK50rzt
- TO9gKXANn1X24g9BlTcDIFkGbsbmAGTj2lRf5xzncAZvADh+Bub1W4BhOD2QbFNeDWpCBNz4z
- 7LVygLoQcVWJsnbxxTrZIuk+Df/pztCfUe2SSoRkGrpLxgVRKzkikI+uEkO8p6b6nshvjN6nR
- iddcGucwY+j6c41h8S4htdyTrBaZrDQjTsIBkfosNuMvH/NCIPW0AcjDs2VI0NaYCa7lHoAY6
- iEsM3dqNYYCAHTDZllDvdXykxsYDVUvUyKsYyxFBkCnIMORx5VBAqiVaRmBJB3B3jIjDP8GVW
- yfpL8fbjTl6PZxfzThL5fOW8lT37Pe9vTSADXetk6Qzuxc7w40R5T2c43Y/AeHXUciJc7iWxq
- DtDKQhBxgTIU+ELuMQe7ZnOznTbk6QCbf9q2EfXoA6c8m80QEF3JYDBlLPAnRjXtL1xxY6F5H
- o7ygE/If9/DJEN4uyfK0c4Tz8IFE5U/ACn1Mo4MoSl7Rlw9e01OMRVW4R9PWJbvPsmLw/Vxyi
- cIOsyu83/XZMDJZ+gCDxTr3G+KSwzbdymsyVBt5ptDMemOeglSr0jUn6EoxP8IlT5YtsQUWZh
- MB0MR4XFz8z0qa5tmbwx88msAJ65kreI1Za+RyEqXfHZYXUXpggSa9V2BVdPhPCxWXLV9RKiU
- Du3PAxE4ct22Ym2jt94Q==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200113181138.iqmo33ml2kpnmsfo@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:11 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 14-01-20, 10:56, Arnd Bergmann wrote:
-> > My point was that you cannot mix __iomem accesses with pointer
-> > accesses. As I understood it, the current version uses a pointer to a
->
-> The current version is stupid as I misunderstood the whole __iomem
-> thing and just dropped it :)
->
-> > hardware mailbox with structured data, so you have to use ioremap()
-> > to get a token you can pass into ioread(), but (some of) the new
-> > transport types would just be backed by regular RAM, on which this
-> > is not a well-defined operation and you have to use memremap()
-> > and memcpy() instead.
->
-> Okay, I think I understand that a bit now. So here are the things
-> which I may need to do now:
->
-> - Maybe move payload to struct scmi_mailbox structure, as that is the
->   transport dependent structure..
->
-> - Do ioremap, etc in mailbox.c only instead of driver.c
->
-> - Provide more ops in struct scmi_transport_ops to provide read/write
->   helpers to the payload and implement the ones based on
->   ioread/iowrite in mailbox.c ..
->
-> Am I thinking in the right direction now ?
+On Mon 13-01-20 19:11:38, Pali Rohár wrote:
+> On Monday 13 January 2020 12:58:22 Jan Kara wrote:
+> > On Sun 12-01-20 18:59:31, Pali Rohár wrote:
+> > > These two fields are stored in VAT and override previous values stored in
+> > > LVIDIU.
+> > > 
+> > > This change contains only implementation for UDF 2.00+. For UDF 1.50 there
+> > > is an optional structure "Logical Volume Extended Information" which is not
+> > > implemented in this change yet.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> > 
+> > For this and the following patch, I'd rather have the 'additional data'
+> > like number of files, dirs, or revisions, stored in the superblock than
+> > having them hidden in the VAT partition structure. And places that parse
+> > corresponding on-disk structures would fill in the numbers into the
+> > superblock.
+> 
+> This is not simple. Kernel first reads and parses VAT and later parses
+> LVIDIU. VAT is optional UDF feature and in UDF 1.50 are even those data
+> optional.
+> 
+> Logic for determining minimal write UDF revision is currently in code
+> which parse LVIDIU. And this is the only place which needs access UDF
+> revisions stored in VAT and LVIDIU.
+> 
+> UDF revision from LVD is already stored into superblock.
+> 
+> And because VAT is parsed prior to parsing LVIDIU is is also not easy to
+> store number of files and directories into superblock. LVIDIU needs to
+> know if data from VAT were loaded to superblock or not and needs to know
+> if data from LVIDIU should be stored into superblock or not.
+> 
+> Any idea how to do it without complicating whole code?
 
-That sounds about right. What I'm still not sure about is whether the
-current kernel code is actually correct and should use iomeap()
-in the first place. Can you confirm that all current hardware
-implementations actually use MMIO type registers here rather than
-just rely on a buffer in RAM?
+Let's take the discussion about revision storage to the thread about the
+other patch. But for number of directories and files I was thinking like:
 
-      Arnd
+We could initialize values in the superblock to -1 (or whatever invalid
+value - define a constant for it). The first place that has valid values
+available (detected by the superblock having still invalid values) stores them
+in the superblock. We are guaranteed to parse VAT before LVIDIU because we
+need VAT to locate LVIDIU in the first place so this logic should be
+reliable.
+
+And later when using the values, we can also easily check whether we
+actually have sensible values available in the first place...
+
+								Honza
+
+> > >  fs/udf/super.c  | 25 ++++++++++++++++++++++---
+> > >  fs/udf/udf_sb.h |  3 +++
+> > >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/fs/udf/super.c b/fs/udf/super.c
+> > > index 8df6e9962..e8661bf01 100644
+> > > --- a/fs/udf/super.c
+> > > +++ b/fs/udf/super.c
+> > > @@ -1202,6 +1202,8 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+> > >  		map->s_type_specific.s_virtual.s_start_offset = 0;
+> > >  		map->s_type_specific.s_virtual.s_num_entries =
+> > >  			(sbi->s_vat_inode->i_size - 36) >> 2;
+> > > +		/* TODO: Add support for reading Logical Volume Extended Information (UDF 1.50 Errata, DCN 5003, 3.3.4.5.1.3) */
+> > > +		map->s_type_specific.s_virtual.s_has_additional_data = false;
+> > >  	} else if (map->s_partition_type == UDF_VIRTUAL_MAP20) {
+> > >  		vati = UDF_I(sbi->s_vat_inode);
+> > >  		if (vati->i_alloc_type != ICBTAG_FLAG_AD_IN_ICB) {
+> > > @@ -1215,6 +1217,12 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+> > >  							vati->i_ext.i_data;
+> > >  		}
+> > >  
+> > > +		map->s_type_specific.s_virtual.s_has_additional_data =
+> > > +			true;
+> > > +		map->s_type_specific.s_virtual.s_num_files =
+> > > +			le32_to_cpu(vat20->numFiles);
+> > > +		map->s_type_specific.s_virtual.s_num_dirs =
+> > > +			le32_to_cpu(vat20->numDirs);
+> > >  		map->s_type_specific.s_virtual.s_start_offset =
+> > >  			le16_to_cpu(vat20->lengthHeader);
+> > >  		map->s_type_specific.s_virtual.s_num_entries =
+> > > @@ -2417,9 +2425,20 @@ static int udf_statfs(struct dentry *dentry, struct kstatfs *buf)
+> > >  	buf->f_blocks = sbi->s_partmaps[sbi->s_partition].s_partition_len;
+> > >  	buf->f_bfree = udf_count_free(sb);
+> > >  	buf->f_bavail = buf->f_bfree;
+> > > -	buf->f_files = (lvidiu != NULL ? (le32_to_cpu(lvidiu->numFiles) +
+> > > -					  le32_to_cpu(lvidiu->numDirs)) : 0)
+> > > -			+ buf->f_bfree;
+> > > +
+> > > +	if ((sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP15 ||
+> > > +	     sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP20) &&
+> > > +	     sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_has_additional_data)
+> > > +		buf->f_files = sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_files +
+> > > +			       sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_dirs +
+> > > +			       buf->f_bfree;
+> > > +	else if (lvidiu != NULL)
+> > > +		buf->f_files = le32_to_cpu(lvidiu->numFiles) +
+> > > +			       le32_to_cpu(lvidiu->numDirs) +
+> > > +			       buf->f_bfree;
+> > > +	else
+> > > +		buf->f_files = buf->f_bfree;
+> > > +
+> > >  	buf->f_ffree = buf->f_bfree;
+> > >  	buf->f_namelen = UDF_NAME_LEN;
+> > >  	buf->f_fsid.val[0] = (u32)id;
+> > > diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
+> > > index 6bd0d4430..c74abbc84 100644
+> > > --- a/fs/udf/udf_sb.h
+> > > +++ b/fs/udf/udf_sb.h
+> > > @@ -78,6 +78,9 @@ struct udf_sparing_data {
+> > >  struct udf_virtual_data {
+> > >  	__u32	s_num_entries;
+> > >  	__u16	s_start_offset;
+> > > +	bool	s_has_additional_data;
+> > > +	__u32	s_num_files;
+> > > +	__u32	s_num_dirs;
+> > >  };
+> > >  
+> > >  struct udf_bitmap {
+> > > -- 
+> > > 2.20.1
+> > > 
+> 
+> -- 
+> Pali Rohár
+> pali.rohar@gmail.com
+
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
