@@ -2,116 +2,139 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C049AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBFBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BEB2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B287214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IYGsRr7O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BM++qX7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgANSGV (ORCPT
+        id S1728783AbgANSGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:06:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20428 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728633AbgANSGU (ORCPT
+        Tue, 14 Jan 2020 13:06:54 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39279 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANSGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:06:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579025179;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G/WdIxHJtjkP+9AN++jWhKySJMpGHzaJ1b/ah446BtA=;
-        b=IYGsRr7O/vQhAM9fzBWzuXHb7nzf2s6XbsoeTvkLvTJOXZvIDL4efKxdGRA+vY5EbfKvav
-        Jva2OHdntxMlWoE4KjW0EiwrccGA6TZOIO0rocOj0qpwqtFcjtRvnpEvk27YFPJ+H8ZfKp
-        bb1rCznE5gomPdG1PtCNbhE3an62rqE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-zJ2FEVbQOmqKGV5XN1HWHQ-1; Tue, 14 Jan 2020 13:06:16 -0500
-X-MC-Unique: zJ2FEVbQOmqKGV5XN1HWHQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2933B8045DA;
-        Tue, 14 Jan 2020 18:06:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABAD580F62;
-        Tue, 14 Jan 2020 18:06:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200114170250.GA8904@ZenIV.linux.org.uk>
-References: <20200114170250.GA8904@ZenIV.linux.org.uk> <3326.1579019665@warthog.procyon.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
-        tytso@mit.edu, adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Making linkat() able to overwrite the target
+        Tue, 14 Jan 2020 13:06:54 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y1so10540774lfb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 10:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Keh0pN3nVsujrnlowQ2fXa3E3KsxxsvtihNq2qlmIY=;
+        b=BM++qX7s2iHq67cFNL7bEz6Kek13yiDDeMNxi4xdvlCZXEB+SWEaDIbjiySDIwWIO+
+         xfK0X48Y5cxTmXyzQ7neQlHVmMk2LiPjVlYvujWiUcru9njB82MSpk0fBrVmHa50eOCf
+         VqZb3iWt5+i0JfjOEShdT/cjXHcVA1Mb8DldtMHuWJ5TIqbcwhyFCMEL3WlTjaD+FuE5
+         uz9WB2PVCGRHzEmA9SJfj3thq7XnPHm0jr6TDewHpPGJEg2QffqSz09YkdQq7C2DgLuz
+         iOnI9fTHXClbwoZ8cGBbf6uVK7al0F0m5QSATFS0hcVi9QDtSwAfj3dGSI0JadngAYwk
+         ob5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Keh0pN3nVsujrnlowQ2fXa3E3KsxxsvtihNq2qlmIY=;
+        b=CpTEsz5mp9rxHYB9w66ECzZHfGDLDqEfdhOrWmZDcoY9fkiNJh9BwoNe3cKRZmz3cP
+         qEyWqHptWOKXeE7eGdKOkAIdH1mDNmix1LgXkXZvV78NwfImqZMxSYEaWxtXYhDS8ja7
+         lQeOB37r7ZJ9SUFO8RkJ0E5xUqWaC0WGbXV1071AWngrK0sBnif/w8aL/ERi+wWDmv/r
+         k+TwJxmJDlkGpHgDlde91MpaTg3QbA2VH5kOGJ08IPaEUvIKrYSShnV7R7lZMVwtNUhS
+         N88u7bT8SraKLZwjxlhXw/LpbKqmATsRt/vSM6tY62DHwHugko3gUgQz3nUHNbskBfYp
+         ub9w==
+X-Gm-Message-State: APjAAAXBj0sMBhZ+bVFMiB8Mbyoh0XjmD2cPZF1HzaB+RmajjdBcTZl9
+        BW/QGD42+uqCFOII7vWB225u4CjXmU6RGCejyso=
+X-Google-Smtp-Source: APXvYqw7aFB2MBVPhlTxmlyT6Jy0AT3IFLLxEAqT/Hn0YxMqw3N+Wo6R4Bb4AZPw+T86dM/QPrD1dA5pwyEtGLSFLGc=
+X-Received: by 2002:ac2:4422:: with SMTP id w2mr2476479lfl.178.1579025212486;
+ Tue, 14 Jan 2020 10:06:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9350.1579025170.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 14 Jan 2020 18:06:10 +0000
-Message-ID: <9351.1579025170@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com> <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+ <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com> <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+ <20200111005213.6dfd98fb36ace098004bde0e@kernel.org> <20200110164531.GA2598@kernel.org>
+ <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org> <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+ <5e191833.1c69fb81.8bc25.a88c@mx.google.com> <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+ <20200114122506.3cf442dc189a649d4736f86e@kernel.org> <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+ <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
+In-Reply-To: <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 14 Jan 2020 10:06:40 -0800
+Message-ID: <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> wrote:
-
-> > Would it be possible to make linkat() take a flag, say AT_LINK_REPLACE=
-,
-> > that causes the target to be replaced and not give EEXIST?  Or make it=
- so
-> > that rename() can take a tmpfile as the source and replace the target =
-with
-> > that.  I presume that, either way, this would require journal changes =
-on
-> > ext4, xfs and btrfs.
+On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
+<alexey.budankov@linux.intel.com> wrote:
+> >>
+> >> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
+> >> to open it for enabling/disabling kprobes, not for creation.
+> >>
+> >> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
+> >> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
+> >> it should check the max number of probes to be created by something like
+> >> ulimit)
+> >> I think nowadays we have fixed all such kernel crash problems on x86,
+> >> but not sure for other archs, especially on the devices I can not reach.
+> >> I need more help to stabilize it.
+> >
+> > I don't see how enable/disable is any safer than creation.
+> > If there are kernel bugs in kprobes the kernel will crash anyway.
+> > I think such partial CAP_SYS_PERFMON would be very confusing to the users.
+> > CAP_* is about delegation of root privileges to non-root.
+> > Delegating some of it is ok, but disallowing creation makes it useless
+> > for bpf tracing, so we would need to add another CAP later.
+> > Hence I suggest to do it right away instead of breaking
+> > sys_perf_even_open() access into two CAPs.
+> >
 >
-> Umm...  I don't like the idea of linkat() doing that - you suddenly get =
-new
-> fun cases to think about (what should happen when the target is a mountp=
-oint,
-> for starters?
+> Alexei, Masami,
+>
+> Thanks for your meaningful input.
+> If we know in advance that it still can crash the system in some cases and on
+> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
+> such delegation looks premature until the crashes are avoided. So it looks like
+> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
+> a separate patch set.
 
-Don't allow it onto directories, S_AUTOMOUNT-marked inodes or anything tha=
-t's
-got something mounted on it.
-
-> ) _and_ you would have to add a magical flag to vfs_link() so
-> that it would know which tests to do.
-
-Yes, I suggested AT_LINK_REPLACE as said magical flag.
-
-> As for rename...
-
-Yeah - with further thought, rename() doesn't really work as an interface,
-particularly if a link has already been made.
-
-Do you have an alternative suggestion?  There are two things I want to avo=
-id:
-
- (1) Doing unlink-link or unlink-create as that leaves a window where the
-     cache file is absent.
-
- (2) Creating replacement files in a temporary directory and renaming from
-     there over the top of the target file as the temp dir would then be a
-     bottleneck that spends a lot of time locked for creations and renames=
-.
-
-David
-
+perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
+imo adding a cap just for pmc is pointless.
+if you add a new cap it should cover all of sys_perf_event_open syscall.
+subdividing it into sw vs hw counters, kprobe create vs enable, etc will
+be the source of ongoing confusion. nack to such cap.
