@@ -2,99 +2,191 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51826C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34258C33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E8121556
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578963609;
-	bh=w6b7zxtaX1JNVVh331GpaaL1Tljp48nC2gXOjBChnjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GFcVpI/G2NF+96MZNo5xkcX8xzazSVM6JlIj1ap5yfwf/pHb9nNtOwe/xTG2CM2qy
-	 5REo+ZPkaUY1AMT7d8cURc58xB7PJyz//BxWAf/Qf8fW0v0Ik5I4whWPsmgnMQNx0B
-	 wd7JE9bRqcEYiHoX/zQyMSg96VS5gquw1zHwAHsM=
+	by mail.kernel.org (Postfix) with ESMTP id C975921556
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pcB0715y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgANBAI (ORCPT
+        id S1729274AbgANBCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:00:08 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36921 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbgANBAH (ORCPT
+        Mon, 13 Jan 2020 20:02:15 -0500
+Received: from mail-m974.mail.163.com ([123.126.97.4]:55096 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgANBCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:00:07 -0500
-Received: by mail-oi1-f195.google.com with SMTP id z64so10265107oia.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 17:00:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fXJN2b85yGTyfLCLDYBimi22Hg8WM/nHD10wRzYfTm4=;
-        b=Ro0P7aDz6hyzXO5rfR6V0kzTF46LLJ4qA3uOcdYARDHRiMs+m3v8ojvGigkRRtK18f
-         iYunyjDgyarDDKdhiDOV78S4umEOtTK25TlY7OXR34IDbsdqAixpe7EY0dVDuZKSjBo1
-         Ind8alKZ4U0XWKoWAtzLqeFp74I0uYxcmWrqGRnyN0sR9dIhgibqbF32wD8DrF0YiHvp
-         s1CMR99X5BXdmuLKe9/6Qrz1HM18yG3IxZg2EkE3JorUutJINybSxaAMAln8n0rGPnS2
-         T2qC9lDH7wiVxZprLWg3wxO+tJvc5pG22VpStTwtXr/CQEjf1aJWVbJskCt45cC0Bk8Z
-         2PGw==
-X-Gm-Message-State: APjAAAW6MtBFpuNtw5BprTVnSPM0ML+Zh/aMVY+ycG6LGGvrveTKkhaf
-        Q06z/uTfNDNDvP0xZ9SAMK+KnwSFQA==
-X-Google-Smtp-Source: APXvYqzXw2S6y8s5CM5uOD6UWMTfHf4By9csm5iuhLieHFP1Um4mlWMxJgjQbiChEu8l8h8UDHqU4w==
-X-Received: by 2002:a05:6808:3c2:: with SMTP id o2mr15125700oie.45.1578963606483;
-        Mon, 13 Jan 2020 17:00:06 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm4106780oib.16.2020.01.13.17.00.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 17:00:03 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 22198d
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 18:33:32 -0600
-Date:   Mon, 13 Jan 2020 18:33:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, vkoul@kernel.org,
-        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
-        lee.jones@linaro.org, radu_nicolae.pirea@upb.ro,
-        richard.genoud@gmail.com, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 15/17] dt-bindings: arm: add sam9x60-ek board
-Message-ID: <20200114003332.GA3401@bogus>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
+        Mon, 13 Jan 2020 20:02:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Uelvu
+        7kF0s69Lu17ZLO/24scVGUTvnSP2RRh1v1R1g0=; b=pcB0715yLWgMmKIeWhFrZ
+        M4sTc9Uxm7DogZHJWitnB0jlzkriBdxf97DmgBv2VKjua9mGkbzPx5fridxneq+p
+        kwm4fTtO9aD2O9mMsIs6Gy86jXxwTXtTUJSHzT/kMDH1rVXGKULrSmaaBGBNQsq9
+        O5UgNGCcSQ0b1y5/7aCc1A=
+Received: from xilei-TM1604.mioffice.cn (unknown [114.247.175.223])
+        by smtp4 (Coremail) with SMTP id HNxpCgAnDSLkEh1ewZVvDw--.2666S4;
+        Tue, 14 Jan 2020 09:01:24 +0800 (CST)
+From:   Niu Xilei <niu_xilei@163.com>
+To:     davem@davemloft.net
+Cc:     tglx@linutronix.de, fw@strlen.de, peterz@infradead.org,
+        steffen.klassert@secunet.com, bigeasy@linutronix.de,
+        jonathan.lemon@gmail.com, pabeni@redhat.com,
+        anshuman.khandual@arm.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Niu Xilei <niu_xilei@163.com>
+Subject: [v3] pktgen: Allow configuration of IPv6 source address range
+Date:   Tue, 14 Jan 2020 09:01:22 +0800
+Message-Id: <20200114010122.5327-1-niu_xilei@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: HNxpCgAnDSLkEh1ewZVvDw--.2666S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxur47Zr45Gr45Aw43Gr17KFg_yoWrJw45pa
+        y3GF9xJryxZr43twsxJF9rtr1S9w4v9345XayfA3sY9FyDWryrA397Ga47KFyjqryvk398
+        tr42ga90ga1qqrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j2c_-UUUUU=
+X-Originating-IP: [114.247.175.223]
+X-CM-SenderInfo: pqlxs5plohxqqrwthudrp/xtbBRQSqgFPAEO8rFwAAs7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 18:18:07 +0200, Claudiu Beznea wrote:
-> Add documentation for SAM9X60-EK board.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Pktgen can use only one IPv6 source address from output device or src6
+command setting. In pressure test we need create lots of sessions more than
+65535. So add src6_min and src6_max command to set the range.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Niu Xilei <niu_xilei@163.com>
+
+Changes since v2:
+ - reword subject line
+Changes since v1:
+ - only create IPv6 source address over least significant 64 bit range
+---
+ net/core/pktgen.c | 90 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index 294bfcf0ce0e..33435ae0ba68 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -1355,6 +1355,49 @@ static ssize_t pktgen_if_write(struct file *file,
+ 		sprintf(pg_result, "OK: dst6_max=%s", buf);
+ 		return count;
+ 	}
++	if (!strcmp(name, "src6_min")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->min_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->min_in6_saddr);
++
++		pkt_dev->cur_in6_saddr = pkt_dev->min_in6_saddr;
++		if (debug)
++			pr_debug("src6_min set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: src6_min=%s", buf);
++		return count;
++	}
++	if (!strcmp(name, "src6_max")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->max_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->max_in6_saddr);
++
++		if (debug)
++			pr_debug("dst6_max set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: dst6_max=%s", buf);
++		return count;
++	}
+ 	if (!strcmp(name, "src6")) {
+ 		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
+ 		if (len < 0)
+@@ -2286,6 +2329,51 @@ static void set_cur_queue_map(struct pktgen_dev *pkt_dev)
+ 	pkt_dev->cur_queue_map  = pkt_dev->cur_queue_map % pkt_dev->odev->real_num_tx_queues;
+ }
+ 
++/* generate ipv6 source addr */
++static inline void set_src_in6_addr(struct pktgen_dev *pkt_dev)
++{
++	__be64 min6_h, min6_l, max6_h, max6_l, addr_l, *t;
++	u64 min6, max6, rand, i;
++	struct in6_addr addr6;
++
++	memcpy(&min6_h, pkt_dev->min_in6_saddr.s6_addr, 8);
++	memcpy(&min6_l, pkt_dev->min_in6_saddr.s6_addr + 8, 8);
++	memcpy(&max6_h, pkt_dev->max_in6_saddr.s6_addr, 8);
++	memcpy(&max6_l, pkt_dev->max_in6_saddr.s6_addr + 8, 8);
++
++	/* only generate source address in least significant 64 bits range
++	 * most significant 64 bits must be equal
++	 */
++	if (max6_h != min6_h)
++		return;
++
++	addr6 = pkt_dev->min_in6_saddr;
++	t = (__be64 *)addr6.s6_addr + 1;
++	min6 = be64_to_cpu(min6_l);
++	max6 = be64_to_cpu(max6_l);
++
++	if (min6 < max6) {
++		if (pkt_dev->flags & F_IPSRC_RND) {
++			do {
++				prandom_bytes(&rand, sizeof(rand));
++				rand = rand % (max6 - min6) + min6;
++				addr_l = cpu_to_be64(rand);
++				memcpy(t, &addr_l, 8);
++			} while (ipv6_addr_loopback(&addr6) ||
++				 ipv6_addr_v4mapped(&addr6) ||
++				 ipv6_addr_is_multicast(&addr6));
++		} else {
++			addr6 = pkt_dev->cur_in6_saddr;
++			i = be64_to_cpu(*t);
++			if (++i > max6)
++				i = min6;
++			addr_l = cpu_to_be64(i);
++			memcpy(t, &addr_l, 8);
++		}
++	}
++	pkt_dev->cur_in6_saddr = addr6;
++}
++
+ /* Increment/randomize headers according to flags and current values
+  * for IP src/dest, UDP src/dst port, MAC-Addr src/dst
+  */
+@@ -2454,6 +2542,8 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
+ 		}
+ 	} else {		/* IPV6 * */
+ 
++		set_src_in6_addr(pkt_dev);
++
+ 		if (!ipv6_addr_any(&pkt_dev->min_in6_daddr)) {
+ 			int i;
+ 
+-- 
+2.20.1
+
