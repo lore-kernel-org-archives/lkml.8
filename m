@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52AFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D74C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722B324677
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6BB24677
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996542;
-	bh=IAWoV7sLHY7VarPJfk6cJJN8sA4BpJYPO9/iJ9t548g=;
+	s=default; t=1578996547;
+	bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpeQF+1Qgpkc7S5ZmRLjYj86nnCAwq1ptoqaXSEZirqCFWeAKXSO70rj4CqcEpuOy
-	 ZE3ivmKbTTQxW1GXmUCwrf08V/gBeA8q/qHBXc0Cp28CLxAup4paVl8nztNwdE1FQO
-	 lWcu52Gg3NDeEsq9KD16OD2dj1mDrMtAYsKs9nA0=
+	b=Ub0doruhRJS6l3prAu25uk7Y4XQb4EoQuDz10fh/yAMl7Vb0lUDcwNsCDwY2C6A/Z
+	 vZjgny5oqFPs0dNnMR1hEWh+USLuA8ktZxZLkPJg7QOq/dl3ftZ3sb+MTg41axnPG1
+	 /bOnLcMgceN5dEODI3xio1hLgQUeNP5zLq5tsgGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgANKJB (ORCPT
+        id S1731255AbgANKJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:09:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgANKI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:59 -0500
+        id S1731214AbgANKJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9622124679;
-        Tue, 14 Jan 2020 10:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8892467A;
+        Tue, 14 Jan 2020 10:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996539;
-        bh=IAWoV7sLHY7VarPJfk6cJJN8sA4BpJYPO9/iJ9t548g=;
+        s=default; t=1578996544;
+        bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zi9t3OEnrUgRZwzkf6NpJkQ6RsSL/guWjQHwRE+KCtvANxpux+GtSdkF7NBpVg65k
-         ad7LxaRjcQyHDhrosuim0BF9slVXIP304GGMmK3kGF1sZ28hwYTX1yceRv5P/cLXqP
-         zGEcfSzt4RP/eVGbroU39Wna0+pBjKBlGidjKmBE=
+        b=CRXJrjGWiL/vBIOx51IJtYNogX0phv7PPaTW7SRVxNDV2HawdNmz3bUpzrgLJby1B
+         atzp7tQivCPO3IbcowIN8roANmKKXc3SPFys41TTCzcOC677ynTlGAIN2/LAfkQ/ff
+         9r+44paFn64/WZrzoz9s62YNcFPTwICWjHc8YjA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.19 39/46] ath10k: fix memory leak
-Date:   Tue, 14 Jan 2020 11:01:56 +0100
-Message-Id: <20200114094347.933299495@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Roger Whittaker <Roger.Whittaker@suse.com>
+Subject: [PATCH 4.19 41/46] USB: Fix: Dont skip endpoint descriptors with maxpacket=0
+Date:   Tue, 14 Jan 2020 11:01:58 +0100
+Message-Id: <20200114094348.257779024@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -61,31 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit b8d17e7d93d2beb89e4f34c59996376b8b544792 upstream.
+commit 2548288b4fb059b2da9ceada172ef763077e8a59 upstream.
 
-In ath10k_usb_hif_tx_sg the allocated urb should be released if
-usb_submit_urb fails.
+It turns out that even though endpoints with a maxpacket length of 0
+aren't useful for data transfer, the descriptors do serve other
+purposes.  In particular, skipping them will also skip over other
+class-specific descriptors for classes such as UVC.  This unexpected
+side effect has caused some UVC cameras to stop working.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+In addition, the USB spec requires that when isochronous endpoint
+descriptors are present in an interface's altsetting 0 (which is true
+on some devices), the maxpacket size _must_ be set to 0.  Warning
+about such things seems like a bad idea.
+
+This patch updates an earlier commit which would log a warning and
+skip these endpoint descriptors.  Now we only log a warning, and we
+don't even do that for isochronous endpoints in altsetting 0.
+
+We don't need to worry about preventing endpoints with maxpacket = 0
+from ever being used for data transfers; usb_submit_urb() already
+checks for this.
+
+Reported-and-tested-by: Roger Whittaker <Roger.Whittaker@suse.com>
+Fixes: d482c7bb0541 ("USB: Skip endpoints with 0 maxpacket length")
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Link: https://marc.info/?l=linux-usb&m=157790377329882&w=2
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001061040270.1514-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/config.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/ath/ath10k/usb.c
-+++ b/drivers/net/wireless/ath/ath10k/usb.c
-@@ -454,6 +454,7 @@ static int ath10k_usb_hif_tx_sg(struct a
- 			ath10k_dbg(ar, ATH10K_DBG_USB_BULK,
- 				   "usb bulk transmit failed: %d\n", ret);
- 			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			ret = -EINVAL;
- 			goto err_free_urb_to_pipe;
- 		}
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -392,12 +392,16 @@ static int usb_parse_endpoint(struct dev
+ 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
+ 	}
+ 
+-	/* Validate the wMaxPacketSize field */
++	/*
++	 * Validate the wMaxPacketSize field.
++	 * Some devices have isochronous endpoints in altsetting 0;
++	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
++	 * (see the end of section 5.6.3), so don't warn about them.
++	 */
+ 	maxp = usb_endpoint_maxp(&endpoint->desc);
+-	if (maxp == 0) {
+-		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
++	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
++		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
+ 		    cfgno, inum, asnum, d->bEndpointAddress);
+-		goto skip_to_next_endpoint_or_interface_descriptor;
+ 	}
+ 
+ 	/* Find the highest legal maxpacket size for this endpoint */
 
 
