@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A592EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0983DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710B6207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD33207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997166;
-	bh=E0EEgmJfg0TLopBj4W64EXLVTA4Z/uD24x8keHioWrA=;
+	s=default; t=1578997170;
+	bh=YYDNboL4m8g3g4m2YUaCkwrjnE5SH4FJd0ATILs0d6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2wi9HjxEeNVbAGgW8lEwfzPbwOP7/cRexoXIKIw4iaVoKKVmZgPoomtlyoXxDKJSe
-	 g3f1Mw5TnhqbL5aVAJcwbGBjet3iebgvYZhndcPccrVhAbdtkVIIMetfoNVS/L2CZ6
-	 4sT8jlx0lq5/617Yqu7r9/2G0w5+xz9XKxHaUR7I=
+	b=uAqu/m1HSq6vx80cio1eDNIstBcyn8AMGZrsjcJeijxPXBl0V8aPUot81hhx9m+a3
+	 GZWKtOg86yO4tUWcN5/iM0bDyGfy+i+mm4pHS6+/XZ1SVEli189eDLIWN8rcRPXjEZ
+	 bbmqof0BQfQfvkHSUGwG1B1XaqUqEAlHXCBvvP5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgANKF4 (ORCPT
+        id S1730202AbgANKFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34426 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbgANKFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:53 -0500
+        id S1730192AbgANKFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4435024679;
-        Tue, 14 Jan 2020 10:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F85120678;
+        Tue, 14 Jan 2020 10:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996352;
-        bh=E0EEgmJfg0TLopBj4W64EXLVTA4Z/uD24x8keHioWrA=;
+        s=default; t=1578996343;
+        bh=YYDNboL4m8g3g4m2YUaCkwrjnE5SH4FJd0ATILs0d6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMkXq7NAKmunGEMJg0JUFaRNOO+w+aQ+o8XJ6drEt6T1YEL6B1Z/MZHFdbfDkcVmH
-         zebossA4GFlSrauhPtR8fqDguPUIX1eFEeecKDui5V+kdxx0DEbqVg8608OSBkh1lu
-         rUroUB0em1eLgkKhH1vfOQV19C/9lHAXxZtm2is0=
+        b=KdNEH5ni1RtDaYm7wa6Lge4o5vjwxLvFbEwcqK202ldZf5pXGkq2AGHIXVLR3QOZw
+         7aiEPOo8t4jdg9zN6huAgap6QAl6KzqWZaSan6CERpHxVco9KtcfVKsV//ETZktgcf
+         mw003QeC28KGO+jZgt0fw4HsUhpV/z9JqfLrcuGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 5.4 43/78] usb: ohci-da8xx: ensure error return on variable error is set
-Date:   Tue, 14 Jan 2020 11:01:17 +0100
-Message-Id: <20200114094359.349034019@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 5.4 40/78] staging: vt6656: set usb_set_intfdata on driver fail.
+Date:   Tue, 14 Jan 2020 11:01:14 +0100
+Message-Id: <20200114094358.969291521@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,51 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit ba9b40810bb43e6bf73b395012b98633c03f7f59 upstream.
+commit c0bcf9f3f5b661d4ace2a64a79ef661edd2a4dc8 upstream.
 
-Currently when an error occurs when calling devm_gpiod_get_optional or
-calling gpiod_to_irq it causes an uninitialized error return in variable
-'error' to be returned.  Fix this by ensuring the error variable is set
-from da8xx_ohci->oc_gpio and oc_irq.
+intfdata will contain stale pointer when the device is detached after
+failed initialization when referenced in vt6656_disconnect
 
-Thanks to Dan Carpenter for spotting the uninitialized error in the
-gpiod_to_irq failure case.
+Provide driver access to it here and NULL it.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: d193abf1c913 ("usb: ohci-da8xx: add vbus and overcurrent gpios")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200107123901.101190-1-colin.king@canonical.com
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/6de448d7-d833-ef2e-dd7b-3ef9992fee0e@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-da8xx.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/vt6656/device.h   |    1 +
+ drivers/staging/vt6656/main_usb.c |    1 +
+ drivers/staging/vt6656/wcmd.c     |    1 +
+ 3 files changed, 3 insertions(+)
 
---- a/drivers/usb/host/ohci-da8xx.c
-+++ b/drivers/usb/host/ohci-da8xx.c
-@@ -415,13 +415,17 @@ static int ohci_da8xx_probe(struct platf
- 	}
+--- a/drivers/staging/vt6656/device.h
++++ b/drivers/staging/vt6656/device.h
+@@ -259,6 +259,7 @@ struct vnt_private {
+ 	u8 mac_hw;
+ 	/* netdev */
+ 	struct usb_device *usb;
++	struct usb_interface *intf;
  
- 	da8xx_ohci->oc_gpio = devm_gpiod_get_optional(dev, "oc", GPIOD_IN);
--	if (IS_ERR(da8xx_ohci->oc_gpio))
-+	if (IS_ERR(da8xx_ohci->oc_gpio)) {
-+		error = PTR_ERR(da8xx_ohci->oc_gpio);
- 		goto err;
-+	}
+ 	u64 tsf_time;
+ 	u8 rx_rate;
+--- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -993,6 +993,7 @@ vt6656_probe(struct usb_interface *intf,
+ 	priv = hw->priv;
+ 	priv->hw = hw;
+ 	priv->usb = udev;
++	priv->intf = intf;
  
- 	if (da8xx_ohci->oc_gpio) {
- 		oc_irq = gpiod_to_irq(da8xx_ohci->oc_gpio);
--		if (oc_irq < 0)
-+		if (oc_irq < 0) {
-+			error = oc_irq;
- 			goto err;
-+		}
+ 	vnt_set_options(priv);
  
- 		error = devm_request_threaded_irq(dev, oc_irq, NULL,
- 				ohci_da8xx_oc_thread, IRQF_TRIGGER_RISING |
+--- a/drivers/staging/vt6656/wcmd.c
++++ b/drivers/staging/vt6656/wcmd.c
+@@ -99,6 +99,7 @@ void vnt_run_command(struct work_struct
+ 		if (vnt_init(priv)) {
+ 			/* If fail all ends TODO retry */
+ 			dev_err(&priv->usb->dev, "failed to start\n");
++			usb_set_intfdata(priv->intf, NULL);
+ 			ieee80211_free_hw(priv->hw);
+ 			return;
+ 		}
 
 
