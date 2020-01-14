@@ -2,137 +2,130 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7554BC33CB8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BEDC33CB8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5472B24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A0424672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:23:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="g5wL/jH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgANTW4 (ORCPT
+        id S1728969AbgANTXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:22:56 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:32882 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANTWz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:22:55 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1irRm7-0000Fw-1E; Tue, 14 Jan 2020 19:22:51 +0000
-Date:   Tue, 14 Jan 2020 20:22:50 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-Message-ID: <20200114192249.saweb3xxiex5h4ys@wittgenstein>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <20200113104256.5ujbplyec2sk4onn@wittgenstein>
- <20200113184408.GD110363@google.com>
- <20200113191046.2tidyvc544zvchek@wittgenstein>
- <20200114185944.GA178589@google.com>
+        Tue, 14 Jan 2020 14:23:01 -0500
+Received: from mout.gmx.net ([212.227.17.22]:52427 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728656AbgANTW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:22:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1579029769;
+        bh=lq30yIs/kC7cfrgLzXRHtUHGynXb89ZYgnwcKuYTLNE=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=g5wL/jH6+URP2UNQCK5hFk7dGX2j5kexWIwUQsfx6t5neivSt0hgbU/bJpexlakRE
+         2h/OskBvdMsgCksJcwKNSz9aySouLfrEKLbSiqDzFz3OZ/0PfSXJaZC+DaP2nBmAXq
+         MZ8O5KxNwidsEHfwvu3/656EGF0NIWTW8vlFb/lU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.171.104]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MnakX-1jYmom2w3J-00jdli; Tue, 14
+ Jan 2020 20:22:49 +0100
+Date:   Tue, 14 Jan 2020 20:22:47 +0100
+From:   Helge Deller <deller@gmx.de>
+To:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Serge Semin <fancer.lancer@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] ntb_tool: Fix printk format
+Message-ID: <20200114192247.GA30840@ls3530.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114185944.GA178589@google.com>
-User-Agent: NeoMutt/20180716
+X-Provags-ID: V03:K1:cqTwOqVIQYt3IB2/nbO2/Luf1hWf6voFM2wcMONjNhcxwkzE5lC
+ 13ZcewEVHh+aQnf2xsKUYsyEgPjdxFHofbLhKgp+KOQ1nsIWZTE/ci9cSDjf6CHCZkRXkXT
+ lC4kUszKHhrVK9J1sxM2naso06sxpHuqBcSKXcKc3sFSl27WoHM9BUFmbf9Z+aPyUrWJNVf
+ Ho685sHT0PeWOquU6rHPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wyHYgapCZjo=:roclqpz9XbEmK9svrJhxpv
+ L4UiUpakxKhuu8HIUITvo0Kak2YkvO5+b4hIZEHbnRqJZXYEe7EJc1pYLBx5+oDGZ2n7EOg0Y
+ koZMOyb4UyhPYhCYM66dlfqsmJBSmCgJR/jwKWvS0gzjv5HVWhMzZOtnmQ+oIBeqWDkNuuhBK
+ WCf5enuIwAjCEc5fcD2K64dPHh0brL3wmd9EIkdKbx/wAxrpU6PcwAuPYS1p3OyoEiwSs1/8y
+ E5oDYZRDTYdOLdE7rqCXR070dVUutM9Bn8/qFw4/Z/vEEpMSCoUEMH7agVxaE8za0jb2PyLJk
+ 264IDe/57kFISEEpMJjehlgW7m+LU+kgg9uKBt7ml1RANiw2Vu3BuywAnGZRc6cEUiJ+1Xi+e
+ e7ZgCsYUG34yvFHGV02chVWZCUIhAk7RizTYKz8EO61moM7m5RFCm5SLLA5sjz6IP4zZKfxZ9
+ v2BxLjRofIIhLytEsBFSgIMpaiWGH0JTqjnxMIVbIDPAIp4zhyortTargGPK7tBhASCmK1UbC
+ VnM0TVlHcRaQNV2h9ZWtsupuF4Ae7moIZVs62U/wuLqtODRAV8jv5fob7823ky6pRtTSHMmrE
+ 9TL8HMC0xYsBpUalEe5nmO+hOvUXxVHGex4MD+P/0Gz+jqGyRZ6GtnTuAY5F2bhgZqW7icg91
+ EDoYUE84Wnp2VSLRoLLasu9J7hOoFvI+LpUm9SrGgpZTAHcOoom2iQgifBCQ1LqdD3h4fOHOU
+ zz+tuxxbbeQAjG/LQHdj5SUrngEtXg+NI929vX9No5mLqA1pVC8Iezw8Y7ZI0rRCTxGqpdIoK
+ ctWa1VjjrvyW1taHa5Z3lOUBp4hVA8oNSGQQta+FP7U5qJe0UXSTqRSGYUJFcEkUhyZBfBNAk
+ zSmJRkeLhoGmiu4Uu7tG6u2GBI/6Sj9ymutc0y/E/OF10GJ3my18UMS6GgB5V89pXv/XdNj2m
+ qIgW0tmJRproK0vlD6SF43ERKJiWI4/mSbLn7T47BuqVHChrPFxCeINLSXixPtZ7pkYlJSF5Z
+ 6ic5oI9wBGQC3wGWkhcPRoCpUGVZsQ+F0v8dFbzt9Gn4pYWkwkGZ1ZstkLlGDWmdcRSohB81Z
+ YsWUgBcf/d37yqxfS2uCnRtJQZdaTT5/7hOJwKHNLykq8fjJ4ktXluIkIMbN/ixRJjX/guqar
+ MFRT7cRYOPPGz+pamRhFs1Mb32UmUgK9E9GD74k49TiOvECBGn2k/qtJNPtL/3t4ebfcDAzMe
+ Pcot8cSGsycwPG/6jEeRyHQi4XrbVGCz/K2Id7w==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:59:44AM -0800, Minchan Kim wrote:
-> Hi Christian,
-> 
-> On Mon, Jan 13, 2020 at 08:10:47PM +0100, Christian Brauner wrote:
-> > On Mon, Jan 13, 2020 at 10:44:08AM -0800, Minchan Kim wrote:
-> > > On Mon, Jan 13, 2020 at 11:42:57AM +0100, Christian Brauner wrote:
-> > > > On Mon, Jan 13, 2020 at 11:47:11AM +0300, Kirill Tkhai wrote:
-> > > 
-> > > < snip >
-> > > 
-> > > > > > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> > > > > > +		size_t, len_in, int, behavior, unsigned long, flags)
-> > > > > 
-> > > > > I don't like the interface. The fact we have pidfd does not mean,
-> > > > > we have to use it for new syscalls always. A user may want to set
-> > > > > madvise for specific pid from console and pass pid as argument.
-> > > > > pidfd would be an overkill in this case.
-> > > > > We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
-> > > > > allow this?
-> > > > > 
-> > > > > I suggent to extend first argument to work with both pid and pidfd.
-> > > > > Look at what we have for waitid(idtype, id_t id, ...) for example:
-> > > > > 
-> > > > >        idtype == P_PID
-> > > > >               Wait for the child whose process ID matches id.
-> > > > > 
-> > > > >        idtype == P_PIDFD (since Linux 5.4)
-> > > > >               Wait for the child referred to by the PID file descriptor specified in id.  (See pidfd_open(2) for  further  information  on
-> > > > >               PID file descriptors.)
-> > > > > 
-> > > > > We may use @flags argument for this.
-> > > > 
-> > > > Sorry for chiming in just a comment. Overall, I don't particularly care
-> > > > how or if you integrate pidfd here. One thing I would like to point out
-> > > > is that we're working on a patch to place new features under pidfd
-> > > > specific flags. This e.g. means a pidfd would be only be able to be used
-> > > > for madvise operations (or getfd operations) if it was created with that
-> > > > specific flag set making it easier to share them with other processes.
-> > > > So if you integrate them here I would be quite thankful if you target
-> > > > the patchset for the v5.7 merge window, not for v5.6.
-> > > 
-> > > Hi Christian,
-> > > Sorry but I couldn't understand your point.
-> > > Could you clarify what you meant?
-> > 
-> > Hi Minchan,
-> > 
-> > Sure. When you create a pidfd, e.g. with clone3() and you'd wanted to
-> > use it for madvise you'd need to set a flag like pidfd_cap_madvise or
-> > pidfd_feature_madvise when you create the pidfd. Only if the pidfd was
-> > created with that flag set could you use it with madvise (This does not
-> > affect the permission checking you're performing here.). This has come
-> > up a couple of times and becomes more relevant now that people keep
-> > adding new features on top of pidfd and is similar to what we are now
-> > doing with openat2().
-> 
-> Thanks for the explain. When I read discussion with you and Daniel, it's
-> still vague for me that what's the outcome so that it could land onto
-> v5.6.(If I miss something progress on other thread, sorry about that.)
+The correct printk format is %pa or %pap, but not %pa[p].
 
-I'll try to post patches soon.
+Signed-off-by: Helge Deller <deller@gmx.de>
+Fixes: 7f46c8b3a5523 ("NTB: ntb_tool: Add full multi-port NTB API support"=
+)
 
-> 
-> I will keep Ccing you so that you may notice when this patchset could
-> be merged(Please Cc me when you send your patchset for me to notice)
-> So if we judge it's worth to integrate, maybe we could make a quick
-> patch to use it or postpone a cycle to intergrate it if we have more
-> time.
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index d592c0ffbd19..69da758fe64c 100644
+=2D-- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -678,19 +678,19 @@ static ssize_t tool_mw_trans_read(struct file *filep=
+, char __user *ubuf,
+ 			 &inmw->dma_base);
 
-Yeah, that would be great!
-It's unlikely that process_madvise() will land for v5.6 anyway since
-it's quite late in the cycle, so we should have some time to coordinate.
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Window Size    \t%pa[p]\n",
++			 "Window Size    \t%pap\n",
+ 			 &inmw->size);
 
-Thanks!
-Christian
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Alignment      \t%pa[p]\n",
++			 "Alignment      \t%pap\n",
+ 			 &addr_align);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Size Alignment \t%pa[p]\n",
++			 "Size Alignment \t%pap\n",
+ 			 &size_align);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Size Max       \t%pa[p]\n",
++			 "Size Max       \t%pap\n",
+ 			 &size_max);
+
+ 	ret =3D simple_read_from_buffer(ubuf, size, offp, buf, off);
+@@ -907,16 +907,16 @@ static ssize_t tool_peer_mw_trans_read(struct file *=
+filep, char __user *ubuf,
+ 			 "Virtual address     \t0x%pK\n", outmw->io_base);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Phys Address        \t%pa[p]\n", &map_base);
++			 "Phys Address        \t%pap\n", &map_base);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Mapping Size        \t%pa[p]\n", &map_size);
++			 "Mapping Size        \t%pap\n", &map_size);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+ 			 "Translation Address \t0x%016llx\n", outmw->tr_base);
+
+ 	off +=3D scnprintf(buf + off, buf_size - off,
+-			 "Window Size         \t%pa[p]\n", &outmw->size);
++			 "Window Size         \t%pap\n", &outmw->size);
+
+ 	ret =3D simple_read_from_buffer(ubuf, size, offp, buf, off);
+ 	kfree(buf);
