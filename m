@@ -2,95 +2,108 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF123C33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C429C33CAD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2B82465B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6207C222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 04:59:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="YzrR6SiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgANE5l (ORCPT
+        id S1728775AbgANE7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 23:57:41 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33430 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbgANE5k (ORCPT
+        Mon, 13 Jan 2020 23:59:49 -0500
+Received: from forward100o.mail.yandex.net ([37.140.190.180]:36273 "EHLO
+        forward100o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727331AbgANE7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 23:57:40 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irEGj-007m9W-2q; Tue, 14 Jan 2020 04:57:33 +0000
-Date:   Tue, 14 Jan 2020 04:57:33 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200114045733.GW8904@ZenIV.linux.org.uk>
-References: <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200108031314.GE8904@ZenIV.linux.org.uk>
- <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
- <20200110210719.ktg3l2kwjrdutlh6@yavin>
+        Mon, 13 Jan 2020 23:59:49 -0500
+Received: from forward102q.mail.yandex.net (forward102q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:516:4e7d])
+        by forward100o.mail.yandex.net (Yandex) with ESMTP id 721D34AC1143;
+        Tue, 14 Jan 2020 07:59:46 +0300 (MSK)
+Received: from mxback6q.mail.yandex.net (mxback6q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:9de5:975f])
+        by forward102q.mail.yandex.net (Yandex) with ESMTP id 6B5967F2001D;
+        Tue, 14 Jan 2020 07:59:46 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback6q.mail.yandex.net (mxback/Yandex) with ESMTP id zJNr872U7L-xhv4HC7P;
+        Tue, 14 Jan 2020 07:59:45 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578977985;
+        bh=6Cyzs5wumIUEXhKYoOJBtaXB0/ZKou1qqhe1zk9UI/A=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=YzrR6SiP0oG1WQ7DbN37izmaJeR9CfEMOrJBYGGgufSSqp2hik1sQDF5Ar0y4AYkL
+         buO45ByXcp6oGuJbsauXEBndI+R1ZXC1zXmuARLSqBEN90EkJUQdG7f1zu6+sTNGgD
+         JCUzFyBjRkyeBLmg84auPPPHktSFSxCtG2DabCF4=
+Authentication-Results: mxback6q.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by vla1-0bfbe4c1c324.qloud-c.yandex.net with HTTP;
+        Tue, 14 Jan 2020 07:59:43 +0300
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Envelope-From: yjx@flygoat.com
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "paul.burton@mips.com" <paul.burton@mips.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "syq@debian.org" <syq@debian.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "chenhc@lemote.com" <chenhc@lemote.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "paul@crapouillou.net" <paul@crapouillou.net>,
+        "prasannatsmkumar@gmail.com" <prasannatsmkumar@gmail.com>,
+        "sernia.zhou@foxmail.com" <sernia.zhou@foxmail.com>,
+        "zhenwenjin@gmail.com" <zhenwenjin@gmail.com>
+In-Reply-To: <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
+References: <Introduce SMP support for CI20 (based on JZ4780).>
+         <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com> <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110210719.ktg3l2kwjrdutlh6@yavin>
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Tue, 14 Jan 2020 12:59:43 +0800
+Message-Id: <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 08:07:19AM +1100, Aleksa Sarai wrote:
 
-> If I'm understanding this proposal correctly, this would be a problem
-> for the libpathrs use-case -- if this is done then there's no way to
-> avoid a TOCTOU with someone mounting and the userspace program checking
-> whether something is a mountpoint (unless you have Linux >5.6 and
-> RESOLVE_NO_XDEV). Today, you can (in theory) do it with MNT_EXPIRE:
-> 
->   1. Open the candidate directory.
->   2. umount2(MNT_EXPIRE) the fd.
->     * -EINVAL means it wasn't a mountpoint when we got the fd, and the
-> 	  fd is a stable handle to the underlying directory.
-> 	* -EAGAIN or -EBUSY means that it was a mountpoint or became a
-> 	  mountpoint after the fd was opened (we don't care about that, but
-> 	  fail-safe is better here).
->   3. Use the fd from (1) for all operations.
 
-... except that foo/../bar *WILL* cross into the covering mount, on any
-kernel that supports ...at(2) at all, so I would be very cautious about
-any kind "hardening" claims in that case.
+14.01.2020, 00:44, "周琰杰 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+>  .../bindings/mips/ingenic/ingenic,cpu.txt | 32 ++++++++++++++++++++++
+>  .../bindings/mips/ingenic/ingenic,soc,txt | 18 ++++++++++++
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
+>
 
-I'm not sure about Linus' proposal - it looks rather convoluted and we
-get a hard to describe twist of semantics in an area (procfs symlinks
-vs. mount traversal) on top of everything else in there...
+We'd better use schemas for the document.
 
-Anyway, a couple of questions:
+See[1]
 
-1) do you see any problems on your testcases with the current #fixes?
-That's commit 7a955b7363b8 as branch tip.
+Thanks.
 
-2) do you have any updates you would like to fold into stuff in
-#work.openat2?  Right now I have a local variant of #work.namei (with
-fairly cosmetical change compared to vfs.git one) that merges clean
-with #work.openat2; I would like to do any updates/fold-ins/etc.
-of #work.openat2 *before* doing a merge and continuing to work on
-top of the merge results...
+[1]: https://lwn.net/Articles/771621/
+--
+Jiaxun Yang
