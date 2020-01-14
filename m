@@ -2,53 +2,55 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD7EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D241FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D192467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BB324673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgANWER (ORCPT
+        id S1728880AbgANWEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:04:17 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46301 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728873AbgANWEO (ORCPT
+        Tue, 14 Jan 2020 17:04:24 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:34203 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728791AbgANWEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:04:14 -0500
-Received: by mail-io1-f72.google.com with SMTP id p206so9053729iod.13
+        Tue, 14 Jan 2020 17:04:13 -0500
+Received: by mail-io1-f70.google.com with SMTP id n26so9036362ioj.1
         for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 14:04:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=3S9j3uq36gpvrhnH3ydXwg7I0WRc5NPGZffM/xDaOQ4=;
-        b=B4Pb9Bpm+LjWHR4iLoc06JOlm8ofueH5HK91ZSiTrj++1ze3k7WrLeUnqxt0QOC92g
-         PMx/pDdLSPEDraZzEPZ3Un3ILQkM6X3qlpXqOnZN+VJbIryWcHb6o2PvRr0sxiK7Aw83
-         OpEGhbCNbFeIKWALO1Drecbj7xRSm1P9DcjBR7BAQQ9gq4qQqJ6uATk95zgmZBFs9sK7
-         K3D21WGm1pdmY2fuw6S3lm9nn4Zp0Xi/0u0eQ6pvvkri7rle8Fb7JKNxDR/AEEHuhfsn
-         rQwowd4XvY6OyFQSUE6qwVs0W5epoIkOPFgL7j2PR6OWe8Mj+seeYieUVpaPuNZdBuww
-         BZNQ==
-X-Gm-Message-State: APjAAAWr8XmP32NZF6si+VVWR661nK18J4uxbmNUMxqCnXjIjKt7gZZ0
-        N4z18hBEaUuepzUAh1zkXTKPjSdApt1PTSLBTHiKzVANMQ9L
-X-Google-Smtp-Source: APXvYqzGw7+E4Qb4MFTi8sqavJrANCW76Yc3mrQOOUjOJMiwlkeR/2ZHwvrF7c5DaAm/QvZ3i/RyhWMP5QoadwAoM6b53ReBqQpX
+        bh=OMN3C/VoYyKIvwTqw2B7b50mrKvNUjoFBtsQzpL17pw=;
+        b=B1G8sEkgupTKBPtlLAQQPBOMifRAWV6CYkixd8QTkb1dAfSCMWHgnBdbbmiLPYzvCJ
+         mwdcBmmXAwPIjN8m8vWOzw/+2v54ZIpaz8/Ovr8arZtOEwcAThXvdmCZknVi9TWZq0fQ
+         Q9egnvFwzU3ipFUPOC/olxtwuBnh0eZeOqqTG9z7U83oDTZdat3b6l76lKRkAJvst7gF
+         6mGgilecVsMyGM4gRXw7ZtAqm5eT1bhbV8s+mfuIAbnk74C5z0foDyhSnWlpazrLhLJc
+         e0TLWMiTH3VKV4HiQTQcCacSTgRNur2fwyEkwGtqD60EjWcs6h3UkkARfdQG634sW8Td
+         dGbA==
+X-Gm-Message-State: APjAAAWs9oWs5cq/GeEv/PYA+eC0uD4CXENYml0EKPHTWWUYyOhlkdYP
+        WhUygXkFaRl62fES2M8hSsAZkdLPoqGwVpHE4z+QrhoPrkEV
+X-Google-Smtp-Source: APXvYqwT5gXgVOW2dudlVYr3OrjQUlenltw3HdN1hwCoQje3ZeeWmf8prgS/U+Qse+oz3HaCUTBqLCpufZngjUDXwJlPy1cnd1QE
 MIME-Version: 1.0
-X-Received: by 2002:a92:d18a:: with SMTP id z10mr663613ilz.48.1579039453602;
- Tue, 14 Jan 2020 14:04:13 -0800 (PST)
-Date:   Tue, 14 Jan 2020 14:04:13 -0800
+X-Received: by 2002:a92:cd07:: with SMTP id z7mr583436iln.124.1579039452376;
+ Tue, 14 Jan 2020 14:04:12 -0800 (PST)
+Date:   Tue, 14 Jan 2020 14:04:12 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b7f160059c20c5a9@google.com>
-Subject: possible deadlock in proc_pid_stack
-From:   syzbot <syzbot+c84a45dcab486e41c053@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        christian@brauner.io, guro@fb.com, kent.overstreet@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
+Message-ID: <000000000000a539c1059c20c5aa@google.com>
+Subject: WARNING: refcount bug in free_nsproxy (2)
+From:   syzbot <syzbot+a98eee31f5df4261d88c@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, armijn@tjaldur.nl, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        gregkh@linuxfoundation.org, jakub.kicinski@netronome.com,
+        jhs@mojatatu.com, jiri@resnulli.us, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, xiyou.wangcong@gmail.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,180 +61,88 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    e033e7d4 Merge branch 'dhowells' (patches from DavidH)
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1499533ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=c84a45dcab486e41c053
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/  
-c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+HEAD commit:    6c09d7db Add linux-next specific files for 20200110
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=102b2156e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7dc7ab9739654fbe
+dashboard link: https://syzkaller.appspot.com/bug?extid=a98eee31f5df4261d88c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162f16aee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13457571e00000
 
-Unfortunately, I don't have any reproducer for this crash yet.
+The bug was bisected to:
+
+commit 14215108a1fd7e002c0a1f9faf8fbaf41fdda50d
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu Feb 21 05:37:42 2019 +0000
+
+     net_sched: initialize net pointer inside tcf_exts_init()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1063da9ee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1263da9ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1463da9ee00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c84a45dcab486e41c053@syzkaller.appspotmail.com
+Reported-by: syzbot+a98eee31f5df4261d88c@syzkaller.appspotmail.com
+Fixes: 14215108a1fd ("net_sched: initialize net pointer inside  
+tcf_exts_init()")
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-rc6-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.5/21564 is trying to acquire lock:
-ffff8880a29cdf10 (&sig->cred_guard_mutex){+.+.}, at: lock_trace  
-fs/proc/base.c:406 [inline]
-ffff8880a29cdf10 (&sig->cred_guard_mutex){+.+.}, at:  
-proc_pid_stack+0xd9/0x200 fs/proc/base.c:450
-
-but task is already holding lock:
-ffff8880a8bb30a0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0 fs/seq_file.c:161
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&p->lock){+.+.}:
-        lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4485
-        __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-        __mutex_lock kernel/locking/mutex.c:1103 [inline]
-        mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1118
-        seq_read+0x6b/0xdb0 fs/seq_file.c:161
-        proc_reg_read+0x1d5/0x2e0 fs/proc/inode.c:223
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-        vfs_readv+0xc2/0x120 fs/read_write.c:997
-        kernel_readv fs/splice.c:365 [inline]
-        default_file_splice_read+0x579/0xa40 fs/splice.c:422
-        do_splice_to fs/splice.c:892 [inline]
-        splice_direct_to_actor+0x3c9/0xb90 fs/splice.c:971
-        do_splice_direct+0x200/0x330 fs/splice.c:1080
-        do_sendfile+0x7e4/0xfd0 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x176/0x1b0 fs/read_write.c:1511
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #2 (sb_writers#3){.+.+}:
-        lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4485
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        __sb_start_write+0x189/0x420 fs/super.c:1674
-        sb_start_write include/linux/fs.h:1650 [inline]
-        mnt_want_write+0x4a/0xa0 fs/namespace.c:354
-        ovl_want_write+0x77/0x80 fs/overlayfs/util.c:21
-        ovl_create_object+0xaf/0x2d0 fs/overlayfs/dir.c:596
-        ovl_create+0x29/0x30 fs/overlayfs/dir.c:627
-        lookup_open fs/namei.c:3241 [inline]
-        do_last fs/namei.c:3331 [inline]
-        path_openat+0x234d/0x4250 fs/namei.c:3537
-        do_filp_open+0x192/0x3d0 fs/namei.c:3567
-        do_sys_open+0x29f/0x560 fs/open.c:1097
-        ksys_open include/linux/syscalls.h:1383 [inline]
-        __do_sys_creat fs/open.c:1155 [inline]
-        __se_sys_creat fs/open.c:1153 [inline]
-        __x64_sys_creat+0x65/0x70 fs/open.c:1153
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&ovl_i_mutex_dir_key[depth]#2){++++}:
-        lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4485
-        down_read+0x39/0x50 kernel/locking/rwsem.c:1495
-        inode_lock_shared include/linux/fs.h:801 [inline]
-        do_last fs/namei.c:3330 [inline]
-        path_openat+0xa7a/0x4250 fs/namei.c:3537
-        do_filp_open+0x192/0x3d0 fs/namei.c:3567
-        do_open_execat+0xff/0x620 fs/exec.c:856
-        __do_execve_file+0x758/0x1cc0 fs/exec.c:1761
-        do_execveat_common fs/exec.c:1867 [inline]
-        do_execve fs/exec.c:1884 [inline]
-        __do_sys_execve fs/exec.c:1960 [inline]
-        __se_sys_execve fs/exec.c:1955 [inline]
-        __x64_sys_execve+0x94/0xb0 fs/exec.c:1955
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&sig->cred_guard_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2971
-        __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3955
-        lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4485
-        __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-        __mutex_lock kernel/locking/mutex.c:1103 [inline]
-        mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-        lock_trace fs/proc/base.c:406 [inline]
-        proc_pid_stack+0xd9/0x200 fs/proc/base.c:450
-        proc_single_show+0xe7/0x180 fs/proc/base.c:756
-        seq_read+0x4d8/0xdb0 fs/seq_file.c:229
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-        vfs_readv fs/read_write.c:997 [inline]
-        do_preadv+0x178/0x290 fs/read_write.c:1089
-        __do_sys_preadv fs/read_write.c:1139 [inline]
-        __se_sys_preadv fs/read_write.c:1134 [inline]
-        __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
-        do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&p->lock);
-                                lock(sb_writers#3);
-                                lock(&p->lock);
-   lock(&sig->cred_guard_mutex);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor.5/21564:
-  #0: ffff8880a8bb30a0 (&p->lock){+.+.}, at: seq_read+0x6b/0xdb0  
-fs/seq_file.c:161
-
-stack backtrace:
-CPU: 1 PID: 21564 Comm: syz-executor.5 Not tainted 5.5.0-rc6-syzkaller #0
+R13: 0000000000000008 R14: 0000000000000000 R15: 0000000000000000
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 9780 at lib/refcount.c:28  
+refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9780 Comm: syz-executor174 Not tainted  
+5.5.0-rc5-next-20200110-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1fb/0x318 lib/dump_stack.c:118
-  print_circular_bug+0xc3f/0xe70 kernel/locking/lockdep.c:1685
-  check_noncircular+0x206/0x3a0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain+0x1507/0x7be0 kernel/locking/lockdep.c:2971
-  __lock_acquire+0xc5a/0x1bc0 kernel/locking/lockdep.c:3955
-  lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4485
-  __mutex_lock_common+0x16e/0x2f30 kernel/locking/mutex.c:956
-  __mutex_lock kernel/locking/mutex.c:1103 [inline]
-  mutex_lock_killable_nested+0x1b/0x30 kernel/locking/mutex.c:1133
-  lock_trace fs/proc/base.c:406 [inline]
-  proc_pid_stack+0xd9/0x200 fs/proc/base.c:450
-  proc_single_show+0xe7/0x180 fs/proc/base.c:756
-  seq_read+0x4d8/0xdb0 fs/seq_file.c:229
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_iter_read+0x4a2/0x5b0 fs/read_write.c:935
-  vfs_readv fs/read_write.c:997 [inline]
-  do_preadv+0x178/0x290 fs/read_write.c:1089
-  __do_sys_preadv fs/read_write.c:1139 [inline]
-  __se_sys_preadv fs/read_write.c:1134 [inline]
-  __x64_sys_preadv+0x9e/0xb0 fs/read_write.c:1134
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:176 [inline]
+  fixup_bug arch/x86/kernel/traps.c:171 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:269
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:288
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Code: e9 d8 fe ff ff 48 89 df e8 b1 a6 13 fe e9 85 fe ff ff e8 47 6e d5 fd  
+48 c7 c7 80 64 91 88 c6 05 4f 5b 00 07 01 e8 e3 f5 a5 fd <0f> 0b e9 ac fe  
+ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
+RSP: 0018:ffffc90005fd7cf8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e8546 RDI: fffff52000bfaf91
+RBP: ffffc90005fd7d08 R08: ffff8880a65ee500 R09: ffffed1015d26659
+R10: ffffed1015d26658 R11: ffff8880ae9332c7 R12: 0000000000000003
+R13: ffff88809aff6040 R14: ffff88809aff6044 R15: 00000000000002bc
+  refcount_sub_and_test include/linux/refcount.h:261 [inline]
+  refcount_dec_and_test include/linux/refcount.h:281 [inline]
+  put_net include/net/net_namespace.h:259 [inline]
+  free_nsproxy+0x2eb/0x330 kernel/nsproxy.c:180
+  switch_task_namespaces+0xb3/0xd0 kernel/nsproxy.c:225
+  exit_task_namespaces+0x18/0x20 kernel/nsproxy.c:230
+  do_exit+0xbc6/0x2f70 kernel/exit.c:800
+  do_group_exit+0x135/0x360 kernel/exit.c:899
+  __do_sys_exit_group kernel/exit.c:910 [inline]
+  __se_sys_exit_group kernel/exit.c:908 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:908
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45af49
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f893d1e0c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045af49
-RDX: 0000000000000332 RSI: 00000000200017c0 RDI: 0000000000000004
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f893d1e16d4
-R13: 00000000004c954e R14: 00000000004e2220 R15: 00000000ffffffff
+RIP: 0033:0x441228
+Code: 74 20 63 6f 64 65 20 62 61 73 65 2e 00 00 00 00 00 00 72 73 79 73 6c  
+6f 67 64 3a 20 24 41 62 6f 72 74 4f 6e 55 6e 63 6c 65 61 <6e> 43 6f 6e 66  
+69 67 20 69 73 20 73 65 74 2c 20 61 6e 64 20 63 6f
+RSP: 002b:00007ffedb54aa88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 0000000000441228
+RDX: 0000000000000001 RSI: 000000000000003c RDI: 0000000000000001
+RBP: 00000000004c79d0 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006daa80 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
@@ -242,3 +152,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
