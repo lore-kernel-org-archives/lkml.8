@@ -2,118 +2,123 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C26C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E0E2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87141207E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="d4nipDKe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bwSScmx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgANG7D (ORCPT
+        id S1728901AbgANG7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:59:03 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55890 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgANG7B (ORCPT
+        Tue, 14 Jan 2020 01:59:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:57750 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728680AbgANG7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:59:01 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so5272731pjz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:59:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hCBAxuPJwON1Gy5hn3PW9lmQgUC5syzaXBSX40eS+mE=;
-        b=d4nipDKe1st0I/SXY9Ir7FSC+6zGAc24kDE90jHBhLJs1cgnxNQDmG5BOrHXOXXDN9
-         M5znoCrr9FBDAwkxHTLRxrQjRZjC9xw3CHZGvXHUrYaQFL6u4xKWL3x3XqMH/7X23KwR
-         7dsLnKQN+qy8qu/NKmz9IkM0orc+jICbyLBLQSxA5SBY5u8aed2cek/vZgrWe6MvWyYZ
-         h665sc7h8JgzPH1HydnPXBgEdneFKkuPuBnIwijRCjCOzEIH8L1jyS4blAzz/4Zv1N0j
-         06oq1cgsglipda3d7eHh331a4tKYoGWbxwbGLj7NEDHC63U5G4uuzgzmmIrCPoBIkp1J
-         BvIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hCBAxuPJwON1Gy5hn3PW9lmQgUC5syzaXBSX40eS+mE=;
-        b=A9JGMR1UNxZGiNmVNcK7buOfzgrasjh/8I3hEnURaTa78MOzKld3tUWCuipzuj7z0r
-         txWdxT4GbTE3Yyxk3VX21FW4hEbfqgDSnYRR5BxKTM624KnoBtLiQYCMk9Rk2LKiMKzQ
-         2m+fVS7YlY+5catGDbGWP3vLqotvfyBVjdcX942E3mWjrDaqBKqTPzhHztdVMAzaO9kl
-         jAvORZ+WiUaMzSiuCrFUo8XxQmhC+0b1mcBbDiTzs7wHqHYeCemj+UL5xf+2VMOhlHAE
-         Q3PlTCodDsEI+afg2ZmvoatTLQ2YlwdAPltVWDaOTCrnhFvkxHGJiQ+phz7zqOHYlIZM
-         lAEw==
-X-Gm-Message-State: APjAAAUP2wFfDGDi3bMMdfxxQryYzNE10PHk+Sz2aMHVSOflV70MFhiY
-        XTlQvDWF3V5iHkV/im+ppxDfOWOvlNc=
-X-Google-Smtp-Source: APXvYqzyPDf6N9UafVmaZvY1p6ZEe39MSNHu6C0hOh2acYCd4w00Ixvgj2fPvACdY8KdkzCSJcnODg==
-X-Received: by 2002:a17:90a:8a0e:: with SMTP id w14mr27686748pjn.51.1578985140155;
-        Mon, 13 Jan 2020 22:59:00 -0800 (PST)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id p21sm16320432pfn.103.2020.01.13.22.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 22:58:59 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Mantas Pucka <mantas@8devices.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: vqmmc-ipq4019: Trivial clean up
-Date:   Tue, 14 Jan 2020 14:58:47 +0800
-Message-Id: <20200114065847.31667-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200114065847.31667-1-axel.lin@ingics.com>
-References: <20200114065847.31667-1-axel.lin@ingics.com>
+        Tue, 14 Jan 2020 01:59:34 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6wuax189199;
+        Tue, 14 Jan 2020 06:59:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Um3aq13bt3KE8FaQoSHBOGx9xF1pyNNvuGHu3EV01Lg=;
+ b=bwSScmx96s4yKtSNq2SZAalf38tHkEjLxLXLH0i7GgzsalBbDpDbuafNPtg9OBNw5hHD
+ +Wnqy3cZbhidEUkZpVIuSO+O5p3AshrjC8HTQekJ4Egk7cov7XSfWPxkX+Xq6Sv/Y2JO
+ xeRojrUAJyP2rFn4hCvDwkTawdb7rhsRrrfUuylEjLqmoltt9pGiSuXxIwc7YmOqF/Yu
+ KZl5Yq7PWzxhpz4TZi4UK9aTsNaDgBGn6je5Emo5QjGOqXwCgieyKqAgzDnvHJxznHhF
+ IMl/cdc8vk8m+ufDSsbmp4OsurT2tZiR6h2EA+VDdufYHfeaznprgga8tUF9Soiri2dl 3g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xf74s3xdb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 06:59:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6xJo4074324;
+        Tue, 14 Jan 2020 06:59:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2xh8ergxrn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 06:59:28 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E6x2HU012071;
+        Tue, 14 Jan 2020 06:59:02 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 22:59:01 -0800
+Date:   Tue, 14 Jan 2020 09:58:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+79eb0f3df962caf839ed@syzkaller.appspotmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: kernel BUG at fs/namei.c:LINE!
+Message-ID: <20200114065854.GA3719@kadam>
+References: <00000000000008132d059c13c47b@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000008132d059c13c47b@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=742
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001140060
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=803 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few trivial clean up:
-* Make ipq4019_regulator_voltage_ops and vmmc_regulator const
-* Make ipq4019_vmmcq_regmap_config static
-* Use regulator_map_voltage_ascend
+On Mon, Jan 13, 2020 at 10:33:10PM -0800, syzbot wrote:
+> ------------[ cut here ]------------
+> kernel BUG at fs/namei.c:684!
+> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 9764 Comm: syz-executor.0 Not tainted
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/vqmmc-ipq4019-regulator.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> 5.5.0-rc5-next-20200113-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
 
-diff --git a/drivers/regulator/vqmmc-ipq4019-regulator.c b/drivers/regulator/vqmmc-ipq4019-regulator.c
-index 42a2368e9ef7..685b585b39a1 100644
---- a/drivers/regulator/vqmmc-ipq4019-regulator.c
-+++ b/drivers/regulator/vqmmc-ipq4019-regulator.c
-@@ -18,13 +18,14 @@ static const unsigned int ipq4019_vmmc_voltages[] = {
- 	1500000, 1800000, 2500000, 3000000,
- };
- 
--static struct regulator_ops ipq4019_regulator_voltage_ops = {
-+static const struct regulator_ops ipq4019_regulator_voltage_ops = {
- 	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_ascend,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- };
- 
--static struct regulator_desc vmmc_regulator = {
-+static const struct regulator_desc vmmc_regulator = {
- 	.name		= "vmmcq",
- 	.ops		= &ipq4019_regulator_voltage_ops,
- 	.type		= REGULATOR_VOLTAGE,
-@@ -35,7 +36,7 @@ static struct regulator_desc vmmc_regulator = {
- 	.vsel_mask	= 0x3,
- };
- 
--const struct regmap_config ipq4019_vmmcq_regmap_config = {
-+static const struct regmap_config ipq4019_vmmcq_regmap_config = {
- 	.reg_bits	= 32,
- 	.reg_stride	= 4,
- 	.val_bits	= 32,
--- 
-2.20.1
+> RIP: 0010:unlazy_walk+0x306/0x3b0 fs/namei.c:684
+
+>  path_mountpoint.isra.0+0x1d5/0x340 fs/namei.c:2788
+>  filename_mountpoint+0x181/0x380 fs/namei.c:2809
+>  user_path_mountpoint_at+0x3a/0x50 fs/namei.c:2839
+>  ksys_umount+0x164/0xef0 fs/namespace.c:1683
+
+  2289  static const char *path_init(struct nameidata *nd, unsigned flags)
+  2290  {
+  2291          int error;
+  2292          const char *s = nd->name->name;
+  2293  
+  2294          if (!*s)
+  2295                  flags &= ~LOOKUP_RCU;
+                        ^^^^^^^^^^^^^^^^^^^^
+My guess is that LOOKUP_RCU gets cleared out here.  Maybe the problem
+was introduced in commit e56b43b971a7 ("reimplement path_mountpoint()
+with less magic") because before we checked LOOKUP_RCU before calling
+unlazy_walk().
+
+-       /* If we're in rcuwalk, drop out of it to handle last component */
+-       if (nd->flags & LOOKUP_RCU) {
+-               if (unlazy_walk(nd))
+
+  2296          if (flags & LOOKUP_RCU)
+  2297                  rcu_read_lock();
+  2298  
+
+regards,
+dan carpenter
 
