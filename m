@@ -2,96 +2,102 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A57C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3BAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17AC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k1CQPAZk"
+	by mail.kernel.org (Postfix) with ESMTP id 548902465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgANMKF (ORCPT
+        id S1729380AbgANMLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:10:05 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:46568 "EHLO mail.skyhub.de"
+        Tue, 14 Jan 2020 07:11:54 -0500
+Received: from mga18.intel.com ([134.134.136.126]:14197 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgANMKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:10:04 -0500
-Received: from zn.tnic (p200300EC2F0C77003938F16A642D0E75.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:3938:f16a:642d:e75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 41DAD1EC0C98;
-        Tue, 14 Jan 2020 13:10:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579003803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UVBVRwQAHchxAi67wcQn1l/n0Q8ILWONdjW0r4Pz9Oo=;
-        b=k1CQPAZkTFeGujiaSCpD85Dps96nHnz6Y+2EdQklq1wygC303JzKNGUCsxmcb+OY6LYEW8
-        +lfOeAifIm0OYq3H6ZJ7paJGNSrQG1Mo/nDe8TRxuEC4NSdG8kEo9Q2qAtKD6ROqaVVnYt
-        CfvRlSgv+bjUYfpT+uNTaqtdw0T7yvs=
-Date:   Tue, 14 Jan 2020 13:10:00 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode/amd: fix uninitalized structure cp
-Message-ID: <20200114121000.GH31032@zn.tnic>
-References: <20200114111505.320186-1-colin.king@canonical.com>
- <20200114113834.GE31032@zn.tnic>
- <b59bb156-891e-3a26-3204-f5a0a1cc60d3@canonical.com>
- <20200114120156.GG31032@zn.tnic>
- <54eca4f8-33ca-24b1-9123-70df3b164043@canonical.com>
+        id S1726053AbgANMLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:11:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 04:11:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="256276608"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 04:11:51 -0800
+Subject: Re: [PATCH] mmc: sdhci-of-at91: fix memleak on clk_get failure
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-mmc@vger.kernel.org
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+References: <b2a44d5be2e06ff075f32477e466598bb0f07b36.1577961679.git.mirq-linux@rere.qmqm.pl>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <96974b11-55f6-e52d-abdb-9f6f77d5c84a@intel.com>
+Date:   Tue, 14 Jan 2020 14:10:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <b2a44d5be2e06ff075f32477e466598bb0f07b36.1577961679.git.mirq-linux@rere.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <54eca4f8-33ca-24b1-9123-70df3b164043@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:03:36PM +0000, Colin Ian King wrote:
-> On 14/01/2020 12:01, Borislav Petkov wrote:
-> > On Tue, Jan 14, 2020 at 11:51:43AM +0000, Colin Ian King wrote:
-> >> Starting at load_ucode_amd_bsp(), this initializes a local cp to zero,
-> >> then passes &cp when it calls __load_ucode_amd() as parameter *ret.  In
-> >> __load_ucode_amd a new local cp is created on the stack and *only* is
-> >> assigned here:
-> >>
-> >>        if (!get_builtin_microcode(&cp, x86_family(cpuid_1_eax)))
-> >>                 cp = find_microcode_in_initrd(path, use_pa);
-> > 
-> > Is there any case where cp doesn't get assigned here? Either by
-> > get_builtin_microcode() or by find_microcode_in_initrd()?
-^^^^^^^^^^^^^
+On 2/01/20 12:42 pm, Michał Mirosław wrote:
+> sdhci_alloc_host() does its work not using managed infrastructure, so
+> needs explicit free on error path. Add it where needed.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-You missed this question.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> OK, I will try to extract every special Tag from Coverity and get this
-> documented when I get some spare cycles.
+> ---
+>  drivers/mmc/host/sdhci-of-at91.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-at91.c b/drivers/mmc/host/sdhci-of-at91.c
+> index b2a8c45c9c23..ab2bd314a390 100644
+> --- a/drivers/mmc/host/sdhci-of-at91.c
+> +++ b/drivers/mmc/host/sdhci-of-at91.c
+> @@ -345,20 +345,23 @@ static int sdhci_at91_probe(struct platform_device *pdev)
+>  			priv->mainck = NULL;
+>  		} else {
+>  			dev_err(&pdev->dev, "failed to get baseclk\n");
+> -			return PTR_ERR(priv->mainck);
+> +			ret = PTR_ERR(priv->mainck);
+> +			goto sdhci_pltfm_free;
+>  		}
+>  	}
+>  
+>  	priv->hclock = devm_clk_get(&pdev->dev, "hclock");
+>  	if (IS_ERR(priv->hclock)) {
+>  		dev_err(&pdev->dev, "failed to get hclock\n");
+> -		return PTR_ERR(priv->hclock);
+> +		ret = PTR_ERR(priv->hclock);
+> +		goto sdhci_pltfm_free;
+>  	}
+>  
+>  	priv->gck = devm_clk_get(&pdev->dev, "multclk");
+>  	if (IS_ERR(priv->gck)) {
+>  		dev_err(&pdev->dev, "failed to get multclk\n");
+> -		return PTR_ERR(priv->gck);
+> +		ret = PTR_ERR(priv->gck);
+> +		goto sdhci_pltfm_free;
+>  	}
+>  
+>  	ret = sdhci_at91_set_clks_presets(&pdev->dev);
+> 
 
-tglx just explained to me the whole situation about coverity.
-
-I'm not asking about extracting special tags but rather about a
-couple of sentences somewhere in Documentation/ explaining what
-Addresses-Coverity* means for the unenlightened among us and how one can
-find further invormation.
-
-Reportedly, there's even a web page with the tags somewhere...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
