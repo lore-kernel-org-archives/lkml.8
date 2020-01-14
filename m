@@ -2,116 +2,120 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508FFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A96EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2550C24684
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14292467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijdJg9u0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LZxZ8nJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgANONk (ORCPT
+        id S1729005AbgANOOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:13:40 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55625 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgANONj (ORCPT
+        Tue, 14 Jan 2020 09:14:08 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52879 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgANOOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:13:39 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so5754641pjz.5;
-        Tue, 14 Jan 2020 06:13:39 -0800 (PST)
+        Tue, 14 Jan 2020 09:14:07 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so13985133wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 06:14:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RqFXdgT3LlFr0BDIsZ4AkGZfGr6feSH5yxzOu+zCNSA=;
-        b=ijdJg9u0y8HQtUMQC6bTqYlb+yzR+A9CetjNaAiOUJ8y48b2GdY/MmEYcpEvTBchSU
-         QA+02mmmPreon+F8I+rs37vSly1Vj4ushL4+K+Dl5TeUgzWW3EllM5RJiVVHdX3lO8VA
-         BgPZ2FLkKWidqhteoQcwiMx6iD0nY2BPxZDaR4bHH1NvkH6sA8I8aCpfLBmZDoCiSZ10
-         /b/d44sjfOHnproo3KAhstLlbkMKMUUJ2LmgYksPDtLwNQrkKb6O+qXZH4P0q7SN+Pp7
-         7Sg/IzqGl2QRmHXTq/76dOIQHdWJEbm+VSZw+bTTrJDYMrWpT4rnrTNVQfe2yf6enM7R
-         Q2Ww==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=dQLNpWLGlZntblD8Vo0H/wvH1TQ6QT4Dns9lFKlqz40=;
+        b=LZxZ8nJsB9nlPqYwpe05m8yIOGGz3U7FORuzL9jPFR8DnrEDYhhEJVL3mxwoZTv8Uk
+         2+G3OpwK1la2GB49LF546G3Xf6PprTbmPuyydQCOFS8/17QQPwkVrC7hPMEqSASwPFNc
+         1C5ElEZr4mGHdUeyJ6B/V2e8xcAw8R045/kEKvB10viUPvW8vleUNafyxLoiS4EJC9SP
+         9nNdJK5ylbqfiZ1rznYCKPH5g7P1+3mBMZRtaKEPL5h8TllrCStP2Xki0icbxQS95vgy
+         fV9dMgeBOZ1onCWbimsy4dzKOA3FFcMdQyfwV9ax6fTgOUoyzfI98/xnf5UiXO+X5bZ3
+         0kCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RqFXdgT3LlFr0BDIsZ4AkGZfGr6feSH5yxzOu+zCNSA=;
-        b=Ky6UweRvxD8f3RHqC0aZCzsJCscEGmrNxuCG/g8hX7pxJl5bJ2M5Vhx4xZh87hiar2
-         JjvMm71SOSvt0bcoytV97ITJDMJ+ktPb0SIFRo+GsrgXuPCAwUtu3Am/C4q7Jfo9XU1W
-         /VvIbFs7F6dmo+V3wA3HFVhN2X3IMeGa4IGYZScw78dGL+S5W27245rIqFzoCsyOBWUz
-         maIBL97A5i+64JnO7+ptfEL1vMYBRf0eH0Q5SiSnzRJrAr3MrGvtmUUcOspyDyTCcgWN
-         2lFppun1NbVYFN4pH6ZYDz3COkdlMfN/tWZ5J6HauDQEQU4MMNFCKMUla8U8N0tFcWuv
-         QUrQ==
-X-Gm-Message-State: APjAAAVB5AZ8MOgKtaZ2vYf2cAzv7nMLb/sQSUG8bQgJyvZ8qkjW+7DP
-        ZA9lJxT4BTuHI2Eh2eIIiWA=
-X-Google-Smtp-Source: APXvYqxjQGSoPS5oTAT9D0cQglVKshJ9Vv9jKAtTk9hoiRjnujw/stvy9RNQ7AGtuzfCkLCiyrYtQw==
-X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr29363741pjc.20.1579011218933;
-        Tue, 14 Jan 2020 06:13:38 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k10sm13391223pjq.14.2020.01.14.06.13.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 06:13:38 -0800 (PST)
-Date:   Tue, 14 Jan 2020 06:13:37 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     linux-hwmon@vger.kernel.org, Michael.Hennerich@analog.com,
-        linux-kernel@vger.kernel.org, jdelvare@suse.com,
-        mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, biabeniamin@outlook.com
-Subject: Re: [PATCH v4 3/3] MAINTAINERS: add entry for ADM1177 driver
-Message-ID: <20200114141337.GA28002@roeck-us.net>
-References: <20200114112159.25998-1-beniamin.bia@analog.com>
- <20200114112159.25998-3-beniamin.bia@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114112159.25998-3-beniamin.bia@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dQLNpWLGlZntblD8Vo0H/wvH1TQ6QT4Dns9lFKlqz40=;
+        b=MTNw+EHjR20BNbSSE8SAnHbTJ4Vu5d6JFhUSIUIvGglao59rwaKLy8u/N9ZcVzaBxy
+         q5rkeHQOXZvkshu/ezG6DUzBSbq9MLGXSgxhvivjIOHwIL9SSKp5WAgFcaUlGye1+OwU
+         LoYG5ECddPUAab6jt9iB76x2PHWpm4lgR1WMz/odKpA2VB9R+pq5fTifyDasoYKLB6ZQ
+         hudvQ+p8dLNRNUNbPlbDkiQ6aNBC030+3t+7MGJ08z82npL0AV3yhfV/8W/Nxyu37Q6A
+         bTzDSPp/pmi+ly2NHWL7GTrycclzZ8FadFKEB2tmN4HD3HSZEsvjTAK7iT3RAUhpHdKo
+         Rebw==
+X-Gm-Message-State: APjAAAVeL26hqBDbpMki/8dH8sBTNAgSt06CrE4Ag3hwD9nmtkQEL3dq
+        lO7fF1vSkMjZQ+fLUZ2haWlPeA==
+X-Google-Smtp-Source: APXvYqyFMifaUXiCLIJuPP4BSfLAKNc+mu4d237cGpGKZQKElYr20LsKMnyRBEnvg5KwkotZfRMrGQ==
+X-Received: by 2002:a1c:de09:: with SMTP id v9mr26876030wmg.170.1579011245694;
+        Tue, 14 Jan 2020 06:14:05 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:51a2:f361:d0e2:7ea6])
+        by smtp.gmail.com with ESMTPSA id l15sm18978128wrv.39.2020.01.14.06.13.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 14 Jan 2020 06:14:00 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair : prevent unlimited runtime on throttled group
+Date:   Tue, 14 Jan 2020 15:13:56 +0100
+Message-Id: <1579011236-31256-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:21:59PM +0200, Beniamin Bia wrote:
-> Add Beniamin Bia and Michael Hennerich as a maintainer for ADM1177 ADC.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+When a running task is moved on a throttled task group and there is no
+other task enqueued on the CPU, the task can keep running using 100% CPU
+whatever the allocated bandwidth for the group and although its cfs rq is
+throttled. Furthermore, the group entity of the cfs_rq and its parents are
+not enqueued but only set as curr on their respective cfs_rqs.
 
-Applied.
+We have the following sequence:
 
-Thanks,
-Guenter
+sched_move_task
+  -dequeue_task: dequeue task and group_entities.
+  -put_prev_task: put task and group entities.
+  -sched_change_group: move task to new group.
+  -enqueue_task: enqueue only task but not group entities because cfs_rq is
+    throttled.
+  -set_next_task : set task and group_entities as current sched_entity of
+    their cfs_rq.
 
-> ---
-> Changes in v4:
-> -nothing changed 
-> 
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bd5847e802de..a71f56d3b891 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -975,6 +975,15 @@ W:	http://ez.analog.com/community/linux-device-drivers
->  F:	drivers/iio/imu/adis16460.c
->  F:	Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
->  
-> +ANALOG DEVICES INC ADM1177 DRIVER
-> +M:	Beniamin Bia <beniamin.bia@analog.com>
-> +M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> +L:	linux-hwmon@vger.kernel.org
-> +W:	http://ez.analog.com/community/linux-device-drivers
-> +S:	Supported
-> +F:	drivers/hwmon/adm1177.c
-> +F:	Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-> +
->  ANALOG DEVICES INC ADP5061 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
->  L:	linux-pm@vger.kernel.org
+Another impact is that the root cfs_rq runnable_load_avg at root rq stays
+null because the group_entities are not enqueued. This situation will stay
+the same until an "external" event triggers a reschedule. Let trigger it
+immediately instead.
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e7b08d52db93..d0acc67336c0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7062,8 +7062,15 @@ void sched_move_task(struct task_struct *tsk)
+ 
+ 	if (queued)
+ 		enqueue_task(rq, tsk, queue_flags);
+-	if (running)
++	if (running) {
+ 		set_next_task(rq, tsk);
++		/*
++		 * After changing group, the running task may have joined a
++		 * throttled one but it's still the running task. Trigger a
++		 * resched to make sure that task can still run.
++		 */
++		resched_curr(rq);
++	}
+ 
+ 	task_rq_unlock(rq, tsk, &rf);
+ }
+-- 
+2.7.4
+
