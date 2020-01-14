@@ -2,81 +2,133 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9740C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9562CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96A324658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="idXTrc1A"
+	by mail.kernel.org (Postfix) with ESMTP id 7EC4824672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgANSLb (ORCPT
+        id S1728794AbgANSME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:11:31 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:34475 "EHLO rere.qmqm.pl"
+        Tue, 14 Jan 2020 13:12:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:55974 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANSLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:11:31 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47xz6l4YtLz1p;
-        Tue, 14 Jan 2020 19:11:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1579025488; bh=GloLZ5z++1Zxfj3fPfs6lgSK94B1ofTLcLm957oZolY=;
-        h=Date:From:Subject:To:Cc:From;
-        b=idXTrc1A0a85ieZI9LO9PwgaOjtSjTv2Xr1oZXRYv5VCKJ3dPOHV8E9s47htBnJwI
-         MYvGqfqLG30wh9GKV+T3YhUYTOO6Xyrph6C8bbsXzgd7oa4KmnPdiS+O3ryw4Hn1Rc
-         27I+cexzwNtoh7cu1WbXHovcixJtp8dpU/54h2+eiXf2iwO/e0Ha3j+gtj5xXwdDau
-         KYckQuPkfwVVJ0hbxFWRdR8E3Qzz3QPlXOl3LPAGIeTPWqgeViTTP4e9It1CFJKxLI
-         osdDcpcPeN7oTifUgFP8oxZPi+34wpyo5Euo0xL32mDwSAyVZwZ+BDH4izVlOnCe5V
-         uWhuH/yUI7frQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Tue, 14 Jan 2020 19:11:26 +0100
-Message-Id: <e026b0d7a2eceaa1745a001baa9f950ce546addb.1579025325.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2] builddeb: allow selection of .deb compressor
+        id S1726450AbgANSME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:12:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B59841396;
+        Tue, 14 Jan 2020 10:12:03 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8509B3F68E;
+        Tue, 14 Jan 2020 10:12:01 -0800 (PST)
+Date:   Tue, 14 Jan 2020 18:11:59 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, olof@lixom.net
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 2/6] ARM: dts: bcm2711: Enable PCIe controller
+Message-ID: <20200114181159.GB11177@e121166-lin.cambridge.arm.com>
+References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+ <20191216110113.30436-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216110113.30436-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Select deb compression using KDEB_COMPRESS make variable. This allows to
-use gzip compression for local or test builds, and that's way faster
-than now-default xz compression.
+On Mon, Dec 16, 2019 at 12:01:08PM +0100, Nicolas Saenz Julienne wrote:
+> This enables bcm2711's PCIe bus, which is hardwired to a VIA
+> Technologies XHCI USB 3.0 controller.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> ---
+> 
+> Changes since v4:
+>   - Rebase commit taking into account genet support series
+> 
+> Changes since v3:
+>   - Remove unwarranted comment
+> 
+> Changes since v2:
+>   - Remove unused interrupt-map
+>   - correct dma-ranges to it's full size, non power of 2 bus DMA
+>     constraints now supported in linux-next[1]
+>   - add device_type
+>   - rename alias from pcie_0 to pcie0
+> 
+> Changes since v1:
+>   - remove linux,pci-domain
+> 
+> [1] https://lkml.org/lkml/2019/11/21/235
+> 
+>  arch/arm/boot/dts/bcm2711.dtsi | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- v2: rename KPKG_COMPRESS to KDEB_COMPRESS as suggested by Masahiro Yamada
----
- scripts/package/builddeb | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Olof as we discussed previously, I will not merge this dts change and
+drop it from the series - Nicolas should redirect it to arm-soc, please
+let me know if my understanding is correct.
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index c4c580f547ef..b68aaeece7c9 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -43,7 +43,7 @@ create_package() {
- 
- 	# Create the package
- 	dpkg-gencontrol -p$pname -P"$pdir"
--	dpkg --build "$pdir" ..
-+	dpkg-deb ${KDEB_COMPRESS:+-Z$KDEB_COMPRESS} --build "$pdir" ..
- }
- 
- version=$KERNELRELEASE
--- 
-2.20.1
+Thanks,
+Lorenzo
 
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index e2f6ffb00aa9..b56388ce1216 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -331,7 +331,36 @@ scb {
+>  		#address-cells = <2>;
+>  		#size-cells = <1>;
+>  
+> -		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>;
+> +		ranges = <0x0 0x7c000000  0x0 0xfc000000  0x03800000>,
+> +			 <0x6 0x00000000  0x6 0x00000000  0x40000000>;
+> +
+> +		pcie0: pcie@7d500000 {
+> +			compatible = "brcm,bcm2711-pcie";
+> +			reg = <0x0 0x7d500000 0x9310>;
+> +			device_type = "pci";
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			#size-cells = <2>;
+> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "pcie", "msi";
+> +			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +			interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143
+> +							IRQ_TYPE_LEVEL_HIGH>;
+> +			msi-controller;
+> +			msi-parent = <&pcie0>;
+> +
+> +			ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000
+> +				  0x0 0x04000000>;
+> +			/*
+> +			 * The wrapper around the PCIe block has a bug
+> +			 * preventing it from accessing beyond the first 3GB of
+> +			 * memory.
+> +			 */
+> +			dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000
+> +				      0x0 0xc0000000>;
+> +			brcm,enable-ssc;
+> +		};
+>  
+>  		genet: ethernet@7d580000 {
+>  			compatible = "brcm,bcm2711-genet-v5";
+> -- 
+> 2.24.0
+> 
