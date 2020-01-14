@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83775C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF3C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1BB2468B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6456524687
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996436;
-	bh=+gYPelXvqrrju/nEGUV6QFgs/hZenqpPWhlUyiFzqwc=;
+	s=default; t=1578996438;
+	bh=jCi41ZsJLM7yYkSsH9juRlawv+6zNQHW4Q3VfUb71UE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kq8WnbVHScRnto2BRpn76wqdvurkoiHFmP40FjAPsu9iE1LofBp+75QqULd6MeBzm
-	 0eLxCCoo5xej8BJNK9eVUAHbyQ++5LT4W1u1kiY7fYnpOwI1L/rQHMq0sC+G74zX+j
-	 hA8iVDuqh2awXSHmhC8X97vbXSzew5hJOHQf7q6I=
+	b=Q+2KzPbjN6bB3c1t8czPoUFN6YPGv/iAE1lgVnC3T28BB6MOvUUVFY1bIwFl6uDoi
+	 zBXfl7fsMGedzNFYRlXnh5Ml/qYeyRRJrtwX3GgzDxpwijAs+soKzEgTuqj6cT0H5/
+	 O3EW1ongDIEB/n0zztDjcoHdc54LtCcY/Pl6tkrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgANKHP (ORCPT
+        id S1730665AbgANKHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36840 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:07:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbgANKHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:06 -0500
+        id S1730620AbgANKHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:07:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 259F624681;
-        Tue, 14 Jan 2020 10:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B5B24695;
+        Tue, 14 Jan 2020 10:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996425;
-        bh=+gYPelXvqrrju/nEGUV6QFgs/hZenqpPWhlUyiFzqwc=;
+        s=default; t=1578996431;
+        bh=jCi41ZsJLM7yYkSsH9juRlawv+6zNQHW4Q3VfUb71UE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSXNR6WIpbog3P5TGPPW1+ctoYfKl+cCOnXN8DnTEJh4vthItFPpCw2wUFHi5YfpB
-         7OyRHpqqimFUnb2ZDmPCs96Crlbt3D2GBFOUplZ+CM39NZBREtYXVUe7+pZh1ONlpq
-         Q71oDC84SvBCBCvD+SIPw3Pcx9Kq4D4P9uDqsgJY=
+        b=llIiidnwbRhsmFnG4f7b4z5kce9zhV5qo6c+SYDydlt64Nqy01EGtOST9DvBUB544
+         Z+gbCKzGHB7XOYKXqrPxn2n1T/s+BqzISIYqgG1LwiMWaKc8DSwqQgjpxFWpZ2PtHn
+         Uyh7j2DpO0DQUD5PbWti4qj/0PxiSFUe+8YLNqtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 05/46] ALSA: hda/realtek - Add new codec supported for ALCS1200A
-Date:   Tue, 14 Jan 2020 11:01:22 +0100
-Message-Id: <20200114094341.488946953@linuxfoundation.org>
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 07/46] ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 7th gen
+Date:   Tue, 14 Jan 2020 11:01:24 +0100
+Message-Id: <20200114094341.923274527@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -61,46 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kailang Yang <kailang@realtek.com>
 
-commit 6d9ffcff646bbd0ede6c2a59f4cd28414ecec6e0 upstream.
+commit 54a6a7dc107da0492a9e84fd7e9a107b3c58138d upstream.
 
-Add ALCS1200A supported.
-It was similar as ALC900.
+Add quirk to ALC285_FIXUP_SPEAKER2_TO_DAC1, which is the same fixup
+applied for X1 Carbon 7th gen in commit d2cd795c4ece ("ALSA: hda -
+fixup for the bass speaker on Lenovo Carbon X1 7th gen").
 
 Signed-off-by: Kailang Yang <kailang@realtek.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/a9bd3cdaa02d4fa197623448d5c51e50@realtek.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -442,6 +442,7 @@ static void alc_fill_eapd_coef(struct hd
- 		break;
- 	case 0x10ec0899:
- 	case 0x10ec0900:
-+	case 0x10ec0b00:
- 	case 0x10ec1168:
- 	case 0x10ec1220:
- 		alc_update_coef_idx(codec, 0x7, 1<<1, 0);
-@@ -2521,6 +2522,7 @@ static int patch_alc882(struct hda_codec
- 	case 0x10ec0882:
- 	case 0x10ec0885:
- 	case 0x10ec0900:
-+	case 0x10ec0b00:
- 	case 0x10ec1220:
- 		break;
- 	default:
-@@ -8989,6 +8991,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0892, "ALC892", patch_alc662),
- 	HDA_CODEC_ENTRY(0x10ec0899, "ALC898", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec0900, "ALC1150", patch_alc882),
-+	HDA_CODEC_ENTRY(0x10ec0b00, "ALCS1200A", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec1168, "ALC1220", patch_alc882),
- 	HDA_CODEC_ENTRY(0x10ec1220, "ALC1220", patch_alc882),
- 	{} /* terminator */
+@@ -7042,6 +7042,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
++	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
 
 
