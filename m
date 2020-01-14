@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E75C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C148AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325D124676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ADA24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997202;
-	bh=nkghoqy5PO1R0vFhiLup2ZoVuVgw26sLl6ZOwSh8jKw=;
+	s=default; t=1578997204;
+	bh=HJyKb3ufKZ8IOVfXFQ3wbJVp9+703THq2r4/pcSxkfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Peyp4rCzRftJChYKzF1q8SdOk03Zel4eRstNlTtPiJ8dvghRja3PkpmtTuzOgPhRM
-	 Y9gXGItgEsgcwPzJpMk4Af/9f0+zFSjSmlk3KBK7iC2RYwxEg6DpMvb/GoHp9I4Z5F
-	 osGtTUIlV7SUTkZrzR1dUSWePHaG6Nimfvj3uGIA=
+	b=MRWqozvVKnwYcJXgc+LT4U8qECfeD7dFKNDYMalH5GHgy0tpLnxmDah64fy34ruNt
+	 Vp+Vy8awDhAlooLNNtvsbsKAEL75FB2BSOust0ow4Z1rbhA3paTRl8uCIFvYGJxTIM
+	 Ag8viI5YcnpJC+YzVYD+0EXdCBizRUqu7T2CW6/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgANKUB (ORCPT
+        id S1729922AbgANKEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:20:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60574 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729930AbgANKEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:44 -0500
+        id S1725820AbgANKEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731632465B;
-        Tue, 14 Jan 2020 10:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8207124673;
+        Tue, 14 Jan 2020 10:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996284;
-        bh=nkghoqy5PO1R0vFhiLup2ZoVuVgw26sLl6ZOwSh8jKw=;
+        s=default; t=1578996278;
+        bh=HJyKb3ufKZ8IOVfXFQ3wbJVp9+703THq2r4/pcSxkfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fuf4EhHfoWPDvIblSxtsrvXswuagIGkL416fh0FSWY/csCMnirhGsLe+J8FlLxcJG
-         FBjc16X4aiOJeHEVdRrMTWihoy0iUJqPBvEM+i8j/L+Fuxj5TmKjLDWl7nSQAlRH9c
-         UV7xiE5JKhADEziTwbKRF0uYd5HHm/+w0Hh4nF34=
+        b=IfkkUefQ2ex/tSXAHrdy/SOYsLuf8VUiidxGqFx5JecjuMT68Onxv617Tj7/2rq7I
+         ih4MYIOvpfvERXB7VhF8GnWSiRGts9k6GYL0BGJ1+qMwGIyPzFQlr3oxWa6ieJ4jUc
+         Q3+9mKPTfI7BuivFdqleJK8B5Y5CYLQBlaD4ylIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.vger.org,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Matt Atwood <matthew.s.atwood@intel.com>,
-        Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Subject: [PATCH 5.4 23/78] drm/i915: Add Wa_1408615072 and Wa_1407596294 to icl,ehl
-Date:   Tue, 14 Jan 2020 11:00:57 +0100
-Message-Id: <20200114094356.857631672@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com,
+        syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.4 21/78] Input: add safety guards to input_set_keycode()
+Date:   Tue, 14 Jan 2020 11:00:55 +0100
+Message-Id: <20200114094356.618225454@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -63,60 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit a7f3ad37f80d0d5eec9dad156964c0dac800a80e upstream.
+commit cb222aed03d798fc074be55e59d9a112338ee784 upstream.
 
-Workaround database indicates we should disable clock gating of both the
-vsunit and hsunit.
+If we happen to have a garbage in input device's keycode table with values
+too big we'll end up doing clear_bit() with offset way outside of our
+bitmaps, damaging other objects within an input device or even outside of
+it. Let's add sanity checks to the returned old keycodes.
 
-Bspec: 33450
-Bspec: 33451
-Cc: stable@kernel.vger.org
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Matt Atwood <matthew.s.atwood@intel.com>
-Cc: Radhakrishna Sripada <radhakrishna.sripada@intel.com>
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191224012026.3157766-3-matthew.d.roper@intel.com
-Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
-(cherry picked from commit b9cf9dac3dac4c1d2a47d34f30ec53c0423cecf8)
-Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Reported-by: syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com
+Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191207212757.GA245964@dtor-ws
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_reg.h |    4 +++-
- drivers/gpu/drm/i915/intel_pm.c |    8 ++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/input/input.c |   26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_reg.h
-+++ b/drivers/gpu/drm/i915/i915_reg.h
-@@ -4049,7 +4049,9 @@ enum {
- #define  GWUNIT_CLKGATE_DIS		(1 << 16)
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -878,16 +878,18 @@ static int input_default_setkeycode(stru
+ 		}
+ 	}
  
- #define UNSLICE_UNIT_LEVEL_CLKGATE	_MMIO(0x9434)
--#define  VFUNIT_CLKGATE_DIS		(1 << 20)
-+#define   VFUNIT_CLKGATE_DIS		REG_BIT(20)
-+#define   HSUNIT_CLKGATE_DIS		REG_BIT(8)
-+#define   VSUNIT_CLKGATE_DIS		REG_BIT(3)
+-	__clear_bit(*old_keycode, dev->keybit);
+-	__set_bit(ke->keycode, dev->keybit);
+-
+-	for (i = 0; i < dev->keycodemax; i++) {
+-		if (input_fetch_keycode(dev, i) == *old_keycode) {
+-			__set_bit(*old_keycode, dev->keybit);
+-			break; /* Setting the bit twice is useless, so break */
++	if (*old_keycode <= KEY_MAX) {
++		__clear_bit(*old_keycode, dev->keybit);
++		for (i = 0; i < dev->keycodemax; i++) {
++			if (input_fetch_keycode(dev, i) == *old_keycode) {
++				__set_bit(*old_keycode, dev->keybit);
++				/* Setting the bit twice is useless, so break */
++				break;
++			}
+ 		}
+ 	}
  
- #define INF_UNIT_LEVEL_CLKGATE		_MMIO(0x9560)
- #define   CGPSF_CLKGATE_DIS		(1 << 3)
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -9194,6 +9194,14 @@ static void icl_init_clock_gating(struct
- 	/* WaEnable32PlaneMode:icl */
- 	I915_WRITE(GEN9_CSFE_CHICKEN1_RCS,
- 		   _MASKED_BIT_ENABLE(GEN11_ENABLE_32_PLANE_MODE));
-+
-+	/*
-+	 * Wa_1408615072:icl,ehl  (vsunit)
-+	 * Wa_1407596294:icl,ehl  (hsunit)
-+	 */
-+	intel_uncore_rmw(&dev_priv->uncore, UNSLICE_UNIT_LEVEL_CLKGATE,
-+			 0, VSUNIT_CLKGATE_DIS | HSUNIT_CLKGATE_DIS);
-+
++	__set_bit(ke->keycode, dev->keybit);
+ 	return 0;
  }
  
- static void cnp_init_clock_gating(struct drm_i915_private *dev_priv)
+@@ -943,9 +945,13 @@ int input_set_keycode(struct input_dev *
+ 	 * Simulate keyup event if keycode is not present
+ 	 * in the keymap anymore
+ 	 */
+-	if (test_bit(EV_KEY, dev->evbit) &&
+-	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
+-	    __test_and_clear_bit(old_keycode, dev->key)) {
++	if (old_keycode > KEY_MAX) {
++		dev_warn(dev->dev.parent ?: &dev->dev,
++			 "%s: got too big old keycode %#x\n",
++			 __func__, old_keycode);
++	} else if (test_bit(EV_KEY, dev->evbit) &&
++		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
++		   __test_and_clear_bit(old_keycode, dev->key)) {
+ 		struct input_value vals[] =  {
+ 			{ EV_KEY, old_keycode, 0 },
+ 			input_value_sync
 
 
