@@ -2,147 +2,231 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18082C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A840D24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E4E24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:54:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XUdrkmrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgANRx4 (ORCPT
+        id S1728880AbgANRyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:53:56 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5109 "EHLO mga12.intel.com"
+        Tue, 14 Jan 2020 12:54:04 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:37170 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgANRxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:53:55 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 09:53:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
-   d="scan'208";a="225622891"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga006.jf.intel.com with ESMTP; 14 Jan 2020 09:53:54 -0800
-Date:   Tue, 14 Jan 2020 09:53:54 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
-Message-ID: <20200114175353.GA7871@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-10-ira.weiny@intel.com>
- <20200113222212.GO8247@magnolia>
- <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
- <20200114013004.GU8247@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114013004.GU8247@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        id S1727083AbgANRyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:54:03 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47xykb50F1z9txgw;
+        Tue, 14 Jan 2020 18:53:59 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=XUdrkmrF; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id PPoCtav8nAJt; Tue, 14 Jan 2020 18:53:59 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47xykb3pGFz9txgv;
+        Tue, 14 Jan 2020 18:53:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579024439; bh=RD6AJmT7P3p5m/VjjJ7pHW8wtEX8tJmMu/xmc0pHx7o=;
+        h=From:Subject:To:Cc:Date:From;
+        b=XUdrkmrFNLoSO0Nu6KwGGPv3p7gD/bUfVtRPyvArzdV+9TQiJVxvLqpr7e8Y2e7+q
+         PCaVlsxTISWHRUA9B4jFftwmLKhMzjssDfiT1G0K8KIoMZWhF6jWQLgvpBYnISzo7G
+         SZ5s7dydvN2WE6WVWQARoFZ0mC4sYq1fP6lAq6gY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3FE018B7EB;
+        Tue, 14 Jan 2020 18:54:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id seWaVykdEzNW; Tue, 14 Jan 2020 18:54:01 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D7FFE8B7E8;
+        Tue, 14 Jan 2020 18:54:00 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 929AD6381C; Tue, 14 Jan 2020 17:54:00 +0000 (UTC)
+Message-Id: <031dec5487bde9b2181c8b3c9800e1879cf98c1a.1579024426.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/5] powerpc/32: add support of KASAN_VMALLOC
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org,
+        dja@axtens.net
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 14 Jan 2020 17:54:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 05:30:04PM -0800, Darrick J. Wong wrote:
-> On Mon, Jan 13, 2020 at 04:46:10PM -0800, Ira Weiny wrote:
-> > On Mon, Jan 13, 2020 at 02:22:12PM -0800, Darrick J. Wong wrote:
-> > > On Fri, Jan 10, 2020 at 11:29:39AM -0800, ira.weiny@intel.com wrote:
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > 
-> > [snip]
-> > 
-> > > >  
-> > > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > > > index bc3654fe3b5d..1ab0906c6c7f 100644
-> > > > --- a/fs/xfs/xfs_ioctl.c
-> > > > +++ b/fs/xfs/xfs_ioctl.c
-> > > > @@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
-> > > >  		goto out_unlock;
-> > > >  	}
-> > > >  
-> > > > +	/*
-> > > > +	 * If there is a mapping in place we must remain in our current mode.
-> > > > +	 */
-> > > > +	if (atomic64_read(&inode->i_mapped)) {
-> > > 
-> > > Urk, should we really be messing around with the address space
-> > > internals?
-> > 
-> > I contemplated a function call instead of checking i_mapped directly?  Is that
-> > what you mean?
-> 
-> Yeah.  Abstracting the details just enough that filesystems don't have
-> to know that i_mapped is atomic64 etc.
+Add support of KASAN_VMALLOC on PPC32.
 
-Done.
+To allow this, the early shadow covering the VMALLOC space
+need to be removed once high_memory var is set and before
+freeing memblock.
 
-> 
-> > 
-> > > 
-> > > > +		error = -EBUSY;
-> > > > +		goto out_unlock;
-> > > > +	}
-> > > > +
-> > > >  	error = filemap_write_and_wait(inode->i_mapping);
-> > > >  	if (error)
-> > > >  		goto out_unlock;
-> > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > > index 631f11d6246e..6e7dc626b657 100644
-> > > > --- a/include/linux/fs.h
-> > > > +++ b/include/linux/fs.h
-> > > > @@ -740,6 +740,7 @@ struct inode {
-> > > >  #endif
-> > > >  
-> > > >  	void			*i_private; /* fs or device private pointer */
-> > > > +	atomic64_t               i_mapped;
-> > > 
-> > > I would have expected to find this in struct address_space since the
-> > > mapping count is a function of the address space, right?
-> > 
-> > I suppose but the only external call (above) would be passing an inode.  So to
-> > me it seemed better here.
-> 
-> But the number of memory mappings reflects the state of the address
-> space, not the inode.  Or maybe put another way, if I were an mm
-> developer I would not expect to look in struct inode for mm state.
+And the VMALLOC area need to be aligned such that boundaries
+are covered by a full shadow page.
 
-This is a good point...
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-> 
-> static inline bool inode_has_mappings(struct inode *inode)
-> {
-> 	return atomic64_read(&inode->i_mapping->mapcount) > 0;
-> }
-> 
-> OTOH if there exist other mm developers who /do/ find that storing the
-> mmap count in struct inode is more logical, please let me know. :)
+---
+v3: added missing inclusion of asm/kasan.h needed when CONFIG_KASAN is not set.
 
-...  My thinking was that the number of mappings does not matters to the mm
-system...  However, I'm starting to think you are correct...  ;-)
+v2: rebased ; exclude specific module handling when CONFIG_KASAN_VMALLOC is set.
+---
+ arch/powerpc/Kconfig                         |  1 +
+ arch/powerpc/include/asm/book3s/32/pgtable.h |  5 +++++
+ arch/powerpc/include/asm/kasan.h             |  2 ++
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  5 +++++
+ arch/powerpc/mm/kasan/kasan_init_32.c        | 33 +++++++++++++++++++++++++++-
+ arch/powerpc/mm/mem.c                        |  4 ++++
+ 6 files changed, 49 insertions(+), 1 deletion(-)
 
-I've made a note of it and we will see what others think.
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1ec34e16ed65..a247bbfb03d4 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -173,6 +173,7 @@ config PPC
+ 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
+ 	select HAVE_ARCH_JUMP_LABEL
+ 	select HAVE_ARCH_KASAN			if PPC32
++	select HAVE_ARCH_KASAN_VMALLOC		if PPC32
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_MMAP_RND_BITS
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
+index 0796533d37dd..5b39c11e884a 100644
+--- a/arch/powerpc/include/asm/book3s/32/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
+@@ -193,7 +193,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+ #else
+ #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
+ #endif
++
++#ifdef CONFIG_KASAN_VMALLOC
++#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
++#else
+ #define VMALLOC_END	ioremap_bot
++#endif
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/sched.h>
+diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+index 296e51c2f066..fbff9ff9032e 100644
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -31,9 +31,11 @@
+ void kasan_early_init(void);
+ void kasan_mmu_init(void);
+ void kasan_init(void);
++void kasan_late_init(void);
+ #else
+ static inline void kasan_init(void) { }
+ static inline void kasan_mmu_init(void) { }
++static inline void kasan_late_init(void) { }
+ #endif
+ 
+ #endif /* __ASSEMBLY */
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index 552b96eef0c8..60c4d829152e 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -114,7 +114,12 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot);
+ #else
+ #define VMALLOC_START ((((long)high_memory + VMALLOC_OFFSET) & ~(VMALLOC_OFFSET-1)))
+ #endif
++
++#ifdef CONFIG_KASAN_VMALLOC
++#define VMALLOC_END	_ALIGN_DOWN(ioremap_bot, PAGE_SIZE << KASAN_SHADOW_SCALE_SHIFT)
++#else
+ #define VMALLOC_END	ioremap_bot
++#endif
+ 
+ /*
+  * Bits in a linux-style PTE.  These match the bits in the
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 0e6ed4413eea..88036fb88350 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -129,6 +129,31 @@ static void __init kasan_remap_early_shadow_ro(void)
+ 	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
+ }
+ 
++static void __init kasan_unmap_early_shadow_vmalloc(void)
++{
++	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
++	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
++	unsigned long k_cur;
++	phys_addr_t pa = __pa(kasan_early_shadow_page);
++
++	if (!early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
++		int ret = kasan_init_shadow_page_tables(k_start, k_end);
++
++		if (ret)
++			panic("kasan: kasan_init_shadow_page_tables() failed");
++	}
++	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
++		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
++		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
++
++		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
++			continue;
++
++		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
++	}
++	flush_tlb_kernel_range(k_start, k_end);
++}
++
+ void __init kasan_mmu_init(void)
+ {
+ 	int ret;
+@@ -165,7 +190,13 @@ void __init kasan_init(void)
+ 	pr_info("KASAN init done\n");
+ }
+ 
+-#ifdef CONFIG_MODULES
++void __init kasan_late_init(void)
++{
++	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
++		kasan_unmap_early_shadow_vmalloc();
++}
++
++#if defined(CONFIG_MODULES) && !defined(CONFIG_KASAN_VMALLOC)
+ void *module_alloc(unsigned long size)
+ {
+ 	void *base;
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index f5535eae637f..ef7b1119b2e2 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -49,6 +49,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/swiotlb.h>
+ #include <asm/rtas.h>
++#include <asm/kasan.h>
+ 
+ #include <mm/mmu_decl.h>
+ 
+@@ -301,6 +302,9 @@ void __init mem_init(void)
+ 
+ 	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+ 	set_max_mapnr(max_pfn);
++
++	kasan_late_init();
++
+ 	memblock_free_all();
+ 
+ #ifdef CONFIG_HIGHMEM
+-- 
+2.13.3
 
-Ira
-
-> 
-> --D
-> 
-> > Ira
-> > 
-> > > 
-> > > --D
-> > > 
