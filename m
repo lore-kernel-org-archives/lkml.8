@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CE0C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E7FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D682467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC3B2467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgANNE5 (ORCPT
+        id S1729684AbgANNFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:04:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43103 "EHLO
+        Tue, 14 Jan 2020 08:05:04 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43096 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgANNCT (ORCPT
+        with ESMTP id S1726115AbgANNCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:02:19 -0500
+        Tue, 14 Jan 2020 08:02:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1irLpn-0004bD-57; Tue, 14 Jan 2020 14:02:15 +0100
+        id 1irLpm-0004aT-99; Tue, 14 Jan 2020 14:02:14 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BD93F1C07EC;
-        Tue, 14 Jan 2020 14:02:14 +0100 (CET)
-Date:   Tue, 14 Jan 2020 13:02:14 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D31A91C07F3;
+        Tue, 14 Jan 2020 14:02:13 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:02:13 -0000
 From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] fs/proc: Introduce /proc/pid/timens_offsets
+Subject: [tip: timers/core] selftests/timens: Add a test for clock_nanosleep()
 Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-28-dima@arista.com>
-References: <20191112012724.250792-28-dima@arista.com>
+In-Reply-To: <20191112012724.250792-31-dima@arista.com>
+References: <20191112012724.250792-31-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157900693455.396.18061088292922754668.tip-bot2@tip-bot2>
+Message-ID: <157900693371.396.7843624097685904606.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,287 +56,219 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     04a8682a71becdb639ec9c0d82b315a2baef7a5d
-Gitweb:        https://git.kernel.org/tip/04a8682a71becdb639ec9c0d82b315a2baef7a5d
+Commit-ID:     46e003433f8946283c3bfec1be854ca87b5ba402
+Gitweb:        https://git.kernel.org/tip/46e003433f8946283c3bfec1be854ca87b5ba402
 Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:16 
+AuthorDate:    Tue, 12 Nov 2019 01:27:19 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 14 Jan 2020 12:20:59 +01:00
+CommitterDate: Tue, 14 Jan 2020 12:21:01 +01:00
 
-fs/proc: Introduce /proc/pid/timens_offsets
+selftests/timens: Add a test for clock_nanosleep()
 
-API to set time namespace offsets for children processes, i.e.:
-echo "$clockid $offset_sec $offset_nsec" > /proc/self/timens_offsets
+Check that clock_nanosleep() takes into account clock offsets.
+
+Output on success:
+ 1..4
+ ok 1 clockid: 1 abs:0
+ ok 2 clockid: 1 abs:1
+ ok 3 clockid: 9 abs:0
+ ok 4 clockid: 9 abs:1
+
+Output with lack of permissions:
+ 1..4
+ not ok 1 # SKIP need to run as root
+
+Output without support of time namespaces:
+ 1..4
+ not ok 1 # SKIP Time namespaces are not supported
 
 Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-28-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-31-dima@arista.com
 
 
 ---
- fs/proc/base.c                 |  94 ++++++++++++++++++++++++++++++-
- include/linux/time_namespace.h |  10 +++-
- kernel/time/namespace.c        | 101 ++++++++++++++++++++++++++++++++-
- 3 files changed, 205 insertions(+)
+ tools/testing/selftests/timens/.gitignore        |   1 +-
+ tools/testing/selftests/timens/Makefile          |   4 +-
+ tools/testing/selftests/timens/clock_nanosleep.c | 149 ++++++++++++++-
+ 3 files changed, 152 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/timens/clock_nanosleep.c
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea950..5adc639 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -94,6 +94,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/stat.h>
- #include <linux/posix-timers.h>
-+#include <linux/time_namespace.h>
- #include <trace/events/oom.h>
- #include "internal.h"
- #include "fd.h"
-@@ -1533,6 +1534,96 @@ static const struct file_operations proc_pid_sched_autogroup_operations = {
+diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
+index b609f6e..9b6c8dd 100644
+--- a/tools/testing/selftests/timens/.gitignore
++++ b/tools/testing/selftests/timens/.gitignore
+@@ -1,2 +1,3 @@
++clock_nanosleep
+ timens
+ timerfd
+diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
+index 293aed6..40f630d 100644
+--- a/tools/testing/selftests/timens/Makefile
++++ b/tools/testing/selftests/timens/Makefile
+@@ -1,6 +1,6 @@
+-TEST_GEN_PROGS := timens timerfd
++TEST_GEN_PROGS := timens timerfd clock_nanosleep
  
- #endif /* CONFIG_SCHED_AUTOGROUP */
+-CFLAGS := -Wall -Werror
++CFLAGS := -Wall -Werror -pthread
+ LDFLAGS := -lrt
  
-+#ifdef CONFIG_TIME_NS
-+static int timens_offsets_show(struct seq_file *m, void *v)
+ include ../lib.mk
+diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
+new file mode 100644
+index 0000000..8e7b7c7
+--- /dev/null
++++ b/tools/testing/selftests/timens/clock_nanosleep.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
++#include <sched.h>
++
++#include <sys/timerfd.h>
++#include <sys/syscall.h>
++#include <time.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <stdint.h>
++#include <pthread.h>
++#include <signal.h>
++#include <string.h>
++
++#include "log.h"
++#include "timens.h"
++
++void test_sig(int sig)
 +{
-+	struct task_struct *p;
++	if (sig == SIGUSR2)
++		pthread_exit(NULL);
++}
 +
-+	p = get_proc_task(file_inode(m->file));
-+	if (!p)
-+		return -ESRCH;
-+	proc_timens_show_offsets(p, m);
++struct thread_args {
++	struct timespec *now, *rem;
++	pthread_mutex_t *lock;
++	int clockid;
++	int abs;
++};
 +
-+	put_task_struct(p);
++void *call_nanosleep(void *_args)
++{
++	struct thread_args *args = _args;
++
++	clock_nanosleep(args->clockid, args->abs ? TIMER_ABSTIME : 0, args->now, args->rem);
++	pthread_mutex_unlock(args->lock);
++	return NULL;
++}
++
++int run_test(int clockid, int abs)
++{
++	struct timespec now = {}, rem;
++	struct thread_args args = { .now = &now, .rem = &rem, .clockid = clockid};
++	struct timespec start;
++	pthread_mutex_t lock;
++	pthread_t thread;
++	int j, ok, ret;
++
++	signal(SIGUSR1, test_sig);
++	signal(SIGUSR2, test_sig);
++
++	pthread_mutex_init(&lock, NULL);
++	pthread_mutex_lock(&lock);
++
++	if (clock_gettime(clockid, &start) == -1) {
++		if (errno == EINVAL && check_skip(clockid))
++			return 0;
++		return pr_perror("clock_gettime");
++	}
++
++
++	if (abs) {
++		now.tv_sec = start.tv_sec;
++		now.tv_nsec = start.tv_nsec;
++	}
++
++	now.tv_sec += 3600;
++	args.abs = abs;
++	args.lock = &lock;
++	ret = pthread_create(&thread, NULL, call_nanosleep, &args);
++	if (ret != 0) {
++		pr_err("Unable to create a thread: %s", strerror(ret));
++		return 1;
++	}
++
++	/* Wait when the thread will call clock_nanosleep(). */
++	ok = 0;
++	for (j = 0; j < 8; j++) {
++		/* The maximum timeout is about 5 seconds. */
++		usleep(10000 << j);
++
++		/* Try to interrupt clock_nanosleep(). */
++		pthread_kill(thread, SIGUSR1);
++
++		usleep(10000 << j);
++		/* Check whether clock_nanosleep() has been interrupted or not. */
++		if (pthread_mutex_trylock(&lock) == 0) {
++			/**/
++			ok = 1;
++			break;
++		}
++	}
++	if (!ok)
++		pthread_kill(thread, SIGUSR2);
++	pthread_join(thread, NULL);
++	pthread_mutex_destroy(&lock);
++
++	if (!ok) {
++		ksft_test_result_pass("clockid: %d abs:%d timeout\n", clockid, abs);
++		return 1;
++	}
++
++	if (rem.tv_sec < 3300 || rem.tv_sec > 3900) {
++		pr_fail("clockid: %d abs: %d remain: %ld\n",
++			clockid, abs, rem.tv_sec);
++		return 1;
++	}
++	ksft_test_result_pass("clockid: %d abs:%d\n", clockid, abs);
 +
 +	return 0;
 +}
 +
-+static ssize_t timens_offsets_write(struct file *file, const char __user *buf,
-+				    size_t count, loff_t *ppos)
++int main(int argc, char *argv[])
 +{
-+	struct inode *inode = file_inode(file);
-+	struct proc_timens_offset offsets[2];
-+	char *kbuf = NULL, *pos, *next_line;
-+	struct task_struct *p;
-+	int ret, noffsets;
++	int ret, nsfd;
 +
-+	/* Only allow < page size writes at the beginning of the file */
-+	if ((*ppos != 0) || (count >= PAGE_SIZE))
-+		return -EINVAL;
++	nscheck();
 +
-+	/* Slurp in the user data */
-+	kbuf = memdup_user_nul(buf, count);
-+	if (IS_ERR(kbuf))
-+		return PTR_ERR(kbuf);
++	ksft_set_plan(4);
 +
-+	/* Parse the user data */
-+	ret = -EINVAL;
-+	noffsets = 0;
-+	for (pos = kbuf; pos; pos = next_line) {
-+		struct proc_timens_offset *off = &offsets[noffsets];
-+		int err;
++	check_config_posix_timers();
 +
-+		/* Find the end of line and ensure we don't look past it */
-+		next_line = strchr(pos, '\n');
-+		if (next_line) {
-+			*next_line = '\0';
-+			next_line++;
-+			if (*next_line == '\0')
-+				next_line = NULL;
-+		}
++	if (unshare_timens())
++		return 1;
 +
-+		err = sscanf(pos, "%u %lld %lu", &off->clockid,
-+				&off->val.tv_sec, &off->val.tv_nsec);
-+		if (err != 3 || off->val.tv_nsec >= NSEC_PER_SEC)
-+			goto out;
-+		noffsets++;
-+		if (noffsets == ARRAY_SIZE(offsets)) {
-+			if (next_line)
-+				count = next_line - kbuf;
-+			break;
-+		}
-+	}
++	if (_settime(CLOCK_MONOTONIC, 7 * 24 * 3600))
++		return 1;
++	if (_settime(CLOCK_BOOTTIME, 9 * 24 * 3600))
++		return 1;
 +
-+	ret = -ESRCH;
-+	p = get_proc_task(inode);
-+	if (!p)
-+		goto out;
-+	ret = proc_timens_set_offset(file, p, offsets, noffsets);
-+	put_task_struct(p);
++	nsfd = open("/proc/self/ns/time_for_children", O_RDONLY);
++	if (nsfd < 0)
++		return pr_perror("Unable to open timens_for_children");
++
++	if (setns(nsfd, CLONE_NEWTIME))
++		return pr_perror("Unable to set timens");
++
++	ret = 0;
++	ret |= run_test(CLOCK_MONOTONIC, 0);
++	ret |= run_test(CLOCK_MONOTONIC, 1);
++	ret |= run_test(CLOCK_BOOTTIME_ALARM, 0);
++	ret |= run_test(CLOCK_BOOTTIME_ALARM, 1);
++
 +	if (ret)
-+		goto out;
-+
-+	ret = count;
-+out:
-+	kfree(kbuf);
++		ksft_exit_fail();
++	ksft_exit_pass();
 +	return ret;
 +}
-+
-+static int timens_offsets_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, timens_offsets_show, inode);
-+}
-+
-+static const struct file_operations proc_timens_offsets_operations = {
-+	.open		= timens_offsets_open,
-+	.read		= seq_read,
-+	.write		= timens_offsets_write,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+#endif /* CONFIG_TIME_NS */
-+
- static ssize_t comm_write(struct file *file, const char __user *buf,
- 				size_t count, loff_t *offset)
- {
-@@ -3016,6 +3107,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #ifdef CONFIG_SCHED_AUTOGROUP
- 	REG("autogroup",  S_IRUGO|S_IWUSR, proc_pid_sched_autogroup_operations),
- #endif
-+#ifdef CONFIG_TIME_NS
-+	REG("timens_offsets",  S_IRUGO|S_IWUSR, proc_timens_offsets_operations),
-+#endif
- 	REG("comm",      S_IRUGO|S_IWUSR, proc_pid_set_comm_operations),
- #ifdef CONFIG_HAVE_ARCH_TRACEHOOK
- 	ONE("syscall",    S_IRUSR, proc_pid_syscall),
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 04a2ba8..824d54e 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -52,6 +52,16 @@ static inline void put_time_ns(struct time_namespace *ns)
- 	kref_put(&ns->kref, free_time_ns);
- }
- 
-+void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m);
-+
-+struct proc_timens_offset {
-+	int			clockid;
-+	struct timespec64	val;
-+};
-+
-+int proc_timens_set_offset(struct file *file, struct task_struct *p,
-+			   struct proc_timens_offset *offsets, int n);
-+
- static inline void timens_add_monotonic(struct timespec64 *ts)
- {
- 	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 0732964..1285850 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -8,6 +8,7 @@
- #include <linux/user_namespace.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
-+#include <linux/seq_file.h>
- #include <linux/proc_ns.h>
- #include <linux/export.h>
- #include <linux/time.h>
-@@ -334,6 +335,106 @@ static struct user_namespace *timens_owner(struct ns_common *ns)
- 	return to_time_ns(ns)->user_ns;
- }
- 
-+static void show_offset(struct seq_file *m, int clockid, struct timespec64 *ts)
-+{
-+	seq_printf(m, "%d %lld %ld\n", clockid, ts->tv_sec, ts->tv_nsec);
-+}
-+
-+void proc_timens_show_offsets(struct task_struct *p, struct seq_file *m)
-+{
-+	struct ns_common *ns;
-+	struct time_namespace *time_ns;
-+
-+	ns = timens_for_children_get(p);
-+	if (!ns)
-+		return;
-+	time_ns = to_time_ns(ns);
-+
-+	show_offset(m, CLOCK_MONOTONIC, &time_ns->offsets.monotonic);
-+	show_offset(m, CLOCK_BOOTTIME, &time_ns->offsets.boottime);
-+	put_time_ns(time_ns);
-+}
-+
-+int proc_timens_set_offset(struct file *file, struct task_struct *p,
-+			   struct proc_timens_offset *offsets, int noffsets)
-+{
-+	struct ns_common *ns;
-+	struct time_namespace *time_ns;
-+	struct timespec64 tp;
-+	int i, err;
-+
-+	ns = timens_for_children_get(p);
-+	if (!ns)
-+		return -ESRCH;
-+	time_ns = to_time_ns(ns);
-+
-+	if (!file_ns_capable(file, time_ns->user_ns, CAP_SYS_TIME)) {
-+		put_time_ns(time_ns);
-+		return -EPERM;
-+	}
-+
-+	for (i = 0; i < noffsets; i++) {
-+		struct proc_timens_offset *off = &offsets[i];
-+
-+		switch (off->clockid) {
-+		case CLOCK_MONOTONIC:
-+			ktime_get_ts64(&tp);
-+			break;
-+		case CLOCK_BOOTTIME:
-+			ktime_get_boottime_ts64(&tp);
-+			break;
-+		default:
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
-+		err = -ERANGE;
-+
-+		if (off->val.tv_sec > KTIME_SEC_MAX ||
-+		    off->val.tv_sec < -KTIME_SEC_MAX)
-+			goto out;
-+
-+		tp = timespec64_add(tp, off->val);
-+		/*
-+		 * KTIME_SEC_MAX is divided by 2 to be sure that KTIME_MAX is
-+		 * still unreachable.
-+		 */
-+		if (tp.tv_sec < 0 || tp.tv_sec > KTIME_SEC_MAX / 2)
-+			goto out;
-+	}
-+
-+	mutex_lock(&offset_lock);
-+	if (time_ns->frozen_offsets) {
-+		err = -EACCES;
-+		goto out_unlock;
-+	}
-+
-+	err = 0;
-+	/* Don't report errors after this line */
-+	for (i = 0; i < noffsets; i++) {
-+		struct proc_timens_offset *off = &offsets[i];
-+		struct timespec64 *offset = NULL;
-+
-+		switch (off->clockid) {
-+		case CLOCK_MONOTONIC:
-+			offset = &time_ns->offsets.monotonic;
-+			break;
-+		case CLOCK_BOOTTIME:
-+			offset = &time_ns->offsets.boottime;
-+			break;
-+		}
-+
-+		*offset = off->val;
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&offset_lock);
-+out:
-+	put_time_ns(time_ns);
-+
-+	return err;
-+}
-+
- const struct proc_ns_operations timens_operations = {
- 	.name		= "time",
- 	.type		= CLONE_NEWTIME,
