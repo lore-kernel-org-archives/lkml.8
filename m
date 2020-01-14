@@ -7,143 +7,93 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C0BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25FCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BC224655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB6524658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwQM15Vl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1meb4QS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgANQQd (ORCPT
+        id S1728913AbgANQQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:16:33 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59622 "EHLO
+        Tue, 14 Jan 2020 11:16:59 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51559 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726495AbgANQQd (ORCPT
+        by vger.kernel.org with ESMTP id S1726450AbgANQQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:16:33 -0500
+        Tue, 14 Jan 2020 11:16:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579018592;
+        s=mimecast20190719; t=1579018618;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=PbZ2iYquyHL3/ESJhoyXhT4LrB0J4rJjHgCtbtkH6oU=;
-        b=gwQM15VlRb96B++eNvhozToW2kKXuCmfvOLeWgr0QOxDm/0/f5/c7HpRjfvMkd+XFeDoVD
-        G/zQ1vY4JQG6KCg2sPvSw+ky4RHUVBQ42ND2l/DLSYNKWuUu7bcqSvssDzDj4xiyLHys0z
-        AD8nbF7JVJXP9+CpYb1Xv4hcFG6SMgo=
+        bh=MmNBZkwBy1szGWacQmXBphuROcFRHJi+XYFCIYFXOoM=;
+        b=e1meb4QSnsUO5sGiGE5crJWgxiIVIVk52dfnCa9xOJ5+BlgL3wfnn0fnoue8v+YX1z8q7Z
+        0UTSotLqWrtfvZ+e19eC80VRlTTxFfiJHf8jqtxrliuGMRAItUACyRug953xzPZiFFBoZR
+        5Rk2t6VrtoGGcIBziYzpso4QyMtA2JA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-KJa4clGFPE60OmZjNLAIbg-1; Tue, 14 Jan 2020 11:16:29 -0500
-X-MC-Unique: KJa4clGFPE60OmZjNLAIbg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-430-dIecYhpBPyKNb0Hd40mSXg-1; Tue, 14 Jan 2020 11:16:57 -0500
+X-MC-Unique: dIecYhpBPyKNb0Hd40mSXg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B008C10513C7;
-        Tue, 14 Jan 2020 16:16:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BD568DD348;
+        Tue, 14 Jan 2020 16:16:56 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 53D4026E43;
-        Tue, 14 Jan 2020 16:16:26 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 03D2680F5C;
+        Tue, 14 Jan 2020 16:16:54 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix use-after-loss-of-ref
+Subject: [PATCH] afs: Fix afs_lookup() to not clobber the version on a new
+ dentry
 From:   David Howells <dhowells@redhat.com>
 To:     torvalds@linux-foundation.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 14 Jan 2020 16:16:25 +0000
-Message-ID: <157901858546.1172.10059769927247020179.stgit@warthog.procyon.org.uk>
+Cc:     linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 14 Jan 2020 16:16:54 +0000
+Message-ID: <157901861423.1394.15115986296413304429.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-afs_lookup() has a tracepoint to indicate the outcome of d_splice_alias(),
-passing it the inode to retrieve the fid from.  However, the function gave
-up its ref on that inode when it called d_splice_alias(), which may have
-failed and dropped the inode.
+Fix afs_lookup() to not clobber the version set on a new dentry by
+afs_do_lookup() - especially as it's using the wrong version of the version
+(we need to use the one given to us by whatever op the dir contents
+correspond to rather than what's in the afs_vnode).
 
-Fix this by caching the fid.
-
-Fixes: 80548b03991f ("afs: Add more tracepoints")
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 9dd0b82ef530 ("afs: Fix missing dentry data version updating")
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- fs/afs/dir.c               |   12 +++++++-----
- include/trace/events/afs.h |   12 +++---------
- 2 files changed, 10 insertions(+), 14 deletions(-)
+ fs/afs/dir.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 497f979018c2..813db1708494 100644
+index 813db1708494..5c794f4b051a 100644
 --- a/fs/afs/dir.c
 +++ b/fs/afs/dir.c
-@@ -908,6 +908,7 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
- 				 unsigned int flags)
- {
- 	struct afs_vnode *dvnode = AFS_FS_I(dir);
-+	struct afs_fid fid = {};
- 	struct inode *inode;
- 	struct dentry *d;
- 	struct key *key;
-@@ -957,15 +958,16 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
- 		dentry->d_fsdata =
- 			(void *)(unsigned long)dvnode->status.data_version;
- 	}
-+
-+	if (!IS_ERR_OR_NULL(inode))
-+		fid = AFS_FS_I(inode)->fid;
-+
- 	d = d_splice_alias(inode, dentry);
- 	if (!IS_ERR_OR_NULL(d)) {
- 		d->d_fsdata = dentry->d_fsdata;
--		trace_afs_lookup(dvnode, &d->d_name,
--				 inode ? AFS_FS_I(inode) : NULL);
-+		trace_afs_lookup(dvnode, &d->d_name, &fid);
- 	} else {
--		trace_afs_lookup(dvnode, &dentry->d_name,
--				 IS_ERR_OR_NULL(inode) ? NULL
--				 : AFS_FS_I(inode));
-+		trace_afs_lookup(dvnode, &dentry->d_name, &fid);
- 	}
- 	return d;
- }
-diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
-index d5ec4fac82ae..564ba1b5cf57 100644
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -915,9 +915,9 @@ TRACE_EVENT(afs_call_state,
+@@ -952,12 +952,8 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
+ 	afs_stat_v(dvnode, n_lookup);
+ 	inode = afs_do_lookup(dir, dentry, key);
+ 	key_put(key);
+-	if (inode == ERR_PTR(-ENOENT)) {
++	if (inode == ERR_PTR(-ENOENT))
+ 		inode = afs_try_auto_mntpt(dentry, dir);
+-	} else {
+-		dentry->d_fsdata =
+-			(void *)(unsigned long)dvnode->status.data_version;
+-	}
  
- TRACE_EVENT(afs_lookup,
- 	    TP_PROTO(struct afs_vnode *dvnode, const struct qstr *name,
--		     struct afs_vnode *vnode),
-+		     struct afs_fid *fid),
- 
--	    TP_ARGS(dvnode, name, vnode),
-+	    TP_ARGS(dvnode, name, fid),
- 
- 	    TP_STRUCT__entry(
- 		    __field_struct(struct afs_fid,	dfid		)
-@@ -928,13 +928,7 @@ TRACE_EVENT(afs_lookup,
- 	    TP_fast_assign(
- 		    int __len = min_t(int, name->len, 23);
- 		    __entry->dfid = dvnode->fid;
--		    if (vnode) {
--			    __entry->fid = vnode->fid;
--		    } else {
--			    __entry->fid.vid = 0;
--			    __entry->fid.vnode = 0;
--			    __entry->fid.unique = 0;
--		    }
-+		    __entry->fid = *fid;
- 		    memcpy(__entry->name, name->name, __len);
- 		    __entry->name[__len] = 0;
- 			   ),
+ 	if (!IS_ERR_OR_NULL(inode))
+ 		fid = AFS_FS_I(inode)->fid;
 
