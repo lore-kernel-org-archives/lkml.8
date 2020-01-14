@@ -2,72 +2,70 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBF6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D4FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4405A2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03752465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgANRhJ (ORCPT
+        id S1728926AbgANRhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:37:09 -0500
-Received: from smtprelay0045.hostedemail.com ([216.40.44.45]:42062 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbgANRhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:37:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 2813D182CF665;
-        Tue, 14 Jan 2020 17:37:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cent53_3dc9e911f6f34
-X-Filterd-Recvd-Size: 1584
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 14 Jan 2020 17:37:04 +0000 (UTC)
-Message-ID: <e1b3cccb0814ba4b0c99592715776ed48f343795.camel@perches.com>
-Subject: Re: [PATCHv2-next 3/3] serial_core: Remove unused member in
- uart_port
-From:   Joe Perches <joe@perches.com>
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-Date:   Tue, 14 Jan 2020 09:36:09 -0800
-In-Reply-To: <20200114171912.261787-4-dima@arista.com>
-References: <20200114171912.261787-1-dima@arista.com>
-         <20200114171912.261787-4-dima@arista.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 14 Jan 2020 12:37:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:55626 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgANRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:37:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 004CD1396;
+        Tue, 14 Jan 2020 09:37:18 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41ABD3F68E;
+        Tue, 14 Jan 2020 09:37:15 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:37:13 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v4 12/12] arm64: mm: Display guarded pages in ptdump
+Message-ID: <20200114173712.GO30444@arrakis.emea.arm.com>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-13-broonie@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211154206.46260-13-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-01-14 at 17:19 +0000, Dmitry Safonov wrote:
-> It should remove the align-padding before @name.
-[]
-> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-[]
-> @@ -247,7 +247,6 @@ struct uart_port {
->  
->  	unsigned char		hub6;			/* this should be in the 8250 driver */
->  	unsigned char		suspended;
-> -	unsigned char		unused;
+On Wed, Dec 11, 2019 at 03:42:06PM +0000, Mark Brown wrote:
+> v8.5-BTI introduces the GP field in stage 1 translation tables which
+> indicates that blocks and pages with it set are guarded pages for which
+> branch target identification checks should be performed. Decode this
+> when dumping the page tables to aid debugging.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-I suggest this not be applied as this is just to let
-readers know that there is an unused 1 byte alignment
-hole here that could be used for something else.
-
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
