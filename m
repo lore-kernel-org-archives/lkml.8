@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA51C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506F6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0945D24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19659207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997227;
-	bh=7lrQMTsQe47ViLM91pWK8ucocgIUyk6tGInDECp0ht4=;
+	s=default; t=1578997230;
+	bh=SJvBSaoMS0e5WzxqzcuBHsGDMilqyBHp4GnjjU/Gexs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OiaQVCnm3sskS8pcg13cJnRZ7DTFwGBNuzr+0db7NYt5PK58pIlzyIRtRSuurCHYk
-	 AvY6SlOH8XNfmlNF6gciPxjWu0XYAmRCIuLGaG/GGB90cvfKAw8/Z6ibrPR55YLQtF
-	 yIQlbI+aI7+a7QWSWZV3LZ755yKhNiARy1hEVXIk=
+	b=hfuC1SZRdoWqH8MmY+vrtpCu5xeJYZaVnyaRgcTRaEVa7QV8k98/XG09Pt1Xh2eMJ
+	 hnSB20i/V2dpU/0MftyA1MLPBS0xjtuQYa6mTlwKufxGWurIi8ZaiEtkoh15HaN4I0
+	 exIoJqQfXjr7MUFXWEcu1BiZzDheXeRLVSafaKQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgANKU0 (ORCPT
+        id S1729139AbgANKDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:20:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58860 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgANKDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:45 -0500
+        id S1729537AbgANKD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B33B42467D;
-        Tue, 14 Jan 2020 10:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B35124672;
+        Tue, 14 Jan 2020 10:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996225;
-        bh=7lrQMTsQe47ViLM91pWK8ucocgIUyk6tGInDECp0ht4=;
+        s=default; t=1578996206;
+        bh=SJvBSaoMS0e5WzxqzcuBHsGDMilqyBHp4GnjjU/Gexs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2j7Ju8l79GZHML/P4/uRFAKBnhEn3TyEsgAYa1YH6rMHyOzbeGUo+9V+4uTgO6F0
-         mDx0odnjtWGqb7awiooHHnJc9W5HnMSYiyg4W6Vngsk0OJR1TAXKnr+9YTPa+Tqi8E
-         NXf7K9OYnfCtBy1HTL8FcWyMSHy/1JKYiymW1S5A=
+        b=J+6PH9lfGOzRQUfNwyEPRpPqfOROjWwwzee5ZOIm5GFgR+O2HEmuv2Hclj9jSmeRy
+         elF5UB2ZNn+1nHroB0dsMUw4EcGdytYvw1RDmW37mgJryWDivAD7pRQYiuRs94TVaE
+         tYpNjvMS+YW394ygLOvI/GyFPMPFi2g7LYlnyoJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 15/78] tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
-Date:   Tue, 14 Jan 2020 11:00:49 +0100
-Message-Id: <20200114094354.782557348@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 05/78] ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
+Date:   Tue, 14 Jan 2020 11:00:39 +0100
+Message-Id: <20200114094353.250893006@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -59,39 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
+commit 51d4efab7865e6ea6a4ebcd25b3f03c019515c4c upstream.
 
-On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
-this makes the stack tracer fail to compile. Just define it to zero in this
-case.
+Bose Companion 5 (with USB ID 05a7:1020) doesn't seem supporting
+reading back the sample rate, so the existing quirk is needed.
 
-Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
-
-Cc: stable@vger.kernel.org
-Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206063
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200104110936.14288-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_stack.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/usb/quirks.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/trace/trace_stack.c
-+++ b/kernel/trace/trace_stack.c
-@@ -283,6 +283,11 @@ static void check_stack(unsigned long ip
- 	local_irq_restore(flags);
- }
- 
-+/* Some archs may not define MCOUNT_INSN_SIZE */
-+#ifndef MCOUNT_INSN_SIZE
-+# define MCOUNT_INSN_SIZE 0
-+#endif
-+
- static void
- stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1397,6 +1397,7 @@ bool snd_usb_get_sample_rate_quirk(struc
+ 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
+ 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
+ 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
++	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
+ 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
+ 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
+ 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
 
 
