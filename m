@@ -2,152 +2,289 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBB7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36875C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25432075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46BE24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QjPV36Ez"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tTJsxc3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgANQnM (ORCPT
+        id S1728808AbgANQnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:43:12 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:53862 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgANQnM (ORCPT
+        Tue, 14 Jan 2020 11:43:25 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50098 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgANQnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:43:12 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EGXpUX071233;
-        Tue, 14 Jan 2020 16:42:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=CWF7k3UenyIwPtt3gZw5fAYDOXkVTUWe1i/V4e3zLSs=;
- b=QjPV36EzmmNo9gJpnhtE/8AYeSzi5dPWM3VNc5lWBk2piN5luEUOQkkJcJBo237LQ3Gz
- PgEyyNchTD5KP2roPD9+a98fYaNWP6QvNq+cBLhFW2pE/KQvetcaUBRf/jtQEg/3/Hay
- r6Dn5YOoTzv9LSUgg5h5iI7coGZrHxz4kp9YxGx44RdIKz7wX/5UmetlmJxrtwpPf2A1
- w8CZqQ5zztShH7io7O5yHrGi/crJC1tCIR+1t0sBppKdxxwcOwQpyur5rysOJ0rmEMlE
- VBteG1Ff6vdFJT+VQUK0PMghyMLJ//BldVVtpNtSt5Z3dBPEecrbPbH7jBFYvxhWJmaK DQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xf73yf6cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 16:42:51 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EGXjSk086814;
-        Tue, 14 Jan 2020 16:42:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xh2scv2cq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 16:42:49 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00EGgmov027856;
-        Tue, 14 Jan 2020 16:42:48 GMT
-Received: from dhcp-10-175-171-251.vpn.oracle.com (/10.175.171.251)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jan 2020 08:42:48 -0800
-Date:   Tue, 14 Jan 2020 16:42:37 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-171-251.vpn.oracle.com
-To:     Randy Dunlap <rdunlap@infradead.org>
-cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        dmitry.torokhov@gmail.com, sfr@canb.auug.org.au,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, skhan@linuxfoundation.org
-Subject: Re: [PATCH] software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST
-In-Reply-To: <2242e184-93a5-147d-d603-4017ca86eba9@infradead.org>
-Message-ID: <alpine.LRH.2.20.2001141639240.15464@dhcp-10-175-171-251.vpn.oracle.com>
-References: <1579018183-14879-1-git-send-email-alan.maguire@oracle.com> <2242e184-93a5-147d-d603-4017ca86eba9@infradead.org>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 14 Jan 2020 11:43:24 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00EGgwJZ040414;
+        Tue, 14 Jan 2020 10:42:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579020178;
+        bh=1mVkPX3+ifyGY+7VTYUHxU8kVljF60ZWI4hLy4ITAAw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=tTJsxc3ZlSlyu825JwhA4xk5QQ5R53/QU99DbKm7pY7KWY9gZgVhcLkbMTN40JplE
+         8yMDBWXplBrSWkO7ioRbcUcanTewtOkcdclnT59gIqUef2hu5PzHYp3zvv3V27NRN+
+         Ee2j/5RFJiGn+wpQNXaIxrxAxSyvamfzNzbPm+sg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00EGgwTi071780
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jan 2020 10:42:58 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
+ Jan 2020 10:42:58 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 14 Jan 2020 10:42:58 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00EGgt3E060474;
+        Tue, 14 Jan 2020 10:42:56 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <hch@lst.de>, <robin.murphy@arm.com>
+CC:     <vigneshr@ti.com>, <konrad.wilk@oracle.com>,
+        <linux@armlinux.org.uk>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-arm-kernel@lists.infradead.org>, <rogerq@ti.com>,
+        <robh@kernel.org>
+Subject: [PoC] arm: dma-mapping: direct: Apply dma_pfn_offset only when it is valid
+Date:   Tue, 14 Jan 2020 18:43:32 +0200
+Message-ID: <20200114164332.3164-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <8eb68140-97b2-62ce-3e06-3761984aa5b1@ti.com>
+References: <8eb68140-97b2-62ce-3e06-3761984aa5b1@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140138
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Randy Dunlap wrote:
+The dma_pfn_offset should only be applied to an address which is within the
+dma-ranges range. Any address outside should have offset as 0.
 
-> Hi Alan,
-> 
-> On 1/14/20 8:09 AM, Alan Maguire wrote:
-> > currently the property entry kunit tests are built if CONFIG_KUNIT=y.
-> > This will cause warnings when merged with the kunit tree that now
-> > supports tristate CONFIG_KUNIT.  While the tests appear to compile
-> > as a module, we get a warning about missing module license.
-> > 
-> > It's better to have a per-test suite CONFIG variable so that
-> > we can do selective building of kunit-based suites, and can
-> > also avoid merge issues like this.
-> > 
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->
+This is a proof of concept patch which works on k2g where we have
+dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+for the SoC.
 
-Apologies for missing you out here.
+Without this patch everything which tries to set DMA_BIT_MASK(32) or less
+fails -> DMA and peripherals with built in DMA (SD with ADMA) will not
+probe or fall back to PIO mode.
+
+With this patch EDMA probes, SD's ADMA is working.
+Audio and dma-test is working just fine with EDMA, mmc accesses with ADMA
+also operational.
+
+The patch does not tried to address the incomplete handling of dma-ranges
+from DT and it is not fixing/updating arch code or drivers which uses
+dma_pfn_offset.
+Neither provides fallback support for kernel setting only dma_pfn_offset to
+arbitrary number without paddr/dma_addr/size.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi Christoph, Robin,
+
+I know it is a bit more complicated, but with this patch k2g is working fine...
+
+I wanted to test the concept I was describing and a patch speaks better than
+words.
+
+Kind regards,
+Peter
+
+ arch/arm/include/asm/dma-mapping.h | 25 ++++++++++++++++++++--
+ drivers/of/device.c                |  7 ++++++-
+ include/linux/device.h             |  8 ++++++++
+ include/linux/dma-direct.h         | 33 ++++++++++++++++++++++++++++--
+ kernel/dma/coherent.c              |  9 +++++---
+ 5 files changed, 74 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index bdd80ddbca34..9bff6ad2d8c8 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -33,10 +33,31 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+  * addresses. They must not be used by drivers.
+  */
+ #ifndef __arch_pfn_to_dma
++
++static inline unsigned long __phys_to_dma_pfn_offset(struct device *dev,
++						     phys_addr_t paddr)
++{
++	if (paddr >= dev->dma_ranges.paddr &&
++	    paddr <= (dev->dma_ranges.paddr + dev->dma_ranges.size))
++		return dev->dma_ranges.pfn_offset;
++
++	return 0;
++}
++
++static inline unsigned long __dma_to_phys_pfn_offset(struct device *dev,
++						     dma_addr_t dma_addr)
++{
++	if (dma_addr >= dev->dma_ranges.dma_addr &&
++	    dma_addr <= (dev->dma_ranges.dma_addr + dev->dma_ranges.size))
++		return dev->dma_ranges.pfn_offset;
++
++	return 0;
++}
++
+ static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+ {
+ 	if (dev)
+-		pfn -= dev->dma_pfn_offset;
++		pfn -= __phys_to_dma_pfn_offset(dev, __pfn_to_phys(pfn));
+ 	return (dma_addr_t)__pfn_to_bus(pfn);
+ }
  
-> > Fixes: c032ace71c29 ("software node: add basic tests for property entries")
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > ---
-> >  drivers/base/test/Kconfig  | 3 +++
-> >  drivers/base/test/Makefile | 2 +-
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
-> > index 86e85da..d29ae95 100644
-> > --- a/drivers/base/test/Kconfig
-> > +++ b/drivers/base/test/Kconfig
-> > @@ -8,3 +8,6 @@ config TEST_ASYNC_DRIVER_PROBE
-> >  	  The module name will be test_async_driver_probe.ko
-> >  
-> >  	  If unsure say N.
-> > +config KUNIT_DRIVER_PE_TEST
-> > +	bool "KUnit Tests for property entry API"
-> > +	depends on KUNIT
-> 
-> Why is this bool instead of tristate?
->
-
-The support for building kunit and kunit tests as modules has not merged 
-into linux-next yet, so if we set the option to tristate the build would
-fail for allmodconfig builds.   Once it's merged we can revisit though; I 
-should have mentioned this, thanks for reminding me!
-
-Alan
+@@ -45,7 +66,7 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+ 	unsigned long pfn = __bus_to_pfn(addr);
  
-> > diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
-> > index 2214310..3ca5636 100644
-> > --- a/drivers/base/test/Makefile
-> > +++ b/drivers/base/test/Makefile
-> > @@ -1,4 +1,4 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)	+= test_async_driver_probe.o
-> >  
-> > -obj-$(CONFIG_KUNIT) += property-entry-test.o
-> > +obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
-> > 
-> 
-> thanks.
-> -- 
-> ~Randy
-> 
-> 
+ 	if (dev)
+-		pfn += dev->dma_pfn_offset;
++		pfn += __dma_to_phys_pfn_offset(dev, addr);
+ 
+ 	return pfn;
+ }
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 27203bfd0b22..07a8cc1a7d7f 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -105,7 +105,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 		if (!force_dma)
+ 			return ret == -ENODEV ? 0 : ret;
+ 
+-		dma_addr = offset = 0;
++		dma_addr = offset = paddr = 0;
+ 	} else {
+ 		offset = PFN_DOWN(paddr - dma_addr);
+ 
+@@ -144,6 +144,11 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 
+ 	dev->dma_pfn_offset = offset;
+ 
++	dev->dma_ranges.paddr = paddr;
++	dev->dma_ranges.dma_addr = dma_addr;
++	dev->dma_ranges.size = size;
++	dev->dma_ranges.pfn_offset = offset;
++
+ 	/*
+ 	 * Limit coherent and dma mask based on size and default mask
+ 	 * set by the driver.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ce6db68c3f29..57006b51a989 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -293,6 +293,13 @@ struct device_dma_parameters {
+ 	unsigned long segment_boundary_mask;
+ };
+ 
++struct dma_ranges {
++	u64 paddr;
++	u64 dma_addr;
++	u64 size;
++	unsigned long pfn_offset;
++};
++
+ /**
+  * struct device_connection - Device Connection Descriptor
+  * @fwnode: The device node of the connected device
+@@ -581,6 +588,7 @@ struct device {
+ 					     allocations such descriptors. */
+ 	u64		bus_dma_limit;	/* upstream dma constraint */
+ 	unsigned long	dma_pfn_offset;
++	struct dma_ranges dma_ranges;
+ 
+ 	struct device_dma_parameters *dma_parms;
+ 
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 24b8684aa21d..4a46a15945ea 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -11,18 +11,47 @@ extern unsigned int zone_dma_bits;
+ #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+ #include <asm/dma-direct.h>
+ #else
++
++static inline unsigned long __phys_to_dma_pfn_offset(struct device *dev,
++						     phys_addr_t paddr)
++{
++	if (!dev)
++		return 0;
++
++	if (paddr >= dev->dma_ranges.paddr &&
++	    paddr <= (dev->dma_ranges.paddr + dev->dma_ranges.size))
++		return dev->dma_ranges.pfn_offset
++
++	return 0;
++}
++
++static inline unsigned long __dma_to_phys_pfn_offset(struct device *dev,
++						     dma_addr_t dma_addr)
++{
++	if (!dev)
++		return 0;
++
++	if (dma_addr >= dev->dma_ranges.dma_addr &&
++	    dma_addr <= (dev->dma_ranges.dma_addr + dev->dma_ranges.size))
++		return dev->dma_ranges.pfn_offset
++
++	return 0;
++}
++
+ static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	dma_addr_t dev_addr = (dma_addr_t)paddr;
++	unsigned long offset = __phys_to_dma_pfn_offset(dev, paddr);
+ 
+-	return dev_addr - ((dma_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
++	return dev_addr - ((dma_addr_t)offset << PAGE_SHIFT);
+ }
+ 
+ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+ {
+ 	phys_addr_t paddr = (phys_addr_t)dev_addr;
++	unsigned long offset = __dma_to_phys_pfn_offset(dev, dev_addr);
+ 
+-	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
++	return paddr + ((phys_addr_t)offset << PAGE_SHIFT);
+ }
+ #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+ 
+diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+index 551b0eb7028a..7a68fd09f5d0 100644
+--- a/kernel/dma/coherent.c
++++ b/kernel/dma/coherent.c
+@@ -31,10 +31,13 @@ static inline struct dma_coherent_mem *dev_get_coherent_memory(struct device *de
+ static inline dma_addr_t dma_get_device_base(struct device *dev,
+ 					     struct dma_coherent_mem * mem)
+ {
+-	if (mem->use_dev_dma_pfn_offset)
+-		return (mem->pfn_base - dev->dma_pfn_offset) << PAGE_SHIFT;
+-	else
++	if (mem->use_dev_dma_pfn_offset) {
++		unsigned long offset = __phys_to_dma_pfn_offset(dev,
++						__pfn_to_phys(mem->pfn_base));
++		return (mem->pfn_base - offset) << PAGE_SHIFT;
++	} else {
+ 		return mem->device_base;
++	}
+ }
+ 
+ static int dma_init_coherent_memory(phys_addr_t phys_addr,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
