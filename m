@@ -2,131 +2,156 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F476C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD41C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0A1207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0DF207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgANJYj (ORCPT
+        id S1728978AbgANJYk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:24:39 -0500
-Received: from mail.wangsu.com ([123.103.51.227]:54216 "EHLO wangsu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgANJYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:24:40 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43995 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANJYh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 04:24:37 -0500
-Received: from 137.localdomain (unknown [59.61.78.232])
-        by app2 (Coremail) with SMTP id 4zNnewDXIjS8iB1ea_sEAA--.5S2;
-        Tue, 14 Jan 2020 17:24:13 +0800 (CST)
-From:   Pengcheng Yang <yangpc@wangsu.com>
-To:     edumazet@google.com
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH] tcp: fix marked lost packets not being retransmitted
-Date:   Tue, 14 Jan 2020 17:23:40 +0800
-Message-Id: <1578993820-2114-1-git-send-email-yangpc@wangsu.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: 4zNnewDXIjS8iB1ea_sEAA--.5S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF18WF43uF4UtryfKF17KFg_yoW5Wr17pa
-        n5KwnrJFZ8Gr1Fkw1DKrWUXryUtFs3A343J39Yyr9Iya15Gr17uF45K3y3KFy3GFZ5Jay0
-        qFW0yw13Ka4DCFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyG1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
-        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lOx8S6xCaFVCjc4AY6r1j6r4U
-        M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-        kIc2xKxwCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8
-        GwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
-        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-        67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU0F_M3UUUUU==
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 09180C0012;
+        Tue, 14 Jan 2020 09:24:33 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 10:24:32 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+Message-ID: <20200114102432.602415a4@xps13>
+In-Reply-To: <20191209113506.41341ed4@collabora.com>
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+        <20191127105522.31445-5-miquel.raynal@bootlin.com>
+        <20191209113506.41341ed4@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
-retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
-If packet loss is detected at this time, retransmit_skb_hint will be set
-to point to the current packet loss in tcp_verify_retransmit_hint(),
-then the packets that were previously marked lost but not retransmitted
-due to the restriction of cwnd will be skipped and cannot be
-retransmitted.
+Hi Rob,
 
-To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
-be reset only after all marked lost packets are retransmitted
-(retrans_out >= lost_out), otherwise we need to traverse from
-tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 9 Dec
+2019 11:35:06 +0100:
 
-Packetdrill to demonstrate:
+> On Wed, 27 Nov 2019 11:55:22 +0100
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Introduce a generic way to define concatenated MTD devices. This may
+> > be very useful in the case of ie. stacked SPI-NOR. Partitions to
+> > concatenate are described in an additional property of the partitions
+> > subnode:
+> > 
+> >         flash0 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> >                         part-concat = <&flash0_part1>, <&flash1_part0>;
+> > 
+> > 			part0@0 {
+> > 				label = "part0_0";
+> > 				reg = <0x0 0x800000>;
+> > 			};
+> > 
+> > 			flash0_part1: part1@800000 {
+> > 				label = "part0_1";
+> > 				reg = <0x800000 0x800000>;  
+> 
+> So, flash0_part1 and flash0_part2 will be created even though the user
+> probably doesn't need them?
+> 
+> > 			};
+> >                 };
+> >         };
+> > 
+> >         flash1 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> > 
+> > 			flash0_part1: part1@0 {
+> > 				label = "part1_0";
+> > 				reg = <0x0 0x800000>;
+> > 			};
+> > 
+> > 			part0@800000 {
+> > 				label = "part1_1";
+> > 				reg = <0x800000 0x800000>;
+> > 			};
+> >                 };
+> >         };  
+> 
+> IMHO this representation is far from intuitive. At first glance it's not
+> obvious which partitions are linked together and what's the name of the
+> resulting concatenated part. I definitely prefer the solution where we
+> have a virtual device describing the concatenation. I also understand
+> that this goes against the #1 DT rule: "DT only decribes HW blocks, not
+> how they should be used/configured", but maybe we can find a compromise
+> here, like moving this description to the /chosen node?
+> 
+> chosen {
+> 	flash-arrays {
+> 		/*
+> 		 * my-flash-array is the MTD name if label is
+> 		 * not present.
+> 		 */
+> 		my-flash-array {
+> 			/*
+> 			 * We could have
+> 			 * compatible = "flash-array";
+> 			 * but we can also do without it.
+> 			 */
+> 			label = "foo";
+> 			flashes = <&flash1 &flash2 ...>;
+> 			partitions {
+> 				/* usual partition description. */
+> 				...
+> 			};
+> 		};
+> 	};
+> };
+> 
+> Rob, what do you think?
 
-// Disable RACK and set max_reordering to keep things simple
-    0 `sysctl -q net.ipv4.tcp_recovery=0`
-   +0 `sysctl -q net.ipv4.tcp_max_reordering=3`
+Rob, I would really welcome your thoughts on this solution, having
+something like a flash-array node in the /chosen/ node would avoid
+creating dummy devices, keep the declarations of the physical nodes
+tidy and have a very simple description.
 
-// Establish a connection
-   +0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-  +.1 < S 0:0(0) win 32792 <mss 1000,sackOK,nop,nop,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <...>
- +.01 < . 1:1(0) ack 1 win 257
-   +0 accept(3, ..., ...) = 4
-
-// Send 8 data segments
-   +0 write(4, ..., 8000) = 8000
-   +0 > P. 1:8001(8000) ack 1
-
-// Enter recovery and 1:3001 is marked lost
- +.01 < . 1:1(0) ack 1 win 257 <sack 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:6001 3001:4001,nop,nop>
-   +0 < . 1:1(0) ack 1 win 257 <sack 5001:7001 3001:4001,nop,nop>
-
-// Retransmit 1:1001, now retransmit_skb_hint points to 1001:2001
-   +0 > . 1:1001(1000) ack 1
-
-// 1001:2001 was ACKed causing retransmit_skb_hint to be set to NULL
- +.01 < . 1:1(0) ack 2001 win 257 <sack 5001:8001 3001:4001,nop,nop>
-// Now retransmit_skb_hint points to 4001:5001 which is now marked lost
-
-// BUG: 2001:3001 was not retransmitted
-   +0 > . 2001:3001(1000) ack 1
-
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
----
- net/ipv4/tcp_input.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 0238b55..5347ab2 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -915,9 +915,10 @@ static void tcp_check_sack_reordering(struct sock *sk, const u32 low_seq,
- /* This must be called before lost_out is incremented */
- static void tcp_verify_retransmit_hint(struct tcp_sock *tp, struct sk_buff *skb)
- {
--	if (!tp->retransmit_skb_hint ||
--	    before(TCP_SKB_CB(skb)->seq,
--		   TCP_SKB_CB(tp->retransmit_skb_hint)->seq))
-+	if ((!tp->retransmit_skb_hint && tp->retrans_out >= tp->lost_out) ||
-+	    (tp->retransmit_skb_hint &&
-+	     before(TCP_SKB_CB(skb)->seq,
-+		    TCP_SKB_CB(tp->retransmit_skb_hint)->seq)))
- 		tp->retransmit_skb_hint = skb;
- }
+Hope this compromise could fit!
  
--- 
-1.8.3.1
+> 
+> > 
+> > This is useful for boards where memory range has been extended with
+> > the use of multiple flash chips as memory banks of a single MTD
+> > device, with partitions spanning chip borders.
+> > 
+> > Suggested-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
+Thanks,
+Miquèl
