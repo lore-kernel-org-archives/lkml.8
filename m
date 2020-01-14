@@ -2,84 +2,166 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF29EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B27C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB4D2072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579015373;
-	bh=9ONsXseL7vnPhow6rBf8Rwy7QYNR2g1suzafCfQHXSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UEViNXegbLu1f7iT5n/KvalVSHLs5JQnUaOhdL95I+KhTt3CFJYqNKm3k7ZiXx1Zc
-	 a8Kp8TkwM8yIFMXucC38VfdT8F9D7ePLYqra910PF9eNo1jssFGLF4RNBrQ0gO7wGI
-	 0vyzPYGRuqy8HPYG6bTkObeNzlvwrbRahHT58VPI=
+	by mail.kernel.org (Postfix) with ESMTP id 5A8002467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:24:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M9vmOQbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgANPWw (ORCPT
+        id S1728977AbgANPYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:22:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbgANPWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:22:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C73E2467D;
-        Tue, 14 Jan 2020 15:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579015372;
-        bh=9ONsXseL7vnPhow6rBf8Rwy7QYNR2g1suzafCfQHXSk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XkObdN6QZyL7qMxqhY0CAJQQ0sjY3N8DpwRxUhEzAeC7xnJ3/Iug79uQYo3uwuU2F
-         ogbuVetlDLA9ETMJDdIEW15hjtaUpveO5gU2AkrPMIAtSFZQV0xcfV5k0D+TnjJay5
-         w4tfgTsqJb8Rc02Ry5a8qZSK7Y8zwKKeTusf244A=
-Date:   Tue, 14 Jan 2020 16:22:49 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] binder: fix log spam for existing debugfs file creation.
-Message-ID: <20200114152249.GA2041689@kroah.com>
-References: <1578671054-5982-1-git-send-email-martin.fuzzey@flowbird.group>
+        Tue, 14 Jan 2020 10:24:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48794 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:24:34 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EFI8i2021302;
+        Tue, 14 Jan 2020 15:24:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=RvfBr+qkTO6i+FWGePDqotfMAgPzZt3oVbFipG709cg=;
+ b=M9vmOQbCfgyh9QkHt/OnD//WJxFj6hT9WNauKWuBYfGBLqvW8QK0PeIFm/UCpl1muIeT
+ 0bR3NwCUZsluwsmNY4YZpzS9G/+w+6mluYLKUCYQMbSpJX96HHrmQCFDfcF3Q4x+Ep2S
+ EUoY+YVJMmSnz5zhyaQshC2ieW+DC55q0qekKQDkhWtOEYDpIFCJfY4huo3qK/fw0c1H
+ NtMhL4B41ljf6YrMYwZ+vw0mazxnLeURiyMwyIHgZOB+NQb1EcCUj9DlXS7ZBtVM7snF
+ 3V1G+Pr5T1QOqrYzA8q3C/MKhk9R5wW4GVVK5JnsqKTpKn1SzkrQ2f+XfGg0gI7s9P7z dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xf74s6mp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 15:24:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EFJI6C017581;
+        Tue, 14 Jan 2020 15:24:25 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2xh8es8fgq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 15:24:25 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00EFOOkl003786;
+        Tue, 14 Jan 2020 15:24:24 GMT
+Received: from kadam (/10.175.194.72)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jan 2020 07:24:23 -0800
+Date:   Tue, 14 Jan 2020 18:24:14 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Write in hiddev_disconnect
+Message-ID: <20200114152414.GC3719@kadam>
+References: <0000000000004a11c1059c193a54@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578671054-5982-1-git-send-email-martin.fuzzey@flowbird.group>
+In-Reply-To: <0000000000004a11c1059c193a54@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=824
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001140132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=888 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 04:44:01PM +0100, Martin Fuzzey wrote:
-> Since commit 43e23b6c0b01 ("debugfs: log errors when something goes wrong")
-> debugfs logs attempts to create existing files.
-> 
-> However binder attempts to create multiple debugfs files with
-> the same name when a single PID has multiple contexts, this leads
-> to log spamming during an Android boot (17 such messages during
-> boot on my system).
-> 
-> Fix this by checking if we already know the PID and only create
-> the debugfs entry for the first context per PID.
-> 
-> Do the same thing for binderfs for symmetry.
-> 
-> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+I'm trying to take a stab at diagnosing these bugs.  (But I'm seldom
+smart enough to actually fix anything).  These hiddev_disconnect() bugs
+are a race condition:
 
-Does this need a "Fixes:" and cc: stable tag?
+devel/drivers/hid/usbhid/hiddev.c
+   924  void hiddev_disconnect(struct hid_device *hid)
+   925  {
+   926          struct hiddev *hiddev = hid->hiddev;
+   927          struct usbhid_device *usbhid = hid->driver_data;
+   928  
+   929          usb_deregister_dev(usbhid->intf, &hiddev_class);
+   930  
+   931          mutex_lock(&hiddev->existancelock);
+   932          hiddev->exist = 0;
+                ^^^^^^^^^^^^^^^^^^
+We set "exist = 0;"
 
-And it would be good to get a review from the binder maintainer(s) to
-see if this is sane or not...
+   933  
+   934          if (hiddev->open) {
+   935                  mutex_unlock(&hiddev->existancelock);
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Then we drop the lock.
 
-thanks,
+   936                  hid_hw_close(hiddev->hid);
+   937                  wake_up_interruptible(&hiddev->wait);
+                                               ^^^^^^
+The other thread frees hiddev and it crashes here.
 
-greg k-h
+   938          } else {
+   939                  mutex_unlock(&hiddev->existancelock);
+   940                  kfree(hiddev);
+   941          }
+   942  }
+
+The other thread is doing:
+
+drivers/hid/usbhid/hiddev.c
+   216  static int hiddev_release(struct inode * inode, struct file * file)
+   217  {
+   218          struct hiddev_list *list = file->private_data;
+   219          unsigned long flags;
+   220  
+   221          spin_lock_irqsave(&list->hiddev->list_lock, flags);
+   222          list_del(&list->node);
+   223          spin_unlock_irqrestore(&list->hiddev->list_lock, flags);
+   224  
+   225          mutex_lock(&list->hiddev->existancelock);
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Takes the lock.
+
+   226          if (!--list->hiddev->open) {
+                     ^^^^^^^^^^^^^^^^^^^^
+Decrements open.
+
+   227                  if (list->hiddev->exist) {
+                            ^^^^^^^^^^^^^^^^^^^
+This is false.
+
+   228                          hid_hw_close(list->hiddev->hid);
+   229                          hid_hw_power(list->hiddev->hid, PM_HINT_NORMAL);
+   230                  } else {
+   231                          mutex_unlock(&list->hiddev->existancelock);
+   232                          kfree(list->hiddev);
+                                      ^^^^^^^^^^^^
+Freed here.
+
+   233                          vfree(list);
+   234                          return 0;
+   235                  }
+   236          }
+   237  
+   238          mutex_unlock(&list->hiddev->existancelock);
+   239          vfree(list);
+   240  
+   241          return 0;
+   242  }
+
+I'm not sure what the fix should be though.
+
+regards,
+dan carpenter
+
