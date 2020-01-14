@@ -2,43 +2,105 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D99C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADECC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B411D20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEA02072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:46:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BWLoroo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgANPpm (ORCPT
+        id S1729121AbgANPq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:45:42 -0500
-Received: from verein.lst.de ([213.95.11.211]:46578 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbgANPpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:45:42 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8548668AFE; Tue, 14 Jan 2020 16:45:40 +0100 (CET)
-Date:   Tue, 14 Jan 2020 16:45:40 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     hch@lst.de, darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Add __packed to xfs_dir2_sf_entry_t definition
-Message-ID: <20200114154540.GA7194@lst.de>
-References: <20200114120352.53111-1-vincenzo.frascino@arm.com>
+        Tue, 14 Jan 2020 10:46:27 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:36367 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgANPq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:46:26 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id F0EF622F54;
+        Tue, 14 Jan 2020 16:46:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1579016784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=L/5pDwGZbj6GR9oEQi1uXOUKGfs66wphp2lm7VKi6uE=;
+        b=BWLoroo8D/Gz43X6laSOsgvYokIjzevwp5IpfXZW62ged+4AnURg+2ofM/saYcVKGgHofb
+        2AepK1rBvBXug8qT0wZAwpLz/Ps8uVWnCyPOCsYPVMZkL9ZG/YrXeYSwOuiccBUDeIwehU
+        C+uCE34dHzPqV1KWrb62yot2YdChUE4=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Cc:     Han Xu <han.xu@nxp.com>, Mark Brown <broonie@kernel.org>,
+        Yogesh Gaur <yogeshnarayan.gaur@nxp.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] spi: spi-fsl-qspi: Ensure width is respected in spi-mem operations
+Date:   Tue, 14 Jan 2020 16:46:13 +0100
+Message-Id: <20200114154613.8195-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114120352.53111-1-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: F0EF622F54
+X-Spamd-Result: default: False [4.90 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         MID_CONTAINS_FROM(1.00)[];
+         NEURAL_HAM(-0.00)[-0.903];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+Make use of a core helper to ensure the desired width is respected
+when calling spi-mem operators.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Otherwise only the SPI controller will be matched with the flash chip,
+which might lead to wrong widths. Also consider the width specified by
+the user in the device tree.
+
+Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI controller")
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/spi/spi-fsl-qspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index 79b1558b74b8..e8a499cd1f13 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -410,7 +410,7 @@ static bool fsl_qspi_supports_op(struct spi_mem *mem,
+ 	    op->data.nbytes > q->devtype_data->txfifo)
+ 		return false;
+ 
+-	return true;
++	return spi_mem_default_supports_op(mem, op);
+ }
+ 
+ static void fsl_qspi_prepare_lut(struct fsl_qspi *q,
+-- 
+2.20.1
+
