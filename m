@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D45BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B783C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF77207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B37207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997117;
-	bh=EzNgiiWZ33n+Hg8gPGnUEB6TwMW3CwgI6GJIxqhBaLE=;
+	s=default; t=1578997132;
+	bh=rIdIKCDUQnyi2OOaikTMwgHo0OvD/vjeFzKMOH6F4tM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYrQ7PBZXBMRGtRmjRrp+3w4djJ0lkcziKHRCMIC++/Sfd8gYg57oeg2YevASTfUd
-	 iJjg2TfZ2Qw6FPdY9VIhrC3KeIPBg4EQTa5iojvPZXYyJIPqWpvUW0/kQnC/75WkP1
-	 UjZQTPPjFNUg9jYpthUafV05B9tMFUs1Rjfc8C9w=
+	b=wBmA6Ez/Lo6hBAAxKVDMCS8Oi9AdaC2eTaR2ciRhizkRtjw87qYVXsbHJsCHksDgo
+	 Fq3xrf4J3Q0PAH2f2wtRxwCJgRZ+MwItb4N3a+Ap/2zqU6BTqTP504XQfRMP0sO9wP
+	 ry8QQvuuhvcXj69ggXaGWhbfIYBLoJZAjttvMuPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgANKSg (ORCPT
+        id S1730503AbgANKGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:18:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37956 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730287AbgANKHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:34 -0500
+        id S1729406AbgANKGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8146E24679;
-        Tue, 14 Jan 2020 10:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FFA324679;
+        Tue, 14 Jan 2020 10:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996453;
-        bh=EzNgiiWZ33n+Hg8gPGnUEB6TwMW3CwgI6GJIxqhBaLE=;
+        s=default; t=1578996405;
+        bh=rIdIKCDUQnyi2OOaikTMwgHo0OvD/vjeFzKMOH6F4tM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6gUs0X2OwfSWddcaHwhHnEE9DBqDW90UBnVucWzFnbwZPcLzM47CsS+ykCxspi0E
-         lvlb2v8IjZT2GzbQMewPdC9oNemB4cmE37y0Ug9BDKEIv6zMv3WAsH+AaE/s47x0Ql
-         WO1FJJRyxaahZ/F5eeBtf7Ce0sg7t4+31ndANH7U=
+        b=Pj4lOYAH+lfjjnffDr17wKkOkYaMrs2BG3Czt+Lf0m9HlFlxiiXbiJ/yXdkBUyEIf
+         ziSL8HqgfcKtY22wsPSmI0GJFJSiZpG22WdMFqucNSc17hD+s00YjdkbfpC9xEjQFo
+         bJUuHkr/evAaYzpnrwdtEFcPZr9l8rn4D1+GzgoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 22/46] can: can_dropped_invalid_skb(): ensure an initialized headroom in outgoing CAN sk_buffs
-Date:   Tue, 14 Jan 2020 11:01:39 +0100
-Message-Id: <20200114094344.962581194@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 5.4 70/78] rtl8xxxu: prevent leaking urb
+Date:   Tue, 14 Jan 2020 11:01:44 +0100
+Message-Id: <20200114094402.718639354@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
-References: <20200114094339.608068818@linuxfoundation.org>
+In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
+References: <20200114094352.428808181@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,88 +62,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit e7153bf70c3496bac00e7e4f395bb8d8394ac0ea upstream.
+commit a2cdd07488e666aa93a49a3fc9c9b1299e27ef3c upstream.
 
-KMSAN sysbot detected a read access to an untinitialized value in the
-headroom of an outgoing CAN related sk_buff. When using CAN sockets this
-area is filled appropriately - but when using a packet socket this
-initialization is missing.
+In rtl8xxxu_submit_int_urb if usb_submit_urb fails the allocated urb
+should be released.
 
-The problematic read access occurs in the CAN receive path which can
-only be triggered when the sk_buff is sent through a (virtual) CAN
-interface. So we check in the sending path whether we need to perform
-the missing initializations.
-
-Fixes: d3b58c47d330d ("can: replace timestamp as unique skb attribute")
-Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Tested-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: linux-stable <stable@vger.kernel.org> # >= v4.1
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/can/dev.h |   34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/can/dev.h
-+++ b/include/linux/can/dev.h
-@@ -18,6 +18,7 @@
- #include <linux/can/error.h>
- #include <linux/can/led.h>
- #include <linux/can/netlink.h>
-+#include <linux/can/skb.h>
- #include <linux/netdevice.h>
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -5447,6 +5447,7 @@ static int rtl8xxxu_submit_int_urb(struc
+ 	ret = usb_submit_urb(urb, GFP_KERNEL);
+ 	if (ret) {
+ 		usb_unanchor_urb(urb);
++		usb_free_urb(urb);
+ 		goto error;
+ 	}
  
- /*
-@@ -91,6 +92,36 @@ struct can_priv {
- #define get_can_dlc(i)		(min_t(__u8, (i), CAN_MAX_DLC))
- #define get_canfd_dlc(i)	(min_t(__u8, (i), CANFD_MAX_DLC))
- 
-+/* Check for outgoing skbs that have not been created by the CAN subsystem */
-+static inline bool can_skb_headroom_valid(struct net_device *dev,
-+					  struct sk_buff *skb)
-+{
-+	/* af_packet creates a headroom of HH_DATA_MOD bytes which is fine */
-+	if (WARN_ON_ONCE(skb_headroom(skb) < sizeof(struct can_skb_priv)))
-+		return false;
-+
-+	/* af_packet does not apply CAN skb specific settings */
-+	if (skb->ip_summed == CHECKSUM_NONE) {
-+		/* init headroom */
-+		can_skb_prv(skb)->ifindex = dev->ifindex;
-+		can_skb_prv(skb)->skbcnt = 0;
-+
-+		skb->ip_summed = CHECKSUM_UNNECESSARY;
-+
-+		/* preform proper loopback on capable devices */
-+		if (dev->flags & IFF_ECHO)
-+			skb->pkt_type = PACKET_LOOPBACK;
-+		else
-+			skb->pkt_type = PACKET_HOST;
-+
-+		skb_reset_mac_header(skb);
-+		skb_reset_network_header(skb);
-+		skb_reset_transport_header(skb);
-+	}
-+
-+	return true;
-+}
-+
- /* Drop a given socketbuffer if it does not contain a valid CAN frame. */
- static inline bool can_dropped_invalid_skb(struct net_device *dev,
- 					  struct sk_buff *skb)
-@@ -108,6 +139,9 @@ static inline bool can_dropped_invalid_s
- 	} else
- 		goto inval_skb;
- 
-+	if (!can_skb_headroom_valid(dev, skb))
-+		goto inval_skb;
-+
- 	return false;
- 
- inval_skb:
 
 
