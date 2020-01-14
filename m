@@ -2,78 +2,184 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5319BC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACEAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3409D2465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62582467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:17:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="iOjCeWYW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dNaC0snj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgANMPP (ORCPT
+        id S1729377AbgANMRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:15:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42935 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANMPO (ORCPT
+        Tue, 14 Jan 2020 07:17:23 -0500
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:47799 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgANMRW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:15:14 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irL6D-0003Yw-Os; Tue, 14 Jan 2020 13:15:09 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 388A1101DEE; Tue, 14 Jan 2020 13:15:09 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ramon Fried <rfried.dev@gmail.com>, hkallweit1@gmail.com,
-        bhelgaas@google.com, maz@kernel.org, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-In-Reply-To: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
-Date:   Tue, 14 Jan 2020 13:15:09 +0100
-Message-ID: <87wo9ub5f6.fsf@nanos.tec.linutronix.de>
+        Tue, 14 Jan 2020 07:17:22 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 2C2F0490;
+        Tue, 14 Jan 2020 07:17:21 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 14 Jan 2020 07:17:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        +K5zOwuA3yoK1vVndKd2rxLD6c5mO4R3lTKJDznfHvY=; b=iOjCeWYW/AOKr6/l
+        nFe/fZ1IwZOV7Su2bT+ZpGLtytwHVRYwJzYO2gizPrFw2kTTbYQd2FqPk/EWTBD5
+        tKboXMoUqma3amQF+2NdJRuhl+eExruEsGNf6hja4QELlVh794i2XD0VjvmPCkXi
+        MLSiqn8J7P+lmbpGSGQ0qct5Uv9SgrTna62ZWVhej+/TnrkgmQyIYAnAqFDJHNPC
+        gAlAwxxTZJGtEANZp4ET+oGlk4WQbOjuFK5ndHqE/CNoP8pu59o9PMi6SdDgpfm2
+        UHCGCGnvUlDsPrGh0Vul6dotGtmwv3HMxrNd26ubusXoHORNs0kmM8bouvf7OYXD
+        y2bVqg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=+K5zOwuA3yoK1vVndKd2rxLD6c5mO4R3lTKJDznfH
+        vY=; b=dNaC0snjmT4LFwdJgfWG/mDnfqdD2bT7g3Udvejc5lqpKQtmPXbzJr9u1
+        Enf5uWo0WjHIWSjcitpl/FsyoW8LkG8Xlf31FoUFu93IpbmrzHH6Ck4Eeje+BhBT
+        7ykN47zL7TcpDF4LjcmMuZINH7RMwXTRczFyS9e0hvHeOrgKpGA7jify4DMJUQLo
+        CsfcgJ9/MBbUCaMGYEMX6wduvEXKEw3PhV3c0ZrJbUcpsYArqmjJ5g7zqcNVNLup
+        tZIZo/aTF9TLuGCgrl2c47kyte2lTfxg3de9CRkRjFT+HEFWWoFFi4n6cWNjyjVO
+        6NYMdUoU/gQoAc3wwEvtJXsGzuOBA==
+X-ME-Sender: <xms:T7EdXhVR0KrPiTTyYHiyHzMr38Po4BGhVuVJpfaZtEd0y9BvJUSbrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddtgddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuffhomhgrihhnpehgihhthh
+    husgdrtghomhenucfkphepuddukedrvddtledrudejhedrvdehnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvthenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:T7EdXtbiCejVvLL8f1StPI3zBSwiLot6NUA_4WcZiSQ19z21CX8pJQ>
+    <xmx:T7EdXksHJ5qbraTsOpGI96KSOTwciwNOfQGAnsDg1HOTJT1wROx0pA>
+    <xmx:T7EdXnlg2nPqIfq4tqrfKbOSaid7xoT1Qemjc43hgD1xM2OaCmsJtg>
+    <xmx:ULEdXgj8R3gSgmf6jhpRvKCtkXy98KvP7tfO-Jdk4EGQE3Xu6TIaq5IlyXE>
+Received: from mickey.themaw.net (unknown [118.209.175.25])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 36C4E80063;
+        Tue, 14 Jan 2020 07:17:14 -0500 (EST)
+Message-ID: <fca18b4b9e9b5b5bc8610970dfb605458c3acaa0.camel@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 14 Jan 2020 20:17:11 +0800
+In-Reply-To: <7b2b9f81871898d2b6301a74f2bee85943f21cdc.camel@themaw.net>
+References: <20200101030815.GA17593@ZenIV.linux.org.uk>
+         <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+         <20200101234009.GB8904@ZenIV.linux.org.uk>
+         <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+         <20200103014901.GC8904@ZenIV.linux.org.uk>
+         <20200110231945.GL8904@ZenIV.linux.org.uk>
+         <aea0bc800b6a1e547ca1944738ff9db4379098ba.camel@themaw.net>
+         <20200113035407.GQ8904@ZenIV.linux.org.uk>
+         <41c535d689530f3715f21cd25074eb61e825a5f6.camel@themaw.net>
+         <58f9894e51a00ad2a4ac3d4122bf29e7cb6c0d54.camel@themaw.net>
+         <20200113133047.GR8904@ZenIV.linux.org.uk>
+         <7b2b9f81871898d2b6301a74f2bee85943f21cdc.camel@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ramon Fried <rfried.dev@gmail.com> writes:
-> While debugging the root cause of spurious IRQ's on my PCIe MSI line it appears
-> that because of the line:
->     info->chip->flags |= IRQCHIP_ONESHOT_SAFE;
-> in pci_msi_create_irq_domain()
->
-> The IRQF_ONESHOT is ignored, especially when requesting IRQ through
-> pci_request_threaded_irq() where handler is NULL.
+On Tue, 2020-01-14 at 15:25 +0800, Ian Kent wrote:
+> On Mon, 2020-01-13 at 13:30 +0000, Al Viro wrote:
+> > On Mon, Jan 13, 2020 at 02:03:00PM +0800, Ian Kent wrote:
+> > 
+> > > Oh wait, for systemd I was actually looking at:
+> > > https://github.com/systemd/systemd/blob/master/src/shared/switch-root.c
+> > > 
+> > > > Mind you, that's not the actual systemd repo. either I probably
+> > > > need to look a lot deeper (and at the actual systemd repo) to
+> > > > work out what's actually being called.
+> > > > 
+> > > > > Sigh...  Guess I'll have to dig that Fedora KVM image out and
+> > > > > try to see what it's about... ;-/  Here comes a couple of
+> > > > > hours
+> > > > > of build...
+> > 
+> > D'oh...  And yes, that would've been a bisect hazard - switch to
+> > path_lookupat() later in the series gets rid of that.  Incremental
+> > (to be foldede, of course):
+> > 
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 1793661c3342..204677c37751 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -2634,7 +2634,7 @@ path_mountpoint(struct nameidata *nd,
+> > unsigned
+> > flags, struct path *path)
+> >  		(err = lookup_last(nd)) > 0) {
+> >  		s = trailing_symlink(nd);
+> >  	}
+> > -	if (!err)
+> > +	if (!err && (nd->flags & LOOKUP_RCU))
+> >  		err = unlazy_walk(nd);
+> >  	if (!err)
+> >  		err = handle_lookup_down(nd);
+> 
+> Ok, so I've tested with the updated patch.
+> 
+> The autofs connectathon tests I use function fine.
+> 
+> I also tested sending a SIGKILL to the daemon with about 180 active
+> mounts and restarted the daemon to test the function of the ioctls
+> that Al was concerned about.
+> 
+> While the connectathon test expired everything I had 3 mounts left
+> after allowing sufficient expire time with the SIGKILL test.
+> 
+> Those mounts correspond to one map entry that has a mix of NFS
+> vers=3 and vers=2 mount options and NFSv2 isn't supported by the
+> servers I use in testing.
+> 
+> I'm inclined to think this is a bug in the automount mount tree
+> re-connection code rather than a problem with this patch since
+> all the other mounts, some simple and others with not so simple
+> constructs, expired fine after automount re-connected to them.
+> 
+> There are two other map entries that have an NFS vers=2 option but
+> they are simple mounts that will fail on attempting the automount
+> because the server doesn't support v2 so they don't end up with
+> mounts to reconnect to.
+> 
+> This particular map entry, having a mix of NFS vers=3 and vers=2
+> in the offsets of the entry, will lead to a partial mount of the
+> map entry which is probably not being handled properly by automount
+> when re-connecting to the mounts in the tree.
+> 
+> So I think the patch here is fine from an autofs POV.
 
-Which is perfectly fine.
+Umm ... unfortunately further testing shows an autofs problem.
 
-> The problem is that the MSI masking now only surrounds the HW handler,
-> and all additional MSI that occur before the threaded handler is
-> complete are considered by the note_interrupt() as spurious.
+It appears to be present in the current kernel (so far I've only
+been able to check the current git head and an earlier kernel
+but can't remember the version and can't check) so I must have
+missed it.
 
-Which is not a problem as long as the thread finishes before 100k MSIs
-arrived on that line. If that happens then there is something really
-wrong. Either the device fires MSIs like crazy or the threaded handler
-is stuck somewhere.
+I'm attempting to bisect now but managed to trash the root
+file system on my VM. I'll get this done as quickly as I can.
 
-> Besides the side effect of that, I don't really understand the logic
-> of not masking the MSI until the threaded handler is complete,
-> especially when there's no HW handler and only threaded handler.
+Ian
 
-What's wrong with having another interrupt firing while the threaded
-handler is running? Nothing, really. It actually can be desired because
-the threaded handler is allowed to sleep.
-
-Thanks,
-
-        tglx
