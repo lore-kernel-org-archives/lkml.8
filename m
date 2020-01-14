@@ -2,108 +2,125 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CCC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7D8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2559F2072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB8B2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="EI+oPXbn"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="jXUvgtW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgANMpC (ORCPT
+        id S1728759AbgANMpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:45:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46048 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgANMpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:45:00 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so5188713pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 04:45:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G2ocqpNCNamUAy5E/KrLLD+fKqvg94tYj4BJ9iBtt5s=;
-        b=EI+oPXbnl+yy9J09rgqE3ehUE+czANY9CAE/rrPG6TEvMrj2c2uqY5/g5kOe0qHrIu
-         dLn3aUED0jWJjf3xJQzACY8oGfGNFlNI9PpXDwbL0/AvlEgf/9ns5ql5ZgNbTBN6nUYj
-         dJKaPixUuBiQ2BAX/94BWQC+7t9+0iFq5O1ILfjn7WEZjuOP5E9bmiURTrvL79SsEliR
-         cAaqlRJnPt6vfhallAtscoLJe/bPtnL8KhFFYYLnZn+vNleYM4CyAYe9TZA6y1/uPDgm
-         a9RjE3tMjLP9jwl3FE1DBp4GnyyL4tr9daFUZPCtjlkyMbawXQT8R26waWc1ODf8Hif8
-         cKHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G2ocqpNCNamUAy5E/KrLLD+fKqvg94tYj4BJ9iBtt5s=;
-        b=k+ZWBPRAwV2kwsvYOaOtH0/6xNqLofoNMOrdFuWwAxhUKXpIZf26n6XEro3vp4r5yp
-         YngXVZ1J80GbwkPos2AksGOW8C5Sp6SjqAlQvrhkOAlD0tSRgz7PhiucPk8zg4WuTOLx
-         FUTTOv9aStuU2TYDHdECgKyPzSzSBvI9tERnvQj3FhcVk4SPT5GsiBTxCWZg9VTbUDDH
-         UlA3L8EiWa8rKRsSK5Z8SwkOW03b8ykfmieNT2ECJA4VvWsAwqC3Sgpo9laj4+HA7qPE
-         ScHRVOD14WX+L4M+xQCnmhT4Q4jGqrfdPEGAc8V9lYWZQizMab1RHWFVmXHh6cJ5EKfD
-         IGwA==
-X-Gm-Message-State: APjAAAUL6xAdfLQJJKM4ubxVy8Fg5UaeU8l9K9TYzEWROZOdmSf6lMxw
-        28jHRbebh3Rb/oQdUMpcoZGt4A==
-X-Google-Smtp-Source: APXvYqwGVReQXXDNoX9cGSPsbV23dDIOppPIv/+zsZQ8bVlsNTYIFzag4i6Xq1/CyWTCbCypbBMfWA==
-X-Received: by 2002:a17:902:820b:: with SMTP id x11mr19767084pln.196.1579005900149;
-        Tue, 14 Jan 2020 04:45:00 -0800 (PST)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id a185sm17816033pge.15.2020.01.14.04.44.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 04:44:59 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: mpq7920: Convert to use .probe_new
-Date:   Tue, 14 Jan 2020 20:44:49 +0800
-Message-Id: <20200114124449.28408-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200114124449.28408-1-axel.lin@ingics.com>
-References: <20200114124449.28408-1-axel.lin@ingics.com>
+        Tue, 14 Jan 2020 07:45:31 -0500
+Received: from mail-db8eur05on2069.outbound.protection.outlook.com ([40.107.20.69]:6069
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726106AbgANMpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:45:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kq1u2P1stFd2kBKMjR+A+ynd4ZbIzucggXLk4sx33mf+mr1lNxXoS6WFIbE+lOkSmrHCB+GcLRlADejQofORFtGNRX7gTzMyQ3fIn/SD9fPfTOYPa012Izum35wyMX5vWFWYm0pJnRJlLyLgI4Fee+z/+CuzWir3hYsglYyZEqhPlIXbdG3wtFDHnEuAgw2m6b3wen8tnhGP1aZDKVD9v+0SvokzbFFF+pIiLbxDN1JVEh6KLEFlUAWAHFnJF2S0zKQ9AosAEZS3rQaiW4eQ0O+DAcjD7osgfUHgbHiuD0O1ihr+qkvtrUNW3biR+Y2AagELf9Q2dwXR7nJw9X0+bQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Spg3lBFjL6jFBypta8RI6PxCBcLRGJsQGd8+tPOhcE8=;
+ b=SHlCqxrwxxzUVbQBq71v8bZtO6iaxGfVHBvmYAoL0faxnAkrPjaGR690eQ2lSArMOwUrtboXxJ92DiPvrqvRi7YLWwd+7jehyBC8VKc78PoNzrJRjUqkTt/RTS3Eyf+qP+BBZ6BagXCukEVdUStnTVNTsyz3hX8ahPO5lMM/32ziLTGgtC0ByBLGfg+vE6tkFnnIkBKyF1U74ceNZMBHQoWju7KTd4AwOLmEg+4VIvpI+XCH80kpRWES6lrGJ3b7+6KI15NZ9FoYbdgFG1YElKzRgto0P3RPDS8Smj/D07YxRE7hSw+oKsmXf2jgpW0NwDe3oRkfaKDxzww2bTdKAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Spg3lBFjL6jFBypta8RI6PxCBcLRGJsQGd8+tPOhcE8=;
+ b=jXUvgtW67v//eJI9L5w5tLLNTdg4qlJKD5WGn3VyE0zw0JxKcA/XUZjMgvSjineArmQfdNgePfbW7+pYo/HX7N6dwIYt25INi9KqOuBU7otLUZ8NlSbd2QW3eFO5fh5Vr1IiNDK94hF9F1KC7nG8ecNRWpPMGB/PtBTKpBMvVJY=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4303.eurprd05.prod.outlook.com (52.133.15.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Tue, 14 Jan 2020 12:45:26 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 12:45:26 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR03CA0014.namprd03.prod.outlook.com (2603:10b6:208:23a::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11 via Frontend Transport; Tue, 14 Jan 2020 12:45:26 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1irLZT-0005oa-5y; Tue, 14 Jan 2020 08:45:23 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Topic: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+Thread-Index: AQHVtEsczeksfKC51EmFDx7aa5U3hKfi4tSAgAAlPICAABeZAIAGPeMAgADq14A=
+Date:   Tue, 14 Jan 2020 12:45:26 +0000
+Message-ID: <20200114124523.GM20978@mellanox.com>
+References: <20191216195733.28353-1-rcampbell@nvidia.com>
+ <20191216195733.28353-2-rcampbell@nvidia.com>
+ <20200109194805.GK20978@mellanox.com>
+ <73225ded-c22d-33f2-ebcb-b9e9aa95266b@nvidia.com>
+ <20200109232548.GO20978@mellanox.com>
+ <633a3dda-d4d7-1233-b290-53d36fb8fda1@nvidia.com>
+In-Reply-To: <633a3dda-d4d7-1233-b290-53d36fb8fda1@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR03CA0014.namprd03.prod.outlook.com
+ (2603:10b6:208:23a::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ae819793-7c8f-46f6-77d2-08d798efa101
+x-ms-traffictypediagnostic: VI1PR05MB4303:
+x-microsoft-antispam-prvs: <VI1PR05MB43037E89488D4CB3E666BCB1CF340@VI1PR05MB4303.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(8676002)(52116002)(66446008)(1076003)(2616005)(558084003)(186003)(26005)(54906003)(8936002)(5660300002)(9746002)(9786002)(7416002)(86362001)(81156014)(81166006)(15650500001)(33656002)(66476007)(2906002)(4326008)(6916009)(66946007)(66556008)(71200400001)(36756003)(498600001)(64756008)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4303;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1dYYNySpS/5ZJY6Zso55nL6KzvZMA5rJ+IPzZUYfCy0ZZW5W94kTIHBukDBA0njVhVFeXQGMlTTTmOKj1cIIKmjThY5DZEiPqwpx5B2eJQ1GUwNS3M5U7d5nGWT8efKkRqAeMlXREiSJ/T7NXLQ8p1bdBRY4jTA6gd77lPjqUyC1VmsiWw+NoVGmr6eYjCFm9Kqr7f9PNxCblyYtwmLoz1G8Ast9SWjHFvDNnn0DfAO1QItqy8JfLCnFfCVclw9f05niyRjxgJ6fxJtRsF9UyLIAsq+6NHCEsPV4K+64Uskvp2RnOOdAE/GWlNUQNMAy6uMOpx4KUmQSYd8mkyLPyPg/MJdWYWm2IabD/IxKQjy+5sXYUhE6KP0VfjeO7hk3bkU6pG7ANL5hCaN2zMr/fC/rtZc1iiWLCwaLOWf9QhUst2nwpUCLzNqB0OhGIHJgi15q8yui3Nh9otLt9G/sVV4I82/wUgC0odsYYB+B7T8LsCZCHdZptz3EKVjS+C2E
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <52D9FE7B2FA91941B468D6267DA6CA97@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae819793-7c8f-46f6-77d2-08d798efa101
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 12:45:26.4007
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WG8snBU0whMrxb8KX6wF6m8c6bzM1eXPhDH5VZHhHl73HClbzcm/KK1Qblb9H/SpA40sYK8ziaDvtweXk7lpYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4303
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new .probe_new instead.
+On Mon, Jan 13, 2020 at 02:44:52PM -0800, Ralph Campbell wrote:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/mpq7920.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+> I'm using the device driver lock to serialize find/insert/update/remove
+> changes to the interval tree.
 
-diff --git a/drivers/regulator/mpq7920.c b/drivers/regulator/mpq7920.c
-index b133bab514a9..54c862edf571 100644
---- a/drivers/regulator/mpq7920.c
-+++ b/drivers/regulator/mpq7920.c
-@@ -260,8 +260,7 @@ static void mpq7920_parse_dt(struct device *dev,
- 	of_node_put(np);
- }
- 
--static int mpq7920_i2c_probe(struct i2c_client *client,
--				    const struct i2c_device_id *id)
-+static int mpq7920_i2c_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct mpq7920_regulator_info *info;
-@@ -321,7 +320,7 @@ static struct i2c_driver mpq7920_regulator_driver = {
- 		.name = "mpq7920",
- 		.of_match_table = of_match_ptr(mpq7920_of_match),
- 	},
--	.probe = mpq7920_i2c_probe,
-+	.probe_new = mpq7920_i2c_probe,
- 	.id_table = mpq7920_id,
- };
- module_i2c_driver(mpq7920_regulator_driver);
--- 
-2.20.1
+The device driver lock can't really fully serialize this as it doesn't
+effect how the intersection lookup runs.
 
+Jason
