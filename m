@@ -2,42 +2,37 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED61DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A776EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C805C24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CE824655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgANTt0 (ORCPT
+        id S1728959AbgANTtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:49:26 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44775 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbgANTtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 14:49:12 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44733 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgANTtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:49:08 -0500
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1irSBZ-0005aj-KR; Tue, 14 Jan 2020 20:49:09 +0100
-Message-Id: <20200114185947.796806514@linutronix.de>
+        id 1irSBW-0005a8-2B; Tue, 14 Jan 2020 20:49:06 +0100
+Message-Id: <20200114185947.406096630@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 19:52:49 +0100
+Date:   Tue, 14 Jan 2020 19:52:45 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Christophe Leroy <christophe.leroy@c-s.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Juergen Gross <jgross@suse.com>,
@@ -45,8 +40,13 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Subject: [patch 12/15] ARM/arm64: vdso: Use common vdso clock mode storage
+        James Hogan <jhogan@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [patch 08/15] x86/vdso: Move VDSO clocksource state tracking to callback
 References: <20200114185237.273005683@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,175 +55,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ARM/ARM64 to the generic VDSO clock mode storage. This needs to
-happen in one go as they share the clocksource driver.
+All architectures which use the generic VDSO code have their own storage
+for the VDSO clock mode. That's pointless and just requires duplicate code.
+
+X86 abuses the function which retrieves the architecture specific clock
+mode storage to mark the clocksource as used in the VDSO. That's silly
+because this is invoked on every tick when the VDSO data is updated.
+
+Move this functionality to the clocksource::enable() callback so it gets
+invoked once when the clocksource is installed. This allows to make the
+clock mode storage generic.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig                       |    1 -
- arch/arm/include/asm/clocksource.h     |    5 ++---
- arch/arm/include/asm/vdso/vsyscall.h   |   21 ---------------------
- arch/arm/mm/Kconfig                    |    1 +
- arch/arm64/Kconfig                     |    2 +-
- arch/arm64/include/asm/clocksource.h   |    5 ++---
- arch/arm64/include/asm/vdso/vsyscall.h |    9 ---------
- drivers/clocksource/arm_arch_timer.c   |    8 ++++----
- 8 files changed, 10 insertions(+), 42 deletions(-)
+ arch/x86/entry/vdso/vma.c            |    4 ++++
+ arch/x86/include/asm/clocksource.h   |   12 ++++++++++++
+ arch/x86/include/asm/mshyperv.h      |    2 ++
+ arch/x86/include/asm/vdso/vsyscall.h |   10 +---------
+ arch/x86/include/asm/vgtod.h         |    6 ------
+ arch/x86/kernel/kvmclock.c           |    7 +++++++
+ arch/x86/kernel/tsc.c                |   32 ++++++++++++++++++++------------
+ arch/x86/xen/time.c                  |   17 ++++++++++++-----
+ drivers/clocksource/hyperv_timer.c   |    7 +++++++
+ 9 files changed, 65 insertions(+), 32 deletions(-)
 
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -3,7 +3,6 @@ config ARM
- 	bool
- 	default y
- 	select ARCH_32BIT_OFF_T
--	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_BINFMT_FLAT
- 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
---- a/arch/arm/include/asm/clocksource.h
-+++ b/arch/arm/include/asm/clocksource.h
-@@ -1,8 +1,7 @@
- #ifndef _ASM_CLOCKSOURCE_H
- #define _ASM_CLOCKSOURCE_H
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -38,6 +38,8 @@ struct vdso_data *arch_get_vdso_data(voi
+ }
+ #undef EMIT_VVAR
  
--struct arch_clocksource_data {
--	bool vdso_direct;	/* Usable for direct VDSO access? */
--};
-+#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMODE_ARCHTIMER
- 
++unsigned int vclocks_used __read_mostly;
++
+ #if defined(CONFIG_X86_64)
+ unsigned int __read_mostly vdso64_enabled = 1;
  #endif
---- a/arch/arm/include/asm/vdso/vsyscall.h
-+++ b/arch/arm/include/asm/vdso/vsyscall.h
-@@ -11,18 +11,6 @@
- extern struct vdso_data *vdso_data;
- extern bool cntvct_ok;
+@@ -445,6 +447,8 @@ static __init int vdso_setup(char *s)
  
--static __always_inline
--bool tk_is_cntvct(const struct timekeeper *tk)
--{
--	if (!IS_ENABLED(CONFIG_ARM_ARCH_TIMER))
--		return false;
+ static int __init init_vdso(void)
+ {
++	BUILD_BUG_ON(VCLOCK_MAX >= 32);
++
+ 	init_vdso_image(&vdso_image_64);
+ 
+ #ifdef CONFIG_X86_X32_ABI
+--- a/arch/x86/include/asm/clocksource.h
++++ b/arch/x86/include/asm/clocksource.h
+@@ -14,4 +14,16 @@ struct arch_clocksource_data {
+ 	int vclock_mode;
+ };
+ 
++extern unsigned int vclocks_used;
++
++static inline bool vclock_was_used(int vclock)
++{
++	return READ_ONCE(vclocks_used) & (1U << vclock);
++}
++
++static inline void vclocks_set_used(unsigned int which)
++{
++	WRITE_ONCE(vclocks_used, READ_ONCE(vclocks_used) | (1 << which));
++}
++
+ #endif /* _ASM_X86_CLOCKSOURCE_H */
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -47,6 +47,8 @@ typedef int (*hyperv_fill_flush_list_fun
+ 	wrmsrl(HV_X64_MSR_REFERENCE_TSC, val)
+ #define hv_set_clocksource_vdso(val) \
+ 	((val).archdata.vclock_mode = VCLOCK_HVCLOCK)
++#define hv_enable_vdso_clocksource() \
++	vclocks_set_used(VCLOCK_HVCLOCK);
+ #define hv_get_raw_timer() rdtsc_ordered()
+ 
+ void hyperv_callback_vector(void);
+--- a/arch/x86/include/asm/vdso/vsyscall.h
++++ b/arch/x86/include/asm/vdso/vsyscall.h
+@@ -10,8 +10,6 @@
+ #include <asm/vgtod.h>
+ #include <asm/vvar.h>
+ 
+-int vclocks_used __read_mostly;
 -
--	if (!tk->tkr_mono.clock->archdata.vdso_direct)
--		return false;
--
--	return true;
--}
--
+ DEFINE_VVAR(struct vdso_data, _vdso_data);
  /*
   * Update the vDSO data page to keep in sync with kernel timekeeping.
-  */
-@@ -41,15 +29,6 @@ bool __arm_update_vdso_data(void)
- #define __arch_update_vdso_data __arm_update_vdso_data
- 
+@@ -26,13 +24,7 @@ struct vdso_data *__x86_get_k_vdso_data(
  static __always_inline
--int __arm_get_clock_mode(struct timekeeper *tk)
--{
--	u32 __tk_is_cntvct = tk_is_cntvct(tk);
--
--	return __tk_is_cntvct;
--}
--#define __arch_get_clock_mode __arm_get_clock_mode
--
--static __always_inline
- void __arm_sync_vdso_data(struct vdso_data *vdata)
+ int __x86_get_clock_mode(struct timekeeper *tk)
  {
- 	flush_dcache_page(virt_to_page(vdata));
---- a/arch/arm/mm/Kconfig
-+++ b/arch/arm/mm/Kconfig
-@@ -900,6 +900,7 @@ config VDSO
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_VDSO_32
- 	select GENERIC_GETTIMEOFDAY
-+	select GENERIC_VDSO_CLOCK_MODE
- 	help
- 	  Place in the process address space an ELF shared object
- 	  providing fast implementations of gettimeofday and
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -9,7 +9,6 @@ config ARM64
- 	select ACPI_MCFG if (ACPI && PCI)
- 	select ACPI_SPCR_TABLE if ACPI
- 	select ACPI_PPTT if ACPI
--	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_DEBUG_VIRTUAL
- 	select ARCH_HAS_DEVMEM_IS_ALLOWED
- 	select ARCH_HAS_DMA_PREP_COHERENT
-@@ -109,6 +108,7 @@ config ARM64
- 	select GENERIC_STRNLEN_USER
- 	select GENERIC_TIME_VSYSCALL
- 	select GENERIC_GETTIMEOFDAY
-+	select GENERIC_VDSO_CLOCK_MODE
- 	select HANDLE_DOMAIN_IRQ
- 	select HARDIRQS_SW_RESEND
- 	select HAVE_PCI
---- a/arch/arm64/include/asm/clocksource.h
-+++ b/arch/arm64/include/asm/clocksource.h
-@@ -2,8 +2,7 @@
- #ifndef _ASM_CLOCKSOURCE_H
- #define _ASM_CLOCKSOURCE_H
+-	int vclock_mode = tk->tkr_mono.clock->archdata.vclock_mode;
+-
+-	/* Mark the new vclock used. */
+-	BUILD_BUG_ON(VCLOCK_MAX >= 32);
+-	WRITE_ONCE(vclocks_used, READ_ONCE(vclocks_used) | (1 << vclock_mode));
+-
+-	return vclock_mode;
++	return tk->tkr_mono.clock->archdata.vclock_mode;
+ }
+ #define __arch_get_clock_mode __x86_get_clock_mode
  
--struct arch_clocksource_data {
--	bool vdso_direct;	/* Usable for direct VDSO access? */
--};
-+#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMODE_ARCHTIMER
- 
+--- a/arch/x86/include/asm/vgtod.h
++++ b/arch/x86/include/asm/vgtod.h
+@@ -15,10 +15,4 @@ typedef u64 gtod_long_t;
+ typedef unsigned long gtod_long_t;
  #endif
---- a/arch/arm64/include/asm/vdso/vsyscall.h
-+++ b/arch/arm64/include/asm/vdso/vsyscall.h
-@@ -22,15 +22,6 @@ struct vdso_data *__arm64_get_k_vdso_dat
- #define __arch_get_k_vdso_data __arm64_get_k_vdso_data
  
- static __always_inline
--int __arm64_get_clock_mode(struct timekeeper *tk)
+-extern int vclocks_used;
+-static inline bool vclock_was_used(int vclock)
 -{
--	u32 use_syscall = !tk->tkr_mono.clock->archdata.vdso_direct;
--
--	return use_syscall;
+-	return READ_ONCE(vclocks_used) & (1 << vclock);
 -}
--#define __arch_get_clock_mode __arm64_get_clock_mode
 -
--static __always_inline
- void __arm64_update_vsyscall(struct vdso_data *vdata, struct timekeeper *tk)
- {
- 	vdata[CS_HRES_COARSE].mask	= VDSO_PRECISION_MASK;
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -69,7 +69,7 @@ static enum arch_timer_ppi_nr arch_timer
- static bool arch_timer_c3stop;
- static bool arch_timer_mem_use_virtual;
- static bool arch_counter_suspend_stop;
--static bool vdso_default = true;
-+static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
- 
- static cpumask_t evtstrm_available = CPU_MASK_NONE;
- static bool evtstrm_enable = IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
-@@ -560,8 +560,8 @@ void arch_timer_enable_workaround(const
- 	 * change both the default value and the vdso itself.
- 	 */
- 	if (wa->read_cntvct_el0) {
--		clocksource_counter.archdata.vdso_direct = false;
--		vdso_default = false;
-+		clocksource_counter.vdso_clock_mode = VDSO_CLOCKMODE_NONE;
-+		vdso_default = VDSO_CLOCKMODE_NONE;
- 	}
+ #endif /* _ASM_X86_VGTOD_H */
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -159,12 +159,19 @@ bool kvm_check_and_clear_guest_paused(vo
+ 	return ret;
  }
  
-@@ -979,7 +979,7 @@ static void __init arch_counter_register
- 		}
++static int kvm_cs_enable(struct clocksource *cs)
++{
++	vclocks_set_used(VCLOCK_PVCLOCK);
++	return 0;
++}
++
+ struct clocksource kvm_clock = {
+ 	.name	= "kvm-clock",
+ 	.read	= kvm_clock_get_cycles,
+ 	.rating	= 400,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	.enable	= kvm_cs_enable,
+ };
+ EXPORT_SYMBOL_GPL(kvm_clock);
  
- 		arch_timer_read_counter = rd;
--		clocksource_counter.archdata.vdso_direct = vdso_default;
-+		clocksource_counter.vdso_clock_mode = vdso_default;
- 	} else {
- 		arch_timer_read_counter = arch_counter_get_cntvct_mem;
- 	}
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -1108,17 +1108,24 @@ static void tsc_cs_tick_stable(struct cl
+ 		sched_clock_tick_stable();
+ }
+ 
++static int tsc_cs_enable(struct clocksource *cs)
++{
++	vclocks_set_used(VCLOCK_TSC);
++	return 0;
++}
++
+ /*
+  * .mask MUST be CLOCKSOURCE_MASK(64). See comment above read_tsc()
+  */
+ static struct clocksource clocksource_tsc_early = {
+-	.name                   = "tsc-early",
+-	.rating                 = 299,
+-	.read                   = read_tsc,
+-	.mask                   = CLOCKSOURCE_MASK(64),
+-	.flags                  = CLOCK_SOURCE_IS_CONTINUOUS |
++	.name			= "tsc-early",
++	.rating			= 299,
++	.read			= read_tsc,
++	.mask			= CLOCKSOURCE_MASK(64),
++	.flags			= CLOCK_SOURCE_IS_CONTINUOUS |
+ 				  CLOCK_SOURCE_MUST_VERIFY,
+-	.archdata               = { .vclock_mode = VCLOCK_TSC },
++	.archdata		= { .vclock_mode = VCLOCK_TSC },
++	.enable			= tsc_cs_enable,
+ 	.resume			= tsc_resume,
+ 	.mark_unstable		= tsc_cs_mark_unstable,
+ 	.tick_stable		= tsc_cs_tick_stable,
+@@ -1131,14 +1138,15 @@ static struct clocksource clocksource_ts
+  * been found good.
+  */
+ static struct clocksource clocksource_tsc = {
+-	.name                   = "tsc",
+-	.rating                 = 300,
+-	.read                   = read_tsc,
+-	.mask                   = CLOCKSOURCE_MASK(64),
+-	.flags                  = CLOCK_SOURCE_IS_CONTINUOUS |
++	.name			= "tsc",
++	.rating			= 300,
++	.read			= read_tsc,
++	.mask			= CLOCKSOURCE_MASK(64),
++	.flags			= CLOCK_SOURCE_IS_CONTINUOUS |
+ 				  CLOCK_SOURCE_VALID_FOR_HRES |
+ 				  CLOCK_SOURCE_MUST_VERIFY,
+-	.archdata               = { .vclock_mode = VCLOCK_TSC },
++	.archdata		= { .vclock_mode = VCLOCK_TSC },
++	.enable			= tsc_cs_enable,
+ 	.resume			= tsc_resume,
+ 	.mark_unstable		= tsc_cs_mark_unstable,
+ 	.tick_stable		= tsc_cs_tick_stable,
+--- a/arch/x86/xen/time.c
++++ b/arch/x86/xen/time.c
+@@ -145,12 +145,19 @@ static struct notifier_block xen_pvclock
+ 	.notifier_call = xen_pvclock_gtod_notify,
+ };
+ 
++static int xen_cs_enable(struct clocksource *cs)
++{
++	vclocks_set_used(VCLOCK_PVCLOCK);
++	return 0;
++}
++
+ static struct clocksource xen_clocksource __read_mostly = {
+-	.name = "xen",
+-	.rating = 400,
+-	.read = xen_clocksource_get_cycles,
+-	.mask = ~0,
+-	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
++	.name	= "xen",
++	.rating	= 400,
++	.read	= xen_clocksource_get_cycles,
++	.mask	= CLOCKSOURCE_MASK(64),
++	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	.enable = xen_cs_enable,
+ };
+ 
+ /*
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -330,12 +330,19 @@ static u64 read_hv_sched_clock_tsc(void)
+ 	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
+ }
+ 
++static int hv_cs_enable(struct clocksource *cs)
++{
++	hv_enable_vdso_clocksource();
++	return 0;
++}
++
+ static struct clocksource hyperv_cs_tsc = {
+ 	.name	= "hyperv_clocksource_tsc_page",
+ 	.rating	= 400,
+ 	.read	= read_hv_clock_tsc,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	.enable = hv_cs_enable,
+ };
+ 
+ static u64 notrace read_hv_clock_msr(struct clocksource *arg)
 
