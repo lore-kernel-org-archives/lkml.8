@@ -2,100 +2,121 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35871C33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059CCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A37E2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97EB20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmmufy/r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OI4sHU7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgANBW0 (ORCPT
+        id S1729410AbgANBYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:22:26 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38309 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgANBWZ (ORCPT
+        Mon, 13 Jan 2020 20:24:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49151 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729213AbgANBYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:22:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x185so5750845pfc.5;
-        Mon, 13 Jan 2020 17:22:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oISwi8GU+7YIyrOrSfp4ImJj1Y/DvBujca93dXgVtlA=;
-        b=pmmufy/ruG8Yk3G13Kk0n9FsWP+7iMJUHICK7QN050PdDEd4giLRkBn68WZcc2EV+0
-         9U7cu7H2gOwIcWuz/79yklnSATdq/nwpUeOhBZuKqNWFH3Y7bN/S/DaPqwj/IX4go2vU
-         ULzTZmdp8fgsjcKdy0sRQHww2xsUpeu7kLfrbupH29QNXVlHScgUXEN9nvX2qp+7BfY6
-         fqwZVvdTyHBmLXcMxgHL7RKlq4o8F/wRJi9RNnUAkcExc0SI5RQouFkeidFaBeWNxo41
-         hdBO+d8W5OKRdl8bJ8XKN+6XZtuxc5XmU/PcGfgyLHHQa7nmjB9kaz8aBpU1/MVjykN5
-         r0rw==
+        Mon, 13 Jan 2020 20:24:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578965061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fHEMm2SsTYZoIki8jbB8+WC5Q2vGKFdNsQ1V1gkRMy8=;
+        b=OI4sHU7dzmfbaOWQeTbdLBNwueBXqdgY3LpzNSax2J0KCab+CHTAIA35/WFBLtDW3xS0Ie
+        JIz1beCjplmQKvPRLX9lCE25viQEzgB45PFXmTrzxQtYtikX0qhuRX3ijZQATgqmVyd2qn
+        dy1DDAVTIHbKbYKfTSMQviZwiCfGMP8=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-418-SnJpvwK9OIuBjtU8Op-qJw-1; Mon, 13 Jan 2020 20:24:20 -0500
+X-MC-Unique: SnJpvwK9OIuBjtU8Op-qJw-1
+Received: by mail-qk1-f200.google.com with SMTP id w64so7312070qka.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 17:24:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oISwi8GU+7YIyrOrSfp4ImJj1Y/DvBujca93dXgVtlA=;
-        b=e9o3EiEMlyD+dq5LVUxaFznKK3HdaPwyybyyBkdeNk43qxA+fzgV3OwvMFgjdT+F0k
-         OVAQdACdyj4/Ixlp3cIItkGrImbRMQk3FnHfeXFqF2tCS5hEhHmxS45YXoN/6udzkIwe
-         Ujz7ThuXf3uRzemef7MIM0kCngUBa1Q9Xc5QOUDuRjRffx8WSUD5O1Cw4jgeSceRUHJH
-         xyoLNGSjvSZ4E/bF8+muUcrYgwuAzx4H5DSLpAigB9BtYRtBL5iZecGmlI//nhcPyOsf
-         viyB7gAyY4Mm0fSfuwdmq02aKB3aIPKNiRkKIPHQvLhKJ8xijTjJSOluA/La/NOVPJ6q
-         Qn4g==
-X-Gm-Message-State: APjAAAXJBQCGbFqyMDbIfByVV5q+HjXXt1nIo0U24yT+R4xPq2Vl/xr6
-        asFSWmQE1O60TJqJa4hCG7o=
-X-Google-Smtp-Source: APXvYqxWg2ne000PwbmOdByZWSA7GR4T3UfyDJ0wmkkVI3T+MK4h1azrhhO9WUaiajXlX7hD2ww7Tg==
-X-Received: by 2002:a63:7705:: with SMTP id s5mr23498344pgc.379.1578964944815;
-        Mon, 13 Jan 2020 17:22:24 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id fa21sm14526963pjb.17.2020.01.13.17.22.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 17:22:23 -0800 (PST)
-Date:   Tue, 14 Jan 2020 10:22:21 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the random tree
-Message-ID: <20200114012221.GC202391@google.com>
-References: <20200108113953.1a92a90f@canb.auug.org.au>
- <20200114001832.GP76141@mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fHEMm2SsTYZoIki8jbB8+WC5Q2vGKFdNsQ1V1gkRMy8=;
+        b=FWlICp0HB8R2cZwuBmaSzWAK73boslYekUEn6fdvXqxsq3Czhnzp4rFJd/Mo/ad6OG
+         4BYkhlczSTH4Cl5H9Cn4H+BPFpuhZqZA7HwNHV5YI+gslBeZiB1nJEYHdlrP3WeHApJm
+         vuM4WkcamgMsp1X/JQ7u8qrWMppRY/438IxoUWmhXiWQ30dup9ZQracPkEtXLM/iTcSE
+         2C0AgRc0UIOAcfqwC3L0/HL6xhnx4JzazznlZqnORL+htQXB4+d3tuJaStfAlp+Rjznf
+         XtRKtX+GEfXZYnM/3UE0os9hJ9WyflaU3WdJd2dLlPrUQtFBN0e2N1dkL/pwCAaFO2PS
+         AWhQ==
+X-Gm-Message-State: APjAAAUfT2+2WFAlxguoODyapXFXQcQRBGh2xz9QZtWSKKGmyNR0SGa6
+        QnTw55IPYdmXM8jkgJH/oWqkajhHHJpxNkm72aoOkOIh6IMBzWjruaSvJdH6Y/Jd60/5p3sAwOV
+        K1Oe4xP0kgdgMW6UiMk5rB8vhyshy/CiXh9DvTL5H
+X-Received: by 2002:a0c:fac7:: with SMTP id p7mr18867681qvo.46.1578965059690;
+        Mon, 13 Jan 2020 17:24:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy8rp2tVJG8FFSrMqEEhMSegO/Ch9+dAU7aqOjlvhAWdChQ9jSPgjRB76ehlY2C/JNhnmNpbdLe0UeQ6dG9z0g=
+X-Received: by 2002:a0c:fac7:: with SMTP id p7mr18867665qvo.46.1578965059435;
+ Mon, 13 Jan 2020 17:24:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114001832.GP76141@mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200113192300.2482096-1-lains@archlinux.org>
+In-Reply-To: <20200113192300.2482096-1-lains@archlinux.org>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 14 Jan 2020 11:24:08 +1000
+Message-ID: <CAO-hwJKkMv7T0e11XoYKh9GtsnNCfOztFsoU7JXgmxCvfROeZw@mail.gmail.com>
+Subject: Re: [PATCH] HID: logitech-dj: add debug msg when exporting a HID++
+ report descriptors
+To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/01/13 19:18), Theodore Y. Ts'o wrote:
-> On Wed, Jan 08, 2020 at 11:39:53AM +1100, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Commit
-> > 
-> >   1b710b1b10ef ("char/random: silence a lockdep splat with printk()")
-> > 
-> > is missing a Signed-off-by from its author.
-> 
-> Sergey, can you confirm that you intended to add a Signed-off-by: for
-> this patch?
+Hi Filipe,
 
-Oh, I didn't realize I was the author. Sorry!
+On Tue, Jan 14, 2020 at 5:23 AM Filipe La=C3=ADns <lains@archlinux.org> wro=
+te:
+>
+> When exporting all other types of report descriptors we print a debug
+> message. Not doing so for HID++ descriptors makes unaware users think
+> that no HID++ descriptor was exported.
 
-Sure, confirmed
+Unless I am mistaken, those dbg_hid() calls are not displayed by
+default on any distribution. So I am not sure what is the benefit to
+add this one here when we are already not showing the rest to the
+users by default. There is a tiny improvement to have some code
+symmetry, but here, honestly, it doesn't feel that required.
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cheers,
+Benjamin
 
-	-ss
+>
+> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> ---
+>  drivers/hid/hid-logitech-dj.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.=
+c
+> index cc7fc71d8b05..8f17a29b5a94 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1368,6 +1368,8 @@ static int logi_dj_ll_parse(struct hid_device *hid)
+>         }
+>
+>         if (djdev->reports_supported & HIDPP) {
+> +               dbg_hid("%s: sending a HID++ descriptor, reports_supporte=
+d: %llx\n",
+> +                       __func__, djdev->reports_supported);
+>                 rdcat(rdesc, &rsize, hidpp_descriptor,
+>                       sizeof(hidpp_descriptor));
+>         }
+> --
+> 2.24.1
+>
+
