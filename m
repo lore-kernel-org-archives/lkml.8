@@ -2,67 +2,130 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93318C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3F7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F09824670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9255C24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579037648;
+	bh=N2S7y+O790zET1Gmtmsm8tuXTXxczW82v07Ij9f4etg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Fvh1UwFCQb3acnwS28cd0E6C9vea2JWNFXnyH5iowNp9GgSc7KxUtJ+WtT+0tJKz4
+	 FOtqhu3Cpw218OQEEfwDvXIm8jcPkB9++2qoKDP9g800y2+bpSczo2y9Ff4TJT0HTT
+	 moeXj322y9xBn99JpQ7NJNClmcyP7Z1GReq32Wq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgANVds (ORCPT
+        id S1728963AbgANVeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:33:48 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49648 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726491AbgANVds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:33:48 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-108.corp.google.com [104.133.0.108] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00ELXXC9023515
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jan 2020 16:33:34 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 095E24207DF; Tue, 14 Jan 2020 16:33:33 -0500 (EST)
-Date:   Tue, 14 Jan 2020 16:33:32 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+        Tue, 14 Jan 2020 16:34:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgANVeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:34:07 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F3924656;
+        Tue, 14 Jan 2020 21:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579037645;
+        bh=N2S7y+O790zET1Gmtmsm8tuXTXxczW82v07Ij9f4etg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=E19ztN87s0hx9TSeFhbYpD4KDYFnyV2gto/gqjaKAfYjz7c5aXHcsklLFATfRh40W
+         Krlsmw3JOJcH2iti5LhYFL3x8wnsI4XrND8lAwIc7zpyl15esGA5KHG4rQs7yW5iyD
+         XuiqPr1+p+/FgPX/3BzIPVbdApiWI0BuJYOa6yYg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 597AF3522755; Tue, 14 Jan 2020 13:34:05 -0800 (PST)
+Date:   Tue, 14 Jan 2020 13:34:05 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
 To:     Qian Cai <cai@lca.pw>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the random tree
-Message-ID: <20200114213332.GF140865@mit.edu>
-References: <20200108113953.1a92a90f@canb.auug.org.au>
- <20200114001832.GP76141@mit.edu>
- <20200114012221.GC202391@google.com>
- <20200114165739.GB140865@mit.edu>
- <613F42EB-F993-4F39-AD9B-A86E06A875AA@lca.pw>
+Cc:     Marco Elver <elver@google.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v4 01/10] kcsan: Add Kernel Concurrency Sanitizer
+ infrastructure
+Message-ID: <20200114213405.GX2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200114192220.GS2935@paulmck-ThinkPad-P72>
+ <F185919B-2D86-43B6-9BEC-D14D72871A58@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <613F42EB-F993-4F39-AD9B-A86E06A875AA@lca.pw>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <F185919B-2D86-43B6-9BEC-D14D72871A58@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:31:04PM -0500, Qian Cai wrote:
-> It is actually Sergey proposed an informal patch here [1]. I just sent on
-> his behave and adding a commit log.
+On Tue, Jan 14, 2020 at 03:30:53PM -0500, Qian Cai wrote:
 > 
-> [1] https://lore.kernel.org/linux-mm/20190911011008.GA4420@jagdpanzerIV/ 
 > 
+> > On Jan 14, 2020, at 2:22 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > Just so I understand...  Does this problem happen even in CONFIG_KCSAN=n
+> > kernels?
+> 
+> No.
 
-Thanks for the clarification; given that you composed the commit log,
-would you like me to add a "Signed-off-by: Qian Cai <cai@lca.pw>" for
-you as well?  Given that you added the commit description, it would be
-fair to give you credit as well.
+Whew!!!  ;-)
 
-Regards,
+> > I have been running extensive CONFIG_KSCAN=y rcutorture tests for quite
+> > awhile now, so even if this only happens for CONFIG_KSCAN=y, it is not
+> > like it affects everyone.
+> > 
+> > Yes, it should be fixed, and Marco does have a patch on the way.
+> 
+> The concern is really about setting KSCAN=y in a distro debug kernel where it has other debug options. I’ll try to dig into more of those issues in the next few days.
 
-					- Ted
+Understood.  But there are likely to be other issues with KCSAN, given how
+new it is.  Yes, yes, I certainly would like to believe that the patches
+we currently know about will make KCSAN perfect for distros, I have way
+too much grey hair (and too little hair as well!) to really beleive that.
+
+As an alternative, once the patches needed for your tests to pass
+reach mainline, you could announce that KCSAN was ready to be enabled
+in distros.
+
+Though I confess that I don't know how that works.  Is there a separate
+testing kernel binary provided by the distros in question?
+
+							Thanx, Paul
