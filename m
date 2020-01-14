@@ -2,130 +2,136 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DFCC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA80EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B250F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C694207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m9FJTcRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgANK7z (ORCPT
+        id S1729476AbgANLAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:59:55 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:45611 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbgANK7z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:59:55 -0500
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MVdUQ-1jGiYn0RfA-00RdML for <linux-kernel@vger.kernel.org>; Tue, 14 Jan
- 2020 11:59:53 +0100
-Received: by mail-qt1-f173.google.com with SMTP id d5so12052491qto.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:59:52 -0800 (PST)
-X-Gm-Message-State: APjAAAWUwx1uP5/Fy+kTCiTnjbd12gb0A+RTYjxntsD5m3Xm/iq0YW9h
-        hl4Z6qV4jhL2u2Hmre0jratCPsFJUmNbEhzX/pg=
-X-Google-Smtp-Source: APXvYqy7DVQeNpwjj8/PcKvWd95l2BRRTtcYFTLWs1RZ+YhziEOQD5McLfFwTnVEhhx5R0yRDJ/gghU9Y+a5TCN65G8=
-X-Received: by 2002:ac8:6153:: with SMTP id d19mr2975529qtm.18.1578999591888;
- Tue, 14 Jan 2020 02:59:51 -0800 (PST)
+        Tue, 14 Jan 2020 06:00:31 -0500
+Received: from mail-eopbgr10089.outbound.protection.outlook.com ([40.107.1.89]:63450
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725842AbgANLAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:00:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RHP8i26fIaLitpC4PNREbFXqnFUx5/vceNIWcWksT9LTSq2fXPQ+lLXGf0RuTJqyn0rzZHZaWaOo/G5QmRohnIlCTKRgMg1za2eMvVn9sHavbVNkWWvhsW0+LBB9IuGTpZJ5qpezcrK7lQAH85O3NZTQC9gFqX9Zqszjpg+hPjGJB4zz06do2uPHF2GrXj+W6Qg56KPDYtsLn1JkJoUoYrxZ09S7EvI4CPrex3GYI9laNuNGfLC/HGz7UZt4jUJ8rse4U5saUcKUIyExlBul1YbC2vfCFeIGddM8MezpxZVQFWJV0HX7+XbBmDyTc3ibIgtJgy9jBkox6pChoXVGKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dz9sjZ5m6jN+vIIopKZdcjL1Bo1aDqrFWwtDUdDA1gI=;
+ b=IMaoot7mESNza6rt0Y0q6Tg2tP2INXMMKWbPRASXcZRhsamLDsMYmIsosrR8be2DSjRt8OpfJ4IpDXTOB1Yq70zU3CNxWrTMCY445jPTD8pqENruJeTJMm3vgqLSG3l5EmYVEdNWrvb+lwZmRi//HBgfs6hQ1SuTGzC0GK0kRXRrCaLZ+jmJ9zZNGw0LZkECZLwAoP6wsAu8E+r9YheWun2GdQCO9FbwNLvjWfNf0ZkyI3IxfHf9mtAFKuybPPobTR/oD+QSOE36EwNH0SpIgfdq8f4g/U1cvN88V7O7MVOg6y+uhsE42Hm/CG5tDWfj+5xnAPfS+HHoO7oWj5AJhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dz9sjZ5m6jN+vIIopKZdcjL1Bo1aDqrFWwtDUdDA1gI=;
+ b=m9FJTcRdcB5grvHewYHzM4H5/xljd9dvYqcxIaqlBxvCMhDbWC9Yiie0pX5lfZPAWhuTu7+woTd08u8PwdVKtAo6O5Kwu0JPozSNMy5ODIJ11NBbz3VxZSui3F+sHFEd/SfrtjoDVUmYFeCewt+lp3GumwINGh5svx0/Yo6v/mk=
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com (20.179.0.89) by
+ AM6PR04MB4808.eurprd04.prod.outlook.com (20.177.33.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Tue, 14 Jan 2020 11:00:25 +0000
+Received: from AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::932:9fab:97d3:1a82]) by AM6PR04MB5878.eurprd04.prod.outlook.com
+ ([fe80::932:9fab:97d3:1a82%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 11:00:25 +0000
+Received: from fsr-ub1864-101.ea.freescale.net (89.37.124.34) by LO2P123CA0019.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:a6::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Tue, 14 Jan 2020 11:00:24 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "swood@redhat.com" <swood@redhat.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH] MAINTAINERS: Add myself as maintainer of ehv_bytechan tty
+ driver
+Thread-Topic: [PATCH] MAINTAINERS: Add myself as maintainer of ehv_bytechan
+ tty driver
+Thread-Index: AQHVysnTMfstR3XjwkGcaoGASJ/wzg==
+Date:   Tue, 14 Jan 2020 11:00:25 +0000
+Message-ID: <20200114110012.17351-1-laurentiu.tudor@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P123CA0019.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:a6::31) To AM6PR04MB5878.eurprd04.prod.outlook.com
+ (2603:10a6:20b:a2::25)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3391090d-9c55-445e-817c-08d798e0f586
+x-ms-traffictypediagnostic: AM6PR04MB4808:|AM6PR04MB4808:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4808EAC74BB35F628528B987EC340@AM6PR04MB4808.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1265;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(189003)(199004)(186003)(6506007)(8676002)(26005)(54906003)(44832011)(6512007)(8936002)(66446008)(64756008)(16526019)(66476007)(66556008)(81166006)(36756003)(81156014)(2906002)(71200400001)(66946007)(86362001)(52116002)(4744005)(6486002)(2616005)(956004)(316002)(1076003)(110136005)(5660300002)(478600001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4808;H:AM6PR04MB5878.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WS0vPEcW1cP3JCTF+8sjIunXC8KfzEKb1nVcbQD9MM9kn8IpcaMz/zSjVWB6AhhDqHNOKQ9Y2/vzFAhkRpNCO9dxN37Ay9STnRPwttqjkiWuhRFJYpf5fCXLA6r7QldwbzJonJVMPl+iSxbE6DE+tPN1/A8cllBS5CBQj8klvE0ZqW9O09QSkT0H8QyReiUJdQty3Fk/P61DhWo7KeKh0JWYHXte2tXyh7XZZpb662bnIJNqCYnT3B5MCJnIeAD98j9aK7x0CxgJUknrDyjNN1CGDOGSxVuOK9o6Nkan66lyiDYXwqeBCnsDExbMunYAh4OiKnRPjd/2fjkjYwoBul+dMkhahIhb9Gke/Fj/HrW5domcni8lTexvP2u22lwoT8GPXiUZ0yqm0qVvBf104Qm25u6A4pXDTZtCY+2xDNMk6bZXv54OMjsTzEazRFbw
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C7E7CEF18CC55443BFE0A621F43FF567@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1578989048-10162-1-git-send-email-peng.fan@nxp.com>
- <20200114081751.3wjbbnaem7lbnn3v@pengutronix.de> <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jan 2020 11:59:36 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
-Message-ID: <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com>
-Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:cE0A+PnSYgySMGJC6R6kvE52gv2pSNLSoRnLGEpf61gFOrhWkmX
- f08AEHMtRfEkuc7hitJwpz0A9rwkXxjodQxT1uYaoS+QhpWrnQ+lSX5eGNl5QUub0VkBHe9
- 7HIlb6nD2AzlurBxnh9KzqVq/B3kXfV6CkuSApmC9QktImwsszpXAAJ6ELxe58mo2PG5AQI
- ABWL3qEDTZ1qARZk8Oh4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:njkbmezlBps=:rB2AmmCVywC4eKHL9ohjnZ
- Y/Fit45mtwwJ7hsRtdC1M4fPt+nRdgUPk5vUpJ/WSTF/jBEroHF6QeVq+9769OMw+lBHNAd0M
- 4jFFippfptC9fGpyGUUA90HSJOXxNeofuie/USXS08c3ek8Hilj/tNrrmWSAZtG7H0uhz2ry6
- 7iupsp/lR7RtaItYPSsVKva5RGsrmt87v9gQJlbJ2Cx5QKqL1+chcgcSowxHiU4ajXz9O833Q
- 8fIDR/v7YcxJugz98T5BbsuDDE0FpV4pAArQRgpTnsnCOapdh1ycqLniUHUyGFq8Jb5VETNoc
- gMVOHdjx1ZI1lc4/x34rve8hEmUSaSrKOA9AIydaSQk9CM+B19YzyYaB9OI1oWbhPVk88kGKU
- xrMk+EHJnILeV0jKL++tUZP/n0A/uxT8x+Oc3mWUJb26VhjzEM5YZx7xLl9iHSZkUPUQxS0iK
- +4cEaTDmSwoFK3BFEH0RMBAAgUEu9TRNAImG4kDbW9J23j5zCYx+fP3hkwGWzTWUS+d2F/hgc
- h384hyh3LBobKtcesA1Qm20KeJwA3p6bhXrPKR8kOXSUX/rrqgn86n1K0L7kw4dJ0GdLX/bqn
- +2NlY6Uelq4Wndv9IudgTwFScZmEqP3msJaQvN2iR730+WrRsxSZfzyHIriOecK4LbId77mxh
- yPWeXpNUUxGHzCGInzxbLw9myejcVImuv4pwoFIb4QvqgnOujLh//x7vEcD0bKOHltywmqsos
- P0MWoG+sn+5DTZQJcl5ziX7zMOv4mEsMFmUUwNmpNAD6yItFUXEhfb9QUQ3yK5MYopOv1luNA
- hR6JZuorufUchYpWyH4lxV2HgTFSgbIJU9V+JXZ5PdkHn3IFSZNIc7rOKi5XJeK2C4KC/redc
- z7aWpjPWRTvcZYaSJHpQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3391090d-9c55-445e-817c-08d798e0f586
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 11:00:25.7332
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eorwiOtcbboatseT7jYniqPzUAxr52CMlG1T58ROZxmz1KME80q79/Mm3ZHMl7tsU+lLvrPkCjSyJt2rDk7dMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4808
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 9:32 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
-> > CONFIG_ARM64
-> >
-> > On Tue, Jan 14, 2020 at 08:08:45AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Only need to build soc-imx8.c when CONFIG_ARM64 defined, no need to
-> > > build it for CONFIG_ARM32 currently.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/soc/imx/Makefile | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile index
-> > > cf9ca42ff739..cfcbc62b11d7 100644
-> > > --- a/drivers/soc/imx/Makefile
-> > > +++ b/drivers/soc/imx/Makefile
-> > > @@ -1,5 +1,7 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  obj-$(CONFIG_HAVE_IMX_GPC) += gpc.o
-> > >  obj-$(CONFIG_IMX_GPCV2_PM_DOMAINS) += gpcv2.o
-> > > +ifdef CONFIG_ARM64
-> > >  obj-$(CONFIG_ARCH_MXC) += soc-imx8.o
-> > > +endif
-> >
-> > For earlier SoCs we had kconfig symbols like SOC_IMX25. Actually
-> > SOC_IMX8 would be the right one to decide about soc-imx8.c to be compiled,
-> > it would be easier to read and verify than the suggested
-> > "ARM64 && ARCH_MXC" and it would stay right once NXP presents it's next
-> > 64-bit SoC i.MX9.
->
-> There is no SOC_IMX8 currently. Need to introduce one in
-> arch/arm64/Kconfig.platforms. But I not see other vendors
-> introduce options like SOC_XX. Is this the right direction to
-> add one in Kconfig.platforms?
+Michael Ellerman made a call for volunteers from NXP to maintain
+this driver and I offered myself.
 
-I think it would be more consistent with the other platforms to have
-a symbol in drivers/soc/imx/Kconfig to control whether we build
-that driver.
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-If the driver is well written, it should be possible to allow compile
-testing it on any architecture (please test this, at least on x86).
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4017e6b760be..62082e5f7101 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6155,6 +6155,12 @@ M:	Maxim Levitsky <maximlevitsky@gmail.com>
+ S:	Maintained
+ F:	drivers/media/rc/ene_ir.*
+=20
++EPAPR HYPERVISOR BYTE CHANNEL DEVICE DRIVER
++M:	Laurentiu Tudor <laurentiu.tudor@nxp.com>
++L:	linuxppc-dev@lists.ozlabs.org
++S:	Maintained
++F:	drivers/tty/ehv_bytechan.c
++
+ EPSON S1D13XXX FRAMEBUFFER DRIVER
+ M:	Kristoffer Ericson <kristoffer.ericson@gmail.com>
+ S:	Maintained
+--=20
+2.17.1
 
-For some SoCs, we also allow running 32-bit kernels, so it would
-not be wrong to allow enabling the symbol on 32-bit ARM as
-well, but this is probably something where you want to consider
-the bigger picture to see if you want to support that configuration
-or not.
-
-      Arnd
