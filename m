@@ -2,104 +2,61 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B549C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D19C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2141B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578991212;
-	bh=MXqdw4MTso3cXAd4+1sT9xEPuKYM/LCL2K4R2PuY9fk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HsS+BjbcQAAFvZGVbiqVVC7+xrOSDb93/mwI58HoPgWIb9P7vIqGjXyn6ESpWmdaG
-	 1zNyzMrioN0vYuBBzQh6Q9twVJ1J3rxPo5s6jug3Wg8ipY3a9DnBJyegtR8KV8qwpi
-	 ODEXxMPpQBstbN5auGx7jvAo2QD2mgVoa7M1wLbI=
+	by mail.kernel.org (Postfix) with ESMTP id 7D1C3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgANIkK (ORCPT
+        id S1728882AbgANIlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:40:10 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40007 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgANIkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:40:10 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u1so13337663ljk.7;
-        Tue, 14 Jan 2020 00:40:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zm6dxfwwxxsUgoQx/Ixs6f65hoaWz7f2fI6es/3Ijns=;
-        b=I1uARPBp9OUDNT5/Yyt0sZC7WOngXlM96UryfU3EkWeN8o8jJBFRAWrYi36UMdfyt7
-         gvEm+f9Eu3K7KDuJw7+5dmQpaA54K2oj9bg04iFcMMbDZOoQqvLmaIelS0KeGc19ZTVA
-         OCJiV3wsL54ha95oB3fsc03FgcfhegKON+JfLuJa8t4kMxZ0KYNHqzyxS8IwzN/vwBCe
-         c+S7DkpIkx+ziLX78jaY97LDAUsTc85fVBXVqQMWwqAYEhSl7uqH4oRWbfttaPZiJfGN
-         bPMYkowbMBRAGJRNKkXZPeMDZLOZr8dMBvaIRZy1BwyLWMf/J3z1f7696ZSvD2hE3Ayi
-         ch3g==
-X-Gm-Message-State: APjAAAW0vFxEXSfpD/T/HiPcFcS/4uKpsVZAmoQ/TFot5r2UIu0SOze4
-        zLHUZV9bddkQjdhMpOVYZ/u4LocO
-X-Google-Smtp-Source: APXvYqxK2dS7w47TFeRL1ZrMAWZXamRgxsgmqFsDFdxveqSAiv1L06WR5SP8UeZYWuXxDExwsvy0yQ==
-X-Received: by 2002:a2e:910b:: with SMTP id m11mr12819480ljg.213.1578991208043;
-        Tue, 14 Jan 2020 00:40:08 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id b14sm6840893lff.68.2020.01.14.00.40.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 00:40:07 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1irHk7-0000Ia-26; Tue, 14 Jan 2020 09:40:07 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: [PATCH] ALSA: usb-audio: fix sync-ep altsetting sanity check
-Date:   Tue, 14 Jan 2020 09:39:53 +0100
-Message-Id: <20200114083953.1106-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jan 2020 03:41:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33882 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgANIlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 03:41:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C9258AE6F;
+        Tue, 14 Jan 2020 08:41:03 +0000 (UTC)
+Message-ID: <1578990223.15925.0.camel@suse.com>
+Subject: Re: [PATCH] r8152: Add MAC passthrough support to new device
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, davem@davemloft.net,
+        hayeswang@realtek.com
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Prashant Malani <pmalani@chromium.org>,
+        Grant Grundler <grundler@chromium.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        David Chen <david.chen7@dell.com>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 09:23:43 +0100
+In-Reply-To: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+References: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The altsetting sanity check in set_sync_ep_implicit_fb_quirk() was
-checking for there to be at least one altsetting but then went on to
-access the second one, which may not exist.
+Am Dienstag, den 14.01.2020, 12:41 +0800 schrieb Kai-Heng Feng:
+> Device 0xa387 also supports MAC passthrough, therefore add it to the
+> whitelst.
 
-This could lead to random slab data being used to initialise the sync
-endpoint in snd_usb_add_endpoint().
+Hi,
 
-Fixes: c75a8a7ae565 ("ALSA: snd-usb: add support for implicit feedback")
-Fixes: ca10a7ebdff1 ("ALSA: usb-audio: FT C400 sync playback EP to capture EP")
-Fixes: 5e35dc0338d8 ("ALSA: usb-audio: add implicit fb quirk for Behringer UFX1204")
-Fixes: 17f08b0d9aaf ("ALSA: usb-audio: add implicit fb quirk for Axe-Fx II")
-Fixes: 103e9625647a ("ALSA: usb-audio: simplify set_sync_ep_implicit_fb_quirk")
-Cc: stable <stable@vger.kernel.org>     # 3.5
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- sound/usb/pcm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+this list is getting longer and longer. Isn't there a way to do
+this generically? ACPI?
 
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index a11c8150af58..0e4eab96e23e 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -370,7 +370,7 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
- add_sync_ep_from_ifnum:
- 	iface = usb_ifnum_to_if(dev, ifnum);
- 
--	if (!iface || iface->num_altsetting == 0)
-+	if (!iface || iface->num_altsetting < 2)
- 		return -EINVAL;
- 
- 	alts = &iface->altsetting[1];
--- 
-2.24.1
+	Regards
+		Oliver
 
