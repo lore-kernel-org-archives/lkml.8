@@ -2,86 +2,104 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DATE_IN_FUTURE_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C4FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79148C33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A102D20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="K4EqHH7F"
+	by mail.kernel.org (Postfix) with ESMTP id 562BC2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgAMKNR (ORCPT
+        id S1728676AbgAMKN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:13:17 -0500
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:42177 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725978AbgAMKNR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:13:17 -0500
-Received: from forward102q.mail.yandex.net (forward102q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:516:4e7d])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id D3D456741291;
-        Mon, 13 Jan 2020 13:13:13 +0300 (MSK)
-Received: from mxback3q.mail.yandex.net (mxback3q.mail.yandex.net [IPv6:2a02:6b8:c0e:39:0:640:4545:437c])
-        by forward102q.mail.yandex.net (Yandex) with ESMTP id CF6D97F2001F;
-        Mon, 13 Jan 2020 13:13:13 +0300 (MSK)
-Received: from vla3-4c649d03f525.qloud-c.yandex.net (vla3-4c649d03f525.qloud-c.yandex.net [2a02:6b8:c15:2584:0:640:4c64:9d03])
-        by mxback3q.mail.yandex.net (mxback/Yandex) with ESMTP id MlyymQRMBT-DDkChGdu;
-        Mon, 13 Jan 2020 13:13:13 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578910393;
-        bh=W0LouJHxhJ8X0NqqqQzaJDVH6qHFyXTB5zG8KPXgID4=;
-        h=Subject:To:From:Cc:Date:Message-Id;
-        b=K4EqHH7FRdthdu1mQFTuNH0tqlMArF4/YrXBetuY56mT5APBCkP3cufdKPCDNUDE5
-         ttURaS/F0BmJC1ZKF40w5QlJVfDL18FRuLLHHiWDepTdga0CSp/77C0mf8licrE8vy
-         OUSrbrYe1g62TO0yyBxjRBaVrR7ataPr7/wPHeSw=
-Authentication-Results: mxback3q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla3-4c649d03f525.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ATtQsIjGG0-D4VCMcx1;
-        Mon, 13 Jan 2020 13:13:11 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH] irqchip: mips-cpu: Remove eoi operation
-Date:   Mon, 13 Jan 2020 18:12:51 +0800
-Message-Id: <20200113101251.37471-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jan 2020 05:13:26 -0500
+Received: from mga03.intel.com ([134.134.136.65]:10161 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgAMKNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:13:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 02:13:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="397116735"
+Received: from bong5-hp-z440.png.intel.com ([10.221.118.136])
+  by orsmga005.jf.intel.com with ESMTP; 13 Jan 2020 02:13:21 -0800
+From:   Ong Boon Leong <boon.leong.ong@intel.com>
+To:     netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/7] net: stmmac: general fixes for Ethernet functionality
+Date:   Tue, 14 Jan 2020 10:01:09 +0800
+Message-Id: <1578967276-55956-1-git-send-email-boon.leong.ong@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The eoi opreation in mips_cpu_irq_controller caused chained_irq_enter
-falsely consider CPU IP interrupt as a FastEOI type IRQ. So the interrupt
-won't be masked during in handler. Which might lead to spurious interrupt.
+Patch-series that fixes couple of issues in stmmac:-
 
-Thus we simply remove eoi operation for mips_cpu_irq_controller,
+1/7: It fixes the incorrect setting of Rx Tail Pointer. Rx Tail Pointer
+     should points to the last valid descriptor that was replenished by
+     stmmac_rx_refill().
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- drivers/irqchip/irq-mips-cpu.c | 1 -
- 1 file changed, 1 deletion(-)
+2/7: It ensures that the real_num_rx|tx_queues are set in both driver
+     probe() and resume(). So, move the netif_set_real_num_rx|tx_queues()
+     into stmmac_hw_setup().
 
-diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.c
-index 95d4fd8f7a96..0ad7f1f9a58b 100644
---- a/drivers/irqchip/irq-mips-cpu.c
-+++ b/drivers/irqchip/irq-mips-cpu.c
-@@ -55,7 +55,6 @@ static struct irq_chip mips_cpu_irq_controller = {
- 	.irq_mask	= mask_mips_irq,
- 	.irq_mask_ack	= mask_mips_irq,
- 	.irq_unmask	= unmask_mips_irq,
--	.irq_eoi	= unmask_mips_irq,
- 	.irq_disable	= mask_mips_irq,
- 	.irq_enable	= unmask_mips_irq,
- };
+3/7: It fixes missing netdev->features = features update in
+     stmmac_set_features().
+
+4/7: It fixes incorrect MACRO function defininition for TX and RX user
+     priority queue steering for queue > 3.
+
+5/7: It ensures that the previous value of GMAC_VLAN_TAG register is
+     read first before for updating the register.
+
+6/7: It ensures the GMAC IP v4.xx and above behaves correctly to:-
+      ip link set <devname> multicast off|on
+
+7/7: It ensures PCI platform data is using plat->phy_interface.
+
+Thanks,
+Boon Leong
+
+Aashish Verma (1):
+  net: stmmac: Fix incorrect location to set real_num_rx|tx_queues
+
+Ong Boon Leong (2):
+  net: stmmac: fix error in updating rx tail pointer to last free entry
+  net: stmmac: fix missing netdev->features in stmmac_set_features
+
+Tan, Tee Min (1):
+  net: stmmac: fix incorrect GMAC_VLAN_TAG register writting
+    implementation
+
+Verma, Aashish (1):
+  net: stmmac: fix missing IFF_MULTICAST check in dwmac4_set_filter
+
+Voon Weifeng (2):
+  net: stmmac: Fix priority steering for tx/rx queue >3
+  net: stmmac: update pci platform data to use phy_interface
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      | 10 ++++++----
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |  9 +++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 16 ++++++++++------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c  | 14 ++++++++------
+ 4 files changed, 29 insertions(+), 20 deletions(-)
+
 -- 
-2.24.1
+2.7.4
 
