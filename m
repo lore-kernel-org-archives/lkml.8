@@ -2,113 +2,112 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54053C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA92EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF3F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABB6207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgANKX6 (ORCPT
+        id S1730090AbgANKYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:23:58 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:50548 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729606AbgANKXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:23:55 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: GvRYKR2ayyplV6UdninP9KLm+QaPK5i6DALfFXUiqqZvzT6invH5o01ZVUgmgdSq2UOd1/sCdi
- fvEK5kh85tKqrKmvBddqSi9OGqPvE6xvm9qTjCobJzpbDgAVQ764m4aOhE+RoQkC681ofop5Fr
- 2NE/JI+XAZ71S0t78+OI6Js+mOxc48Y6Cq7OItZIjMIwcoeF6+vaEB8pCyKtT4yASuJUDm23HY
- evwkaYPGHe1UQpT2m5N+t/9xtZpiLygp5DlnVwsDyTfmvq0LEFMWciK79ZdAD2B+xTjMoDfLvs
- 0tc=
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="61849252"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jan 2020 03:23:55 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 Jan 2020 03:23:54 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 14 Jan 2020 03:23:50 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>,
-        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
-        <a.zummo@towertech.it>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 6/7] ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
-Date:   Tue, 14 Jan 2020 12:23:16 +0200
-Message-ID: <1578997397-23165-7-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 14 Jan 2020 05:24:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39274 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729950AbgANKX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:23:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0D991ACE0;
+        Tue, 14 Jan 2020 10:23:54 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: Add a reason for reserved pages in
+ has_unmovable_pages()
+To:     Michal Hocko <mhocko@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     David Hildenbrand <david@redhat.com>, Qian Cai <cai@lca.pw>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        linux-kernel@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>
+References: <49fa7dea-00ac-155f-e7b7-eeca206556b5@arm.com>
+ <6A58E80B-7A5F-4CAD-ACF1-89BCCBE4D3B1@lca.pw>
+ <a0bfcebe-a0f4-95ef-0973-8edd3780d013@redhat.com>
+ <f6487dc1-c962-67aa-131e-2eec4f6ca686@arm.com>
+ <20200114091013.GD19428@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <1f3ff7fc-2f6b-d8e5-85a5-078f0e1a0daf@suse.cz>
+Date:   Tue, 14 Jan 2020 11:23:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200114091013.GD19428@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B. These are necessary
-for SAM9X60.
+On 1/14/20 10:10 AM, Michal Hocko wrote:
+> [Cc Ralph]
+>> The reason is dump_page() does not print page->flags universally
+>> and only does so for KSM, Anon and File pages while excluding
+>> reserved pages at boot. Wondering should not we make printing
+>> page->flags universal ?
+> 
+> We used to do that and this caught me as a surprise when looking again.
+> This is a result of 76a1850e4572 ("mm/debug.c: __dump_page() prints an
+> extra line") which is a cleanup patch and I suspect this result was not
+> anticipated.
+> 
+> The following will do the trick but I cannot really say I like the code
+> duplication. pr_cont in this case sounds like a much cleaner solution to
+> me.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/configs/at91_dt_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+How about this then?
 
-diff --git a/arch/arm/configs/at91_dt_defconfig b/arch/arm/configs/at91_dt_defconfig
-index 5c5df8bc0074..f66bb98a5cce 100644
---- a/arch/arm/configs/at91_dt_defconfig
-+++ b/arch/arm/configs/at91_dt_defconfig
-@@ -160,6 +160,9 @@ CONFIG_USB_AT91=y
- CONFIG_USB_ATMEL_USBA=y
- CONFIG_USB_G_SERIAL=y
- CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_OF_AT91=y
- CONFIG_MMC_ATMELMCI=y
- CONFIG_MMC_SPI=y
- CONFIG_NEW_LEDS=y
-@@ -177,6 +180,7 @@ CONFIG_RTC_DRV_AT91SAM9=y
- CONFIG_DMADEVICES=y
- CONFIG_AT_HDMAC=y
- CONFIG_AT_XDMAC=y
-+CONFIG_MICROCHIP_PIT64B=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_IIO=y
- CONFIG_AT91_ADC=y
--- 
-2.7.4
+diff --git mm/debug.c mm/debug.c
+index 0461df1207cb..6a52316af839 100644
+--- mm/debug.c
++++ mm/debug.c
+@@ -47,6 +47,7 @@ void __dump_page(struct page *page, const char *reason)
+ 	struct address_space *mapping;
+ 	bool page_poisoned = PagePoisoned(page);
+ 	int mapcount;
++	char *type = "";
+ 
+ 	/*
+ 	 * If struct page is poisoned don't access Page*() functions as that
+@@ -78,9 +79,9 @@ void __dump_page(struct page *page, const char *reason)
+ 			page, page_ref_count(page), mapcount,
+ 			page->mapping, page_to_pgoff(page));
+ 	if (PageKsm(page))
+-		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
++		type = "ksm ";
+ 	else if (PageAnon(page))
+-		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
++		type = "anon ";
+ 	else if (mapping) {
+ 		if (mapping->host && mapping->host->i_dentry.first) {
+ 			struct dentry *dentry;
+@@ -88,10 +89,11 @@ void __dump_page(struct page *page, const char *reason)
+ 			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
+ 		} else
+ 			pr_warn("%ps\n", mapping->a_ops);
+-		pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	}
+ 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
+ 
++	pr_warn("%sflags: %#lx(%pGp)\n", type, page->flags, &page->flags);
++
+ hex_only:
+ 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+ 			sizeof(unsigned long), page,
 
