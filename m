@@ -2,187 +2,213 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3016AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2A0C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D4A2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44EB2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:11:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lSkH2eFW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qs1x37Bd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgANILg (ORCPT
+        id S1729335AbgANILl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:11:36 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43462 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANILf (ORCPT
+        Tue, 14 Jan 2020 03:11:41 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41253 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbgANILk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:11:35 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00E8BNXc111226;
-        Tue, 14 Jan 2020 02:11:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578989483;
-        bh=OXgw5jVtI/P8lq90Ajh5uW2OyAX5bZNN5cmbnuabCec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lSkH2eFWkfeoKXLvH8m9BL6PJIVxyND0b2PDvvSWCvc6AmTrP8EkrYHWbizr4Uh3U
-         JVv+2AFLRMJj8+obgV7Uk4gxbH8g0OgqDiPFhM+NtqxxAb1yVtKGwkHaerfaZL+1FN
-         LrUTSzHksvbzuGgY75fOE1sG8yzira/dqDplrJy8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00E8BNHU078292
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jan 2020 02:11:23 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
- Jan 2020 02:11:23 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 14 Jan 2020 02:11:23 -0600
-Received: from [172.24.145.246] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00E8BHg1063367;
-        Tue, 14 Jan 2020 02:11:18 -0600
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        <santosh.shilimkar@oracle.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>, <frowand.list@gmail.com>
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
-Date:   Tue, 14 Jan 2020 13:41:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jan 2020 03:11:40 -0500
+Received: by mail-oi1-f193.google.com with SMTP id i1so10981062oie.8;
+        Tue, 14 Jan 2020 00:11:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ESgbHWyyXZkUE+Zt5y6qd3pCusxZlx2vlVaiZEg9MHY=;
+        b=qs1x37BdbYn5t6+23mL0IE+dw5g0PGcS5ldK99AKnwJhurHow1kPcdhAGd29oDAm8D
+         vZBnicg0mFy4ulUyWo0e8COjmB12/uPF+VtzOLHMl3i2Y1CA3Ok+t56Iw7roc0KjzqaL
+         oP5L7jiNCAM4qY4BkmOi/LHpeFyDNKziaX5S1OHwT9HS2QKe7wriSs4oHZJxZyRmwF+I
+         yVc/UuBYs6IkcHdWcknqLstN1X15uGDB/JZ1R29VlAT0nx8/An6hzNW9Qbqclaec5XYC
+         4dh6dw3o/hl+Q22PdhB8rlk0cLlApYHShdgEnK3Tts+cco5LAo1nulGT+ZpVyzFZBbHQ
+         SF7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ESgbHWyyXZkUE+Zt5y6qd3pCusxZlx2vlVaiZEg9MHY=;
+        b=hyt0rq1GHGTpBD4aQRVnRIb10a4gkwUUka8PA8E6Ng/QPEDDQ22jWaJCgWv0kiE1il
+         UJUuSx3hJUleB6cML8FwaUFPWu1nkrSieKhZNfdWCCC5OoeYLp4W+huJJiQ3Io34X23s
+         iiETB2VDpP5dWcxvaIDM60YrGgdY5m4odwmZFI0QIwJ/ex4RkKFCQ/2K4Y2wgfZOc+Rm
+         Aea6wmhX6bBqVqFI67vznSW/hOg8KyaJM6WQUH1KTFXkeOwJlCzqtx5meuzqeCmC7+6n
+         3fkh3vnyARTCRjgvWUtDX6ONX3mUqyCW/o9BMts6FIqMgm44lGWpvBNuNU+P7IPdL8DC
+         y8GA==
+X-Gm-Message-State: APjAAAUiRhjjXpR/JuRljBkoUTb6KipAR6tlphhJtkP8v84iAvTmSnp2
+        68ulTo52vke09lUCk6oa+x3XBILWGQZfLsW/zqk=
+X-Google-Smtp-Source: APXvYqzCDP1HlSPkjT+Ko+pskg045pRBOTrM+W3f2eEy7IcfuScVnML1cmr+MHU+++hW/8MQQKSTseULh6yeUpc2qVo=
+X-Received: by 2002:aca:1309:: with SMTP id e9mr15897662oii.7.1578989498871;
+ Tue, 14 Jan 2020 00:11:38 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200113212252.GA3120@bogus>
+In-Reply-To: <20200113212252.GA3120@bogus>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 14 Jan 2020 08:11:12 +0000
+Message-ID: <CA+V-a8sP=zTU1UAbXBWCpAn0uduNnUg+JEK0-y8G-4dV4AVVGQ@mail.gmail.com>
+Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
+ endpoint controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Simon Horman <horms@verge.net.au>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/01/20 12:28 PM, Peter Ujfalusi wrote:
-> Hi Santosh,
-> 
-> On 13/01/2020 23.28, santosh.shilimkar@oracle.com wrote:
->>
->>
->> On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
->>> Hi Santosh,
->>>
->>> On 23/12/2019 13.04, Peter Ujfalusi wrote:
->>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>
->>>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
->>>> enable straightforward passing of work between a producer and a
->>>> consumer.
->>>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
->>>>
->>>> The RINGACC converts constant-address read and write accesses to
->>>> equivalent
->>>> read or write accesses to a circular data structure in memory. The
->>>> RINGACC
->>>> eliminates the need for each DMA controller which needs to access ring
->>>> elements from having to know the current state of the ring (base
->>>> address,
->>>> current offset). The DMA controller performs a read or write access to a
->>>> specific address range (which maps to the source interface on the
->>>> RINGACC)
->>>> and the RINGACC replaces the address for the transaction with a new
->>>> address
->>>> which corresponds to the head or tail element of the ring (head for
->>>> reads,
->>>> tail for writes). Since the RINGACC maintains the state, multiple DMA
->>>> controllers or channels are allowed to coherently share the same
->>>> rings as
->>>> applicable. The RINGACC is able to place data which is destined towards
->>>> software into cached memory directly.
->>>>
->>>> Supported ring modes:
->>>> - Ring Mode
->>>> - Messaging Mode
->>>> - Credentials Mode
->>>> - Queue Manager Mode
->>>>
->>>> TI-SCI integration:
->>>>
->>>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
->>>> now
->>>> has control over Ringacc module resources management (RM) and Rings
->>>> configuration.
->>>>
->>>> The corresponding support of TI-SCI Ringacc module RM protocol
->>>> introduced as option through DT parameters:
->>>> - ti,sci: phandle on TI-SCI firmware controller DT node
->>>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
->>>>
->>>> if both parameters present - Ringacc driver will configure/free/reset
->>>> Rings
->>>> using TI-SCI Message Ringacc RM Protocol.
->>>>
->>>> The Ringacc driver manages Rings allocation by itself now and requests
->>>> TI-SCI firmware to allocate and configure specific Rings only. It's done
->>>> this way because, Linux driver implements two stage Rings allocation and
->>>> configuration (allocate ring and configure ring) while TI-SCI Message
->>>> Protocol supports only one combined operation (allocate+configure).
->>>>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
->>>> Tested-by: Keerthy <j-keerthy@ti.com>
->>>
->>> Can you please giver your Acked-by for the ringacc patches if they are
->>> still OK from your point of view as you had offered to take them before
->>> I got comments from Lokesh.
->>>
->> Sure. But you really need to split the series so that dma engine and
->> soc driver patches can be applied independently.
-> 
-> The ringacc is a build and runtime dependency for the DMA. I have hoped
-> that all of them can go via DMAengine (hence asking for your ACK on the
-> drivers/soc/ti/ patches) for 5.6.
-> 
->> Can you please do that?
-> 
-> This late in the merge window that would really mean that I will miss
-> another release for the KS3 DMA...
-> I can live with that if you can pick the ringacc for 5.6 and if Vinod
-> takes the DMAengine core changes as well.
-> 
-> That would leave only the DMA drivers for 5.7 and we can also queue up
-> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
-> sa2ul, etc).
-> 
-> If they go independently and nothing makes it to 5.6 then 5.8 is the
-> realistic target for the DMA support for the KS3 family of devices...
+Hi Rob,
 
-Thats too many kernel versions to get this important piece in.
+thank you for the review.
 
-Santosh, if you do not have anything else queued up that clashes with
-this, can the whole series be picked up by Vinod with your ack on the
-drivers/soc/ti/ pieces?
+On Mon, Jan 13, 2020 at 9:23 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jan 08, 2020 at 04:22:09PM +0000, Lad Prabhakar wrote:
+> > This patch adds the bindings for the R-Car PCIe endpoint driver.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
+> >  1 file changed, 76 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+>
+> Fails 'make dt_binding_check':
+>
+> Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml: $id:
+> path/filename 'pci/rcar-pcie-ep.yaml' doesn't match actual filename
+>
+my bad fill that and post a v4.
 
-Vinod could also perhaps setup an immutable branch based on v5.5-rc1
-with just the drivers/soc/ti parts applied so you can merge that branch
-in case you end up having to send up anything that conflicts.
-
-Thanks,
-Sekhar
+Cheers,
+--Prabhakar Lad
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+> > new file mode 100644
+> > index 000000000000..99c2a1174463
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+> > @@ -0,0 +1,76 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas R-Car PCIe Endpoint
+> > +
+> > +maintainers:
+> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: renesas,r8a774c0-pcie-ep
+> > +      - const: renesas,rcar-gen3-pcie-ep
+> > +
+> > +  reg:
+> > +    maxItems: 5
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: apb-base
+> > +      - const: memory0
+> > +      - const: memory1
+> > +      - const: memory2
+> > +      - const: memory3
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: pcie
+> > +
+> > +  max-functions:
+> > +    minimum: 1
+> > +    maximum: 6
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +  - resets
+> > +  - power-domains
+> > +  - clocks
+> > +  - clock-names
+> > +  - max-functions
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
+> > +    #include <dt-bindings/power/r8a774c0-sysc.h>
+> > +
+> > +     pcie0_ep: pcie-ep@fe000000 {
+> > +            compatible = "renesas,r8a774c0-pcie-ep",
+> > +                         "renesas,rcar-gen3-pcie-ep";
+> > +            reg = <0 0xfe000000 0 0x80000>,
+> > +                  <0x0 0xfe100000 0 0x100000>,
+> > +                  <0x0 0xfe200000 0 0x200000>,
+> > +                  <0x0 0x30000000 0 0x8000000>,
+> > +                  <0x0 0x38000000 0 0x8000000>;
+> > +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+> > +            resets = <&cpg 319>;
+> > +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> > +            clocks = <&cpg CPG_MOD 319>;
+> > +            clock-names = "pcie";
+> > +            max-functions = /bits/ 8 <1>;
+> > +    };
+> > --
+> > 2.20.1
+> >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
