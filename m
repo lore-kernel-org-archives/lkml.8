@@ -2,296 +2,110 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D00C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35D424672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5A8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="fQKMNEvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgANPhm (ORCPT
+        id S1728824AbgANPkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:37:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:53830 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgANPhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:37:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41E391396;
-        Tue, 14 Jan 2020 07:37:41 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 447E13F68E;
-        Tue, 14 Jan 2020 07:37:39 -0800 (PST)
-Date:   Tue, 14 Jan 2020 15:37:34 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
-        maz@kernel.org
-Subject: Re: [PATCH v4 2/6] PCI: iproc: Add INTx support with better modeling
-Message-ID: <20200114153734.GA8268@e121166-lin.cambridge.arm.com>
-References: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
- <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+        Tue, 14 Jan 2020 10:40:43 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39042 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgANPkn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:40:43 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so12214588oib.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 07:40:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u8XC9ay451hJukBxPp4gptSvR5akp33o0GT26Nx+rN4=;
+        b=fQKMNEvOdLnsADksjSwSk8sRK5bp5aL4P/dfzdlnvRDMQ3qRzDbeLngRwBZEaQrOlj
+         X4zhDwC9tSqko8r3mJs36SDOtRrGKqIllVXOjiTADvOj0sBT6AQssKY8wLHwuAkbSTfG
+         YO69puHnqzXFJQumuUNxPOb2UpDOf8EaBAp8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u8XC9ay451hJukBxPp4gptSvR5akp33o0GT26Nx+rN4=;
+        b=MI0RpEZ71uIXBLAce6IeXcELUa4b22bRwTpab99nHe6LKoX5ZVegOPwrpcGPriZ+T7
+         g7/7mZ9N9Ib6lu6O2EJfHasN5VdA6G1xh1473tHFDIPatGB68+/WGK2OksU1IUBkv0mn
+         NZIC/7cRy3cStuGTGsamQsuzxbB0LCE9Rfo5BnhPhq+JQc6d90aPVvuzCv4JCRQrrrD9
+         5Lozm+hfD1be+Oc4B4tygKHY3hYVMKrvLyxhtluvYFw3niJ+8Q6Yo/Frh9YdcjAtuLdI
+         rOEFKXkN3uq9+K+q0xPGgnwFP3aRcxwu64nW1m8d1C1H5dRR50t4IaDbbiHrUXKRy8E6
+         nZOQ==
+X-Gm-Message-State: APjAAAVadoZPCyDPoHFgPV4y4N72RECrFJ8t5hURy3+I0MGDN3MlMcVc
+        bbOb9ap+hDS8TxTjJIqODyRSF+Y2r3iwQX21aocCmQ==
+X-Google-Smtp-Source: APXvYqw9oJlg+tUTGvPGmuG74GW5vN5WjxpK0O2mxySKvUph8pLBk6qmod2aqAPm6odbKTbiPgZcbgK4GskfnUL65wo=
+X-Received: by 2002:aca:ad11:: with SMTP id w17mr17844187oie.85.1579016442324;
+ Tue, 14 Jan 2020 07:40:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com> <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+In-Reply-To: <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Date:   Tue, 14 Jan 2020 10:40:31 -0500
+Message-ID: <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Marc thanks to whom I can review this code with the required IRQ chip
-knowledge]
+On Mon, Jan 13, 2020 at 8:12 PM Tim Chen <tim.c.chen@linux.intel.com> wrote:
 
-On Fri, Dec 20, 2019 at 09:24:14AM +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
-> 
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register
-          ^
-Missing a period.
+> I also encountered kernel panic with the v4 code when taking cpu offline or online
+> when core scheduler is running.  I've refreshed the previous patch, along
+> with 3 other patches to fix problems related to CPU online/offline.
+>
+> As a side effect of the fix, each core can now operate in core-scheduling
+> mode or non core-scheduling mode, depending on how many online SMT threads it has.
+>
+> Vineet, are you guys planning to refresh v4 and update it to v5?  Aubrey posted
+> a port to the latest kernel earlier.
+>
+Thanks for the updated patch Tim.
 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-iproc.c | 108 +++++++++++++++++++++++++++++++++++-
->  drivers/pci/controller/pcie-iproc.h |   6 ++
->  2 files changed, 112 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 0a468c7..485967b 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
->  #include <linux/of_pci.h>
-> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
->  
->  	/* enable INTx */
->  	IPROC_PCIE_INTX_EN,
-> +	IPROC_PCIE_INTX_CSR,
->  
->  	/* outbound address mapping */
->  	IPROC_PCIE_OARR0,
-> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
->  };
->  
-> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
->  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
->  	[IPROC_PCIE_INTX_EN]		= 0x330,
-> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
->  	[IPROC_PCIE_OARR0]		= 0xd20,
->  	[IPROC_PCIE_OMAP0]		= 0xd40,
->  	[IPROC_PCIE_OARR1]		= 0xd28,
-> @@ -846,9 +851,103 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
->  	return link_is_active ? 0 : -ENODEV;
->  }
->  
-> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
-> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> +			       irq_hw_number_t hwirq)
->  {
-> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+We have been testing with v4 rebased on 5.4.8 as RC kernels had given us
+trouble in the past. v5 is due soon and we are planning to release v5 when
+5.5 comes out. As of now, v5 has your crash fixes and Aubrey's changes
+related to load balancing. We are investigating a performance issue with
+high overcommit io intensive workload and also we are trying to see if
+we can add synchronization during VMEXITs so that a guest vm cannot run
+run alongside with host kernel. We also need to think about the userland
+interface for corescheduling in preparation for upstreaming work.
 
-This looks wrong.
-
-Don't tell me there are other PCI controllers drivers implementing this
-code so you copied and pasted it; I know that and they are all wrong.
-
-Legacy PCI IRQs are level IRQs so they must be masked/unmasked upon IRQ
-entry/exit.
-
-Therefore the IRQ chip representing your controller can't be a
-dummy_irq_chip, that has no methods so no masking is implemented
-through it and the flow handler must be handle_level_irq (which,
-in turn takes care of masking the IRQ - handle_simple_irq does
-not).
-
-The IRQ chip in the PCI host bridge has to have a way to mask/unmask
-specific IRQs, implement a proper IRQ chip for it please.
-
-We are curious: Have you ever tested this change with a PCI driver
-requesting a threaded IRQ ?
+Does it make sense to wait until 5.5 release for v5 considering the
+above details?
 
 Thanks,
-Lorenzo
-
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = iproc_pcie_intx_map,
-> +};
-> +
-> +static void iproc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct iproc_pcie *pcie;
-> +	struct device *dev;
-> +	unsigned long status;
-> +	u32 bit, virq;
-> +
-> +	chained_irq_enter(chip, desc);
-> +	pcie = irq_desc_get_handler_data(desc);
-> +	dev = pcie->dev;
-> +
-> +	/* go through INTx A, B, C, D until all interrupts are handled */
-> +	do {
-> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(pcie->irq_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err(dev, "unexpected INTx%u\n", bit);
-> +		}
-> +	} while ((status & SYS_RC_INTX_MASK) != 0);
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
-> +{
-> +	struct device *dev = pcie->dev;
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	/*
-> +	 * BCMA devices do not map INTx the same way as platform devices. All
-> +	 * BCMA needs below line to enable INTx
-> +	 */
->  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
-> +
-> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-> +	if (node)
-> +		pcie->irq = of_irq_get(node, 0);
-> +
-> +	if (!node || pcie->irq <= 0)
-> +		return 0;
-> +
-> +	/* set IRQ handler */
-> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
-> +
-> +	/* add IRQ domain for INTx */
-> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> +						 &intx_domain_ops, pcie);
-> +	if (!pcie->irq_domain) {
-> +		dev_err(dev, "failed to add INTx IRQ domain\n");
-> +		ret = -ENOMEM;
-> +		goto err_rm_handler_data;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_rm_handler_data:
-> +	of_node_put(node);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
-> +{
-> +	uint32_t offset, virq;
-> +
-> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
-> +
-> +	if (pcie->irq <= 0)
-> +		return;
-> +
-> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
-> +		virq = irq_find_mapping(pcie->irq_domain, offset);
-> +		if (virq)
-> +			irq_dispose_mapping(virq);
-> +	}
-> +
-> +	irq_domain_remove(pcie->irq_domain);
-> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
->  }
->  
->  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
-> @@ -1518,7 +1617,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  		goto err_power_off_phy;
->  	}
->  
-> -	iproc_pcie_enable(pcie);
-> +	ret = iproc_pcie_intx_enable(pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable INTx\n");
-> +		goto err_power_off_phy;
-> +	}
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		if (iproc_pcie_msi_enable(pcie))
-> @@ -1562,6 +1665,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
->  	pci_remove_root_bus(pcie->root_bus);
->  
->  	iproc_pcie_msi_disable(pcie);
-> +	iproc_pcie_intx_disable(pcie);
->  
->  	phy_power_off(pcie->phy);
->  	phy_exit(pcie->phy);
-> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
-> index 4f03ea5..103e568 100644
-> --- a/drivers/pci/controller/pcie-iproc.h
-> +++ b/drivers/pci/controller/pcie-iproc.h
-> @@ -74,6 +74,9 @@ struct iproc_msi;
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @irq: interrupt line wired to the generic GIC for INTx
-> + * @irq_domain: IRQ domain for INTx
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc PCIe
->   * controller is required to steer MSI writes to external interrupt controller
->   * @msi: MSI data
-> @@ -102,6 +105,9 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
->  
-> +	int irq;
-> +	struct irq_domain *irq_domain;
-> +
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
->  };
-> -- 
-> 2.7.4
-> 
+Vineeth
