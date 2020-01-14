@@ -2,161 +2,122 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB97C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAD1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA051222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DA724656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr1uy4rA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hRnFOSqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbgANTOA (ORCPT
+        id S1728712AbgANTRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:14:00 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44886 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgANTN7 (ORCPT
+        Tue, 14 Jan 2020 14:17:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31858 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726491AbgANTRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:13:59 -0500
-Received: by mail-qt1-f196.google.com with SMTP id t3so13446288qtr.11;
-        Tue, 14 Jan 2020 11:13:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MFqB+06rBeER++BRySglojh7CJB3/vJLed3nR17srZY=;
-        b=Cr1uy4rA/yc63G/NYnYI6sGqCHjIbj2TiaQVLsKC492L5usjwa9oleTsoZYu7gfzAz
-         fViS+p1sEET0HTnq0582qDyZfsPjAw9Ra2caO/4j6osRwltuRqO4/3vDtygeKSJc5Isd
-         5OXxYJlilf3YnCifUUYtc59aGVj8cejFf5udT1ze8tUSnxdZg+oZDuh75TG2ov1we41u
-         5wuNe7KELTyQuRDb+nQ6wVTXB5CRurnsWsmU2IV5cbDT/ZGTWhRWaQV9TnDXkS8+Fq8t
-         nBf+mW01SclboYCRG+sxLVUG8YtFgwpfHnPt2yo7FFNV0j1WgVRego3SjXeap6hREQk6
-         WBBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MFqB+06rBeER++BRySglojh7CJB3/vJLed3nR17srZY=;
-        b=RZl0rP21WpIFESdYGs2F//HMoxhqAaE0qgc4q7BGZqRF6yXRnAbGWhWtCTKfd3cZ1j
-         t+/YzU0UXva+qpWsF7uWtisRxLKMg7DkCHwKNr2wyewSKceFrua7MHi+x78fMFb386SD
-         bi/JaGWYHLCjX4cVJQod+f+B0Nmy9z4A5Ftz/R4BwnGaFFetvVyLpptEpHDGbyfcNSYQ
-         iCuZiWrEwDHjHJQlNEFdHipeLBV+7s+aU1qp8Q1QG0l8sHeXxWRd/ARu2FhcBNO7Exf9
-         M4DqcgnGqS0On0hABrgt0HjkTpUdrE1q6BnV1+UYs7ravOjdnuEr102enN0xw4Qu1QEq
-         g1iA==
-X-Gm-Message-State: APjAAAUHqwlR1+E4oRJAtd+kJcJc9UrflkD8AKj/Hs+i4JAqiB6TEKN/
-        kyCXwP1HDUzcpZtDZXE33+md3LXwBiMYJtpkrKtG3HRs
-X-Google-Smtp-Source: APXvYqzlubP7Me7CKiqxoDf6GVTcdnAviypa3ckAtyf8BEQW1oEW0BFawdKK8kqKdvmjfa1uBN2JxgI5I5GwUsEjXcc=
-X-Received: by 2002:ac8:7b29:: with SMTP id l9mr72065qtu.141.1579029238026;
- Tue, 14 Jan 2020 11:13:58 -0800 (PST)
+        Tue, 14 Jan 2020 14:17:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579029423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=azbvDxnc2xgDC9U0cn3dkI+d0+KvXPPR9kPql0yzi6E=;
+        b=hRnFOSqxjLnZvo5WK29bYbRzi3YmJ45KmypaNf2X51OoZf52APtqGu+gOhVsdX9FDuYC4M
+        LiDRr3UBJzeDNeUbdW4S1aNrY5M/p+EvCk5h6qSeD4ZMig7qYkI+4YmTPc7PVtl2SDu8cT
+        FhY0PMI5jn6nuFh9wD3AqktPgO1Ea7w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-8IqR9p4SMDejD8I74EWQEA-1; Tue, 14 Jan 2020 14:16:59 -0500
+X-MC-Unique: 8IqR9p4SMDejD8I74EWQEA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CA5510D08B4;
+        Tue, 14 Jan 2020 19:16:58 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-218.rdu2.redhat.com [10.10.122.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD6B1842B8;
+        Tue, 14 Jan 2020 19:16:57 +0000 (UTC)
+Subject: Re: [PATCH v2 4/6] locking/lockdep: Reuse freed chain_hlocks entries
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191216151517.7060-1-longman@redhat.com>
+ <20191216151517.7060-5-longman@redhat.com>
+ <20200113155823.GY2844@hirez.programming.kicks-ass.net>
+ <e282e7f3-6010-ef13-bd07-524445049ef8@redhat.com>
+ <20200114094656.GA2844@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <b19df484-1d82-1014-1edf-a1294b4dcd09@redhat.com>
+Date:   Tue, 14 Jan 2020 14:16:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
- <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com> <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
-In-Reply-To: <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 14 Jan 2020 11:13:47 -0800
-Message-ID: <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200114094656.GA2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:54 AM Brian Vazquez <brianvv@google.com> wrote:
+On 1/14/20 4:46 AM, Peter Zijlstra wrote:
+> On Mon, Jan 13, 2020 at 11:24:37AM -0500, Waiman Long wrote:
+>> On 1/13/20 10:58 AM, Peter Zijlstra wrote:
+>>> That's _two_ allocators :/ And it can trivially fail, even if there's
+>>> plenty space available.
+>>>
+>>> Consider nr_chain_hlocks is exhaused, and @size is empty, but size+1
+>>> still has blocks.
+>>>
+>>> I'm guessing you didn't make it a single allocator because you didn't
+>>> want to implement block splitting? why?
+>>>
+>> In my testing, most of the lock chains tend to be rather short (within
+>> the 2-8 range). I don't see a lot of free blocks left in the system
+>> after the test. So I don't see a need to implement block splitting for now.
+>>
+>> If you think this is a feature that needs to be implemented for the
+>> patch to be complete, I can certainly add patch to do that. My initial
+>> thought is just to split long blocks in the unsized list for allocation
+>> request that is no longer than 8 to make thing easier.
+> From an engineering POV I'd much prefer a single complete allocator over
+> two half ones. We can leave block merger out of the initial allocator I
+> suppose and worry about that if/when fragmentation really shows to be a
+> problem.
 >
-> On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
-> > >
-> > > From: Yonghong Song <yhs@fb.com>
-> > >
-> > > Added four libbpf API functions to support map batch operations:
-> > >   . int bpf_map_delete_batch( ... )
-> > >   . int bpf_map_lookup_batch( ... )
-> > >   . int bpf_map_lookup_and_delete_batch( ... )
-> > >   . int bpf_map_update_batch( ... )
-> > >
-> > > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > > ---
-> > >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
-> > >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
-> > >  tools/lib/bpf/libbpf.map |  4 +++
-> > >  3 files changed, 86 insertions(+)
-> > >
-> > > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> > > index 500afe478e94a..12ce8d275f7dc 100644
-> > > --- a/tools/lib/bpf/bpf.c
-> > > +++ b/tools/lib/bpf/bpf.c
-> > > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
-> > >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
-> > >  }
-> > >
-> > > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
-> > > +                               void *out_batch, void *keys, void *values,
-> > > +                               __u32 *count,
-> > > +                               const struct bpf_map_batch_opts *opts)
-> > > +{
-> > > +       union bpf_attr attr = {};
-> > > +       int ret;
-> > > +
-> > > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
-> > > +               return -EINVAL;
-> > > +
-> > > +       memset(&attr, 0, sizeof(attr));
-> > > +       attr.batch.map_fd = fd;
-> > > +       attr.batch.in_batch = ptr_to_u64(in_batch);
-> > > +       attr.batch.out_batch = ptr_to_u64(out_batch);
-> > > +       attr.batch.keys = ptr_to_u64(keys);
-> > > +       attr.batch.values = ptr_to_u64(values);
-> > > +       if (count)
-> > > +               attr.batch.count = *count;
-> > > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
-> > > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
-> > > +
-> > > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
-> > > +       if (count)
-> > > +               *count = attr.batch.count;
-> >
-> > what if syscall failed, do you still want to assign *count then?
+> I'm thinking worst-fit might work well for our use-case. Best-fit would
+> result in a heap of tiny fragments and we don't have really large
+> allocations, which is the Achilles-heel of worst-fit.
+I am going to add a patch to split chain block as a last resort in case
+we run out of the main buffer.
 >
-> Hi Andrii, thanks for taking a look.
->
-> attr.batch.count should report the number of entries correctly
-> processed before finding and error, an example could be when you
-> provided a buffer for 3 entries and the map only has 1, ret is going
-> to be -ENOENT meaning that you traversed the map and you still want to
-> assign *count.
+> Also, since you put in a minimal allocation size of 2, but did not
+> mandate size is a multiple of 2, there is a weird corner case of size-1
+> fragments. The simplest case is to leak those, but put in a counter so
+> we can see if they're a problem -- there is a fairly trivial way to
+> recover them without going full merge.
 
-ah, ok, tricky semantics :) if syscall failed before kernel got to
-updating count, I'm guessing it is guaranteed to preserve old value?
+There is no size-1 fragment. Are you referring to the those blocks with
+a size of 2, but with only one entry used? There are some wasted space
+there. I can add a counter to track that.
+
+Cheers,
+Longman
 
 >
-> That being said, the condition 'if (count)' is wrong and I think it
-> should be removed.
-
-So count is mandatory, right? In that case both `if (count)` checks are wrong.
-
+> Also, there's a bunch of syzcaller reports of running out of
+> ENTRIES/CHAIN_HLOCKS, perhaps try some of those workloads to better
+> stress the allocator?
 >
-> >
-> > > +
-> > > +       return ret;
-> > > +}
-> > > +
-> >
-> > [...]
+
