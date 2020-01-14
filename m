@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D4DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D34C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0A924677
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9291E2467D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996483;
-	bh=8AIZEBeI+orkEPwjWlJSquPttIx5N798ymgLlc/bwHs=;
+	s=default; t=1578996487;
+	bh=QOtqjUFCOKYM8zRv5UdVdn1GxVGQCrtHBIh9QLZ5b9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnmSSnsqQZpjiugSm+pFwtMVFf9mxZrXYKzwcIZJRH6M8FWC+sKiiytBmFpN3AzpI
-	 XNlXSZEGTxFwqGJ6LanjPf+0WQloFDLmJ27yTVjycZPhgadXP6/4drJiEksJ2w1eW/
-	 80gvCGdqoIEXZJFxs8YYJE/3z8nB/s3FJocKso4E=
+	b=cwSUBXaBpScgGx9IgMhPhPDmWciAtikzcX4wn1wcQwkuhW18NDVAw2O88XVUKPOvp
+	 geZM92yz0Bk9b5Y3vBXGopK7ZprQ1BlPA2GW+ARQFB0+Hsl4Dh5g9uLOPi0OOMOv/L
+	 3JZKSAxuGdQCxus8pGOJR5TJVn6b03Y+TG3Gy6aM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbgANKIC (ORCPT
+        id S1730868AbgANKIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbgANKHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:52 -0500
+        id S1730407AbgANKIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3873924677;
-        Tue, 14 Jan 2020 10:07:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45DAD24690;
+        Tue, 14 Jan 2020 10:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996471;
-        bh=8AIZEBeI+orkEPwjWlJSquPttIx5N798ymgLlc/bwHs=;
+        s=default; t=1578996480;
+        bh=QOtqjUFCOKYM8zRv5UdVdn1GxVGQCrtHBIh9QLZ5b9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bIr9V7QOxTw6Nlh4NqzojvTkLo9eZRfC4Jr41qkn0Q+zVI8XixHllg82Z6WMJGa29
-         Dy38grSz84k84Qg33vr8iQUV0XFBumjwUhhHoKA+8OiipoB3MVSmEgC0orlRMmiISa
-         wzoOSr7O2iYORfT93f7+8InijtQBenzLHE38eJo8=
+        b=EKG0XEmVhB8L53JuE2+usS/5R9wh9r9vKZqc4ZEIy7l3x//68DcSR44DFA0QTjnak
+         9jZR9tDIGhti5tzTdIAtwPebT51sxPEzuVGiFXAWRc3C99v9niDBYastoIJxG5cAZD
+         WC2b8p154F599YOw/rx/ZvLyZpRtW5rt6E8bfbx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>
-Subject: [PATCH 4.19 27/46] usb: musb: fix idling for suspend after disconnect interrupt
-Date:   Tue, 14 Jan 2020 11:01:44 +0100
-Message-Id: <20200114094345.907114623@linuxfoundation.org>
+        stable@vger.kernel.org, Dmytro Fil <monkdaf@gmail.com>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 30/46] staging: comedi: adv_pci1710: fix AI channels 16-31 for PCI-1713
+Date:   Tue, 14 Jan 2020 11:01:47 +0100
+Message-Id: <20200114094346.470710904@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -61,62 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 5fbf7a2534703fd71159d3d71504b0ad01b43394 upstream.
+commit a9d3a9cedc1330c720e0ddde1978a8e7771da5ab upstream.
 
-When disconnected as USB B-device, suspend interrupt should come before
-diconnect interrupt, because the DP/DM pins are shorter than the
-VBUS/GND pins on the USB connectors. But we sometimes get a suspend
-interrupt after disconnect interrupt. In that case we have devctl set to
-99 with VBUS still valid and musb_pm_runtime_check_session() wrongly
-thinks we have an active session. We have no other interrupts after
-disconnect coming in this case at least with the omap2430 glue.
+The Advantech PCI-1713 has 32 analog input channels, but an incorrect
+bit-mask in the definition of the `PCI171X_MUX_CHANH(x)` and
+PCI171X_MUX_CHANL(x)` macros is causing channels 16 to 31 to be aliases
+of channels 0 to 15.  Change the bit-mask value from 0xf to 0xff to fix
+it.  Note that the channel numbers will have been range checked already,
+so the bit-mask isn't really needed.
 
-Let's fix the issue by checking the interrupt status again with
-delayed work for the devctl 99 case. In the suspend after disconnect
-case the devctl session bit has cleared by then and musb can idle.
-For a typical USB B-device connect case we just continue with normal
-interrupts.
-
-Fixes: 467d5c980709 ("usb: musb: Implement session bit based runtime PM for musb-core")
-
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200107152625.857-2-b-liu@ti.com
+Fixes: 92c65e5553ed ("staging: comedi: adv_pci1710: define the mux control register bits")
+Reported-by: Dmytro Fil <monkdaf@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20191227170054.32051-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/musb/musb_core.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/staging/comedi/drivers/adv_pci1710.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -1842,6 +1842,9 @@ static const struct attribute_group musb
- #define MUSB_QUIRK_B_INVALID_VBUS_91	(MUSB_DEVCTL_BDEVICE | \
- 					 (2 << MUSB_DEVCTL_VBUS_SHIFT) | \
- 					 MUSB_DEVCTL_SESSION)
-+#define MUSB_QUIRK_B_DISCONNECT_99	(MUSB_DEVCTL_BDEVICE | \
-+					 (3 << MUSB_DEVCTL_VBUS_SHIFT) | \
-+					 MUSB_DEVCTL_SESSION)
- #define MUSB_QUIRK_A_DISCONNECT_19	((3 << MUSB_DEVCTL_VBUS_SHIFT) | \
- 					 MUSB_DEVCTL_SESSION)
- 
-@@ -1864,6 +1867,11 @@ static void musb_pm_runtime_check_sessio
- 	s = MUSB_DEVCTL_FSDEV | MUSB_DEVCTL_LSDEV |
- 		MUSB_DEVCTL_HR;
- 	switch (devctl & ~s) {
-+	case MUSB_QUIRK_B_DISCONNECT_99:
-+		musb_dbg(musb, "Poll devctl in case of suspend after disconnect\n");
-+		schedule_delayed_work(&musb->irq_work,
-+				      msecs_to_jiffies(1000));
-+		break;
- 	case MUSB_QUIRK_B_INVALID_VBUS_91:
- 		if (musb->quirk_retries && !musb->flush_irq_work) {
- 			musb_dbg(musb,
+--- a/drivers/staging/comedi/drivers/adv_pci1710.c
++++ b/drivers/staging/comedi/drivers/adv_pci1710.c
+@@ -46,8 +46,8 @@
+ #define PCI171X_RANGE_UNI	BIT(4)
+ #define PCI171X_RANGE_GAIN(x)	(((x) & 0x7) << 0)
+ #define PCI171X_MUX_REG		0x04	/* W:   A/D multiplexor control */
+-#define PCI171X_MUX_CHANH(x)	(((x) & 0xf) << 8)
+-#define PCI171X_MUX_CHANL(x)	(((x) & 0xf) << 0)
++#define PCI171X_MUX_CHANH(x)	(((x) & 0xff) << 8)
++#define PCI171X_MUX_CHANL(x)	(((x) & 0xff) << 0)
+ #define PCI171X_MUX_CHAN(x)	(PCI171X_MUX_CHANH(x) | PCI171X_MUX_CHANL(x))
+ #define PCI171X_STATUS_REG	0x06	/* R:   status register */
+ #define PCI171X_STATUS_IRQ	BIT(11)	/* 1=IRQ occurred */
 
 
