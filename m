@@ -2,267 +2,193 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B712C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6B224676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CCD24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgANLhH (ORCPT
+        id S1729602AbgANLhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:37:07 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbgANLhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:37:06 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C8605A6E80C2610A71DD;
-        Tue, 14 Jan 2020 19:37:03 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 14 Jan 2020 19:36:57 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: change to use rwsem for gc_mutex
-Date:   Tue, 14 Jan 2020 19:36:50 +0800
-Message-ID: <20200114113650.104881-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 14 Jan 2020 06:37:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60672 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgANLhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:37:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D7FC2ACBD;
+        Tue, 14 Jan 2020 11:37:08 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7F2BF1E0D0E; Tue, 14 Jan 2020 12:37:07 +0100 (CET)
+Date:   Tue, 14 Jan 2020 12:37:07 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [WIP PATCH 2/4] udf: Fix reading numFiles and numDirs from UDF
+ 2.00+ VAT discs
+Message-ID: <20200114113707.GG6466@quack2.suse.cz>
+References: <20200112175933.5259-1-pali.rohar@gmail.com>
+ <20200112175933.5259-3-pali.rohar@gmail.com>
+ <20200113115822.GE23642@quack2.suse.cz>
+ <20200113181138.iqmo33ml2kpnmsfo@pali>
+ <20200114111817.GF6466@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200114111817.GF6466@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mutex lock won't serialize callers, in order to avoid starving of unlucky
-caller, let's use rwsem lock instead.
+On Tue 14-01-20 12:18:17, Jan Kara wrote:
+> On Mon 13-01-20 19:11:38, Pali Rohár wrote:
+> > On Monday 13 January 2020 12:58:22 Jan Kara wrote:
+> > > On Sun 12-01-20 18:59:31, Pali Rohár wrote:
+> > > > These two fields are stored in VAT and override previous values stored in
+> > > > LVIDIU.
+> > > > 
+> > > > This change contains only implementation for UDF 2.00+. For UDF 1.50 there
+> > > > is an optional structure "Logical Volume Extended Information" which is not
+> > > > implemented in this change yet.
+> > > > 
+> > > > Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> > > 
+> > > For this and the following patch, I'd rather have the 'additional data'
+> > > like number of files, dirs, or revisions, stored in the superblock than
+> > > having them hidden in the VAT partition structure. And places that parse
+> > > corresponding on-disk structures would fill in the numbers into the
+> > > superblock.
+> > 
+> > This is not simple. Kernel first reads and parses VAT and later parses
+> > LVIDIU. VAT is optional UDF feature and in UDF 1.50 are even those data
+> > optional.
+> > 
+> > Logic for determining minimal write UDF revision is currently in code
+> > which parse LVIDIU. And this is the only place which needs access UDF
+> > revisions stored in VAT and LVIDIU.
+> > 
+> > UDF revision from LVD is already stored into superblock.
+> > 
+> > And because VAT is parsed prior to parsing LVIDIU is is also not easy to
+> > store number of files and directories into superblock. LVIDIU needs to
+> > know if data from VAT were loaded to superblock or not and needs to know
+> > if data from LVIDIU should be stored into superblock or not.
+> > 
+> > Any idea how to do it without complicating whole code?
+> 
+> Let's take the discussion about revision storage to the thread about the
+> other patch. But for number of directories and files I was thinking like:
+> 
+> We could initialize values in the superblock to -1 (or whatever invalid
+> value - define a constant for it). The first place that has valid values
+> available (detected by the superblock having still invalid values) stores them
+> in the superblock. We are guaranteed to parse VAT before LVIDIU because we
+> need VAT to locate LVIDIU in the first place so this logic should be
+> reliable.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/f2fs.h    |  5 ++++-
- fs/f2fs/file.c    | 12 ++++++------
- fs/f2fs/gc.c      | 12 ++++++------
- fs/f2fs/segment.c |  6 +++---
- fs/f2fs/super.c   | 16 ++++++++--------
- 5 files changed, 27 insertions(+), 24 deletions(-)
+Hum, now checking the code, I was wrong with "we are guaranteed to parse
+VAT before LVIDIU". It is rather on contrary - we need to load LVID to be
+able to locate VAT. So if we added processing of numDirs and numFiles from
+LVID to udf_load_logicalvolint(), we can later just override the values when
+parsing VAT.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index e7208442d32a..61d62cd06449 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1391,7 +1391,10 @@ struct f2fs_sb_info {
- 	struct f2fs_mount_info mount_opt;	/* mount options */
- 
- 	/* for cleaning operations */
--	struct mutex gc_mutex;			/* mutex for GC */
-+	struct rw_semaphore gc_lock;		/*
-+						 * semaphore for GC, avoid
-+						 * race between GC and GC or CP
-+						 */
- 	struct f2fs_gc_kthread	*gc_thread;	/* GC thread */
- 	unsigned int cur_victim_sec;		/* current victim section num */
- 	unsigned int gc_mode;			/* current GC state */
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 0dff22566a1d..86ddbb55d2b1 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1642,7 +1642,7 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
- next_alloc:
- 		if (has_not_enough_free_secs(sbi, 0,
- 			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
--			mutex_lock(&sbi->gc_mutex);
-+			down_write(&sbi->gc_lock);
- 			err = f2fs_gc(sbi, true, false, NULL_SEGNO);
- 			if (err && err != -ENODATA && err != -EAGAIN)
- 				goto out_err;
-@@ -2450,12 +2450,12 @@ static int f2fs_ioc_gc(struct file *filp, unsigned long arg)
- 		return ret;
- 
- 	if (!sync) {
--		if (!mutex_trylock(&sbi->gc_mutex)) {
-+		if (!down_write_trylock(&sbi->gc_lock)) {
- 			ret = -EBUSY;
- 			goto out;
- 		}
- 	} else {
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 	}
- 
- 	ret = f2fs_gc(sbi, sync, true, NULL_SEGNO);
-@@ -2493,12 +2493,12 @@ static int f2fs_ioc_gc_range(struct file *filp, unsigned long arg)
- 
- do_more:
- 	if (!range.sync) {
--		if (!mutex_trylock(&sbi->gc_mutex)) {
-+		if (!down_write_trylock(&sbi->gc_lock)) {
- 			ret = -EBUSY;
- 			goto out;
- 		}
- 	} else {
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 	}
- 
- 	ret = f2fs_gc(sbi, range.sync, true, GET_SEGNO(sbi, range.start));
-@@ -2929,7 +2929,7 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
- 	end_segno = min(start_segno + range.segments, dev_end_segno);
- 
- 	while (start_segno < end_segno) {
--		if (!mutex_trylock(&sbi->gc_mutex)) {
-+		if (!down_write_trylock(&sbi->gc_lock)) {
- 			ret = -EBUSY;
- 			goto out;
- 		}
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index c43181ef98c4..67eca7c2d983 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -78,18 +78,18 @@ static int gc_thread_func(void *data)
- 		 */
- 		if (sbi->gc_mode == GC_URGENT) {
- 			wait_ms = gc_th->urgent_sleep_time;
--			mutex_lock(&sbi->gc_mutex);
-+			down_write(&sbi->gc_lock);
- 			goto do_gc;
- 		}
- 
--		if (!mutex_trylock(&sbi->gc_mutex)) {
-+		if (!down_write_trylock(&sbi->gc_lock)) {
- 			stat_other_skip_bggc_count(sbi);
- 			goto next;
- 		}
- 
- 		if (!is_idle(sbi, GC_TIME)) {
- 			increase_sleep_time(gc_th, &wait_ms);
--			mutex_unlock(&sbi->gc_mutex);
-+			up_write(&sbi->gc_lock);
- 			stat_io_skip_bggc_count(sbi);
- 			goto next;
- 		}
-@@ -1370,7 +1370,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
- 				reserved_segments(sbi),
- 				prefree_segments(sbi));
- 
--	mutex_unlock(&sbi->gc_mutex);
-+	up_write(&sbi->gc_lock);
- 
- 	put_gc_inode(&gc_list);
- 
-@@ -1409,9 +1409,9 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
- 			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
- 		};
- 
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
--		mutex_unlock(&sbi->gc_mutex);
-+		up_write(&sbi->gc_lock);
- 		put_gc_inode(&gc_list);
- 
- 		if (get_valid_blocks(sbi, segno, true))
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 311fe4937f6a..6d03b89242f5 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -504,7 +504,7 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
- 	 * dir/node pages without enough free segments.
- 	 */
- 	if (has_not_enough_free_secs(sbi, 0, 0)) {
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 		f2fs_gc(sbi, false, false, NULL_SEGNO);
- 	}
- }
-@@ -2860,9 +2860,9 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
- 	if (sbi->discard_blks == 0)
- 		goto out;
- 
--	mutex_lock(&sbi->gc_mutex);
-+	down_write(&sbi->gc_lock);
- 	err = f2fs_write_checkpoint(sbi, &cpc);
--	mutex_unlock(&sbi->gc_mutex);
-+	up_write(&sbi->gc_lock);
- 	if (err)
- 		goto out;
- 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 593dc3d2b80b..65a7a432dfee 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1238,9 +1238,9 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
- 
- 		cpc.reason = __get_cp_reason(sbi);
- 
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 		err = f2fs_write_checkpoint(sbi, &cpc);
--		mutex_unlock(&sbi->gc_mutex);
-+		up_write(&sbi->gc_lock);
- 	}
- 	f2fs_trace_ios(NULL, 1);
- 
-@@ -1621,7 +1621,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 	f2fs_update_time(sbi, DISABLE_TIME);
- 
- 	while (!f2fs_time_over(sbi, DISABLE_TIME)) {
--		mutex_lock(&sbi->gc_mutex);
-+		down_write(&sbi->gc_lock);
- 		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
- 		if (err == -ENODATA) {
- 			err = 0;
-@@ -1643,7 +1643,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 		goto restore_flag;
- 	}
- 
--	mutex_lock(&sbi->gc_mutex);
-+	down_write(&sbi->gc_lock);
- 	cpc.reason = CP_PAUSE;
- 	set_sbi_flag(sbi, SBI_CP_DISABLED);
- 	err = f2fs_write_checkpoint(sbi, &cpc);
-@@ -1655,7 +1655,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 	spin_unlock(&sbi->stat_lock);
- 
- out_unlock:
--	mutex_unlock(&sbi->gc_mutex);
-+	up_write(&sbi->gc_lock);
- restore_flag:
- 	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
- 	return err;
-@@ -1663,12 +1663,12 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- 
- static void f2fs_enable_checkpoint(struct f2fs_sb_info *sbi)
- {
--	mutex_lock(&sbi->gc_mutex);
-+	down_write(&sbi->gc_lock);
- 	f2fs_dirty_to_prefree(sbi);
- 
- 	clear_sbi_flag(sbi, SBI_CP_DISABLED);
- 	set_sbi_flag(sbi, SBI_IS_DIRTY);
--	mutex_unlock(&sbi->gc_mutex);
-+	up_write(&sbi->gc_lock);
- 
- 	f2fs_sync_fs(sbi->sb, 1);
- }
-@@ -3398,7 +3398,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	/* init f2fs-specific super block info */
- 	sbi->valid_super_block = valid_super_block;
--	mutex_init(&sbi->gc_mutex);
-+	init_rwsem(&sbi->gc_lock);
- 	mutex_init(&sbi->writepages);
- 	mutex_init(&sbi->cp_mutex);
- 	mutex_init(&sbi->resize_mutex);
+								Honza
+
+> 
+> And later when using the values, we can also easily check whether we
+> actually have sensible values available in the first place...
+> 
+> 								Honza
+> 
+> > > >  fs/udf/super.c  | 25 ++++++++++++++++++++++---
+> > > >  fs/udf/udf_sb.h |  3 +++
+> > > >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/fs/udf/super.c b/fs/udf/super.c
+> > > > index 8df6e9962..e8661bf01 100644
+> > > > --- a/fs/udf/super.c
+> > > > +++ b/fs/udf/super.c
+> > > > @@ -1202,6 +1202,8 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+> > > >  		map->s_type_specific.s_virtual.s_start_offset = 0;
+> > > >  		map->s_type_specific.s_virtual.s_num_entries =
+> > > >  			(sbi->s_vat_inode->i_size - 36) >> 2;
+> > > > +		/* TODO: Add support for reading Logical Volume Extended Information (UDF 1.50 Errata, DCN 5003, 3.3.4.5.1.3) */
+> > > > +		map->s_type_specific.s_virtual.s_has_additional_data = false;
+> > > >  	} else if (map->s_partition_type == UDF_VIRTUAL_MAP20) {
+> > > >  		vati = UDF_I(sbi->s_vat_inode);
+> > > >  		if (vati->i_alloc_type != ICBTAG_FLAG_AD_IN_ICB) {
+> > > > @@ -1215,6 +1217,12 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+> > > >  							vati->i_ext.i_data;
+> > > >  		}
+> > > >  
+> > > > +		map->s_type_specific.s_virtual.s_has_additional_data =
+> > > > +			true;
+> > > > +		map->s_type_specific.s_virtual.s_num_files =
+> > > > +			le32_to_cpu(vat20->numFiles);
+> > > > +		map->s_type_specific.s_virtual.s_num_dirs =
+> > > > +			le32_to_cpu(vat20->numDirs);
+> > > >  		map->s_type_specific.s_virtual.s_start_offset =
+> > > >  			le16_to_cpu(vat20->lengthHeader);
+> > > >  		map->s_type_specific.s_virtual.s_num_entries =
+> > > > @@ -2417,9 +2425,20 @@ static int udf_statfs(struct dentry *dentry, struct kstatfs *buf)
+> > > >  	buf->f_blocks = sbi->s_partmaps[sbi->s_partition].s_partition_len;
+> > > >  	buf->f_bfree = udf_count_free(sb);
+> > > >  	buf->f_bavail = buf->f_bfree;
+> > > > -	buf->f_files = (lvidiu != NULL ? (le32_to_cpu(lvidiu->numFiles) +
+> > > > -					  le32_to_cpu(lvidiu->numDirs)) : 0)
+> > > > -			+ buf->f_bfree;
+> > > > +
+> > > > +	if ((sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP15 ||
+> > > > +	     sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP20) &&
+> > > > +	     sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_has_additional_data)
+> > > > +		buf->f_files = sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_files +
+> > > > +			       sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_dirs +
+> > > > +			       buf->f_bfree;
+> > > > +	else if (lvidiu != NULL)
+> > > > +		buf->f_files = le32_to_cpu(lvidiu->numFiles) +
+> > > > +			       le32_to_cpu(lvidiu->numDirs) +
+> > > > +			       buf->f_bfree;
+> > > > +	else
+> > > > +		buf->f_files = buf->f_bfree;
+> > > > +
+> > > >  	buf->f_ffree = buf->f_bfree;
+> > > >  	buf->f_namelen = UDF_NAME_LEN;
+> > > >  	buf->f_fsid.val[0] = (u32)id;
+> > > > diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
+> > > > index 6bd0d4430..c74abbc84 100644
+> > > > --- a/fs/udf/udf_sb.h
+> > > > +++ b/fs/udf/udf_sb.h
+> > > > @@ -78,6 +78,9 @@ struct udf_sparing_data {
+> > > >  struct udf_virtual_data {
+> > > >  	__u32	s_num_entries;
+> > > >  	__u16	s_start_offset;
+> > > > +	bool	s_has_additional_data;
+> > > > +	__u32	s_num_files;
+> > > > +	__u32	s_num_dirs;
+> > > >  };
+> > > >  
+> > > >  struct udf_bitmap {
+> > > > -- 
+> > > > 2.20.1
+> > > > 
+> > 
+> > -- 
+> > Pali Rohár
+> > pali.rohar@gmail.com
+> 
+> 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 -- 
-2.18.0.rc1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
