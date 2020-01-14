@@ -2,166 +2,133 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5DEC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3865EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB112084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GKgg2CgD"
+	by mail.kernel.org (Postfix) with ESMTP id 169272084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:30:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgANBaY (ORCPT
+        id S1729531AbgANBaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:30:24 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58216 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729436AbgANBaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:30:22 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E1TE0t105524;
-        Tue, 14 Jan 2020 01:30:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=A6M6k3ikXF8yBWj9VHiQxI6pJTnSUujmxK2S/8NxTcw=;
- b=GKgg2CgDiqDxyhrkWOqF5UoV2rsi4K9yH9eAVdbJxkCwdoEtLoEPutV0eO8fXq9FQ4a6
- 64D23mOZG1H98R4V+rWk5icqO2pxgB5ZEy7If5GR3rlVDKTm44wtUbooYstWE61y6xLY
- 3jqHo/KXOoArSRRa61aEhf2kSx6MJiyH5TCJTIfzIL/hKG7bndLDlQ5IGAqf9RWA9hn8
- f/4mPMz0qC85XqsvtE9d4ye8zPyOCwMCpYQfp58opVNt268rwz3Pk6MKRv3BCfTnsOo5
- PGSvO9I4sMNUyPjm+uWgIOcA3XjZWib8IHOcfxro+uwIJRtbvmu/PhZxHqGr76yD9CbZ 7A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xf73tjpw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 01:30:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E1TDD3176589;
-        Tue, 14 Jan 2020 01:30:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2xfrgjp4mg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 01:30:10 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00E1U68n006854;
-        Tue, 14 Jan 2020 01:30:06 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 17:30:06 -0800
-Date:   Mon, 13 Jan 2020 17:30:04 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
-Message-ID: <20200114013004.GU8247@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-10-ira.weiny@intel.com>
- <20200113222212.GO8247@magnolia>
- <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140011
+        Mon, 13 Jan 2020 20:30:30 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:46112 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728838AbgANBaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:30:20 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 981E91A07BA;
+        Tue, 14 Jan 2020 02:30:18 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EB4D1A01BD;
+        Tue, 14 Jan 2020 02:30:13 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0DD0B402DF;
+        Tue, 14 Jan 2020 09:30:06 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 3/3] dt-bindings: clock: Refine i.MX8MN clock binding
+Date:   Tue, 14 Jan 2020 09:26:07 +0800
+Message-Id: <1578965167-31588-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
+References: <1578965167-31588-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 04:46:10PM -0800, Ira Weiny wrote:
-> On Mon, Jan 13, 2020 at 02:22:12PM -0800, Darrick J. Wong wrote:
-> > On Fri, Jan 10, 2020 at 11:29:39AM -0800, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> 
-> [snip]
-> 
-> > >  
-> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > > index bc3654fe3b5d..1ab0906c6c7f 100644
-> > > --- a/fs/xfs/xfs_ioctl.c
-> > > +++ b/fs/xfs/xfs_ioctl.c
-> > > @@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
-> > >  		goto out_unlock;
-> > >  	}
-> > >  
-> > > +	/*
-> > > +	 * If there is a mapping in place we must remain in our current mode.
-> > > +	 */
-> > > +	if (atomic64_read(&inode->i_mapped)) {
-> > 
-> > Urk, should we really be messing around with the address space
-> > internals?
-> 
-> I contemplated a function call instead of checking i_mapped directly?  Is that
-> what you mean?
+Refine i.MX8MN clock binding by removing useless content and
+updating the example, it makes all i.MX8M SoCs' clock binding
+aligned.
 
-Yeah.  Abstracting the details just enough that filesystems don't have
-to know that i_mapped is atomic64 etc.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ .../devicetree/bindings/clock/imx8mn-clock.yaml    | 48 +---------------------
+ 1 file changed, 2 insertions(+), 46 deletions(-)
 
-> 
-> > 
-> > > +		error = -EBUSY;
-> > > +		goto out_unlock;
-> > > +	}
-> > > +
-> > >  	error = filemap_write_and_wait(inode->i_mapping);
-> > >  	if (error)
-> > >  		goto out_unlock;
-> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > index 631f11d6246e..6e7dc626b657 100644
-> > > --- a/include/linux/fs.h
-> > > +++ b/include/linux/fs.h
-> > > @@ -740,6 +740,7 @@ struct inode {
-> > >  #endif
-> > >  
-> > >  	void			*i_private; /* fs or device private pointer */
-> > > +	atomic64_t               i_mapped;
-> > 
-> > I would have expected to find this in struct address_space since the
-> > mapping count is a function of the address space, right?
-> 
-> I suppose but the only external call (above) would be passing an inode.  So to
-> me it seemed better here.
+diff --git a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+index 622f365..da2103d 100644
+--- a/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+@@ -40,7 +40,7 @@ properties:
+ 
+   '#clock-cells':
+     const: 1
+-    description: |
++    description:
+       The clock consumer should specify the desired clock by having the clock
+       ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mn-clock.h
+       for the full list of i.MX8M Nano clock IDs.
+@@ -57,7 +57,7 @@ examples:
+   - |
+     clk: clock-controller@30380000 {
+         compatible = "fsl,imx8mn-ccm";
+-        reg = <0x0 0x30380000 0x0 0x10000>;
++        reg = <0x30380000 0x10000>;
+         #clock-cells = <1>;
+         clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>,
+                  <&clk_ext2>, <&clk_ext3>, <&clk_ext4>;
+@@ -65,48 +65,4 @@ examples:
+                       "clk_ext2", "clk_ext3", "clk_ext4";
+     };
+ 
+-  # Required external clocks for Clock Control Module node:
+-  - |
+-    osc_32k: clock-osc-32k {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency = <32768>;
+-        clock-output-names = "osc_32k";
+-    };
+-
+-    osc_24m: clock-osc-24m {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency = <24000000>;
+-        clock-output-names = "osc_24m";
+-    };
+-
+-    clk_ext1: clock-ext1 {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency = <133000000>;
+-        clock-output-names = "clk_ext1";
+-    };
+-
+-    clk_ext2: clock-ext2 {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency = <133000000>;
+-        clock-output-names = "clk_ext2";
+-    };
+-
+-    clk_ext3: clock-ext3 {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency = <133000000>;
+-        clock-output-names = "clk_ext3";
+-    };
+-
+-    clk_ext4: clock-ext4 {
+-        compatible = "fixed-clock";
+-        #clock-cells = <0>;
+-        clock-frequency= <133000000>;
+-        clock-output-names = "clk_ext4";
+-    };
+-
+ ...
+-- 
+2.7.4
 
-But the number of memory mappings reflects the state of the address
-space, not the inode.  Or maybe put another way, if I were an mm
-developer I would not expect to look in struct inode for mm state.
-
-static inline bool inode_has_mappings(struct inode *inode)
-{
-	return atomic64_read(&inode->i_mapping->mapcount) > 0;
-}
-
-OTOH if there exist other mm developers who /do/ find that storing the
-mmap count in struct inode is more logical, please let me know. :)
-
---D
-
-> Ira
-> 
-> > 
-> > --D
-> > 
