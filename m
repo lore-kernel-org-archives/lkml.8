@@ -2,93 +2,99 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5851C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACAE24673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9221A24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkM6BbNg"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="D2zHMCun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgANUgY (ORCPT
+        id S1728779AbgANUiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:36:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41631 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgANUgY (ORCPT
+        Tue, 14 Jan 2020 15:38:11 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37643 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgANUiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:36:24 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so15910621ljc.8;
-        Tue, 14 Jan 2020 12:36:22 -0800 (PST)
+        Tue, 14 Jan 2020 15:38:11 -0500
+Received: by mail-io1-f67.google.com with SMTP id k24so15339733ioc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:38:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a7uP1zpb1ztpEYbYJJBds6WIHHRIrU9oQfAy4KVLdh8=;
-        b=WkM6BbNgq866gAfEyXf/gMGTEPI7AGNlC+zQWZSwrcsNPuuPppyqnkFEBBtson9/Iu
-         xGeijtj56fxzc76sFKTlKyjgyMGtdL9NA66kuAfzB6zAp91zZ3wMN5dnzriKZBhpr1cH
-         TosQEr0TNEmseHF0LfUKTjmZIDx9M2PCEFYrKGQ8TqSCkEkqdNMitHggjtgCltAw6HcM
-         oHIQowQ8VnukyVLrVlYfVUyO3I0yQ15B7EHiqQtVhV3oiBQCpuiJkmlYxDEhzFk5VmdB
-         qfS4aYJwtURtwI6nkjHb3UwBHma2eyY1boZd03gbKorj3P9FqzRd1PtRsrj+zEwzc/az
-         oqOw==
+        bh=UYuAvyM6eKkIdewcDd2HsrDUAjfpLHDq9QI0D6aHqnA=;
+        b=D2zHMCun7ScFcsJf2i7ZNI4jQignTqfQ3oHuAqqRVrYDNz890tv9MYJs5yQ8rBMD39
+         5AdqZMhAFRDXnX+IYt5JhkOffONeVZYQzWtlveoEWCL/DzbK1f24PY36kc/uOtVloKSe
+         ee/Sr4q5cLlGb/exKZuYxnKYmPx5hSIbvSuMlkFFJj5XI/P0mVlng+uTC0qipALhDpMQ
+         RcBMeFDDyHJ0eA+6t9zJspvf5Z28urQrKGVfIgdvgrb47oBRz1N1obwTuSGI0Bwn4qYp
+         0ydsPRbzPysmru8NUz5pXkOI/VJygp8GuWwRot031WKTTqr/64fJPBoYLDLrFLbIcw4V
+         RviA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=a7uP1zpb1ztpEYbYJJBds6WIHHRIrU9oQfAy4KVLdh8=;
-        b=JMVztwvnd+QNvnqYxr8DkDaFkbwDyckD6eNxXjWbg7cQHceL7DdCbkcY8MMu/EiHm1
-         +oaGf/gIbo52b7QDW+bgj76shHX7oL2eEC6iwf9loaZjUuqSTmwf7/yxmFiPqh3j4u6A
-         v+C3TTkbBJI4rdSwxOYXBgTAkdOZAFXze54y/5bjj8CPoQbEYzCrZjRLBiua6ahMMulH
-         FKy5r+PYq9M7A2dBPqHAweSpWq031pU4VCDV5mbGbkAFFBoP8TafW04PmrT7UasU0EoP
-         Eno188NPHcuzaXQrm89Zg0rViTPCnojV8KZ1YAYjuf5huHBm4YJMhiocr1BEJiIi9wiG
-         ll8w==
-X-Gm-Message-State: APjAAAUqlHGNsPMqKP/w0h2q9FGl64ZGxgoN/qY1yODAsaRplV6s66cF
-        AH+MHjwZKPvFZo0guwx+/EqHwgCF
-X-Google-Smtp-Source: APXvYqxe6Hlj5r5z0SlnmU6Lvr152puMRcx58+cpCLnqZW5j0mbPOf0IUgcQv0WPyX0GTg4xcIyEkQ==
-X-Received: by 2002:a2e:3a12:: with SMTP id h18mr15983388lja.81.1579034181518;
-        Tue, 14 Jan 2020 12:36:21 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p26sm7784178lfh.64.2020.01.14.12.36.20
+        bh=UYuAvyM6eKkIdewcDd2HsrDUAjfpLHDq9QI0D6aHqnA=;
+        b=IBwQV5tzrK0rs2tKjUS81g0tcsaWmXHKXhCRzcxeBoRwdtaHQXZLzspyI4eLR9YIxW
+         3bSVrsxXfgca+JYoQOrS4Yx9hK44ZKn8rJWeIpsIawnqN2pO6doh7zkgrn8iyN69VTy9
+         /anocQXBQ+EitvBeJWkquh4eN2ol0bz8e81DLqcq02L3zJQ5sExVvldI9S9EAHpKvm9e
+         NC6jC9TeSwcAWx2UrALCGcyCn3B1Ql7R293bPX3siAiyVf8IPN6QT7ZTjlhEne16Kzqf
+         T8cPJNXINdkBtlDHi+Cf+HOVcRKHE1Qn3y/joeuhERTYokD8JzEbIjxXofrnrsBTPFIu
+         HYng==
+X-Gm-Message-State: APjAAAUw6jOTbVLyfZX7PIAyW6GG3FkGEc55dAXzGj87SyQDjJ7Qdh74
+        v6fuDwb46Rq08HxQ817u2fRoGg==
+X-Google-Smtp-Source: APXvYqyNm4MvD2hJ2cWcIeEqueLlPTm75AYaWoijguRzNhDQ2/uAXGSZV2BPwZH+FuTDS2f4S5jGVg==
+X-Received: by 2002:a6b:740c:: with SMTP id s12mr19790805iog.108.1579034290369;
+        Tue, 14 Jan 2020 12:38:10 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s10sm3754869iop.36.2020.01.14.12.38.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 12:36:20 -0800 (PST)
-Subject: Re: [PATCH v6 00/12] NVIDIA Tegra20 CPUFreq driver major update
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191218202142.11717-1-digetx@gmail.com>
- <20200114155306.GI28289@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3ebb7123-db2b-bacc-1f35-f6691a12c94d@gmail.com>
-Date:   Tue, 14 Jan 2020 23:36:19 +0300
+        Tue, 14 Jan 2020 12:38:09 -0800 (PST)
+Subject: Re: [BUG] bisected to: block: fix splitting segments on boundary
+ masks
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Chris Mason <clm@fb.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200113221317.0e27f0a9@rorschach.local.home>
+ <e8bd9824-20ff-03e0-c289-e77c4f6669af@kernel.dk>
+ <20200114153456.2cbae42f@gandalf.local.home>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <421d2492-ec70-b5aa-26bc-dd3fc1e6c14d@kernel.dk>
+Date:   Tue, 14 Jan 2020 13:38:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200114155306.GI28289@pdeschrijver-desktop.Nvidia.com>
+In-Reply-To: <20200114153456.2cbae42f@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 18:53, Peter De Schrijver пишет:
-> Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+On 1/14/20 1:34 PM, Steven Rostedt wrote:
+> On Mon, 13 Jan 2020 21:09:41 -0700
+> Jens Axboe <axboe@kernel.dk> wrote:
+> 
+>> Can you try:
+>>
+>> https://git.kernel.dk/cgit/linux-block/commit/?h=block-5.5&id=1ca6b68e516b3de3707ae2cec9e206c8f9dd816e
+> 
+> This appears to fix the situation, Thanks!
+> 
+> Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Thanks! Should help to get these patches into 5.7 :)
+Thanks for testing, I'll add this to the commit. It'll go upstream in
+the next day or two.
+
+-- 
+Jens Axboe
+
