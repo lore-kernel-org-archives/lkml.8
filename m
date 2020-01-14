@@ -2,142 +2,112 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0EAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CE6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 777F22465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D8824672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LjQRYpxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgANMR5 convert rfc822-to-8bit (ORCPT
+        id S1729397AbgANMVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:17:57 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2924 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726053AbgANMR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:17:57 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id E191FB3B85A07F6F6CD0;
-        Tue, 14 Jan 2020 20:17:50 +0800 (CST)
-Received: from DGGEMM423-HUB.china.huawei.com (10.1.198.40) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 14 Jan 2020 20:17:50 +0800
-Received: from DGGEMM506-MBX.china.huawei.com ([169.254.3.174]) by
- dggemm423-hub.china.huawei.com ([10.1.198.40]) with mapi id 14.03.0439.000;
- Tue, 14 Jan 2020 20:17:41 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
- nodes
-Thread-Topic: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
- nodes
-Thread-Index: AQHVyExqmWOdrHr7k0CDA2xXZLn68Kfn3yMAgAChbkD//4CPgIABXxGAgAAUOwCAAKNokA==
-Date:   Tue, 14 Jan 2020 12:17:41 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340E6EE9@DGGEMM506-MBX.china.huawei.com>
-References: <1578725620-39677-1-git-send-email-prime.zeng@hisilicon.com>
- <20200113101922.GE52694@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340E41D1@DGGEMM506-MBX.china.huawei.com>
- <20200113122101.GA49933@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340E59BA@DGGEMM506-MBX.china.huawei.com>
- <20200114102956.GB10403@bogus>
-In-Reply-To: <20200114102956.GB10403@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 14 Jan 2020 07:21:17 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60729 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbgANMVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:21:16 -0500
+Received: from [IPv6:2001:420:44c1:2577:11b:d594:936e:b16a]
+ ([IPv6:2001:420:44c1:2577:11b:d594:936e:b16a])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id rLBviFvU2pLtbrLByieypI; Tue, 14 Jan 2020 13:21:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579004473; bh=el/sCcXKoLi1FEc8sscgQSjCYSmbdJMyDT1iZnQSnSU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=LjQRYpxPLh+sE48zdnmzx1dYwbjH4bXf1Ow+L9xGtnyLYk22ootoKM/W9LPRAIgKT
+         LLdOswZfIOJ19EhGCDm2XmYZWdtI6Xuyl8dC5s7pZAnPOnHvgDHSBKUIFmgTQIhTVG
+         ij0tC8LIc6YqFte/+lbYjCbxQhtShNEKnJZi5/TjgcBt3gomJpQPEu7aOO69F69zpN
+         OZPkGFql/MkFGntWAnRLCI4yBg5FtwfYVadZ5t73EwJzQSaPTnFRe9rfkiRcwhvAGE
+         0ir1vP7bKiXOEArWvvZbnMYeMemda8rYy6AiZUejTxhRAkSw6FHwz7VxGtoaJJalpD
+         AZAylzCO9BqGw==
+Subject: Re: [PATCH v2 05/17] dt-bindings: atmel-isi: add
+ microchip,sam9x60-isi
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mchehab@kernel.org, lee.jones@linaro.org,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
+        mkl@pengutronix.de, a.zummo@towertech.it
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <58d0a872-9f9e-ab64-b9e4-d6548b05142b@xs4all.nl>
+Date:   Tue, 14 Jan 2020 13:21:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDyyJ8A46d/VZ6mWF8HvSJL6XohAbYvGlIDN2xY5sRpRC0AJZrnUH0YX0+FSqCMhFZjpHxOyHfMDslHdlLv97QcDoHwck2Z9TrOv5t+lopMv/NRf0PUV
+ 55QN8cKR2GeYA535VmrhiJJ3ojVhCtZHdqwlNqcXOOfA1jLuIJ84iCZRAPBbM5rNAMNY7EvoyTG6hFaMVlzvbuZ37zENLdycB1+4kebYsziUTwZWtoZuAnMk
+ LMyouB9mCtPGzmRTzeL74XvIxJXSiMOXKUukMY9CZcdbxL+hqcyNHH1cvq0Ae2LxwdzWO4GARzgfg1BRhHkpDrmwNAST/Nzpp1yk+mYmUHUeCKMDd8m74vHt
+ kAndHbAOE1qpMQD5koRQwLbarJX8A/2eAFJTImw2pecQ7825zIoL2og3ZAauw5oPkPbp/rESm4VQrrwIzQZTIdS19wLJw93WlMa24o0M4Pe9Z5x+vxoRp8Xp
+ MMUfb2fVE69KZls7TdCcam6e05Yvra1yqVNR1HEStwiaFBzk/jI1Bo9NFI5Glm7TYVnbqxqMkf306iQCOo0qEXlt+P7vZcEiAVvNC8QVCAnZ33xDCOO1P0MJ
+ t0xckD3lecqem5SKtKLXefkxwFCHpcH207vyGk/FUL9CikGLulLMLG70jX9Ld1ENlKvZKk+13vUDiYXETUhOLvxSM6cMGAGAw9ZxxcdL4ipi7AhZ8LDj/Hos
+ Mkt9jvglBTYomM/KU9sebjVWgPJeviHg+luR+JN4Q5LWheX1ajixs/F7bHRcZ6vELvkzMcco4AX3I2EuQF4KMcH1Q96bO+BppQYyR75cNBcTiu6LbkouxWVm
+ MW4NsCXcJ0fzeQoSgXBZIfj4wzfcvGDsqbwGk6u+aW6XLHkGAEIwPAz0wqV7xfW4B3Tt72thIoZ7yEUcb1NqMczIB0lX1EeMNRmoxXWuOAXv/Y3kllOdMvVM
+ Ar5uaZEBf2ZZJczJNl00ZE/cL98RXshGjLQcLmOO0cOB+ZAxxE+2AbyLSmra4urIpIuGwP7z7WLnDrpuqSoBI65/nkfakNI++OOqwtpqiY5+Ovy2sTlhvJMP
+ NKQilXVls4YsoomtfMm326htDEL8iehi87LtyVzJDdVEbpDuB6M944CpeFCi1lvlbLZKp/xm9YleC7sbhMLQVs92SnXK+0ICEfNtNZ1N8vaiu7fVSr1BFLjZ
+ 8jCShZPcvKBaXW12eRihzGqkWpLj65UlbQwlDHhc7D924tsjBZuhfWnz7g69Vb/e/iBiBa4o3+DHoJJhFax7VwFnU7KuBXXDdERSFtOo/S6RRxadrFshFakC
+ uUzp6UW6M/OChwP1r3uaki5uIkuF9f7/Jnmdj1J/6ho0dIxRF3nVLa/XFeZ5FVlRe4UOcaC31YtX32Em/eD2YPZuHMSsTxORpfBZpdDOFMwv4NAg26A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> Sent: Tuesday, January 14, 2020 6:30 PM
-> To: Zengtao (B)
-> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki;
-> linux-kernel@vger.kernel.org; Sudeep Holla
-> Subject: Re: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
-> nodes
+On 1/10/20 5:17 PM, Claudiu Beznea wrote:
+> Add microchip,sam9x60-isi to DT bindings documentation.
 > 
-> On Tue, Jan 14, 2020 at 01:42:25AM +0000, Zengtao (B) wrote:
-> > Could you help to explain here?
-> > I understand there are two abnormal cases:
-> > 1. The cpu node exist in the device tree, but not a possible cpu.
-> > This case can be caught by of_cpu_node_to_id's return value.
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/media/atmel-isi.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Yes if of_cpu_node_to_id returns -ENODEV, it means there's no logical
-> CPU associated with this DT node.
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> index 332513a151cc..8924c7545b63 100644
+> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
+> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> @@ -2,7 +2,7 @@ Atmel Image Sensor Interface (ISI)
+>  ----------------------------------
+>  
+>  Required properties for ISI:
+> -- compatible: must be "atmel,at91sam9g45-isi".
+> +- compatible: must be "atmel,at91sam9g45-isi" or "microchip,sam9x60-isi".
+>  - reg: physical base address and length of the registers set for the device.
+>  - interrupts: should contain IRQ line for the ISI.
+>  - clocks: list of clock specifiers, corresponding to entries in the clock-names
 > 
-> > 2. The cpu node does not exist. This case can be caught by above logic.
-> Or
-> > do you think of_parse_phandle's return value is enough?
-> 
-> Again yes, there's nothing extra needed.
-> 
-> The only change you need is to consider -ENODEV while handling the
-> case(1)
-> 
-Thanks very much for your explanation.
-So finally it turns into a very simple patch like this, more cleaner:
-+/*
-+ * This function returns the logic cpu number of the node.
-+ * There are basically three kinds of return values:
-+ * (1) logic cpu number which is > 0.
-+ * (2) -ENDEV when the node is valid one which can be found in the device tree
-+ * but there is no possible cpu nodes to match, when the CONFIG_NR_CPUS is
-+ * smaller than cpus node numbers in device tree, this will happen. It's
-+ * suggested to just ignore this case.
-+ * (3) -1 if the node does not exist in the device tree
-+ */
- static int __init get_cpu_for_node(struct device_node *node)
- {
-        struct device_node *cpu_node;
-@@ -261,7 +271,8 @@ static int __init get_cpu_for_node(struct device_node *node)
-        if (cpu >= 0)
-                topology_parse_cpu_capacity(cpu_node, cpu);
-        else
--               pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-+               pr_info("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
-+                       cpu_node, cpumask_pr_args(cpu_possible_mask));
 
-        of_node_put(cpu_node);
-        return cpu;
-@@ -286,9 +297,8 @@ static int __init parse_core(struct device_node *core, int package_id,
-                                cpu_topology[cpu].package_id = package_id;
-                                cpu_topology[cpu].core_id = core_id;
-                                cpu_topology[cpu].thread_id = i;
--                       } else {
--                               pr_err("%pOF: Can't get CPU for thread\n",
--                                      t);
-+                       } else if (cpu != -ENODEV) {
-+                               pr_err("%pOF: Can't get CPU for thread\n", t);
-                                of_node_put(t);
-                                return -EINVAL;
-                        }
-@@ -307,7 +317,7 @@ static int __init parse_core(struct device_node *core, int package_id,
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-                cpu_topology[cpu].package_id = package_id;
-                cpu_topology[cpu].core_id = core_id;
--       } else if (leaf) {
-+       } else if (leaf && cpu != -ENODEV) {
-                pr_err("%pOF: Can't get CPU for leaf core\n", core);
-                return -EINVAL;
-        }
+Regards,
 
-Any more suggestions? 
-
-Regards
-Zengtao 
-
+	Hans
