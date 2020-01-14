@@ -2,67 +2,114 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEE4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1692C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C5524672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A76524672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 12:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgANL61 (ORCPT
+        id S1729319AbgANMBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:58:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42870 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANL60 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:58:26 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irKpx-000374-Hh; Tue, 14 Jan 2020 12:58:21 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BF368101DEE; Tue, 14 Jan 2020 12:58:20 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org, kernel-janitors@vger.kernel.org,
+        Tue, 14 Jan 2020 07:01:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40614 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgANMBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:01:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BC840AE34;
+        Tue, 14 Jan 2020 12:01:38 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5544B1E0D0E; Tue, 14 Jan 2020 13:01:38 +0100 (CET)
+Date:   Tue, 14 Jan 2020 13:01:38 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode/amd: fix uninitalized structure cp
-In-Reply-To: <b59bb156-891e-3a26-3204-f5a0a1cc60d3@canonical.com>
-References: <20200114111505.320186-1-colin.king@canonical.com> <20200114113834.GE31032@zn.tnic> <b59bb156-891e-3a26-3204-f5a0a1cc60d3@canonical.com>
-Date:   Tue, 14 Jan 2020 12:58:20 +0100
-Message-ID: <8736cickrn.fsf@nanos.tec.linutronix.de>
+Subject: Re: [WIP PATCH 1/4] udf: Do not access LVIDIU revision members when
+ they are not filled
+Message-ID: <20200114120138.GH6466@quack2.suse.cz>
+References: <20200112175933.5259-1-pali.rohar@gmail.com>
+ <20200112175933.5259-2-pali.rohar@gmail.com>
+ <20200113120049.GF23642@quack2.suse.cz>
+ <20200113183728.ucuidmverddt4nme@pali>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200113183728.ucuidmverddt4nme@pali>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin Ian King <colin.king@canonical.com> writes:
-> On 14/01/2020 11:38, Borislav Petkov wrote:
->>>
->>> Addresses-Coverity: ("Uninitialized scalar variable")
->> 
->> I already asked about those: either document what those tags mean or
->> remove them.
->> 
-> I can send a V2 w/o these if it so pleases you. I've had nobody else
-> complain about these and we have literally hundreds of Coverity tagged
-> issues now accepted in the kernel so that we can trace how fixes are found.
+On Mon 13-01-20 19:37:28, Pali Rohár wrote:
+> On Monday 13 January 2020 13:00:49 Jan Kara wrote:
+> > On Sun 12-01-20 18:59:30, Pali Rohár wrote:
+> > > minUDFReadRev, minUDFWriteRev and maxUDFWriteRev members were introduced in
+> > > UDF 1.02. Previous UDF revisions used that area for implementation specific
+> > > data. So in this case do not touch these members.
+> > > 
+> > > To check if LVIDIU contain revisions members, first read UDF revision from
+> > > LVD. If revision is at least 1.02 LVIDIU should contain revision members.
+> > > 
+> > > This change should fix mounting UDF 1.01 images in R/W mode. Kernel would
+> > > not touch, read overwrite implementation specific area of LVIDIU.
+> > > 
+> > > Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> > 
+> > Maybe we could store the fs revision in the superblock as well to avoid
+> > passing the udf_rev parameter?
+> 
+> Unfortunately not. Function udf_verify_domain_identifier() is called
+> also when parsing FSD. FSD is stored on partition map and e.g. Metadata
+> partition map depends on UDF revision. So it is not a good idea to
+> overwrite UDF revision from FSD. This is reason why I decided to use
+> initial UDF revision number only from LVD.
+> 
+> But whole stuff around UDF revision is a mess. UDF revision is stored on
+> these locations:
+> 
+> main LVD
+> reserve LVD
+> main IUVD
+> reserve IUVD
+> FSD
+> 
+> And optionally (when specific UDF feature is used) also on:
+> 
+> sparable partition map 1.50+
+> virtual partition map 1.50+
+> all sparing tables 1.50+
+> VAT 1.50
+> 
+> Plus tuple minimal read, minimal write, maximal write UDF revision is
+> stored on:
+> 
+> LVIDIU 1.02+
+> VAT 2.00+
+> 
+> VAT in 2.00+ format overrides information stored on LVIDIU.
 
-Please keep them. Having a reference how stuff got "reported" _is_
-useful.
+Thanks for the summary. This is indeed a mess in the standard so let's not
+overcomplicate it. I agree with just taking the revision from 'main LVD'
+and storing it in the superblock like you do in this patch. I'd just
+slightly change your code so that extracting a revision from 'struct regid'
+is a separate function and not "hidden" inside
+udf_verify_domain_identifier(). There's no strong reason for combining
+these two.
 
-Thanks,
+WRT parsing of minUDFReadRev and friends, I'd handle them similarly to
+numDirs and numFiles. I'd initialize them to the version we've got from
+LVD, then possibly override them in udf_load_logicalvolint(), and finally
+possibly override them in udf_load_vat().
 
-        tglx
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
