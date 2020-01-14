@@ -2,104 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C17BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04354C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CF224676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996235;
-	bh=6gpxHRZvvxtXCc/sdKcp4tVqk49lNRrgqJ9R00qoDXI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqBe/sFgrYGrqIAWw+kxKxkKuCmQFl4XRbSQs7OD8s0p9q7jYaLk0NHc168Ci7QqN
-	 6duQfxHBaoMt7VudwhEyGqNjY+1IHITqwBCkNgeiNYR0aFZ4y1LOI6U/HFy8wbR67X
-	 NNJASWKv76MQFfjLKtAPS2XncvCAlE1sPCdN+AD4=
+	by mail.kernel.org (Postfix) with ESMTP id D5D8324680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgANKDy (ORCPT
+        id S1729714AbgANKD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:03:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58984 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:03:57 -0500
+Received: from mga18.intel.com ([134.134.136.126]:4432 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgANKDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:03:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 985D12465B;
-        Tue, 14 Jan 2020 10:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996231;
-        bh=6gpxHRZvvxtXCc/sdKcp4tVqk49lNRrgqJ9R00qoDXI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSI+6SHBOaXLT/p4RP1BRwz9FMaodd/gbh08DT8NjjR6vrhmthGC+4Nh0wwB9kJvc
-         fFqJdEc5CsMH/lBKKlvPxZfW04hhI53zL7IL2+5Wk1D27CZhwJTA7VmPlpKcuf0olS
-         mlIegNNvAq9yO+8B5Tbp8sP/agUJc+x2UGxZlF88=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 25/78] Revert "drm/amdgpu: Set no-retry as default."
-Date:   Tue, 14 Jan 2020 11:00:59 +0100
-Message-Id: <20200114094357.099118296@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-References: <20200114094352.428808181@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729299AbgANKDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 02:03:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="397461736"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 14 Jan 2020 02:03:52 -0800
+Received: from [10.226.39.11] (unknown [10.226.39.11])
+        by linux.intel.com (Postfix) with ESMTP id 9DAA75802B1;
+        Tue, 14 Jan 2020 02:03:51 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix intel,global-reset
+ schema
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>
+References: <20200113214515.3950-1-robh@kernel.org>
+ <6594eba7-fb23-b741-4490-da27573fe132@linux.intel.com>
+Message-ID: <6cbc1500-6526-f985-6060-962ffd87ac25@linux.intel.com>
+Date:   Tue, 14 Jan 2020 18:03:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <6594eba7-fb23-b741-4490-da27573fe132@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+Hi Rob,
 
-commit 7aec9ec1cf324d5c5a8d17b9c78a34c388e5f17b upstream.
+My bad, please ignore my response.
+I just directly jumped into the error and felt you are suggesting me to 
+send a separate patch to fix the error.
+After sending the mail i realized by reading the subject that you 
+already submitted the fix patch.
+Please ignore it,
 
-This reverts commit 51bfac71cade386966791a8db87a5912781d249f.
+Thanks for doing it.
+Regards,
+Dilip
 
-This causes stability issues on some raven boards.  Revert
-for now until a proper fix is completed.
-
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/934
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=206017
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -145,7 +145,7 @@ int amdgpu_async_gfx_ring = 1;
- int amdgpu_mcbp = 0;
- int amdgpu_discovery = -1;
- int amdgpu_mes = 0;
--int amdgpu_noretry = 1;
-+int amdgpu_noretry;
- 
- struct amdgpu_mgpu_info mgpu_info = {
- 	.mutex = __MUTEX_INITIALIZER(mgpu_info.mutex),
-@@ -613,7 +613,7 @@ MODULE_PARM_DESC(mes,
- module_param_named(mes, amdgpu_mes, int, 0444);
- 
- MODULE_PARM_DESC(noretry,
--	"Disable retry faults (0 = retry enabled, 1 = retry disabled (default))");
-+	"Disable retry faults (0 = retry enabled (default), 1 = retry disabled)");
- module_param_named(noretry, amdgpu_noretry, int, 0644);
- 
- #ifdef CONFIG_HSA_AMD
-
-
+On 1/14/2020 5:54 PM, Dilip Kota wrote:
+>
+> On 1/14/2020 5:45 AM, Rob Herring wrote:
+>> The intel,rcu-gw binding example has an error:
+>>
+>> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
+>>    reset-controller@e0000000: intel,global-reset: [[16, 30]] is too 
+>> short
+>>
+>> The error isn't really correct as the problem is in how the data is
+>> encoded and the schema is not fixed up by the tooling correctly.
+>> However, array properties should describe the elements in the array, so
+>> lets do that which fixes the error in the process.
+>
+> Sure, i will add the change describing the array properties and push 
+> as a fix patch.
+>
+>
+> Regards,
+>
+> Dilip
+>
+>>
+>> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the 
+>> Intel Reset controller")
+>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+>> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml 
+>> b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> index 246dea8a2ec9..8ac437282659 100644
+>> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> @@ -23,7 +23,11 @@ properties:
+>>       description: Global reset register offset and bit offset.
+>>       allOf:
+>>         - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> -      - maxItems: 2
+>> +    items:
+>> +      - description: Register offset
+>> +      - description: Register bit offset
+>> +        minimum: 0
+>> +        maximum: 31
+>>       "#reset-cells":
+>>       minimum: 2
