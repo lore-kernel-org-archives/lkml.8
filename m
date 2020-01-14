@@ -2,110 +2,161 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFEDC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB97C33CB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E954724672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA051222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IoV0u8G3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr1uy4rA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgANTN4 (ORCPT
+        id S1728844AbgANTOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:13:56 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37430 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgANTNz (ORCPT
+        Tue, 14 Jan 2020 14:14:00 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44886 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgANTN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:13:55 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so6306594pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:13:55 -0800 (PST)
+        Tue, 14 Jan 2020 14:13:59 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t3so13446288qtr.11;
+        Tue, 14 Jan 2020 11:13:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kh1Ge+Ojyq1Hkaf57+ksFQlpw/tvYEo5VWAEqDe26e0=;
-        b=IoV0u8G3OE4qe/OlOUrmQtTvkn0Ck8iGTgGitUdy4pm3zeqyty3RtPcor2vp/ZM5UM
-         bh3Y3Dm0Rl8FtYVdIGq1TmyzYHROP92D3Yb8/avJnDjSPv2yCHiRXrJt9rFiOnhFOgfx
-         J1uuzsbaA6SZJOUNcD3OseGl4+stFJaViEmj8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MFqB+06rBeER++BRySglojh7CJB3/vJLed3nR17srZY=;
+        b=Cr1uy4rA/yc63G/NYnYI6sGqCHjIbj2TiaQVLsKC492L5usjwa9oleTsoZYu7gfzAz
+         fViS+p1sEET0HTnq0582qDyZfsPjAw9Ra2caO/4j6osRwltuRqO4/3vDtygeKSJc5Isd
+         5OXxYJlilf3YnCifUUYtc59aGVj8cejFf5udT1ze8tUSnxdZg+oZDuh75TG2ov1we41u
+         5wuNe7KELTyQuRDb+nQ6wVTXB5CRurnsWsmU2IV5cbDT/ZGTWhRWaQV9TnDXkS8+Fq8t
+         nBf+mW01SclboYCRG+sxLVUG8YtFgwpfHnPt2yo7FFNV0j1WgVRego3SjXeap6hREQk6
+         WBBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kh1Ge+Ojyq1Hkaf57+ksFQlpw/tvYEo5VWAEqDe26e0=;
-        b=c+XGeaya0IbH4vJPIgHBHNl9D6TCNvOVlwjptqXeVIawaySdxUq0o9HhkeoaysvdCK
-         yEL34Vxb5Yo7ZHcP/WXdO8tmExtOLh+UBxSSNVmRyFjzr670+7AHA8xZlWdRhmLDypbT
-         d1lT8avAYMFXzUV9aKrZte22ANKJNB8/1ge4e249FAEOxLQpCGQtTqI5VluJLPq03JD1
-         8G3PPbUAUMYMPI0h3W4MPlS5IwYbJVONreLnqpe777uexH4l6yeFZP4687AvFroQKts0
-         fj7RND2LpW8rGnyYd6Js+z0Ch7nQwXEQse4XwqC7XOyCZhL534iTjLMQIIsWsC5d57rD
-         cFeA==
-X-Gm-Message-State: APjAAAURALyDrYjyoN+4wJuMoJ4A9ZYUEshbb700e0N85Pys0J8btcX6
-        wTNn1AIs2X6k+xoZF/USFUNt8w==
-X-Google-Smtp-Source: APXvYqwzRsJ2RVe43UkCslTgq8Oqb8xg0wTDZUJHvubtVap0H3WXcQ3V3xpS5d6YsDXJ15yBA5c0TQ==
-X-Received: by 2002:a17:902:8c84:: with SMTP id t4mr21515599plo.101.1579029235167;
-        Tue, 14 Jan 2020 11:13:55 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id v4sm18628483pff.174.2020.01.14.11.13.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 11:13:54 -0800 (PST)
-Date:   Tue, 14 Jan 2020 11:13:53 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Chanwoo Choi <chanwoo@kernel.org>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/2] PM / devfreq: Use exclusively PM QoS to determine
- frequency limits
-Message-ID: <20200114191353.GL89495@google.com>
-References: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
- <CGME20200110174932epcas1p345b0e750b48cc9e351dca14e0dd4de86@epcas1p3.samsung.com>
- <20200110094913.2.Ie8eacf976ce7a13e421592f5c1ab8dbdc537da5c@changeid>
- <c793c2e5-dd0e-bff4-9769-26344afe914e@samsung.com>
- <VI1PR04MB702308C23513581F33EFE697EE340@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MFqB+06rBeER++BRySglojh7CJB3/vJLed3nR17srZY=;
+        b=RZl0rP21WpIFESdYGs2F//HMoxhqAaE0qgc4q7BGZqRF6yXRnAbGWhWtCTKfd3cZ1j
+         t+/YzU0UXva+qpWsF7uWtisRxLKMg7DkCHwKNr2wyewSKceFrua7MHi+x78fMFb386SD
+         bi/JaGWYHLCjX4cVJQod+f+B0Nmy9z4A5Ftz/R4BwnGaFFetvVyLpptEpHDGbyfcNSYQ
+         iCuZiWrEwDHjHJQlNEFdHipeLBV+7s+aU1qp8Q1QG0l8sHeXxWRd/ARu2FhcBNO7Exf9
+         M4DqcgnGqS0On0hABrgt0HjkTpUdrE1q6BnV1+UYs7ravOjdnuEr102enN0xw4Qu1QEq
+         g1iA==
+X-Gm-Message-State: APjAAAUHqwlR1+E4oRJAtd+kJcJc9UrflkD8AKj/Hs+i4JAqiB6TEKN/
+        kyCXwP1HDUzcpZtDZXE33+md3LXwBiMYJtpkrKtG3HRs
+X-Google-Smtp-Source: APXvYqzlubP7Me7CKiqxoDf6GVTcdnAviypa3ckAtyf8BEQW1oEW0BFawdKK8kqKdvmjfa1uBN2JxgI5I5GwUsEjXcc=
+X-Received: by 2002:ac8:7b29:: with SMTP id l9mr72065qtu.141.1579029238026;
+ Tue, 14 Jan 2020 11:13:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGTfZH1YvkSQtVTCrCYyWyBNUvKoTk8Vfrc2hHYsH=3AHr-tqw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-9-brianvv@google.com>
+ <CAEf4BzYEGv-q7p0rK-d94Ng0fyQLuTEvsy1ZSzTdk0xZcyibQA@mail.gmail.com> <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
+In-Reply-To: <CAMzD94ScYuQfvx2FLY7RAzgZ8xO-E31L79dGEJH-tNDKJzrmOg@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 14 Jan 2020 11:13:47 -0800
+Message-ID: <CAEf4BzZHFaCGNg21VuWywB0Qsa_AkqDPnM4k_pcU_ssmFjd0Yg@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 7/9] libbpf: add libbpf support to batch ops
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:35:48AM +0900, Chanwoo Choi wrote:
-> On Wed, Jan 15, 2020 at 1:08 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+On Tue, Jan 14, 2020 at 10:54 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> On Tue, Jan 14, 2020 at 10:36 AM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
 > >
-> > On 13.01.2020 09:24, Chanwoo Choi wrote:
-> > > Hi,
+> > On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
 > > >
-> > > Any device driver except for devfreq_cooling.c might
-> > > use dev_pm_opp_enable/disable interface.
-> > > So, don't need to remove the devfreq->scaling_max_freq
-> > > and devfreq->scaling_min_freq for supporting OPP interface.
+> > > From: Yonghong Song <yhs@fb.com>
+> > >
+> > > Added four libbpf API functions to support map batch operations:
+> > >   . int bpf_map_delete_batch( ... )
+> > >   . int bpf_map_lookup_batch( ... )
+> > >   . int bpf_map_lookup_and_delete_batch( ... )
+> > >   . int bpf_map_update_batch( ... )
+> > >
+> > > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > > ---
+> > >  tools/lib/bpf/bpf.c      | 60 ++++++++++++++++++++++++++++++++++++++++
+> > >  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
+> > >  tools/lib/bpf/libbpf.map |  4 +++
+> > >  3 files changed, 86 insertions(+)
+> > >
+> > > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> > > index 500afe478e94a..12ce8d275f7dc 100644
+> > > --- a/tools/lib/bpf/bpf.c
+> > > +++ b/tools/lib/bpf/bpf.c
+> > > @@ -452,6 +452,66 @@ int bpf_map_freeze(int fd)
+> > >         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
+> > >  }
+> > >
+> > > +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
+> > > +                               void *out_batch, void *keys, void *values,
+> > > +                               __u32 *count,
+> > > +                               const struct bpf_map_batch_opts *opts)
+> > > +{
+> > > +       union bpf_attr attr = {};
+> > > +       int ret;
+> > > +
+> > > +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
+> > > +               return -EINVAL;
+> > > +
+> > > +       memset(&attr, 0, sizeof(attr));
+> > > +       attr.batch.map_fd = fd;
+> > > +       attr.batch.in_batch = ptr_to_u64(in_batch);
+> > > +       attr.batch.out_batch = ptr_to_u64(out_batch);
+> > > +       attr.batch.keys = ptr_to_u64(keys);
+> > > +       attr.batch.values = ptr_to_u64(values);
+> > > +       if (count)
+> > > +               attr.batch.count = *count;
+> > > +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
+> > > +       attr.batch.flags = OPTS_GET(opts, flags, 0);
+> > > +
+> > > +       ret = sys_bpf(cmd, &attr, sizeof(attr));
+> > > +       if (count)
+> > > +               *count = attr.batch.count;
 > >
-> > It seems that devfreq_cooling was the only upstream user of
-> > dev_pm_opp_enable and the remaining callers of dev_pm_opp_disable are
-> > probe-time checks.
-> 
-> OPP interface has still dev_pm_opp_enable and dev_pm_opp_disable
-> function. As long as remains them, any device driver related to devfreq
-> could call them at some time. The devfreq supports the OPP interface,
-> not just for only devfreq_cooling.
+> > what if syscall failed, do you still want to assign *count then?
+>
+> Hi Andrii, thanks for taking a look.
+>
+> attr.batch.count should report the number of entries correctly
+> processed before finding and error, an example could be when you
+> provided a buffer for 3 entries and the map only has 1, ret is going
+> to be -ENOENT meaning that you traversed the map and you still want to
+> assign *count.
 
-I would like to remove the disabled OPP handling since no devfreq device
-makes use of dev_pm_opp_enable/disable, but I fear you are right that
-we have to keep it as long as the API is available.
+ah, ok, tricky semantics :) if syscall failed before kernel got to
+updating count, I'm guessing it is guaranteed to preserve old value?
+
+>
+> That being said, the condition 'if (count)' is wrong and I think it
+> should be removed.
+
+So count is mandatory, right? In that case both `if (count)` checks are wrong.
+
+>
+> >
+> > > +
+> > > +       return ret;
+> > > +}
+> > > +
+> >
+> > [...]
