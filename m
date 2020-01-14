@@ -2,147 +2,162 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6950C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D96FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8365124676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0983E24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgANUCW (ORCPT
+        id S1728847AbgANUFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:02:22 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:60288 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgANUCW (ORCPT
+        Tue, 14 Jan 2020 15:05:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33604 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728733AbgANUFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:02:22 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47y1Zf2B6hzKmVl;
-        Tue, 14 Jan 2020 21:02:18 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id 8yIjXp1Taw1j; Tue, 14 Jan 2020 21:02:14 +0100 (CET)
-Date:   Wed, 15 Jan 2020 07:01:50 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200114200150.ryld4npoblns2ybe@yavin>
-References: <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200108031314.GE8904@ZenIV.linux.org.uk>
- <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
- <20200110210719.ktg3l2kwjrdutlh6@yavin>
- <20200114045733.GW8904@ZenIV.linux.org.uk>
+        Tue, 14 Jan 2020 15:05:03 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1irSQv-000376-D1; Tue, 14 Jan 2020 20:05:01 +0000
+Subject: Re: [PATCH] ALSA: hda - fix out of bounds read on spec->smux_paths
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200114154412.365395-1-colin.king@canonical.com>
+ <s5ho8v5renx.wl-tiwai@suse.de>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c826c500-1573-b42b-3c72-5c9f3123d0ed@canonical.com>
+Date:   Tue, 14 Jan 2020 20:05:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yw32mmv2xicgi7vl"
-Content-Disposition: inline
-In-Reply-To: <20200114045733.GW8904@ZenIV.linux.org.uk>
+In-Reply-To: <s5ho8v5renx.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/01/2020 20:01, Takashi Iwai wrote:
+> On Tue, 14 Jan 2020 16:44:12 +0100,
+> Colin King wrote:
+>>
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> It is possible for the call to snd_hda_get_num_conns to fail and return
+>> a negative error code that gets assigned to num_conns. In that specific
+>> case, the check of very large values of val against num_conns will not
+>> fail the -EINVAL check and later on an out of bounds array read on
+>> spec->smux_paths will occur.  Fix this by sanity checking for an error
+>> return from the call to snd_hda_get_num_conns.
+> 
+> Thanks for the patch, but this can't happen.
+> The ad1988_auto_smux_enum_put() is used only for IEC958 Playback
+> Source element, and it's added in ad1988_add_spdif_mux_ctl().  And
+> there at the beginning, there is already a check of the value:
+> 
+> 	num_conns = snd_hda_get_num_conns(codec, 0x0b) + 1;
+> 	if (num_conns != 3 && num_conns != 4)
+> 		return 0;
+> 				
+> And the snd_hda_get_num_conns() function returns the cached value,
+> hence it's always same at the second and later calls, so it can't be a
+> negative error.
 
---yw32mmv2xicgi7vl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, OK, sorry about the noise.
 
-On 2020-01-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Sat, Jan 11, 2020 at 08:07:19AM +1100, Aleksa Sarai wrote:
->=20
-> > If I'm understanding this proposal correctly, this would be a problem
-> > for the libpathrs use-case -- if this is done then there's no way to
-> > avoid a TOCTOU with someone mounting and the userspace program checking
-> > whether something is a mountpoint (unless you have Linux >5.6 and
-> > RESOLVE_NO_XDEV). Today, you can (in theory) do it with MNT_EXPIRE:
-> >=20
-> >   1. Open the candidate directory.
-> >   2. umount2(MNT_EXPIRE) the fd.
-> >     * -EINVAL means it wasn't a mountpoint when we got the fd, and the
-> > 	  fd is a stable handle to the underlying directory.
-> > 	* -EAGAIN or -EBUSY means that it was a mountpoint or became a
-> > 	  mountpoint after the fd was opened (we don't care about that, but
-> > 	  fail-safe is better here).
-> >   3. Use the fd from (1) for all operations.
->=20
-> ... except that foo/../bar *WILL* cross into the covering mount, on any
-> kernel that supports ...at(2) at all, so I would be very cautious about
-> any kind "hardening" claims in that case.
+> 
+> That said, I don't think we need to apply the change as is.  But if we
+> were to improve something, we can rather record this number more
+> explicitly e.g. introduce a new field spec->num_spdif_mux_conns and
+> keep there instead of calling snd_hda_get_num_conns() at each place.
 
-In the use-case I have, we would have full control over what the path
-being opened is (and thus you wouldn't open "foo/../bar"). But I agree
-that generally the MNT_EXPIRE solution is really non-ideal anyway.
+That would seem more optimal for sure.
 
-Not to mention that we're still screwed when it comes to using
-magic-links (because if someone bind-mounts a magic-link over a
-magic-link there's absolutely no race-free way to be sure that we're
-traversing the right magic-link -- for that we'll need to have a
-different solution).
+Colin
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+>>
+>> Addresses-Coverity: ("Out-of-bounds read")
+>> Fixes: 272f3ea31776 ("ALSA: hda - Add SPDIF mux control to AD codec auto-parser")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  sound/pci/hda/patch_analog.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/sound/pci/hda/patch_analog.c b/sound/pci/hda/patch_analog.c
+>> index 88c46b051d14..399561369495 100644
+>> --- a/sound/pci/hda/patch_analog.c
+>> +++ b/sound/pci/hda/patch_analog.c
+>> @@ -756,9 +756,11 @@ static int ad1988_auto_smux_enum_put(struct snd_kcontrol *kcontrol,
+>>  	struct ad198x_spec *spec = codec->spec;
+>>  	unsigned int val = ucontrol->value.enumerated.item[0];
+>>  	struct nid_path *path;
+>> -	int num_conns = snd_hda_get_num_conns(codec, 0x0b) + 1;
+>> +	int num_conns = snd_hda_get_num_conns(codec, 0x0b);
+>>  
+>> -	if (val >= num_conns)
+>> +	if (num_conns < 0)
+>> +		return num_conns;
+>> +	if (val >= num_conns + 1)
+>>  		return -EINVAL;
+>>  	if (spec->cur_smux == val)
+>>  		return 0;
+>> -- 
+>> 2.24.0
+>>
 
-> I'm not sure about Linus' proposal - it looks rather convoluted and we
-> get a hard to describe twist of semantics in an area (procfs symlinks
-> vs. mount traversal) on top of everything else in there...
-
-Yeah, I agree.
-
-> 1) do you see any problems on your testcases with the current #fixes?
-> That's commit 7a955b7363b8 as branch tip.
-
-I will take a quick look later today, but I'm currently at a conference.
-
-> 2) do you have any updates you would like to fold into stuff in
-> #work.openat2?  Right now I have a local variant of #work.namei (with
-> fairly cosmetical change compared to vfs.git one) that merges clean
-> with #work.openat2; I would like to do any updates/fold-ins/etc.
-> of #work.openat2 *before* doing a merge and continuing to work on
-> top of the merge results...
-
-Yes, there were two patches I sent a while ago[1]. I can re-send them if
-you like. The second patch switches open_how->mode to a u64, but I'm
-still on the fence about whether that makes sense to do...
-
-[1]: https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.com/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---yw32mmv2xicgi7vl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXh4eKwAKCRCdlLljIbnQ
-EohNAP9bZokE7Mx988k9i8bCb2VifwEsK32qWbBGbd1mfrCgcAD9FPGxR3BU2iR4
-1M+DPlD/ZTxDuzJUo2DWSGfEWzl2hAQ=
-=b/NS
------END PGP SIGNATURE-----
-
---yw32mmv2xicgi7vl--
