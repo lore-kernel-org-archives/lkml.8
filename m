@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1641EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8907DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD26F24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F42207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996721;
-	bh=y3hojQXEA8XV+d/pNvuWwQg0+T/RPwpbZaLgU7memec=;
+	s=default; t=1578996725;
+	bh=4nAkv6T/KHbSo6vgUYZW7o+FzmQgtTO6S3jvFzs7md0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NenKpBi1jt808EcTl2K2nW9tlMhO+VnTRYu1nfBrfOSTZFtekIEWvueLr2RXeR942
-	 oC9YZMtVe97Jg9sjaab+ZP0lGfs5HVIi/e5SCBiv0U+QDfRGp4Xl44wvuPSpaoz3BJ
-	 RFF+Gt49Tg5XbO9yvjQZzuuPBfEjP4MWbMwqBuIs=
+	b=x3tBPNq30kWlKt4YP1r0MyUPoMurSyWlNZYbNUtzDsOthhUVpYZm4xwLrCCw3CFOX
+	 9UCYCCKs0lGTMoGVUaYoYs9A6tG+yWTB6ZjUBSYWZEScf4vPp8E77DkTMs9ao5gCcF
+	 gyDTRCbRO0O0yteeP0envqErUdYBms6hEvv64Hns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732864AbgANKMB (ORCPT
+        id S1730709AbgANKME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731514AbgANKL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:58 -0500
+        id S1732861AbgANKMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C1EB207FF;
-        Tue, 14 Jan 2020 10:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A02F207FF;
+        Tue, 14 Jan 2020 10:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996717;
-        bh=y3hojQXEA8XV+d/pNvuWwQg0+T/RPwpbZaLgU7memec=;
+        s=default; t=1578996720;
+        bh=4nAkv6T/KHbSo6vgUYZW7o+FzmQgtTO6S3jvFzs7md0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NK+jxkqwKMHjnsGmNMWe9/M5vWMapUYTl9nAMu++iCYZ2RsOibexStEgeHbL85SCV
-         7Xxbk1l/h5IkI3PVTQiB8gftHT/r+JM9w41zjiuzkH+K/mRZnkC3SrMP9bq/zs9+9n
-         3wW2GOiv35eVxYUGo/0QSHEsbuteO7ey85jeCAFc=
+        b=h6t+bdawmmsoVSUd9/5vWvX4xbsSj9uwc3FQ90ZJ5VniK/LWvrjET0bFN1ine8azv
+         uvQIxjEhgI2lAmq4CTi70Z1lXfmGbe6FUHh33i6PdjF6IG+V/s3ZaF0aUMn1IxRu7b
+         AgQ46VftNbi40WfRyuBVrp+zE9mpTsEuqv9PKov0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org,
+        syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.9 09/31] HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
-Date:   Tue, 14 Jan 2020 11:02:01 +0100
-Message-Id: <20200114094341.392739255@linuxfoundation.org>
+Subject: [PATCH 4.9 10/31] HID: hid-input: clear unmapped usages
+Date:   Tue, 14 Jan 2020 11:02:02 +0100
+Message-Id: <20200114094341.617526687@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -59,41 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit be54e7461ffdc5809b67d2aeefc1ddc9a91470c7 upstream.
+commit 4f3882177240a1f55e45a3d241d3121341bead78 upstream.
 
-Always return EPOLLOUT from uhid_char_poll to allow polling /dev/uhid
-for writable state.
+We should not be leaving half-mapped usages with potentially invalid
+keycodes, as that may confuse hidinput_find_key() when the key is located
+by index, which may end up feeding way too large keycode into the VT
+keyboard handler and cause OOB write there:
 
-Fixes: 1f9dec1e0164 ("HID: uhid: allow poll()'ing on uhid devices")
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
+...
+ kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
+ kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
+ input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
+ input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
+ input_pass_values drivers/input/input.c:949 [inline]
+ input_set_keycode+0x290/0x320 drivers/input/input.c:954
+ evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
+ evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+
 Cc: stable@vger.kernel.org
+Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Tested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/uhid.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-input.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/drivers/hid/uhid.c
-+++ b/drivers/hid/uhid.c
-@@ -26,6 +26,7 @@
- #include <linux/uhid.h>
- #include <linux/wait.h>
- #include <linux/uaccess.h>
-+#include <linux/eventpoll.h>
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1026,9 +1026,15 @@ static void hidinput_configure_usage(str
+ 	}
  
- #define UHID_NAME	"uhid"
- #define UHID_BUFSIZE	32
-@@ -774,7 +775,7 @@ static unsigned int uhid_char_poll(struc
- 	if (uhid->head != uhid->tail)
- 		return POLLIN | POLLRDNORM;
+ mapped:
+-	if (device->driver->input_mapped && device->driver->input_mapped(device,
+-				hidinput, field, usage, &bit, &max) < 0)
+-		goto ignore;
++	if (device->driver->input_mapped &&
++	    device->driver->input_mapped(device, hidinput, field, usage,
++					 &bit, &max) < 0) {
++		/*
++		 * The driver indicated that no further generic handling
++		 * of the usage is desired.
++		 */
++		return;
++	}
  
--	return 0;
-+	return EPOLLOUT | EPOLLWRNORM;
+ 	set_bit(usage->type, input->evbit);
+ 
+@@ -1087,9 +1093,11 @@ mapped:
+ 		set_bit(MSC_SCAN, input->mscbit);
+ 	}
+ 
+-ignore:
+ 	return;
+ 
++ignore:
++	usage->type = 0;
++	usage->code = 0;
  }
  
- static const struct file_operations uhid_fops = {
+ void hidinput_hid_event(struct hid_device *hid, struct hid_field *field, struct hid_usage *usage, __s32 value)
 
 
