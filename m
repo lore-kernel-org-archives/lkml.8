@@ -2,105 +2,113 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCCDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CB3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842D524656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CAC2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QNnMhi1W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3/2qNtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgANQr1 (ORCPT
+        id S1726669AbgANQsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:47:27 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:48258 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbgANQqp (ORCPT
+        Tue, 14 Jan 2020 11:48:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44743 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727102AbgANQsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:46:45 -0500
-Received: by mail-pl1-f202.google.com with SMTP id bc5so1314083plb.15
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:46:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bTzv6GNpgfrRZmeHOV0jVc+oFdZ9HuTWtPYHIUcg/W4=;
-        b=QNnMhi1W2Lwr9MiJV1KUIy84wUVGideJuBgoE8jzj7ATu3d+8Iej5m7jE4wEyrUloG
-         PmCzBN3Y/FcSXfgNrjtdeca6SP75c21ZSFxwQ33whfSl8Llc/Tfs931jR7JFlKvtpL7R
-         OVQD2+sf7pxwqUSXltEoe9xWiW8qtliCn4a6dmeqj6LHT9vtAQItMQikhZnofmzBG3ZN
-         SY4j+4f9chtw5cTVKbA+v/YxZpuJTUPdcuSaDlkWIegcBGwvg2oifZEqpMBK4bDDbS8f
-         oJPCU+5ZciMpiDheJSoUQnu4UnxzEBByQdSSTGsNpWfzD/C9yoO51HaQXhDAknnJLTT/
-         RP5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bTzv6GNpgfrRZmeHOV0jVc+oFdZ9HuTWtPYHIUcg/W4=;
-        b=T8xLPJRzPwKK6OKHKdca6OEz0AK8fjqUvW2PZgUsgxBje8Flq2KoPzTCOWgtR2XEJP
-         ENRCcJUd2Lz5Lb9l6lIcpvKuNRy+fRC8arF/jB6qwwmzLKJ0FKMtMs6wU2f4ikBnO5Hy
-         L0Ii/W84mE2lTKtOChw0fOF7i46lLUmkCUXtZ26iKwkWdsrYk7ISuJ/gVGxrhkf0TXTG
-         k3AO79pHNN/wzHOblgXtZ0DLgwYoNOlbSPbWTzCEmW12SYPtp1rIgKBduErPR/yPlBeo
-         zmJA8pReOK+gTXVxCXjZTl7Y4lp6fwHZ18PH1Q9dJdXIfWsWFwrchkKb8dBWks0pq/XC
-         8SQg==
-X-Gm-Message-State: APjAAAUYEWqIgg7t9vv5MDZoJxcMuWohwLGTZAEGrR59cnxn44ENDiY9
-        r8qmfbj7X2XFs0WH8dMBYWnQ3gTQ1Cl5
-X-Google-Smtp-Source: APXvYqwNlRjnwBABlatph1aPgTiQJF+O6lc81rsDh02aseJJD5vR/jzq0Fjyes0uwdcfrH/meeLDOMTraN4R
-X-Received: by 2002:a63:7843:: with SMTP id t64mr27824323pgc.144.1579020404127;
- Tue, 14 Jan 2020 08:46:44 -0800 (PST)
-Date:   Tue, 14 Jan 2020 08:46:08 -0800
-In-Reply-To: <20200114164614.47029-1-brianvv@google.com>
-Message-Id: <20200114164614.47029-5-brianvv@google.com>
-Mime-Version: 1.0
-References: <20200114164614.47029-1-brianvv@google.com>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH v4 bpf-next 4/9] bpf: add lookup and update batch ops to arraymap
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jan 2020 11:48:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579020518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wa4DvoCfeEWwo/urASd6YVcN7NZPPV/NkQMLP8JZMPc=;
+        b=a3/2qNtWS5NkfAPYCrG5beYpHo7nJ4Rt04O2/q8kHNOiZdBHTXTFPkuXyjnCfl2DytpqFQ
+        iCLMOb5vjRn3HtaPkxGon0FLKq9/jpGVd6B3JuT/5/hc5UEzXvhmlSDSRB/2eXmOiOBtVC
+        w5k25P/1KTBHhZVD2SaFQafi6fWIiuo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-qff8BlnUO7GRh5at_9TLdg-1; Tue, 14 Jan 2020 11:48:34 -0500
+X-MC-Unique: qff8BlnUO7GRh5at_9TLdg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B70891FE18;
+        Tue, 14 Jan 2020 16:48:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8C9C60BF1;
+        Tue, 14 Jan 2020 16:48:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk, hch@lst.de,
+        tytso@mit.edu, adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
+cc:     dhowells@redhat.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Problems with determining data presence by examining extents?
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4466.1579020509.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 14 Jan 2020 16:48:29 +0000
+Message-ID: <4467.1579020509@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the generic batch ops functionality to bpf arraymap, note that
-since deletion is not a valid operation for arraymap, only batch and
-lookup are added.
+Again with regard to my rewrite of fscache and cachefiles:
 
-Signed-off-by: Brian Vazquez <brianvv@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
----
- kernel/bpf/arraymap.c | 2 ++
- 1 file changed, 2 insertions(+)
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
+/?h=3Dfscache-iter
 
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index f0d19bbb9211e..95d77770353c9 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -503,6 +503,8 @@ const struct bpf_map_ops array_map_ops = {
- 	.map_mmap = array_map_mmap,
- 	.map_seq_show_elem = array_map_seq_show_elem,
- 	.map_check_btf = array_map_check_btf,
-+	.map_lookup_batch = generic_map_lookup_batch,
-+	.map_update_batch = generic_map_update_batch,
- };
- 
- const struct bpf_map_ops percpu_array_map_ops = {
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
+I've got rid of my use of bmap()!  Hooray!
+
+However, I'm informed that I can't trust the extent map of a backing file =
+to
+tell me accurately whether content exists in a file because:
+
+ (a) Not-quite-contiguous extents may be joined by insertion of blocks of
+     zeros by the filesystem optimising itself.  This would give me a fals=
+e
+     positive when trying to detect the presence of data.
+
+ (b) Blocks of zeros that I write into the file may get punched out by
+     filesystem optimisation since a read back would be expected to read z=
+eros
+     there anyway, provided it's below the EOF.  This would give me a fals=
+e
+     negative.
+
+Is there some setting I can use to prevent these scenarios on a file - or =
+can
+one be added?
+
+Without being able to trust the filesystem to tell me accurately what I've
+written into it, I have to use some other mechanism.  Currently, I've swit=
+ched
+to storing a map in an xattr with 1 bit per 256k block, but that gets hard=
+ to
+use if the file grows particularly large and also has integrity consequenc=
+es -
+though those are hopefully limited as I'm now using DIO to store data into=
+ the
+cache.
+
+If it helps, I'm downloading data in aligned 256k blocks and storing data =
+in
+those same aligned 256k blocks, so if that makes it easier...
+
+David
 
