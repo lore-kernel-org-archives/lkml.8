@@ -2,210 +2,194 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D209C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4D6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AFC2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sjLkjcig"
+	by mail.kernel.org (Postfix) with ESMTP id D658C2467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgANSIY (ORCPT
+        id S1727556AbgANSLB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:08:24 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:49550 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANSIX (ORCPT
+        Tue, 14 Jan 2020 13:11:01 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43143 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANSLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:08:23 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EI35PI135086;
-        Tue, 14 Jan 2020 18:08:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=8huRquYJuRzktEGhLgBn3jch4GfJtH2XqGhnCkGfssw=;
- b=sjLkjcigTAvd2hbqEY+IHT16I8X12Wq7ECnPesHsmDHbQRezbEyd9oHjd08M/zLLFDqg
- hi5VDwFKAjeUYuj6e9YguvE9eYYGMhd7JUEGxXtzCoeGG2UPDW45I1ETz1lbj3/gNANV
- Xp5je2uSnPrmvxD4z+ai8OmRR+lKMfa+tYmxPbDXZRUMkHfu4Rz4DhtDAN4/Dg+j45i+
- qiuKZ5lWW/B/mLTXmxIeVtvqai0vf5bXwtWmBIUAhur/m2p/M6LrNJqmhu1Nmf1v6wVj
- 0cKchYbG4CUGNeezEAdFtssB2fntWkimymkl1m4GvWhUaNeb4hbHHWBr69gRDVEwIWow pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xf73tqk92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 18:08:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EI4KsI061308;
-        Tue, 14 Jan 2020 18:06:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xh2tp4n1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 18:06:09 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00EI688F009660;
-        Tue, 14 Jan 2020 18:06:09 GMT
-Received: from [10.209.227.41] (/10.209.227.41)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jan 2020 10:06:08 -0800
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org,
-        robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com, frowand.list@gmail.com
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
- <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
-Date:   Tue, 14 Jan 2020 10:06:06 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Tue, 14 Jan 2020 13:11:01 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 19A3B240005;
+        Tue, 14 Jan 2020 18:10:53 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 19:10:52 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+Message-ID: <20200114191052.0a16d116@xps13>
+In-Reply-To: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+        <20191127105522.31445-5-miquel.raynal@bootlin.com>
+        <20191209113506.41341ed4@collabora.com>
+        <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140143
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 12:11 AM, Sekhar Nori wrote:
-> On 14/01/20 12:28 PM, Peter Ujfalusi wrote:
->> Hi Santosh,
->>
->> On 13/01/2020 23.28, santosh.shilimkar@oracle.com wrote:
->>>
->>>
->>> On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
->>>> Hi Santosh,
->>>>
->>>> On 23/12/2019 13.04, Peter Ujfalusi wrote:
->>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>>
->>>>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
->>>>> enable straightforward passing of work between a producer and a
->>>>> consumer.
->>>>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
->>>>>
->>>>> The RINGACC converts constant-address read and write accesses to
->>>>> equivalent
->>>>> read or write accesses to a circular data structure in memory. The
->>>>> RINGACC
->>>>> eliminates the need for each DMA controller which needs to access ring
->>>>> elements from having to know the current state of the ring (base
->>>>> address,
->>>>> current offset). The DMA controller performs a read or write access to a
->>>>> specific address range (which maps to the source interface on the
->>>>> RINGACC)
->>>>> and the RINGACC replaces the address for the transaction with a new
->>>>> address
->>>>> which corresponds to the head or tail element of the ring (head for
->>>>> reads,
->>>>> tail for writes). Since the RINGACC maintains the state, multiple DMA
->>>>> controllers or channels are allowed to coherently share the same
->>>>> rings as
->>>>> applicable. The RINGACC is able to place data which is destined towards
->>>>> software into cached memory directly.
->>>>>
->>>>> Supported ring modes:
->>>>> - Ring Mode
->>>>> - Messaging Mode
->>>>> - Credentials Mode
->>>>> - Queue Manager Mode
->>>>>
->>>>> TI-SCI integration:
->>>>>
->>>>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
->>>>> now
->>>>> has control over Ringacc module resources management (RM) and Rings
->>>>> configuration.
->>>>>
->>>>> The corresponding support of TI-SCI Ringacc module RM protocol
->>>>> introduced as option through DT parameters:
->>>>> - ti,sci: phandle on TI-SCI firmware controller DT node
->>>>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
->>>>>
->>>>> if both parameters present - Ringacc driver will configure/free/reset
->>>>> Rings
->>>>> using TI-SCI Message Ringacc RM Protocol.
->>>>>
->>>>> The Ringacc driver manages Rings allocation by itself now and requests
->>>>> TI-SCI firmware to allocate and configure specific Rings only. It's done
->>>>> this way because, Linux driver implements two stage Rings allocation and
->>>>> configuration (allocate ring and configure ring) while TI-SCI Message
->>>>> Protocol supports only one combined operation (allocate+configure).
->>>>>
->>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
->>>>> Tested-by: Keerthy <j-keerthy@ti.com>
->>>>
->>>> Can you please giver your Acked-by for the ringacc patches if they are
->>>> still OK from your point of view as you had offered to take them before
->>>> I got comments from Lokesh.
->>>>
->>> Sure. But you really need to split the series so that dma engine and
->>> soc driver patches can be applied independently.
->>
->> The ringacc is a build and runtime dependency for the DMA. I have hoped
->> that all of them can go via DMAengine (hence asking for your ACK on the
->> drivers/soc/ti/ patches) for 5.6.
->>
->>> Can you please do that?
->>
->> This late in the merge window that would really mean that I will miss
->> another release for the KS3 DMA...
->> I can live with that if you can pick the ringacc for 5.6 and if Vinod
->> takes the DMAengine core changes as well.
->>
->> That would leave only the DMA drivers for 5.7 and we can also queue up
->> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
->> sa2ul, etc).
->>
->> If they go independently and nothing makes it to 5.6 then 5.8 is the
->> realistic target for the DMA support for the KS3 family of devices...
-> 
-> Thats too many kernel versions to get this important piece in.
-> 
-> Santosh, if you do not have anything else queued up that clashes with
-> this, can the whole series be picked up by Vinod with your ack on the
-> drivers/soc/ti/ pieces?
-> 
-I would prefer driver patches to go via driver tree.
+Hi Rob,
 
-> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
-> with just the drivers/soc/ti parts applied so you can merge that branch
-> in case you end up having to send up anything that conflicts.
-> 
-As suggested on other email to Peter, these DMA engine related patches
-should be queued up since they don't have any dependency. Based on
-the status of that patchset, will take care of pulling in the driver
-patches either for this merge window or early part of next merge window.
+Rob Herring <robh+dt@kernel.org> wrote on Tue, 14 Jan 2020 11:46:18
+-0600:
 
-Regards,
-Santosh
+> On Mon, Dec 9, 2019 at 4:35 AM Boris Brezillon
+> <boris.brezillon@collabora.com> wrote:
+> >
+> > On Wed, 27 Nov 2019 11:55:22 +0100
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >  
+> > > Introduce a generic way to define concatenated MTD devices. This may
+> > > be very useful in the case of ie. stacked SPI-NOR. Partitions to
+> > > concatenate are described in an additional property of the partitions
+> > > subnode:
+> > >
+> > >         flash0 {
+> > >                 partitions {
+> > >                         compatible = "fixed-partitions";
+> > >                         part-concat = <&flash0_part1>, <&flash1_part0>;
+> > >
+> > >                       part0@0 {
+> > >                               label = "part0_0";
+> > >                               reg = <0x0 0x800000>;
+> > >                       };
+> > >
+> > >                       flash0_part1: part1@800000 {
+> > >                               label = "part0_1";
+> > >                               reg = <0x800000 0x800000>;  
+> >
+> > So, flash0_part1 and flash0_part2 will be created even though the user
+> > probably doesn't need them?  
+> 
+> I don't follow?
+
+Well, one will have to create "fake" partitions in order to concatenate
+them with this solution, instead of just concatenating the devices (in
+the case where you want to concatenate the entire devices). But the real
+debate is below, on the representation.
+
+> 
+> >  
+> > >                       };
+> > >                 };
+> > >         };
+> > >
+> > >         flash1 {
+> > >                 partitions {
+> > >                         compatible = "fixed-partitions";
+> > >
+> > >                       flash0_part1: part1@0 {
+> > >                               label = "part1_0";
+> > >                               reg = <0x0 0x800000>;
+> > >                       };
+> > >
+> > >                       part0@800000 {
+> > >                               label = "part1_1";
+> > >                               reg = <0x800000 0x800000>;
+> > >                       };
+> > >                 };
+> > >         };  
+> >
+> > IMHO this representation is far from intuitive. At first glance it's not
+> > obvious which partitions are linked together and what's the name of the
+> > resulting concatenated part. I definitely prefer the solution where we
+> > have a virtual device describing the concatenation. I also understand
+> > that this goes against the #1 DT rule: "DT only decribes HW blocks, not
+> > how they should be used/configured", but maybe we can find a compromise
+> > here, like moving this description to the /chosen node?
+> >
+> > chosen {
+> >         flash-arrays {
+> >                 /*
+> >                  * my-flash-array is the MTD name if label is
+> >                  * not present.
+> >                  */
+> >                 my-flash-array {
+> >                         /*
+> >                          * We could have
+> >                          * compatible = "flash-array";
+> >                          * but we can also do without it.
+> >                          */
+> >                         label = "foo";
+> >                         flashes = <&flash1 &flash2 ...>;
+> >                         partitions {
+> >                                 /* usual partition description. */
+> >                                 ...
+> >                         };
+> >                 };
+> >         };
+> > };
+> >
+> > Rob, what do you think?  
+> 
+> I don't think chosen is the right place to put all the partition
+> information. It's not something the bootloader configures.
+> 
+> This suffers from the same issue I have with the original proposal. It
+> will not work for existing s/w. There's only 1 logical partition that
+
+I don't get why it would not work? Current hardware will just not have
+the concatenation support, that's all. How is this a problem?
+
+> concatenated. The rest of the partitions shouldn't need any special
+> handling. So we really only need some way to say 'link these 2
+> partitions into 1 logical partition'. Though perhaps one could want to
+> combine any number of physical partitions into logical partitions, but
+> then none of the proposals could support that. Then again, maybe
+
+Yes, the flash-array proposal supports having more than two
+partitions/devices concatenated, it is also already supported by the
+driver (you don't care about this, but I do :) ).
+
+> that's a userspace problem like with disks.
+
+I see one big issue with this solution: what about bootloaders?
+
+The root cause for such idea is that, in my case, the 2 MTD devices are
+too small to contain the images needed to boot. The perfect solution is
+to merge the two devices virtually in one single device and let U-Boot
+read it like one.
+
+I need to have the same representation both in U-Boot and Linux, hence
+a userspace tool and a kernel command line argument do not work, right?
+
+> To throw out another option, what if the first device contains the
+> complete partitions for both devices with some property in one or both
+> devices pointing to the other device? That would make the partitions
+> in the 1st device still accessible to existing s/w (unless it bounds
+> checks the partitions).
+
+From a coding perspective this is very difficult as bound checks are
+done everywhere and lying about the boundaries is IMHO a bit complex.
+
+Thanks,
+Miquèl
