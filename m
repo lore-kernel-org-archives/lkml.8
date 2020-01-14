@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18B0C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF885C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818CB207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0140207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996599;
-	bh=Lv120bcg/Eqbm6F5BkYFSHwxvzllsH613wmYXWHfjqE=;
+	s=default; t=1578996603;
+	bh=Yxju/tOlV7GN9m7OTkRbGpno+PEH8N7lP/4YNiySSrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J1rhASlDzsiXWFRkL0wqmGkJ+dvl0pXQ6qkk9leDepgeKvoGYrCveQbLwMExgSgl5
-	 Nih4l25UZjWYRmgZeji/KyAPeHZHdlw1YPALbk6siiIgkWPpL9VS1i45EWXfpM/kgw
-	 o2zSYAf4fRP+8PmLnJax9QCjukxiNPEvDxqhKsNU=
+	b=LsKmP/b+uTHsvUvnaAuqXX5LthVhiowDbvLczg0xg+2ZmVEtnJQe9QJSOruGxfeT+
+	 TsUw3RGMS+IRrQKCtbAbX08/pf0gPi9N+7RgdBjQbmVRYU7lMhBSp1fmzMITGn0Vuf
+	 eLw0QVk+ldN6ywh/PJp0bRZ/ZZrqYGNVhNRmUcbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgANKJ6 (ORCPT
+        id S1731087AbgANKKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43274 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:10:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731498AbgANKJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:55 -0500
+        id S1729963AbgANKJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6682C24677;
-        Tue, 14 Jan 2020 10:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB2120678;
+        Tue, 14 Jan 2020 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996594;
-        bh=Lv120bcg/Eqbm6F5BkYFSHwxvzllsH613wmYXWHfjqE=;
+        s=default; t=1578996597;
+        bh=Yxju/tOlV7GN9m7OTkRbGpno+PEH8N7lP/4YNiySSrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRVFVI1D/fBw/OYuJ+rmh31cOxemarbcegJtdI7WLr++D0BYATg9GHbDxtxOYYlbw
-         37opuIF8IESK/9/8clw/Pd41wevTGzbFhnyQ3BTC8N+OflmTfgCF1I2NPzEqiF7PQB
-         0/SSVOL+RDbhkiNWuc6EW/YnwCZFhc6V2RCmygm4=
+        b=Jvln+9ja5Fp3cMF0nk4W0LJn9RPWsX8EFPMtOh5ZGQOWy2Qk1gAWVV6I1YT8pozSX
+         q/MNRgdCw0tfgI325SuE7GUFyo3h1czHdpZBh/NrgQ2wF4TQXj6BTps/FnCoz02Xf1
+         9AqfaMpD+WvqcYLj19iKItGzHNC5LLhi2G/Fv4Hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harry Wentland <harry.wentland@amd.com>,
-        Wayne Lin <Wayne.Lin@amd.com>, Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 4.14 24/39] drm/dp_mst: correct the shifting in DP_REMOTE_I2C_READ
-Date:   Tue, 14 Jan 2020 11:01:58 +0100
-Message-Id: <20200114094344.333911566@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 05/39] ALSA: hda/realtek - Set EAPD control to default for ALC222
+Date:   Tue, 14 Jan 2020 11:01:39 +0100
+Message-Id: <20200114094340.152430298@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
 References: <20200114094336.210038037@linuxfoundation.org>
@@ -59,52 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit c4e4fccc5d52d881afaac11d3353265ef4eccb8b upstream.
+commit 9194a1ebbc56d7006835e2b4cacad301201fb832 upstream.
 
-[Why]
-According to DP spec, it should shift left 4 digits for NO_STOP_BIT
-in REMOTE_I2C_READ message. Not 5 digits.
+Set EAPD control to verb control.
 
-In current code, NO_STOP_BIT is always set to zero which means I2C
-master is always generating a I2C stop at the end of each I2C write
-transaction while handling REMOTE_I2C_READ sideband message. This issue
-might have the generated I2C signal not meeting the requirement. Take
-random read in I2C for instance, I2C master should generate a repeat
-start to start to read data after writing the read address. This issue
-will cause the I2C master to generate a stop-start rather than a
-re-start which is not expected in I2C random read.
-
-[How]
-Correct the shifting value of NO_STOP_BIT for DP_REMOTE_I2C_READ case in
-drm_dp_encode_sideband_req().
-
-Changes since v1:(https://patchwork.kernel.org/patch/11312667/)
-* Add more descriptions in commit and cc to stable
-
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200103055001.10287-1-Wayne.Lin@amd.com
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -274,7 +274,7 @@ static void drm_dp_encode_sideband_req(s
- 			memcpy(&buf[idx], req->u.i2c_read.transactions[i].bytes, req->u.i2c_read.transactions[i].num_bytes);
- 			idx += req->u.i2c_read.transactions[i].num_bytes;
- 
--			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 5;
-+			buf[idx] = (req->u.i2c_read.transactions[i].no_stop_bit & 0x1) << 4;
- 			buf[idx] |= (req->u.i2c_read.transactions[i].i2c_transaction_delay & 0xf);
- 			idx++;
- 		}
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -378,6 +378,7 @@ static void alc_fill_eapd_coef(struct hd
+ 	case 0x10ec0672:
+ 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
+ 		break;
++	case 0x10ec0222:
+ 	case 0x10ec0623:
+ 		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
+ 		break;
 
 
