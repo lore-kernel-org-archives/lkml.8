@@ -2,445 +2,232 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E58C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40E8214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gMsSqGq+"
+	by mail.kernel.org (Postfix) with ESMTP id E12FE214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgANNyP (ORCPT
+        id S1728816AbgANNzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:54:15 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:43443 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgANNyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:54:13 -0500
-Received: by mail-yw1-f66.google.com with SMTP id v126so9019845ywc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1xmtWp6vBPkN/74fZt+HR0Ttw/ns84mVuIZzx55xcLM=;
-        b=gMsSqGq+F3BjgqDJwYN+GooSBpKDZR4BKcDqC8OZNBkpMkQBHl/gVtiGTyyU1plR43
-         72Wrnu/qzBs0GAdLG6sj26ZLaMN/+yVR5xpwo9Vjml2qYbJ2MZVuwXHA7TXZ10jesC//
-         3Edg69hVBz9ebd8aPBHWEHEfkB0D1AeAmHUF8vdcTLvvlUlynroj874mrB+JQlU+PVM2
-         vsLBhEza4XjwiKOF/h9DtH7NEs4CiMchSfvL9bKKenQgyypeL7YvhmvoZuYT4Tv+ISyX
-         EnkJ3XXxpWZvYFlGczfma7TxAxXJvjt86kNvjqK3wErDmjRdqeQCdSj0sNGE3UL2iKUU
-         Clsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1xmtWp6vBPkN/74fZt+HR0Ttw/ns84mVuIZzx55xcLM=;
-        b=GM3Jjogc7ZbKub3S3cKhefHYRo/dfjakP17F89jSTwo7IOf45Oy7uW0KCQtXqMKL1+
-         j6VT3O4IGhWi2Rs8ak6PUzH8aXaylrj635++PvrzaFdN+XRnNFuvCwP8c6WpaYdfBhCQ
-         laJ+GR837kSWITVnr+g0ugGq/minZvb2uRJM1gagwvM3T+X1opKG5DVFwXYlpnH5Z5Kx
-         TUi+x/Hk4nkQeHGhHMg69Rpp8bxrVTE/lPpRudDKkxcgdkNfIUYnZJT8HZo+6StOQxT4
-         NYM1ptk15VYIHe0A0KqogYPJt2tVhn8vNtX8ZV2jAdVdb3ud4et+LWt7I6atCDKdWCoX
-         Ylrw==
-X-Gm-Message-State: APjAAAW9hCQ+sVYcRBHwYA9Ok4qAJzVCfcckDWfFCIaIZq2qdp8/Ozt3
-        JA55j7AbmsLih+TjnLXvUOEAC6AoR636Oc18EUafLQ==
-X-Google-Smtp-Source: APXvYqw4djG0flx1K0kTj4DZuiy0f1ICRBCrA6V0h0eJs1DZ6OvSzi5br2Or+7jyI2ZWdkYF1k0YZhLP7CSrQUlIlEo=
-X-Received: by 2002:a0d:f147:: with SMTP id a68mr17125349ywf.371.1579010051130;
- Tue, 14 Jan 2020 05:54:11 -0800 (PST)
+        Tue, 14 Jan 2020 08:55:11 -0500
+Received: from mga17.intel.com ([192.55.52.151]:40222 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgANNzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:55:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 05:55:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="372582882"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 14 Jan 2020 05:55:10 -0800
+Received: from [10.125.249.138] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 03E0B580458;
+        Tue, 14 Jan 2020 05:55:06 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bPATCH_v3_2/2=5d_perf_x86=3a_Exposing_an_Uncore_u?=
+ =?UTF-8?Q?nit_to_PMON_for_Intel_Xeon=c2=ae_server_platform?=
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        alexander.antonov@intel.com
+References: <20200113135444.12027-1-roman.sudarikov@linux.intel.com>
+ <20200113135444.12027-3-roman.sudarikov@linux.intel.com>
+ <20200113143818.GB390411@kroah.com>
+From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
+Message-ID: <cdce3529-a953-41e4-740a-36193e7931b4@linux.intel.com>
+Date:   Tue, 14 Jan 2020 16:55:03 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200114110620.164861-1-hsinyi@chromium.org>
-In-Reply-To: <20200114110620.164861-1-hsinyi@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 14 Jan 2020 05:54:00 -0800
-Message-ID: <CABXOdTcx4S4vWEEeYZWdtqZnCTjnZYUL_8a+SXOXfcz8+BR_OA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v4] reboot: support offline CPUs before reboot
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200113143818.GB390411@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 3:07 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+On 13.01.2020 17:38, Greg KH wrote:
+> On Mon, Jan 13, 2020 at 04:54:44PM +0300, roman.sudarikov@linux.intel.com wrote:
+>> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>>
+>> Current version supports a server line starting Intel® Xeon® Processor
+>> Scalable Family and introduces mapping for IIO Uncore units only.
+>> Other units can be added on demand.
+>>
+>> IIO stack to PMON mapping is exposed through:
+>>      /sys/devices/uncore_iio_<pmu_idx>/platform_mapping
+>>      in the following format: domain:bus
+>>
+>> For example, on a 4-die Intel Xeon® server platform:
+>>      $ cat /sys/devices/uncore_iio_0/platform_mapping
+>>      0000:00,0000:40,0000:80,0000:c0
+> That's horrid to parse.  Sysfs should be one value per file, why not
+> have individual files for all of these things?
 >
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
+>> Which means:
+>> IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
+>> IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
+>> IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
+>> IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
+> Where did you get the die number from the above data?
 >
-> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop. If architecture don't enable this
-> config, or some cpus somehow fails to offline, it would fallback to ipi
-> function.
->
-> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> Resend v4:
-> * Cc more people and mailing lists. Also fix a few nits from v4.
->
-> Change from v3:
-> * Opt in config for architectures that support CONFIG_HOTPLUG_CPU
-> * Merge function offline_secondary_cpus() and freeze_secondary_cpus()
->   with an additional flag.
->
-> Change from v2:
-> * Add another config instead of configed by CONFIG_HOTPLUG_CPU
->
-> Previous related discussion on list:
-> https://lore.kernel.org/lkml/20190727164450.GA11726@roeck-us.net/
-> https://lore.kernel.org/patchwork/patch/1117201/
-> ---
->  arch/Kconfig                          |  5 +++++
->  arch/arm/Kconfig                      |  1 +
->  arch/arm64/Kconfig                    |  1 +
->  arch/arm64/kernel/hibernate.c         |  2 +-
->  arch/csky/Kconfig                     |  1 +
->  arch/ia64/Kconfig                     |  1 +
->  arch/mips/Kconfig                     |  1 +
->  arch/parisc/Kconfig                   |  1 +
->  arch/powerpc/Kconfig                  |  1 +
->  arch/s390/Kconfig                     |  1 +
->  arch/sh/Kconfig                       |  1 +
->  arch/sparc/Kconfig                    |  1 +
->  arch/x86/Kconfig                      |  1 +
->  arch/xtensa/Kconfig                   |  1 +
->  drivers/power/reset/sc27xx-poweroff.c |  2 +-
->  include/linux/cpu.h                   |  9 ++++++---
->  kernel/cpu.c                          | 12 ++++++++----
->  kernel/reboot.c                       |  8 ++++++++
->  18 files changed, 41 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 48b5e103bdb0..210095ce2d92 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -255,6 +255,11 @@ config ARCH_HAS_UNCACHED_SEGMENT
->         select ARCH_HAS_DMA_PREP_COHERENT
->         bool
->
-> +# Select to do a full offline on secondary CPUs before reboot.
-> +config ARCH_OFFLINE_CPUS_ON_REBOOT
-> +       bool "Support for offline CPUs before reboot"
+Mapping algorithm requires domain:bus pair for each IO stack for each die.
+Current implementation provides comma separated list of domain:bus pairs
+for each stack where offset in the list corresponds to die index.
 
-Doesn't the text make it show up in menuconfig ? Is that really what
-you want ? If so, I think you might need a help text as well.
+Technically similar approach which was already implemented for the 
+cpumask attribute.
+>
+>> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
+>> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>> ---
+>>   arch/x86/events/intel/uncore.c       |   2 +-
+>>   arch/x86/events/intel/uncore.h       |   1 +
+>>   arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
+>>   3 files changed, 164 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>> index 2c53ad44b51f..c0d86bc8e786 100644
+>> --- a/arch/x86/events/intel/uncore.c
+>> +++ b/arch/x86/events/intel/uncore.c
+>> @@ -16,7 +16,7 @@ struct pci_driver *uncore_pci_driver;
+>>   DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
+>>   struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
+>>   struct pci_extra_dev *uncore_extra_pci_dev;
+>> -static int max_dies;
+>> +int max_dies;
+> Horrible global variable name :(
+>
+> "unicore_max_dies" instead please.
+Sorry, not sure I get the point right - the intent is to iterate over 
+available
+dies on the platform which physically are the same for core and uncore.
+>
+>>   /* mask of cpus that collect uncore events */
+>>   static cpumask_t uncore_cpu_mask;
+>> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+>> index f52dd3f112a7..94eacca6f485 100644
+>> --- a/arch/x86/events/intel/uncore.h
+>> +++ b/arch/x86/events/intel/uncore.h
+>> @@ -523,6 +523,7 @@ extern raw_spinlock_t pci2phy_map_lock;
+>>   extern struct list_head pci2phy_map_head;
+>>   extern struct pci_extra_dev *uncore_extra_pci_dev;
+>>   extern struct event_constraint uncore_constraint_empty;
+>> +extern int max_dies;
+>>   
+>>   /* uncore_snb.c */
+>>   int snb_uncore_pci_init(void);
+>> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+>> index b10a5ec79e48..2562fde2e5b8 100644
+>> --- a/arch/x86/events/intel/uncore_snbep.c
+>> +++ b/arch/x86/events/intel/uncore_snbep.c
+>> @@ -273,6 +273,30 @@
+>>   #define SKX_CPUNODEID			0xc0
+>>   #define SKX_GIDNIDMAP			0xd4
+>>   
+>> +/*
+>> + * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
+>> + * that BIOS programmed. MSR has package scope.
+>> + * |  Bit  |  Default  |  Description
+>> + * | [63]  |    00h    | VALID - When set, indicates the CPU bus
+>> + *                       numbers have been initialized. (RO)
+>> + * |[62:48]|    ---    | Reserved
+>> + * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(5). (RO)
+>> + * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(4). (RO)
+>> + * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(3). (RO)
+>> + * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(2). (RO)
+>> + * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(1). (RO)
+>> + * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
+>> + *                       CPUBUSNO(0). (RO)
+>> + */
+>> +#define SKX_MSR_CPU_BUS_NUMBER		0x300
+>> +#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
+>> +#define BUS_NUM_STRIDE			8
+>> +
+>>   /* SKX CHA */
+>>   #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
+>>   #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
+>> @@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
+>>   	.read_counter		= uncore_msr_read_counter,
+>>   };
+>>   
+>> +static int skx_iio_get_topology(struct intel_uncore_type *type);
+>> +static int skx_iio_set_mapping(struct intel_uncore_type *type);
+>> +
+>>   static struct intel_uncore_type skx_uncore_iio = {
+>>   	.name			= "iio",
+>>   	.num_counters		= 4,
+>> @@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
+>>   	.constraints		= skx_uncore_iio_constraints,
+>>   	.ops			= &skx_uncore_iio_ops,
+>>   	.format_group		= &skx_uncore_iio_format_group,
+>> +	.get_topology		= skx_iio_get_topology,
+>> +	.set_mapping		= skx_iio_set_mapping,
+>>   };
+>>   
+>>   enum perf_uncore_iio_freerunning_type_id {
+>> @@ -3780,6 +3809,139 @@ static int skx_count_chabox(void)
+>>   	return hweight32(val);
+>>   }
+>>   
+>> +static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+>> +{
+>> +	u64 msr_value;
+>> +
+>> +	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
+>> +			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
+>> +		return -1;
+>> +
+>> +	*topology = msr_value;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int skx_iio_get_topology(struct intel_uncore_type *type)
+>> +{
+>> +	int ret, cpu, die, current_die;
+>> +	struct pci_bus *bus = NULL;
+>> +
+>> +	/*
+>> +	 * Verified single-segment environments only; disabled for multiple
+>> +	 * segment topologies for now.
+>> +	 */
+>> +	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
+>> +		;
+>> +	if (bus) {
+>> +		pr_info("I/O stack mapping is not supported for multi-seg\n");
+>> +		return -1;
+> Do not make up random negative error values, use a #defined one please.
+will be addressed in the next version.
+> And shouldn't this be dev_err()?  What happens if a user gets this, who
+> do they complain to, their BIOS vendor?
+The mapping depends on BIOS support so yes, if BIOS doesn't provide required
+information then the mapping will not be available but all other 
+functionalities remain the same.
+>
+> thanks,
+>
+> greg k-h
 
-Guenter
 
-> +       depends on HOTPLUG_CPU
-> +
->  # Select if arch init_task must go in the __init_task_data section
->  config ARCH_TASK_STRUCT_ON_STACK
->         bool
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 69950fb5be64..d53cc8cb47e3 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -28,6 +28,7 @@ config ARM
->         select ARCH_KEEP_MEMBLOCK if HAVE_ARCH_PFN_VALID || KEXEC
->         select ARCH_MIGHT_HAVE_PC_PARPORT
->         select ARCH_NO_SG_CHAIN if !ARM_HAS_SG_CHAIN
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
->         select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
->         select ARCH_SUPPORTS_ATOMIC_RMW
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 9af26ac75d19..9f913bc5c1f6 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -61,6 +61,7 @@ config ARM64
->         select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPTION
->         select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
->         select ARCH_KEEP_MEMBLOCK
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_USE_CMPXCHG_LOCKREF
->         select ARCH_USE_QUEUED_RWLOCKS
->         select ARCH_USE_QUEUED_SPINLOCKS
-> diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-> index 590963c9c609..f7245dfa09d9 100644
-> --- a/arch/arm64/kernel/hibernate.c
-> +++ b/arch/arm64/kernel/hibernate.c
-> @@ -581,5 +581,5 @@ int hibernate_resume_nonboot_cpu_disable(void)
->                 return -ENODEV;
->         }
->
-> -       return freeze_secondary_cpus(sleep_cpu);
-> +       return freeze_secondary_cpus(sleep_cpu, false);
->  }
-> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-> index 4acef4088de7..0f03e5c3f2fc 100644
-> --- a/arch/csky/Kconfig
-> +++ b/arch/csky/Kconfig
-> @@ -5,6 +5,7 @@ config CSKY
->         select ARCH_HAS_DMA_PREP_COHERENT
->         select ARCH_HAS_SYNC_DMA_FOR_CPU
->         select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_USE_BUILTIN_BSWAP
->         select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
->         select COMMON_CLK
-> diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
-> index bab7cd878464..f12b4b11ee98 100644
-> --- a/arch/ia64/Kconfig
-> +++ b/arch/ia64/Kconfig
-> @@ -10,6 +10,7 @@ config IA64
->         bool
->         select ARCH_MIGHT_HAVE_PC_PARPORT
->         select ARCH_MIGHT_HAVE_PC_SERIO
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ACPI
->         select ACPI_NUMA if NUMA
->         select ARCH_SUPPORTS_ACPI
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index b6b5f83af169..9bb2556d21fc 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -8,6 +8,7 @@ config MIPS
->         select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->         select ARCH_HAS_UBSAN_SANITIZE_ALL
->         select ARCH_HAS_FORTIFY_SOURCE
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_SUPPORTS_UPROBES
->         select ARCH_USE_BUILTIN_BSWAP
->         select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
-> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-> index 71034b54d74e..41609f00b057 100644
-> --- a/arch/parisc/Kconfig
-> +++ b/arch/parisc/Kconfig
-> @@ -13,6 +13,7 @@ config PARISC
->         select ARCH_HAS_STRICT_KERNEL_RWX
->         select ARCH_HAS_UBSAN_SANITIZE_ALL
->         select ARCH_NO_SG_CHAIN
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_SUPPORTS_MEMORY_FAILURE
->         select RTC_CLASS
->         select RTC_DRV_GENERIC
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 658e0324d256..a6b76dd82a2d 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -142,6 +142,7 @@ config PPC
->         select ARCH_KEEP_MEMBLOCK
->         select ARCH_MIGHT_HAVE_PC_PARPORT
->         select ARCH_MIGHT_HAVE_PC_SERIO
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT      if HOTPLUG_CPU
->         select ARCH_OPTIONAL_KERNEL_RWX         if ARCH_HAS_STRICT_KERNEL_RWX
->         select ARCH_SUPPORTS_ATOMIC_RMW
->         select ARCH_USE_BUILTIN_BSWAP
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 287714d51b47..19eec37b1682 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -102,6 +102,7 @@ config S390
->         select ARCH_INLINE_WRITE_UNLOCK_IRQ
->         select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE
->         select ARCH_KEEP_MEMBLOCK
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_SAVE_PAGE_KEYS if HIBERNATION
->         select ARCH_STACKWALK
->         select ARCH_SUPPORTS_ATOMIC_RMW
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 9ece111b0254..4ed1e0ca83a2 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -18,6 +18,7 @@ config SUPERH
->         select ARCH_HAVE_CUSTOM_GPIO_H
->         select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
->         select ARCH_HAS_GCOV_PROFILE_ALL
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select PERF_USE_VMALLOC
->         select HAVE_DEBUG_KMEMLEAK
->         select HAVE_KERNEL_GZIP
-> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-> index e8c3ea01c12f..f31700309621 100644
-> --- a/arch/sparc/Kconfig
-> +++ b/arch/sparc/Kconfig
-> @@ -30,6 +30,7 @@ config SPARC
->         select RTC_SYSTOHC
->         select HAVE_ARCH_JUMP_LABEL if SPARC64
->         select GENERIC_IRQ_SHOW
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_WANT_IPC_PARSE_VERSION
->         select GENERIC_PCI_IOMAP
->         select HAVE_NMI_WATCHDOG if SPARC64
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index b595ecb21a0f..e8edab974f67 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -85,6 +85,7 @@ config X86
->         select ARCH_MIGHT_HAVE_ACPI_PDC         if ACPI
->         select ARCH_MIGHT_HAVE_PC_PARPORT
->         select ARCH_MIGHT_HAVE_PC_SERIO
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT      if HOTPLUG_CPU
->         select ARCH_STACKWALK
->         select ARCH_SUPPORTS_ACPI
->         select ARCH_SUPPORTS_ATOMIC_RMW
-> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
-> index 1c645172b4b5..c862dfa69ed9 100644
-> --- a/arch/xtensa/Kconfig
-> +++ b/arch/xtensa/Kconfig
-> @@ -7,6 +7,7 @@ config XTENSA
->         select ARCH_HAS_SYNC_DMA_FOR_CPU if MMU
->         select ARCH_HAS_SYNC_DMA_FOR_DEVICE if MMU
->         select ARCH_HAS_UNCACHED_SEGMENT if MMU
-> +       select ARCH_OFFLINE_CPUS_ON_REBOOT if HOTPLUG_CPU
->         select ARCH_USE_QUEUED_RWLOCKS
->         select ARCH_USE_QUEUED_SPINLOCKS
->         select ARCH_WANT_FRAME_POINTERS
-> diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
-> index 29fb08b8faa0..d6cdf837235c 100644
-> --- a/drivers/power/reset/sc27xx-poweroff.c
-> +++ b/drivers/power/reset/sc27xx-poweroff.c
-> @@ -30,7 +30,7 @@ static void sc27xx_poweroff_shutdown(void)
->  #ifdef CONFIG_PM_SLEEP_SMP
->         int cpu = smp_processor_id();
->
-> -       freeze_secondary_cpus(cpu);
-> +       freeze_secondary_cpus(cpu, false);
->  #endif
->  }
->
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index 1ca2baf817ed..9c62274a4db9 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -137,11 +137,14 @@ static inline void cpu_hotplug_done(void) { cpus_write_unlock(); }
->  static inline void get_online_cpus(void) { cpus_read_lock(); }
->  static inline void put_online_cpus(void) { cpus_read_unlock(); }
->
-> +#if defined(CONFIG_PM_SLEEP_SMP) || defined(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
-> +extern int freeze_secondary_cpus(int primary, bool reboot);
-> +#endif
-> +
->  #ifdef CONFIG_PM_SLEEP_SMP
-> -extern int freeze_secondary_cpus(int primary);
->  static inline int disable_nonboot_cpus(void)
->  {
-> -       return freeze_secondary_cpus(0);
-> +       return freeze_secondary_cpus(0, false);
->  }
->  extern void enable_nonboot_cpus(void);
->
-> @@ -152,7 +155,7 @@ static inline int suspend_disable_secondary_cpus(void)
->         if (IS_ENABLED(CONFIG_PM_SLEEP_SMP_NONZERO_CPU))
->                 cpu = -1;
->
-> -       return freeze_secondary_cpus(cpu);
-> +       return freeze_secondary_cpus(cpu, false);
->  }
->  static inline void suspend_enable_secondary_cpus(void)
->  {
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 9c706af713fb..52d04e4e1aab 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1209,10 +1209,10 @@ int cpu_up(unsigned int cpu)
->  }
->  EXPORT_SYMBOL_GPL(cpu_up);
->
-> -#ifdef CONFIG_PM_SLEEP_SMP
-> +#if defined(CONFIG_PM_SLEEP_SMP) || defined(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
->  static cpumask_var_t frozen_cpus;
->
-> -int freeze_secondary_cpus(int primary)
-> +int freeze_secondary_cpus(int primary, bool reboot)
->  {
->         int cpu, error = 0;
->
-> @@ -1237,11 +1237,13 @@ int freeze_secondary_cpus(int primary)
->                 if (cpu == primary)
->                         continue;
->
-> -               if (pm_wakeup_pending()) {
-> +#ifdef CONFIG_PM_SLEEP
-> +               if (!reboot && pm_wakeup_pending()) {
->                         pr_info("Wakeup pending. Abort CPU freeze\n");
->                         error = -EBUSY;
->                         break;
->                 }
-> +#endif
->
->                 trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
->                 error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
-> @@ -1250,7 +1252,9 @@ int freeze_secondary_cpus(int primary)
->                         cpumask_set_cpu(cpu, frozen_cpus);
->                 else {
->                         pr_err("Error taking CPU%d down: %d\n", cpu, error);
-> -                       break;
-> +                       /* When rebooting, offline as many CPUs as possible. */
-> +                       if (!reboot)
-> +                               break;
->                 }
->         }
->
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index c4d472b7f1b4..12f643b66e57 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -7,6 +7,7 @@
->
->  #define pr_fmt(fmt)    "reboot: " fmt
->
-> +#include <linux/cpu.h>
->  #include <linux/ctype.h>
->  #include <linux/export.h>
->  #include <linux/kexec.h>
-> @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
->         /* The boot cpu is always logical cpu 0 */
->         int cpu = reboot_cpu;
->
-> +#if !IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
->         cpu_hotplug_disable();
-> +#endif
->
->         /* Make certain the cpu I'm about to reboot on is online */
->         if (!cpu_online(cpu))
-> @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
->
->         /* Make certain I only run on the appropriate processor */
->         set_cpus_allowed_ptr(current, cpumask_of(cpu));
-> +
-> +#if IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
-> +       /* Offline other cpus if possible */
-> +       freeze_secondary_cpus(cpu, true);
-> +#endif
->  }
->
->  /**
-> --
-> 2.25.0.rc1.283.g88dfdc4193-goog
->
