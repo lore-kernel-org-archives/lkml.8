@@ -2,283 +2,169 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48293C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FC5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FBF24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:55:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FxFJ9mdi"
+	by mail.kernel.org (Postfix) with ESMTP id D5FB72467A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgANLzG (ORCPT
+        id S1729577AbgANL4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:55:06 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37446 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANLzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:55:05 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsije112647;
-        Tue, 14 Jan 2020 05:54:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579002884;
-        bh=fL4wb7qxhS863dp+nYgiM3uom70qjY56tgWdTfNmElg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FxFJ9mdiPIVGIbIDLrJz7hDEuRqZ3iR3bjrKVDg5mLN5u0ZIJxAw42IiJK6fEE1HM
-         FyL2/ptwaXIN2RCQ2+6ETu+UtqlxZkMxUOIvbihBeqyJKbz/ERdoil0NcvXVJ3OvY8
-         NfR0b96Ob22RWTw3k9UJcytOLS7jZTIpydKU5zdc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsiwI000606;
-        Tue, 14 Jan 2020 05:54:44 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
- Jan 2020 05:54:43 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 14 Jan 2020 05:54:44 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00EBsft7013663;
-        Tue, 14 Jan 2020 05:54:41 -0600
-Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: Add documentation for
- Toshiba tc358768
-To:     Rob Herring <robh@kernel.org>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <mark.rutland@arm.com>,
-        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
-        <tomi.valkeinen@ti.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>
-References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
- <20191217101506.18910-2-peter.ujfalusi@ti.com> <20191226222449.GA8816@bogus>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7a7067ef-3c1c-ea20-8322-6d90c2c4c680@ti.com>
-Date:   Tue, 14 Jan 2020 13:55:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jan 2020 06:56:18 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725956AbgANL4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:56:18 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5C6C283E77F513A02D3A;
+        Tue, 14 Jan 2020 19:56:16 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
+ 19:56:09 +0800
+To:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH V3] brd: check and limit max_part par
+Message-ID: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
+Date:   Tue, 14 Jan 2020 19:56:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191226222449.GA8816@bogus>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
-On 27/12/2019 0.24, Rob Herring wrote:
-> On Tue, Dec 17, 2019 at 12:15:05PM +0200, Peter Ujfalusi wrote:
->> TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
->>  1 file changed, 158 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
->> new file mode 100644
->> index 000000000000..8f96867caca0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
->> @@ -0,0 +1,158 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
->> +
->> +maintainers:
->> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
->> +
->> +description: |
->> +  The TC358768/TC358778 is bridge device which converts RGB to DSI.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - toshiba,tc358768
->> +      - toshiba,tc358778
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: base I2C address of the device
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +    description: GPIO connected to active low RESX pin
->> +
->> +  vddc-supply:
->> +    maxItems: 1
-> 
-> Drop this. Not an array. *-supply doesn't need further constraints.
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
 
-OK.
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 
-> 
->> +    description: Regulator for 1.2V internal core power.
->> +
->> +  vddmipi-supply:
->> +    maxItems: 1
->> +    description: Regulator for 1.2V for the MIPI.
->> +
->> +  vddio-supply:
->> +    maxItems: 1
->> +    description: Regulator for 1.8V - 3.3V IO power.
-> 
-> Blank line here.
+Here, we add brd_check_and_reset_par func to check and limit max_part par.
 
-Oops, I'll fix it.
+--
+V2->V3: (suggested by Ming Lei)
+ - clear .minors when running out of consecutive minor space in brd_alloc
+ - remove limit of rd_nr
 
-> 
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    const: refclk
->> +
->> +  ports:
->> +    type: object
->> +
->> +    properties:
->> +      "#address-cells":
->> +        const: 1
->> +
->> +      "#size-cells":
->> +        const: 0
->> +
->> +      port@0:
->> +        type: object
->> +        additionalProperties: false
->> +
->> +        description: |
->> +          Video port for RGB input
->> +
->> +        properties:
->> +          reg:
->> +            const: 0
->> +
->> +        patternProperties:
->> +          endpoint:
->> +            type: object
->> +            additionalProperties: false
->> +
->> +            properties:
->> +              data-lines:
->> +                enum: [ 16, 18, 24 ]
->> +
->> +              remote-endpoint: true
->> +
->> +        required:
->> +          - reg
->> +
->> +      port@1:
->> +        type: object
->> +        description: |
->> +          Video port for DSI output (panel or connector).
->> +
->> +        properties:
->> +          reg:
->> +            const: 1
->> +
->> +        patternProperties:
->> +          endpoint:
->> +            type: object
->> +            additionalProperties: false
->> +
->> +            properties:
->> +              remote-endpoint: true
->> +
->> +        required:
->> +          - reg
-> 
-> No additionalProperties on this one?
+V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei.
 
-Correct, I have missed the additionalProperties: false
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ drivers/block/brd.c | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
-I'll update the binding documents when I get comments for the driver.
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index df8103dd40ac..2295a0bafb5e 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -330,16 +330,16 @@ static const struct block_device_operations brd_fops = {
+ /*
+  * And now the modules code and kernel interface.
+  */
+-static int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
+-module_param(rd_nr, int, 0444);
++static unsigned int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
++module_param(rd_nr, uint, 0444);
+ MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
 
-Thank you,
-- Péter
+ unsigned long rd_size = CONFIG_BLK_DEV_RAM_SIZE;
+ module_param(rd_size, ulong, 0444);
+ MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
 
-> 
->> +
->> +    required:
->> +      - "#address-cells"
->> +      - "#size-cells"
->> +      - port@0
->> +      - port@1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - vddc-supply
->> +  - vddmipi-supply
->> +  - vddio-supply
->> +  - ports
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c1 {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      dsi_bridge: tc358768@0e {
->> +        compatible = "toshiba,tc358768";
->> +        reg = <0x0e>;
->> +
->> +        clocks = <&tc358768_refclk>;
->> +        clock-names = "refclk";
->> +
->> +        /* GPIO line is inverted before going to the bridge */
->> +        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
->> +
->> +        vddc-supply = <&v1_2d>;
->> +        vddmipi-supply = <&v1_2d>;
->> +        vddio-supply = <&v3_3d>;
->> +
->> +        dsi_bridge_ports: ports {
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          port@0 {
->> +            reg = <0>;
->> +            rgb_in: endpoint {
->> +              remote-endpoint = <&dpi_out>;
->> +              data-lines = <24>;
->> +            };
->> +          };
->> +
->> +          port@1 {
->> +            reg = <1>;
->> +            dsi_out: endpoint {
->> +              remote-endpoint = <&lcd_in>;
->> +            };
->> +          };
->> +        };
->> +      };
->> +    };
->> +    
->> -- 
->> Peter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
+-static int max_part = 1;
+-module_param(max_part, int, 0444);
++static unsigned int max_part = 1;
++module_param(max_part, uint, 0444);
+ MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ MODULE_LICENSE("GPL");
+@@ -393,7 +393,14 @@ static struct brd_device *brd_alloc(int i)
+ 	if (!disk)
+ 		goto out_free_queue;
+ 	disk->major		= RAMDISK_MAJOR;
+-	disk->first_minor	= i * max_part;
++	/*
++	 * Clear .minors when running out of consecutive minor space since
++	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt.
++	 */
++	if ((i * disk->minors) & ~MINORMASK)
++		disk->minors = 0;
++	else
++		disk->first_minor = i * disk->minors;
+ 	disk->fops		= &brd_fops;
+ 	disk->private_data	= brd;
+ 	disk->queue		= brd->brd_queue;
+@@ -468,6 +475,21 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
+
++static inline void brd_check_and_reset_par(void)
++{
++	if (unlikely(!rd_nr))
++		rd_nr = 1;
++
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	if (max_part > DISK_MAX_PARTS) {
++		pr_info("brd: max_part can't be larger than %d, reset max_part = %d.\n",
++			DISK_MAX_PARTS, DISK_MAX_PARTS);
++		max_part = DISK_MAX_PARTS;
++	}
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+@@ -491,8 +513,7 @@ static int __init brd_init(void)
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
+
+-	if (unlikely(!max_part))
+-		max_part = 1;
++	brd_check_and_reset_par();
+
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
+-- 
+2.19.1
+
+
