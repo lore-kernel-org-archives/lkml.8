@@ -2,377 +2,170 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5AEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF640C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9433124673
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579039087;
-	bh=QZmmQhtTZhFn5RWULXkcKZqRQZnjU475IG6k7KlYd9E=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=mkpryI6pD5WRebBgXGTWOd0dXFkHqMZQZNJl0ZPC1LMWY+CKD/L26yEotHO2CaxSb
-	 ASDod6xQq30/etSh1DhfukgirT5Q2TB559rU5XLaug92DTK0HEintxRtO2peXMhaPA
-	 04Qj1C2kVkpwLTcc1Vu+gQY/aDUntrXGeazCa9I8=
+	by mail.kernel.org (Postfix) with ESMTP id 96C6524679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n52rsCEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgANV6G (ORCPT
+        id S1728894AbgANV6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:58:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbgANV6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:58:04 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07CC724673;
-        Tue, 14 Jan 2020 21:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579039082;
-        bh=QZmmQhtTZhFn5RWULXkcKZqRQZnjU475IG6k7KlYd9E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=QUOl4D/cHI71iePKCA2+uptSAeQclr1dQ4YeiqeO1FysbZIMDEs8oy2USo5749bXj
-         jzYkPzZDEGRRZe5MZJ9je/ZGnvEs5n1anpzYlK/BwpUz58nxECoBN+HsfMpJykxZl0
-         275wCZ9vZxlw/IA4kezZUav+Xl/omnspJ7uyXs+k=
-Date:   Tue, 14 Jan 2020 22:57:59 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.4.12
-Message-ID: <20200114215759.GA2362638@kroah.com>
+        Tue, 14 Jan 2020 16:58:16 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39402 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728824AbgANV6K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:58:10 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t17so13475703eds.6;
+        Tue, 14 Jan 2020 13:58:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Mye4LmyzQE+LrbbIEq6tP/9MPNsewchUD91k+otVz+w=;
+        b=n52rsCEiRkzPFenvyx25SeM1GC8hE/eMjP0sjse+wfLL1IXV4keBvfRflPo8igr69f
+         m2z5keNNqfIGqxNsbFUM7CmlS/ifpZYvSUKWsyMKdtN08cpWEk20wH1+1EWO6mawknjh
+         04hnMapLyNp4Mmzxxm0ddfuLS1xMgl8Cn8ULxDjtqPpai9AiDAhjPD9yZJoEzc0bzC7+
+         mY2YfGbdky7W3S+neN+QY5bkt0Htu+ChM2KLROgntLWCuPWBpIvJwkCZu4GCnLU7BNel
+         othYC5z84OXy7XQThXKC98DIQnbCTTQuFS8/qeLA1GycbCPMxd/Peq6HFSRX6VjtLFxM
+         2Otw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Mye4LmyzQE+LrbbIEq6tP/9MPNsewchUD91k+otVz+w=;
+        b=ee8D1TZjqT1zvznyclo3GWLfxXHAtUyVMMCPL17Mxxt+a6DQ/JhxR/UiiL5UcYvCq8
+         SDX06x5Z/Lknr819ZukayE5Cn+bGg0l36WOBY7PSePxnR3OyR1nahcPBIOaAy3N3KipM
+         iYaMOZkovCvQGDkwcP1WIetIdj9W9Bmc7zcfb1GVFOEI4KVY3gXY8QQNbe0GVRTFjeqm
+         u6kOLpsd8ToFLimyE1hOsjGoD2w+uzhQFWJ3QeE7Ll5i/66tRxCmlsaMmbxOIRk8Aajh
+         vOAp5BitDdte0ob2/NZ2MrfepIpbNuFLxTvAd+MiUY7DP2BWkOLH9m4nJgO6AO6pUHX7
+         I1tA==
+X-Gm-Message-State: APjAAAX9okrZW2nUT5Rr62prv4aQTM+9J/rWcKXgsvF4A7A0mtlAiOX0
+        EzZYfjGTbQnyjjKhDhEIIj8=
+X-Google-Smtp-Source: APXvYqxB09DwRODZB2nlJ/k1cFJE9gsRdldb66R9ThkKbXcsmtV8y8kBgCC6iLHu2bkV3WZ35PRLCQ==
+X-Received: by 2002:a17:906:1356:: with SMTP id x22mr25313595ejb.55.1579039088179;
+        Tue, 14 Jan 2020 13:58:08 -0800 (PST)
+Received: from [10.67.50.41] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id ba29sm655434edb.47.2020.01.14.13.57.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 13:58:07 -0800 (PST)
+Subject: Re: [PATCH RFC net-next 06/19] net: dsa: tag_gswip: fix typo in tag
+ name
+To:     Andrew Lunn <andrew@lunn.ch>, Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20191230143028.27313-1-alobakin@dlink.ru>
+ <20191230143028.27313-7-alobakin@dlink.ru> <20191230172209.GE13569@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <0edda44f-7a75-e6c9-eec3-48259630bb3d@gmail.com>
+Date:   Tue, 14 Jan 2020 13:57:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
+In-Reply-To: <20191230172209.GE13569@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/30/19 9:22 AM, Andrew Lunn wrote:
+> On Mon, Dec 30, 2019 at 05:30:14PM +0300, Alexander Lobakin wrote:
+>> "gwsip" -> "gswip".
+>>
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Likewise, this is a bug fix that should be extracted out of this GRO
+series and a Fixes: tag be put since this has an user-visible impact
+through /sys/class/net/*/dsa/tagging.
 
-I'm announcing the release of the 5.4.12 kernel.
-
-All users of the 5.4 kernel series must upgrade.
-
-The updated 5.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-5.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                              |    2=20
- arch/arm/Kconfig                                      |    1=20
- arch/arm/kernel/process.c                             |    6 -
- arch/arm64/Kconfig                                    |    1=20
- arch/arm64/include/asm/unistd.h                       |    1=20
- arch/arm64/include/uapi/asm/unistd.h                  |    1=20
- arch/arm64/kernel/process.c                           |   10 -
- arch/parisc/Kconfig                                   |    1=20
- arch/parisc/kernel/process.c                          |    8 -
- arch/riscv/Kconfig                                    |    1=20
- arch/riscv/kernel/process.c                           |    6 -
- arch/um/Kconfig                                       |    1=20
- arch/um/include/asm/ptrace-generic.h                  |    2=20
- arch/um/kernel/process.c                              |    6 -
- arch/x86/um/tls_32.c                                  |    6 -
- arch/x86/um/tls_64.c                                  |    7 -
- arch/xtensa/Kconfig                                   |    1=20
- arch/xtensa/kernel/process.c                          |    8 -
- drivers/char/tpm/tpm-dev-common.c                     |    2=20
- drivers/char/tpm/tpm-dev.h                            |    2=20
- drivers/char/tpm/tpm_tis_core.c                       |   34 ++----
- drivers/gpio/gpiolib-acpi.c                           |   51 ++++++++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c               |    4=20
- drivers/gpu/drm/drm_dp_mst_topology.c                 |    2=20
- drivers/gpu/drm/drm_fb_helper.c                       |    7 +
- drivers/gpu/drm/i915/gt/intel_lrc.c                   |   10 +
- drivers/gpu/drm/i915/i915_reg.h                       |    8 +
- drivers/gpu/drm/i915/intel_pm.c                       |   11 ++
- drivers/gpu/drm/sun4i/sun4i_tcon.c                    |   15 ++
- drivers/gpu/drm/sun4i/sun4i_tcon.h                    |    1=20
- drivers/hid/hid-core.c                                |    6 +
- drivers/hid/hid-input.c                               |   16 ++
- drivers/hid/hidraw.c                                  |    4=20
- drivers/hid/uhid.c                                    |    2=20
- drivers/hid/usbhid/hiddev.c                           |   97 +++++++------=
------
- drivers/i2c/i2c-core-base.c                           |   13 +-
- drivers/infiniband/hw/hfi1/tid_rdma.c                 |    9 +
- drivers/input/evdev.c                                 |   14 +-
- drivers/input/input.c                                 |   26 ++--
- drivers/input/misc/uinput.c                           |   14 +-
- drivers/iommu/intel-iommu.c                           |    9 +
- drivers/net/can/m_can/tcan4x5x.c                      |    4=20
- drivers/net/can/mscan/mscan.c                         |   21 +--
- drivers/net/can/usb/gs_usb.c                          |    4=20
- drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c     |    2=20
- drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c      |    2=20
- drivers/net/wireless/ath/ath10k/usb.c                 |    1=20
- drivers/net/wireless/marvell/mwifiex/pcie.c           |    4=20
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c      |   13 ++
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c |    1=20
- drivers/phy/motorola/phy-cpcap-usb.c                  |   35 +++---
- drivers/powercap/intel_rapl_common.c                  |    3=20
- drivers/rpmsg/rpmsg_char.c                            |    6 -
- drivers/rtc/rtc-sun6i.c                               |   16 ++
- drivers/scsi/bfa/bfad_attr.c                          |    4=20
- drivers/staging/comedi/drivers/adv_pci1710.c          |    4=20
- drivers/staging/rtl8188eu/os_dep/usb_intf.c           |    1=20
- drivers/staging/vt6656/baseband.c                     |    4=20
- drivers/staging/vt6656/card.c                         |    2=20
- drivers/staging/vt6656/device.h                       |    1=20
- drivers/staging/vt6656/main_usb.c                     |    3=20
- drivers/staging/vt6656/usbpipe.c                      |   25 ++++
- drivers/staging/vt6656/usbpipe.h                      |    5=20
- drivers/staging/vt6656/wcmd.c                         |    1=20
- drivers/tty/serdev/core.c                             |   10 +
- drivers/tty/serial/serial_core.c                      |    1=20
- drivers/usb/cdns3/gadget.c                            |   14 --
- drivers/usb/chipidea/host.c                           |    4=20
- drivers/usb/core/config.c                             |   12 +-
- drivers/usb/host/ohci-da8xx.c                         |    8 +
- drivers/usb/musb/musb_core.c                          |   11 ++
- drivers/usb/musb/musbhsdma.c                          |    2=20
- drivers/usb/serial/option.c                           |    8 +
- drivers/usb/serial/usb-wwan.h                         |    1=20
- drivers/usb/serial/usb_wwan.c                         |    4=20
- drivers/usb/typec/tcpm/tcpci.c                        |   20 ++-
- fs/char_dev.c                                         |    2=20
- fs/pstore/ram.c                                       |    4=20
- fs/pstore/ram_core.c                                  |    2=20
- include/linux/can/dev.h                               |   34 ++++++
- include/trace/events/preemptirq.h                     |    8 -
- include/uapi/linux/input.h                            |    1=20
- kernel/fork.c                                         |   10 +
- kernel/trace/trace_sched_wakeup.c                     |    4=20
- kernel/trace/trace_stack.c                            |    5=20
- net/ipv4/netfilter/arp_tables.c                       |   27 ++---
- net/netfilter/ipset/ip_set_core.c                     |    3=20
- net/netfilter/nf_conntrack_proto_dccp.c               |    3=20
- net/netfilter/nf_conntrack_proto_sctp.c               |    3=20
- sound/pci/hda/patch_realtek.c                         |    5=20
- sound/usb/quirks.c                                    |    1=20
- 91 files changed, 552 insertions(+), 243 deletions(-)
-
-Akeem G Abodunrin (1):
-      drm/i915/gen9: Clear residual context state on context switch
-
-Alan Stern (2):
-      HID: Fix slab-out-of-bounds read in hid_field_extract
-      USB: Fix: Don't skip endpoint descriptors with maxpacket=3D0
-
-Alex Deucher (1):
-      Revert "drm/amdgpu: Set no-retry as default."
-
-Amanieu d'Antras (8):
-      arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
-      arm64: Implement copy_thread_tls
-      arm: Implement copy_thread_tls
-      parisc: Implement copy_thread_tls
-      riscv: Implement copy_thread_tls
-      xtensa: Implement copy_thread_tls
-      clone3: ensure copy_thread_tls is implemented
-      um: Implement copy_thread_tls
-
-Arnd Bergmann (1):
-      Input: input_event - fix struct padding on sparc64
-
-Chen-Yu Tsai (2):
-      rtc: sun6i: Add support for RTC clocks on R40
-      drm/sun4i: tcon: Set RGB DCLK min. divider based on hardware model
-
-Chris Wilson (1):
-      drm/i915/gt: Mark up virtual engine uabi_instance
-
-Colin Ian King (1):
-      usb: ohci-da8xx: ensure error return on variable error is set
-
-Daniele Palmas (1):
-      USB: serial: option: add ZLP support for 0x1bc7/0x9010
-
-Dmitry Torokhov (3):
-      HID: hid-input: clear unmapped usages
-      Input: add safety guards to input_set_keycode()
-      HID: hiddev: fix mess in hiddev_open()
-
-Douglas Gilbert (1):
-      USB-PD tcpm: bad warning+size, PPS adapters
-
-Florian Faber (1):
-      can: mscan: mscan_rx_poll(): fix rx path lockup when returning from p=
-olling to irq mode
-
-Florian Westphal (3):
-      netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
-      netfilter: conntrack: dccp, sctp: handle null timeout argument
-      netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
-
-Ganapathi Bhat (1):
-      mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
-
-Geert Uytterhoeven (1):
-      drm/fb-helper: Round up bits_per_pixel if possible
-
-Greg Kroah-Hartman (1):
-      Linux 5.4.12
-
-Guenter Roeck (1):
-      usb: chipidea: host: Disable port power only if previously enabled
-
-Hans de Goede (2):
-      gpiolib: acpi: Turn dmi_system_id table into a generic quirk table
-      gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
-
-Harry Pan (1):
-      powercap: intel_rapl: add NULL pointer check to rapl_mmio_cpu_online()
-
-Ian Abbott (1):
-      staging: comedi: adv_pci1710: fix AI channels 16-31 for PCI-1713
-
-Jarkko Sakkinen (1):
-      tpm: Revert "tpm_tis: reserve chip for duration of tpm_tis_core_init"
-
-Joel Fernandes (Google) (1):
-      tracing: Change offset type to s32 in preempt/irq tracepoints
-
-Johan Hovold (2):
-      can: kvaser_usb: fix interface sanity check
-      can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
-
-Kaike Wan (1):
-      IB/hfi1: Adjust flow PSN with the correct resync_psn
-
-Kailang Yang (3):
-      ALSA: hda/realtek - Add new codec supported for ALCS1200A
-      ALSA: hda/realtek - Set EAPD control to default for ALC222
-      ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 =
-7th gen
-
-Kaitao Cheng (1):
-      kernel/trace: Fix do not unregister tracepoints when register sched_m=
-igrate_task fail
-
-Kees Cook (1):
-      pstore/ram: Regularize prz label allocation lifetime
-
-Malcolm Priestley (5):
-      staging: vt6656: set usb_set_intfdata on driver fail.
-      staging: vt6656: Fix non zero logical return of, usb_control_msg
-      staging: vt6656: correct return of vnt_init_registers.
-      staging: vt6656: limit reg output to block size
-      staging: vt6656: remove bool from vnt_radio_power_on ret
-
-Marcel Holtmann (2):
-      HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
-      HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
-
-Matt Roper (2):
-      drm/i915: Add Wa_1408615072 and Wa_1407596294 to icl,ehl
-      drm/i915: Add Wa_1407352427:icl,ehl
-
-Michael Straube (1):
-      staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
-
-Navid Emamdoost (5):
-      mwifiex: pcie: Fix memory leak in mwifiex_pcie_alloc_cmdrsp_buf
-      rpmsg: char: release allocated memory
-      scsi: bfa: release allocated memory in case of error
-      rtl8xxxu: prevent leaking urb
-      ath10k: fix memory leak
-
-Oliver Hartkopp (1):
-      can: can_dropped_invalid_skb(): ensure an initialized headroom in out=
-going CAN sk_buffs
-
-Patrick Steinhardt (1):
-      iommu/vt-d: Fix adding non-PCI devices to Intel IOMMU
-
-Paul Cercueil (2):
-      usb: musb: Disable pullup at init
-      usb: musb: dma: Correct parameter passed to IRQ handler
-
-Peter Chen (1):
-      usb: cdns3: should not use the same dev_id for shared interrupt handl=
-er
-
-Punit Agrawal (1):
-      serdev: Don't claim unsupported ACPI serial devices
-
-Russell King (1):
-      i2c: fix bus recovery stop mode timing
-
-Sean Nyekjaer (1):
-      can: tcan4x5x: tcan4x5x_can_probe(): get the device out of standby be=
-fore register access
-
-Stefan Berger (2):
-      tpm: Revert "tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for i=
-nterrupts"
-      tpm: Revert "tpm_tis_core: Turn on the TPM before probing IRQ's"
-
-Steven Rostedt (VMware) (1):
-      tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defin=
-ed
-
-Sudip Mukherjee (2):
-      tty: link tty and port before configuring it as console
-      tty: always relink the port
-
-Tadeusz Struk (1):
-      tpm: Handle negative priv->response_len in tpm_common_read()
-
-Takashi Iwai (1):
-      ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
-
-Tony Lindgren (3):
-      usb: musb: fix idling for suspend after disconnect interrupt
-      phy: cpcap-usb: Fix error path when no host driver is loaded
-      phy: cpcap-usb: Fix flakey host idling and enumerating of devices
-
-Wayne Lin (1):
-      drm/dp_mst: correct the shifting in DP_REMOTE_I2C_READ
-
-Will Deacon (1):
-      chardev: Avoid potential use-after-free in 'chrdev_open()'
-
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl4eOWcACgkQONu9yGCS
-aT6dDQ/8CAoBItrTPIiTL9ti9LxkaFSETCf6eQ8TNqOhen+qU323OTwMXTLmGKQI
-vbUFIKjSkJyvoIThopUjZ4GQrgg2WFdtpYIRjIVKotFFnxkikNuw7bJeiuttIPqC
-OFnAC6nEqy8EPwXZlRiv0Xp9Bu4rjAhn0tnJ3ppB/XdYm85D9VpAvJ3HnkK/tDdR
-bXwc38ckVQW2J9SjEv0KflM0dsZpsVzY4a5CWdDthl8J6cYu2gnMAyuH1vSB1EPr
-exfLGA9XSyjty/SGpvFg3/BwukFn/Oo0I4+du7K38AOyFqFMea74WSk1r5S+uZe9
-eF2USXHfl8utTeIs4msMtX5/lMnzbXFnYYWNDZy3GQK4sGlb3xHRptFlpJyEdykS
-PLAA9rz4Uu8HyIDUjflBwoGSxsZk0rMjS9sEdLHNr7o7cU5hdYVuqeApfsOtlho9
-qRt04N23p/6DsTKhTT/o8tT2EiTUml/IYY4g79eXiUyHVTFXqWnuqTdYCaxoGuXB
-trulgDyN9Y2UqiMlNTyVhkitjmJGNq8rt2Sw5hW0g0zforv8E66hSlKCp5nNewUA
-7vnBDXmAhnWxrdVdRMCvhr8aG9mclZiIantwyiRZRD+jX9mlBXfVvpurYA7iy7L9
-hwFpKBptz6OU89wKZMhKNTlEBee6CWMiCg0n3g6/N7Itc9/a4vQ=
-=x/6t
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+Thanks
+-- 
+Florian
