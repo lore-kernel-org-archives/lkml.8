@@ -2,131 +2,179 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7791C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2968FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62F72075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26D92075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9fADKpD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgANQqT (ORCPT
+        id S1728909AbgANQqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:46:19 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:6828 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgANQqS (ORCPT
+        Tue, 14 Jan 2020 11:46:36 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:40569 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbgANQqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:46:18 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: y+ft/dlKJOCa17GdZ1QBuWly0sE48PA5wRGmIFD6wVJusyZ8AcWlL3fyfIG6YhYN/nJeKrCins
- Ahg78OxmOcrIdFk+0U9KHOIPhaCpJIGTqEJN+6dDV1FI2aZUdDw4I2mawl4zZLfbzMEz7tEu0W
- nI8gib6X0JaYJ9MbdAt+omA11WCk86f2l8mm/I6lm6Re1SvWChmL++MKtecYBOoljRvpyAdyBe
- b+bmzBTVMlh4iYDnZ05itmtjCwKgkPmFmJtg207FN6DkG5ngdmMUAdwRkg8pTjjSoGHxqZt50w
- FkM=
-X-IronPort-AV: E=Sophos;i="5.70,433,1574146800"; 
-   d="scan'208";a="64704366"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jan 2020 09:46:16 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 Jan 2020 09:46:16 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Tue, 14 Jan 2020 09:46:16 -0700
-Date:   Tue, 14 Jan 2020 17:46:15 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
-        <jakub.kicinski@netronome.com>, <vivien.didelot@gmail.com>,
-        <olteanv@gmail.com>, <anirudh.venkataramanan@intel.com>,
-        <dsahern@gmail.com>, <jiri@resnulli.us>, <ivecera@redhat.com>,
-        <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next Patch v2 4/4] net: bridge: mrp: switchdev: Add HW
- offload
-Message-ID: <20200114164615.yvidcidrj24x4gcy@soft-dev3.microsemi.net>
-References: <20200113124620.18657-1-horatiu.vultur@microchip.com>
- <20200113124620.18657-5-horatiu.vultur@microchip.com>
- <20200113140053.GE11788@lunn.ch>
- <20200113225751.jkkio4rztyuff4xj@soft-dev3.microsemi.net>
- <20200113233011.GF11788@lunn.ch>
- <20200114080856.wa7ljxyzaf34u4xj@soft-dev3.microsemi.net>
- <20200114132047.GG11788@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200114132047.GG11788@lunn.ch>
-User-Agent: NeoMutt/20180716
+        Tue, 14 Jan 2020 11:46:35 -0500
+Received: by mail-pl1-f201.google.com with SMTP id o12so5378280pll.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:46:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Y5paa4AX/DtiLn+XUHqwYVRo7c1ie192vd9rP9qKaQo=;
+        b=N9fADKpD0r9H67g2GPg3lDqgyoOfXJ8fqkefx5tT9gD6k1n1ANE1BcES4cW6eSVSL9
+         m+mHNzJRVgEZS2iHDBajZL7jTWuBsnomJVrGNzqSjNAcbpbfc28gOJiWeOuf8v+RpdyC
+         YEbKbD3B6s6a6emwyWBU+a2sAg273K8jbVDUaju/k9cIhXGUMurcMo4RmOW0pskS8Tvv
+         mzKHKBn/LykPk70TiHrKaxE7pkc60BF+jRKWehBV9fd7ewxx1sv3NGEgGumWizqgmBeQ
+         v4rYFbMsfGhSJUubHXCdH8TgiilWkeiptjsmMBhOxcQoq0uEwWs7Nwhyt2Fui2hoAiHG
+         eBKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Y5paa4AX/DtiLn+XUHqwYVRo7c1ie192vd9rP9qKaQo=;
+        b=asXhUC1tp6vGm0p9KKnMhgrVc2oj0XxQXEqVImzTgYba1ObYzkBJP7Flhv08W8zBFP
+         Xfpe9HtQ6OIOXIV/zYLn3tvaPprS6zV624snmO3+lNo8MY2dBqKo297Vd5dchUwVD6XL
+         3IMr54/tbL1fcYb5EoNq+nL5JT0M2AUJIHAKUhVecch8cPHwimNRpJmrapBB74r2z9bi
+         6eLrFoZ2W0XqWCc6qg8z+Em3rDpGsSzXChGq07o/Jtt+b0xGaZEL0PyZvjECa4+pz79+
+         +rkwxr5zDBX8oajwDdjxxc3Y5/Wa6qP2ak70cHyIr4kviXnhJesT/r2gBIwTWq/CjouG
+         agCQ==
+X-Gm-Message-State: APjAAAWp4ByHgczJ44QLLCCJynjDebY0pWwpHl2BRLDNAHWKso8zPa6u
+        /9pObuojfU4CZ/TeUXj0ail2Da04BDB8
+X-Google-Smtp-Source: APXvYqzONT7nLLWPpiU9vD9Wp+N2yEKNO5DIOd5gU9RA8R5M3Deo/90nrxFN27n0MUo+5JWiD7QC2wZsDKqu
+X-Received: by 2002:a63:303:: with SMTP id 3mr27857755pgd.372.1579020394568;
+ Tue, 14 Jan 2020 08:46:34 -0800 (PST)
+Date:   Tue, 14 Jan 2020 08:46:04 -0800
+Message-Id: <20200114164614.47029-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+Subject: [PATCH v4 bpf-next 0/9] add bpf batch ops to process more than 1 elem
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 01/14/2020 14:20, Andrew Lunn wrote:
-> 
-> On Tue, Jan 14, 2020 at 09:08:56AM +0100, Horatiu Vultur wrote:
-> > The 01/14/2020 00:30, Andrew Lunn wrote:
-> > >
-> > > Hi Horatiu
-> > >
-> > > It has been said a few times what the basic state machine should be in
-> > > user space. A pure software solution can use raw sockets to send and
-> > > receive MRP_Test test frames. When considering hardware acceleration,
-> > > the switchdev API you have proposed here seems quite simple. It should
-> > > not be too hard to map it to a set of netlink messages from userspace.
-> >
-> > Yes and we will try to go with this approach, to have a user space
-> > application that contains the state machines and then in the kernel to
-> > extend the netlink messages to map to the switchdev API.
-> > So we will create a new RFC once we will have the user space and the
-> > definition of the netlink messages.
-> 
-> Cool.
-> 
-> Before you get too far, we might want to discuss exactly how you pass
-> these netlink messages. Do we want to make this part of the new
-> ethtool Netlink implementation? Part of devlink? Extend the current
-> bridge netlink interface used by userspae RSTP daemons? A new generic
-> netlink socket?
+This patch series introduce batch ops that can be added to bpf maps to
+lookup/lookup_and_delete/update/delete more than 1 element at the time,
+this is specially useful when syscall overhead is a problem and in case
+of hmap it will provide a reliable way of traversing them.
 
-We are not yet 100% sure. We were thinking to choose between extending
-the bridge netlink interface or adding a new netlink socket.  I was
-leaning to create a new netlink socket, because I think that would be
-clearer and easier to understand. But I don't have much experience with
-this, so in both cases I need to sit down and actually try to implement
-it to see exactly.
+The implementation inclues a generic approach that could potentially be
+used by any bpf map and adds it to arraymap, it also includes the specific
+implementation of hashmaps which are traversed using buckets instead
+of keys.
 
-> 
-> Extending the bridge netlink interface might seem the most logical.
-> The argument against it, is that the kernel bridge code probably does
-> not need to know anything about this offloading. But it does allow you
-> to make use of the switchdev API, so we have a uniform API between the
-> network stack and drivers implementing offloading.
-> 
->       Andrew
+The bpf syscall subcommands introduced are:
+
+  BPF_MAP_LOOKUP_BATCH
+  BPF_MAP_LOOKUP_AND_DELETE_BATCH
+  BPF_MAP_UPDATE_BATCH
+  BPF_MAP_DELETE_BATCH
+
+The UAPI attribute is:
+
+  struct { /* struct used by BPF_MAP_*_BATCH commands */
+         __aligned_u64   in_batch;       /* start batch,
+                                          * NULL to start from beginning
+                                          */
+         __aligned_u64   out_batch;      /* output: next start batch */
+         __aligned_u64   keys;
+         __aligned_u64   values;
+         __u32           count;          /* input/output:
+                                          * input: # of key/value
+                                          * elements
+                                          * output: # of filled elements
+                                          */
+         __u32           map_fd;
+         __u64           elem_flags;
+         __u64           flags;
+  } batch;
+
+
+in_batch and out_batch are only used for lookup and lookup_and_delete since
+those are the only two operations that attempt to traverse the map.
+
+update/delete batch ops should provide the keys/values that user wants
+to modify.
+
+Here are the previous discussions on the batch processing:
+ - https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+ - https://lore.kernel.org/bpf/20190829064502.2750303-1-yhs@fb.com/
+ - https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+
+Changelog sinve v3:
+ - Do not use copy_to_user inside atomic region (Yonghong Song)
+ - Use _opts approach on libbpf APIs (Andrii Nakryiko)
+ - Drop generic_map_lookup_and_delete_batch support
+ - Free malloc-ed memory in tests (Yonghong Song)
+ - Reverse christmas tree (Yonghong Song)
+ - Add acked labels
+
+Changelog sinve v2:
+ - Add generic batch support for lpm_trie and test it (Yonghong Song)
+ - Use define MAP_LOOKUP_RETRIES for retries (John Fastabend)
+ - Return errors directly and remove labels (Yonghong Song)
+ - Insert new API functions into libbpf alphabetically (Yonghong Song)
+ - Change hlist_nulls_for_each_entry_rcu to
+   hlist_nulls_for_each_entry_safe in htab batch ops (Yonghong Song)
+
+Changelog since v1:
+ - Fix SOB ordering and remove Co-authored-by tag (Alexei Starovoitov)
+
+Changelog since RFC:
+ - Change batch to in_batch and out_batch to support more flexible opaque
+   values to iterate the bpf maps.
+ - Remove update/delete specific batch ops for htab and use the generic
+   implementations instead.
+
+Brian Vazquez (5):
+  bpf: add bpf_map_{value_size,update_value,map_copy_value} functions
+  bpf: add generic support for lookup batch op
+  bpf: add generic support for update and delete batch ops
+  bpf: add lookup and update batch ops to arraymap
+  selftests/bpf: add batch ops testing to array bpf map
+
+Yonghong Song (4):
+  bpf: add batch ops to all htab bpf map
+  tools/bpf: sync uapi header bpf.h
+  libbpf: add libbpf support to batch ops
+  selftests/bpf: add batch ops testing for htab and htab_percpu map
+
+ include/linux/bpf.h                           |  18 +
+ include/uapi/linux/bpf.h                      |  21 +
+ kernel/bpf/arraymap.c                         |   2 +
+ kernel/bpf/hashtab.c                          | 258 +++++++++
+ kernel/bpf/syscall.c                          | 548 ++++++++++++++----
+ tools/include/uapi/linux/bpf.h                |  21 +
+ tools/lib/bpf/bpf.c                           |  60 ++
+ tools/lib/bpf/bpf.h                           |  22 +
+ tools/lib/bpf/libbpf.map                      |   4 +
+ .../bpf/map_tests/array_map_batch_ops.c       | 131 +++++
+ .../bpf/map_tests/htab_map_batch_ops.c        | 285 +++++++++
+ 11 files changed, 1242 insertions(+), 128 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c
+ create mode 100644 tools/testing/selftests/bpf/map_tests/htab_map_batch_ops.c
 
 -- 
-/Horatiu
+2.25.0.rc1.283.g88dfdc4193-goog
+
