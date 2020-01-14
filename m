@@ -2,152 +2,235 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A467C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E639EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E982072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:01:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="VeacHFBr"
+	by mail.kernel.org (Postfix) with ESMTP id AF3732187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578982211;
+	bh=A1+Xq60D1AEWHSM5xvY2OEdGgPGMug5LZyF0ZdYiV6w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=mThUgDFkuRKicE2QaMjvrgzK8WYd3/tPqFWmq6xKICv1G6Q91SCxOp3Bmm4Sp55BL
+	 7qhvmUkYya7oCOcwfP0e+Qwf1Ueth+0xwmf2dp+lJtf2DaoVhyZoN3SR7LqIWq2tu1
+	 8cLNyK1tqXtzNSo2wOGLCefcZESv59Q96J5Tu+sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgANGBL (ORCPT
+        id S1728558AbgANGKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:01:11 -0500
-Received: from ozlabs.org ([203.11.71.1]:57653 "EHLO ozlabs.org"
+        Tue, 14 Jan 2020 01:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgANGBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:01:11 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726297AbgANGKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:10:10 -0500
+Received: from localhost (unknown [49.207.51.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47xfw44QqWz9s29;
-        Tue, 14 Jan 2020 17:01:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1578981669;
-        bh=ALUqYMWpSbT7KFgjzz53QbyoSg0qLp1ykpVazbFizZs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=VeacHFBr9aPVdYAUvzFeq7NcHKql1k4vcG9bAmkdkP0pLZT7B8j9hNg3y/L2RIj9z
-         BDaQF4D7aqE14D9Thn18l0FaoUHV0MaHWCuzMCISlSlohqUG5aJmgPaqSUHFG5pZDH
-         FtazzpjNGDaGyyQQo9DBN6op1Tr8bmfsN1XPWXeUYzy93mOdMhtt1HwSzVUM1om7au
-         CC3fquYcjZWeqzToqCOweP0/3oRjXtSeSnhe0mK50gFHFLqurE3ZpFfKwqaTm2/OG0
-         2rOZERZDdudk46PoAypvGV0rRE7BUMwHg1S7rOqLB/nkd1kf9uT10bWmc1AQBFFHvh
-         UMMy2sUoIk97A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/ptdump: don't entirely rebuild kernel when selecting CONFIG_PPC_DEBUG_WX
-In-Reply-To: <176774c19b0398634e004835b9515c93030d326f.1578645835.git.christophe.leroy@c-s.fr>
-References: <176774c19b0398634e004835b9515c93030d326f.1578645835.git.christophe.leroy@c-s.fr>
-Date:   Tue, 14 Jan 2020 16:01:10 +1000
-Message-ID: <87muaqa861.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE4A207FF;
+        Tue, 14 Jan 2020 06:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578982208;
+        bh=A1+Xq60D1AEWHSM5xvY2OEdGgPGMug5LZyF0ZdYiV6w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=usgoa2+zDuSilIJYa7lQJKTzlh9XOEPD0S+UYNLGPs6lcZaOinvdJIq7zUF9qpRDt
+         FaGlNJcTR8ywlONqcGr04DKlzXBcV2WIhBTFiUDWhvGMKGwSB9fO2yiIIC6ugCgWRr
+         Uaw/94rVMfdMdDcOb7j+WcAEM+GT7pi6PJ92Jw7A=
+Date:   Tue, 14 Jan 2020 11:39:59 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v5 09/17] soundwire: intel: remove platform devices and
+ use 'Master Devices' instead
+Message-ID: <20200114060959.GA2818@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d77dcdfd-2b33-d533-e0b2-564c12223eec@linux.intel.com>
+ <20191217210314.20410-10-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Selecting CONFIG_PPC_DEBUG_WX only impacts ptdump and pgtable_32/64
-> init calls. Declaring related functions in asm/pgtable.h implies
-> rebuilding almost everything.
->
-> Move ptdump_check_wx() declaration in a new dedicated header file.
+On 13-01-20, 09:22, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 1/12/20 11:18 PM, Vinod Koul wrote:
+> > On 10-01-20, 10:08, Pierre-Louis Bossart wrote:
+> > > 
+> > > > > > The "big" difference is that probe is called by core (asoc) and not by
+> > > > > > driver onto themselves.. IMO that needs to go away.
+> > > > > 
+> > > > > What I did is not different from what existed already with platform devices.
+> > > > > They were manually created, weren't they?
+> > > > 
+> > > > Manual creation of device based on a requirement is different, did I ask
+> > > > you why you are creating device :)
+> > > > 
+> > > > I am simple asking you not to call probe in the driver. If you need
+> > > > that, move it to core! We do not want these kind of things in the
+> > > > drivers...
+> > > 
+> > > What core are you talking about?
+> > 
+> > soundwire core ofcourse! IMO All that which goes into soundwire-bus-objs is
+> > considered as soundwire core part and rest are drivers intel, qc, so on!
+> This master code was added to the bus:   v
+>                                          v
+> soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o
+> stream.o
+> obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
+> 
+> and the API is also part of the sdw.h include file. That seems to meet
+> exactly what you describe above, no?
+> 
+> git grep sdw_master_device_add (reformatted output)
+> 
+> drivers/soundwire/intel_init.c:
+> md = sdw_master_device_add(&intel_sdw_driver,
+> 
+> drivers/soundwire/master.c:
+> *sdw_master_device_add(struct sdw_master_driver *driver,
+> 
+> drivers/soundwire/master.c:
+> EXPORT_SYMBOL_GPL(sdw_master_device_add);
+> 
+> include/linux/soundwire/sdw.h:
+> *sdw_master_device_add(struct sdw_master_driver *driver,
+> 
+> So, what exactly is the issue?
+> 
+> We are not 'calling the probe in the [Intel] driver' as you state it, we use
+> a SoundWire core API which in turn will create a device. The device core
+> takes care of calling the probe, see the master.c code which is NOT
+> Intel-specific.
+> 
+> > > 
+> > > The SOF intel driver needs to create a device, which will then be bound with
+> > > a SoundWire master driver.
+> > > 
+> > > What I am doing is no different from what your team did with
+> > > platform_register_device, I am really lost on what you are asking.
+> > 
+> > Again repeating myself, you call an API to do that is absolutely fine,
+> > but we don't do that in drivers or open code these things
+> That is still quite unclear, what 'open-coding' are you referring to?
+> 
+> I am starting to wonder if you missed the addition of the master
+> functionality in the previous patch:
+> 
+> [PATCH v5 08/17] soundwire: add initial definitions for sdw_master_device
+> 
+> What this patch 9 does is call the core-defined API and implement the
+> intel-specific master driver.
 
-Can you put it in arch/powerpc/mm/mmu_decl.h ? That already exists for
-things that are private to arch/powerpc/mm, which this function is
-AFAICT.
+Yes and no, it does call things introduced in patch 8, I questioned calling probe!
+See below!
 
-cheers
+> > > > > > > FWIW, the implementation here follows what was suggested for Greybus 'Host
+> > > > > > > Devices' [1] [2], so it's not like I am creating any sort of dangerous
+> > > > > > > precedent.
+> > > > > > > 
+> > > > > > > [1]
+> > > > > > > https://elixir.bootlin.com/linux/latest/source/drivers/greybus/es2.c#L1275
+> > > > > > > [2] https://elixir.bootlin.com/linux/latest/source/drivers/greybus/hd.c#L124
+> > > > > > 
+> > > > > > And if you look closely all this work is done by core not by drivers!
+> > > > > > Drivers _should_ never do all this, it is the job of core to do that for
+> > > > > > you.
+> > > > > 
+> > > > > Please look at the code again, you have a USB probe that will manually call
+> > > > > the GreyBus device creation.
+> > > > > 
+> > > > > static int ap_probe(struct usb_interface *interface,
+> > > > > 		    const struct usb_device_id *id)
+> > > > > {
+> > > > > 	hd = gb_hd_create(&es2_driver, &udev->dev, 	
+> > > > > 
+> > > > > 
+> > > > > static struct usb_driver es2_ap_driver = {
+> > > > > 	.name =		"es2_ap_driver",
+> > > > > 	.probe =	ap_probe, <<< code above
+> > > > > 	.disconnect =	ap_disconnect,
+> > > > > 	.id_table =	id_table,
+> > > > > 	.soft_unbind =	1,
+> > > > > };
+> > > > 
+> > > > Look closely the driver es2 calls into greybus core hd.c and gets the
+> > > > work done, subtle but a big differances in the approaches..
+> > > 
+> > > I am sorry, I have absolutely no idea what you are referring to.
+> > > 
+> > > The code I copy/pasted here makes no call to the greybus core, it's ap_probe
+> > > -> gb_hd_create. No core involved. If I am mistaken, please show me what I
+> > > got wrong.
+> > 
+> > 1. es2_ap_driver is host controller driver
+> > 
+> > 2. gb_hd_create() is an API provided by greybus core!
+> 
+> same in my code...
+> 
+> > 
+> > es2 driver doesn't open code creation like you are doing in intel driver,
+> > it doesn't call probe on its own, greybus does that
+> > 
+> > This is very common pattern in linux kernel subsytems, drivers dont do
+> > these things, the respective subsystem core does that... see about es2
+> > driver and implementation of gb_hd_create(). See callers of
+> > platform_register_device() and its implementation.
+> > 
+> > I don't know how else I can explain this to you, is something wrong in
+> > how I conveyed this info or you... or something else, I dont know!!!
+> the new 'master' functionality is part of the bus code, so please clarify
+> what you see as problematic for the partition.
 
->  arch/powerpc/include/asm/pgtable.h |  6 ------
->  arch/powerpc/include/asm/ptdump.h  | 15 +++++++++++++++
->  arch/powerpc/mm/pgtable_32.c       |  1 +
->  arch/powerpc/mm/pgtable_64.c       |  1 +
->  arch/powerpc/mm/ptdump/ptdump.c    |  1 +
->  5 files changed, 18 insertions(+), 6 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/ptdump.h
->
-> diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-> index 0e4ec8cc37b7..8cc543ed114c 100644
-> --- a/arch/powerpc/include/asm/pgtable.h
-> +++ b/arch/powerpc/include/asm/pgtable.h
-> @@ -94,12 +94,6 @@ void mark_initmem_nx(void);
->  static inline void mark_initmem_nx(void) { }
->  #endif
->  
-> -#ifdef CONFIG_PPC_DEBUG_WX
-> -void ptdump_check_wx(void);
-> -#else
-> -static inline void ptdump_check_wx(void) { }
-> -#endif
+I am quoting the code in patch, which i pointed in my first reply!
+
+On 17-12-19, 15:03, Pierre-Louis Bossart wrote:
+
+> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+> index 4b769409f6f8..42f7ae034bea 100644
+> --- a/drivers/soundwire/intel_init.c
+
+This is intel specific file...
+
+> +++ b/drivers/soundwire/intel_init.c
+
+snip ...
+
+> +static struct sdw_intel_ctx
+> +*sdw_intel_probe_controller(struct sdw_intel_res *res)
+
+this is intel driver, intel function!
+
 > -
->  /*
->   * When used, PTE_FRAG_NR is defined in subarch pgtable.h
->   * so we are sure it is included when arriving here.
-> diff --git a/arch/powerpc/include/asm/ptdump.h b/arch/powerpc/include/asm/ptdump.h
-> new file mode 100644
-> index 000000000000..246b92c21729
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/ptdump.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_POWERPC_PTDUMP_H
-> +#define _ASM_POWERPC_PTDUMP_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#ifdef CONFIG_PPC_DEBUG_WX
-> +void ptdump_check_wx(void);
-> +#else
-> +static inline void ptdump_check_wx(void) { }
-> +#endif
-> +
-> +#endif /* __ASSEMBLY__ */
-> +
-> +#endif /* _ASM_POWERPC_PTDUMP_H */
-> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-> index 73b84166d06a..6c866f1b1eeb 100644
-> --- a/arch/powerpc/mm/pgtable_32.c
-> +++ b/arch/powerpc/mm/pgtable_32.c
-> @@ -29,6 +29,7 @@
->  #include <asm/fixmap.h>
->  #include <asm/setup.h>
->  #include <asm/sections.h>
-> +#include <asm/ptdump.h>
->  
->  #include <mm/mmu_decl.h>
->  
-> diff --git a/arch/powerpc/mm/pgtable_64.c b/arch/powerpc/mm/pgtable_64.c
-> index e78832dce7bb..3686cd887c2f 100644
-> --- a/arch/powerpc/mm/pgtable_64.c
-> +++ b/arch/powerpc/mm/pgtable_64.c
-> @@ -45,6 +45,7 @@
->  #include <asm/sections.h>
->  #include <asm/firmware.h>
->  #include <asm/dma.h>
-> +#include <asm/ptdump.h>
->  
->  #include <mm/mmu_decl.h>
->  
-> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-> index 2f9ddc29c535..d7b02bcd0691 100644
-> --- a/arch/powerpc/mm/ptdump/ptdump.c
-> +++ b/arch/powerpc/mm/ptdump/ptdump.c
-> @@ -23,6 +23,7 @@
->  #include <linux/const.h>
->  #include <asm/page.h>
->  #include <asm/pgalloc.h>
-> +#include <asm/ptdump.h>
->  
->  #include "ptdump.h"
->  
-> -- 
-> 2.13.3
+> -		link->pdev = pdev;
+> -		link++;
+> +		/* let the SoundWire master driver to its probe */
+> +		md->driver->probe(md, link);
+                            ^^^^^^
+which does this... calls a probe()!
+
+And my first reply was:
+
+> > +             /* let the SoundWire master driver to its probe */
+> > +             md->driver->probe(md, link);
+> 
+> So you are invoking driver probe here.. That is typically role of driver
+> core to do that.. If we need that, make driver core do that for you!
+
+I rest my case!
+
+-- 
+~Vinod
