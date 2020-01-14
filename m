@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BEEC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DE7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C067924672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EFC24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="snqsJvuQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YXkasibS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgANT6A (ORCPT
+        id S1728901AbgANT5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:58:00 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38463 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728952AbgANT54 (ORCPT
+        Tue, 14 Jan 2020 14:57:51 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:43298 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANT5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:57:56 -0500
-Received: by mail-qt1-f194.google.com with SMTP id c24so2818534qtp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:57:56 -0800 (PST)
+        Tue, 14 Jan 2020 14:57:49 -0500
+Received: by mail-qv1-f67.google.com with SMTP id p2so6268082qvo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yfen/AoSu53olPP9ksuFCbFgbf4x6IRveD5uzGZKIms=;
-        b=snqsJvuQIjL3Bm/ZNs5UWDLzKR0/9FVv+VRL0od926L1vJX6evu/XVJD+9CnRbQigj
-         CUXfCeBz3sxUcVbxaPk3oFYOCyC2Mjk/U/Ip6u5rKhOlCLITUk3cwdg/P5DABXDbJ69k
-         TLiuPmrgwjtV0IEfGGzS/UvYttBrJpTgQjdbph1HAUuLBWls8VK+VG5p9bLW/aFGGrkF
-         AZMAQzWFRjDYWHg3S0bZO299wKqQZ9lH2diCazsHRlXn7P7wG2mFJTQzz2Yn8lg13jX9
-         xc2lsnMmNweWxapU2n++mTW4aShDZF4W/f3IOR+Kj1v/PDrakK2+liCoKatdoJ8yvPXS
-         bcnQ==
+        bh=+1Z6MDx4XobCI0ghEoan/t4117hnB8BnW9bXN5G/GnQ=;
+        b=YXkasibSmroyzZCfF+UQZQ1oFgWiaHhWUb6WN7rujtmpJWaKLiAbIdVhsdvlLSXLsK
+         nPWWOGdmYzKRkAfLw2Da9jaIoYP4NiNtEkkLbqJEXCMugRMSDao/x2VVAs4XYIQOR1ND
+         zexRAKJQxuaizSQJ7pxRW+yn+OCFkjiFghc+42NG9PZOloPnByekwRye6chnD6hZYsFK
+         nOsvw+0dZgzcQh5iBcTj2alfeBe5gPXdBPEgc4mEonN6T9xyHKfRnplKbBvneo8t1sVY
+         MwC4O5XUWG0A9dbgI1efTlBwt7XaPHjWyfhUc757LEeYp725Uew1CG/2jkbALkpkW6G1
+         jypQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yfen/AoSu53olPP9ksuFCbFgbf4x6IRveD5uzGZKIms=;
-        b=K6XPyTK2CoKjS6Ih0SiS+HXxYwbDC8n/MtrNuyRWP1nSLIfKVc1DLyBXb1tUsiikn2
-         jp/mn9vy/nY9wuQoeIS97jhw5Kpr4eWfxIENMi5IdvsvEOlF+TkuQOEYmg3rKGkrxV5p
-         qVf42qqRoad94dzDzPKlDHWjS3zwN0f65gPrlJmZB5Vn6i/8EA6BGuWxnOW7tSOwF5Aw
-         /S8CNoBajzm6okT4vrPADl0DOuyoj5f0QdDdYLR+E9CJZcLYwsrm39914zzsFLmU9j1/
-         bZvIJ3At17xiy8joU+4lOrNr/VpPa4k9ml2/K0kA+ZkHt1mkqxHsZnGsor3WuGhWy6Gq
-         BtLw==
-X-Gm-Message-State: APjAAAWxN8IRCAauq79YWqWxuk4WdtYiOHH+wywVtesrKzAYrqw/CtIZ
-        NZC6Zxf1YfBotAe65xPzGr9viQ==
-X-Google-Smtp-Source: APXvYqz0t6OIqPrDyq+aZGCcSp10zYfP07jDaLy7U1+HH76GlDTN7Kcvmc/wYCCYKL3IaiPIrKCZog==
-X-Received: by 2002:ac8:1194:: with SMTP id d20mr230530qtj.243.1579031875611;
-        Tue, 14 Jan 2020 11:57:55 -0800 (PST)
+        bh=+1Z6MDx4XobCI0ghEoan/t4117hnB8BnW9bXN5G/GnQ=;
+        b=UguTUBHAS6tTtBYNWBVMqNSeDAj1z8kpyXCBBSuAm4CDlJqbgUicD+65FWSdhmYAY/
+         ZTsTjIfRJnE8oGP+FBwTF1n5T5LRTrmtd5/g14ebavuSolYZgS6PsLCyhtyxkFkULvmu
+         O8DYDtyycDkH5EZQBGAzZdC+qL5n9jK8XS3O7YcW+uIH+6ABjRSyjMmzUI7I2bgQGpyY
+         46HJKG+9gXWH9efJFn6HbIS0pmYM5SrvPD1gNDgHhakQBdYT8e8c/CUZIaI/Qdb+WZG5
+         z1w3wISmmnOv2+klooU519tBenmKIKfxsVe8DiUHLBUdT3AV/eOm6SV2dnk9w8vjzx3v
+         CGnA==
+X-Gm-Message-State: APjAAAWUVVlze6SN9G88lPZNvaYik+4pxbYc/4mDf596LILbskcOKGDY
+        Leqf8VKS1esXq68qucNIlLfxHA==
+X-Google-Smtp-Source: APXvYqzkGDo2ONlqlNSX8c36WfHfwws8lgE2PgOm4qOA0zkzVazWXBhTvZlxwgeuR6CJQzwYayL+vQ==
+X-Received: by 2002:a0c:ed32:: with SMTP id u18mr22985554qvq.2.1579031868679;
+        Tue, 14 Jan 2020 11:57:48 -0800 (PST)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id b81sm7183497qkc.135.2020.01.14.11.57.54
+        by smtp.googlemail.com with ESMTPSA id b81sm7183497qkc.135.2020.01.14.11.57.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 14 Jan 2020 11:57:55 -0800 (PST)
+        Tue, 14 Jan 2020 11:57:48 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
@@ -62,9 +62,9 @@ To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         viresh.kumar@linaro.org
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v8 7/7] sched/fair: Enable tuning of decay period
-Date:   Tue, 14 Jan 2020 14:57:39 -0500
-Message-Id: <1579031859-18692-8-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v8 3/7] arm,arm64,drivers:Add infrastructure to store and update instantaneous thermal pressure
+Date:   Tue, 14 Jan 2020 14:57:35 -0500
+Message-Id: <1579031859-18692-4-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
 References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
@@ -73,94 +73,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal pressure follows pelt signals which means the decay period for
-thermal pressure is the default pelt decay period. Depending on soc
-characteristics and thermal activity, it might be beneficial to decay
-thermal pressure slower, but still in-tune with the pelt signals.  One way
-to achieve this is to provide a command line parameter to set a decay
-shift parameter to an integer between 0 and 10.
+Add architecture specific APIs to update and track thermal pressure on a
+per cpu basis. A per cpu variable thermal_pressure is introduced to keep
+track of instantaneous per cpu thermal pressure. Thermal pressure is the
+delta between maximum capacity and capped capacity due to a thermal event.
+
+topology_get_thermal_pressure can be hooked into the scheduler specified
+arch_cpu_thermal_capacity to retrieve instantaneous thermal pressure of a
+cpu.
+
+arch_set_thermal_pressure can be used to update the thermal pressure.
+
+Considering topology_get_thermal_pressure reads thermal_pressure and
+arch_set_thermal_pressure writes into thermal_pressure, one can argue for
+some sort of locking mechanism to avoid a stale value.  But considering
+topology_get_thermal_pressure can be called from a system critical path
+like scheduler tick function, a locking mechanism is not ideal. This means
+that it is possible the thermal_pressure value used to calculate average
+thermal pressure for a cpu can be stale for upto 1 tick period.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  5 ++++
- kernel/sched/fair.c                             | 34 +++++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index dd3df3d..34848e4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4370,6 +4370,11 @@
- 			incurs a small amount of overhead in the scheduler
- 			but is useful for debugging and performance tuning.
+v6->v7:
+	- Changed the input argument in arch_set_thermal_pressure from
+	  capped capacity to delta capacity(thermal pressure) as per
+	  Ionela's review comments.
+
+ arch/arm/include/asm/topology.h   |  3 +++
+ arch/arm64/include/asm/topology.h |  3 +++
+ drivers/base/arch_topology.c      | 11 +++++++++++
+ include/linux/arch_topology.h     | 10 ++++++++++
+ 4 files changed, 27 insertions(+)
+
+diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
+index 8a0fae9..3a50a19 100644
+--- a/arch/arm/include/asm/topology.h
++++ b/arch/arm/include/asm/topology.h
+@@ -16,6 +16,9 @@
+ /* Enable topology flag updates */
+ #define arch_update_cpu_topology topology_update_cpu_topology
  
-+	sched_thermal_decay_shift=
-+			[KNL, SMP] Set decay shift for thermal pressure signal.
-+			Format: integer between 0 and 10
-+			Default is 0.
++/* Replace task scheduler's default thermal pressure retrieve API */
++#define arch_cpu_thermal_pressure topology_get_thermal_pressure
 +
- 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
- 			xtime_lock contention on larger systems, and/or RCU lock
- 			contention on all systems with CONFIG_MAXSMP set.
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2b1fec3..8b2ee5a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -86,6 +86,36 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
+ #else
  
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+ static inline void init_cpu_topology(void) { }
+diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+index a4d945d..a70896f 100644
+--- a/arch/arm64/include/asm/topology.h
++++ b/arch/arm64/include/asm/topology.h
+@@ -25,6 +25,9 @@ int pcibus_to_node(struct pci_bus *bus);
+ /* Enable topology flag updates */
+ #define arch_update_cpu_topology topology_update_cpu_topology
  
-+/**
-+ * By default the decay is the default pelt decay period.
-+ * The decay shift can change the decay period in
-+ * multiples of 32.
-+ *  Decay shift		Decay period(ms)
-+ *	0			32
-+ *	1			64
-+ *	2			128
-+ *	3			256
-+ *	4			512
-+ */
-+static int sched_thermal_decay_shift;
++/* Replace task scheduler's default thermal pressure retrieve API */
++#define arch_cpu_thermal_pressure topology_get_thermal_pressure
 +
-+static inline u64 rq_clock_thermal(struct rq *rq)
-+{
-+	return rq_clock_task(rq) >> sched_thermal_decay_shift;
-+}
-+
-+static int __init setup_sched_thermal_decay_shift(char *str)
-+{
-+	int _shift;
-+
-+	if (kstrtoint(str, 0, &_shift))
-+		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
-+
-+	sched_thermal_decay_shift = clamp(_shift, 0, 10);
-+	return 1;
-+}
-+__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-+
- #ifdef CONFIG_SMP
- /*
-  * For asym packing, by default the lower numbered CPU has higher priority.
-@@ -7509,7 +7539,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ #include <asm-generic/topology.h>
  
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_thermal_load_avg(rq_clock_task(rq), rq,
-+		  update_thermal_load_avg(rq_clock_thermal(rq), rq,
- 					  thermal_pressure) 			|
- 		  update_irq_load_avg(rq, 0);
- 
-@@ -10300,7 +10330,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 
- 	update_misfit_status(curr, rq);
- 	update_overutilized_status(task_rq(curr));
--	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
-+	update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure);
+ #endif /* _ASM_ARM_TOPOLOGY_H */
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 1eb81f11..c2c5f1d 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -42,6 +42,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+ 	per_cpu(cpu_scale, cpu) = capacity;
  }
  
- /*
++DEFINE_PER_CPU(unsigned long, thermal_pressure);
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure)
++{
++	int cpu;
++
++	for_each_cpu(cpu, cpus)
++		WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
++}
++
+ static ssize_t cpu_capacity_show(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 char *buf)
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index 3015ecb..88a115e 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -33,6 +33,16 @@ unsigned long topology_get_freq_scale(int cpu)
+ 	return per_cpu(freq_scale, cpu);
+ }
+ 
++DECLARE_PER_CPU(unsigned long, thermal_pressure);
++
++static inline unsigned long topology_get_thermal_pressure(int cpu)
++{
++	return per_cpu(thermal_pressure, cpu);
++}
++
++void arch_set_thermal_pressure(struct cpumask *cpus,
++			       unsigned long th_pressure);
++
+ struct cpu_topology {
+ 	int thread_id;
+ 	int core_id;
 -- 
 2.1.4
 
