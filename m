@@ -2,132 +2,195 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62888C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C729C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3076D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQTf3sEn"
+	by mail.kernel.org (Postfix) with ESMTP id E89292075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 08:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgANI52 (ORCPT
+        id S1728777AbgANI7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:57:28 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35982 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgANI52 (ORCPT
+        Tue, 14 Jan 2020 03:59:45 -0500
+Received: from snd00005.auone-net.jp ([111.86.247.5]:60129 "EHLO
+        dmta0006-f.auone-net.jp" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725820AbgANI7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 03:57:28 -0500
-Received: by mail-il1-f196.google.com with SMTP id b15so10835827iln.3;
-        Tue, 14 Jan 2020 00:57:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7tLJRdOhrpRuZLt75MI5obWTF6EcjzoGZuRIS5Hzxcs=;
-        b=aQTf3sEn9a0g2FxG5v0LVpqc58XSbGWNhATPrWkhBednuc/CyIE1RtYBVyLSlXWth9
-         ou6Ym1tDAikDfkjZJr8myF2Qs39VPN1Bw6D3lDqamHm8YF3dIBLPuZ7vbteaDASG6XGK
-         S/KitbEo7bRMwMJNVpBi6pKrCHSTZJ7+odCi+DW7Wd3GiRuZQs6NyUQ8b7TzfSfP301h
-         aVHmNBvop3ndYUvYWeU0SrilMcBszdMVdMrb9WL4sK2n6oyIaoUUXxOtrhVx9Ke7/ndV
-         kjefa9lojQzn53re4iusfuGbH+xFI2oKiYlr8qU/ixC5jGhgzAU06iv1waTYmnLP5hrI
-         0JNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7tLJRdOhrpRuZLt75MI5obWTF6EcjzoGZuRIS5Hzxcs=;
-        b=un+rC/9tZAIb2PMyRE1gLTH9WJ2/eaHosKXOEdx3N80DBRqkMTlcIndHXP5llUGMAB
-         /t2GmauDXuhBUP6z7euJ1rYU7nUJCB4pYlGHRGUy5MtX+nksiX0BTeW/Lfx3DA9v9OAw
-         87Ed6WjPybHIYMFo9BQsPE3I4ZjKdsFecSCfgW/el5NUMkFXe4s8fWbWqyzASVeBIiFa
-         9BzHxG4MkJ9Icn/auCnylY1ygN2iyw0gSWxXhDTn/mEMtNU1mcyoxYO7zZ89iZtuj2WQ
-         glvxwyyZluqTGT51ZX9mb3wiIG3ACX8P+phhNYHEfJn45PwERnUvj6SHoaYAcVrhMLc3
-         IQ+A==
-X-Gm-Message-State: APjAAAV+BjpGdh0xTZBOx4bwxUpBhPcmhTxLw4JtXp+3Hr9Vltz6KyD/
-        x5NloKmrGGA0CaONGXxRDrHgRpHhmbn5koMIpi0=
-X-Google-Smtp-Source: APXvYqyVec6v6hJouPfOSiTNhYY92qh0MJoQ4kjIp+7oXZYlk8mkFQvVqO4pI3zA3PRg0Tx+oxovxBS4uJpppm7o0Fs=
-X-Received: by 2002:a92:c111:: with SMTP id p17mr2648717ile.204.1578992247189;
- Tue, 14 Jan 2020 00:57:27 -0800 (PST)
+        Tue, 14 Jan 2020 03:59:44 -0500
+X-Greylist: delayed 377 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jan 2020 03:59:43 EST
+Received: from ppp.dion.ne.jp by dmta0008.auone-net.jp with ESMTP
+          id <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>;
+          Tue, 14 Jan 2020 17:53:25 +0900
+Date:   Tue, 14 Jan 2020 17:53:24 +0900
+From:   Kusanagi Kouichi <slash@ac.auone-net.jp>
+To:     linux-btrfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: Implement lazytime
 MIME-Version: 1.0
-References: <20200108113719.21551-1-pawell@cadence.com> <20200108142829.GB2383861@kroah.com>
- <BYAPR07MB4709983A2DF70AA0058C737FDD390@BYAPR07MB4709.namprd07.prod.outlook.com>
- <20200109063841.GA2579094@kroah.com> <BYAPR07MB4709AA109700B4BCAD1C1ED8DD390@BYAPR07MB4709.namprd07.prod.outlook.com>
- <20200109093812.GC44349@kroah.com>
-In-Reply-To: <20200109093812.GC44349@kroah.com>
-From:   Peter Chen <hzpeterchen@gmail.com>
-Date:   Tue, 14 Jan 2020 16:57:15 +0800
-Message-ID: <CAL411-pE7QheAEQf+ki8auChWP6MOWxaaAA3xkkdweWn=q_0wA@mail.gmail.com>
-Subject: Re: [PATCH] usb: cdns3: Fix: ARM core hang after connect/disconnect operation.
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Pawel Laszczak <pawell@cadence.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "jbergsagel@ti.com" <jbergsagel@ti.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>,
-        Peter Chan <peter.chan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Message-Id: <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 5:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jan 09, 2020 at 08:34:12AM +0000, Pawel Laszczak wrote:
-> > >
-> > >On Thu, Jan 09, 2020 at 06:27:02AM +0000, Pawel Laszczak wrote:
-> > >> >> +       writel(EP_CMD_EPRST, &priv_dev->regs->ep_cmd);
-> > >> >> +
-> > >> >> +       ret = readl_poll_timeout_atomic(&priv_dev->regs->ep_cmd, val,
-> > >> >> +                                       !(val & (EP_CMD_CSTALL | EP_CMD_EPRST)),
-> > >> >> +                                       1, 1000);
-> > >> >> +
-> > >> >> +       if (unlikely(ret))
-> > >> >
-> > >> >Unless you can measure the difference of using/not using a
-> > >> >unlikely/likely mark, NEVER use it.  The compiler and cpu can almost
-> > >> >always do better than you can, we have the tests to prove it.
-> > >> >
-> > >>
-> > >> The both of the above timeout should never occur. If they occurred it would be a
-> > >> critical controller bug. In this case driver can only inform  about this event.
-> > >
-> > >"Should never occur" is a fun thing to say :)
-> > >
-> > >If it can never occur, then don't even check for it.
-> >
-> > Yes, on existing platforms it can never occur.
-> >
-> > >
-> > >If it can, then check for it and handle it properly.
-> > >
-> > >What about this controller in systems with removable busses (like PCI?)
-> > >What happens then (hint, I bet this could occur...)
-> >
-> > It's good question.  Nobody from our customer currently use such system.
-> > The only platform with PCI is used by me for testing purpose.
->
-> So if you do have a PCI device, then you need to handle PCI reads
-> failing and returning all 1s.  Hopefully you can gracefully handle this :)
->
-> Adding timeout handling here, where it is totally obvious to do so,
-> would be a good thing.
->
-> thanks,
->
-> greg k-h
+I tested with xfstests and lazytime didn't cause any new failures.
 
-Hi Pawel,
+Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
+---
+ fs/btrfs/delayed-inode.c |  6 ++++++
+ fs/btrfs/file.c          | 11 +++++++++++
+ fs/btrfs/inode.c         | 28 +++++++++++++++++++++++++---
+ fs/btrfs/ioctl.c         | 14 ++++++++++++++
+ fs/btrfs/super.c         |  1 +
+ 5 files changed, 57 insertions(+), 3 deletions(-)
 
-My email is: peter.chen@nxp.com, please change it when your send next version.
+diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
+index d3e15e1d4a91..b30b00678503 100644
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -1722,6 +1722,12 @@ static void fill_stack_inode_item(struct btrfs_trans_handle *trans,
+ 				  struct btrfs_inode_item *inode_item,
+ 				  struct inode *inode)
+ {
++	if (inode->i_sb->s_flags & SB_LAZYTIME) {
++		spin_lock(&inode->i_lock);
++		inode->i_state &= ~(I_DIRTY_SYNC | I_DIRTY_TIME);
++		spin_unlock(&inode->i_lock);
++	}
++
+ 	btrfs_set_stack_inode_uid(inode_item, i_uid_read(inode));
+ 	btrfs_set_stack_inode_gid(inode_item, i_gid_read(inode));
+ 	btrfs_set_stack_inode_size(inode_item, BTRFS_I(inode)->disk_i_size);
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 8d47c76b7bd1..36aa75f4e532 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2069,6 +2069,17 @@ int btrfs_sync_file(struct file *file, loff_t start, loff_t end, int datasync)
+ 
+ 	trace_btrfs_sync_file(file, datasync);
+ 
++	if (!datasync && inode->i_sb->s_flags & SB_LAZYTIME) {
++		while (1) {
++			ret = sync_inode_metadata(inode, 0);
++			if (ret != -EAGAIN)
++				break;
++			flush_work(&fs_info->async_reclaim_work);
++		}
++		if (ret)
++			return ret;
++	}
++
+ 	btrfs_init_log_ctx(&ctx, inode);
+ 
+ 	/*
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 5509c41a4f43..a60aee76cc95 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -3941,6 +3941,12 @@ static void fill_inode_item(struct btrfs_trans_handle *trans,
+ 
+ 	btrfs_init_map_token(&token, leaf);
+ 
++	if (inode->i_sb->s_flags & SB_LAZYTIME) {
++		spin_lock(&inode->i_lock);
++		inode->i_state &= ~(I_DIRTY_SYNC | I_DIRTY_TIME);
++		spin_unlock(&inode->i_lock);
++	}
++
+ 	btrfs_set_token_inode_uid(leaf, item, i_uid_read(inode), &token);
+ 	btrfs_set_token_inode_gid(leaf, item, i_gid_read(inode), &token);
+ 	btrfs_set_token_inode_size(leaf, item, BTRFS_I(inode)->disk_i_size,
+@@ -6188,6 +6194,16 @@ static int btrfs_dirty_inode(struct inode *inode)
+ 	return ret;
+ }
+ 
++int btrfs_write_inode(struct inode *inode, struct writeback_control *wbc)
++{
++	if (work_busy(&btrfs_sb(inode->i_sb)->async_reclaim_work) & WORK_BUSY_RUNNING) {
++		mark_inode_dirty_sync(inode);
++		return -EAGAIN;
++	}
++
++	return btrfs_dirty_inode(inode);
++}
++
+ /*
+  * This is a copy of file_update_time.  We need this so we can return error on
+  * ENOSPC for updating the inode in the case of file write and mmap writes.
+@@ -6201,15 +6217,21 @@ static int btrfs_update_time(struct inode *inode, struct timespec64 *now,
+ 	if (btrfs_root_readonly(root))
+ 		return -EROFS;
+ 
+-	if (flags & S_VERSION)
+-		dirty |= inode_maybe_inc_iversion(inode, dirty);
++	if (!(flags & S_VERSION && inode_maybe_inc_iversion(inode, dirty))) {
++		if (unlikely(!dirty))
++			return 0;
++		if (inode->i_sb->s_flags & SB_LAZYTIME &&
++		    !test_bit(BTRFS_INODE_DUMMY, &BTRFS_I(inode)->runtime_flags))
++			return generic_update_time(inode, now, flags);
++	}
++
+ 	if (flags & S_CTIME)
+ 		inode->i_ctime = *now;
+ 	if (flags & S_MTIME)
+ 		inode->i_mtime = *now;
+ 	if (flags & S_ATIME)
+ 		inode->i_atime = *now;
+-	return dirty ? btrfs_dirty_inode(inode) : 0;
++	return btrfs_dirty_inode(inode);
+ }
+ 
+ /*
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 18e328ce4b54..af47b4b046de 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -799,6 +799,14 @@ static int create_snapshot(struct btrfs_root *root, struct inode *dir,
+ 	if (ret)
+ 		goto dec_and_free;
+ 
++	/* For xfstests generic/003. Is it better to fix the test? */
++	if (dir->i_sb->s_flags & SB_LAZYTIME) {
++		down_read(&dir->i_sb->s_umount);
++		if (!sb_rdonly(dir->i_sb))
++			sync_inodes_sb(dir->i_sb);
++		up_read(&dir->i_sb->s_umount);
++	}
++
+ 	/*
+ 	 * All previous writes have started writeback in NOCOW mode, so now
+ 	 * we force future writes to fallback to COW mode during snapshot
+@@ -5497,6 +5505,12 @@ long btrfs_ioctl(struct file *file, unsigned int
+ 		ret = btrfs_start_delalloc_roots(fs_info, -1);
+ 		if (ret)
+ 			return ret;
++		if (inode->i_sb->s_flags & SB_LAZYTIME) {
++			down_read(&inode->i_sb->s_umount);
++			if (!sb_rdonly(inode->i_sb))
++				sync_inodes_sb(inode->i_sb);
++			up_read(&inode->i_sb->s_umount);
++		}
+ 		ret = btrfs_sync_fs(inode->i_sb, 1);
+ 		/*
+ 		 * The transaction thread may want to do more work,
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index f452a94abdc3..ccfe9aff1394 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2281,6 +2281,7 @@ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
+ }
+ 
+ static const struct super_operations btrfs_super_ops = {
++	.write_inode	= btrfs_write_inode,
+ 	.drop_inode	= btrfs_drop_inode,
+ 	.evict_inode	= btrfs_evict_inode,
+ 	.put_super	= btrfs_put_super,
+-- 
+2.25.0.rc2
 
-Peter
