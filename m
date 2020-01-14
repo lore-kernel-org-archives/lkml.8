@@ -2,141 +2,296 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A836C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 295CF24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bCRhGJGp"
+	by mail.kernel.org (Postfix) with ESMTP id B35D424672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgANPgF (ORCPT
+        id S1728794AbgANPhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:36:05 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5190 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:36:05 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1ddfd00000>; Tue, 14 Jan 2020 07:35:44 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jan 2020 07:36:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:36:04 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 15:36:02 +0000
-Subject: Re: [PATCH v4 04/14] dmaengine: tegra-apb: Clean up tasklet releasing
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-5-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2395e415-c435-0305-b53e-81278ff24d30@nvidia.com>
-Date:   Tue, 14 Jan 2020 15:36:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 10:37:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:53830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726342AbgANPhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:37:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41E391396;
+        Tue, 14 Jan 2020 07:37:41 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 447E13F68E;
+        Tue, 14 Jan 2020 07:37:39 -0800 (PST)
+Date:   Tue, 14 Jan 2020 15:37:34 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>,
+        maz@kernel.org
+Subject: Re: [PATCH v4 2/6] PCI: iproc: Add INTx support with better modeling
+Message-ID: <20200114153734.GA8268@e121166-lin.cambridge.arm.com>
+References: <1576814058-30003-1-git-send-email-srinath.mannam@broadcom.com>
+ <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <20200112173006.29863-5-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579016144; bh=4nzaSqhuTxBtHcd2ez0EJ4Bfl+5vH4h40EZkwwGBUgA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bCRhGJGpIM4zf0HkZYKQe4MwSUQPwKEpXlAxKLWJPIIp/CT1afIFYr0HYE6BWgEzx
-         m9HFHWr9g41QOPxlyoBFcpZ25fLuDO5vb47QTrFtNFIv15WTgNZbVT2io0IIY4FFAC
-         rChsqV8tzUaIGtJ/mjdd+VqZEnKPFxdkKES013iVV8XCkiQDow4oSA/WOjrfYDn3NX
-         /JHzeNXuidGr7MM2A4oA+Qnh79VfoQDCK50tPbYqZMWPRl+KTAquKDRh1WXaJcvzuF
-         vR4ZdEKaGBcQVhWvLyA0VVyNukqnS8igFknhOuqn91X1vRT4yJ3hB9RTbjQD1a+iWr
-         vENEnpNAnkruw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576814058-30003-3-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[+Marc thanks to whom I can review this code with the required IRQ chip
+knowledge]
 
-On 12/01/2020 17:29, Dmitry Osipenko wrote:
-> There is no need to kill tasklet when driver's probe fails because tasklet
-> can't be scheduled at this time. It is also cleaner to kill tasklet on
-> channel's freeing rather than to kill it on driver's removal, otherwise
-> tasklet could perform a dummy execution after channel's releasing, which
-> isn't very nice.
+On Fri, Dec 20, 2019 at 09:24:14AM +0530, Srinath Mannam wrote:
+> From: Ray Jui <ray.jui@broadcom.com>
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
+> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
+> INTD share the same interrupt line connected to the GIC in the system,
+> while the status of each INTx can be obtained through the INTX CSR
+> register
+          ^
+Missing a period.
+
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 > ---
->  drivers/dma/tegra20-apb-dma.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+>  drivers/pci/controller/pcie-iproc.c | 108 +++++++++++++++++++++++++++++++++++-
+>  drivers/pci/controller/pcie-iproc.h |   6 ++
+>  2 files changed, 112 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 24ad3a5a04e3..1b8a11804962 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -1287,7 +1287,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
->  	struct tegra_dma_sg_req *sg_req;
->  	struct list_head dma_desc_list;
->  	struct list_head sg_req_list;
-> -	unsigned long flags;
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 0a468c7..485967b 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> @@ -270,6 +271,7 @@ enum iproc_pcie_reg {
 >  
->  	INIT_LIST_HEAD(&dma_desc_list);
->  	INIT_LIST_HEAD(&sg_req_list);
-> @@ -1295,15 +1294,14 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
->  	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
+>  	/* enable INTx */
+>  	IPROC_PCIE_INTX_EN,
+> +	IPROC_PCIE_INTX_CSR,
 >  
->  	tegra_dma_terminate_all(dc);
-> +	tasklet_kill(&tdc->tasklet);
+>  	/* outbound address mapping */
+>  	IPROC_PCIE_OARR0,
+> @@ -314,6 +316,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_LINK_STATUS]	= 0xf0c,
+>  };
 >  
-> -	spin_lock_irqsave(&tdc->lock, flags);
->  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
->  	list_splice_init(&tdc->free_sg_req, &sg_req_list);
->  	list_splice_init(&tdc->free_dma_desc, &dma_desc_list);
->  	INIT_LIST_HEAD(&tdc->cb_desc);
->  	tdc->config_init = false;
->  	tdc->isr_handler = NULL;
-> -	spin_unlock_irqrestore(&tdc->lock, flags);
+> @@ -325,6 +328,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -341,6 +345,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
+>  	[IPROC_PCIE_CFG_ADDR]		= 0x1f8,
+>  	[IPROC_PCIE_CFG_DATA]		= 0x1fc,
+>  	[IPROC_PCIE_INTX_EN]		= 0x330,
+> +	[IPROC_PCIE_INTX_CSR]		= 0x334,
+>  	[IPROC_PCIE_OARR0]		= 0xd20,
+>  	[IPROC_PCIE_OMAP0]		= 0xd40,
+>  	[IPROC_PCIE_OARR1]		= 0xd28,
+> @@ -846,9 +851,103 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>  	return link_is_active ? 0 : -ENODEV;
+>  }
 >  
->  	while (!list_empty(&dma_desc_list)) {
->  		dma_desc = list_first_entry(&dma_desc_list,
-> @@ -1542,7 +1540,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  		struct tegra_dma_channel *tdc = &tdma->channels[i];
+> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> +static int iproc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+> +			       irq_hw_number_t hwirq)
+>  {
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+
+This looks wrong.
+
+Don't tell me there are other PCI controllers drivers implementing this
+code so you copied and pasted it; I know that and they are all wrong.
+
+Legacy PCI IRQs are level IRQs so they must be masked/unmasked upon IRQ
+entry/exit.
+
+Therefore the IRQ chip representing your controller can't be a
+dummy_irq_chip, that has no methods so no masking is implemented
+through it and the flow handler must be handle_level_irq (which,
+in turn takes care of masking the IRQ - handle_simple_irq does
+not).
+
+The IRQ chip in the PCI host bridge has to have a way to mask/unmask
+specific IRQs, implement a proper IRQ chip for it please.
+
+We are curious: Have you ever tested this change with a PCI driver
+requesting a threaded IRQ ?
+
+Thanks,
+Lorenzo
+
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = iproc_pcie_intx_map,
+> +};
+> +
+> +static void iproc_pcie_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct iproc_pcie *pcie;
+> +	struct device *dev;
+> +	unsigned long status;
+> +	u32 bit, virq;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pcie = irq_desc_get_handler_data(desc);
+> +	dev = pcie->dev;
+> +
+> +	/* go through INTx A, B, C, D until all interrupts are handled */
+> +	do {
+> +		status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
+> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
+> +			virq = irq_find_mapping(pcie->irq_domain, bit);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +			else
+> +				dev_err(dev, "unexpected INTx%u\n", bit);
+> +		}
+> +	} while ((status & SYS_RC_INTX_MASK) != 0);
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static int iproc_pcie_intx_enable(struct iproc_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	struct device_node *node;
+> +	int ret;
+> +
+> +	/*
+> +	 * BCMA devices do not map INTx the same way as platform devices. All
+> +	 * BCMA needs below line to enable INTx
+> +	 */
+>  	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, SYS_RC_INTX_MASK);
+> +
+> +	node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
+> +	if (node)
+> +		pcie->irq = of_irq_get(node, 0);
+> +
+> +	if (!node || pcie->irq <= 0)
+> +		return 0;
+> +
+> +	/* set IRQ handler */
+> +	irq_set_chained_handler_and_data(pcie->irq, iproc_pcie_isr, pcie);
+> +
+> +	/* add IRQ domain for INTx */
+> +	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						 &intx_domain_ops, pcie);
+> +	if (!pcie->irq_domain) {
+> +		dev_err(dev, "failed to add INTx IRQ domain\n");
+> +		ret = -ENOMEM;
+> +		goto err_rm_handler_data;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_rm_handler_data:
+> +	of_node_put(node);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+> +
+> +	return ret;
+> +}
+> +
+> +static void iproc_pcie_intx_disable(struct iproc_pcie *pcie)
+> +{
+> +	uint32_t offset, virq;
+> +
+> +	iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, 0x0);
+> +
+> +	if (pcie->irq <= 0)
+> +		return;
+> +
+> +	for (offset = 0; offset < PCI_NUM_INTX; offset++) {
+> +		virq = irq_find_mapping(pcie->irq_domain, offset);
+> +		if (virq)
+> +			irq_dispose_mapping(virq);
+> +	}
+> +
+> +	irq_domain_remove(pcie->irq_domain);
+> +	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+>  }
 >  
->  		free_irq(tdc->irq, tdc);
-> -		tasklet_kill(&tdc->tasklet);
+>  static inline bool iproc_pcie_ob_is_valid(struct iproc_pcie *pcie,
+> @@ -1518,7 +1617,11 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  		goto err_power_off_phy;
 >  	}
 >  
->  	pm_runtime_disable(&pdev->dev);
-> @@ -1562,7 +1559,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
->  	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
->  		tdc = &tdma->channels[i];
->  		free_irq(tdc->irq, tdc);
-> -		tasklet_kill(&tdc->tasklet);
->  	}
+> -	iproc_pcie_enable(pcie);
+> +	ret = iproc_pcie_intx_enable(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable INTx\n");
+> +		goto err_power_off_phy;
+> +	}
 >  
->  	pm_runtime_disable(&pdev->dev);
-
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
--- 
-nvpublic
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+>  		if (iproc_pcie_msi_enable(pcie))
+> @@ -1562,6 +1665,7 @@ int iproc_pcie_remove(struct iproc_pcie *pcie)
+>  	pci_remove_root_bus(pcie->root_bus);
+>  
+>  	iproc_pcie_msi_disable(pcie);
+> +	iproc_pcie_intx_disable(pcie);
+>  
+>  	phy_power_off(pcie->phy);
+>  	phy_exit(pcie->phy);
+> diff --git a/drivers/pci/controller/pcie-iproc.h b/drivers/pci/controller/pcie-iproc.h
+> index 4f03ea5..103e568 100644
+> --- a/drivers/pci/controller/pcie-iproc.h
+> +++ b/drivers/pci/controller/pcie-iproc.h
+> @@ -74,6 +74,9 @@ struct iproc_msi;
+>   * @ib: inbound mapping related parameters
+>   * @ib_map: outbound mapping region related parameters
+>   *
+> + * @irq: interrupt line wired to the generic GIC for INTx
+> + * @irq_domain: IRQ domain for INTx
+> + *
+>   * @need_msi_steer: indicates additional configuration of the iProc PCIe
+>   * controller is required to steer MSI writes to external interrupt controller
+>   * @msi: MSI data
+> @@ -102,6 +105,9 @@ struct iproc_pcie {
+>  	struct iproc_pcie_ib ib;
+>  	const struct iproc_pcie_ib_map *ib_map;
+>  
+> +	int irq;
+> +	struct irq_domain *irq_domain;
+> +
+>  	bool need_msi_steer;
+>  	struct iproc_msi *msi;
+>  };
+> -- 
+> 2.7.4
+> 
