@@ -2,107 +2,191 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF25DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F43C24680
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579015014;
-	bh=ltE4O5Iv8exH9g/sXCtdOGBiwtglhDk3vn+1JHo2VB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bwt+vo8CC/i2i3rJbGLGXw0rNckT5MfU+exXzbQpDcbMBydztgaZQVp9d22/6cWxZ
-	 khZhrHZZgFzUOwiRJcxrm9yCyd9AErY7ue0vQdZgCR1T0eBA6EB7PxK+umnS+jaN+0
-	 txBCAIGcN1v9OPXS1tdgjsCVLFBbaVNV3FU9O38E=
+	by mail.kernel.org (Postfix) with ESMTP id A170E222C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:17:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZt7jWyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgANPQx (ORCPT
+        id S1729149AbgANPRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:16:53 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33484 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPQw (ORCPT
+        Tue, 14 Jan 2020 10:17:55 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38478 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgANPRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:16:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K15TeIKz2iH2yNBaQfbFQ/2HZ43ycaI2mrMgjoB89W8=; b=eqqWHZPhE1xW0gJlR8rUqsdv+
-        14x7EIh3mp7KCevqvc2W/P5xWtIynG2LI174Hi1s+Cl5gRYWHvrPZXBPtnxUpvTNSMeUEAtZCYsrU
-        RXg2EFs3MZ+EQLZGh170vi1j1eAEhv9Ac9eR8jghkcbjKtQ4zgx89uVywSYcPvGB1uMW0=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irNvv-00004y-E7; Tue, 14 Jan 2020 15:16:43 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 22C3ED04DF5; Tue, 14 Jan 2020 15:16:43 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 15:16:43 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: Re: [PATCH v3 4/7] drm/panfrost: Add support for multiple regulators
-Message-ID: <20200114151643.GW3897@sirena.org.uk>
-References: <20200114071602.47627-1-drinkcat@chromium.org>
- <20200114071602.47627-5-drinkcat@chromium.org>
+        Tue, 14 Jan 2020 10:17:54 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so6734314pfc.5;
+        Tue, 14 Jan 2020 07:17:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NccOTQjRE3K/mry3ktyfcVSqMgiS7x0ndgHbwmuP8TQ=;
+        b=eZt7jWyj1lFcAl+nxOMeOUkRlU/C5B9gtr1fYUIkxqtPV7ZLoHlFBT9L+nnBkuVvsI
+         76KXt4W1Sc/eX0hJHYnfXtkmSrjtCzlZ4knqTozpPeGS4awMa/uhW5RKe5F5IK2KxtcC
+         hSzOwtndvb3vc2n6un8ZoX7X3QF2T/PHZVi/kZFTqibdl06MqwPVw9EtcTZ7Xbs72esb
+         OBxlvh7+wXJQbjJw+voB2QhTM2w3dpqxOA2xLLooA4mWpZxvX4FsZPnXWCM99GvyABb/
+         hJDBBKujbLMqDpB5XfxABB6VDerelAx8BJIceJDqMh0DTximUuNaWkMvTKfp2kbMGLGf
+         M9sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NccOTQjRE3K/mry3ktyfcVSqMgiS7x0ndgHbwmuP8TQ=;
+        b=i47GzduhUsvnFM57j1NA7YQ8xQhWXKR5r5r9QlXL0uTfTv2PZ4u7wFQP8Qif3c/wkM
+         PWjf5decpgSCE6sudoJAoj0E+lEjyEY61lqwj1TALuDdIf87b9pUnuI3hIYlcc8kvYFc
+         3ilQa8UGVnbYS9WlOUaCn6iw5PgKLknLFpomr8J3FGoOe8UfpX95PA2RpuUUqMmDmuPc
+         XeiUjk7Nx2fDaTQ06/R+Vo3kJlbWhk5/OTP54P1a5np9VbsfCfTrS2QhliVSjUagl51a
+         k3T1ZaRCRrDuXMqXSmfYypCyE/K7lkn1sKRkygTxaI+XCGFKPTTLSksVzc1Rbis6di6b
+         viPg==
+X-Gm-Message-State: APjAAAU4I3C1rklI4BT/MTdYdBaknLnfWdEEW/HPphC9GMVAlBDpmDA/
+        CWoiYMtWElIF13Tjm+FXXPs=
+X-Google-Smtp-Source: APXvYqzwNEAFXEtPiRfWUAnOnIb8U9kJ3KgFoweLCKDYPBx7VAISFddFFf8Pt91PMer7e3JiwzH0Jw==
+X-Received: by 2002:a63:b005:: with SMTP id h5mr26671855pgf.67.1579015073738;
+        Tue, 14 Jan 2020 07:17:53 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id s131sm20232099pfs.135.2020.01.14.07.17.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 07:17:52 -0800 (PST)
+Subject: Re: [PATCH] can, slip: Protect tty->disc_data access with RCU
+To:     Richard Palethorpe <rpalethorpe@suse.com>,
+        linux-can@vger.kernel.org
+Cc:     syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tyler Hall <tylerwhall@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller@googlegroups.com
+References: <0000000000002b81b70590a83ad7@google.com>
+ <20200114143244.20739-1-rpalethorpe@suse.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
+Date:   Tue, 14 Jan 2020 07:17:51 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="buDNgeHiu+HCsDEc"
-Content-Disposition: inline
-In-Reply-To: <20200114071602.47627-5-drinkcat@chromium.org>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114143244.20739-1-rpalethorpe@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---buDNgeHiu+HCsDEc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Jan 14, 2020 at 03:15:59PM +0800, Nicolas Boichat wrote:
+On 1/14/20 6:32 AM, Richard Palethorpe wrote:
+> write_wakeup can happen in parallel with close where tty->disc_data is set
+> to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
+> is an atomic operation. Otherwise accessing tty->disc_data could result in
+> a NULL pointer deref or access to some random location.
+> 
+> This problem was found by Syzkaller on slcan, but the same issue appears to
+> exist in slip where slcan was copied from.
+> 
+> A fix which didn't use RCU was posted by Hillf Danton.
+> 
+> Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
+> Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
+> Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
+> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+> Cc: Wolfgang Grandegger <wg@grandegger.com>
+> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Tyler Hall <tylerwhall@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: syzkaller@googlegroups.com
+> ---
+> 
+> Note, that mabye RCU should also applied to receive_buf as that also happens
+> in interrupt context. So if the pointer assignment is split by the compiler
+> then sl may point somewhere unexpected?
+> 
+>  drivers/net/can/slcan.c | 11 +++++++++--
+>  drivers/net/slip/slip.c | 11 +++++++++--
+>  2 files changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+> index 2e57122f02fb..ee029aae69d4 100644
+> --- a/drivers/net/can/slcan.c
+> +++ b/drivers/net/can/slcan.c
+> @@ -344,7 +344,14 @@ static void slcan_transmit(struct work_struct *work)
+>   */
+>  static void slcan_write_wakeup(struct tty_struct *tty)
+>  {
+> -	struct slcan *sl = tty->disc_data;
+> +	struct slcan *sl;
+> +
+> +	rcu_read_lock();
+> +	sl = rcu_dereference(tty->disc_data);
+> +	rcu_read_unlock();
 
->  - I couldn't find a way to detect the number of regulators in the
->    device tree, if we wanted to refuse to probe the device if there
->    are too many regulators, which might be required for safety, see
->    the thread on v2 [1].
+This rcu_read_lock()/rcu_read_unlock() pair is not protecting anything.
 
-You'd need to enumerate all the properties of the device and look
-for things matching *-supply.
+Right after rcu_read_unlock(), sl validity can not be guaranteed.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+> +
+> +	if (!sl)
+> +		return;
+>  
+>  	schedule_work(&sl->tx_work);
+>  }
+> @@ -644,7 +651,7 @@ static void slcan_close(struct tty_struct *tty)
+>  		return;
+>  
+>  	spin_lock_bh(&sl->lock);
+> -	tty->disc_data = NULL;
+> +	rcu_assign_pointer(tty->disc_data, NULL);
+>  	sl->tty = NULL;
+>  	spin_unlock_bh(&sl->lock);
 
---buDNgeHiu+HCsDEc
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d21oACgkQJNaLcl1U
-h9CCOwf+K6UJ3dhSHND3Fpdx/IUgRmsJiK2V3jATceFWHdf8/BMeiNDYwD2U7i1q
-3086jl6AsX+YoSVr7Y1z7U+i8sHs2E/x/bP9LjOzRAXLya+5rdefN2ngQZq1Deex
-AUlEQpjAk186CwzKC1OWLLmbBYRbo/avge9LcYp3eAFfUbv2kjv2QRPII2EspHzi
-Zs3Y57WJlZ7STEyx7rHHXWYqEv7IqhlIo1f2xZobE7MFBmsYCjYy9GMMexe6H2z4
-zMbp8clRBhJ/+CeT06cbMK5/gPb1biOaPeFndjeQOSbO3hmvfi2F2w32lJZsad4x
-qAImcHOYwKX7KXoR1RoiFJO5kVdyaw==
-=l7/J
------END PGP SIGNATURE-----
+Where is the rcu grace period before freeing enforced ?
 
---buDNgeHiu+HCsDEc--
+>  
+> diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+> index 2a91c192659f..dfed9f0b8646 100644
+> --- a/drivers/net/slip/slip.c
+> +++ b/drivers/net/slip/slip.c
+> @@ -452,7 +452,14 @@ static void slip_transmit(struct work_struct *work)
+>   */
+>  static void slip_write_wakeup(struct tty_struct *tty)
+>  {
+> -	struct slip *sl = tty->disc_data;
+> +	struct slip *sl;
+> +
+> +	rcu_read_lock();
+> +	sl = rcu_dereference(tty->disc_data);
+> +	rcu_read_unlock();
+
+Same here.
+
+> +
+> +	if (!sl)
+> +		return;
+>  
+>  	schedule_work(&sl->tx_work);
+>  }
+> @@ -882,7 +889,7 @@ static void slip_close(struct tty_struct *tty)
+>  		return;
+>  
+>  	spin_lock_bh(&sl->lock);
+> -	tty->disc_data = NULL;
+> +	rcu_assign_pointer(tty->disc_data, NULL);
+>  	sl->tty = NULL;
+>  	spin_unlock_bh(&sl->lock);
+>  
+> 
