@@ -2,69 +2,86 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12C6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26732C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33CC24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A3E24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 21:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579038903;
-	bh=zOSg2WCOVpe+aAEklnKX/2mo3OLawgvqqcKIABLB7d4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=gduz1p+6BV/oFk623chOU7ajY7tzarkuYUN2Kj5bDkscw4Ob820s9PvdEaXiSBT7f
-	 qf5EYbXzDGYq3oQqWk+E6ouv6+ffiA8w+KlK5cGVokt1PFeFuWUsmXPlRfgF8oI5Df
-	 iAlQhSUbpHxcXnGb3O/Yc+rE3sU8qytlolweL27U=
+	s=default; t=1579038957;
+	bh=+xqwiOYcBJrdVaCNI+KhG1JsykzRIQyfBAXhDvOo3DU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j+gRT75N07likWiEk8q7Qzd99AKzmZxkDaqFqGHqddb1U3lc7sRz9hJX07Ewiduw8
+	 OS4HkSaDZkgD3eo6lKGaED9GbdvfU55zarOEHH0D/ocN1PO8VOOYXWoAv3dBZY6T7f
+	 yHCnHa6nIxnlV6+nScOCFSmoj7poVfvjJ/b1evmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgANVzC (ORCPT
+        id S1728848AbgANVz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:55:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47820 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 16:55:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANVzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:55:02 -0500
-Subject: Re: [GIT PULL] Please pull NFS over RDMA fixes for 5.5-rc7
+        id S1726491AbgANVzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:55:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD852072B;
+        Tue, 14 Jan 2020 21:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579038901;
-        bh=zOSg2WCOVpe+aAEklnKX/2mo3OLawgvqqcKIABLB7d4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=J8Z2jL4xVLdJNayAgt1ql7AzJZxYWl2RhZw42KxMkb49t+PTp9tQ+rQLs+cMLK4qR
-         3E7Ly0+xqkGI/tJSRt7fOgcc+nly7Lq/u4OIaHeyuXR4Hu7O9PCqkmx7FLi7VzEkBb
-         bqnEN+SKDoRPhWvgZn+/C0e4ELm0utqT0QFFgvqY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <e85791e49b772b5641b65c09b75fad4cee62218b.camel@netapp.com>
-References: <e85791e49b772b5641b65c09b75fad4cee62218b.camel@netapp.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <e85791e49b772b5641b65c09b75fad4cee62218b.camel@netapp.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git
- tags/nfs-for-5.5-2
-X-PR-Tracked-Commit-Id: 671c450b6fe0680ea1cb1cf1526d764fdd5a3d3f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 95e20af9fb9ce572129b930967dcb762a318c588
-Message-Id: <157903890169.2883.16329569388665062116.pr-tracker-bot@kernel.org>
-Date:   Tue, 14 Jan 2020 21:55:01 +0000
-To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        s=default; t=1579038955;
+        bh=+xqwiOYcBJrdVaCNI+KhG1JsykzRIQyfBAXhDvOo3DU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZvENRmQbQ6ymSxSnglOoLMb6iGLnA16Oju0J4WGyUX29PGkXhLbq4Yp5Ht2/TVCYo
+         c+t16TvvSxacU53w2f9T4eXBVl2lEatEBnex4BX72DSy9aWxinZaDQEJjdI69I/fYi
+         bXSRE272xAHplDTu9xOZSwpj2evuAWOHDm2CDMQg=
+Date:   Tue, 14 Jan 2020 22:55:51 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
+Message-ID: <20200114215551.GA2362026@kroah.com>
+References: <20200114094352.428808181@linuxfoundation.org>
+ <0c5ca0ba-fac2-03e6-72b8-3d1a4a52f346@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c5ca0ba-fac2-03e6-72b8-3d1a4a52f346@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 14 Jan 2020 21:12:56 +0000:
+On Tue, Jan 14, 2020 at 01:19:41PM -0700, shuah wrote:
+> On 1/14/20 3:00 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.12 release.
+> > There are 78 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.5-2
+Thanks for testing all of these and letting me know.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/95e20af9fb9ce572129b930967dcb762a318c588
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+greg k-h
