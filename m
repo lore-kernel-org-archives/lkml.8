@@ -2,144 +2,130 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A432C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D5BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52A424655
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A392465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jUqcROsP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="kOTtIyG0";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="kOTtIyG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgANQOw (ORCPT
+        id S1728880AbgANQPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:14:52 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:52306 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgANQOv (ORCPT
+        Tue, 14 Jan 2020 11:15:54 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49062 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726495AbgANQPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:14:51 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EG9OZK070392;
-        Tue, 14 Jan 2020 16:14:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=Yno/8o3VD6Dg4efinphoYmptXGewwjphjyePJ/y+XUI=;
- b=jUqcROsPqrvy/K6MNQ9jmLIppBKSZG1NxL4fv7NUh1zoelNu9I0jZPD0/7sjPtmiv1RZ
- AZHuSEmtdOEspgBbGHAVPzt8b/XMqcZHVTK1vNktP0RMm7Wx+sQzqZ57B4pcg8C8lweY
- mDvAOhFBW0SugJp/z9WzB8oAm3gpN1OA8aVbWIw84RzrZp+nqWIhohCYkBcGnAuhpgha
- FmF0dGrVI7h3AzAkFmDOK7nDPoNXRRSzeqoWqQAfAchLlflEkDHPXtWETXZ0/4Qtbuf2
- nsOvM8q8aR4bPr6V264xnI0ZNP/TR39fp7jkquos0R93XY5Ga+v/CAg8YM3YUqFr5902 0w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xf74s70h7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 16:14:36 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EG9RFh111084;
-        Tue, 14 Jan 2020 16:14:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xh2tny7fg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 16:14:35 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00EGEYEP007786;
-        Tue, 14 Jan 2020 16:14:34 GMT
-Received: from dhcp-10-175-171-251.vpn.oracle.com (/10.175.171.251)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jan 2020 08:14:34 -0800
-Date:   Tue, 14 Jan 2020 16:14:22 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-171-251.vpn.oracle.com
-To:     Brendan Higgins <brendanhiggins@google.com>
-cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: linux-next: Tree for Jan 13
- (drivers/base/test/property-entry-test.o)
-In-Reply-To: <CAFd5g454Xgb-tnG-rBQ3fkCe2bsO7M8_dauOTpG3bxDjnxOX9A@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.2001141612110.14991@dhcp-10-175-171-251.vpn.oracle.com>
-References: <20200113181457.209ab4a5@canb.auug.org.au> <eddaa93c-3bde-a9ed-5ee7-766f3cd51a43@infradead.org> <20200114104049.5244f612@canb.auug.org.au> <CAFd5g454Xgb-tnG-rBQ3fkCe2bsO7M8_dauOTpG3bxDjnxOX9A@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140137
+        Tue, 14 Jan 2020 11:15:54 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id AB6638EE24E;
+        Tue, 14 Jan 2020 08:15:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1579018553;
+        bh=02Zx84XMsoxh7GzrzKK9m0tPh6L4+QOXtmWVHzMsKtw=;
+        h=Subject:From:To:Cc:Date:From;
+        b=kOTtIyG0qEwPYFG8te35hTmv5Fut53abcZsDMENe4IlPYLWaJx7MGQVtTZNGSrZ0B
+         q6eHsGvRWfU3yf7ES9I/LRUSVpfB2WkgzMzqqS+PWDPSbVyeLuvB8rdiaA1L8TUdwQ
+         SfvpSNyjQ6LjxhwHRUq1ICMAJbYyrsJyVxrWP5xo=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tEzRh7KVHe4h; Tue, 14 Jan 2020 08:15:53 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E35808EE056;
+        Tue, 14 Jan 2020 08:15:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1579018553;
+        bh=02Zx84XMsoxh7GzrzKK9m0tPh6L4+QOXtmWVHzMsKtw=;
+        h=Subject:From:To:Cc:Date:From;
+        b=kOTtIyG0qEwPYFG8te35hTmv5Fut53abcZsDMENe4IlPYLWaJx7MGQVtTZNGSrZ0B
+         q6eHsGvRWfU3yf7ES9I/LRUSVpfB2WkgzMzqqS+PWDPSbVyeLuvB8rdiaA1L8TUdwQ
+         SfvpSNyjQ6LjxhwHRUq1ICMAJbYyrsJyVxrWP5xo=
+Message-ID: <1579018551.3390.13.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.5-rc6
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Tue, 14 Jan 2020 08:15:51 -0800
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020, Brendan Higgins wrote:
+Two simple fixes in the upper drivers (so both fairly core), one in
+enclosures, which fixes replugging a device into an enclosure slot and
+one in the disk driver which fixes revalidating a drive with protection
+information (PI) to make it a non-PI drive ... previously we were still
+remembering the old PI state.  Both fixed issues are quite rare in the
+field.
 
-> +KUnit Development
-> +open list:KERNEL SELFTEST FRAMEWORK
-> 
-> On Mon, Jan 13, 2020 at 3:40 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Hi Randy,
-> >
-> > On Mon, 13 Jan 2020 14:59:54 -0800 Randy Dunlap <rdunlap@infradead.org> wrote:
-> > >
-> > > on i386:
-> > >
-> > > WARNING: modpost: missing MODULE_LICENSE() in drivers/base/test/property-entry-test.o
-> > > see include/linux/module.h for more information
-> >
-> > Sorry, I missed that yesterday.
-> >
-> > Caused by commit
-> >
-> >   c032ace71c29 ("software node: add basic tests for property entries")
-> >
-> > from the pm tree interacting with commit
-> >
-> >   9fe124bf1b77 ("kunit: allow kunit to be loaded as a module")
-> >
-> > from the kunit-next tree.
-> 
-> Yes, the problem seems to be that the property-entry-test is turned on
-> when CONFIG_KUNIT is y or m.
-> 
-> From drivers/base/test/Makefile:
-> ...
-> obj-$(CONFIG_KUNIT) += property-entry-test.o
-> 
-> It seems we can fix it just by adding the missing MODULE_LICENSE, but
-> I think there is a bigger question of whether we should let people do
-> this. Do we want to just let people have their tests run whenever
-> CONFIG_KUNIT is enabled? I am inclined to think no. It should be
-> possible for people to run their test and their test only.
-> 
+The patch is available here:
 
-I agree completely, CONFIG_KUNIT is too big a switch I
-think, aside from the merge issues caused here. I've posted
-a patch which introduces a per-test-suite CONFIG option:
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-https://lore.kernel.org/lkml/1579018183-14879-1-git-send-email-alan.maguire@oracle.com/T/#u
+The short changelog is:
 
-Brendan, do let me know if you want me to amend it to add a Suggested-by 
-from you (didn't want to add it without your permission). Thanks!
+James Bottomley (1):
+      scsi: enclosure: Fix stale device oops with hot replug
 
-Alan
+Xiang Chen (1):
+      scsi: sd: Clear sdkp->protection_type if disk is reformatted without PI
+
+And the diffstat:
+
+ drivers/misc/enclosure.c | 3 +--
+ drivers/scsi/sd.c        | 4 +++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
+index 6d27ccfe0680..3c2d405bc79b 100644
+--- a/drivers/misc/enclosure.c
++++ b/drivers/misc/enclosure.c
+@@ -406,10 +406,9 @@ int enclosure_remove_device(struct enclosure_device *edev, struct device *dev)
+ 		cdev = &edev->component[i];
+ 		if (cdev->dev == dev) {
+ 			enclosure_remove_links(cdev);
+-			device_del(&cdev->cdev);
+ 			put_device(dev);
+ 			cdev->dev = NULL;
+-			return device_add(&cdev->cdev);
++			return 0;
+ 		}
+ 	}
+ 	return -ENODEV;
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index cea625906440..65ce10c7989c 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -2211,8 +2211,10 @@ static int sd_read_protection_type(struct scsi_disk *sdkp, unsigned char *buffer
+ 	u8 type;
+ 	int ret = 0;
+ 
+-	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0)
++	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0) {
++		sdkp->protection_type = 0;
+ 		return ret;
++	}
+ 
+ 	type = ((buffer[12] >> 1) & 7) + 1; /* P_TYPE 0 = Type 1 */
+ 
