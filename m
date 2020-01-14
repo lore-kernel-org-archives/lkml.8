@@ -2,71 +2,124 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082D3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C7BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55DD24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579031327;
-	bh=Jwtjbz1xWl2epV72DQ55JG7jJJ7iyLgmYALvx4gZz4M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=pAAfdWo6DKc0yyTF2low6r2zF1YhpKUuhibgOcgF1uyuE7Wz3Sw/amr0CjlKS5smE
-	 D5W4L+u5TFV+7W5q6Ub/W7jTPM34u9o9Yd0WgaS71UAZ8J/kYjVl7BskLTyGT3iuvb
-	 MNxlg2u+NdFLDpTch/tvY4J9LaxKE0UqtmrIw8kA=
+	by mail.kernel.org (Postfix) with ESMTP id 912E724670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgANTsr (ORCPT
+        id S1728895AbgANTtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:48:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANTsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:48:46 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940A524655;
-        Tue, 14 Jan 2020 19:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579031326;
-        bh=Jwtjbz1xWl2epV72DQ55JG7jJJ7iyLgmYALvx4gZz4M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L1KzeYrIy55KkTvrJ5ex0kR+Iz1jl9gpFWZnB6xbgs9V7I+KBnRKxn4W72X4UxOUp
-         0cxlWPXEOGmyqKuGEwlQsnHqMeigm+iw9EMpMetHRCKHkCXnzTT95K4CiQpATDNfTv
-         hcCzWFVsRU/HMM8L5igYBAQQYJbvlCyhr71H6gxk=
-Date:   Tue, 14 Jan 2020 13:48:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v12 0/8] Add Error Disconnect Recover (EDR) support
-Message-ID: <20200114194843.GA134677@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 Jan 2020 14:49:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44691 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANTtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:49:02 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irSBO-0005Z9-37; Tue, 14 Jan 2020 20:48:58 +0100
+Message-Id: <20200114185237.273005683@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 14 Jan 2020 19:52:37 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [patch 00/15] lib/vdso: Bugfix and consolidation
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 02:43:54PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ...
-> Changes since v11:
->  * Allowed error recovery to proceed after successful reset_link().
->  * Used correct ACPI handle for sending EDR status.
->  * Rebased on top of v5.5-rc5
+The recent discussions about changes in the VDSO to support PPC
+triggered this consolidation series which in turn unearthed a subtle
+bug affecting ARM.
 
-You don't need to rebase this for *me*, since I always apply patches
-on topic branches based on my "master" branch (typically -rc1) unless
-they depend on something that's not in -rc1 (please tell me when this
-is the case).
+The bug affects only ARM 32bit systems which lack a VDSO capable
+timer. The absence of the ARM architected timer causes the VDSO update
+code to terminate early. As a result the parts of the VDSO data which
+is usable without a VDSO capable clocksource are not updated either,
+but the VDSO code uses them, i.e. it uses stale data and will serve
+that forever. The fix is to make only the parts of the update
+conditional which are related to te high resolution interfaces.
 
-It usually doesn't *hurt* (and this series applies just fine on -rc1),
-so this is just FYI.
+The rest of the series is addressing the following points:
+
+ - Allow architectures to compile out the high resolution parts of the
+   VDSO library when they know at compile time that no VDSO capable
+   clocksource will be available.
+
+ - Move the storage of the VDSO clockmode into generic code and remove
+   all the redundant copies of the storage and the handling of it from
+   the architectures. 
+
+   This allows to remove the check for a valid clocksource at runtime
+   from the clock readout function and make it generic by checking
+   for a clock mode != NONE in the generic code. This generates better
+   code on PPC and does not affect x86/arm performance.
+
+Thanks,
+
+       tglx
+
+8<----------
+ arch/arm/Kconfig                            |    1 
+ arch/arm/include/asm/clocksource.h          |    5 -
+ arch/arm/include/asm/vdso/gettimeofday.h    |    6 +
+ arch/arm/include/asm/vdso/vsyscall.h        |   35 ---------
+ arch/arm64/Kconfig                          |    1 
+ arch/arm64/include/asm/clocksource.h        |    5 -
+ arch/arm64/include/asm/vdso/vsyscall.h      |    9 --
+ arch/mips/Kconfig                           |    1 
+ arch/mips/include/asm/clocksource.h         |   18 ----
+ arch/mips/include/asm/vdso/vsyscall.h       |    9 --
+ arch/mips/kernel/csrc-r4k.c                 |    2 
+ arch/x86/Kconfig                            |    1 
+ arch/x86/entry/vdso/vma.c                   |    8 +-
+ arch/x86/include/asm/clocksource.h          |   23 ++++--
+ arch/x86/include/asm/mshyperv.h             |    4 -
+ arch/x86/include/asm/vdso/gettimeofday.h    |    6 -
+ arch/x86/include/asm/vdso/vsyscall.h        |   15 ----
+ arch/x86/include/asm/vgtod.h                |    6 -
+ arch/x86/kernel/kvmclock.c                  |    9 ++
+ arch/x86/kernel/pvclock.c                   |    2 
+ arch/x86/kernel/time.c                      |   12 ---
+ arch/x86/kernel/tsc.c                       |   32 +++++---
+ arch/x86/kvm/trace.h                        |    4 -
+ arch/x86/kvm/x86.c                          |   22 +++---
+ arch/x86/xen/time.c                         |   36 ++++++---
+ b/arch/mips/include/asm/vdso/gettimeofday.h |   29 +++----
+ b/include/asm-generic/vdso/vsyscall.h       |   14 ---
+ drivers/clocksource/arm_arch_timer.c        |    8 +-
+ drivers/clocksource/hyperv_timer.c          |    7 +
+ drivers/clocksource/mips-gic-timer.c        |    8 +-
+ include/linux/clocksource.h                 |  102 ++++++++++++++++------------
+ include/vdso/datapage.h                     |    2 
+ kernel/time/clocksource.c                   |    9 ++
+ kernel/time/namespace.c                     |    7 +
+ kernel/time/vsyscall.c                      |   43 +++++------
+ lib/vdso/gettimeofday.c                     |   43 +++++++----
+ 36 files changed, 259 insertions(+), 285 deletions(-)
+
+
