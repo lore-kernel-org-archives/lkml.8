@@ -2,54 +2,78 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F17C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FCFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDBF217BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011A8207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgANJVm (ORCPT
+        id S1728921AbgANJWx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:21:42 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42813 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbgANJVl (ORCPT
+        Tue, 14 Jan 2020 04:22:53 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42004 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgANJWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:21:41 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TnibZb5_1578993695;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnibZb5_1578993695)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 Jan 2020 17:21:35 +0800
-Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        shakeelb@google.com, hannes@cmpxchg.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
- <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
- <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
- <2ba8a04e-d8e0-1d50-addc-dbe1b4d8e0f1@yandex-team.ru>
- <a095d80d-8e34-c84f-e4be-085a5aae1929@linux.alibaba.com>
- <20200113163456.GA332@bombadil.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <2f3b6613-d107-6d89-2510-6d01c0ae0625@linux.alibaba.com>
-Date:   Tue, 14 Jan 2020 17:20:06 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200113163456.GA332@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jan 2020 04:22:50 -0500
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1irIPP-0006qn-ND
+        for linux-kernel@vger.kernel.org; Tue, 14 Jan 2020 09:22:47 +0000
+Received: by mail-pj1-f72.google.com with SMTP id gn11so8514621pjb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 01:22:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=ZWAvW0Rz1fE7AgqGVyczDvEbs9mU6QRWoYteCf8IMgY=;
+        b=ApMbS4Izoyx4Hk/FJ1dSCDxh0lrd7E/SkWrKNyuuSPAi0gJwnmbLKMdY2yhM+li0bl
+         Bs2Va0lYkdq9ysYxQzYxFLIUt7rjw+XZsX1P6XKW4GCj4pKsewRF+r08Rzxdsk1xlM3m
+         3kENukQoBDwj0o9hFh+7UvhlJqUnDggDaMTqGSipSfJiG63Z2i7+OL/KoiGmDC/79y58
+         cj31S88x7b/tokt4S1/nI2AIxOcT/6UXcIMTj2kInsX+eAw3T6oAghFfz5SudYT6RNIQ
+         l49KnHn1j+D6or99jUQJe3qA12AMQKFB8n9HL98Qqx7mOUNTqYVqchD2vsvEveTclqwp
+         46jA==
+X-Gm-Message-State: APjAAAUd+isC+K0nnHN79UoDPwOCUuRT53pzhgQPhMj8UYqkHG4oBPLV
+        /1s37VgYfA8YPQ7ZUSBXl5eVAbEPjaagJp1Ut5S4i19pOk3HxR+Ud7quNL6sAmSwI8A/WW3AVZo
+        9IzF5DY8P0tJNjFmLOo9ddNyXv6GoxgXxkUVu5AkJ4A==
+X-Received: by 2002:a17:90a:cb83:: with SMTP id a3mr27325366pju.80.1578993766159;
+        Tue, 14 Jan 2020 01:22:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz/dfKdh6hyfCjf7/vtp3J9v7vz7wJtppmbIjvVArkf4ZL6hlcXyW/MQU84uBegDfMHDLn6Tg==
+X-Received: by 2002:a17:90a:cb83:: with SMTP id a3mr27325337pju.80.1578993765891;
+        Tue, 14 Jan 2020 01:22:45 -0800 (PST)
+Received: from 2001-b011-380f-35a3-5d99-e277-e07f-4d26.dynamic-ip6.hinet.net (2001-b011-380f-35a3-5d99-e277-e07f-4d26.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:5d99:e277:e07f:4d26])
+        by smtp.gmail.com with ESMTPSA id a6sm15893776pgg.25.2020.01.14.01.22.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 01:22:45 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] r8152: Add MAC passthrough support to new device
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <1578990223.15925.0.camel@suse.com>
+Date:   Tue, 14 Jan 2020 17:22:39 +0800
+Cc:     David Miller <davem@davemloft.net>,
+        Hayes Wang <hayeswang@realtek.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Prashant Malani <pmalani@chromium.org>,
+        Grant Grundler <grundler@chromium.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        David Chen <david.chen7@dell.com>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <A3D0DBA9-7014-48BF-8001-6F34EC2200B1@canonical.com>
+References: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+ <1578990223.15925.0.camel@suse.com>
+To:     Oliver Neukum <oneukum@suse.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,50 +81,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-在 2020/1/14 上午12:34, Matthew Wilcox 写道:
-> On Mon, Jan 13, 2020 at 08:47:25PM +0800, Alex Shi wrote:
->> 在 2020/1/13 下午5:55, Konstantin Khlebnikov 写道:
->>>>> That's wrong. Here PageLRU must be checked again under lru_lock.
->>>> Hi, Konstantin,
->>>>
->>>> For logical remain, we can get the lock and then release for !PageLRU.
->>>> but I still can figure out the problem scenario. Would like to give more hints?
->>>
->>> That's trivial race: page could be isolated from lru between
->>>
->>> if (PageLRU(page))
->>> and
->>> spin_lock_irq(&pgdat->lru_lock);
->>
->> yes, it could be a problem. guess the following change could helpful:
->> I will update it in new version.
+> On Jan 14, 2020, at 16:23, Oliver Neukum <oneukum@suse.com> wrote:
 > 
->> +       if (lrucare) {
->> +               lruvec = lock_page_lruvec_irq(page);
->> +               if (likely(PageLRU(page))) {
->> +                       ClearPageLRU(page);
->> +                       del_page_from_lru_list(page, lruvec, page_lru(page));
->> +               } else {
->> +                       unlock_page_lruvec_irq(lruvec);
->> +                       lruvec = NULL;
->> +               }
+> Am Dienstag, den 14.01.2020, 12:41 +0800 schrieb Kai-Heng Feng:
+>> Device 0xa387 also supports MAC passthrough, therefore add it to the
+>> whitelst.
 > 
-> What about a harder race to hit like a page being on LRU list A when you
-> look up the lruvec, then it's removed and added to LRU list B by the
-> time you get the lock?  At that point, you are holding a lock on the
-> wrong LRU list.  I think you need to check not just that the page
-> is still PageLRU but also still on the same LRU list.
+> Hi,
 > 
+> this list is getting longer and longer. Isn't there a way to do
+> this generically? ACPI?
 
-Thanks for comments, Matthew!
+ACPI only provides the MAC address, to write the MAC to r8152 it still requires hardware support.
+So we need to use whitelist here, not all r8152 support this feature.
 
-We will check and lock lruvec after lock_page_memcg, so if it works well, a page
-won't moved from one lruvec to another. Also the later debug do this check, to
-see if lruvec changed.
+Kai-Heng
 
-If you mean lru list not lruvec, It seems there is noway to figure out the lru list
-from a page now.
-
-Thanks
-Alex
+> 
+> 	Regards
+> 		Oliver
+> 
 
