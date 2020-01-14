@@ -2,114 +2,87 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B702BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 02:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 02:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA362084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 02:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nz5Aooyy"
+	by mail.kernel.org (Postfix) with ESMTP id B481B2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 02:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgANCNv (ORCPT
+        id S1729600AbgANCPc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 21:13:51 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33613 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgANCNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 21:13:51 -0500
-Received: by mail-pj1-f66.google.com with SMTP id u63so427301pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 18:13:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+z8kiB27wPGXn90Jifmc7GvqCcTTfQFQ09TVSilQ62U=;
-        b=nz5AooyyO8UV4W2raMKoiKBMXtT/bo9PatBrL5aEBihU5Bu8dzhJ8lIyBnJQ+7UN76
-         P+8/m5ClVTYTjII38MEWxWvX3IgSd4aJJ5WHnTZBjPegsX3qCbvmzuugoTbHeCGxKb4D
-         x4Tz6JqgNPET3RWsCkuix5TjP3xnI2zk1U5FIhqepS7I66Q5kXX0uOyeIxJgvG80qeSF
-         xxacbzLRmtPQRQNpVGry/ia8R+OdKCBfLrFLnw5bvA0fTBwrEhvK38+x3T07HMggXDyN
-         L3ZMnfshrU53TdeSuwwYqAH4t9yzn8peHp4uA1EZQ7oD09Aj36dwrTV0bi7V3NhYvo8o
-         1BBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+z8kiB27wPGXn90Jifmc7GvqCcTTfQFQ09TVSilQ62U=;
-        b=h+nZsiJ8T1x3QMjFYhHClRWDI9C9TuXm7LX5NJvzJuaHxEd+3+p0aaKJogl1YvTRUd
-         TJYOaKDgdlDPZ/HNgajo8Px0TTUWIM3VnSM0E4TKBNrgZgzs5diR05HcI8XNW42nWYVc
-         iOIrtqaJU5XfIg8rAV1H/n8sRZsHdnzPDjKSXCRX+yY+m8AtfqixUX/Xlc3w42bWj9zs
-         frYMl/+WGYkTIGb9lYWqTlGoovp45Xd/wfogRYY2Y6rvBZmDuk1f+ytv+Murb2Cnxx5a
-         2ffd3+QZ14lhh9N2M8ay386qitI1jhO2h9GYlsdbsTKM3SBDY4QSrmRe6AEyhYuNhtq6
-         cFFA==
-X-Gm-Message-State: APjAAAVLBzI39bJ4sMz3kclPJwZWUjwsVuv8u7RUSuZMDMFbSTUrCNIG
-        XHpZFE1E0/+lmHhv0kEU/Bqv86+ilS7Qs3TwnmhqKw==
-X-Google-Smtp-Source: APXvYqw6inDyeiXLNEF5jBW5S399bu/qD+aslWeemGXOynwxYjD/Q4CHQwEuQJmIYgaJouVkAD9Go4Az+fNFNcXaWa0=
-X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr17781759plm.232.1578968030398;
- Mon, 13 Jan 2020 18:13:50 -0800 (PST)
+        Mon, 13 Jan 2020 21:15:32 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2989 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729402AbgANCPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 21:15:31 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id B9AA8675F32A4268D52D;
+        Tue, 14 Jan 2020 10:15:28 +0800 (CST)
+Received: from dggeme716-chm.china.huawei.com (10.1.199.112) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 Jan 2020 10:15:28 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme716-chm.china.huawei.com (10.1.199.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 14 Jan 2020 10:15:28 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Tue, 14 Jan 2020 10:15:28 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "liran.alon@oracle.com" <liran.alon@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v2] KVM: nVMX: vmread should not set rflags to specify
+ success in case of #PF
+Thread-Topic: [PATCH v2] KVM: nVMX: vmread should not set rflags to specify
+ success in case of #PF
+Thread-Index: AdXKfnlTqBbphD17SN+x8lK5ZNmfGA==
+Date:   Tue, 14 Jan 2020 02:15:28 +0000
+Message-ID: <724c22eff5f94a338e0f8af4f2c1df93@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200110134337.1752000-1-arnd@arndb.de> <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
-In-Reply-To: <CAFd5g47+_oyqsS0o0kQ+CaLNtjqbvOmQc-n0Ch1jAT6P6RSFiw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 13 Jan 2020 18:13:39 -0800
-Message-ID: <CAFd5g45bsH1781stRRWR45AN92=o9MeafHDjt7qZQveJSVMOJQ@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] kunit: move binary assertion out of line
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 6:12 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
+Hi,
+On Mon, Jan 13, 2020 at 12:09:42PM -0800, Sean Christopherson wrote:
+> > On Sat, Dec 28, 2019 at 02:25:24PM +0800, linmiaohe wrote:
+> > > From: Miaohe Lin <linmiaohe@huawei.com>
+> > > 
+> > > In case writing to vmread destination operand result in a #PF, 
+> > vmread should not call nested_vmx_succeed() to set rflags to specify success.
+> > > Similar to as done in VMPTRST (See handle_vmptrst()).
+> > > 
+> > > Reviewed-by: Liran Alon <liran.alon@oracle.com>
+> > > Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> > 
+> > Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 >
-> On Fri, Jan 10, 2020 at 5:43 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > In combination with the structleak gcc plugin, kunit can lead to excessive
-> > stack usage when each assertion adds another structure to the stack from
-> > of the calling function:
-> >
-> > base/test/property-entry-test.c:99:1: error: the frame size of 3032 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-> >
-> > As most assertions are binary, change those over to a direct function
-> > call that does not have this problem.  This can probably be improved
-> > further, I just went for a straightforward conversion, but a function
-> > call with 12 fixed arguments plus varargs it not great either.
->
-> Yeah, I am not exactly excited by maintaining such a set of functions.
->
-> I don't think anyone wants to go with the heap allocation route.
->
-> Along the lines of the union/single copy idea[1]. What if we just put
-> a union of all the assertion types in the kunit struct? One is already
-> allocated for every test case and we only need one assertion object
-> for each test case at a time, so I imagine that sould work.
->
-> I will start messing around with the idea. Still, it sounds like we
-> are down to either reducing the number of instances of this struct
-> that get created per test case, or we need to remove it entirely (as
-> you have done here).
->
-> Cheers
+> Gah, got trigger happy.  This could also have "Cc: stable@vger.kernel.org".
+> With that, my Reviewed-by stands :-).
 
-Woops forgot to link the original discussion.
-
-[1] https://lkml.org/lkml/2020/1/13/1166
+Many thanks for your review. I would add Cc tag and resend a v3. Thanks again.
