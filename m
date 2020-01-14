@@ -2,325 +2,176 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D732BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F37C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9106A24672
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brkho-com.20150623.gappssmtp.com header.i=@brkho-com.20150623.gappssmtp.com header.b="SQ1M75nB"
+	by mail.kernel.org (Postfix) with ESMTP id 1D21F24673
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579023993;
+	bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qcN3xrn4pzANAuQrLH4nwd/dtpwagPWL0AUYl0D+7SnZjBfBinrd365LEiVaCHRzA
+	 cYTa+xGp7p84JLUZew0Z0GNInQc6xuRbXAFWBpEC7+W81jfa6U+MvFUFX+JpUsqH6F
+	 89DKH8/JsIwILdDlRbhWihNWIErCWOVeCx6OoEtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgANRpk (ORCPT
+        id S1728721AbgANRqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:45:40 -0500
-Received: from mail-vk1-f226.google.com ([209.85.221.226]:41666 "EHLO
-        mail-vk1-f226.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANRpk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:45:40 -0500
-Received: by mail-vk1-f226.google.com with SMTP id p191so3871833vkf.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:45:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brkho-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IEReIqiV9DqHXynuZUoOdv3vrFwkK9mEmA9xvO2qdVM=;
-        b=SQ1M75nBLkNeAmQ+001qHsQS9SIbcVKCV9HenJqQp3MKVoZzELHJnxWUapFur3RI+L
-         rq6nLNQi7kwMMdJao1IyDmEjsL7v9A66vyDeTc8u2bTK1IwiJzxr0NYVwRQ0jJkCTqdf
-         5fNIludEQ3n0pwvnFcOscpzezyNSFqDWmsZYabCFYKpPOjDGrI1VYkNbYcLOTXgbpr37
-         Qjchmk7WHVgMIuy5Ur4J9LtxDlaTQJrsyaomrpalW4Rw4gHSg4rtjCrDnUDReCZn1Ugr
-         qZ30vZL/BcznnOeHZ2MdPbYpJ+uXxe7nRMtLI2bkf/6Hq+Xq3eaCnswrUncykQ817bRg
-         lJvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IEReIqiV9DqHXynuZUoOdv3vrFwkK9mEmA9xvO2qdVM=;
-        b=eMZpmODcb4A5UnDePfTXBQrGpXIU7GxXkosNn3sxfCXy1KLtKyy3jdYRMqa240NgDE
-         KHurQxPeJdpwKGcZ7y7dsqckE+WaS2WYghKTP3TC6Z/e+ZgJbDr0k/D6TmfbYKJ5KDaU
-         BmE1E+P/dz5W+86lcteEqFe8czUQ0M851J5jk4YBaqe5gvYleyxqGbqU1Chg954NLUn7
-         /JmvZaLqnT8W7O6d5Dnpq8q7g0DDiX75znEwZ0967rWfpaEekaV73uAthewpKeUHRyxA
-         6XhVv0R1Gl704eBTpWk3eYjDr1wl4feXX4zEGouE8QQ14i/akr+iW6PGjL6oO3i7fMSr
-         Qrpg==
-X-Gm-Message-State: APjAAAWE5tzoXNzf1r4bSIW2DAH6x3G00IbJjNI2tMtcBBkT/ZvhX724
-        YQovP1N4wXdJblv/OLA/GFAxksl3cYpI5lhZ9eBc5weGB2K/4g==
-X-Google-Smtp-Source: APXvYqz2RK+0iwilGpb6fmKNV1jXJyXQPjjgffnkHiktNmrOjrT2wDcdwuZfAypJn+qxTYbYBqBNC8xYhOxG
-X-Received: by 2002:a05:6122:332:: with SMTP id d18mr11769867vko.89.1579023939106;
-        Tue, 14 Jan 2020 09:45:39 -0800 (PST)
-Received: from google.com ([100.118.32.120])
-        by smtp-relay.gmail.com with ESMTPS id f205sm1505678vka.0.2020.01.14.09.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 09:45:39 -0800 (PST)
-X-Relaying-Domain: brkho.com
-Date:   Tue, 14 Jan 2020 12:45:22 -0500
-From:   Brian Ho <brian@brkho.com>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Kristian Kristensen <hoegsberg@google.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        hoegsberg <hoegsberg@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
-Message-ID: <20200114174521.GA239970@google.com>
-References: <20200113153605.52350-1-brian@brkho.com>
- <20200113153605.52350-3-brian@brkho.com>
- <CAJs_Fx48B-C8GEeAmPaqGAqAOTR2dT0csg8W=TRyULOfy=1=VQ@mail.gmail.com>
- <CAOPc6Tn8CWVzcLoJOGmn3CW6B9FMKf_-NzE8TpwDHsPfoQDaQQ@mail.gmail.com>
- <20200113225516.GA157345@google.com>
- <CAJs_Fx5i-cZ0qXk_jNo=JGfZRc7uuvUcTZ2TE1ppuYUfNLymKQ@mail.gmail.com>
- <20200114164034.GA213224@google.com>
- <CAJs_Fx6YN_DFx8y_7PB4kJ7YzmGvgUPE9FaOqTY_kJW7y08LVw@mail.gmail.com>
+        Tue, 14 Jan 2020 12:46:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbgANRqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:46:31 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D123C24681;
+        Tue, 14 Jan 2020 17:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579023991;
+        bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jO2fxggsWM5N6fDuJsQiwOrF47A7M0Zj6PjohQnWobjCR2xHQjoywTjQap5QCKX8p
+         iEHdg2y8Kch7ICsK2mTl/kaCOS2AZf0wjHLqfkXREssRjYVgcCkJO3lxmKlNWts9AG
+         dRkXSvn9hiTVctu5Dd87ETssj41Oqiq2Rxjbt8u4=
+Received: by mail-qv1-f52.google.com with SMTP id dc14so6037980qvb.9;
+        Tue, 14 Jan 2020 09:46:30 -0800 (PST)
+X-Gm-Message-State: APjAAAXkpB4KgiaGNEqeW/iP84Opo/o+5MG/ssKz862MTnAqtXW4W8eB
+        aiReoBGJYseiQ3afaSaf84gLbjvUqHw+uSHZrw==
+X-Google-Smtp-Source: APXvYqyzXMJ62ahYNuL6VK1Cf8ZGH/+06Kwo7FdWPAvSiMHBuwB7fFnCgD4KmcvFWnoyxKzjiFXuvKUl+MLXk2qpQcg=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr17346460qvn.79.1579023989888;
+ Tue, 14 Jan 2020 09:46:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJs_Fx6YN_DFx8y_7PB4kJ7YzmGvgUPE9FaOqTY_kJW7y08LVw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+ <20191127105522.31445-5-miquel.raynal@bootlin.com> <20191209113506.41341ed4@collabora.com>
+In-Reply-To: <20191209113506.41341ed4@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 14 Jan 2020 11:46:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 08:48:48AM -0800, Rob Clark wrote:
-> On Tue, Jan 14, 2020 at 8:40 AM Brian Ho <brian@brkho.com> wrote:
+On Mon, Dec 9, 2019 at 4:35 AM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
+>
+> On Wed, 27 Nov 2019 11:55:22 +0100
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> > Introduce a generic way to define concatenated MTD devices. This may
+> > be very useful in the case of ie. stacked SPI-NOR. Partitions to
+> > concatenate are described in an additional property of the partitions
+> > subnode:
 > >
-> > On Mon, Jan 13, 2020 at 03:17:38PM -0800, Rob Clark wrote:
-> > > On Mon, Jan 13, 2020 at 2:55 PM Brian Ho <brian@brkho.com> wrote:
-> > > >
-> > > > On Mon, Jan 13, 2020 at 09:57:43AM -0800, Kristian Kristensen wrote:
-> > > > > On Mon, Jan 13, 2020 at 8:25 AM Rob Clark <robdclark@chromium.org> wrote:
-> > > > >
-> > > > > > On Mon, Jan 13, 2020 at 7:37 AM Brian Ho <brian@brkho.com> wrote:
-> > > > > > >
-> > > > > > > Implements an ioctl to wait until a value at a given iova is greater
-> > > > > > > than or equal to a supplied value.
-> > > > > > >
-> > > > > > > This will initially be used by turnip (open-source Vulkan driver for
-> > > > > > > QC in mesa) for occlusion queries where the userspace driver can
-> > > > > > > block on a query becoming available before continuing via
-> > > > > > > vkGetQueryPoolResults.
-> > > > > > >
-> > > > > > > Signed-off-by: Brian Ho <brian@brkho.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/msm/msm_drv.c | 63 +++++++++++++++++++++++++++++++++--
-> > > > > > >  include/uapi/drm/msm_drm.h    | 13 ++++++++
-> > > > > > >  2 files changed, 74 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/msm/msm_drv.c
-> > > > > > b/drivers/gpu/drm/msm/msm_drv.c
-> > > > > > > index c84f0a8b3f2c..dcc46874a5a2 100644
-> > > > > > > --- a/drivers/gpu/drm/msm/msm_drv.c
-> > > > > > > +++ b/drivers/gpu/drm/msm/msm_drv.c
-> > > > > > > @@ -36,10 +36,11 @@
-> > > > > > >   *           MSM_GEM_INFO ioctl.
-> > > > > > >   * - 1.4.0 - softpin, MSM_RELOC_BO_DUMP, and GEM_INFO support to set/get
-> > > > > > >   *           GEM object's debug name
-> > > > > > > - * - 1.5.0 - Add SUBMITQUERY_QUERY ioctl
-> > > > > > > + * - 1.5.0 - Add SUBMITQUEUE_QUERY ioctl
-> > > > > > > + * - 1.6.0 - Add WAIT_IOVA ioctl
-> > > > > > >   */
-> > > > > > >  #define MSM_VERSION_MAJOR      1
-> > > > > > > -#define MSM_VERSION_MINOR      5
-> > > > > > > +#define MSM_VERSION_MINOR      6
-> > > > > > >  #define MSM_VERSION_PATCHLEVEL 0
-> > > > > > >
-> > > > > > >  static const struct drm_mode_config_funcs mode_config_funcs = {
-> > > > > > > @@ -952,6 +953,63 @@ static int msm_ioctl_submitqueue_close(struct
-> > > > > > drm_device *dev, void *data,
-> > > > > > >         return msm_submitqueue_remove(file->driver_priv, id);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +static int msm_ioctl_wait_iova(struct drm_device *dev, void *data,
-> > > > > > > +               struct drm_file *file)
-> > > > > > > +{
-> > > > > > > +       struct msm_drm_private *priv = dev->dev_private;
-> > > > > > > +       struct drm_gem_object *obj;
-> > > > > > > +       struct drm_msm_wait_iova *args = data;
-> > > > > > > +       ktime_t timeout = to_ktime(args->timeout);
-> > > > > > > +       unsigned long remaining_jiffies = timeout_to_jiffies(&timeout);
-> > > > > > > +       struct msm_gpu *gpu = priv->gpu;
-> > > > > > > +       void *base_vaddr;
-> > > > > > > +       uint64_t *vaddr;
-> > > > > > > +       int ret;
-> > > > > > > +
-> > > > > > > +       if (args->pad)
-> > > > > > > +               return -EINVAL;
-> > > > > > > +
-> > > > > > > +       if (!gpu)
-> > > > > > > +               return 0;
-> > > > > >
-> > > > > > hmm, I'm not sure we should return zero in this case.. maybe -ENODEV?
-> > > > > >
-> > > > > > > +
-> > > > > > > +       obj = drm_gem_object_lookup(file, args->handle);
-> > > > > > > +       if (!obj)
-> > > > > > > +               return -ENOENT;
-> > > > > > > +
-> > > > > > > +       base_vaddr = msm_gem_get_vaddr(obj);
-> > > > > > > +       if (IS_ERR(base_vaddr)) {
-> > > > > > > +               ret = PTR_ERR(base_vaddr);
-> > > > > > > +               goto err_put_gem_object;
-> > > > > > > +       }
-> > > > > > > +       if (args->offset + sizeof(*vaddr) > obj->size) {
-> > > > > > > +               ret = -EINVAL;
-> > > > > > > +               goto err_put_vaddr;
-> > > > > > > +       }
-> > > > > > > +
-> > > > > > > +       vaddr = base_vaddr + args->offset;
-> > > > > > > +
-> > > > > > > +       /* Assumes WC mapping */
-> > > > > > > +       ret = wait_event_interruptible_timeout(
-> > > > > > > +                       gpu->event, *vaddr >= args->value,
-> > > > > > remaining_jiffies);
-> > > > > >
-> > > > >
-> > > > > This needs to do the awkward looking
-> > > > >
-> > > > >   (int64_t)(*data - value) >= 0
-> > > > >
-> > > > > to properly handle the wraparound case.
-> > > > >
-> > > >
-> > > > I think this comparison will run into issues if we allow for 64-bit
-> > > > reference values. For example, if value is ULLONG_MAX, and *data
-> > > > starts at 0 on the first comparison, we'll immediately return.
-> > > >
-> > > > It's not too much of an issue in fence_completed (msm_fence.c), but
-> > > > in this ioctl, *data can grow at an arbitrary rate. Are we concerned
-> > > > about this?
-> > > >
-> > > > > > +
-> > > > > > > +       if (ret == 0) {
-> > > > > > > +               ret = -ETIMEDOUT;
-> > > > > > > +               goto err_put_vaddr;
-> > > > > > > +       } else if (ret == -ERESTARTSYS) {
-> > > > > > > +               goto err_put_vaddr;
-> > > > > > > +       }
-> > > > > >
-> > > > > > maybe:
-> > > > > >
-> > > > > >  } else {
-> > > > > >    ret = 0;
-> > > > > >  }
-> > > > > >
-> > > > > > and then drop the next three lines?
-> > > > > >
-> > > > > > > +
-> > > > > > > +       msm_gem_put_vaddr(obj);
-> > > > > > > +       drm_gem_object_put_unlocked(obj);
-> > > > > > > +       return 0;
-> > > > > > > +
-> > > > > > > +err_put_vaddr:
-> > > > > > > +       msm_gem_put_vaddr(obj);
-> > > > > > > +err_put_gem_object:
-> > > > > > > +       drm_gem_object_put_unlocked(obj);
-> > > > > > > +       return ret;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  static const struct drm_ioctl_desc msm_ioctls[] = {
-> > > > > > >         DRM_IOCTL_DEF_DRV(MSM_GET_PARAM,    msm_ioctl_get_param,
-> > > > > > DRM_RENDER_ALLOW),
-> > > > > > >         DRM_IOCTL_DEF_DRV(MSM_GEM_NEW,      msm_ioctl_gem_new,
-> > > > > > DRM_RENDER_ALLOW),
-> > > > > > > @@ -964,6 +1022,7 @@ static const struct drm_ioctl_desc msm_ioctls[] = {
-> > > > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_NEW,
-> > > > > >  msm_ioctl_submitqueue_new,   DRM_RENDER_ALLOW),
-> > > > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_CLOSE,
-> > > > > > msm_ioctl_submitqueue_close, DRM_RENDER_ALLOW),
-> > > > > > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_QUERY,
-> > > > > > msm_ioctl_submitqueue_query, DRM_RENDER_ALLOW),
-> > > > > > > +       DRM_IOCTL_DEF_DRV(MSM_WAIT_IOVA, msm_ioctl_wait_iova,
-> > > > > > DRM_RENDER_ALLOW),
-> > > > > > >  };
-> > > > > > >
-> > > > > > >  static const struct vm_operations_struct vm_ops = {
-> > > > > > > diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
-> > > > > > > index 0b85ed6a3710..8477f28a4ee1 100644
-> > > > > > > --- a/include/uapi/drm/msm_drm.h
-> > > > > > > +++ b/include/uapi/drm/msm_drm.h
-> > > > > > > @@ -298,6 +298,17 @@ struct drm_msm_submitqueue_query {
-> > > > > > >         __u32 pad;
-> > > > > > >  };
-> > > > > > >
-> > > > > > > +/* This ioctl blocks until the u64 value at bo + offset is greater than
-> > > > > > or
-> > > > > > > + * equal to the reference value.
-> > > > > > > + */
-> > > > > > > +struct drm_msm_wait_iova {
-> > > > > > > +       __u32 handle;          /* in, GEM handle */
-> > > > > > > +       __u32 pad;
-> > > > > > > +       struct drm_msm_timespec timeout;   /* in */
-> > > > > > > +       __u64 offset;          /* offset into bo */
-> > > > > > > +       __u64 value;           /* reference value */
-> > > > > >
-> > > > > > Maybe we should go ahead and add a __u64 mask;
-> > > > > >
-> > > > > > that would let us wait for 32b values as well, and wait for bits in a
-> > > > > > bitmask
-> > > > > >
-> > > > >
-> > > > > I think we'd be OK to just default to 32 bit values instead, since most of
-> > > > > the CP commands that this is intended to work with (CP_EVENT_WRITE,
-> > > > > CP_WAIT_MEM_GTE etc) operate on 32 bit values. We could move 'value' to the
-> > > > > slot right after 'handle' but then we'd not have any pad/reserved fields.
-> > > > > Maybe we keep 'value' 64 bit but restrict it to 32 bits, with an option to
-> > > > > add a 64 bit flag in 'pad' later on?
-> > > > >
-> > > >
-> > > > FWIW, the current usage of this in my mesa MR uses a 64 bit value.
-> > > > There's no super great reason that the available bit is 64 bits and
-> > > > not 32 bits (I think it made the addressing math a bit simpler), but
-> > > > I'm fine with whatever you all decide on here.
-> > > >
-> > >
-> > > I assume you are waiting for a fence value written w/ CP_EVENT_WRITE?
-> > > Or at least that is what I'd recommend.  That would be 32b
-> > >
-> > > BR,
-> > > -R
-> > >
+> >         flash0 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> >                         part-concat = <&flash0_part1>, <&flash1_part0>;
 > >
-> > So it's actually a little bit different than that. I allocate a bo
-> > for the occlusion query which has an "availability" bit (0 for
-> > unavailable, 1 for available). When the occlusion query ends, we
-> > write the fragments passed value to the bo via CP_EVENT_WRITE and
-> > then wait for that write to complete before setting the available
-> > bit to 1 via a simple CP_MEM_WRITE [1].
+> >                       part0@0 {
+> >                               label = "part0_0";
+> >                               reg = <0x0 0x800000>;
+> >                       };
 > >
-> > It's that CP_MEM_WRITE that I plan on waiting on with this new iova
-> > ioctl.
-> >
-> > [1] https://gitlab.freedesktop.org/mesa/mesa/blob/768106c50a5569796bb6d5e04b5e4d65c1d00ea0/src/freedreno/vulkan/tu_query.c#L529
-> >
-> 
-> hmm, interesting.. I had in mind something more like:
-> 
-> https://gitlab.freedesktop.org/drm/msm/blob/msm-next/drivers/gpu/drm/msm/adreno/a6xx_gpu.c#L137
-> 
-> The high bit in the first dword of the packet (which we probably
-> shouldn't open-code) is the "give me an irq after the value in last
-> dword is written to memory"..
-> 
-> (I haven't checked yet whether we can use the "gimme an irq" bit from userspace)
-> 
-> BR,
-> -R
+> >                       flash0_part1: part1@800000 {
+> >                               label = "part0_1";
+> >                               reg = <0x800000 0x800000>;
+>
+> So, flash0_part1 and flash0_part2 will be created even though the user
+> probably doesn't need them?
 
-I see. Let's continue discussing this on the mesa MR because there's
-more context there.
+I don't follow?
 
-Regardless of how we end up implementing vkCmdEndQuery, I think it
-will be safe to default to 32 bit values for this ioctl and have a
-flag to use 64 bit instead like Kristian suggested. If that sounds
-good to you, I'll go ahead and make the change for the v2 patch
-series.
+>
+> >                       };
+> >                 };
+> >         };
+> >
+> >         flash1 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> >
+> >                       flash0_part1: part1@0 {
+> >                               label = "part1_0";
+> >                               reg = <0x0 0x800000>;
+> >                       };
+> >
+> >                       part0@800000 {
+> >                               label = "part1_1";
+> >                               reg = <0x800000 0x800000>;
+> >                       };
+> >                 };
+> >         };
+>
+> IMHO this representation is far from intuitive. At first glance it's not
+> obvious which partitions are linked together and what's the name of the
+> resulting concatenated part. I definitely prefer the solution where we
+> have a virtual device describing the concatenation. I also understand
+> that this goes against the #1 DT rule: "DT only decribes HW blocks, not
+> how they should be used/configured", but maybe we can find a compromise
+> here, like moving this description to the /chosen node?
+>
+> chosen {
+>         flash-arrays {
+>                 /*
+>                  * my-flash-array is the MTD name if label is
+>                  * not present.
+>                  */
+>                 my-flash-array {
+>                         /*
+>                          * We could have
+>                          * compatible = "flash-array";
+>                          * but we can also do without it.
+>                          */
+>                         label = "foo";
+>                         flashes = <&flash1 &flash2 ...>;
+>                         partitions {
+>                                 /* usual partition description. */
+>                                 ...
+>                         };
+>                 };
+>         };
+> };
+>
+> Rob, what do you think?
+
+I don't think chosen is the right place to put all the partition
+information. It's not something the bootloader configures.
+
+This suffers from the same issue I have with the original proposal. It
+will not work for existing s/w. There's only 1 logical partition that
+concatenated. The rest of the partitions shouldn't need any special
+handling. So we really only need some way to say 'link these 2
+partitions into 1 logical partition'. Though perhaps one could want to
+combine any number of physical partitions into logical partitions, but
+then none of the proposals could support that. Then again, maybe
+that's a userspace problem like with disks.
+
+To throw out another option, what if the first device contains the
+complete partitions for both devices with some property in one or both
+devices pointing to the other device? That would make the partitions
+in the 1st device still accessible to existing s/w (unless it bounds
+checks the partitions).
+
+Rob
