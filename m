@@ -2,123 +2,193 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29BC33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CDAC33CA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87141207E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A837D2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bwSScmx9"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="a68Dz6qN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgANG7e (ORCPT
+        id S1728851AbgANHAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:59:34 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:57750 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgANG7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:59:34 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6wuax189199;
-        Tue, 14 Jan 2020 06:59:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Um3aq13bt3KE8FaQoSHBOGx9xF1pyNNvuGHu3EV01Lg=;
- b=bwSScmx96s4yKtSNq2SZAalf38tHkEjLxLXLH0i7GgzsalBbDpDbuafNPtg9OBNw5hHD
- +Wnqy3cZbhidEUkZpVIuSO+O5p3AshrjC8HTQekJ4Egk7cov7XSfWPxkX+Xq6Sv/Y2JO
- xeRojrUAJyP2rFn4hCvDwkTawdb7rhsRrrfUuylEjLqmoltt9pGiSuXxIwc7YmOqF/Yu
- KZl5Yq7PWzxhpz4TZi4UK9aTsNaDgBGn6je5Emo5QjGOqXwCgieyKqAgzDnvHJxznHhF
- IMl/cdc8vk8m+ufDSsbmp4OsurT2tZiR6h2EA+VDdufYHfeaznprgga8tUF9Soiri2dl 3g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xf74s3xdb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 06:59:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E6xJo4074324;
-        Tue, 14 Jan 2020 06:59:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xh8ergxrn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 06:59:28 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E6x2HU012071;
-        Tue, 14 Jan 2020 06:59:02 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 22:59:01 -0800
-Date:   Tue, 14 Jan 2020 09:58:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+79eb0f3df962caf839ed@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: kernel BUG at fs/namei.c:LINE!
-Message-ID: <20200114065854.GA3719@kadam>
-References: <00000000000008132d059c13c47b@google.com>
+        Tue, 14 Jan 2020 02:00:47 -0500
+Received: from mail-dm6nam11on2056.outbound.protection.outlook.com ([40.107.223.56]:14560
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728680AbgANHAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 02:00:47 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bF9HIzHdOcAk1+IBO6Fn3rjEhyr2RqKuu9/Aetn/j1EPP6CtpjBYTknCUDhkldBb1g1jCwcpbsp0w33e3o5PpRgdrimX9w2g3hkW3g+zFB5YwOCgeDjAjB4TQmGwfocd+HFxyvPeArT9hKZTnvHqyCT5O3IIw4m3wtK8uq5kCRMHDhUJqWumg4JdURwPnFNJXFx52RblF6WU5jvxGTrXzYZq3axdT5UUWCmfapT9qg0uGMKUolwxza7lv/xZuotApNe74PsGzUthCPONE3UTUaqefu9iOH+Dm/mQH2e6B8b4f/aHarXxGbhqvtUAwtMJ3kRXqoBF09RQryIIc78JCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GVTojgNtKg3WaEOtH+uIBL6eae7mH8VYD5Xm1pgQEwI=;
+ b=S87GT96tP5RkjAMDg8Dmm6rZ7tuEWE0QjnJGVnSHq0OaK7UYXJssBxWIB8MGDSd16AqqXw7b2lz4YsNMJnFwthBMMXVFXJCKmXkA8dhWWbJPjJz9q87cBj3wLRlwJBhob783ZXMPicUaBCE3uOPPyUg3PnTY8tESmLiUCvZD4nLGlidF10IivuWOQIbGLUulObXB8xHohBEQRf/3pacC90pCT12JL4A9fAmnK/PaxjqWGr4y1U4KPvadFU467AAWKzf8O+n0EYFkTreclN/7BfQ7MIMKvlvMjXnYbC5RqqTAN8RZqhNiHoj7lf7a/kWh7hg9ECKm/wIu9zHLYhnA+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GVTojgNtKg3WaEOtH+uIBL6eae7mH8VYD5Xm1pgQEwI=;
+ b=a68Dz6qNO/vxGobopIE0UrIr00DtzgpFlJRc6mCTQULuSwc485J+sMyu5i8uAl8h1aYoEXOVS4gy+guUTCw9fMqBTy7SDQWlzI3xhd71CluHWVrN9tzc2W4dj+BoOIPuzWPMoW01K4NsPeVTgFRRTdLcO3658GtGT7ZSNOJTs0w=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3798.namprd13.prod.outlook.com (20.180.12.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.10; Tue, 14 Jan 2020 07:00:43 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2644.015; Tue, 14 Jan 2020
+ 07:00:42 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Anup Patel <anup@brainfault.org>
+CC:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "bp@suse.de" <bp@suse.de>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v3 2/2] riscv: Add support to determine no. of L2 cache
+ way enabled
+Thread-Topic: [PATCH v3 2/2] riscv: Add support to determine no. of L2 cache
+ way enabled
+Thread-Index: AQHVydwodBIGGsoHAUC3jryVYubltafpm00AgAAhEOA=
+Date:   Tue, 14 Jan 2020 07:00:42 +0000
+Message-ID: <CH2PR13MB3368EF2E46094F333D8E4D278C340@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1578897500-23897-1-git-send-email-yash.shah@sifive.com>
+ <1578897500-23897-3-git-send-email-yash.shah@sifive.com>
+ <CAAhSdy2QvF+U0eJ1XMc8L5gJB5e_9_XUoQpg8pVof+kxxJ5avg@mail.gmail.com>
+In-Reply-To: <CAAhSdy2QvF+U0eJ1XMc8L5gJB5e_9_XUoQpg8pVof+kxxJ5avg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5ac74a01-9d24-4ed8-2974-08d798bf78da
+x-ms-traffictypediagnostic: CH2PR13MB3798:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB37987B86BCF9A316A0BCFEA48C340@CH2PR13MB3798.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39840400004)(136003)(346002)(366004)(396003)(376002)(189003)(199004)(186003)(7416002)(71200400001)(7696005)(33656002)(53546011)(6506007)(44832011)(26005)(2906002)(107886003)(478600001)(54906003)(6916009)(9686003)(55016002)(4326008)(8936002)(81166006)(81156014)(316002)(76116006)(66946007)(86362001)(52536014)(64756008)(66476007)(5660300002)(66556008)(8676002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3798;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C+TxP2wsswsopPhTwfjtLy8nIa/w/CzzX0aJgdMg46oAyiT3SbHCEFfEcE/i3nDp/41g5xYq8s0uW3uD9ASRWjpFiuDJyK1jarW+dJ/thoyrFFvra+7ycttZ5ZOVQGcXi7DV2vhck6PN7KIglXMRJRqPxvOsH8ErrhdNYeWpS1xIHGW9H8mkZHgWJEmpwg9l5Vf/x1wHhmjUKh0nZj4H7IhIY6XiAvDEq+rh7jXt11khmJdqJCK/Y0+e1mWR76K1/vDsCaeJeIDZHK+oyh7UZ+RcrEr06k2ndpyMEq5heXBDrIXnaqNRSSK+XT3LsZBIAqheTIUHMCDFWiZMkNxAXC9DsSVO/1TCoj8ORf1ZYlgaH72h7aDRvVN5i+4ykIsiDYcm1y0GHgSTKBKoY9W4djY//N35ccy9APhLrn7V/NW/R+xCmLWHsjQ0XX7wqLAI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000008132d059c13c47b@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=742
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140060
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=803 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001140060
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ac74a01-9d24-4ed8-2974-08d798bf78da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 07:00:42.8804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nGZ5eWg0TpRfrnbeXwN/vD3VuMmjxiBvMNPQb3/roq0l9ii8YARIeI/eZp46QstpfeB2FGphpDz4V0jn3xuIIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3798
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:33:10PM -0800, syzbot wrote:
-> ------------[ cut here ]------------
-> kernel BUG at fs/namei.c:684!
-> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 9764 Comm: syz-executor.0 Not tainted
-
-> 5.5.0-rc5-next-20200113-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-
-> RIP: 0010:unlazy_walk+0x306/0x3b0 fs/namei.c:684
-
->  path_mountpoint.isra.0+0x1d5/0x340 fs/namei.c:2788
->  filename_mountpoint+0x181/0x380 fs/namei.c:2809
->  user_path_mountpoint_at+0x3a/0x50 fs/namei.c:2839
->  ksys_umount+0x164/0xef0 fs/namespace.c:1683
-
-  2289  static const char *path_init(struct nameidata *nd, unsigned flags)
-  2290  {
-  2291          int error;
-  2292          const char *s = nd->name->name;
-  2293  
-  2294          if (!*s)
-  2295                  flags &= ~LOOKUP_RCU;
-                        ^^^^^^^^^^^^^^^^^^^^
-My guess is that LOOKUP_RCU gets cleared out here.  Maybe the problem
-was introduced in commit e56b43b971a7 ("reimplement path_mountpoint()
-with less magic") because before we checked LOOKUP_RCU before calling
-unlazy_walk().
-
--       /* If we're in rcuwalk, drop out of it to handle last component */
--       if (nd->flags & LOOKUP_RCU) {
--               if (unlazy_walk(nd))
-
-  2296          if (flags & LOOKUP_RCU)
-  2297                  rcu_read_lock();
-  2298  
-
-regards,
-dan carpenter
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnVwIFBhdGVsIDxhbnVwQGJy
+YWluZmF1bHQub3JnPg0KPiBTZW50OiAxNCBKYW51YXJ5IDIwMjAgMTA6MzANCj4gVG86IFlhc2gg
+U2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+DQo+IENjOiBQYXVsIFdhbG1zbGV5ICggU2lmaXZl
+KSA8cGF1bC53YWxtc2xleUBzaWZpdmUuY29tPjsgUGFsbWVyIERhYmJlbHQNCj4gPHBhbG1lckBk
+YWJiZWx0LmNvbT47IEFsYmVydCBPdSA8YW91QGVlY3MuYmVya2VsZXkuZWR1PjsgQWxsaXNvbg0K
+PiBSYW5kYWwgPGFsbGlzb25AbG9odXRvay5uZXQ+OyBBbGV4aW9zIFphdnJhcyA8YWxleGlvcy56
+YXZyYXNAaW50ZWwuY29tPjsNCj4gR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3Vu
+ZGF0aW9uLm9yZz47IFRob21hcyBHbGVpeG5lcg0KPiA8dGdseEBsaW51dHJvbml4LmRlPjsgYnBA
+c3VzZS5kZTsgbGludXgtcmlzY3YgPGxpbnV4LQ0KPiByaXNjdkBsaXN0cy5pbmZyYWRlYWQub3Jn
+PjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZn
+ZXIua2VybmVsLm9yZz47IFNhY2hpbiBHaGFkaSA8c2FjaGluLmdoYWRpQHNpZml2ZS5jb20+DQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi8yXSByaXNjdjogQWRkIHN1cHBvcnQgdG8gZGV0ZXJt
+aW5lIG5vLiBvZiBMMiBjYWNoZQ0KPiB3YXkgZW5hYmxlZA0KPiANCj4gT24gTW9uLCBKYW4gMTMs
+IDIwMjAgYXQgMTI6MDkgUE0gWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4gd3JvdGU6
+DQo+ID4NCj4gPiBJbiBvcmRlciB0byBkZXRlcm1pbmUgdGhlIG51bWJlciBvZiBMMiBjYWNoZSB3
+YXlzIGVuYWJsZWQgYXQgcnVudGltZSwNCj4gPiBpbXBsZW1lbnQgYSBwcml2YXRlIGF0dHJpYnV0
+ZSAoIm51bWJlcl9vZl93YXlzX2VuYWJsZWQiKS4gUmVhZGluZyB0aGlzDQo+ID4gYXR0cmlidXRl
+IHJldHVybnMgdGhlIG51bWJlciBvZiBlbmFibGVkIEwyIGNhY2hlIHdheXMgYXQgcnVudGltZS4N
+Cj4gPg0KPiA+IFVzaW5nIHJpc2N2X3NldF9jYWNoZWluZm9fb3BzKCkgaG9vayBhIGN1c3RvbSBm
+dW5jdGlvbiwgdGhhdCByZXR1cm5zDQo+ID4gdGhpcyBwcml2YXRlIGF0dHJpYnV0ZSwgdG8gdGhl
+IGdlbmVyaWMgb3BzIHN0cnVjdHVyZSB3aGljaCBpcyB1c2VkIGJ5DQo+ID4gY2FjaGVfZ2V0X3By
+aXZfZ3JvdXAoKSBpbiBjYWNoZWluZm8gZnJhbWV3b3JrLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogWWFzaCBTaGFoIDx5YXNoLnNoYWhAc2lmaXZlLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVy
+cy9zb2Mvc2lmaXZlL3NpZml2ZV9sMl9jYWNoZS5jIHwgMzgNCj4gPiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9zb2Mvc2lmaXZlL3NpZml2ZV9sMl9j
+YWNoZS5oIHwgIDIgKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0MCBpbnNlcnRpb25zKCspDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2Mvc2lmaXZlL3NpZml2ZV9sMl9jYWNoZS5j
+DQo+ID4gYi9kcml2ZXJzL3NvYy9zaWZpdmUvc2lmaXZlX2wyX2NhY2hlLmMNCj4gPiBpbmRleCBh
+NTA2OTM5Li44NzQxODg1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc29jL3NpZml2ZS9zaWZp
+dmVfbDJfY2FjaGUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL3NpZml2ZS9zaWZpdmVfbDJfY2Fj
+aGUuYw0KPiA+IEBAIC05LDYgKzksOCBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0
+Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4
+L29mX2FkZHJlc3MuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPg0KPiA+ICsjaW5j
+bHVkZSA8YXNtL2NhY2hlaW5mby5oPg0KPiA+ICAjaW5jbHVkZSA8c29jL3NpZml2ZS9zaWZpdmVf
+bDJfY2FjaGUuaD4NCj4gPg0KPiA+ICAjZGVmaW5lIFNJRklWRV9MMl9ESVJFQ0NGSVhfTE9XIDB4
+MTAwIEBAIC0zMSw2ICszMyw3IEBADQo+ID4NCj4gPiAgc3RhdGljIHZvaWQgX19pb21lbSAqbDJf
+YmFzZTsNCj4gPiAgc3RhdGljIGludCBnX2lycVtTSUZJVkVfTDJfTUFYX0VDQ0lOVFJdOw0KPiA+
+ICtzdGF0aWMgc3RydWN0IHJpc2N2X2NhY2hlaW5mb19vcHMgbDJfY2FjaGVfb3BzOw0KPiA+DQo+
+ID4gIGVudW0gew0KPiA+ICAgICAgICAgRElSX0NPUlIgPSAwLA0KPiA+IEBAIC0xMDcsNiArMTEw
+LDM4IEBAIGludCB1bnJlZ2lzdGVyX3NpZml2ZV9sMl9lcnJvcl9ub3RpZmllcihzdHJ1Y3QNCj4g
+PiBub3RpZmllcl9ibG9jayAqbmIpICB9DQo+ID4gRVhQT1JUX1NZTUJPTF9HUEwodW5yZWdpc3Rl
+cl9zaWZpdmVfbDJfZXJyb3Jfbm90aWZpZXIpOw0KPiA+DQo+ID4gK2ludCBzaWZpdmVfbDJfbGFy
+Z2VzdF93YXllbmFibGVkKHZvaWQpDQo+ID4gK3sNCj4gPiArICAgICAgIHJldHVybiByZWFkbChs
+Ml9iYXNlICsgU0lGSVZFX0wyX1dBWUVOQUJMRSk7IH0NCj4gDQo+IFRoZSBzaWZpbmVfbDJfbGFy
+Z2VzdF93YXllbmFibGVkKCkgaXMgbm90IGNhbGxlZCBmcm9tIGFueXdoZXJlIGVsc2Ugc28NCj4g
+bWFrZSBpdCBzdGF0aWMgYW5kIHJlbmFtZSBpdCB0byBsMl9sYXJnZXN0X3dheWVuYWJsZWQoKS4N
+Cg0KU3VyZSB3aWxsIGRvIHRoYXQgaW4gdjQNCg0KPiANCj4gPiArDQo+ID4gK3N0YXRpYyBzc2l6
+ZV90IG51bWJlcl9vZl93YXlzX2VuYWJsZWRfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vf
+YXR0cmlidXRlICphdHRyLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjaGFyICpidWYpIHsNCj4gPiArICAgICAgIHJldHVybiBzcHJpbnRmKGJ1ZiwgIiV1
+XG4iLCBzaWZpdmVfbDJfbGFyZ2VzdF93YXllbmFibGVkKCkpOyB9DQo+ID4gKw0KPiA+ICtzdGF0
+aWMgREVWSUNFX0FUVFJfUk8obnVtYmVyX29mX3dheXNfZW5hYmxlZCk7DQo+ID4gKw0KPiA+ICtz
+dGF0aWMgc3RydWN0IGF0dHJpYnV0ZSAqcHJpdl9hdHRyc1tdID0gew0KPiA+ICsgICAgICAgJmRl
+dl9hdHRyX251bWJlcl9vZl93YXlzX2VuYWJsZWQuYXR0ciwNCj4gPiArICAgICAgIE5VTEwsDQo+
+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCBw
+cml2X2F0dHJfZ3JvdXAgPSB7DQo+ID4gKyAgICAgICAuYXR0cnMgPSBwcml2X2F0dHJzLA0KPiA+
+ICt9Ow0KPiA+ICsNCj4gPiArY29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCAqbDJfZ2V0X3By
+aXZfZ3JvdXAoc3RydWN0IGNhY2hlaW5mbw0KPiA+ICsqdGhpc19sZWFmKSB7DQo+ID4gKyAgICAg
+ICAvKiBXZSB3YW50IHRvIHVzZSBwcml2YXRlIGdyb3VwIGZvciBMMiBjYWNoZSBvbmx5ICovDQo+
+ID4gKyAgICAgICBpZiAodGhpc19sZWFmLT5sZXZlbCA9PSAyKQ0KPiA+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gJnByaXZfYXR0cl9ncm91cDsNCj4gPiArICAgICAgIGVsc2UNCj4gPiArICAgICAg
+ICAgICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gK30NCj4gPiArDQo+ID4gIHN0YXRpYyBpcnFyZXR1
+cm5fdCBsMl9pbnRfaGFuZGxlcihpbnQgaXJxLCB2b2lkICpkZXZpY2UpICB7DQo+ID4gICAgICAg
+ICB1bnNpZ25lZCBpbnQgYWRkX2gsIGFkZF9sOw0KPiA+IEBAIC0xNzAsNiArMjA1LDkgQEAgc3Rh
+dGljIGludCBfX2luaXQgc2lmaXZlX2wyX2luaXQodm9pZCkNCj4gPg0KPiA+ICAgICAgICAgbDJf
+Y29uZmlnX3JlYWQoKTsNCj4gPg0KPiA+ICsgICAgICAgbDJfY2FjaGVfb3BzLmdldF9wcml2X2dy
+b3VwID0gbDJfZ2V0X3ByaXZfZ3JvdXA7DQo+ID4gKyAgICAgICByaXNjdl9zZXRfY2FjaGVpbmZv
+X29wcygmbDJfY2FjaGVfb3BzKTsNCj4gPiArDQo+ID4gICNpZmRlZiBDT05GSUdfREVCVUdfRlMN
+Cj4gPiAgICAgICAgIHNldHVwX3NpZml2ZV9kZWJ1ZygpOw0KPiA+ICAjZW5kaWYNCj4gPiBkaWZm
+IC0tZ2l0IGEvaW5jbHVkZS9zb2Mvc2lmaXZlL3NpZml2ZV9sMl9jYWNoZS5oDQo+ID4gYi9pbmNs
+dWRlL3NvYy9zaWZpdmUvc2lmaXZlX2wyX2NhY2hlLmgNCj4gPiBpbmRleCA5MmFkZTEwLi41NWZl
+ZmY1IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvc29jL3NpZml2ZS9zaWZpdmVfbDJfY2FjaGUu
+aA0KPiA+ICsrKyBiL2luY2x1ZGUvc29jL3NpZml2ZS9zaWZpdmVfbDJfY2FjaGUuaA0KPiA+IEBA
+IC0xMCw2ICsxMCw4IEBADQo+ID4gIGV4dGVybiBpbnQgcmVnaXN0ZXJfc2lmaXZlX2wyX2Vycm9y
+X25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9ibG9jaw0KPiA+ICpuYik7ICBleHRlcm4gaW50IHVu
+cmVnaXN0ZXJfc2lmaXZlX2wyX2Vycm9yX25vdGlmaWVyKHN0cnVjdA0KPiA+IG5vdGlmaWVyX2Js
+b2NrICpuYik7DQo+ID4NCj4gPiAraW50IHNpZml2ZV9sMl9sYXJnZXN0X3dheWVuYWJsZWQodm9p
+ZCk7DQo+ID4gKw0KPiANCj4gWW91IGNhbiBkcm9wIHRoZSBzaWZpdmVfbDJfbGFyZ2VzdF93YXll
+bmFibGVkKCkgZGVjbGFyYXRpb24gZnJvbSBoZXJlLg0KPiANCj4gPiAgI2RlZmluZSBTSUZJVkVf
+TDJfRVJSX1RZUEVfQ0UgMA0KPiA+ICAjZGVmaW5lIFNJRklWRV9MMl9FUlJfVFlQRV9VRSAxDQo+
+ID4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCj4gDQo+IEFwYXJ0IGZyb20gYWJvdmUgaXQgbG9v
+a3MgZ29vZC4NCj4gDQo+IFJldmlld2VkLWJ5OiBBbnVwIFBhdGVsIDxhbnVwQGJyYWluZmF1bHQu
+b3JnPg0KDQpUaGFua3MuDQoNCi0gWWFzaA0KDQo+IA0KPiBSZWdhcmRzLA0KPiBBbnVwDQo=
