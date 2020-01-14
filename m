@@ -2,146 +2,250 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA43C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A2CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF8C207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E7624679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="BCxGd/Bh"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="TtzYkCof";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="TtzYkCof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgANKe7 (ORCPT
+        id S1729563AbgANKfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:34:59 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:51678 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgANKe6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:34:58 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: DDSGWrywoZTokcwV4dW9DBihRMl0GXwzfrFLTrLo9bCy3Sto4hFg7dZQUK/OqtAjRgE7isRgKw
- OBZiiREYUJpzLVZbn4PfeVLsghT1cFKzhuTKfCZGWmb1F1FvrzrUBfVbu5G0fMVrZUABcOSY85
- wSFzGuVZQxbVFDElYRqKgsdC6q8vUQDpwWrnNp6YOuweqVQCBTN3cZ1jXarilgzzUGqqut7yrr
- lmvMs1dCLBzX+LteyuMsFuj7D8Vtf6tUOva3izSgKmuM9eZ8k3k7itr8a/D8mK0FzZASptBiC6
- QnU=
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="61850594"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jan 2020 03:34:59 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 Jan 2020 03:34:56 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 14 Jan 2020 03:34:57 -0700
+        Tue, 14 Jan 2020 05:35:04 -0500
+Received: from mail-vi1eur05on2055.outbound.protection.outlook.com ([40.107.21.55]:62178
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727285AbgANKfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:35:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uMcY0I41udNF+2uESqSRzcDBBUmCzMhHhGmFdsv3MdU=;
+ b=TtzYkCofO4VWT/73TqESbF5XVqA0cmdObMMDm1zloZN5CGruOZw3gcJSNRHcrvwRuOaB/JuSoC2qpogMlvo8zTQrjCc88Se0c+CYUhN9qJC+oreFTfwghSxx7/220/2cvhoY5OPrHf2AzQV2M9shHGrBRCt0R1t0ML/8aMp7hsQ=
+Received: from VI1PR08CA0106.eurprd08.prod.outlook.com (2603:10a6:800:d3::32)
+ by VI1PR0802MB2493.eurprd08.prod.outlook.com (2603:10a6:800:b3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10; Tue, 14 Jan
+ 2020 10:34:58 +0000
+Received: from DB5EUR03FT046.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::207) by VI1PR08CA0106.outlook.office365.com
+ (2603:10a6:800:d3::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend
+ Transport; Tue, 14 Jan 2020 10:34:58 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT046.mail.protection.outlook.com (10.152.21.230) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Tue, 14 Jan 2020 10:34:58 +0000
+Received: ("Tessian outbound 121a58c8f9bf:v40"); Tue, 14 Jan 2020 10:34:58 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from b6e565f55bc2.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 59396DE5-C495-44D7-AF14-D39CA66F96DF.1;
+        Tue, 14 Jan 2020 10:34:53 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b6e565f55bc2.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 14 Jan 2020 10:34:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kiKAYpCEshGIRPDttJWriYbvtnE4kwS0CosVFVnXhMemILuo/6xqbRnENp/J1aB/jPqYrvot7y43zwrpX4zzmXpNWZH4s0xT6khkVazXNG9j6fXMxyEXQAaPIEgBg1y7yivBwCu+EMONozn36QnJoi15lQMBTJXSgsrBap9LaoEqKx/s0c795wEHh61uI4TnNB5ljcI9UufvIPs3FmApLjGWR1sOS/QTTpdTR4o871YBccEItpm1i1+mRs6dIlTiSbKd1gDl+Z1OEQZlhw1AzTg8VeLMlNkL0K/EoiGHS+LujOfu/GDvUpUURNNUvnEYsh5X1C+Kj1qdNiy5yT4pNA==
+ b=GO9NFD1Wgc9hOaWhJZQg7pfIdVdflKJHZdodQPiryEm/jLbb5UEeeNkkaWnUkTjBv7Ex0vb6HigTxqwdfkoV8H5mgpl/kQ+133LT+/J7NRgg2iaTmDD1pD/aIoIQyjcJ8r2fLZw7i0JVMKwm2gQpx5G0ZG5xP4mbSRtt3suWf13AVxf0BJcEN8n3KCPlvaNGFZa/z/2xqJwhFHBEZpUFF/jnrZvBGLSiyqhyvo4PNEgUXEgsiZZFBJ8ZoogF3q/UeQr2eD/5lI7n9urGkH1SNqmaHzBU7zh2uXiHM4CpDtLvsKa7UI53gi5MiVkeyxmezHk+zPrYpEe/pDmT/YXtWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeLnPu96GbS6z+HSg7BcsDx2fhpQ5INKuxNSjU9p3gQ=;
- b=nu5SPSPPIehUbqQJ1G1/XQuO0RuQ5tHwH1h1lvNCQkg9FZHX6DGEq25vGaBXaXXPPoh7INuz0of7F+P9hBb0qo+1Uh588jkzLibRgZo/1/xyDbZrkoUrE37zqkYBUXHKf3V2JoqgSBZQAiLy48im94QjPexighC5+mBW3K6lhPsCIttjW0YT+FhajTYZB3PagRO37ny3nysuno5htKfmXQVTLPWXmdYZZ1a0QyijazOEir0zNgUfohfddK9WSdOrOvQgiFv28xw9sakxUDK68fW8Vya4/0EvwWhIt9NnEg8mlE9Anj5nkC1YeoCSZ1x2TDiw6Ae9BE9e1kBYsdHvTA==
+ bh=uMcY0I41udNF+2uESqSRzcDBBUmCzMhHhGmFdsv3MdU=;
+ b=bbC2TeA32a8IqyhgVRlO86yhEtc86oH87FhV11Vvx94+VYsGUfwkAnjCQiv7D9Fcg0UgHpkwM/KXwI2bfzUqkFYohe1uj3aCSp0esnurVWejf6+2neD8dIOKOXl9IvUBTKrQsRo82yJVB09n2t0c6Lg57ZgduVEW1QFi6Oj9chjUvkn5/N4a15cH3ZzrwETNpNxen0qr80F0Ci+ggfDg3Sjsb0RDr58dZ3hJfXnndo5yA8wfHAfJlsaWzPmG8nwiHZN4DwDFcZhgidXhQHJRxhhQcN3/pO/+puMN7+Uj3oy982w8sE2+uiI0Ok92Ta1GagnejjhQRu5wizOmLNszxQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeLnPu96GbS6z+HSg7BcsDx2fhpQ5INKuxNSjU9p3gQ=;
- b=BCxGd/BhB6vKySe2M19L+7N2dFXSSJ4LMTHSp+tWsFl5WozSRl/bx6GySrJkAzFwkMG4hn00w9vn3cQvZIOZJ5d+ecrAf8LqQDh+oZuV5PRUDWKqPPT9ukCDG0jmER6A9hM1pKkLfoeUT7WO4ELfL6wTHVyom0Y9Icgejw2RwsY=
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.224) by
- DM6PR11MB4092.namprd11.prod.outlook.com (20.176.124.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 10:34:55 +0000
-Received: from DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::106f:424f:ac54:1dbb]) by DM6PR11MB3225.namprd11.prod.outlook.com
- ([fe80::106f:424f:ac54:1dbb%7]) with mapi id 15.20.2623.015; Tue, 14 Jan 2020
- 10:34:55 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Nicolas.Ferre@microchip.com>, <sre@kernel.org>,
-        <alexandre.belloni@bootlin.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] at91-sama5d2_shdwc shutdown controller
-Thread-Topic: [PATCH v2 0/2] at91-sama5d2_shdwc shutdown controller
-Thread-Index: AQHVysZDZbGFbsffUkC4vg24P85XXQ==
-Date:   Tue, 14 Jan 2020 10:34:55 +0000
-Message-ID: <3d0c5a04-25fb-5ae6-fd3a-4049e293eab1@microchip.com>
-References: <1576855878-13213-1-git-send-email-claudiu.beznea@microchip.com>
-In-Reply-To: <1576855878-13213-1-git-send-email-claudiu.beznea@microchip.com>
+ bh=uMcY0I41udNF+2uESqSRzcDBBUmCzMhHhGmFdsv3MdU=;
+ b=TtzYkCofO4VWT/73TqESbF5XVqA0cmdObMMDm1zloZN5CGruOZw3gcJSNRHcrvwRuOaB/JuSoC2qpogMlvo8zTQrjCc88Se0c+CYUhN9qJC+oreFTfwghSxx7/220/2cvhoY5OPrHf2AzQV2M9shHGrBRCt0R1t0ML/8aMp7hsQ=
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
+ HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Tue, 14 Jan 2020 10:34:51 +0000
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::49c0:e8df:b9be:724f]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::49c0:e8df:b9be:724f%8]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 10:34:51 +0000
+From:   Jianyong Wu <Jianyong.Wu@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: RE: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
+Thread-Topic: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
+Thread-Index: AQHVrwuxR+1ZEaCriEa+CGCL3lP4K6ffGBkAgALhg9CAAEMegIABkMMAgAAdn4CABKu08IAAEOIAgAGFg8A=
+Date:   Tue, 14 Jan 2020 10:34:51 +0000
+Message-ID: <HE1PR0801MB1676C93AF0AA7980F4A79B3FF4340@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20191210034026.45229-1-jianyong.wu@arm.com>
+ <20191210034026.45229-7-jianyong.wu@arm.com>
+ <7383dc06897bba253f174cd21a19b5c0@kernel.org>
+ <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
+ <HE1PR0801MB16765B507D9B5A1A7827078BF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <ca80d88f5e00937fca7ee80be8f5c962@kernel.org>
+ <HE1PR0801MB167693BFB769ACEEA8A6B007F4350@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <22ba1283a7b82f018c1fdf85414e5bfe@kernel.org>
+In-Reply-To: <22ba1283a7b82f018c1fdf85414e5bfe@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
+x-ts-tracking-id: 30ff59ce-40fd-40e8-bd50-0c283624fabb.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+x-originating-ip: [113.29.88.7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b365253c-6d12-4ad0-682f-08d798dd65a6
-x-ms-traffictypediagnostic: DM6PR11MB4092:
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: cb87c7b3-cceb-4dd4-f98b-08d798dd674c
+X-MS-TrafficTypeDiagnostic: HE1PR0801MB1676:|HE1PR0801MB1676:|VI1PR0802MB2493:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4092657FF99AC8BB6835C88287340@DM6PR11MB4092.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
+X-Microsoft-Antispam-PRVS: <VI1PR0802MB249324583E6E1C73BFF5B5E2F4340@VI1PR0802MB2493.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: True
+x-ms-oob-tlc-oobclassifiers: OLM:6430;OLM:6430;
 x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(396003)(366004)(136003)(199004)(189003)(91956017)(76116006)(64756008)(66446008)(86362001)(110136005)(81156014)(26005)(6506007)(66556008)(81166006)(66476007)(8676002)(316002)(66946007)(31696002)(8936002)(31686004)(186003)(4326008)(54906003)(6512007)(36756003)(71200400001)(2616005)(6486002)(2906002)(53546011)(5660300002)(4744005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB4092;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(199004)(189003)(2906002)(54906003)(316002)(5660300002)(52536014)(478600001)(33656002)(86362001)(4326008)(6916009)(55016002)(7416002)(7696005)(71200400001)(8936002)(81156014)(186003)(81166006)(9686003)(8676002)(66556008)(6506007)(53546011)(26005)(64756008)(66476007)(66946007)(76116006)(55236004)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1676;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LuNh8Ia/sGDQHyQ5TZylAckrz9m1e5JlFN9zbAu2ax0MzxdSyqGJ2CmCvXhVGbrV74XdsqRsNuGs9782UUt+ajlWiuq1NW2in6MmMdTcavGz+G6HF/9A8yDdFzZ3f6UVzcmbiu4eRRzM+IjsFWcZIgDwf/O8BbqAjMGE03PXLh5KlTDT29/yOcEiiu2wvd8u/FHH+N2XQ880JJZci8QLM1HF2mRoANQdTXT8KubTup7wXPLlTaLb7ZU/gC0aEi7ouGZJlwpXoAEXkK3qWMyIL4Rge05g9quHk2FBzcl60ZFhvd9DZGC+oXziC0jXECkhubjNC5w1wtxOzh4Nac75A6yb2sanmsYd4tmzBzc38v88Y95L2matwg0NcDQuzxIaJeDHwHZaHgSRnTR6UxgF5g9cHsn5t692poIrKqrUwX8C39SJZsjjHs93Ei2YUe1y
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <070D50FB6C034041BF1B2B8EF00DC9E7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Nk98rnE1mlVgCWC4ypXsAgy0trOdNDzrcZiAu/NaxJ3DsQlyHH6L65mWmQwU39jlk1XSScG0tLjPQwEy6KGvt2bgBRYSrabd1K5v49CH/fa68rmxwjJpBOmaTwLIp0BWyeibB5CD99qx6ZMTiG4S7vL4oQvR59ZsVwJvGB4Ik098VYKF8pdVlAEWSYmb6dDo0/FxIqcwGoh1W3HhCffQqGddMgHBy3/qFtfUfTVTpFY0NQLuDE9yEvvqTh42L+kqyehggiiwo4xtXk8HaKtd5CHRatpkH2ykpykbHbCFbn2SEVsyPwuVLorK+KoCgsjVLMwiWnF9ANMc4vgsetZFbwMlKLrOUUHS5mJiHwCmsRJjurgQic02erBcnhAe0R4NAe6AGx3076vWtQPxmwIMgLIdHIo0oNVoHbRy+LnMP4v3/TaeBGxDpNnnwOfAfi45
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b365253c-6d12-4ad0-682f-08d798dd65a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 10:34:55.6123
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1676
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT046.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(376002)(136003)(189003)(199004)(478600001)(7696005)(33656002)(6862004)(52536014)(5660300002)(54906003)(26826003)(316002)(86362001)(356004)(6506007)(81166006)(81156014)(53546011)(2906002)(450100002)(186003)(8676002)(26005)(336012)(4326008)(8936002)(55016002)(9686003)(70206006)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2493;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: bfcdd766-b44b-487a-a34b-08d798dd6320
+X-Forefront-PRVS: 028256169F
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PtLkz09q3jslbRe1u7buNXak9glF+EM6IHOnVGHVxGOCweY9hgn+HS6xzUlNoz99ifI6TkQid0VmOyxQe+mrxR9Zzbvri+01ZTFEOPz2VkXQENdWiED3MLHGKKv39KBPC3qX0VMhh8eyUnImrsR1CHxzO0EcAw3cOB9uF/ZiVCliSThhuH31f7t8SeQbSrp5zdNMJ+dilvwkspMXmIonlwOAwihALERQrgiYSjpsgdbsYBinmrbD1SyyheOiVPjDfwa+555jV3ggSbPDz/Eb0wT5ZVeUix/1iPg61SeQjeq6YWjHBIkC2oogw78343AQCOoJq5OVSWzbV4rCd9Qn2IXBIWpzYg1/5LnXEjk/q9rmRSxO2/G6K1K7lsOyPmPLRHX6y2VLuLmsucy504EWIH5sWgq9AN8PY5krZSQHM9zSHX9EnpHFS5g+SiHcj8/2
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2020 10:34:58.3435
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ji/wBafUwkCOKtLnPfePJsm8fehsjPBazOKL1eQb7npMNoC0rHFyqHp1RKIh0JzNbws/MbuiVa3OXnfUuTQ55N8SBj39YomVxr0/5wStZcY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4092
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb87c7b3-cceb-4dd4-f98b-08d798dd674c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2493
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2ViYXN0aWVuLA0KDQpJIGtub3cgeW91IG1heSBidXN5LCBJIGp1c3Qgd2FudCB0byBiZSBz
-dXJlIHRoYXQgeW91IGRpZG4ndCBmb3Jnb3QgdGhpcyBzZXJpZXMuDQoNClRoYW5rIHlvdSwNCkNs
-YXVkaXUgQmV6bmVhDQoNCk9uIDIwLjEyLjIwMTkgMTc6MzEsIENsYXVkaXUgQmV6bmVhIHdyb3Rl
-Og0KPiBFWFRFUk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVu
-dHMgdW5sZXNzIHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IFBNQyBtYXN0ZXIg
-Y2xvY2sgcmVnaXN0ZXIgb2Zmc2V0IGlzIGRpZmZlcmVudCBiL3cgc2FtOXg2MCBhbmQNCj4gb3Ro
-ZXIgU29Dcy4gU2luY2UgdGhlcmUgaXMgYSBuZWVkIG9mIHRoaXMgcmVnaXN0ZXIgb2Zmc2V0IGlu
-DQo+IHNodXRkb3duIHByb2NlZHVyZSB3ZSBuZWVkIHRvIGhhdmUgaXQgcGVyIFNvQy4gVGhpcyBp
-cyB3aGF0DQo+IHRoaXMgc2VyaWVzIGRvZXMuDQo+IA0KPiBDaGFuZ2VzIGluIHYyOg0KPiAtIGRv
-IG5vdCB1c2UgcjUgYXMgaW50ZXJtZWRpYXJ5IHJlZ2lzdGVycyBpbiBhdDkxX3Bvd2Vyb2ZmDQo+
-IA0KPiBDbGF1ZGl1IEJlem5lYSAoMik6DQo+ICAgcG93ZXI6IHJlc2V0OiBhdDkxLXBvd2Vyb2Zm
-OiBpbnRyb2R1Y2Ugc3RydWN0IHNoZHdjX3JlZ19jb25maWcNCj4gICBwb3dlcjogcmVzZXQ6IGF0
-OTEtcG93ZXJvZmY6IHVzZSBwcm9wZXIgbWFzdGVyIGNsb2NrIHJlZ2lzdGVyIG9mZnNldA0KPiAN
-Cj4gIGRyaXZlcnMvcG93ZXIvcmVzZXQvYXQ5MS1zYW1hNWQyX3NoZHdjLmMgfCA3MiArKysrKysr
-KysrKysrKysrKysrKystLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ3IGluc2VydGlv
-bnMoKyksIDI1IGRlbGV0aW9ucygtKQ0KPiANCj4gLS0NCj4gMi43LjQNCj4gDQo+IA==
+Hi Marc,
+
+> -----Original Message-----
+> From: Marc Zyngier <maz@kernel.org>
+> Sent: Monday, January 13, 2020 7:16 PM
+> To: Jianyong Wu <Jianyong.Wu@arm.com>
+> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
+> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
+> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
+> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
+> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; nd <nd@arm.com>
+> Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
+>=20
+> Hi Jianyong,
+>=20
+> On 2020-01-13 10:30, Jianyong Wu wrote:
+> > Hi Marc,
+> >
+> >> -----Original Message-----
+> >> From: Marc Zyngier <maz@kernel.org>
+> >> Sent: Friday, January 10, 2020 6:56 PM NV breaks that assumtion,
+> >> because the guest hypervisor is using the physical counter. Also,
+> >> let's not forget that the hypercall isn't Linux specific.
+> >> I can write my own non-Linux guest and still use this hypercall.
+> >> Nothing in
+> >> there says that I can't use the physical counter if I want to.
+> >>
+> >> So somehow, you need to convey the the hypervisor the notion of
+> >> *which*
+> >> counter the guest uses.
+> >>
+> >> Does it make sense? Or am I missing something?
+> >>
+> > I know what you say. Let me try to solve this problem.
+> > 	Step 0, summary out all the conditions we should process, which will
+> > sever as branch condition.(now only normal virt and nested virt, I
+> > think)
+>=20
+> No. You shouldn't think of the various use cases, but of which time
+> references a guest can use. You don't need nested virt to use the physica=
+l
+> counter, for example.
+Ok,
+
+>=20
+> > 	Step 1, figure out the set of reference counter value used by guest
+> > in all condition.
+>=20
+> That should be for the guest to tell you when it calls into the PV servic=
+e.
+>=20
+Yeah
+
+> > 	Step 2, determine which reference counter value will be used by
+> guest
+> > in a certain condition in hypercall.
+> > In step 1, can we give the set only 2 elements that one is physical
+> > counter the other is virtual counter?
+>=20
+> I don't think returning the two values is useful. Just return what the gu=
+est
+> asks for.
+>=20
+> > For step 2, I have no idea for that now. can you give me some hint
+> > about it?
+>=20
+> Just expand your SMC call to take a parameter indicating the reference
+> counter, and return the sampled (or computed) value corresponding to that
+> counter.
+Get it, I'll try it.
+
+Thanks
+Jianyong=20
+
+>=20
+>          M.
+> --
+> Jazz is not dead. It just smells funny...
