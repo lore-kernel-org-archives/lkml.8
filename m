@@ -2,262 +2,93 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBC3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3821C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469E624658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9gUDnz5"
+	by mail.kernel.org (Postfix) with ESMTP id C1DE124680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 22:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgANWxA (ORCPT
+        id S1728877AbgANWyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 17:53:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40987 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgANWxA (ORCPT
+        Tue, 14 Jan 2020 17:54:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45340 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbgANWyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 17:53:00 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so14327347otc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 14:52:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJtNfvQPx9MiBAuYZtkLpTeT5BO5WkJk3mTGoJfjU7s=;
-        b=o9gUDnz5jpe+CiIZYHYrpzQ0gklH8dSzlV0V5rU3UZuJqVw3CeAXzUvseADgwVpJ7u
-         w4bINIdxg9skSJEoZ8a3U2UWn9tWTp17RAbPRwTe35q9x8gmdrs0RMlH3wo9nyh13LaO
-         tWHBLZzSolC7SMA/mYEjulaVAxYm5wWZLA4q61MyidJApDY493NSCbvvZBjQZaD/ifDQ
-         X2DqkzQjv4UN6OCFvQDXEO54lw1eltlZG3yN+vJYwiRygT5uzceKEXN2SJu0owmn+Kn+
-         JFbABS6lKqtKSXUaN/XbTRiGuFiQvGOFPAXCmNfK1I+kuDQjPVk0iGS4jK4529EgLCm5
-         J96g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJtNfvQPx9MiBAuYZtkLpTeT5BO5WkJk3mTGoJfjU7s=;
-        b=NuNvo2o7FOctSDlcVGM39VHOhavjOSBJ4B4ErkEuBNNuDaiZBt3tEQbBdfWVWqaQIx
-         G/DKNTuvIOn2hkEmiNT4BVVyuRJ9ob9MPgaQT1FS21xHTEKHUDOeCVHZ3JyRu6sFnMVf
-         fWomNfgV33TuDtyyq/bPvNrc+DEbnmwQ2GNGWafRX9nFUVcfIOt0FQouRjP2qjIk33zO
-         AFaaeKUlveNlUEA2FGfSN6BQC1oav656C9JCHsvQG1BQDK9EAoRB+b0Ia+2ciqPCDo8K
-         I5yGttUNs1RcxJnIYS5RivKVplwPgdc1N4CMdDOqcu7Jpx8/XWnwib0RTcDDCH/Pbusb
-         zCAQ==
-X-Gm-Message-State: APjAAAUL9WOZ/WftYfxf2X2qIoP9YqjFafxCzj9ZfxPN5udOLdWT0zcZ
-        nsTqOloyBVVVHuFpB8Q/3OBoAOdFaqd/eryX9lz4fg==
-X-Google-Smtp-Source: APXvYqxrNZMinjspu4inEaBcza9QCTgWkgoCXnc5Q5cQmERuz8yAYG/VoatDOt3ousc+3PSIZdk0IJl6QzzPcJ85qcc=
-X-Received: by 2002:a9d:2028:: with SMTP id n37mr572976ota.127.1579042378672;
- Tue, 14 Jan 2020 14:52:58 -0800 (PST)
+        Tue, 14 Jan 2020 17:54:36 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irV4v-000091-V6; Tue, 14 Jan 2020 23:54:30 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id DB273101DEE; Tue, 14 Jan 2020 23:54:28 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ramon Fried <rfried.dev@gmail.com>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+In-Reply-To: <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
+Date:   Tue, 14 Jan 2020 23:54:28 +0100
+Message-ID: <87imldbqe3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20191217231615.164161-1-almasrymina@google.com>
- <20191217231615.164161-3-almasrymina@google.com> <dec1ccd5-5973-c498-f2fe-390c1c51b2d0@oracle.com>
-In-Reply-To: <dec1ccd5-5973-c498-f2fe-390c1c51b2d0@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Tue, 14 Jan 2020 14:52:47 -0800
-Message-ID: <CAHS8izMzXpNMCmFh_SD7n+4+rj3QTqyRfeWQyXAhFo1-qV4iEQ@mail.gmail.com>
-Subject: Re: [PATCH v9 3/8] hugetlb_cgroup: add reservation accounting for
- private mappings
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 4:55 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> > index dea6143aa0685..e6ab499ba2086 100644
-> > --- a/include/linux/hugetlb.h
-> > +++ b/include/linux/hugetlb.h
-> > @@ -46,6 +46,15 @@ struct resv_map {
-> >       long adds_in_progress;
-> >       struct list_head region_cache;
-> >       long region_cache_count;
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     /*
-> > +      * On private mappings, the counter to uncharge reservations is stored
-> > +      * here. If these fields are 0, then the mapping is shared.
->
-> Will *reservation_counter ALWAYS be non-NULL for private mappings?
->
-> More on this below.
->
-> > +      */
-> > +     struct page_counter *reservation_counter;
-> > +     unsigned long pages_per_hpage;
-> > +     struct cgroup_subsys_state *css;
-> > +#endif
-> >  };
-> >  extern struct resv_map *resv_map_alloc(void);
-> >  void resv_map_release(struct kref *ref);
-> > diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
-> > index eab8a70d5bcb5..8c320accefe87 100644
-> > --- a/include/linux/hugetlb_cgroup.h
-> > +++ b/include/linux/hugetlb_cgroup.h
-> > @@ -25,6 +25,33 @@ struct hugetlb_cgroup;
-> >  #define HUGETLB_CGROUP_MIN_ORDER     2
-> >
-> >  #ifdef CONFIG_CGROUP_HUGETLB
-> > +enum hugetlb_memory_event {
-> > +     HUGETLB_MAX,
-> > +     HUGETLB_NR_MEMORY_EVENTS,
-> > +};
-> > +
-> > +struct hugetlb_cgroup {
-> > +     struct cgroup_subsys_state css;
-> > +
-> > +     /*
-> > +      * the counter to account for hugepages from hugetlb.
-> > +      */
-> > +     struct page_counter hugepage[HUGE_MAX_HSTATE];
-> > +
-> > +     /*
-> > +      * the counter to account for hugepage reservations from hugetlb.
-> > +      */
-> > +     struct page_counter reserved_hugepage[HUGE_MAX_HSTATE];
-> > +
-> > +     atomic_long_t events[HUGE_MAX_HSTATE][HUGETLB_NR_MEMORY_EVENTS];
-> > +     atomic_long_t events_local[HUGE_MAX_HSTATE][HUGETLB_NR_MEMORY_EVENTS];
-> > +
-> > +     /* Handle for "hugetlb.events" */
-> > +     struct cgroup_file events_file[HUGE_MAX_HSTATE];
-> > +
-> > +     /* Handle for "hugetlb.events.local" */
-> > +     struct cgroup_file events_local_file[HUGE_MAX_HSTATE];
-> > +};
-> >
-> >  static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page,
-> >                                                             bool reserved)
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index e6e8240f1718c..7782977970301 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -665,6 +665,17 @@ struct resv_map *resv_map_alloc(void)
-> >       INIT_LIST_HEAD(&resv_map->regions);
-> >
-> >       resv_map->adds_in_progress = 0;
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     /*
-> > +      * Initialize these to 0. On shared mappings, 0's here indicate these
-> > +      * fields don't do cgroup accounting. On private mappings, these will be
-> > +      * re-initialized to the proper values, to indicate that hugetlb cgroup
-> > +      * reservations are to be un-charged from here.
-> > +      */
-> > +     resv_map->reservation_counter = NULL;
-> > +     resv_map->pages_per_hpage = 0;
-> > +     resv_map->css = NULL;
-> > +#endif
-> >
-> >       INIT_LIST_HEAD(&resv_map->region_cache);
-> >       list_add(&rg->link, &resv_map->region_cache);
-> > @@ -3145,7 +3156,20 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
-> >
-> >       reserve = (end - start) - region_count(resv, start, end);
-> >
-> > -     kref_put(&resv->refs, resv_map_release);
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     /*
-> > +      * Since we check for HPAGE_RESV_OWNER above, this must a private
-> > +      * mapping, and these values should be none-zero, and should point to
-> > +      * the hugetlb_cgroup counter to uncharge for this reservation.
-> > +      */
-> > +     WARN_ON(!resv->reservation_counter);
-> > +     WARN_ON(!resv->pages_per_hpage);
-> > +     WARN_ON(!resv->css);
->
-> I was once again wondering if these were always non-NULL for private mappings.
-> It seems that reservation_counter (h_gc) would be NULL in these cases from
-> these early checks in hugetlb_cgroup_charge_cgroup().
->
+Ramon Fried <rfried.dev@gmail.com> writes:
+> On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+>> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> > Ramon Fried <rfried.dev@gmail.com> writes:
+>> > > Besides the side effect of that, I don't really understand the logic
+>> > > of not masking the MSI until the threaded handler is complete,
+>> > > especially when there's no HW handler and only threaded handler.
+>> >
+>> > What's wrong with having another interrupt firing while the threaded
+>> > handler is running? Nothing, really. It actually can be desired because
+>> > the threaded handler is allowed to sleep.
+>> >
+>> What do you mean, isn't it the purpose IRQ masking ?  Interrupt
+>> coalescing is done to mitigate these IRQ's, these HW interrupts just
+>> consume CPU cycles and don't do anything useful (scheduling an
+>> already scheduled thread).
 
-You are right. I'm fixing in v10 the code and comments to account for
-h_cg potentially being NULL, but I'm having trouble testing. Looking
-at the code, I'm a bit confused by the checks. Seems to me
-hugetlb_cgroup_disabled() is the same as #ifdef CONFIG_CGROUP_HUGETLB;
-I can't find a way to enable the Kconfig but have that return false
-unless I hack the code. Also seems to me checking huge_page_order is
-just super definsive; I skimmed the hugepage sizes allowed code and I
-can't find an arch that allows you to configure hugetlb page size to <
-2^HUGETLB_CGROUP_MIN_ORDER pages. So in reality these will never fire,
-IIUC.
+Again, that depends on your POV. It's a perfectly valid scenario to have
+another HW irq coming in preventing the thread to go to sleep and just
+run for another cycle. So no, masking is not necessarily required and
+the semantics of MSI is edge type, so the hardware should not fire
+another interrupt _before_ the threaded handler actually took care of
+the initial one.
 
-> int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
->                                  struct hugetlb_cgroup **ptr, bool reserved)
-> {
->         int ret = 0;
->         struct page_counter *counter;
->         struct hugetlb_cgroup *h_cg = NULL;
->
->         if (hugetlb_cgroup_disabled())
->                 goto done;
->         /*
->          * We don't charge any cgroup if the compound page have less
->          * than 3 pages.
->          */
->         if (huge_page_order(&hstates[idx]) < HUGETLB_CGROUP_MIN_ORDER)
->                 goto done;
->         ...
->
-> It seems like the following hugetlb_cgroup_uncharge_counter() guards
-> against reservation_counter being NULL (for some of the same reasons).
->
-> > +
-> > +     hugetlb_cgroup_uncharge_counter(resv->reservation_counter,
-> > +                                     (end - start) * resv->pages_per_hpage,
-> > +                                     resv->css);
-> > +#endif
-> >
-> >       if (reserve) {
-> >               /*
-> > @@ -3155,6 +3179,8 @@ static void hugetlb_vm_op_close(struct vm_area_struct *vma)
-> >               gbl_reserve = hugepage_subpool_put_pages(spool, reserve);
-> >               hugetlb_acct_memory(h, -gbl_reserve);
-> >       }
-> > +
-> > +     kref_put(&resv->refs, resv_map_release);
-> >  }
-> >
-> >  static int hugetlb_vm_op_split(struct vm_area_struct *vma, unsigned long addr)
-> > @@ -4501,6 +4527,7 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >       struct hstate *h = hstate_inode(inode);
-> >       struct hugepage_subpool *spool = subpool_inode(inode);
-> >       struct resv_map *resv_map;
-> > +     struct hugetlb_cgroup *h_cg;
-> >       long gbl_reserve;
-> >
-> >       /* This should never happen */
-> > @@ -4534,12 +4561,30 @@ int hugetlb_reserve_pages(struct inode *inode,
-> >               chg = region_chg(resv_map, from, to);
-> >
-> >       } else {
-> > +             /* Private mapping. */
-> >               resv_map = resv_map_alloc();
-> >               if (!resv_map)
-> >                       return -ENOMEM;
-> >
-> >               chg = to - from;
-> >
-> > +             if (hugetlb_cgroup_charge_cgroup(hstate_index(h),
-> > +                                              chg * pages_per_huge_page(h),
-> > +                                              &h_cg, true)) {
-> > +                     kref_put(&resv_map->refs, resv_map_release);
-> > +                     return -ENOMEM;
-> > +             }
-> > +
->
-> Shouldn't this code be in the #ifdef CONFIG_CGROUP_HUGETLB block?
+> Additionally, in this case there isn't even an HW IRQ handler, it's
+> passed as NULL in the request IRQ function in this scenario.
 
-Not necessary AFAICT, hugetlb_cgroup_charge_cgroup stub returns 0 (no-op).
+This is completely irrelevant. The primary hardware IRQ handler is
+provided by the core code in this case.
+
+Due to the semantics of MSI this is perfectly fine and aside of your
+problem this has worked perfectly fine so far and it's an actual
+performance win because it avoid fiddling with the MSI mask which is
+slow.
+
+You still have not told which driver/hardware is affected by this. Can
+you please provide that information so we can finally look at the actual
+hardware/driver combo?
+
+Either the driver is broken or the hardware does not comply with the MSI
+spec.
+
+Thanks,
+
+        tglx
