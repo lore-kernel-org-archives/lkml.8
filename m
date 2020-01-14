@@ -2,122 +2,148 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95396C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C93C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70669207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3B7207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwYJRLnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgANKbZ (ORCPT
+        id S1729380AbgANKex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:31:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41612 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANKbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:31:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E3F33ACE0;
-        Tue, 14 Jan 2020 10:31:20 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id CDB791E0D0E; Tue, 14 Jan 2020 11:31:19 +0100 (CET)
-Date:   Tue, 14 Jan 2020 11:31:19 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Kai Li <li.kai4@h3c.com>
-Cc:     jack@suse.cz, tytso@mit.edu, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
-        gechangwei@live.cn, wang.yongd@h3c.com, wang.xibo@h3c.com
-Subject: Re: [PATCH] jbd2: clear JBD2_ABORT flag before journal_reset to
- update log tail info when load journal
-Message-ID: <20200114103119.GE6466@quack2.suse.cz>
-References: <20200111022542.5008-1-li.kai4@h3c.com>
+        Tue, 14 Jan 2020 05:34:53 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44452 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgANKew (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:34:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 195so6368375pfw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 02:34:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6WEFAP/ApgeJPueS6Gwwt3D0c6EozVsVjbD7xwCYDMU=;
+        b=jwYJRLnx31hznR5hOFu8AioG9hqIqaf7k2DcfPbD3O8HfcTL9Q4y5r7HAQ7I5Rd/JX
+         nq08HH8qf7mLFDLvXFIY6+ZPUZSzszeUAy0KJOKzW6+2HqLumlMhF0FdUiCRe+10goY5
+         +zbSgzWFwO21bcTFU/LWVACI19dkAwqLmY/2JmPN4k/zzHFUVsEYoRSZI/ZR/mF6nCqZ
+         vOLikz16Cx7JZFlC4SiZzzott0saT9FrIynGeQxSYHERd9Whw3B5FGclUPkbn4Q/IQhI
+         Vvlinrd6GIxLe4Z9JSG022SbvfOqP6rziyhdl9ki1hPjHscOyYJm4iIE4Qt7590Bzhfk
+         9W6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6WEFAP/ApgeJPueS6Gwwt3D0c6EozVsVjbD7xwCYDMU=;
+        b=m5z8r7LvF7KVGUp0oUXsf3uuBo7QgjG+i2OXCF6TmnKgR7utjWk+PLBrz+B5Of56RR
+         yhDUqtKQONGtja5AqcpOv45xuLtJ/BMuwhbwOxVZrIyCE/lHiwzfoahf/U8bABnA7z/T
+         r9PttcXDcfqZnoJTS7Y3GJChf6aMdKO3JDNE6Af3gDbtCHF98l7PKqxtYkGNcug8y/Qp
+         AS5LQVXE/WHr2W5pJHSdCOWtrjEvUBJzeLH9LeW2XHnFnvcTJBbpds3M17d8jb4V2iCk
+         Mwr0KldU59cUuzU0ebO4eoZv8eYZ82+K04mnQwvUXS2biF1V4YZog5fhIYdIuyh1o0MR
+         XdCA==
+X-Gm-Message-State: APjAAAW1HVp3ZuUTH1ICmdqutdQpVVoXRRF1gW1KP+oVs/EjGLS9GM+7
+        UHhFKhc4+1hoIVu3dfDXDnMPaQ==
+X-Google-Smtp-Source: APXvYqxyC3sfXYgjfIHc/g5DWfKMYs4YAP31hjMYEZtc13r8kBnIiS+sBTrIKQKYIA9GFDXA3LMrEw==
+X-Received: by 2002:a63:6e04:: with SMTP id j4mr25629136pgc.175.1578998092064;
+        Tue, 14 Jan 2020 02:34:52 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id m19sm16555830pjv.10.2020.01.14.02.34.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 02:34:51 -0800 (PST)
+Date:   Tue, 14 Jan 2020 16:04:48 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] Introduce Bandwidth OPPs for interconnects
+Message-ID: <20200114103448.odnvqawnqb3twst5@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200111022542.5008-1-li.kai4@h3c.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191207002424.201796-1-saravanak@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the patch! Just some small comments below:
-
-On Sat 11-01-20 10:25:42, Kai Li wrote:
-> Fixes: 85e0c4e89c1b "jbd2: if the journal is aborted then don't allow update of the log tail"
-
-This tag should come at the bottom of the changelog (close to your
-Signed-off-by).
-
-> If journal is dirty when mount, it will be replayed but jbd2 sb
-> log tail cannot be updated to mark a new start because
-> journal->j_flags has already been set with JBD2_ABORT first
-> in journal_init_common.
-> When a new transaction is committed, it will be recorded in block 1
-> first(journal->j_tail is set to 1 in journal_reset). If emergency
-> restart again before journal super block is updated unfortunately,
-> the new recorded trans will not be replayed in the next mount.
-> It is danerous which may lead to metadata corruption for file system.
-
-I'd slightly rephrase the text here so that it is more easily readable and
-correct some grammar mistakes. Something like:
-
-If the journal is dirty when the filesystem is mounted, jbd2 will replay
-the journal but the journal superblock will not be updated by
-journal_reset() because JBD2_ABORT flag is still set (it was set in
-journal_init_common()). This is problematic because when a new transaction
-is then committed, it will be recorded in block 1 (journal->j_tail was set
-to 1 in journal_reset()). If unclean shutdown happens again before the
-journal superblock is updated, the new recorded transaction will not be
-replayed during the next mount (because of stale sb->s_start and
-sb->s_sequence values) which can lead to filesystem corruption.
-
-Otherwise the patch looks good to me so feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-(again this is added to the bottom of the changelog like the 'Fixes' tag or
-'Signed-off-by' tag).
-
-								Honza
-
+On 06-12-19, 16:24, Saravana Kannan wrote:
+> gpu_cache_opp_table: gpu_cache_opp_table {
+> 	compatible = "operating-points-v2";
 > 
-> Signed-off-by: Kai Li <li.kai4@h3c.com>
-> ---
->  fs/jbd2/journal.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> 	gpu_cache_3000: opp-3000 {
+> 		opp-peak-KBps = <3000000>;
+> 		opp-avg-KBps = <1000000>;
+> 	};
+> 	gpu_cache_6000: opp-6000 {
+> 		opp-peak-KBps = <6000000>;
+> 		opp-avg-KBps = <2000000>;
+> 	};
+> 	gpu_cache_9000: opp-9000 {
+> 		opp-peak-KBps = <9000000>;
+> 		opp-avg-KBps = <9000000>;
+> 	};
+> };
 > 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 5e408ee24a1a..069b22eba795 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -1710,6 +1710,11 @@ int jbd2_journal_load(journal_t *journal)
->  		       journal->j_devname);
->  		return -EFSCORRUPTED;
->  	}
-> +	/*
-> +	 * clear JBD2_ABORT flag initialized in journal_init_common
-> +	 * here to update log tail information with the newest seq.
-> +	 */
-> +	journal->j_flags &= ~JBD2_ABORT;
->  
->  	/* OK, we've finished with the dynamic journal bits:
->  	 * reinitialise the dynamic contents of the superblock in memory
-> @@ -1717,7 +1722,6 @@ int jbd2_journal_load(journal_t *journal)
->  	if (journal_reset(journal))
->  		goto recovery_error;
->  
-> -	journal->j_flags &= ~JBD2_ABORT;
->  	journal->j_flags |= JBD2_LOADED;
->  	return 0;
->  
-> -- 
-> 2.24.0.windows.2
+> gpu_ddr_opp_table: gpu_ddr_opp_table {
+> 	compatible = "operating-points-v2";
 > 
+> 	gpu_ddr_1525: opp-1525 {
+> 		opp-peak-KBps = <1525000>;
+> 		opp-avg-KBps = <452000>;
+> 	};
+> 	gpu_ddr_3051: opp-3051 {
+> 		opp-peak-KBps = <3051000>;
+> 		opp-avg-KBps = <915000>;
+> 	};
+> 	gpu_ddr_7500: opp-7500 {
+> 		opp-peak-KBps = <7500000>;
+> 		opp-avg-KBps = <3000000>;
+> 	};
+> };
+> 
+> gpu_opp_table: gpu_opp_table {
+> 	compatible = "operating-points-v2";
+> 	opp-shared;
+> 
+> 	opp-200000000 {
+> 		opp-hz = /bits/ 64 <200000000>;
+> 	};
+> 	opp-400000000 {
+> 		opp-hz = /bits/ 64 <400000000>;
+> 	};
+> };
+> 
+> gpu@7864000 {
+> 	...
+> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+
+Okay, I got confused a bit again after some interaction with Sibi
+today. The multiple phandle thing in the operating-points-v2 property
+is there specifically for nodes that can provide multiple devices,
+like PM domains where the provider may end up providing multiple
+domains.
+
+But I am not sure what you are going to do with the list of phandles
+you have set for the GPU here.
+
+We can not add multiple OPP tables for a single device right now.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+viresh
