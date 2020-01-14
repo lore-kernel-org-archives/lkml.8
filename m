@@ -2,110 +2,237 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5352C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF00C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866522084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UqX2RrbY"
+	by mail.kernel.org (Postfix) with ESMTP id 864A3206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgANHeX (ORCPT
+        id S1729072AbgANHo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:34:23 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35940 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgANHeX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:34:23 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E7TEk6172803;
-        Tue, 14 Jan 2020 07:34:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=UaGSgT1rbPoNIUsnFhw2dKGfxppFu6+AxAWorBNHUyQ=;
- b=UqX2RrbYPdbrG/nSi5qkg+qJTqYER8ULcgZLNlOWEWuPxvBtbUOu52kYpqZEZjan4ag6
- SPR1MVg6xKQQaWhlkpsaG3VJBJLexAthvvnAeg6AmmrhBmFxFCA3xG7odkRO3jXtn0Mh
- khq0j1BdIsRyN9vHsj//w32DiPRuZpYugEwSydTbtgku8HIGV2grRcS/ohZ4wJBQxwl7
- HYpiRQKJcT7bc3/bsoXkb7kjq5o9/AwzF/0K3C0u1D0Iu24bi7QGrbRbcpQRa8/2m/ZT
- mQ2dHv+oXSUrPP/CPVjqdin78wieHkKQp/UfbfII84oqI9xwTN5VwCz8WrmkTrvHzXB6 dQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xf73tm0d9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 07:34:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00E7TLZB188445;
-        Tue, 14 Jan 2020 07:34:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xh2sc29cu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jan 2020 07:34:16 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00E7YEx9010906;
-        Tue, 14 Jan 2020 07:34:14 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 23:34:13 -0800
-Date:   Tue, 14 Jan 2020 10:34:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jean Delvare <khali@linux-fr.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
-Subject: [PATCH] i2c: i801: Fix memory corruption in i801_isr_byte_done()
-Message-ID: <20200114073406.qaq3hbrhtx76fkes@kili.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000009586b2059c13c7e1@google.com>
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=100 mlxscore=100 mlxlogscore=-1000
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140065
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=100 clxscore=1011
- lowpriorityscore=0 mlxscore=100 impostorscore=0 mlxlogscore=-1000
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001140065
+        Tue, 14 Jan 2020 02:44:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36752 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728801AbgANHo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 02:44:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9B5D4AC6E;
+        Tue, 14 Jan 2020 07:44:23 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 08:44:22 +0100
+Message-ID: <s5htv4yfpnt.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Jeff Chang <richtek.jeff.chang@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, matthias.bgg@gmail.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, jeff_chang@richtek.com
+Subject: Re: [PATCH v6] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+In-Reply-To: <1578968526-13191-1-git-send-email-richtek.jeff.chang@gmail.com>
+References: <1578968526-13191-1-git-send-email-richtek.jeff.chang@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assigning "priv->data[-1] = priv->len;" obviously doesn't make sense.
-What it does is it ends up corrupting the last byte of priv->len so
-priv->len becomes a very high number.
+On Tue, 14 Jan 2020 03:22:06 +0100,
+Jeff Chang wrote:
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index 229cc89..f135fbb 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -1465,6 +1466,16 @@ config SND_SOC_MT6358
+>  	  Enable support for the platform which uses MT6358 as
+>  	  external codec device.
+>  
+> +config SND_SOC_MT6660
+> +	tristate "Mediatek MT6660 Speaker Amplifier"
+> +	depends on I2C
+> +	help
+> +	  MediaTek MT6660 is a smart power amplifier which contain
+> +	  speaker protection, multi-band DRC, equalizer functions.
+> +	  Select N if you don't have MT6660 on board.
+> +	  Select M to build this as module.
+> +
+> +
 
-Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
-Fixes: d3ff6ce40031 ("i2c-i801: Enable IRQ for byte_by_byte transactions")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Untested.
+One blank line too much here.
 
- drivers/i2c/busses/i2c-i801.c | 1 -
- 1 file changed, 1 deletion(-)
+> --- /dev/null
+> +++ b/sound/soc/codecs/mt6660.c
+> @@ -0,0 +1,533 @@
+> +// SPDX-License-Identifier: GPL-2.0 //
+> +
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/version.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/delay.h>
+> +#include <sound/soc.h>
+> +#include <sound/tlv.h>
+> +#include <sound/pcm_params.h>
+> +#include <linux/debugfs.h>
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index f5e69fe56532..420d8025901e 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -584,7 +584,6 @@ static void i801_isr_byte_done(struct i801_priv *priv)
- 					"SMBus block read size is %d\n",
- 					priv->len);
- 			}
--			priv->data[-1] = priv->len;
- 		}
- 
- 		/* Read next byte */
--- 
-2.11.0
+Move linux/*.h above sound/*.h inclusion.
 
+> +
+> +#include "mt6660.h"
+> +
+> +#pragma pack(push, 1)
+
+Actually packing makes little sense for those use cases.
+As I mentioned earlier, packing is useful only for either saving some
+memory (e.g. for a large array) or a strict size definition like ABI.
+
+> +struct codec_reg_val {
+> +	u32 addr;
+> +	u32 mask;
+> +	u32 data;
+> +};
+
+Is this struct used anywhere?  If not, kill it.
+
+> +static struct regmap_config mt6660_regmap_config = {
+
+This can be const.
+
+> +static int mt6660_codec_dac_event(struct snd_soc_dapm_widget *w,
+> +	struct snd_kcontrol *kcontrol, int event)
+> +{
+> +
+
+A superfluous blank line.
+
+> +static int mt6660_component_get_volsw(struct snd_kcontrol *kcontrol,
+> +				  struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component =
+> +		snd_soc_kcontrol_component(kcontrol);
+> +	struct mt6660_chip *chip = (struct mt6660_chip *)
+> +		snd_soc_component_get_drvdata(component);
+> +	int ret = -EINVAL;
+> +
+> +	if (!strcmp(kcontrol->id.name, "Chip Rev")) {
+> +		ucontrol->value.integer.value[0] = chip->chip_rev & 0x0f;
+> +		ret = 0;
+> +	}
+> +	return ret;
+
+So, "T0 SEL" control gets always an error when reading?
+Then can't we pass simply NULL for get ops instead?
+
+> +static int _mt6660_chip_power_on(struct mt6660_chip *chip, int on_off)
+> +{
+> +	u8 reg_data;
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_byte_data(chip->i2c, MT6660_REG_SYSTEM_CTRL);
+> +	if (ret < 0)
+> +		return ret;
+> +	reg_data = (u8)ret;
+> +	if (on_off)
+> +		reg_data &= (~0x01);
+> +	else
+> +		reg_data |= 0x01;
+> +	return regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, reg_data);
+
+Hm, this looks like an open-code of forced update bits via regmap.
+But interestingly there is no corresponding standard helper for that.
+Essentially it should be regmap_update_bits_base() with force=1.
+
+Mark?
+
+> +static int mt6660_component_aif_hw_params(struct snd_pcm_substream *substream,
+> +	struct snd_pcm_hw_params *hw_params, struct snd_soc_dai *dai)
+> +{
+> +	int word_len = params_physical_width(hw_params);
+> +	int aud_bit = params_width(hw_params);
+....
+> +	switch (aud_bit) {
+> +	case 16:
+> +		reg_data = 3;
+> +		break;
+> +	case 18:
+> +		reg_data = 2;
+> +		break;
+> +	case 20:
+> +		reg_data = 1;
+> +		break;
+> +	case 24:
+> +	case 32:
+> +		reg_data = 0;
+> +		break;
+
+So here both 24 and 32 bits data are handled equally, and...
+
+....
+> +	ret = snd_soc_component_update_bits(dai->component,
+> +		MT6660_REG_TDM_CFG3, 0x3f0, word_len << 4);
+
+... word_len is same for both S32 and S24 formats, so there can be no
+difference between S24 and S32 format handling in the code.
+Meanwhile, the supported formats are:
+
+> +#define STUB_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
+> +			SNDRV_PCM_FMTBIT_U16_LE | \
+> +			SNDRV_PCM_FMTBIT_S24_LE | \
+> +			SNDRV_PCM_FMTBIT_U24_LE | \
+> +			SNDRV_PCM_FMTBIT_S32_LE | \
+> +			SNDRV_PCM_FMTBIT_U32_LE)
+
+Are you sure that S24_* formats really work properly?
+
+Also, the code has no check / setup of the format signedness.
+Do unsigned formats (U16, U24, etc) really work as expected, too?
+
+> +static inline int _mt6660_chip_id_check(struct mt6660_chip *chip)
+
+Drop unnecessary inline (here and other places).
+Compiler optimizes well by itself.
+
+> +static inline int _mt6660_chip_sw_reset(struct mt6660_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	/* turn on main pll first, then trigger reset */
+> +	ret = regmap_write(chip->regmap, 0x03, 0x00);
+
+It's MT6660_REG_SYSTEM_CTRL, right?
+
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x80);
+> +	if (ret < 0)
+> +		return ret;
+> +	msleep(30);
+> +	return 0;
+> +}
+> +
+> +static inline int _mt6660_read_chip_revision(struct mt6660_chip *chip)
+> +{
+> +	u8 reg_data[2];
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_i2c_block_data(
+> +		chip->i2c, MT6660_REG_DEVID, 2, reg_data);
+
+Why avoiding regmap here?  This and chip_id_check() use the raw access
+by some reason...
+
+
+thanks,
+
+Takashi
