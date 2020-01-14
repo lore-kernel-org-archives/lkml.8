@@ -2,342 +2,106 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6FDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576BA2468B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BB92465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 14:26:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRb7UzFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgANOY0 (ORCPT
+        id S1728933AbgANO02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:24:26 -0500
-Received: from mga09.intel.com ([134.134.136.24]:32141 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgANOY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:24:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 06:24:25 -0800
-X-IronPort-AV: E=Sophos;i="5.69,433,1571727600"; 
-   d="scan'208";a="213347326"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 06:24:22 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] drm/i915/audio: convert to new drm logging macros.
-In-Reply-To: <87d0bmktgy.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200114095107.21197-1-wambui.karugax@gmail.com> <20200114095107.21197-3-wambui.karugax@gmail.com> <87d0bmktgy.fsf@intel.com>
-Date:   Tue, 14 Jan 2020 16:24:20 +0200
-Message-ID: <87a76qktez.fsf@intel.com>
+        Tue, 14 Jan 2020 09:26:28 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40891 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANO01 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:26:27 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w21so12737851otj.7;
+        Tue, 14 Jan 2020 06:26:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sPuFWmGDBx3VY9Jzpyfn0aIZyXwJCyecc/87RTsvEfA=;
+        b=DRb7UzFmkhqx/FQMyGY7acy+G2ByTNFiQsdoan2tiY0KHLJQ37c1VCddyV92T0/TwJ
+         ppkXQYTlEN+bcheveDBr0p2vgS0hjyPhN0OMxUzdIdtlxUxtdkEIK7hM+o/7PSHcHgEy
+         ImRF1aLx+3gtX/Zw93mrQeze18oUDniVVoKxjffWS0uxpLSz6K7Gakg5S3oXP2ewKegz
+         l0POR4NQXsNUSd/OHH+FXKAMAgSsZPrqYPUTy1ddXDPa4mABtAwKIJW106IaU3iLKRJD
+         Cp7QhI6q/pxnUmevghLJ3N7HikNp1mZnVrubelGQ+dSl0NmsUTDw5ukoXmczD2/DrCr2
+         4Xpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sPuFWmGDBx3VY9Jzpyfn0aIZyXwJCyecc/87RTsvEfA=;
+        b=TAqNIxIPB3CaNU4tJT0/WiTSEl7XikyTATY16ZJ2WP/W8h6Yp4o7dzvI81lyUcBMy8
+         UY6RG552cm61oV67QG/LPXxJiWVg7Ik8oNdxtqN2rOp8djXDo21uTHbKba8FQojfKamZ
+         Q75f/PI7MZ3PVTVdelkje/7Vln3+r9hBpDYxjORr/wiu2AhXlmDy0k5FMmXYRQzpv+Yn
+         obRA7Vmqtv+fPafmcZBqqUcbECYom1xs1FlDeJOq70t+hkZ38hXbecM0vaeTePBJFq4s
+         m6cxk2LlFeoWaQk0bR7eBLG5CipQ2orhiX/+7cOW//LVHRqAc/+mwUH3ZaFtW0yvUHcb
+         O1Ew==
+X-Gm-Message-State: APjAAAU2EoQCgf6SrjXrie6jmecgihkBIX8JRWjWSfN2VNbRq/GSIoSw
+        HSoyi5pdtt8j7vG7BIIXoHZv1V6Lbk9wksd3WFc=
+X-Google-Smtp-Source: APXvYqzRoHAemxMBX4HZxG//uu3ExRtzVSDGR5WFru0o8BS5D6hoKT83Bcg4cx3NgJrW13rhSjcetJbmGHwzukfgMjc=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr17413547otp.44.1579011986681;
+ Tue, 14 Jan 2020 06:26:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200113172038.99689-1-cengiz@kernel.wtf>
+In-Reply-To: <20200113172038.99689-1-cengiz@kernel.wtf>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 14 Jan 2020 14:26:00 +0000
+Message-ID: <CA+V-a8vowxJhV0FnHA8kGcLPLWLi8Xd7RSTABLDBtu7YpLYg9Q@mail.gmail.com>
+Subject: Re: [PATCH] media: davinci: remove self assignment in vpfe
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> On Tue, 14 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
->> Converts the printk based logging macros in i915/display/intel_audio.c
->> to the struct drm_device based logging macros.
->
-> Couple of comments inline.
+Hi Cengiz,
 
-PS. This is
+Thank you for the patch.
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+On Mon, Jan 13, 2020 at 5:21 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+>
+> There's a self assignment which has no effect.
+>
+> Removed self assignment.
+>
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> ---
+>  drivers/media/platform/davinci/vpfe_capture.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/davinci/vpfe_capture.c b/drivers/media/platform/davinci/vpfe_capture.c
+> index 916ed743d716..089648665cdf 100644
+> --- a/drivers/media/platform/davinci/vpfe_capture.c
+> +++ b/drivers/media/platform/davinci/vpfe_capture.c
+> @@ -879,7 +879,6 @@ static int vpfe_enum_fmt_vid_cap(struct file *file, void  *priv,
+>         /* Fill in the information about format */
+>         pix_fmt = vpfe_lookup_pix_format(pix);
+>         if (pix_fmt) {
+> -               fmt->pixelformat = fmt->pixelformat;
+good catch, but the correct fix is to assign pix_fmt->pixelformat to
+fmt->pixelformat.
 
-and I'm fine with the requested changes being applied as separate
-patches as long as they happen.
+Cheers,
+--Prabhakar Lad
 
-
+>                 return 0;
+>         }
+>         return -EINVAL;
+> --
+> 2.24.1
 >
-> BR,
-> Jani.
->
->
->> This transformation was achieved using the following coccinelle script
->> that matches the existence of the struct drm_i915_private device:
->>
->> @rule1@
->> identifier fn, T;
->> @@
->>
->> fn(struct drm_i915_private *T,...) {
->> <+...
->> (
->> -DRM_INFO(
->> +drm_info(&T->drm,
->> ...)
->> |
->> -DRM_ERROR(
->> +drm_err(&T->drm,
->> ...)
->> |
->> -DRM_WARN(
->> +drm_warn(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG(
->> +drm_dbg(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG_DRIVER(
->> +drm_dbg(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG_KMS(
->> +drm_dbg_kms(&T->drm,
->> ...)
->> )
->> ...+>
->> }
->>
->> @rule2@
->> identifier fn, T;
->> @@
->>
->> fn(...) {
->> ...
->> struct drm_i915_private *T = ...;
->> <+...
->> (
->> -DRM_INFO(
->> +drm_info(&T->drm,
->> ...)
->> |
->> -DRM_ERROR(
->> +drm_err(&T->drm,
->> ...)
->> |
->> -DRM_WARN(
->> +drm_warn(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG(
->> +drm_dbg(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG_KMS(
->> +drm_dbg_kms(&T->drm,
->> ...)
->> |
->> -DRM_DEBUG_DRIVER(
->> +drm_dbg(&T->drm,
->> ...)
->> )
->> ...+>
->> }
->>
->> Checkpatch warnings were manually fixed.
->>
->> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
->> ---
->>  drivers/gpu/drm/i915/display/intel_audio.c | 71 ++++++++++++----------
->>  1 file changed, 40 insertions(+), 31 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_audio.c b/drivers/gpu/drm/i915/display/intel_audio.c
->> index e406719a6716..57208440bf6d 100644
->> --- a/drivers/gpu/drm/i915/display/intel_audio.c
->> +++ b/drivers/gpu/drm/i915/display/intel_audio.c
->> @@ -315,7 +315,7 @@ static void g4x_audio_codec_disable(struct intel_encoder *encoder,
->>  	struct drm_i915_private *dev_priv = to_i915(encoder->base.dev);
->>  	u32 eldv, tmp;
->>  
->> -	DRM_DEBUG_KMS("Disable audio codec\n");
->> +	drm_dbg_kms(&dev_priv->drm, "Disable audio codec\n");
->>  
->>  	tmp = I915_READ(G4X_AUD_VID_DID);
->>  	if (tmp == INTEL_AUDIO_DEVBLC || tmp == INTEL_AUDIO_DEVCL)
->> @@ -340,7 +340,8 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
->>  	u32 tmp;
->>  	int len, i;
->>  
->> -	DRM_DEBUG_KMS("Enable audio codec, %u bytes ELD\n", drm_eld_size(eld));
->> +	drm_dbg_kms(&dev_priv->drm, "Enable audio codec, %u bytes ELD\n",
->> +		    drm_eld_size(eld));
->>  
->>  	tmp = I915_READ(G4X_AUD_VID_DID);
->>  	if (tmp == INTEL_AUDIO_DEVBLC || tmp == INTEL_AUDIO_DEVCL)
->> @@ -360,7 +361,7 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
->>  	I915_WRITE(G4X_AUD_CNTL_ST, tmp);
->>  
->>  	len = min(drm_eld_size(eld) / 4, len);
->> -	DRM_DEBUG_DRIVER("ELD size %d\n", len);
->> +	drm_dbg(&dev_priv->drm, "ELD size %d\n", len);
->
-> Please convert this to drm_dbg_kms() while at it.
->
->>  	for (i = 0; i < len; i++)
->>  		I915_WRITE(G4X_HDMIW_HDMIEDID, *((const u32 *)eld + i));
->>  
->> @@ -384,9 +385,10 @@ hsw_dp_audio_config_update(struct intel_encoder *encoder,
->>  	rate = acomp ? acomp->aud_sample_rate[port] : 0;
->>  	nm = audio_config_dp_get_n_m(crtc_state, rate);
->>  	if (nm)
->> -		DRM_DEBUG_KMS("using Maud %u, Naud %u\n", nm->m, nm->n);
->> +		drm_dbg_kms(&dev_priv->drm, "using Maud %u, Naud %u\n", nm->m,
->> +			    nm->n);
->>  	else
->> -		DRM_DEBUG_KMS("using automatic Maud, Naud\n");
->> +		drm_dbg_kms(&dev_priv->drm, "using automatic Maud, Naud\n");
->>  
->>  	tmp = I915_READ(HSW_AUD_CFG(cpu_transcoder));
->>  	tmp &= ~AUD_CONFIG_N_VALUE_INDEX;
->> @@ -437,13 +439,13 @@ hsw_hdmi_audio_config_update(struct intel_encoder *encoder,
->>  
->>  	n = audio_config_hdmi_get_n(crtc_state, rate);
->>  	if (n != 0) {
->> -		DRM_DEBUG_KMS("using N %d\n", n);
->> +		drm_dbg_kms(&dev_priv->drm, "using N %d\n", n);
->>  
->>  		tmp &= ~AUD_CONFIG_N_MASK;
->>  		tmp |= AUD_CONFIG_N(n);
->>  		tmp |= AUD_CONFIG_N_PROG_ENABLE;
->>  	} else {
->> -		DRM_DEBUG_KMS("using automatic N\n");
->> +		drm_dbg_kms(&dev_priv->drm, "using automatic N\n");
->>  	}
->>  
->>  	I915_WRITE(HSW_AUD_CFG(cpu_transcoder), tmp);
->> @@ -476,8 +478,8 @@ static void hsw_audio_codec_disable(struct intel_encoder *encoder,
->>  	enum transcoder cpu_transcoder = old_crtc_state->cpu_transcoder;
->>  	u32 tmp;
->>  
->> -	DRM_DEBUG_KMS("Disable audio codec on transcoder %s\n",
->> -		      transcoder_name(cpu_transcoder));
->> +	drm_dbg_kms(&dev_priv->drm, "Disable audio codec on transcoder %s\n",
->> +		    transcoder_name(cpu_transcoder));
->>  
->>  	mutex_lock(&dev_priv->av_mutex);
->>  
->> @@ -511,8 +513,9 @@ static void hsw_audio_codec_enable(struct intel_encoder *encoder,
->>  	u32 tmp;
->>  	int len, i;
->>  
->> -	DRM_DEBUG_KMS("Enable audio codec on transcoder %s, %u bytes ELD\n",
->> -		      transcoder_name(cpu_transcoder), drm_eld_size(eld));
->> +	drm_dbg_kms(&dev_priv->drm,
->> +		    "Enable audio codec on transcoder %s, %u bytes ELD\n",
->> +		     transcoder_name(cpu_transcoder), drm_eld_size(eld));
->>  
->>  	mutex_lock(&dev_priv->av_mutex);
->>  
->> @@ -561,9 +564,10 @@ static void ilk_audio_codec_disable(struct intel_encoder *encoder,
->>  	u32 tmp, eldv;
->>  	i915_reg_t aud_config, aud_cntrl_st2;
->>  
->> -	DRM_DEBUG_KMS("Disable audio codec on [ENCODER:%d:%s], pipe %c\n",
->> -		      encoder->base.base.id, encoder->base.name,
->> -		      pipe_name(pipe));
->> +	drm_dbg_kms(&dev_priv->drm,
->> +		    "Disable audio codec on [ENCODER:%d:%s], pipe %c\n",
->> +		     encoder->base.base.id, encoder->base.name,
->> +		     pipe_name(pipe));
->>  
->>  	if (WARN_ON(port == PORT_A))
->>  		return;
->> @@ -611,9 +615,10 @@ static void ilk_audio_codec_enable(struct intel_encoder *encoder,
->>  	int len, i;
->>  	i915_reg_t hdmiw_hdmiedid, aud_config, aud_cntl_st, aud_cntrl_st2;
->>  
->> -	DRM_DEBUG_KMS("Enable audio codec on [ENCODER:%d:%s], pipe %c, %u bytes ELD\n",
->> -		      encoder->base.base.id, encoder->base.name,
->> -		      pipe_name(pipe), drm_eld_size(eld));
->> +	drm_dbg_kms(&dev_priv->drm,
->> +		    "Enable audio codec on [ENCODER:%d:%s], pipe %c, %u bytes ELD\n",
->> +		    encoder->base.base.id, encoder->base.name,
->> +		    pipe_name(pipe), drm_eld_size(eld));
->>  
->>  	if (WARN_ON(port == PORT_A))
->>  		return;
->> @@ -701,14 +706,13 @@ void intel_audio_codec_enable(struct intel_encoder *encoder,
->>  
->>  	/* FIXME precompute the ELD in .compute_config() */
->>  	if (!connector->eld[0])
->> -		DRM_DEBUG_KMS("Bogus ELD on [CONNECTOR:%d:%s]\n",
->> -			      connector->base.id, connector->name);
->> +		drm_dbg_kms(&dev_priv->drm,
->> +			    "Bogus ELD on [CONNECTOR:%d:%s]\n",
->> +			    connector->base.id, connector->name);
->>  
->> -	DRM_DEBUG_DRIVER("ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
->> -			 connector->base.id,
->> -			 connector->name,
->> -			 connector->encoder->base.id,
->> -			 connector->encoder->name);
->> +	drm_dbg(&dev_priv->drm, "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
->> +		connector->base.id, connector->name,
->> +		connector->encoder->base.id, connector->encoder->name);
->
-> Please convert this to drm_dbg_kms() while at it.
->
->>  
->>  	connector->eld[6] = drm_av_sync_delay(connector, adjusted_mode) / 2;
->>  
->> @@ -851,8 +855,9 @@ static unsigned long i915_audio_component_get_power(struct device *kdev)
->>  	if (dev_priv->audio_power_refcount++ == 0) {
->>  		if (IS_TIGERLAKE(dev_priv) || IS_ICELAKE(dev_priv)) {
->>  			I915_WRITE(AUD_FREQ_CNTRL, dev_priv->audio_freq_cntrl);
->> -			DRM_DEBUG_KMS("restored AUD_FREQ_CNTRL to 0x%x\n",
->> -				      dev_priv->audio_freq_cntrl);
->> +			drm_dbg_kms(&dev_priv->drm,
->> +				    "restored AUD_FREQ_CNTRL to 0x%x\n",
->> +				    dev_priv->audio_freq_cntrl);
->>  		}
->>  
->>  		/* Force CDCLK to 2*BCLK as long as we need audio powered. */
->> @@ -992,7 +997,8 @@ static int i915_audio_component_sync_audio_rate(struct device *kdev, int port,
->>  	/* 1. get the pipe */
->>  	encoder = get_saved_enc(dev_priv, port, pipe);
->>  	if (!encoder || !encoder->base.crtc) {
->> -		DRM_DEBUG_KMS("Not valid for port %c\n", port_name(port));
->> +		drm_dbg_kms(&dev_priv->drm, "Not valid for port %c\n",
->> +			    port_name(port));
->>  		err = -ENODEV;
->>  		goto unlock;
->>  	}
->> @@ -1023,7 +1029,8 @@ static int i915_audio_component_get_eld(struct device *kdev, int port,
->>  
->>  	intel_encoder = get_saved_enc(dev_priv, port, pipe);
->>  	if (!intel_encoder) {
->> -		DRM_DEBUG_KMS("Not valid for port %c\n", port_name(port));
->> +		drm_dbg_kms(&dev_priv->drm, "Not valid for port %c\n",
->> +			    port_name(port));
->>  		mutex_unlock(&dev_priv->av_mutex);
->>  		return ret;
->>  	}
->> @@ -1119,15 +1126,17 @@ static void i915_audio_component_init(struct drm_i915_private *dev_priv)
->>  				  &i915_audio_component_bind_ops,
->>  				  I915_COMPONENT_AUDIO);
->>  	if (ret < 0) {
->> -		DRM_ERROR("failed to add audio component (%d)\n", ret);
->> +		drm_err(&dev_priv->drm,
->> +			"failed to add audio component (%d)\n", ret);
->>  		/* continue with reduced functionality */
->>  		return;
->>  	}
->>  
->>  	if (IS_TIGERLAKE(dev_priv) || IS_ICELAKE(dev_priv)) {
->>  		dev_priv->audio_freq_cntrl = I915_READ(AUD_FREQ_CNTRL);
->> -		DRM_DEBUG_KMS("init value of AUD_FREQ_CNTRL of 0x%x\n",
->> -			      dev_priv->audio_freq_cntrl);
->> +		drm_dbg_kms(&dev_priv->drm,
->> +			    "init value of AUD_FREQ_CNTRL of 0x%x\n",
->> +			    dev_priv->audio_freq_cntrl);
->>  	}
->>  
->>  	dev_priv->audio_component_registered = true;
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
