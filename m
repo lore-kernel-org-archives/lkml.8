@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021E8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D02DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C8524676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CF24676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996751;
-	bh=mtKLXxFEnGPm48CN0waeK598N3Inza2HibBee1soN8g=;
+	s=default; t=1578996758;
+	bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmS7x1cK0vc6PjY3ZIYUkf1OLjCysUvxJ67ZRKHHg6Eqdp06TbHYajoqqUKopTMnN
-	 tr/CCGz5+8co3kKoGMQ09TSOVQcpgapjuMlgJucWlfQyWBYG0gO5EGPOEcnl4wNKb4
-	 Kj2zcNg8whwcXdA/TBVjq659+/YG0KS2pFKzEctU=
+	b=UJt6uILuMDK+lr4gyFAmMgSMfKEzy+5r8+tRoyUsiedYrXMvqpvdmr1UP5XUIJjJ0
+	 46v5gPKYSur3AX8BMB5KEpSuSLXho3fTD0nzHSsxGQ9u6g8whwm8QLOnbm+vUqWNNl
+	 lSl1XVVzsEF0YxAh0zGmtoBxQWxQJKH8NthXCJ1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgANKMa (ORCPT
+        id S1732677AbgANKMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48858 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733064AbgANKM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:27 -0500
+        id S1733064AbgANKMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 689D5207FF;
-        Tue, 14 Jan 2020 10:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D04C924685;
+        Tue, 14 Jan 2020 10:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996746;
-        bh=mtKLXxFEnGPm48CN0waeK598N3Inza2HibBee1soN8g=;
+        s=default; t=1578996752;
+        bh=/zh7hUGsbKPWP/EZmi18VLr6WqJo0rJEHGMtCmg7Y3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TG9nUxIfW1z1TqvTGvZ1BIT9H4N3bJSM42q111F1jSF+3SJvhMoh8+3TSYwIdxL2f
-         DdbykPq2SlCUze7kcNSq3f7OUy3zi0gMYSLmLi/cKOrRBxEDUlfRswEB/siVBswfON
-         nR5GwX4DZwx5eBwxGB1UAZvN2g5+YbV5zPemW/W0=
+        b=SmsYNkImT97Yv4WHCtTZxD+E8RbSmyGlie+vn1ezTvPQ6/dX0/mVio4OrEzDIvLxi
+         bmMba6XTtgkKWVDxnHKL7Ns1iAqg3Sd8WMmXo+q3EZEz6t0K1pe9zmIO6sF5NsBcwW
+         BlDRfIvTuXbmL6gUKCPtpnQe96dzqLDqDrXj/Snw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com,
-        syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 10/28] Input: add safety guards to input_set_keycode()
-Date:   Tue, 14 Jan 2020 11:02:12 +0100
-Message-Id: <20200114094341.515504421@linuxfoundation.org>
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Peter Chen <peter.chen@freescale.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.4 03/28] usb: chipidea: host: Disable port power only if previously enabled
+Date:   Tue, 14 Jan 2020 11:02:05 +0100
+Message-Id: <20200114094338.347507862@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
 References: <20200114094336.845958665@linuxfoundation.org>
@@ -61,69 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit cb222aed03d798fc074be55e59d9a112338ee784 upstream.
+commit c1ffba305dbcf3fb9ca969c20a97acbddc38f8e9 upstream.
 
-If we happen to have a garbage in input device's keycode table with values
-too big we'll end up doing clear_bit() with offset way outside of our
-bitmaps, damaging other objects within an input device or even outside of
-it. Let's add sanity checks to the returned old keycodes.
+On shutdown, ehci_power_off() is called unconditionally to power off
+each port, even if it was never called to power on the port.
+For chipidea, this results in a call to ehci_ci_portpower() with a request
+to power off ports even if the port was never powered on.
+This results in the following warning from the regulator code.
 
-Reported-by: syzbot+c769968809f9359b07aa@syzkaller.appspotmail.com
-Reported-by: syzbot+76f3a30e88d256644c78@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20191207212757.GA245964@dtor-ws
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
+unbalanced disables for usb_otg2_vbus
+Modules linked in:
+CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
+Hardware name: Freescale i.MX7 Dual (Device Tree)
+[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
+[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
+[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
+[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
+[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
+[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
+[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
+[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
+[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
+[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
+[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
+[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
+[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
+...
+
+Keeping track of the power enable state avoids the warning and traceback.
+
+Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: Peter Chen <peter.chen@freescale.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20191226155754.25451-1-linux@roeck-us.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/input.c |   26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/usb/chipidea/host.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -851,16 +851,18 @@ static int input_default_setkeycode(stru
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -37,6 +37,7 @@ static int (*orig_bus_suspend)(struct us
+ 
+ struct ehci_ci_priv {
+ 	struct regulator *reg_vbus;
++	bool enabled;
+ };
+ 
+ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
+@@ -48,7 +49,7 @@ static int ehci_ci_portpower(struct usb_
+ 	int ret = 0;
+ 	int port = HCS_N_PORTS(ehci->hcs_params);
+ 
+-	if (priv->reg_vbus) {
++	if (priv->reg_vbus && enable != priv->enabled) {
+ 		if (port > 1) {
+ 			dev_warn(dev,
+ 				"Not support multi-port regulator control\n");
+@@ -64,6 +65,7 @@ static int ehci_ci_portpower(struct usb_
+ 				enable ? "enable" : "disable", ret);
+ 			return ret;
  		}
++		priv->enabled = enable;
  	}
  
--	__clear_bit(*old_keycode, dev->keybit);
--	__set_bit(ke->keycode, dev->keybit);
--
--	for (i = 0; i < dev->keycodemax; i++) {
--		if (input_fetch_keycode(dev, i) == *old_keycode) {
--			__set_bit(*old_keycode, dev->keybit);
--			break; /* Setting the bit twice is useless, so break */
-+	if (*old_keycode <= KEY_MAX) {
-+		__clear_bit(*old_keycode, dev->keybit);
-+		for (i = 0; i < dev->keycodemax; i++) {
-+			if (input_fetch_keycode(dev, i) == *old_keycode) {
-+				__set_bit(*old_keycode, dev->keybit);
-+				/* Setting the bit twice is useless, so break */
-+				break;
-+			}
- 		}
- 	}
- 
-+	__set_bit(ke->keycode, dev->keybit);
- 	return 0;
- }
- 
-@@ -916,9 +918,13 @@ int input_set_keycode(struct input_dev *
- 	 * Simulate keyup event if keycode is not present
- 	 * in the keymap anymore
- 	 */
--	if (test_bit(EV_KEY, dev->evbit) &&
--	    !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
--	    __test_and_clear_bit(old_keycode, dev->key)) {
-+	if (old_keycode > KEY_MAX) {
-+		dev_warn(dev->dev.parent ?: &dev->dev,
-+			 "%s: got too big old keycode %#x\n",
-+			 __func__, old_keycode);
-+	} else if (test_bit(EV_KEY, dev->evbit) &&
-+		   !is_event_supported(old_keycode, dev->keybit, KEY_MAX) &&
-+		   __test_and_clear_bit(old_keycode, dev->key)) {
- 		struct input_value vals[] =  {
- 			{ EV_KEY, old_keycode, 0 },
- 			input_value_sync
+ 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
 
 
