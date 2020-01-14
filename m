@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D1FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F15C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F6924676
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2BB24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996410;
-	bh=IeTjsRO6URx1GNryavx0xq8N3v/eFlToJB689lmaoN0=;
+	s=default; t=1578996416;
+	bh=JNfAoog5+ccTMuc9E8lvj6TYLMclB4+LV964XkJSShc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqPlMMIwbVVqgshWwucZpN/23UFrHvYrD4eQsIcMMAy6Ano0jIN2WuCGqcCaJ9/PP
-	 zoqVJkPv3KGfQtWn6/zs7fRPjk8IKP4Qt7Vr0Bt2r5Jdgni+E+LF1AdrFCcgeYhDOy
-	 hEHH5XKNENtY7p2RiUj0VjZmAC73ZgcmZoIHpUFI=
+	b=0L4F9JVOFjh497CS+PD1peG93RlB6lL1DVPjvBMcdJEOFevYhB2ycy+k3oF+7NKW8
+	 xfFMvUuixlhBMS8s5NtOujEc25bDwUUky+rc5AhkyDhAQzi4y2A7tquhRgh1qSCJrs
+	 +8jVN9ob6vCh1lUuclu14RWDaLferoDk7JEiMUGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgANKGs (ORCPT
+        id S1730535AbgANKGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36038 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730422AbgANKGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:42 -0500
+        id S1729331AbgANKGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B87124676;
-        Tue, 14 Jan 2020 10:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B9D24676;
+        Tue, 14 Jan 2020 10:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996402;
-        bh=IeTjsRO6URx1GNryavx0xq8N3v/eFlToJB689lmaoN0=;
+        s=default; t=1578996411;
+        bh=JNfAoog5+ccTMuc9E8lvj6TYLMclB4+LV964XkJSShc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hx1Px5LUhCUw61Za/KQiHoSgc1K/I/uxrHg4kCAxnVY91F3GYXjO4W5+26B5m6teH
-         dhqLjKG/eCYEQ+eCYzwodN4ux1Vek+zyXthGhVIhime9XjQUntFqAhEZDvOSpWXdnc
-         fnjorO9NSBS3km9e1ZRNbeFk8vmud+IPTsZC7Wsg=
+        b=Z8+SEGPvdh/+fktnvsBkHJUvcOJT6sxw7B7fyv8KGDfZDP/66Y0HdPCMlYm+Ime1W
+         5nY6fmHLlduEFRMvvpAc6WDqtRv596RtByjF+29B412Weg5C+bgNPFUOAjpiGjZ2kD
+         VM/JaZf4ofEzl9uBUEryf/O0Fbz5HP7+qWa3P7U4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 5.4 69/78] scsi: bfa: release allocated memory in case of error
-Date:   Tue, 14 Jan 2020 11:01:43 +0100
-Message-Id: <20200114094402.612919693@linuxfoundation.org>
+        stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
+        linux-xtensa@linux-xtensa.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 62/78] xtensa: Implement copy_thread_tls
+Date:   Tue, 14 Jan 2020 11:01:36 +0100
+Message-Id: <20200114094401.746640870@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,36 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Amanieu d'Antras <amanieu@gmail.com>
 
-commit 0e62395da2bd5166d7c9e14cbc7503b256a34cb0 upstream.
+commit c346b94f8c5d1b7d637522c908209de93305a8eb upstream.
 
-In bfad_im_get_stats if bfa_port_get_stats fails, allocated memory needs to
-be released.
+This is required for clone3 which passes the TLS value through a
+struct rather than a register.
 
-Link: https://lore.kernel.org/r/20190910234417.22151-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
+Cc: <stable@vger.kernel.org> # 5.3.x
+Link: https://lore.kernel.org/r/20200102172413.654385-7-amanieu@gmail.com
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/bfa/bfad_attr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/xtensa/Kconfig          |    1 +
+ arch/xtensa/kernel/process.c |    8 ++++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/bfa/bfad_attr.c
-+++ b/drivers/scsi/bfa/bfad_attr.c
-@@ -275,8 +275,10 @@ bfad_im_get_stats(struct Scsi_Host *shos
- 	rc = bfa_port_get_stats(BFA_FCPORT(&bfad->bfa),
- 				fcstats, bfad_hcb_comp, &fcomp);
- 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
--	if (rc != BFA_STATUS_OK)
-+	if (rc != BFA_STATUS_OK) {
-+		kfree(fcstats);
- 		return NULL;
-+	}
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -22,6 +22,7 @@ config XTENSA
+ 	select HAVE_ARCH_JUMP_LABEL
+ 	select HAVE_ARCH_KASAN if MMU
+ 	select HAVE_ARCH_TRACEHOOK
++	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_DEBUG_KMEMLEAK
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_EXIT_THREAD
+--- a/arch/xtensa/kernel/process.c
++++ b/arch/xtensa/kernel/process.c
+@@ -202,8 +202,9 @@ int arch_dup_task_struct(struct task_str
+  * involved.  Much simpler to just not copy those live frames across.
+  */
  
- 	wait_for_completion(&fcomp.comp);
+-int copy_thread(unsigned long clone_flags, unsigned long usp_thread_fn,
+-		unsigned long thread_fn_arg, struct task_struct *p)
++int copy_thread_tls(unsigned long clone_flags, unsigned long usp_thread_fn,
++		unsigned long thread_fn_arg, struct task_struct *p,
++		unsigned long tls)
+ {
+ 	struct pt_regs *childregs = task_pt_regs(p);
  
+@@ -264,9 +265,8 @@ int copy_thread(unsigned long clone_flag
+ 			       &regs->areg[XCHAL_NUM_AREGS - len/4], len);
+ 		}
+ 
+-		/* The thread pointer is passed in the '4th argument' (= a5) */
+ 		if (clone_flags & CLONE_SETTLS)
+-			childregs->threadptr = childregs->areg[5];
++			childregs->threadptr = tls;
+ 	} else {
+ 		p->thread.ra = MAKE_RA_FOR_CALL(
+ 				(unsigned long)ret_from_kernel_thread, 1);
 
 
