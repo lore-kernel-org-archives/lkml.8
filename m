@@ -2,79 +2,94 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5562C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B638C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1472084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAC42084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgAOHJc (ORCPT
+        id S1729163AbgAOHKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:09:32 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9177 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725962AbgAOHJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:09:32 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DDFA057CB3E9AF955BB7;
-        Wed, 15 Jan 2020 15:09:29 +0800 (CST)
-Received: from huawei.com (10.175.107.192) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
- 15:09:20 +0800
-From:   wanghongzhe <wanghongzhe@huawei.com>
-To:     <peterhuewe@gmx.de>
-CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhangchenfeng1@huawei.com>, <wanghongzhe@huawei.com>
-Subject: [PATCH] tpm:tpm_tis_spi: set cs_change = 0 when timesout
-Date:   Wed, 15 Jan 2020 15:09:24 +0800
-Message-ID: <1579072164-23423-1-git-send-email-wanghongzhe@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.107.192]
-X-CFilter-Loop: Reflected
+        Wed, 15 Jan 2020 02:10:38 -0500
+Received: from mga06.intel.com ([134.134.136.31]:16006 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgAOHKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 02:10:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 23:10:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
+   d="scan'208";a="256643646"
+Received: from bong5-hp-z440.png.intel.com ([10.221.118.136])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 23:10:34 -0800
+From:   Ong Boon Leong <boon.leong.ong@intel.com>
+To:     netdev@vger.kernel.org
+Cc:     Jakub Kicinski <kubakici@wp.pl>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v2 0/4] net: stmmac: general fixes for Ethernet functionality
+Date:   Wed, 15 Jan 2020 15:09:59 +0800
+Message-Id: <20200115071003.42820-1-boon.leong.ong@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hongzhe <wanghongzhe@huawei.com>
+Thanks to all feedbacks from community.
 
-when i reach TPM_RETRY, the cs cannot  change back to 'high'.
-So the TPM chips thinks this communication is not over.
-And next times communication cannot be effective because the
-communications mixed up with the last time.
+We updated the patch-series to below:-
 
-Signed-off-by: Wang Hongzhe <wanghongzhe@huawei.com>
----
- drivers/char/tpm/tpm_tis_spi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+1/4: It ensures that the real_num_rx|tx_queues are set in both driver
+     probe() and resume(). So, move the netif_set_real_num_rx|tx_queues()
+     into stmmac_hw_setup().
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index d1754fd..27e57bf 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -66,8 +66,15 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
- 				break;
- 		}
- 
--		if (i == TPM_RETRY)
-+		if (i == TPM_RETRY) {
-+			spi_xfer->len = 1;
-+			spi_xfer->cs_change = 0;
-+			spi_message_init(&m);
-+			spi_message_add_tail(spi_xfer, &m);
-+			if (ret < 0)
-+				return ret;
- 			return -ETIMEDOUT;
-+		}
- 	}
- 
- 	return 0;
+2/4: It ensures that the previous value of GMAC_VLAN_TAG register is
+     read first before for updating the register.
+
+3/4: It ensures the GMAC IP v4.xx and above behaves correctly to:-
+       ip link set <devname> multicast off|on
+
+4/4: It ensures PCI platform data is using plat->phy_interface.
+
+Rgds,
+Boon Leong
+
+Changes from v1:-
+ - Drop v1 patches (1/7, 3/7 & 4/7) that are not valid.
+
+Aashish Verma (1):
+  net: stmmac: Fix incorrect location to set real_num_rx|tx_queues
+
+Tan, Tee Min (1):
+  net: stmmac: fix incorrect GMAC_VLAN_TAG register writting
+    implementation
+
+Verma, Aashish (1):
+  net: stmmac: fix missing IFF_MULTICAST check in dwmac4_set_filter
+
+Voon Weifeng (1):
+  net: stmmac: update pci platform data to use phy_interface
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |  9 +++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  8 ++++----
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c  | 14 ++++++++------
+ 3 files changed, 17 insertions(+), 14 deletions(-)
+
 -- 
-1.7.12.4
+2.17.1
 
