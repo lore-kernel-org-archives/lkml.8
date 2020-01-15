@@ -2,64 +2,130 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4ABC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8D6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B807A2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47504207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgAOWGn (ORCPT
+        id S1729968AbgAOWG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:06:43 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:60632 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgAOWGn (ORCPT
+        Wed, 15 Jan 2020 17:06:57 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34443 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgAOWG5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:06:43 -0500
-Received: from localhost (unknown [62.21.130.100])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7093815A0EE0A;
-        Wed, 15 Jan 2020 14:06:41 -0800 (PST)
-Date:   Wed, 15 Jan 2020 14:06:40 -0800 (PST)
-Message-Id: <20200115.140640.367212385869999160.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     qiang.zhao@nxp.com, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/wan/fsl_ucc_hdlc: fix out of bounds write on array
- utdm_info
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200114145448.361888-1-colin.king@canonical.com>
-References: <20200114145448.361888-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Jan 2020 14:06:42 -0800 (PST)
+        Wed, 15 Jan 2020 17:06:57 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so17547832otf.1;
+        Wed, 15 Jan 2020 14:06:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QA72jMIQiIcv6qKeAvOBZo5//ESBp/sElxNZhuRd/aw=;
+        b=Ku0iu43+DRp7ADCgca45A3oFR4oD6KSyxvayLrXjC1YHUgRX7tN9VwCUaRy3T+rs1d
+         HrDz7EMyz1DhwJfQ1AUHgaJZjIDig6WGjYe+yHk90CNXS7z5kCKJnRKawqAUMqFcQGJt
+         nm4lFsr+AuxGP41OLyp+FhHA3IIk/1bS4z3AFny+YxaCKXjCF5kJu2b5LK/tU/+LUgf6
+         3GJxh8RQYaGMzfnhpcOJIUCw4UvdyE3lYZsqr9YtMIp3PtdicX9+ldwaqMQbmy3xQ9WF
+         uDaAJdaGqWeuRWZqfhKkIKPgwcP20tZ4V9zReNN0apzTlKfIiNPo1UWg0RZVIoU29PFW
+         L++Q==
+X-Gm-Message-State: APjAAAWRWblEbCoV8Z5OTo5yqxGA+upBFl31WX3+iBWiAKObZi53GQ5I
+        z68KEOfGIXtyLZtChCRJIEcMjYACkx4JACjb/ac=
+X-Google-Smtp-Source: APXvYqwUReB61qJ2CDHEnYmnlWNvkGwBGaJEh4v0341plcso6oNlKga1A3x3SDtLiNVKbUvoihUE/WDHebZDXkh8m9k=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr4374295otd.39.1579126016415;
+ Wed, 15 Jan 2020 14:06:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be> <20200115210104.GA28904@ravnborg.org>
+In-Reply-To: <20200115210104.GA28904@ravnborg.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jan 2020 23:06:45 +0100
+Message-ID: <CAMuHMdUEqWWKS_85pNSbAdFBUuGTEzgwE1bd9+x_mN_uzd254Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to
+ DT schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Tue, 14 Jan 2020 14:54:48 +0000
+Hi Sam,
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Array utdm_info is declared as an array of MAX_HDLC_NUM (4) elements
-> however up to UCC_MAX_NUM (8) elements are potentially being written
-> to it.  Currently we have an array out-of-bounds write error on the
-> last 4 elements. Fix this by making utdm_info UCC_MAX_NUM elements in
-> size.
-> 
-> Addresses-Coverity: ("Out-of-bounds write")
-> Fixes: c19b6d246a35 ("drivers/net: support hdlc function for QE-UCC")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+On Wed, Jan 15, 2020 at 10:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Wed, Jan 15, 2020 at 01:45:44PM +0100, Geert Uytterhoeven wrote:
+> > Convert the DT binding documentation for Sitronix ST7735R displays to DT
+> > schema.
+> >
+> > Add a reference to the Adafruit 1.8" LCD while at it.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+>
+> > diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> > new file mode 100644
+> > index 0000000000000000..21bccc91f74255e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> Use (GPL-2.0-only OR BSD-2-Clause) for new binding files.
 
-Applied and queued up for -stable.
+I used GPL-2.0-only, as this is a conversion of an existing binding file,
+covered by the default GPL-2.0-only of the Linux kernel source tree.
+
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sitronix ST7735R Display Panels Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - David Lechner <david@lechnology.com>
+> > +
+> > +description:
+> > +  This binding is for display panels using a Sitronix ST7735R controller in
+> > +  SPI mode.
+> > +
+> > +allOf:
+> > +  - $ref: panel/panel-common.yaml#
+>
+> I am no binding expert so I do not know how to add it.
+> But the old binding described that this MUST be a child of spi.
+> This is missing here.
+>
+> Other panels using spi does not have it - so it is probarly OK.
+
+Yeah, I couldn't find any examples of expressing that requirement in yaml.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
