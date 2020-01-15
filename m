@@ -6,73 +6,65 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629DFC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D6BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3328C222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AA9222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgAOVhQ (ORCPT
+        id S1729883AbgAOVhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:37:16 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:52355 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgAOVhN (ORCPT
+        Wed, 15 Jan 2020 16:37:19 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60388 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729578AbgAOVhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:37:13 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 87423CECF3;
-        Wed, 15 Jan 2020 22:46:29 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH v4 2/3] Bluetooth: hci_qca: Retry btsoc initialize when it
- fails
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200115085552.11483-2-rjliao@codeaurora.org>
-Date:   Wed, 15 Jan 2020 22:37:11 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        hemantg@codeaurora.org
+        Wed, 15 Jan 2020 16:37:15 -0500
+Received: from localhost (unknown [62.21.130.100])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 156D315A0E3E8;
+        Wed, 15 Jan 2020 13:37:11 -0800 (PST)
+Date:   Wed, 15 Jan 2020 13:35:42 -0800 (PST)
+Message-Id: <20200115.133542.149188857628032129.davem@davemloft.net>
+To:     yangpc@wangsu.com
+Cc:     edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tcp: fix marked lost packets not being retransmitted
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1578993820-2114-1-git-send-email-yangpc@wangsu.com>
+References: <1578993820-2114-1-git-send-email-yangpc@wangsu.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Message-Id: <A15FDE9C-21ED-461A-8884-C93E596DF45A@holtmann.org>
-References: <20191225060317.5258-1-rjliao@codeaurora.org>
- <20200115085552.11483-1-rjliao@codeaurora.org>
- <20200115085552.11483-2-rjliao@codeaurora.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Jan 2020 13:37:14 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+From: Pengcheng Yang <yangpc@wangsu.com>
+Date: Tue, 14 Jan 2020 17:23:40 +0800
 
-> This patch adds the retry of btsoc initialization when it fails. There are
-> reports that the btsoc initialization may fail on some platforms but the
-> repro ratio is very low. The symptoms is the firmware downloading failed
-> due to the UART write timed out. The failure may be caused by UART,
-> platform HW or the btsoc itself but it's very difficlut to root cause,
-> given the repro ratio is very low. Add a retry for the btsoc initialization
-> can work around most of the failures and make Bluetooth finally works.
+> When the packet pointed to by retransmit_skb_hint is unlinked by ACK,
+> retransmit_skb_hint will be set to NULL in tcp_clean_rtx_queue().
+> If packet loss is detected at this time, retransmit_skb_hint will be set
+> to point to the current packet loss in tcp_verify_retransmit_hint(),
+> then the packets that were previously marked lost but not retransmitted
+> due to the restriction of cwnd will be skipped and cannot be
+> retransmitted.
 > 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
+> To fix this, when retransmit_skb_hint is NULL, retransmit_skb_hint can
+> be reset only after all marked lost packets are retransmitted
+> (retrans_out >= lost_out), otherwise we need to traverse from
+> tcp_rtx_queue_head in tcp_xmit_retransmit_queue().
 > 
-> Changes in v2: None
-> Changes in v3: None
-> Changes in v4:
->  -rebased the patch with latet code
->  -refined macro and variable name
->  -updated commit message
-> 
-> drivers/bluetooth/hci_qca.c | 19 +++++++++++++++++++
-> 1 file changed, 19 insertions(+)
+> Packetdrill to demonstrate:
+ ...
+> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
 
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
-
+Applied, thank you.
