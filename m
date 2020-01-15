@@ -2,206 +2,595 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A91AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F74C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF222467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE90424680
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XmTMhAP5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b+wrzkcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgAOI3O (ORCPT
+        id S1729268AbgAOI3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:29:14 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1040 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729188AbgAOI3G (ORCPT
+        Wed, 15 Jan 2020 03:29:21 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:37553 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgAOI22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:29:06 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F8Rn5V008078;
-        Wed, 15 Jan 2020 09:29:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=x+t2q3oFR0/g2C2BlDWSZ5LQ8cOF3XZQewhkJ5cwYOM=;
- b=XmTMhAP5BALer3IXtna0VSBMeosJlsVZHeDd4umTM1DaQgbw75ixQe/EJPR43iAVacNe
- ZTob3sj8auKOmZfRu2ChsRnMvIYJt6Sr3cj/kuJdJoJyLa2qI4d4Bw6r4Aq/sL3nywu+
- s6NQp8yIVOqIGM9fv4vkBj+4mnhdInbd+hqRH0iIeSHyGWgWk7sOgfuXL3CNZBHxurCZ
- z1FLNk5MjzAA/o4gQjl0T4fm8RtEIVawoREl/XH5NR0GbP8BF54vI8cnYUkEUdpEyjM0
- 6XJkAk4eUkIWY/tBSsPT0z/Z+7KxrpNMhWRq4vRBivQgLx6JQu85QQekW719/X1PUXPI YQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf78sa27p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 09:29:00 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3FF4110002A;
-        Wed, 15 Jan 2020 09:29:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2D13A210777;
-        Wed, 15 Jan 2020 09:29:00 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan 2020 09:28:59
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-CC:     <arnaud.pouliquen@st.com>, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v3] rpmsg: core: add API to get MTU
-Date:   Wed, 15 Jan 2020 09:27:22 +0100
-Message-ID: <20200115082722.13102-1-arnaud.pouliquen@st.com>
+        Wed, 15 Jan 2020 03:28:28 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200115082824epoutp017cfbd97cbfa774aae215315b04ba96dc~qAhQWahPf1528515285epoutp01i
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200115082824epoutp017cfbd97cbfa774aae215315b04ba96dc~qAhQWahPf1528515285epoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579076904;
+        bh=Bv/xH0aMYkb89l0b0dMAtiAEZSaR7Lrj0eVtrzw8YUQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b+wrzkcNOCP96o5hdNVn2m0FlO440XvlhRy15DdAoH2Sx3AikRQNOr+K8Xfmhmjvu
+         A+jSm2hqE9ChR3S7jgdOZaxCqWha0askjgl5vWf+geMoZi/lCG+CfMm8yMubEbuPw9
+         YCX6eXHpEsPQROmRegWfm02+WPN3FYVTr8AWPvJ8=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115082823epcas1p289e1f23beaea9e60c0ed8185f45f5a27~qAhPtwQz-1293712937epcas1p2J;
+        Wed, 15 Jan 2020 08:28:23 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47yL7V5ntRzMqYkg; Wed, 15 Jan
+        2020 08:28:22 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6F.86.48019.62DCE1E5; Wed, 15 Jan 2020 17:28:22 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2~qAhOSrVnW0883908839epcas1p3T;
+        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115082822epsmtrp22306cdc84af4ecdbcbab0a0b6384ae3a~qAhOR9b-u1143311433epsmtrp2S;
+        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-75-5e1ecd267c39
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9A.4A.10238.62DCE1E5; Wed, 15 Jan 2020 17:28:22 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115082822epsmtip154363f7b87997ab99d8f61a9bb7a4f68~qAhODZAGp0110101101epsmtip1n;
+        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
+        arnd@arndb.de, Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v10 06/14] exfat: add fat entry operations
+Date:   Wed, 15 Jan 2020 17:24:39 +0900
+Message-Id: <20200115082447.19520-7-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-14_06:2020-01-14,2020-01-14 signatures=0
+In-Reply-To: <20200115082447.19520-1-namjae.jeon@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpik+LIzCtJLcpLzFFi42LZdlhTV1ftrFycwdPJOhZ/Jx1jt2hevJ7N
+        YuXqo0wW1+/eYrbYs/cki8XlXXPYLH5Mr7eYePo3k8WWf0dYLS69/8DiwOXx+9ckRo+ds+6y
+        e+yfu4bdY/fNBjaPvi2rGD0+b5LzOLT9DVsAe1SOTUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
+        mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QeUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XU
+        gpScAkODAr3ixNzi0rx0veT8XCtDAwMjU6DKhJyMpfcXMhWsjqr427qaqYHxm1sXIyeHhICJ
+        xOOOHrYuRi4OIYEdjBJnVr+Fcj4xSmxcupcJwvnGKHHw70NmmJaje58yQyT2Mkrcev6KFa5l
+        8bH/QC0cHGwC2hJ/toiCNIgI2Etsnn2ABaSGWeAgo8SbC3PZQRLCAlYSB5beYAWxWQRUJfae
+        fwFm8wrYSNx6t4MJYpu8xOoNB8A2cwrYShzZcpkdZJCEwBE2iZ8tbSwQRS4SD1d2sEPYwhKv
+        jm+BsqUkPr/bywZykIRAtcTH/VAfdDBKvPhuC2EbS9xcv4EVpIRZQFNi/S59iLCixM7fcxlB
+        bGYBPol3X3tYIabwSnS0CUGUqEr0XToMdaW0RFf7B6ilHhKbjh1ihATJBEaJzV9usUxglJuF
+        sGEBI+MqRrHUguLc9NRiwwIT5BjbxAhOf1oWOxj3nPM5xCjAwajEw6twRzZOiDWxrLgy9xCj
+        BAezkgjvyRlAId6UxMqq1KL8+KLSnNTiQ4ymwICcyCwlmpwPTM15JfGGpkbGxsYWJmbmZqbG
+        SuK8rgvk4oQE0hNLUrNTUwtSi2D6mDg4pRoY23dMS2hs/X9xpoIkl/A514Vz5K7qB7wrPCyz
+        fdKDDRc3zNtzRaHxSYBZmXmLexjn/RvGaZHmkpnR98M/3Q3pv7/54s+LvxuVZtw7pBHEr1V+
+        OCEwyz7y0sq/jD1nLmirvV/fGJk7hcNpWsuO3kCWrtxvT5YVmr5et0lacslbRu0Y+ZkHORql
+        lViKMxINtZiLihMBMumn5JUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsWy7bCSnK7aWbk4g947whZ/Jx1jt2hevJ7N
+        YuXqo0wW1+/eYrbYs/cki8XlXXPYLH5Mr7eYePo3k8WWf0dYLS69/8DiwOXx+9ckRo+ds+6y
+        e+yfu4bdY/fNBjaPvi2rGD0+b5LzOLT9DVsAexSXTUpqTmZZapG+XQJXxtL7C5kKVkdV/G1d
+        zdTA+M2ti5GTQ0LAROLo3qfMXYxcHEICuxklmr5vY4ZISEscO3EGyOYAsoUlDh8uBgkLCXxg
+        lNhxmg0kzCagLfFniyhIWETAUaJ312EWkDHMAqcZJbo3PmQCSQgLWEkcWHqDFcRmEVCV2Hv+
+        BZjNK2AjcevdDiaIVfISqzccAFvLKWArcWTLZXaIXTYS056cZJrAyLeAkWEVo2RqQXFuem6x
+        YYFhXmq5XnFibnFpXrpecn7uJkZwiGpp7mC8vCT+EKMAB6MSD6/CHdk4IdbEsuLK3EOMEhzM
+        SiK8J2cAhXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamBM
+        yfOfkVNwwejpp/8JvOaFZ0oEW30uKzw9qvGi2nHfNqW0KsbzqXIvZm15qGj7jF+JP3rj7YL5
+        AcplCy953FGvTWHar3jIS7DH7ttvedXy6oU2jBaHTGdnLpjvWB1oMH3K9tzZM2yEvnRMao00
+        tBW1cnyb0u9/TqHzocxUzVNdj3S/Nv3+UanEUpyRaKjFXFScCADYNyFSTQIAAA==
+X-CMS-MailID: 20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2
+References: <20200115082447.19520-1-namjae.jeon@samsung.com>
+        <CGME20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return the rpmsg buffer MTU for sending message, so rpmsg users
-can split a long message in several sub rpmsg buffers.
+This adds the implementation of fat entry operations for exfat.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 ---
-V2[1] to V3
-  - fix parameter description in rpmsg_device_ops struct
+ fs/exfat/fatent.c | 463 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 463 insertions(+)
+ create mode 100644 fs/exfat/fatent.c
 
-[1]: https://lore.kernel.org/patchwork/patch/1124684/
----
- drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
- drivers/rpmsg/rpmsg_internal.h   |  2 ++
- drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
- include/linux/rpmsg.h            | 10 ++++++++++
- 4 files changed, 43 insertions(+)
-
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index e330ec4dfc33..a6ef54c4779a 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
- }
- EXPORT_SYMBOL(rpmsg_trysend_offchannel);
- 
-+/**
-+ * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
-+ * @ept: the rpmsg endpoint
-+ *
-+ * This function returns maximum buffer size available for a single message.
-+ *
-+ * Return: the maximum transmission size on success and an appropriate error
-+ * value on failure.
+diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
+new file mode 100644
+index 000000000000..a855b1769a96
+--- /dev/null
++++ b/fs/exfat/fatent.c
+@@ -0,0 +1,463 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
 + */
 +
-+ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++#include <linux/slab.h>
++#include <asm/unaligned.h>
++#include <linux/buffer_head.h>
++
++#include "exfat_raw.h"
++#include "exfat_fs.h"
++
++static int exfat_mirror_bh(struct super_block *sb, sector_t sec,
++		struct buffer_head *bh)
 +{
-+	if (WARN_ON(!ept))
-+		return -EINVAL;
-+	if (!ept->ops->get_mtu)
-+		return -ENOTSUPP;
++	struct buffer_head *c_bh;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	sector_t sec2;
++	int err = 0;
 +
-+	return ept->ops->get_mtu(ept);
-+}
-+EXPORT_SYMBOL(rpmsg_get_mtu);
++	if (sbi->FAT2_start_sector != sbi->FAT1_start_sector) {
++		sec2 = sec - sbi->FAT1_start_sector + sbi->FAT2_start_sector;
++		c_bh = sb_getblk(sb, sec2);
++		if (!c_bh)
++			return -ENOMEM;
++		memcpy(c_bh->b_data, bh->b_data, sb->s_blocksize);
++		set_buffer_uptodate(c_bh);
++		mark_buffer_dirty(c_bh);
++		if (sb->s_flags & SB_SYNCHRONOUS)
++			err = sync_dirty_buffer(c_bh);
++		brelse(c_bh);
++	}
 +
- /*
-  * match an rpmsg channel with a channel info struct.
-  * this is used to make sure we're not creating rpmsg devices for channels
-diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-index 3fc83cd50e98..e6f88ee90ff6 100644
---- a/drivers/rpmsg/rpmsg_internal.h
-+++ b/drivers/rpmsg/rpmsg_internal.h
-@@ -47,6 +47,7 @@ struct rpmsg_device_ops {
-  * @trysendto:		see @rpmsg_trysendto(), optional
-  * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
-  * @poll:		see @rpmsg_poll(), optional
-+ * @get_mtu:		see @rpmsg_get_mtu(), optional
-  *
-  * Indirection table for the operations that a rpmsg backend should implement.
-  * In addition to @destroy_ept, the backend must at least implement @send and
-@@ -66,6 +67,7 @@ struct rpmsg_endpoint_ops {
- 			     void *data, int len);
- 	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
- 			     poll_table *wait);
-+	ssize_t (*get_mtu)(struct rpmsg_endpoint *ept);
- };
- 
- int rpmsg_register_device(struct rpmsg_device *rpdev);
-diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-index 376ebbf880d6..6e48fdf24555 100644
---- a/drivers/rpmsg/virtio_rpmsg_bus.c
-+++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-@@ -175,6 +175,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
- 				  int len, u32 dst);
- static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
- 					   u32 dst, void *data, int len);
-+static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
- 
- static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
- 	.destroy_ept = virtio_rpmsg_destroy_ept,
-@@ -184,6 +185,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
- 	.trysend = virtio_rpmsg_trysend,
- 	.trysendto = virtio_rpmsg_trysendto,
- 	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
-+	.get_mtu = virtio_rpmsg_get_mtu,
- };
- 
- /**
-@@ -699,6 +701,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
- 	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
- }
- 
-+static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
-+{
-+	struct rpmsg_device *rpdev = ept->rpdev;
-+	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
-+
-+	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
++	return err;
 +}
 +
- static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
- 			     struct rpmsg_hdr *msg, unsigned int len)
- {
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 9fe156d1c018..88d7892ca93d 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
- __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
- 			poll_table *wait);
- 
-+ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
-+
- #else
- 
- static inline int register_rpmsg_device(struct rpmsg_device *dev)
-@@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
- 	return 0;
- }
- 
-+static inline ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++static int __exfat_ent_get(struct super_block *sb, unsigned int loc,
++		unsigned int *content)
 +{
-+	/* This shouldn't be possible */
-+	WARN_ON(1);
++	unsigned int off;
++	sector_t sec;
++	struct buffer_head *bh;
 +
-+	return -ENXIO;
++	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
++	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
++
++	bh = sb_bread(sb, sec);
++	if (!bh)
++		return -EIO;
++
++	*content = le32_to_cpu(*(__le32 *)(&bh->b_data[off]));
++
++	/* remap reserved clusters to simplify code */
++	if (*content > EXFAT_BAD_CLUSTER)
++		*content = EXFAT_EOF_CLUSTER;
++
++	brelse(bh);
++	return 0;
 +}
 +
- #endif /* IS_ENABLED(CONFIG_RPMSG) */
- 
- /* use a macro to avoid include chaining to get THIS_MODULE */
++int exfat_ent_set(struct super_block *sb, unsigned int loc,
++		unsigned int content)
++{
++	unsigned int off;
++	sector_t sec;
++	__le32 *fat_entry;
++	struct buffer_head *bh;
++
++	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
++	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
++
++	bh = sb_bread(sb, sec);
++	if (!bh)
++		return -EIO;
++
++	fat_entry = (__le32 *)&(bh->b_data[off]);
++	*fat_entry = cpu_to_le32(content);
++	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
++	exfat_mirror_bh(sb, sec, bh);
++	brelse(bh);
++	return 0;
++}
++
++static inline bool is_valid_cluster(struct exfat_sb_info *sbi,
++		unsigned int clus)
++{
++	if (clus < EXFAT_FIRST_CLUSTER || sbi->num_clusters <= clus)
++		return false;
++	return true;
++}
++
++int exfat_ent_get(struct super_block *sb, unsigned int loc,
++		unsigned int *content)
++{
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	int err;
++
++	if (!is_valid_cluster(sbi, loc)) {
++		exfat_fs_error(sb, "invalid access to FAT (entry 0x%08x)",
++			loc);
++		return -EIO;
++	}
++
++	err = __exfat_ent_get(sb, loc, content);
++	if (err) {
++		exfat_fs_error(sb,
++			"failed to access to FAT (entry 0x%08x, err:%d)",
++			loc, err);
++		return err;
++	}
++
++	if (*content == EXFAT_FREE_CLUSTER) {
++		exfat_fs_error(sb,
++			"invalid access to FAT free cluster (entry 0x%08x)",
++			loc);
++		return -EIO;
++	}
++
++	if (*content == EXFAT_BAD_CLUSTER) {
++		exfat_fs_error(sb,
++			"invalid access to FAT bad cluster (entry 0x%08x)",
++			loc);
++		return -EIO;
++	}
++
++	if (*content != EXFAT_EOF_CLUSTER && !is_valid_cluster(sbi, *content)) {
++		exfat_fs_error(sb,
++			"invalid access to FAT (entry 0x%08x) bogus content (0x%08x)",
++			loc, *content);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++int exfat_chain_cont_cluster(struct super_block *sb, unsigned int chain,
++		unsigned int len)
++{
++	if (!len)
++		return 0;
++
++	while (len > 1) {
++		if (exfat_ent_set(sb, chain, chain + 1))
++			return -EIO;
++		chain++;
++		len--;
++	}
++
++	if (exfat_ent_set(sb, chain, EXFAT_EOF_CLUSTER))
++		return -EIO;
++	return 0;
++}
++
++int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
++{
++	unsigned int num_clusters = 0;
++	unsigned int clu;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	/* invalid cluster number */
++	if (p_chain->dir == EXFAT_FREE_CLUSTER ||
++	    p_chain->dir == EXFAT_EOF_CLUSTER ||
++	    p_chain->dir < EXFAT_FIRST_CLUSTER)
++		return 0;
++
++	/* no cluster to truncate */
++	if (p_chain->size == 0)
++		return 0;
++
++	/* check cluster validation */
++	if (p_chain->dir < 2 && p_chain->dir >= sbi->num_clusters) {
++		exfat_msg(sb, KERN_ERR, "invalid start cluster (%u)",
++				p_chain->dir);
++		return -EIO;
++	}
++
++	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
++	clu = p_chain->dir;
++
++	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++		do {
++			exfat_clear_bitmap(inode, clu);
++			clu++;
++
++			num_clusters++;
++		} while (num_clusters < p_chain->size);
++	} else {
++		do {
++			exfat_clear_bitmap(inode, clu);
++
++			if (exfat_get_next_cluster(sb, &clu))
++				goto dec_used_clus;
++
++			num_clusters++;
++		} while (clu != EXFAT_EOF_CLUSTER);
++	}
++
++dec_used_clus:
++	sbi->used_clusters -= num_clusters;
++	return 0;
++}
++
++int exfat_find_last_cluster(struct super_block *sb, struct exfat_chain *p_chain,
++		unsigned int *ret_clu)
++{
++	unsigned int clu, next;
++	unsigned int count = 0;
++
++	next = p_chain->dir;
++	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++		*ret_clu = next + p_chain->size - 1;
++		return 0;
++	}
++
++	do {
++		count++;
++		clu = next;
++		if (exfat_ent_get(sb, clu, &next))
++			return -EIO;
++	} while (next != EXFAT_EOF_CLUSTER);
++
++	if (p_chain->size != count) {
++		exfat_fs_error(sb,
++			"bogus directory size (clus : ondisk(%d) != counted(%d))",
++			p_chain->size, count);
++		return -EIO;
++	}
++
++	*ret_clu = clu;
++	return 0;
++}
++
++static inline int exfat_sync_bhs(struct buffer_head **bhs, int nr_bhs)
++{
++	int i, err = 0;
++
++	for (i = 0; i < nr_bhs; i++)
++		write_dirty_buffer(bhs[i], 0);
++
++	for (i = 0; i < nr_bhs; i++) {
++		wait_on_buffer(bhs[i]);
++		if (!err && !buffer_uptodate(bhs[i]))
++			err = -EIO;
++	}
++	return err;
++}
++
++int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
++{
++	struct super_block *sb = dir->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct buffer_head *bhs[MAX_BUF_PER_PAGE];
++	int nr_bhs = MAX_BUF_PER_PAGE;
++	sector_t blknr, last_blknr;
++	int err, i, n;
++
++	blknr = exfat_cluster_to_sector(sbi, clu);
++	last_blknr = blknr + sbi->sect_per_clus;
++
++	if (last_blknr > sbi->num_sectors && sbi->num_sectors > 0) {
++		exfat_fs_error_ratelimit(sb,
++			"%s: out of range(sect:%llu len:%u)",
++			__func__, (unsigned long long)blknr,
++			sbi->sect_per_clus);
++		return -EIO;
++	}
++
++	/* Zeroing the unused blocks on this cluster */
++	n = 0;
++	while (blknr < last_blknr) {
++		bhs[n] = sb_getblk(sb, blknr);
++		if (!bhs[n]) {
++			err = -ENOMEM;
++			goto release_bhs;
++		}
++		memset(bhs[n]->b_data, 0, sb->s_blocksize);
++		exfat_update_bh(sb, bhs[n], 0);
++
++		n++;
++		blknr++;
++
++		if (n == nr_bhs) {
++			if (IS_DIRSYNC(dir)) {
++				err = exfat_sync_bhs(bhs, n);
++				if (err)
++					goto release_bhs;
++			}
++
++			for (i = 0; i < n; i++)
++				brelse(bhs[i]);
++			n = 0;
++		}
++	}
++
++	if (IS_DIRSYNC(dir)) {
++		err = exfat_sync_bhs(bhs, n);
++		if (err)
++			goto release_bhs;
++	}
++
++	for (i = 0; i < n; i++)
++		brelse(bhs[i]);
++
++	return 0;
++
++release_bhs:
++	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu\n",
++		(unsigned long long)blknr);
++	for (i = 0; i < n; i++)
++		bforget(bhs[i]);
++	return err;
++}
++
++int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
++		struct exfat_chain *p_chain)
++{
++	int ret = -ENOSPC;
++	unsigned int num_clusters = 0, total_cnt;
++	unsigned int hint_clu, new_clu, last_clu = EXFAT_EOF_CLUSTER;
++	struct super_block *sb = inode->i_sb;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	total_cnt = EXFAT_DATA_CLUSTER_COUNT(sbi);
++
++	if (unlikely(total_cnt < sbi->used_clusters)) {
++		exfat_fs_error_ratelimit(sb,
++			"%s: invalid used clusters(t:%u,u:%u)\n",
++			__func__, total_cnt, sbi->used_clusters);
++		return -EIO;
++	}
++
++	if (num_alloc > total_cnt - sbi->used_clusters)
++		return -ENOSPC;
++
++	hint_clu = p_chain->dir;
++	/* find new cluster */
++	if (hint_clu == EXFAT_EOF_CLUSTER) {
++		if (sbi->clu_srch_ptr < EXFAT_FIRST_CLUSTER) {
++			exfat_msg(sb, KERN_ERR,
++				"sbi->clu_srch_ptr is invalid (%u)\n",
++				sbi->clu_srch_ptr);
++			sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
++		}
++
++		hint_clu = exfat_find_free_bitmap(sb, sbi->clu_srch_ptr);
++		if (hint_clu == EXFAT_EOF_CLUSTER)
++			return -ENOSPC;
++	}
++
++	/* check cluster validation */
++	if (hint_clu < EXFAT_FIRST_CLUSTER && hint_clu >= sbi->num_clusters) {
++		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)\n",
++			hint_clu);
++		hint_clu = EXFAT_FIRST_CLUSTER;
++		if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++			if (exfat_chain_cont_cluster(sb, p_chain->dir,
++					num_clusters))
++				return -EIO;
++			p_chain->flags = ALLOC_FAT_CHAIN;
++		}
++	}
++
++	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
++
++	p_chain->dir = EXFAT_EOF_CLUSTER;
++
++	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) !=
++	       EXFAT_EOF_CLUSTER) {
++		if (new_clu != hint_clu &&
++		    p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++			if (exfat_chain_cont_cluster(sb, p_chain->dir,
++					num_clusters)) {
++				ret = -EIO;
++				goto free_cluster;
++			}
++			p_chain->flags = ALLOC_FAT_CHAIN;
++		}
++
++		/* update allocation bitmap */
++		if (exfat_set_bitmap(inode, new_clu)) {
++			ret = -EIO;
++			goto free_cluster;
++		}
++
++		num_clusters++;
++
++		/* update FAT table */
++		if (p_chain->flags == ALLOC_FAT_CHAIN) {
++			if (exfat_ent_set(sb, new_clu, EXFAT_EOF_CLUSTER)) {
++				ret = -EIO;
++				goto free_cluster;
++			}
++		}
++
++		if (p_chain->dir == EXFAT_EOF_CLUSTER) {
++			p_chain->dir = new_clu;
++		} else if (p_chain->flags == ALLOC_FAT_CHAIN) {
++			if (exfat_ent_set(sb, last_clu, new_clu)) {
++				ret = -EIO;
++				goto free_cluster;
++			}
++		}
++		last_clu = new_clu;
++
++		if (--num_alloc == 0) {
++			sbi->clu_srch_ptr = hint_clu;
++			sbi->used_clusters += num_clusters;
++
++			p_chain->size += num_clusters;
++			return 0;
++		}
++
++		hint_clu = new_clu + 1;
++		if (hint_clu >= sbi->num_clusters) {
++			hint_clu = EXFAT_FIRST_CLUSTER;
++
++			if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++				if (exfat_chain_cont_cluster(sb, p_chain->dir,
++						num_clusters)) {
++					ret = -EIO;
++					goto free_cluster;
++				}
++				p_chain->flags = ALLOC_FAT_CHAIN;
++			}
++		}
++	}
++free_cluster:
++	if (num_clusters)
++		exfat_free_cluster(inode, p_chain);
++	return ret;
++}
++
++int exfat_count_num_clusters(struct super_block *sb,
++		struct exfat_chain *p_chain, unsigned int *ret_count)
++{
++	unsigned int i, count;
++	unsigned int clu;
++	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++
++	if (!p_chain->dir || p_chain->dir == EXFAT_EOF_CLUSTER) {
++		*ret_count = 0;
++		return 0;
++	}
++
++	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
++		*ret_count = p_chain->size;
++		return 0;
++	}
++
++	clu = p_chain->dir;
++	count = 0;
++	for (i = EXFAT_FIRST_CLUSTER; i < sbi->num_clusters; i++) {
++		count++;
++		if (exfat_ent_get(sb, clu, &clu))
++			return -EIO;
++		if (clu == EXFAT_EOF_CLUSTER)
++			break;
++	}
++
++	*ret_count = count;
++	return 0;
++}
 -- 
 2.17.1
 
