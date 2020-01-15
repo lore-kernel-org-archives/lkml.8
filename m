@@ -2,90 +2,88 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF08C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B500C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8415724671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0D82053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kHpvzbDY"
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="jToC03rQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgAOP0J (ORCPT
+        id S1729078AbgAOP1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:26:09 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50548 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgAOP0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:26:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=kHpvzbDYrkkUL3cc6cAeI5E40
-        ZM4+K5yaMP71I4XDs4NUIgcsDzecXQdTVQOI9UytyY4m6+JLlmCUKImi6/dR6L0pfsC4d/T3wdp6O
-        MiH8oMX11mdJxpFGhOL7MY3IiaLtrvOA39N0TisTI5sK4J7NubFbUAjuMwaWVei004tfkvfbrpAij
-        WTdPFX3eGuXTIlhNJQiA3RF5rEAKjEdpqrrh5f1fKjYLIoyd1CXYcnXJpOIhCKF5zP2Ta6n7nspuK
-        beARcZPMIHEiIKJBTW/sqFRg/NbSX1PMvzETS5fO9gFel4MAap2iKW4+78ZJA1pxuRM3jK5szGNmG
-        Rhb44UCRQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irkYK-0000mL-Dn; Wed, 15 Jan 2020 15:25:52 +0000
-Date:   Wed, 15 Jan 2020 07:25:52 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: Re: [PATCH v12 08/22] mm/gup: allow FOLL_FORCE for
- get_user_pages_fast()
-Message-ID: <20200115152552.GD19546@infradead.org>
-References: <20200107224558.2362728-1-jhubbard@nvidia.com>
- <20200107224558.2362728-9-jhubbard@nvidia.com>
+        Wed, 15 Jan 2020 10:27:00 -0500
+Received: from uho.ysoft.cz ([81.19.3.130]:49264 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgAOP1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:27:00 -0500
+X-Greylist: delayed 562 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 10:26:59 EST
+Received: from iota-build.ysoft.local (unknown [10.1.5.151])
+        by uho.ysoft.cz (Postfix) with ESMTP id 6BEEBA04F7;
+        Wed, 15 Jan 2020 16:17:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1579101455;
+        bh=0ULpnmAUHvffsEugGgwMjETvdEv0t9gZHoFvdALaxho=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jToC03rQSGKXgTBIs++wTaE//kVMn+aU223x64vW/iQkyWk5hCUcVTiyBsIUnuEDM
+         ndUw30/zFMTthl6z+Hd0u0iWEVr/gu2CZ4QozCAC9mU2bymD8HaG2M1e/jbqVzhJxx
+         +kMYuzYOadxgttPvpfhplPFJbWsgDX6RqbYBlocU=
+From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH] ARM: dts: imx6dl-yapp4: Specify USB overcurrent protection polarity
+Date:   Wed, 15 Jan 2020 16:17:28 +0100
+Message-Id: <1579101448-7247-1-git-send-email-michal.vokac@ysoft.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107224558.2362728-9-jhubbard@nvidia.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Patchwork-Bot: notify
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+After reset the oc protection polarity is set to active high on imx6.
+If the polarity is not specified in device tree it is not changed.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+The imx6dl-yapp4 platform uses an active-low oc signal so explicitly
+configure that in the device tree.
+
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+---
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index b494042e2d8f..fb6ce6d662bc 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -563,6 +563,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbh1>;
+ 	vbus-supply = <&reg_usb_h1_vbus>;
++	over-current-active-low;
+ 	status = "disabled";
+ };
+ 
+@@ -570,6 +571,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbotg>;
+ 	vbus-supply = <&reg_usb_otg_vbus>;
++	over-current-active-low;
+ 	srp-disable;
+ 	hnp-disable;
+ 	adp-disable;
+-- 
+2.1.4
+
