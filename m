@@ -2,91 +2,135 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2105BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1AFC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 007552084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC2122522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579121334;
+	bh=nwKS0zW1NjzVj+K/jTMff6/lN/RQqdLUaC940w/PiHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CVgqVSo31dvIRdamTxrwMEr5ojspnCQlH4p8jxrnRyJqgT/kYhgxgWYPbSJZDuvZ3
+	 amyZycjzxVDeOanWiGO++1GAo3049C7P65/sTQGK+Iu1fw5MLeRIkari5Mhc4Vk43n
+	 rKqqb0Tj5lnq8l0bmYpUyQ95aZYk5CPZMmybXosw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgAOUsY (ORCPT
+        id S1729465AbgAOUsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:48:24 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:32963 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgAOUsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:48:23 -0500
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alexandre@ghiti.fr)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 161D1240002;
-        Wed, 15 Jan 2020 20:48:18 +0000 (UTC)
-From:   Alexandre Ghiti <alexandre@ghiti.fr>
-Subject: Re: linux-next: build warning after merge of the bpf-next tree
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        ppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <a367af4d-7267-2e94-74dc-2a2aac204080@ghiti.fr>
- <20191018105657.4584ec67@canb.auug.org.au>
- <20191028110257.6d6dba6e@canb.auug.org.au>
- <mhng-0daa1a90-2bed-4b2e-833e-02cd9c0aa73f@palmerdabbelt-glaptop>
- <d5d59f54-e391-3659-d4c0-eada50f88187@ghiti.fr>
- <CANXhq0pn+Nq6T5dNyJiB6xvmqTnPSzo8sVfqHhGyWUURY+1ydg@mail.gmail.com>
- <CAADnVQ+kbxpw7fxRZodTtE7AmEmRDgO9fcmMD8kKRssS8WJizA@mail.gmail.com>
-Message-ID: <6c03d212-775c-cddb-b0d0-d7b00571694b@ghiti.fr>
-Date:   Wed, 15 Jan 2020 15:48:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Jan 2020 15:48:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728939AbgAOUsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:48:53 -0500
+Received: from earth.universe (dyndsl-095-033-170-011.ewe-ip-backbone.de [95.33.170.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3001E2081E;
+        Wed, 15 Jan 2020 20:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579121332;
+        bh=nwKS0zW1NjzVj+K/jTMff6/lN/RQqdLUaC940w/PiHc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KvLE67+tXTbGZAkxNOFcfvVDgYRMHBam2zj35egGoSJ/t7FE6jfYIlNZN0KJPUcI5
+         RmRaWoPN9ZlzSpwemZeH62eV12863YhMl2rxfwFpT77gLYAIZbgNVrAA9AQQsTTuEx
+         cWLhcn5iKhz3aeUccSabMjFYxWLlSehq9zR9YEpM=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 59E763C0C7C; Wed, 15 Jan 2020 21:48:50 +0100 (CET)
+Date:   Wed, 15 Jan 2020 21:48:50 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Oskari Lemmela <oskari@lemmela.net>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 0/4] X-Powers Power Supply Improvements
+Message-ID: <20200115204850.7innme3d4agbay2r@earth.universe>
+References: <20200115034048.24901-1-samuel@sholland.org>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQ+kbxpw7fxRZodTtE7AmEmRDgO9fcmMD8kKRssS8WJizA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iquki6qdoejfp2er"
+Content-Disposition: inline
+In-Reply-To: <20200115034048.24901-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 6:23 AM, Alexei Starovoitov wrote:
-> On Sun, Jan 12, 2020 at 8:33 PM Zong Li<zong.li@sifive.com>  wrote:
->> I'm not quite familiar with btf, so I have no idea why there are two
->> weak symbols be added in 8580ac9404f6 ("bpf: Process in-kernel BTF")
-> I can explain what these weak symbols are for, but that won't change
-> the fact that compiler or linker are buggy. The weak symbols should work
-> in all cases and compiler should pick correct relocation.
-> In this case it sounds that compiler picked relative relocation and failed
-> to reach zero from that address.
 
-Sorry for the response delay: I now agree that there is nothing weird 
-about those
-relocations. All compiler/linker I took a look at (arm64, ppc64 and 
-riscv64) correctly
-emit an absolute relocation to the address 0 in case of a weak 
-unresolved symbol,
-so there's no buggy compiler/linker.
+--iquki6qdoejfp2er
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And regarding ppc warning, the kernel being compiled as -pie, the 
-scripts looks
-for absolute relocations which it considers as "bad", except for one 
-that is known
-to be weak and that is ignored: I have just sent a patch to fix this 
-script so that weak
-undefined symbol relocations are not considered as bad.
+Hi,
 
-Thanks,
+Thanks, all queued to power-supply's for-next branch.
 
-Alex
+-- Sebastian
 
+On Tue, Jan 14, 2020 at 09:40:44PM -0600, Samuel Holland wrote:
+> This series adds some improvements to the axp20x_usb_power power supply
+> driver to better support suspend/resume and use on mobile devices.
+>=20
+> Patch 1 is preparation for changes in following patches.
+> Patch 2 allows userspace to take the power supply offline.
+> Patch 3 allows userspace to control the wakeup behavior.
+> Patch 4 avoids polling USB VBUS presence when possible.
+>=20
+> Changes since v3:
+>  - Rebase on power-supply/for-next
+>  - Add Reviewed-by (1-2)
+>=20
+> Changes since v2:
+>  - Patch 1 was merged
+>  - Only check ACIN_PATH_SEL when necessary (1)
+>  - Update commit message (5)
+>  - Avoided reordering lines until/unless necessary (5, 7)
+>  - Update comment and add ID check in axp20x_usb_power_set_property
+>    (it seemed more correct than adding another comment) (6)
+>  - Add Reviewed-by where there were no comments (2-4, 7-8)
+>=20
+> Changes since v1:
+>  - Add patches 1-2
+>  - Shift value properly in calls to regmap_update_bits (3, 7)
+>  - Use #ifdef instead of #if to avoid -Wundef warnings (4, 8)
+>  - Poll once after an IRQ, instead of setting power->online in the IRQ (9)
+>  - Poll once on resume, in case the state changed during suspend (9)
+>=20
+> Samuel Holland (4):
+>   power: supply: axp20x_usb_power: Use a match structure
+>   power: supply: axp20x_usb_power: Allow offlining
+>   power: supply: axp20x_usb_power: Add wakeup control
+>   power: supply: axp20x_usb_power: Only poll while offline
+>=20
+>  drivers/power/supply/axp20x_usb_power.c | 217 ++++++++++++++++++------
+>  1 file changed, 169 insertions(+), 48 deletions(-)
+>=20
+> --=20
+> 2.23.0
+>=20
 
+--iquki6qdoejfp2er
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4feqkACgkQ2O7X88g7
++pozAQ//f7qy+dV6jSnUkT7cC7r6FNKsMxHlcEYcsaWK2kJZRNthTFUbc57S2vlj
+WQs2lDGLIy4CuP6kdJg3HjfZlMoE8GFf0Ta2yWK57B9aGu5aO5jkbZBt7y1u22An
+h0DtToT+WzaQCVa14fXfYITJTJluTvzoCV8ejX4WM3yuiq7rRmWzyadthVbvb2h6
+1PfGO+JEZtcWH+q/wP6LD6hg2gmjuvM00R/sEL02i3N9OCm60t1Lg6sq9nHzf0o8
+Z09wZnK09V2X0q+Pp3IJ3A1NIDYRXJIGQ3bHHjAFq9xnAta3ED33yrlVvhx0DiOh
+6o13ouCV0gfQFj4//ckKAsX5lP21hZQWYhZTN6LtHj14LD1aULJpTZH4+v81eWw9
+emb6dVthMIpImp6GBtuM3SH0TGatk39y/MZocegWmSr43/Gx9rC337sBnXdV5pxS
+Yi5mmBavJe4899PSBoexvfrzcvKjLVMrY10xVrPrv3WM0m11UANpPGulUs6cO+jr
+CzZUPTVYpRW4gt/2Jnm2i+yeNldOwf2eUHu4wql9G4+D9a//QLX+5tkLmtkhsQFc
+rdyK9fr8UnUPGUVf8wv9oWgq+SCLsaKAPZPS2uDcHWNbxvHKDq92lwMRF8elkVUE
+StEy7hT2BImfyvwBzh5qrOQU1xGsVjKCXQ4hsYy/ENd7J+ytt9A=
+=7sqy
+-----END PGP SIGNATURE-----
+
+--iquki6qdoejfp2er--
