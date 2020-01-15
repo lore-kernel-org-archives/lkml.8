@@ -2,113 +2,126 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029B3C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003C3C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3602187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A7720728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4YVAjQs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AwYY6Ltx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAOTTu (ORCPT
+        id S1729078AbgAOTWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:19:50 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42019 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbgAOTTt (ORCPT
+        Wed, 15 Jan 2020 14:22:40 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:39293 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgAOTWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:19:49 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so8640376pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:19:48 -0800 (PST)
+        Wed, 15 Jan 2020 14:22:39 -0500
+Received: by mail-ua1-f65.google.com with SMTP id 73so6714402uac.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:22:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y0L/6Kcm1GJKcnyPUoPeqUBC5pfceEUnD+q3JyvYAEE=;
-        b=A4YVAjQsjO9yS+bZ2p+xPTeFVjMqzAsB1haQHadcdWHedJzXAM6Cy6GYdTg9jS3xnB
-         ySSsVnvIo3WyNXb2ttDB6HFq9twxR0X1qjmFtg3RD7vTf9F6+BmwIevAFElHrDLqQ9zD
-         XJeHYsPAqifBydAE1iUwj2tew8zcqf9Tb6fQ1BK+RW5saqvk6Qn10yqHoTfOJoq3AhwL
-         kVt9GKUZtqLY0kkYedefoKWmKule6N33eUfBZqT4RAEA0HyRUewDbdGrqbskFoSCsdIJ
-         MDhHHYM2naLrVzRoZgTt6iOlsGD7mahhutqDgKBq9uusoCVsCClu9Dw5oX4UgOWPyDne
-         Hbzw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=17v8/619D2AZoaUFrAar/CtDdWqpWMj60JN0gaBw0RA=;
+        b=AwYY6LtxDPRLomfOrjpw8+Gis6U739xC6dwXys/nC5Y/5L4XyuijhAg5OOpyC1XEyY
+         XjRdghULG/KMYKFomh8B335LGY+oh3wQsRKkVFfRpn/8V/3mEt6q4e9iTXQEBZ7AA3rx
+         KDiNMiyHiiAkKWnSh8h7qVhe/NMxr9vjOZYOQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y0L/6Kcm1GJKcnyPUoPeqUBC5pfceEUnD+q3JyvYAEE=;
-        b=bfankZD9yfds7QCzrURyrFcmC6pW7EaUwzG3IwbEzacfKPCZVuUX8Uiz4+PL94Z++l
-         UODmWA6EAUNQCUA7swgpUoBou4J9kmw763avcEwjINP44RIjvE2jr48cKPuj/8J59C5c
-         Ue8+GyXrxJXpw4ZxFpqo52ZbgAFGJho5Qf7w+nQ01jjhBkhWYurcVOzrURoLv/W4UFgS
-         M0nYdIAsR44yzamP5sRckQtRxFxGCEB+2ELn07SHwzfxHCz09MO/TbLkOK8hubKuXVsy
-         QA02wRlVPkBoNlOtZ6TMxmHEyB49I/77jBeAckVyVSSgr7DunvpQR6bnNQdC+U8//eJq
-         yTVw==
-X-Gm-Message-State: APjAAAWZbmTN+57a1myHp0iYJVjegoaSLLohymZYyLUgfp5/eJfXHTWM
-        /4+PfoyNq316lzQsBkKQ+kAxiw==
-X-Google-Smtp-Source: APXvYqxONnTtCwwnSki0/OOTTRl5EWXhbKn6I/OQTaLOzJ8xq81wDXDeIljZnF/OQciErxJzcjfMiA==
-X-Received: by 2002:a63:5442:: with SMTP id e2mr33667216pgm.18.1579115988269;
-        Wed, 15 Jan 2020 11:19:48 -0800 (PST)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a10sm21968793pgm.81.2020.01.15.11.19.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 11:19:47 -0800 (PST)
-Date:   Wed, 15 Jan 2020 11:19:45 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, ath10k@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
-Message-ID: <20200115191945.GM1214176@minitux>
-References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
- <87zhevsrwk.fsf@codeaurora.org>
- <87r201xf8p.fsf@kamboji.qca.qualcomm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=17v8/619D2AZoaUFrAar/CtDdWqpWMj60JN0gaBw0RA=;
+        b=cPYOSNMy74mEHXe2Oz+FprdLzYiZODxVbo/wFmZGdFE9Heqhp3KftK371awtwuwcdA
+         z2WCRbyh6wjSrYcCy/64Qq8vExQOBma3d4+xMCLRODnDqjU94BYm/f+unUNDYelRvId1
+         dAoq6zlfWWa79d/BKVphah+NEdmXIhHz8AkMZD4NvcCIO7JolI5vEQpo7miiFXQeip53
+         rr2K72QUm+UBW4uJdbWUzzLF40k+ltOHLxWEU8nT3/39ClbvHUeOGoHdEsY+FzZqNfUi
+         2lmfo0Ur9X4grgTi2orEdVLls6k3K9SehKnZvZBIs6qRscjD8YTzGDMgZI42ajK58zlb
+         YuRA==
+X-Gm-Message-State: APjAAAWBo1o2DBFslqEBRZtEI93epYzaZYpcfWtGT5dxk7BZYWDWcwvw
+        plXfWNGpZIGkLTKFTpV4P7Ovuw4OoXY=
+X-Google-Smtp-Source: APXvYqwyPA7ABvubiTwi4NioOv3ZPMvIMMMHV/wIzWJd7DmOCSMi8uUZNexh8fem+aO2n8cBsr70Qw==
+X-Received: by 2002:ab0:2bc1:: with SMTP id s1mr14479939uar.109.1579116158463;
+        Wed, 15 Jan 2020 11:22:38 -0800 (PST)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id j199sm4768058vsd.11.2020.01.15.11.22.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 11:22:37 -0800 (PST)
+Received: by mail-ua1-f44.google.com with SMTP id y23so6699629ual.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:22:37 -0800 (PST)
+X-Received: by 2002:ab0:30c2:: with SMTP id c2mr18534657uam.8.1579116157297;
+ Wed, 15 Jan 2020 11:22:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r201xf8p.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <CAD=FV=W2xBFxOgdOM2=RJMB56wi24UUYqdR8WE63KKhxRRwsZQ@mail.gmail.com>
+ <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 15 Jan 2020 11:22:26 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XDPyJJEzjQTd8=6Om0i0HYRfin1+X5Feqcdu5oM0Ro+g@mail.gmail.com>
+Message-ID: <CAD=FV=XDPyJJEzjQTd8=6Om0i0HYRfin1+X5Feqcdu5oM0Ro+g@mail.gmail.com>
+Subject: Re: [PATCH 2/4] alarmtimer: Make alarmtimer platform device child of
+ RTC device
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15 Jan 01:04 PST 2020, Kalle Valo wrote:
+Hi,
 
-> Kalle Valo <kvalo@codeaurora.org> writes:
-> 
-> > Bjorn Andersson <bjorn.andersson@linaro.org> writes:
-> >
-> >> On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
-> >> will reset due to an NoC error. So this adds an optional clock to the ath10k
-> >> binding and makes sure it's enabled while the WiFi firmware needs it.
+On Wed, Jan 15, 2020 at 2:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Doug Anderson <dianders@chromium.org> writes:
+> > On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+> >> index 4b11f0309eee..ccb6aea4f1d4 100644
+> >> --- a/kernel/time/alarmtimer.c
+> >> +++ b/kernel/time/alarmtimer.c
+> >> @@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+> >>         unsigned long flags;
+> >>         struct rtc_device *rtc = to_rtc_device(dev);
+> >>         struct wakeup_source *__ws;
+> >> +       struct platform_device *pdev;
+> >>         int ret = 0;
 > >>
-> >> Bjorn Andersson (2):
-> >>   ath10k: Add optional qdss clk
-> >>   arm64: dts: qcom: sm8150: Specify qdss clock for wifi
+> >>         if (rtcdev)
+> >> @@ -99,6 +100,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+> >>                 return -1;
 > >>
-> >>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 2 +-
-> >>  arch/arm64/boot/dts/qcom/sm8150.dtsi                          | 4 ++--
-> >>  drivers/net/wireless/ath/ath10k/snoc.c                        | 2 +-
-> >>  3 files changed, 4 insertions(+), 4 deletions(-)
+> >>         __ws = wakeup_source_register(dev, "alarmtimer");
+> >> +       pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
 > >
-> > Via which tree are these supposed to go? I'll take patch 1 and arm
-> > mantainers take patch 2, or what?
+> > Don't you need to check for an error here?  If pdev is an error you'll
+> > continue on your merry way.  Before your patch if you got an error
+> > registering the device it would have caused probe to fail.
+>
+> Yes, that return value should be checked
+>
+> > I guess you'd only want it to be an error if "rtcdev" is NULL?
+>
+> If rtcdev is not NULL then this code is not reached. See the begin of
+> this function :)
 
-That sounds good (you take the ath10k and we'll take the dts).
+Wow, not sure how I missed that.  I guess the one at the top of the
+function is an optimization, though?  It's being accessed without the
+spinlock which means that it's not necessarily reliable, right?  I
+guess once the rtcdev has been set then it is never unset, but it does
+seem like if two threads could call alarmtimer_rtc_add_device() at the
+same time then it's possible that we could end up calling
+wakeup_source_register() for both of them.  Did I understand that
+correctly?  If I did then maybe it deserves a comment?
 
-> 
-> No reply, so I'm planning to take patch 1. Please holler if I
-> misunderstood.
-> 
-
-Sorry.
-
-Regards,
-Bjorn
+-Doug
