@@ -2,69 +2,130 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210EAC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE128C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE5922522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09B3222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4tXtc1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgAOVtU (ORCPT
+        id S1730252AbgAOVt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:49:20 -0500
-Received: from mga11.intel.com ([192.55.52.93]:33995 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgAOVtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:49:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 13:49:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="257021421"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 13:49:19 -0800
-Date:   Wed, 15 Jan 2020 13:49:18 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] x86/cpu: Update cached HLE state on write to
- TSX_CTRL_CPUID_CLEAR
-Message-ID: <20200115214918.GA13375@agluck-desk2.amr.corp.intel.com>
-References: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
- <20200115211513.mxzembrm4hf44d6j@treble>
+        Wed, 15 Jan 2020 16:49:59 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46794 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgAOVt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:49:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so8803613pgb.13;
+        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
+        b=a4tXtc1MsCd/AAzWT05JSh0STp4V5v5W99JdSxxo99mNSaIXM1by4ESzPtCgimSYtf
+         yc3f8FEAN+rUJOHgIEy+DQS+Sa4utJG00V1IOHvECTDTK7skX4jRZ/OUhe/01+hF5Ixe
+         lyeKKaoWQsvpmJ2VTwm/3aNFoihGj47IMsTWE/ZIFD05lm8Ci2/5aTKCFsZ8eM/BAyCs
+         Fu30t4D1017WOfYNAKXPw8iJjteKzY2JdnKAXAOMn5As4QOqq8ydLQNIqMp1tmTObzuX
+         LOHRSeigSiOYXWKbXxFrcQ8yJDx2FHyo0M1CxfEqKNdWl+ZWBR9hzi+Sq5VKxYiTak9f
+         gSIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
+        b=rgqIw+iH1DtTp9ZVxkSJcf3vMaiS8SA//n1KlZ1H9X6CqblbHGvNVNnWlCSVkTImyn
+         iWWNHNSuqhTJAnyltLnJPVPTwh5IN8cxocrsGIQ7NP1vF83DxfE+P9gq42B7PMgmp2NJ
+         ZjnyZc6OPkn9xH6fkc9xJlZsNoSk6HGwNhV2woKADdGa5vqSvPJkm+mynVftxb6H5lpI
+         bhoaO3kkcVUF0xci/T0ThYcQ28kfXrBNgoct28ptzN/nMb9Y5g4egrsUpTHTPt9n8dyj
+         /LixlCggYTO++ND8h9yhw1nV2ERr3pH5PTRh29YT1x06XgvMit0DP7CbvzpgOBv9rXIt
+         oR+A==
+X-Gm-Message-State: APjAAAXU7IFk4/Jf/oEP0qUqOEmQ2G1oQX3AlEAeqD6+jF15ADoKYtq/
+        fGJ/8BNKLNV75/QPxdmc9E8=
+X-Google-Smtp-Source: APXvYqw4tFFtqVWsYBb0+omdhX/b6+0lKkDeJt8gEEiG7Cy/SI84NzstJLCZb3wIXZ0ERZYaEEflqw==
+X-Received: by 2002:a65:6815:: with SMTP id l21mr34166607pgt.283.1579124998023;
+        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:f:2cdd:5c73:b928:d080])
+        by smtp.gmail.com with ESMTPSA id b65sm22584179pgc.18.2020.01.15.13.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 13:49:57 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+To:     Borislav Petkov <bp@alien8.de>, sashal@kernel.org
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <20200115213848.GO20975@zn.tnic>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
+Date:   Wed, 15 Jan 2020 13:49:56 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115211513.mxzembrm4hf44d6j@treble>
+In-Reply-To: <20200115213848.GO20975@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 03:15:13PM -0600, Josh Poimboeuf wrote:
-> From the Intel TAA deep dive page [1], it says:
+On 1/15/2020 1:38 PM, Borislav Petkov wrote:
+> On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
+>> New driver supports error detection and correction on the devices with ARM
+>> DMC-520 memory controller.
+>>
+>> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+>> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
 > 
->   "On processors that enumerate IA32_ARCH_CAPABILITIES[TSX_CTRL] (bit
->    7)=1, HLE prefix hints are always ignored."
+> This mail still has your From: because I guess you pasted the patch in
+> the mail.
 > 
-> So if the CPU has IA32_TSX_CTRL, HLE is implicitly disabled, so why
-> would the HLE bit have been set in CPUID in the first place?
+> But, if you look at what I wrote here:
 > 
-> [1] https://software.intel.com/security-software-guidance/insights/deep-dive-intel-transactional-synchronization-extensions-intel-tsx-asynchronous-abort
+> https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
+> 
+> you'll see the
+> 
+> From: Lei Wang <leiwang_git@outlook.com>
+> 
+> which is the last From: in the mail and that is taken by git as the
+> author of the patch.
+> 
+> However, if I apply this mail of yours, it will make you the
+> author. Because in git there can be only one author per patch
+> and other authors can be additionally accredited with the
+> Co-developed-by: tag from the same doc I was pointing at before:
+> Documentation/process/submitting-patches.rst
+>
+> Looking at this driver, however, you have supplied three authors. And I
+> think you guys need to discuss it amongst yourselves who is going to be
+> the author of this driver in the git history.
 
-IIRC some VMM folks asked to not make gratuitous to CPUID feature
-enumeration because it complicates setting up pools of systems.
+Lei will be the author of this driver in the git history. I could ask her to send the patch again if that's the correct way to go. Please confirm.
+ 
+> If there are more questions, I'm pretty sure Sasha would be glad to
+> explain to you how the whole authorship thing works and what the
+> implications are.
 
--Tony
+Thanks, Sasha is currently OOF until April 19th. 
+
+--
+Best regards,
+Shiping Ji
