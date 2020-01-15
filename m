@@ -2,137 +2,197 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D07C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848B4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456BB24681
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579076046;
-	bh=M+HSADfZQKQz8tI8Ei7xqVcpyWZVrFeljkerXtx23vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e/K19g49SNzVpHqOYS/sGRl9F/xubU+OEoVi8SGCdYM4yGhAGZ6vzuf+qobKWRoE4
-	 wHumI1uoZfvnNm1+mljPdOmATlbIjaaMer5DMbkw1NK0V8tiOyxT0/VuFzdpzXKYwq
-	 5Pu/CagTeTtalTgQcnLu10cLLK7YMBoKlR10XAtI=
+	by mail.kernel.org (Postfix) with ESMTP id 64E8F24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgAOIOF (ORCPT
+        id S1728988AbgAOIOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgAOIOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:14:04 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5806724671;
-        Wed, 15 Jan 2020 08:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579076043;
-        bh=M+HSADfZQKQz8tI8Ei7xqVcpyWZVrFeljkerXtx23vs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e5w2X2lmbpZJEt3FIoAYrfP3JCxKVU5luHEmk7pWaix7LJF+MLwiAHRnU/NPD+/UO
-         SKTNLbC1ZD5YUfk5vFr6XYfsozGKLD+QgEjgihzZiieEB29v1eDv4QiAc5YKTHUgJa
-         vTmnktFUhRAjNjuGPvrDxuZjvsDYBRQLH58H7eoE=
-Date:   Wed, 15 Jan 2020 09:14:00 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, mark.rutland@arm.com,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com
-Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
- drivers
-Message-ID: <20200115081400.GA2978927@kroah.com>
-References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
- <20191125033412.GB890@hao-dev>
- <20191125080127.GC1809@willie-the-truck>
- <20191125080839.GA6227@hao-dev>
- <20191209024527.GA22625@hao-dev>
- <20191216010104.GA32154@yilunxu-OptiPlex-7050>
- <20200106023742.GA3980@hao-dev>
- <20200114055605.GA13574@hao-dev>
- <20200115051040.GA1389@epycbox.lan>
+        Wed, 15 Jan 2020 03:14:54 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35049 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgAOIOy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:14:54 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1irdp0-0001Tj-6d; Wed, 15 Jan 2020 09:14:38 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1irdoz-0000CT-5q; Wed, 15 Jan 2020 09:14:37 +0100
+Date:   Wed, 15 Jan 2020 09:14:37 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Han Xu <han.xu@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, esben@geanix.com,
+        boris.brezillon@collabora.com, festevam@gmail.com,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] dmaengine: mxs: switch from dma_coherent to dma_pool
+Message-ID: <20200115081437.gsrzwm5bkk2hg6vo@pengutronix.de>
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
+ <1579038243-28550-5-git-send-email-han.xu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115051040.GA1389@epycbox.lan>
+In-Reply-To: <1579038243-28550-5-git-send-email-han.xu@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:03:40 up 191 days, 14:13, 86 users,  load average: 0.25, 0.42,
+ 0.34
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 09:10:40PM -0800, Moritz Fischer wrote:
-> Hi Greg,
+On Wed, Jan 15, 2020 at 05:44:01AM +0800, Han Xu wrote:
+> create one dma_pool dedicate for mxs-dma to avoid the
+> "alloc_contig_range: [xxx, xxx) PFNs busy" warning message during
+> frequently alloc/free resource ops in runtime pm.
 > 
-> On Tue, Jan 14, 2020 at 01:56:05PM +0800, Wu Hao wrote:
-> > On Mon, Jan 06, 2020 at 10:37:42AM +0800, Wu Hao wrote:
-> > > On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
-> > > > On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
-> > > > > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
-> > > > > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
-> > > > > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
-> > > > > > > > Hi Will and Mark,
-> > > > > > > > 
-> > > > > > > > Could you please help us on review this patchset? as this patchset mainly 
-> > > > > > > > introduced a new perf driver following the similar way as drivers/perf/*.
-> > > > > > > 
-> > > > > > > Why is it not under drivers/perf/, then?
-> > > > > > 
-> > > > > > Hi Will
-> > > > > > 
-> > > > > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
-> > > > > > and we plan to put this sub feature together with others, including related
-> > > > > > documentation. It only registers a standard perf pmu for its userspace
-> > > > > > interfaces.
-> > > > > > 
-> > > > > > > 
-> > > > > > > > This patchset has been submitted for a long time but didn't receive any
-> > > > > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
-> > > > > > > 
-> > > > > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
-> > > > > > 
-> > > > > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
-> > > > > 
-> > > > > Hi Will
-> > > > > 
-> > > > > Did you get a chance to look into this patchset?
-> > > > > 
-> > > > > Thanks
-> > > > > Hao
-> > > > 
-> > > > Hi Will
-> > > > 
-> > > > Did you have time to look into this patchset? We have done review work
-> > > > for FPGA part. And as a perf driver, we appreciate your comments.
-> > > > 
-> > > > Thanks
-> > > > Yilun
-> > > 
-> > > Hi Will
-> > > 
-> > > Did you get a chance to look into this patchset these days? 
-> > > 
-> > > Actually we didn't receive any comments for a long time, if you are busy and
-> > > don't have enough time on this, do you know if someone else could help with
-> > > review and ack from perf driver point of view, or any other things we can do
-> > > to speed up this? Thanks in advance! 
-> > 
-> > Hi Moritz
-> > 
-> > Looks like still no response from Will. :(
-> > 
-> > Do you know someone else could help?
+> Signed-off-by: Han Xu <han.xu@nxp.com>
+> ---
+>  drivers/dma/mxs-dma.c | 32 ++++++++++++++++++++++++--------
+>  1 file changed, 24 insertions(+), 8 deletions(-)
 > 
-> Do you have some feedback? I'm a bit confused on what to do in such a
-> situation, do I just take the patch if the maintainer doesn't respond
-> for a while?
+> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> index 251492c5ea58..dfee41ae1981 100644
+> --- a/drivers/dma/mxs-dma.c
+> +++ b/drivers/dma/mxs-dma.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/list.h>
+>  #include <linux/dma/mxs-dma.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/dmapool.h>
+>  
+>  #include <asm/irq.h>
+>  
+> @@ -121,6 +122,7 @@ struct mxs_dma_chan {
+>  	enum dma_status			status;
+>  	unsigned int			flags;
+>  	bool				reset;
+> +	struct dma_pool			*ccw_pool;
+>  #define MXS_DMA_SG_LOOP			(1 << 0)
+>  #define MXS_DMA_USE_SEMAPHORE		(1 << 1)
+>  };
+> @@ -422,9 +424,10 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+>  	struct device *dev = &mxs_dma->pdev->dev;
+>  	int ret;
+>  
+> -	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
+> -					   CCW_BLOCK_SIZE,
+> -					   &mxs_chan->ccw_phys, GFP_KERNEL);
+> +	mxs_chan->ccw = dma_pool_zalloc(mxs_chan->ccw_pool,
+> +					GFP_ATOMIC,
+> +					&mxs_chan->ccw_phys);
 
-Resend it and say something like "please review" or the like.  With the
-holidays and catching up from the holidays, this time of year is usually
-very backlogged for lots of reviewers.
+Why GFP_ATOMIC?
 
-greg k-h
+> +
+>  	if (!mxs_chan->ccw) {
+>  		ret = -ENOMEM;
+>  		goto err_alloc;
+> @@ -454,8 +457,8 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+>  err_clk:
+>  	free_irq(mxs_chan->chan_irq, mxs_dma);
+>  err_irq:
+> -	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
+> -			mxs_chan->ccw, mxs_chan->ccw_phys);
+> +	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
+> +		      mxs_chan->ccw_phys);
+>  err_alloc:
+>  	return ret;
+>  }
+> @@ -470,8 +473,8 @@ static void mxs_dma_free_chan_resources(struct dma_chan *chan)
+>  
+>  	free_irq(mxs_chan->chan_irq, mxs_dma);
+>  
+> -	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
+> -			mxs_chan->ccw, mxs_chan->ccw_phys);
+> +	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
+> +		      mxs_chan->ccw_phys);
+>  
+>  	pm_runtime_mark_last_busy(dev);
+>  	pm_runtime_put_autosuspend(dev);
+> @@ -796,6 +799,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
+>  	const struct mxs_dma_type *dma_type;
+>  	struct mxs_dma_engine *mxs_dma;
+>  	struct resource *iores;
+> +	struct dma_pool *ccw_pool;
+>  	int ret, i;
+>  
+>  	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
+> @@ -843,7 +847,6 @@ static int mxs_dma_probe(struct platform_device *pdev)
+>  		tasklet_init(&mxs_chan->tasklet, mxs_dma_tasklet,
+>  			     (unsigned long) mxs_chan);
+>  
+> -
+>  		/* Add the channel to mxs_chan list */
+>  		list_add_tail(&mxs_chan->chan.device_node,
+>  			&mxs_dma->dma_device.channels);
+> @@ -858,6 +861,17 @@ static int mxs_dma_probe(struct platform_device *pdev)
+>  
+>  	mxs_dma->dma_device.dev = &pdev->dev;
+>  
+> +	/* create the dma pool */
+> +	ccw_pool = dma_pool_create("ccw_pool",
+> +				   mxs_dma->dma_device.dev,
+> +				   CCW_BLOCK_SIZE, 32, 0);
+> +
+> +	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
+> +		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
+> +
+> +		mxs_chan->ccw_pool = ccw_pool;
+> +	}
+
+ccw_pool is the same for every channel, it should be a member of
+struct mxs_dma_engine and not of struct mcs_dma_chan.
+
+> +
+>  	/* mxs_dma gets 65535 bytes maximum sg size */
+>  	mxs_dma->dma_device.dev->dma_parms = &mxs_dma->dma_parms;
+>  	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
+> @@ -899,11 +913,13 @@ static int mxs_dma_remove(struct platform_device *pdev)
+>  	int i;
+>  
+>  	dma_async_device_unregister(&mxs_dma->dma_device);
+> +	dma_pool_destroy(mxs_dma->mxs_chans[0].ccw_pool);
+
+It doesn't seem to make a big difference, but I would do this after
+killing the tasklets, not before. Otherwise we would have to prove that
+no tasklet is still accessing the dma_pool.
+
+>  
+>  	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
+>  		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
+>  
+>  		tasklet_kill(&mxs_chan->tasklet);
+> +		mxs_chan->ccw_pool = NULL;
+
+There's no point in resetting this to NULL, mxs_chan is never going to
+be touched again.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
