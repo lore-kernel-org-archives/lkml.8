@@ -2,116 +2,164 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB4AC33CBA
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F016E2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE5F222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lqMsQAnX"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cRTE0535"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgAOOtw (ORCPT
+        id S1729191AbgAOOuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:49:52 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45637 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgAOOtu (ORCPT
+        Wed, 15 Jan 2020 09:50:21 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47091 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgAOOuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:49:50 -0500
-Received: by mail-qv1-f66.google.com with SMTP id l14so7446156qvu.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:49:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cm5cr0KkaFdqdflwJkN3g1ehM0Qx8fj0jos08WlEqzM=;
-        b=lqMsQAnXFU2Rt1775zA/Y9RpU+D9BdtIlQNRV5pcYeoMkgjr8kts7UivMPIOiL0e5n
-         f10UOZ9PUDQKAc4uo8oxCDRPATVBy+4x0jxET5bAEYC/jRQba05LCqA5mFdDPXZKT+lb
-         OBhCmsKyjTUS/lbEpqcO3YgoacGz12Msnp2wVNAfyc8QXres7PpHjPHKsi2ZXkAcjK24
-         L01d3NeJlem45mPJulNzAcL08AlMmZ5ok7aIP/9KMn5V/0cTFYAPgtVCpTokVMp8STJN
-         Oyz87SA3j4IaBLjvR+j0YWYGrVgSfqgGG1K43pIfxbDt8YK8NEtcqI1PpfT+bfXVdzrt
-         6cIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cm5cr0KkaFdqdflwJkN3g1ehM0Qx8fj0jos08WlEqzM=;
-        b=CyLMa1THk+AgxVKpq9GmKkho4YeZqCxWYbzvPgHnaDl5nSzYu7IQ+74Y+MSs2V/E/9
-         KAXm+INQqr1XkpFqvlew+hi2RM2YN7j0bXKVUPF5nNFyM3qeqqCWupHXQm3CVkg3u6Xr
-         zkh4sS6pt1LoQnbdaUeacgl9QC/7SW8w6ZgB47bnpapD+oCYD0607cLjizO8B8Cg1LyB
-         dt1fkDmemp6n6Y1W2+sMn18NiYKzNSdE9hcA61KgPCDUMKF/Q2re+baBjXeAGuzXY62m
-         cpAe+dHdu98btuP19UtmuI3z1UJhgZAInjK8xHqV28E9C6l9YFGd/XNydQCJBH3TN9CV
-         26tQ==
-X-Gm-Message-State: APjAAAXQOfoQ2GD326hfiSfy/w7jTbgnCWHPSMPSx8kr5RDFGPK8sMWo
-        nm1h46QHrQV5GsQBWPDcgSltlQ==
-X-Google-Smtp-Source: APXvYqyFIeQqkTbqfmHkLFxl6XwrUnGz4rIsK+5vF2sMxHxXVPVwnMtL57gUSF9TASMuieCBEj6hKA==
-X-Received: by 2002:a05:6214:11a8:: with SMTP id u8mr26158641qvv.16.1579099789994;
-        Wed, 15 Jan 2020 06:49:49 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n32sm9400465qtk.66.2020.01.15.06.49.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jan 2020 06:49:49 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1irjzQ-0008QI-RY; Wed, 15 Jan 2020 10:49:48 -0400
-Date:   Wed, 15 Jan 2020 10:49:48 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: RFC: hold i_rwsem until aio completes
-Message-ID: <20200115144948.GB25201@ziepe.ca>
-References: <20200114161225.309792-1-hch@lst.de>
- <20200114192700.GC22037@ziepe.ca>
- <20200115065614.GC21219@lst.de>
- <20200115132428.GA25201@ziepe.ca>
- <20200115143347.GL2827@hirez.programming.kicks-ass.net>
+        Wed, 15 Jan 2020 09:50:20 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115145018euoutp01692e294a1f4256053632c2b5d1ca397b~qFusd-yf10791207912euoutp01g
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 14:50:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115145018euoutp01692e294a1f4256053632c2b5d1ca397b~qFusd-yf10791207912euoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579099818;
+        bh=NXPvp1zYgb9gUmV9qAl2ZhCLamS6Ygtjex83I12F2Xk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=cRTE0535aT5viddPt8EH6g7TTxAc7M9OM6bH+ROgfHtUtEQWFVJuKJdUOa/hbB7V6
+         m1Rp/v0uyvoUih/9wM1lYEpTUoXTkcUmaR8PGa4bxyB5fiutZ9V25H5e2A1ivhSku2
+         KI9hb54+lIU0piv5tdSUNdMPdDNMeW6oOZM+C+fU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200115145018eucas1p19c95153872d7a1895718036fa17c8918~qFusYbRyR2783327833eucas1p1R;
+        Wed, 15 Jan 2020 14:50:18 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7E.7E.61286.AA62F1E5; Wed, 15
+        Jan 2020 14:50:18 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115145018eucas1p260f7cb61e0dc9738cc5fd3bff9dd3b27~qFusJbuO81408814088eucas1p28;
+        Wed, 15 Jan 2020 14:50:18 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115145018eusmtrp21b96c9875b5a8e01641a8242416f3216~qFusI7DwW0683306833eusmtrp2M;
+        Wed, 15 Jan 2020 14:50:18 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-2d-5e1f26aa99c5
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id FF.4A.07950.AA62F1E5; Wed, 15
+        Jan 2020 14:50:18 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115145016eusmtip271834eddaaa45ebe9074e4e891b665e8~qFuquTwu52322023220eusmtip2g;
+        Wed, 15 Jan 2020 14:50:16 +0000 (GMT)
+Subject: Re: [PATCH v2] video: fbdev: vesafb: add missed release_region
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <69c018bc-b51b-0eab-39bc-6cd14a0245e5@samsung.com>
+Date:   Wed, 15 Jan 2020 15:50:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115143347.GL2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191205160712.32245-1-hslester96@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRmVeSWpSXmKPExsWy7djP87qr1OTjDNrnC1hc+fqezWL2oZfM
+        Fif6PrBaXN41h82BxWPnrLvsHve7jzN5fN4kF8AcxWWTkpqTWZZapG+XwJXxoPkFW8FH7oqt
+        v6obGM9xdjFycEgImEg83FTWxcjFISSwglFiyZlGZgjnC6PEihv/2boYOYGcz4wSz96lgdgg
+        DY+ub2WBKFrOKNH19SOU85ZR4sWSHawgVcIC7hLPl81jAbFFBNQlPu/ayQ5iMwskSJxedA8s
+        ziZgJTGxfRUjiM0rYCdx5Pg8ZhCbRUBVYsnjzUwgtqhAhMSnB4dZIWoEJU7OfALWywnUO+XK
+        AzaImeISt57MZ4Kw5SW2v50D9oKEQD+7xM41XawQZ7tINB3dwwhhC0u8Or6FHcKWkfi/E6QZ
+        pGEdo8TfjhdQ3dsZJZZP/scGUWUtcefcLzZQiDELaEqs36UPEXaUWHHiFCskIPkkbrwVhDiC
+        T2LStunMEGFeiY42IYhqNYkNyzawwazt2rmSeQKj0iwkr81C8s4sJO/MQti7gJFlFaN4amlx
+        bnpqsWFearlecWJucWleul5yfu4mRmA6Of3v+KcdjF8vJR1iFOBgVOLhzfgjFyfEmlhWXJl7
+        iFGCg1lJhPfkDNk4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5akZqemFqQWwWSZ
+        ODilGhg7YnbP8k2fpnw3eNLzJcUXM97uizputXjxdJv2S+ubOTKyXoTJrXoy4eXMw8u7VsTW
+        xfC+r7aROde3zezEm6cFzHv7LWeql2s902F99db20/5D1+4VH7cuu+EZU1jqbN6yg8fAT8Ty
+        16d+lw38laJm76PLtauMGyNsZBPm8TxYkO2tsfPvogtKLMUZiYZazEXFiQA0v5uIIwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xe7qr1OTjDM40MFtc+fqezWL2oZfM
+        Fif6PrBaXN41h82BxWPnrLvsHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
+        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfxoPkFW8FH7oqtv6obGM9xdjFyckgImEg8ur6V
+        pYuRi0NIYCmjxMsve5i7GDmAEjISx9eXQdQIS/y51sUGUfOaUeJ832F2kISwgLvE82XzWEBs
+        EQF1ic+7drKD9DILJEg8m5cCUd/LKPFhxSlWkBo2ASuJie2rGEFsXgE7iSPH5zGD2CwCqhJL
+        Hm9mArFFBSIkDu+YBVUjKHFy5hOw+ZxAvVOuPGADsZmBdv2Zd4kZwhaXuPVkPhOELS+x/e0c
+        5gmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbPtmM/t+xg
+        7HoXfIhRgINRiYf3wD+5OCHWxLLiytxDjBIczEoivCdnyMYJ8aYkVlalFuXHF5XmpBYfYjQF
+        em4is5Rocj4wtvNK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCy
+        bzl0+/ABvxXRkw70i8zzvx8WzjnX98ae4JZiof98mRfFpCQFWaq3vj/lL3qaT+Dh/OOGPR4O
+        S5fMn7j7D8d0viCvKfwS894+UPryb0Yf4781lpLFz5e25ZzIW/tOoVuhcPm74usO4n/ncwgH
+        //OxYypsVXwZf1R3lq7Goa1s1aE5h76IGF1TYinOSDTUYi4qTgQA/uL3LLUCAAA=
+X-CMS-MailID: 20200115145018eucas1p260f7cb61e0dc9738cc5fd3bff9dd3b27
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191205160725eucas1p226595a8d3043f48183a0a646bda61b4c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191205160725eucas1p226595a8d3043f48183a0a646bda61b4c
+References: <CGME20191205160725eucas1p226595a8d3043f48183a0a646bda61b4c@eucas1p2.samsung.com>
+        <20191205160712.32245-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 03:33:47PM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 15, 2020 at 09:24:28AM -0400, Jason Gunthorpe wrote:
+
+On 12/5/19 5:07 PM, Chuhong Yuan wrote:
+> The driver forgets to free the requested irq in remove and probe
+> failure.
+
+This is I/O region not IRQ.
+
+> Add the missed calls to fix it.
 > 
-> > I was interested because you are talking about allowing the read/write side
-> > of a rw sem to be held across a return to user space/etc, which is the
-> > same basic problem.
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v2:
+>   - Modify commit message.
 > 
-> No it is not; allowing the lock to be held across userspace doesn't
-> change the owner. This is a crucial difference, PI depends on there
-> being a distinct owner. That said, allowing the lock to be held across
-> userspace still breaks PI in that it completely wrecks the ability to
-> analyze the critical section.
+>  drivers/video/fbdev/vesafb.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
+> index d9c08f6c2155..fbb196a8bbf6 100644
+> --- a/drivers/video/fbdev/vesafb.c
+> +++ b/drivers/video/fbdev/vesafb.c
+> @@ -468,6 +468,7 @@ static int vesafb_probe(struct platform_device *dev)
+>  	fb_info(info, "%s frame buffer device\n", info->fix.id);
+>  	return 0;
+>  err:
+> +	release_region(0x3c0, 32);
 
-I'm not sure what you are contrasting?
+There is one 'goto err;' instance before request_region() which
+needs to be taken care of first.
 
-I was remarking that I see many places open code a rwsem using an
-atomic and a completion specifically because they need to do the
-things Christoph identified:
+>  	arch_phys_wc_del(par->wc_cookie);
+>  	if (info->screen_base)
+>  		iounmap(info->screen_base);
+> @@ -480,6 +481,7 @@ static int vesafb_remove(struct platform_device *pdev)
+>  {
+>  	struct fb_info *info = platform_get_drvdata(pdev);
+>  
+> +	release_region(0x3c0, 32);
+>  	unregister_framebuffer(info);
 
-> (1) no unlocking by another process than the one that acquired it
-> (2) no return to userspace with locks held
+The order of operations on remove should be the reverse of
+order of operations on probe.
 
-As an example flow: obtain the read side lock, schedual a work queue,
-return to user space, and unlock the read side from the work queue.
+[ We cannot release I/O region while framebuffer is active. ]
 
-If we can make some general primative that addresses this then maybe
-those open coded places can convert as well?
+>  	framebuffer_release(info);
 
-Regards,
-Jason
+Please fix the patch and re-submit.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
