@@ -2,172 +2,122 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3822C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD2FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A7222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DF324656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CE5Gv8Oj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgAONuN (ORCPT
+        id S1729026AbgAONuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:50:13 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48788 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726085AbgAONuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:50:12 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E0AF1764F196C96C2BC7;
-        Wed, 15 Jan 2020 21:50:10 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
- 21:49:59 +0800
-Subject: Re: [PATCH v3 29/32] KVM: arm64: GICv4.1: Allow SGIs to switch
- between HW and SW interrupts
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-30-maz@kernel.org>
- <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
- <6e24d53e-64d9-a682-6753-9e16155c7fde@huawei.com>
- <c30b23cf220a4b2965a42ea87b27285f@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <99ed8894-9d30-7dac-9826-abf95b9a5e80@huawei.com>
-Date:   Wed, 15 Jan 2020 21:49:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 15 Jan 2020 08:50:22 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37849 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728984AbgAONuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:50:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579096220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=w+swK9osAIFZi3cI9plfEPgc0HcD0yrb1cBEuZ3PWuI=;
+        b=CE5Gv8OjqLpwR9x9G/v76Xqsw0JqrzhccwgY88x6gdAN0WaRJQ1VdgeGQcXRwPWACULl2v
+        oNtIL+FQwUKOArNC8LmAiGj4u4p8kQxT43j+P6eBP7asPoRTuO4vC+s1Ko0YZIUIE2nBNd
+        pVVMWJeBj15pTcbdfH0lU2r3IJJoQjk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-GOHqpJ9cNSinEYjPiomTzw-1; Wed, 15 Jan 2020 08:50:16 -0500
+X-MC-Unique: GOHqpJ9cNSinEYjPiomTzw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 837421005502;
+        Wed, 15 Jan 2020 13:50:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 142CC19C5B;
+        Wed, 15 Jan 2020 13:50:11 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200114224917.GA165687@mit.edu>
+References: <20200114224917.GA165687@mit.edu> <4467.1579020509@warthog.procyon.org.uk>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, hch@lst.de, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Problems with determining data presence by examining extents?
 MIME-Version: 1.0
-In-Reply-To: <c30b23cf220a4b2965a42ea87b27285f@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <22055.1579096211.1@warthog.procyon.org.uk>
+Date:   Wed, 15 Jan 2020 13:50:11 +0000
+Message-ID: <22056.1579096211@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Theodore Y. Ts'o <tytso@mit.edu> wrote:
 
-On 2020/1/15 21:32, Marc Zyngier wrote:
-> On 2020-01-15 03:49, Zenghui Yu wrote:
->> Hi,
->>
->> On 2020/1/15 10:49, Shaokun Zhang wrote:
->>> Hi Marc, [This is from Nianyao]
->>>
->>> On 2019/12/24 19:10, Marc Zyngier wrote:
->>>> In order to let a guest buy in the new, active-less SGIs, we
->>>> need to be able to switch between the two modes.
->>>>
->>>> Handle this by stopping all guest activity, transfer the state
->>>> from one mode to the other, and resume the guest.
->>>>
->>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>> ---
->>
->> [...]
->>
->>>> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
->>>> index c2fcde104ea2..063785fd2dc7 100644
->>>> --- a/virt/kvm/arm/vgic/vgic-v4.c
->>>> +++ b/virt/kvm/arm/vgic/vgic-v4.c
->>>> @@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int 
->>>> irq, void *info)
->>>>       return IRQ_HANDLED;
->>>>   }
->>>>   +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct 
->>>> vgic_irq *irq)
->>>> +{
->>>> +    vpe->sgi_config[irq->intid].enabled    = irq->enabled;
->>>> +    vpe->sgi_config[irq->intid].group     = irq->group;
->>>> +    vpe->sgi_config[irq->intid].priority    = irq->priority;
->>>> +}
->>>> +
->>>> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +    struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
->>>> +    int i;
->>>> +
->>>> +    /*
->>>> +     * With GICv4.1, every virtual SGI can be directly injected. So
->>>> +     * let's pretend that they are HW interrupts, tied to a host
->>>> +     * IRQ. The SGI code will do its magic.
->>>> +     */
->>>> +    for (i = 0; i < VGIC_NR_SGIS; i++) {
->>>> +        struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
->>>> +        struct irq_desc *desc;
->>>> +        int ret;
->>>> +
->>>> +        if (irq->hw) {
->>>> +            vgic_put_irq(vcpu->kvm, irq);
->>>> +            continue;
->>>> +        }
->>>> +
->>>> +        irq->hw = true;
->>>> +        irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
->>>
->>> I think we need to check whether irq_find_mapping returns 0.
->>>
->>>> +        vgic_v4_sync_sgi_config(vpe, irq);
->>>> +        /*
->>>> +         * SGIs are initialised as disabled. Enable them if
->>>> +         * required by the rest of the VGIC init code.
->>>> +         */
->>>> +        desc = irq_to_desc(irq->host_irq);
->>>> +        ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
->>>> +                          false);
->>>
->>> If irq->host_irq is not valid , in irq_domain_activate_irq, it will 
->>> trigger NULL pointer
->>> dereference in host kernel.
->>> I meet a problem here. When hw support GIC4.1, and host kernel is 
->>> started with
->>> kvm-arm.vgic_v4_enable=0, starting a virtual machine will trigger 
->>> NULL pointer
->>> dereference in host.
->>
->> I think the thing is that we should _not_ try to configure vSGIs at all
->> if kvm-arm.vgic_v4_enable=0 (which indicates we don't allow use of the
->> GICv4 of direct injection).
->>
->> We currently set kvm_vgic_global_state.has_gicv4_1 to true if HW support
->> GICv4.1, regardless whatever the gicv4_enable is (see patch#23 -
->> vgic_v3_probe).  I think this is what actually needs fixing.
-> 
-> Yes, my point exactly. I've pushed out a potential fix [1], and I'd be
-> grateful if you could let me know whether that fixes it for you.
+> but I'm not sure we would want to make any guarantees with respect to (b).
 
-I haven't had the appropriate HW yet.. Nianyao or Shaokun can help to
-test it tomorrow, I think.
+Um.  That would potentially make disconnected operation problematic.  Now,
+it's unlikely that I'll want to store a 256KiB block of zeros, but not
+impossible.
 
-> 
-> Thanks,
-> 
->          M.
-> 
-> [1] 
-> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/gic-v4.1-devel&id=b82c2ee1d3fef66fb85793965c344260f618219d 
+> I suspect I understand why you want this; I've fielded some requests
+> for people wanting to do something very like this at $WORK, for what I
+> assume to be for the same reason you're seeking to do this; to create
+> do incremental caching of files and letting the file system track what
+> has and hasn't been cached yet.
 
-Anyway, this looks good to me.
+Exactly so.  If I can't tap in to the filesystem's own map of what data is
+present in a file, then I have to do it myself in parallel.  Keeping my own
+list or map has a number of issues:
 
+ (1) It's redundant.  I have to maintain a second copy of what the filesystem
+     already maintains.  This uses extra space.
 
-Thanks,
-Zenghui
+ (2) My map may get out of step with the filesystem after a crash.  The
+     filesystem has tools to deal with this in its own structures.
+
+ (3) If the file is very large and sparse, then keeping a bit-per-block map in
+     a single xattr may not suffice or may become unmanageable.  There's a
+     limit of 64k, which for bit-per-256k limits the maximum mappable size to
+     1TiB (I could use multiple xattrs, but some filesystems may have total
+     xattr limits) and whatever the size, I need a single buffer big enough to
+     hold it.
+
+     I could use a second file as a metadata cache - but that has worse
+     coherency properties.  (As I understand it, setxattr is synchronous and
+     journalled.)
+
+> If we were going to add such a facility, what we could perhaps do is
+> to define a new flag indicating that a particular file should have no
+> extent mapping optimization applied, such that FIEMAP would return a
+> mapping if and only if userspace had written to a particular block, or
+> had requested that a block be preallocated using fallocate().  The
+> flag could only be set on a zero-length file, and this might disable
+> certain advanced file system features, such as reflink, at the file
+> system's discretion; and there might be unspecified performance
+> impacts if this flag is set on a file.
+
+That would be fine for cachefiles.
+
+Also, I don't need to know *where* the data is, only that the first byte of my
+block exists - if a DIO read returns short when it reaches a hole.
+
+David
 
