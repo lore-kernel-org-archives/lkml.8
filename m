@@ -2,129 +2,225 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3643C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBCFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E892222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ERFjVhJV"
+	by mail.kernel.org (Postfix) with ESMTP id 3B797222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579079774;
+	bh=pDZYvNJw5rq9PdxCZs8JHhdti04GWgmSBcd5XeHO+hs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vkx83LF7njvl/K34xsDa95gQnIBQKtst+pzeVyII50NcOxZXCsANzTWgdY0HTBTsw
+	 EPHNGm3wEV4tkUaCo4NWGyLimUpV2HpgzvSs2qnZ826I1CnO+LCbpkfVLBqZBaM8OB
+	 Dyv1gX2S6IQUzuaYDh8WgRQmpTYy14SpckZBNr4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgAOJO0 (ORCPT
+        id S1729351AbgAOJQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:14:26 -0500
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:20885
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726472AbgAOJOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:14:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TX02DQt4F3C85T+OSX45qXpQ4/N/pzuKtfd2aAt9SV+gVW4fumYLdTEkuImRq1jIPqsVwUMH/Md7W7q0CiHDvxIlnj6IaCN0s67OO45nSq1qQuQzSKqF2c2fOGAN0E2JD6OrOWNz5K2oNhE2H+Vo2OiH/Z+nxVHTREAIDom2VT1VAs1krwgsVT+PLkP+l0pmdyfOdTV4YWypDFGLlLToTnV1k9Cxj9/GQPGce/slAjpH0geU7YUQF27ph3xa0c0+q+4lbK4hKW3CIJMIxys/yhe9FcBn8N9bvQcAsGDhViVxf4yuY5SvJwNRxj98gSjpngL3aDn/fHWjwtXxW2SfxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M+VApoI90aCR5uJ5qRi1FH6HYnxgZsGSCNsM8GQyhBo=;
- b=daRV/MabKiSCEnIg9mVMEz0/HctcPK84suTQIc1V858+g4e5KdgNlKPseW/+CBE1Dx4QFx7ApR/vYPA9YzWGU2AM6na0R9hyf/luF0F6wFcu7NHiCa68WZoajLeZO94uwhkmSWlA34YW7vqhXwHJU7a4FPvjvDpYLfxPcRKFRxTAqqBu5Jip4x7D7bBci7L7epRNUknzzaQlP2GZlBXJkx6t8C5ofmKBAszEuayT+DGmPpFmjycf3OboNBHhQwcl6FKNotn6d7Bpt9AnPWBlB+OncJb/Z+BR+NlqzOjcz1bpTL7ibNyRMMMOxTCHw32hTwM4wrK9ED3+uwxngTYxIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M+VApoI90aCR5uJ5qRi1FH6HYnxgZsGSCNsM8GQyhBo=;
- b=ERFjVhJVNsRirsBO0zW/fONtyglkVhttlE0gbg3MQacAzgRlF8HLv6ne0e9CpNl3DSYGiyZ8CK5E7ua2grYAU3k3FkQpU2XIhQwDOz/9SIraUx8+ojO/xP+uo1TPrsMrPjhRNAoTKtxFy3/6kCfmmKagl2i1RIlFVNw7Z6J9v2w=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB5539.eurprd04.prod.outlook.com (20.178.113.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.12; Wed, 15 Jan 2020 09:14:20 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::6d52:5678:e02f:95f4]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::6d52:5678:e02f:95f4%3]) with mapi id 15.20.2623.015; Wed, 15 Jan 2020
- 09:14:20 +0000
-Received: from localhost (89.37.124.34) by AM5P190CA0006.EURP190.PROD.OUTLOOK.COM (2603:10a6:206:14::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Wed, 15 Jan 2020 09:14:20 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>
-CC:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
-Thread-Topic: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
-Thread-Index: AQHVy3/EUCcWFKJUfUCi5MhN1UqJ1afrcVWA
-Date:   Wed, 15 Jan 2020 09:14:20 +0000
-Message-ID: <20200115091419.grdz67mef5mkm4mt@fsr-ub1664-175>
-References: <20200115084225.30464-1-horia.geanta@nxp.com>
- <20200115084225.30464-2-horia.geanta@nxp.com>
-In-Reply-To: <20200115084225.30464-2-horia.geanta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5P190CA0006.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:206:14::19) To AM0PR04MB5779.eurprd04.prod.outlook.com
- (2603:10a6:208:131::23)
-x-originating-ip: [89.37.124.34]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5e5e1c55-4a49-4e47-91a8-08d7999b4e15
-x-ms-traffictypediagnostic: AM0PR04MB5539:|AM0PR04MB5539:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5539CA39A1E63E4D67A40844F6370@AM0PR04MB5539.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(199004)(189003)(81156014)(478600001)(81166006)(8676002)(6486002)(33716001)(64756008)(66476007)(16526019)(66446008)(66556008)(6862004)(66946007)(26005)(6496006)(186003)(52116002)(1076003)(956004)(4326008)(8936002)(7416002)(71200400001)(53546011)(5660300002)(316002)(2906002)(9686003)(44832011)(6636002)(54906003)(86362001)(4744005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5539;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jLmVass1jlZZPKfCLB0mz7QHx2Jz93nu83FKOF78yuCpdec8NYlKn5XA/PaLw91qRFWwB4KYquI0yV3afasvGt+9ZiGciM3O75i54nUErb7JWybPaVoWiByCz3zYR5hERlAbmP8D8exT8nKnZjkIN9+dybmR/DoqaGc28LVLsE1XTHwGJso1I27EpbXoAQS6XiutRzVLaSkm4sjTbYi5Ihfm4K8+zUEaZPLu9FsVENG3xXAf/8Sp49xUjbsm6oxvQ2AC8LVCVPByFCOzmHqtddt0ac4IL9SOowemR1Zm8ogIwOCl0+Pe50PntKvQt5i2RtN3b6k/uH+RcbPcn2BeZ4ntWL0KZDBJ+c79XY7Phd/fufWXQPNPn/5nySZtBYunMvnvxrv2Me47MejYRC0lymQv0+OmgmK0bGsgou+yCJojDvThhw42MEKFXnpGMJZqjdfFrakqbjKoxY8KkpU48iccNHwNXpGDUP31amVRepk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9929C85D2C788B46A82BFA6DED278892@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 15 Jan 2020 04:16:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbgAOJQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:16:12 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBA820728;
+        Wed, 15 Jan 2020 09:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579079771;
+        bh=pDZYvNJw5rq9PdxCZs8JHhdti04GWgmSBcd5XeHO+hs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BUHvcob1Z0wPBd7o+iWe2NZAEcTHARM9IfMOK1UX9x6mDSI3tD70Is+m/tB+9P9Dy
+         +96l5EJ+gsdthVNOlhk3sMjPkV65vJijVo4CeHUPQifVG18cLkjtpylzhojDBjnSVj
+         G6E7qvg+qErZh8+EbWB3mcTrXbY6iYxcB5xBn/pI=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jaswinder.singh@linaro.org, mhiramat@kernel.org
+Subject: [BUGFIX PATCH] selftests: Fix pthread link option
+Date:   Wed, 15 Jan 2020 18:16:07 +0900
+Message-Id: <157907976750.14189.12829891067375600434.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5e1c55-4a49-4e47-91a8-08d7999b4e15
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 09:14:20.7630
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6m89QR9ilNasrAY4ECucnSUobH0QW3XakMlmqaBl+SfrzyBUGtSU1DElxGo2wiyr0Hg84Xnq/5sauX5ogf0eGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5539
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAtMDEtMTUgMTA6NDI6MjMsIEhvcmlhIEdlYW50xIMgd3JvdGU6DQo+IFNpZ25lZC1vZmYt
-Ynk6IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdlYW50YUBueHAuY29tPg0KDQpBZGQgYSBjb21taXQg
-bWVzc2FnZSBwbGVhc2UuDQoNCk5vdGUsIHRoaXMgbW9kaWZpZXMgdGhlIGRldmljZXRyZWUgQUJJ
-Lg0KDQo+IC0tLQ0KPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg4bW4tY2xvY2suaCB8
-IDQgKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14OG1uLWNs
-b2NrLmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDhtbi1jbG9jay5oDQo+IGluZGV4
-IDBmMmI4NDIzY2UxZC4uNDM4ODNmZTY1ZGI1IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2R0LWJp
-bmRpbmdzL2Nsb2NrL2lteDhtbi1jbG9jay5oDQo+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
-Y2xvY2svaW14OG1uLWNsb2NrLmgNCj4gQEAgLTIyOCw2ICsyMjgsOCBAQA0KPiAgI2RlZmluZSBJ
-TVg4TU5fU1lTX1BMTDJfMzMzTV9DRwkJCTIwOQ0KPiAgI2RlZmluZSBJTVg4TU5fU1lTX1BMTDJf
-NTAwTV9DRwkJCTIxMA0KPiAgDQo+IC0jZGVmaW5lIElNWDhNTl9DTEtfRU5ECQkJCTIxMQ0KPiAr
-I2RlZmluZSBJTVg4TU5fQ0xLX1NOVlNfUk9PVAkJCTIxMQ0KPiArDQo+ICsjZGVmaW5lIElNWDhN
-Tl9DTEtfRU5ECQkJCTIxMg0KPiAgDQo+ICAjZW5kaWYNCj4gLS0gDQo+IDIuMTcuMQ0KPiANCg==
+To support pthread correctly, it is better to use -pthread
+instead of -lpthread.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/testing/selftests/bpf/Makefile               |    2 +-
+ tools/testing/selftests/membarrier/Makefile        |    2 +-
+ tools/testing/selftests/mqueue/Makefile            |    2 +-
+ tools/testing/selftests/net/Makefile               |    4 ++--
+ .../testing/selftests/powerpc/benchmarks/Makefile  |    4 ++--
+ tools/testing/selftests/powerpc/dscr/Makefile      |    2 +-
+ tools/testing/selftests/powerpc/mm/Makefile        |    2 +-
+ tools/testing/selftests/rseq/Makefile              |    2 +-
+ tools/testing/selftests/rtc/Makefile               |    2 +-
+ tools/testing/selftests/seccomp/Makefile           |    2 +-
+ tools/testing/selftests/timers/Makefile            |    2 +-
+ tools/testing/selftests/vm/Makefile                |    2 +-
+ 12 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index e2fd6f8d579c..419f58c53d12 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -22,7 +22,7 @@ CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR)	\
+ 	  -I$(GENDIR) -I$(TOOLSDIR) -I$(CURDIR)				\
+ 	  -Dbpf_prog_load=bpf_prog_test_load				\
+ 	  -Dbpf_load_program=bpf_test_load_program
+-LDLIBS += -lcap -lelf -lrt -lpthread
++LDLIBS += -lcap -lelf -lrt -pthread
+ 
+ # Order correspond to 'make run_tests' order
+ TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_lpm_map test_progs \
+diff --git a/tools/testing/selftests/membarrier/Makefile b/tools/testing/selftests/membarrier/Makefile
+index 34d1c81a2324..19d657d966e3 100644
+--- a/tools/testing/selftests/membarrier/Makefile
++++ b/tools/testing/selftests/membarrier/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ CFLAGS += -g -I../../../../usr/include/
+-LDLIBS += -lpthread
++LDLIBS += -pthread
+ 
+ TEST_GEN_PROGS := membarrier_test_single_thread \
+ 		membarrier_test_multi_thread
+diff --git a/tools/testing/selftests/mqueue/Makefile b/tools/testing/selftests/mqueue/Makefile
+index 8a58055fc1f5..9986b778b8b3 100644
+--- a/tools/testing/selftests/mqueue/Makefile
++++ b/tools/testing/selftests/mqueue/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS += -O2
+-LDLIBS = -lrt -lpthread -lpopt
++LDLIBS = -lrt -pthread -lpopt
+ 
+ TEST_GEN_PROGS := mq_open_tests mq_perf_tests
+ 
+diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+index a8e04d665b69..6ad8571bb0ed 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -25,5 +25,5 @@ KSFT_KHDR_INSTALL := 1
+ include ../lib.mk
+ 
+ $(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
+-$(OUTPUT)/tcp_mmap: LDFLAGS += -lpthread
+-$(OUTPUT)/tcp_inq: LDFLAGS += -lpthread
++$(OUTPUT)/tcp_mmap: LDFLAGS += -pthread
++$(OUTPUT)/tcp_inq: LDFLAGS += -pthread
+diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
+index d40300a65b42..0d7c82d520ce 100644
+--- a/tools/testing/selftests/powerpc/benchmarks/Makefile
++++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
+@@ -11,8 +11,8 @@ $(TEST_GEN_PROGS): ../harness.c
+ 
+ $(OUTPUT)/context_switch: ../utils.c
+ $(OUTPUT)/context_switch: CFLAGS += -maltivec -mvsx -mabi=altivec
+-$(OUTPUT)/context_switch: LDLIBS += -lpthread
++$(OUTPUT)/context_switch: LDLIBS += -pthread
+ 
+-$(OUTPUT)/fork: LDLIBS += -lpthread
++$(OUTPUT)/fork: LDLIBS += -pthread
+ 
+ $(OUTPUT)/exec_target: CFLAGS += -static -nostartfiles
+diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
+index 5df476364b4d..90c744592d1b 100644
+--- a/tools/testing/selftests/powerpc/dscr/Makefile
++++ b/tools/testing/selftests/powerpc/dscr/Makefile
+@@ -6,6 +6,6 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
+ top_srcdir = ../../../../..
+ include ../../lib.mk
+ 
+-$(OUTPUT)/dscr_default_test: LDLIBS += -lpthread
++$(OUTPUT)/dscr_default_test: LDLIBS += -pthread
+ 
+ $(TEST_GEN_PROGS): ../harness.c
+diff --git a/tools/testing/selftests/powerpc/mm/Makefile b/tools/testing/selftests/powerpc/mm/Makefile
+index ed1565809d2b..4cda9b0b3dd4 100644
+--- a/tools/testing/selftests/powerpc/mm/Makefile
++++ b/tools/testing/selftests/powerpc/mm/Makefile
+@@ -20,4 +20,4 @@ $(OUTPUT)/large_vm_fork_separation: CFLAGS += -m64
+ $(OUTPUT)/tempfile:
+ 	dd if=/dev/zero of=$@ bs=64k count=1
+ 
+-$(OUTPUT)/tlbie_test: LDLIBS += -lpthread
++$(OUTPUT)/tlbie_test: LDLIBS += -pthread
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index d6469535630a..3a17f5b74b9c 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -6,7 +6,7 @@ endif
+ 
+ CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
+ 	  $(CLANG_FLAGS)
+-LDLIBS += -lpthread
++LDLIBS += -pthread
+ 
+ # Own dependencies because we only want to build against 1st prerequisite, but
+ # still track changes to header files and depend on shared object.
+diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+index de9c8566672a..d075ecfbe846 100644
+--- a/tools/testing/selftests/rtc/Makefile
++++ b/tools/testing/selftests/rtc/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS += -O3 -Wl,-no-as-needed -Wall
+-LDFLAGS += -lrt -lpthread -lm
++LDFLAGS += -lrt -pthread -lm
+ 
+ TEST_GEN_PROGS = rtctest
+ 
+diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+index 1760b3e39730..3e35159f709a 100644
+--- a/tools/testing/selftests/seccomp/Makefile
++++ b/tools/testing/selftests/seccomp/Makefile
+@@ -9,7 +9,7 @@ BINARIES := seccomp_bpf seccomp_benchmark
+ CFLAGS += -Wl,-no-as-needed -Wall
+ 
+ seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+-	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) $< -pthread -o $@
+ 
+ TEST_PROGS += $(BINARIES)
+ EXTRA_CLEAN := $(BINARIES)
+diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
+index 7656c7ce79d9..70461befa338 100644
+--- a/tools/testing/selftests/timers/Makefile
++++ b/tools/testing/selftests/timers/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS += -O3 -Wl,-no-as-needed -Wall
+-LDLIBS += -lrt -lpthread -lm
++LDLIBS += -lrt -pthread -lm
+ 
+ # these are all "safe" tests that don't modify
+ # system time or require escalated privileges
+diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+index 7f9a8a8c31da..afb35febd7b6 100644
+--- a/tools/testing/selftests/vm/Makefile
++++ b/tools/testing/selftests/vm/Makefile
+@@ -31,6 +31,6 @@ TEST_FILES := test_vmalloc.sh
+ KSFT_KHDR_INSTALL := 1
+ include ../lib.mk
+ 
+-$(OUTPUT)/userfaultfd: LDLIBS += -lpthread
++$(OUTPUT)/userfaultfd: LDLIBS += -pthread
+ 
+ $(OUTPUT)/mlock-random-test: LDLIBS += -lcap
+
