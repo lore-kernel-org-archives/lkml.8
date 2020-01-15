@@ -2,105 +2,316 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1C8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB86C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302F9214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E475206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SWhLkRwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAOEwf convert rfc822-to-8bit (ORCPT
+        id S1729026AbgAOE4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 23:52:35 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:35443 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728890AbgAOEwf (ORCPT
+        Tue, 14 Jan 2020 23:56:03 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:32284 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728885AbgAOE4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 23:52:35 -0500
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id 00F4pebM077255
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 15 Jan 2020 12:51:40 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from lenovo (10.0.74.130) by BJMBX01.spreadtrum.com (10.0.64.7) with
- Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 15 Jan 2020 12:52:03 +0800
-Date:   Wed, 15 Jan 2020 12:51:55 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Rob Herring <robh@kernel.org>, Orson Zhai <orson.zhai@unisoc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <baolin.wang@unisoc.com>, <kevin.tang@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        <liangcai.fan@unisoc.com>, <orsonzhai@gmail.com>
-Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon
- reference
-Message-ID: <20200115045155.GE19966@lenovo>
-References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
- <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
- <20191213024935.GD9271@lenovo>
- <20191213082336.GD3468@dell>
+        Tue, 14 Jan 2020 23:56:03 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579064161; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=CFggoQTFe2wvaO1hQn0wyoyP6dGUNWAjLiQUMfhesc4=;
+ b=SWhLkRwQBYpZsP+7dffphoOdGUddyxZ2/3jrKaMZVFfLbjZOBnjuxBPIIAS5C0I/2VCgaFgE
+ msPdhG6YZxJOe/P+dN08VCrrkotzMxgwU6QFXyzfwH2BEpGX6ecPpMwS9NWE6bmtHMJXxTJD
+ JU93Vp4tZT5azu5dDAvKIeqznOk=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1e9b5e.7fd5e16cd538-smtp-out-n02;
+ Wed, 15 Jan 2020 04:55:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AFEBBC447A6; Wed, 15 Jan 2020 04:55:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sthella)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FB58C447A4;
+        Wed, 15 Jan 2020 04:55:56 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191213082336.GD3468@dell>
-X-Originating-IP: [10.0.74.130]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com 00F4pebM077255
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 15 Jan 2020 10:25:56 +0530
+From:   sthella@codeaurora.org
+To:     srinivas.kandagatla@linaro.org
+Cc:     Anirudh Ghayal <aghayal@codeaurora.org>, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2] nvmem: add QTI SDAM driver
+In-Reply-To: <1577098347-32526-1-git-send-email-sthella@codeaurora.org>
+References: <1577098347-32526-1-git-send-email-sthella@codeaurora.org>
+Message-ID: <03db0b6a5cbc33e7481be7758ea5e726@codeaurora.org>
+X-Sender: sthella@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On 2019-12-23 16:22, Shyam Kumar Thella wrote:
+> From: Anirudh Ghayal <aghayal@codeaurora.org>
+> 
+> QTI SDAM driver allows PMIC peripherals to access the shared memory
+> that is available on QTI PMICs.
+> 
+> Use subsys_initcall as PMIC SDAM NV memory is accessed by multiple PMIC
+> drivers (charger, fuel guage) to store/restore data across reboots
+> required during their initialization.
+> 
+> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+> ---
+>  drivers/nvmem/Kconfig          |   8 ++
+>  drivers/nvmem/Makefile         |   1 +
+>  drivers/nvmem/qcom-spmi-sdam.c | 189 
+> +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 198 insertions(+)
+>  create mode 100644 drivers/nvmem/qcom-spmi-sdam.c
+> 
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 73567e9..35efab1 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -109,6 +109,14 @@ config QCOM_QFPROM
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called nvmem_qfprom.
+> 
+> +config NVMEM_SPMI_SDAM
+> +	tristate "SPMI SDAM Support"
+> +	depends on SPMI
+> +	help
+> +	  This driver supports the Shared Direct Access Memory Module on
+> +	  Qualcomm Technologies, Inc. PMICs. It provides the clients
+> +	  an interface to read/write to the SDAM module's shared memory.
+> +
+>  config ROCKCHIP_EFUSE
+>  	tristate "Rockchip eFuse Support"
+>  	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 9e66782..877a0b0 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_MTK_EFUSE)		+= nvmem_mtk-efuse.o
+>  nvmem_mtk-efuse-y		:= mtk-efuse.o
+>  obj-$(CONFIG_QCOM_QFPROM)	+= nvmem_qfprom.o
+>  nvmem_qfprom-y			:= qfprom.o
+> +obj-$(CONFIG_NVMEM_SPMI_SDAM)	+= qcom-spmi-sdam.o
+>  obj-$(CONFIG_ROCKCHIP_EFUSE)	+= nvmem_rockchip_efuse.o
+>  nvmem_rockchip_efuse-y		:= rockchip-efuse.o
+>  obj-$(CONFIG_ROCKCHIP_OTP)	+= nvmem-rockchip-otp.o
+> diff --git a/drivers/nvmem/qcom-spmi-sdam.c 
+> b/drivers/nvmem/qcom-spmi-sdam.c
+> new file mode 100644
+> index 0000000..e11228e
+> --- /dev/null
+> +++ b/drivers/nvmem/qcom-spmi-sdam.c
+> @@ -0,0 +1,189 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2017 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/regmap.h>
+> +
+> +#define SDAM_MEM_START			0x40
+> +#define REGISTER_MAP_ID			0x40
+> +#define REGISTER_MAP_VERSION		0x41
+> +#define SDAM_SIZE			0x44
+> +#define SDAM_PBS_TRIG_SET		0xE5
+> +#define SDAM_PBS_TRIG_CLR		0xE6
+> +
+> +struct sdam_chip {
+> +	struct platform_device		*pdev;
+> +	struct regmap			*regmap;
+> +	struct nvmem_config		sdam_config;
+> +	unsigned int			base;
+> +	unsigned int			size;
+> +};
+> +
+> +/* read only register offsets */
+> +static const u8 sdam_ro_map[] = {
+> +	REGISTER_MAP_ID,
+> +	REGISTER_MAP_VERSION,
+> +	SDAM_SIZE
+> +};
+> +
+> +static bool sdam_is_valid(struct sdam_chip *sdam, unsigned int offset,
+> +				size_t len)
+> +{
+> +	unsigned int sdam_mem_end = SDAM_MEM_START + sdam->size - 1;
+> +
+> +	if (!len)
+> +		return false;
+> +
+> +	if (offset >= SDAM_MEM_START && offset <= sdam_mem_end
+> +				&& (offset + len - 1) <= sdam_mem_end)
+> +		return true;
+> +	else if ((offset == SDAM_PBS_TRIG_SET || offset == SDAM_PBS_TRIG_CLR)
+> +				&& (len == 1))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static bool sdam_is_ro(unsigned int offset, size_t len)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(sdam_ro_map); i++)
+> +		if (offset <= sdam_ro_map[i] && (offset + len) > sdam_ro_map[i])
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+> +static int sdam_read(void *priv, unsigned int offset, void *val,
+> +				size_t bytes)
+> +{
+> +	struct sdam_chip *sdam = priv;
+> +	struct device *dev = &sdam->pdev->dev;
+> +	int rc;
+> +
+> +	if (!sdam_is_valid(sdam, offset, bytes)) {
+> +		dev_err(dev, "Invalid SDAM offset %#x len=%zd\n", offset, bytes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = regmap_bulk_read(sdam->regmap, sdam->base + offset, val, bytes);
+> +	if (rc < 0)
+> +		dev_err(dev, "Failed to read SDAM offset %#x len=%zd, rc=%d\n",
+> +						offset, bytes, rc);
+> +
+> +	return rc;
+> +}
+> +
+> +static int sdam_write(void *priv, unsigned int offset, void *val,
+> +				size_t bytes)
+> +{
+> +	struct sdam_chip *sdam = priv;
+> +	struct device *dev = &sdam->pdev->dev;
+> +	int rc;
+> +
+> +	if (!sdam_is_valid(sdam, offset, bytes)) {
+> +		dev_err(dev, "Invalid SDAM offset %#x len=%zd\n", offset, bytes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (sdam_is_ro(offset, bytes)) {
+> +		dev_err(dev, "Invalid write offset %#x len=%zd\n", offset, bytes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = regmap_bulk_write(sdam->regmap, sdam->base + offset, val, 
+> bytes);
+> +	if (rc < 0)
+> +		dev_err(dev, "Failed to write SDAM offset %#x len=%zd, rc=%d\n",
+> +						offset, bytes, rc);
+> +
+> +	return rc;
+> +}
+> +
+> +static int sdam_probe(struct platform_device *pdev)
+> +{
+> +	struct sdam_chip *sdam;
+> +	struct nvmem_device *nvmem;
+> +	unsigned int val;
+> +	int rc;
+> +
+> +	sdam = devm_kzalloc(&pdev->dev, sizeof(*sdam), GFP_KERNEL);
+> +	if (!sdam)
+> +		return -ENOMEM;
+> +
+> +	sdam->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!sdam->regmap) {
+> +		dev_err(&pdev->dev, "Failed to get regmap handle\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	rc = of_property_read_u32(pdev->dev.of_node, "reg", &sdam->base);
+> +	if (rc < 0) {
+> +		dev_err(&pdev->dev, "Failed to get SDAM base, rc=%d\n", rc);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = regmap_read(sdam->regmap, sdam->base + SDAM_SIZE, &val);
+> +	if (rc < 0) {
+> +		dev_err(&pdev->dev, "Failed to read SDAM_SIZE rc=%d\n", rc);
+> +		return -EINVAL;
+> +	}
+> +	sdam->size = val * 32;
+> +
+> +	sdam->sdam_config.dev = &pdev->dev;
+> +	sdam->sdam_config.name = "spmi_sdam";
+> +	sdam->sdam_config.id = pdev->id;
+> +	sdam->sdam_config.owner = THIS_MODULE,
+> +	sdam->sdam_config.stride = 1;
+> +	sdam->sdam_config.word_size = 1;
+> +	sdam->sdam_config.reg_read = sdam_read;
+> +	sdam->sdam_config.reg_write = sdam_write;
+> +	sdam->sdam_config.priv = sdam;
+> +
+> +	nvmem = devm_nvmem_register(&pdev->dev, &sdam->sdam_config);
+> +	if (IS_ERR(nvmem)) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to register SDAM nvmem device rc=%ld\n",
+> +			PTR_ERR(nvmem));
+> +		return -ENXIO;
+> +	}
+> +	dev_dbg(&pdev->dev,
+> +		"SDAM base=%#x size=%u registered successfully\n",
+> +		sdam->base, sdam->size);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id sdam_match_table[] = {
+> +	{ .compatible = "qcom,spmi-sdam" },
+> +	{},
+> +};
+> +
+> +static struct platform_driver sdam_driver = {
+> +	.driver = {
+> +		.name = "qcom,spmi-sdam",
+> +		.of_match_table = sdam_match_table,
+> +	},
+> +	.probe		= sdam_probe,
+> +};
+> +
+> +static int __init sdam_init(void)
+> +{
+> +	return platform_driver_register(&sdam_driver);
+> +}
+> +subsys_initcall(sdam_init);
+> +
+> +static void __exit sdam_exit(void)
+> +{
+> +	return platform_driver_unregister(&sdam_driver);
+> +}
+> +module_exit(sdam_exit);
+> +
+> +MODULE_DESCRIPTION("QCOM SPMI SDAM driver");
+> +MODULE_LICENSE("GPL v2");
 
-Don't forget to apply this patch please :)
+DT bindings for this driver is available at 
+https://lkml.org/lkml/2020/1/14/51
 
-Feel free to ask me if any problem.
-
-Best,
-Orson
-
-On Fri, Dec 13, 2019 at 08:23:36AM +0000, Lee Jones wrote:
-> On Fri, 13 Dec 2019, Orson Zhai wrote:
->
-> > Hi Lee and Rob,
-> >
-> > On Wed, Dec 11, 2019 at 02:55:39PM +0100, Arnd Bergmann wrote:
-> > > On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wrote:
-> > > >
-> > > > There are a lot of similar global registers being used across multiple SoCs
-> > > > from Unisoc. But most of these registers are assigned with different offset
-> > > > for different SoCs. It is hard to handle all of them in an all-in-one
-> > > > kernel image.
-> > > >
-> > > > Add a helper function to get regmap with arguments where we could put some
-> > > > extra information such as the offset value.
-> > > >
-> > > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> > > > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
-> > >
-> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Does this patch look good to be applied?
-> >
-> > Or if any comments please feel free to send to me.
->
-> If it looks good to Arnd, it looks good to me.
->
-> I have quite a number of reviews to get through first though, please
-> bear with me and resist the urge to nag.
->
-> --
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+Regards,
+Shyam
