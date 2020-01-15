@@ -2,146 +2,172 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBC2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D263CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F53D2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A77324679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ehvjUxlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgAOPDd convert rfc822-to-8bit (ORCPT
+        id S1729154AbgAOPDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:03:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:56503 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgAOPDd (ORCPT
+        Wed, 15 Jan 2020 10:03:52 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:35947 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726132AbgAOPDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:03:33 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MKuGD-1j5pc718HN-00LDZa; Wed, 15 Jan 2020 16:03:30 +0100
-Received: by mail-qk1-f170.google.com with SMTP id a203so15920536qkc.3;
-        Wed, 15 Jan 2020 07:03:30 -0800 (PST)
-X-Gm-Message-State: APjAAAUTH+OhoeArYDcHK6lLuou6CZD62hVTzfwWVuNwdeZA/AzpaWiL
-        awcsahaZqxBCFz7EAwXhrt5aSxM8+m1dsjOp4h0=
-X-Google-Smtp-Source: APXvYqyLEtTG1GZUpIw0OkGP+O+sBSsb+LojprESwrqQPyNJkIFkk2fME3gwB3pEN88Qe6ZkLxRK+sarxOTwhUNkQn0=
-X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr28574667qkj.352.1579100609065;
- Wed, 15 Jan 2020 07:03:29 -0800 (PST)
+        Wed, 15 Jan 2020 10:03:52 -0500
+Received: from [IPv6:2001:420:44c1:2577:18d8:d5d6:4408:6200]
+ ([IPv6:2001:420:44c1:2577:18d8:d5d6:4408:6200])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id rkCwiF0uRT6sRrkCziahYK; Wed, 15 Jan 2020 16:03:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579100629; bh=11i4n8lMpRQQ+iNfpGyMTy/9CCEdWTY8dDDaQE1zD3Q=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ehvjUxlN9DHLZT26Nm8j/e9pTwnJ708Ao9NzFX7vTZZR+oFYavJXAVvt0uHI8TKLr
+         fYJ+3/hhOTRhwalGlqcgujswc4QOQJ981VVy56LvSjSM04relL8i+jkH2+64EICpz9
+         eC+DkY4ZTtJWKXoIZn6bq7y/JOCGfwqUETOBr4V4dYocxaQyw0Shn+GJ4zVCv7Dstx
+         oI2gbXPtg5stiw4iz0zls7XxweGscUhETyck6ulTHhe1IulMb7VhdlVR8xHj1OIU6u
+         Rkc8K2yKOyiq/uz4IeDsGqyLCP+/5AFQ+q/AFGJMJL4x8GkhhmtqvzxoptZYy1GLFc
+         iKAxVWZIe4EMQ==
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+ <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+ <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+ <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
+Date:   Wed, 15 Jan 2020 16:03:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
- <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
- <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
- <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
- <20200115142428.ugsp3binf2vuiarq@pali>
-In-Reply-To: <20200115142428.ugsp3binf2vuiarq@pali>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 16:03:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
-Message-ID: <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
-Subject: Re: [PATCH v10 09/14] exfat: add misc operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <linkinjeon@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:X3H0QcE2jFdspteJSk8fSpj1ophyqEmMuDO8cOJwQbCnkMBqGrz
- SN5FHEbNEvlkpo8rIXHQeNtXOTVLyofH4z54WOxOggNPh6PCKeCmmWt7bYCzZtmCU9hLXOB
- GTMvC+50mf8Wv9kg5RStJnvhM9wphxD9eq52Ya/cWnQ3YFHzbLFwvG3s0tVX0LofgUMgbwF
- cjFI+nGlEGXKVNZ1sQbsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SRpCajnw3uA=:JnWYDUbp/mZ6rEppOH1diO
- /DOGJIOd55WLAahGjPJ4eXl7aotAC9JrAkbYeRYEXH4k3o4MQ1SLLMuEMToVJW21FRZk0aY+O
- Cz6W6ICqSN1bmSQTLSMn5JzZ6PG50ht8uHy4wshUvPbMAL8IxAyzk7DSP03/o8bRC5pSEbH1e
- ikkJtVsATYwSUvalD8XSZP/CkwhKChqve+FdCc9HfuqvYAxrx/dmMM34UBihu+Zyq9bF/ve/D
- fHBxjohbzPnfytzMoSiZYrglzIyzSMBx2li3AC1bA/ZhNUp4SK3DbfXF5tSGJyFX/LMBWFXWe
- vugLWNUKxo6KtHHIh7T0iLmRy66UUHFtr1IMIB/Io4ny73i9dx0qkoWtbhmDH/1vlvJffsjl5
- ZPxA6IODL8bwM1Kh52si5MLK9i3QVEEumsQGz9Bpyi43V8hQKjA7gEZHcQC+vpAoadYfZ1tr5
- ys4JbUxye1Zu+0exzI77cy3+bAWR1k1+6o82t+Zl8IIOJ4RndQLTU8jg7jj0IkcoBuCXamf6H
- AGCcyVn5/ZKhUwZ6ma9/tFvh7wk5D6XZBaTauQpyQVW/VgvwsOh41VIpvmju4ZiVqZhtmoU0M
- xl9S24cIlKcYwVgqdD1HqdbxoegnnAZF7cS5pXDhvDdN7Bi1EefLX9mHguPu8AJGQnP/oDmEP
- OvIUOQuBlykD9UxxPqamgeMjN0qhtTkXDbWrfdiinlayMkYzA1ZbWoN6+2g/R9fLzXJlquexl
- YFFziuMidoji/ZI+q90G2ZsvF7pa9Z8jT/wJgPrZW6hpfavJvDDVjyZfEAy/F6bbCtrC7h+RD
- CjsayRD0LtP+3EBmFgSLREHuPuaOl/iKGHNusYjrGM20IoeMBRHsyc92eULnHXqhLxgBlaeIi
- Dp6Km1qmJnmdJBEKduJA==
+In-Reply-To: <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBWwR3P3/GTdqy8WWZYktsN7pov0YuXInaQkeXKFTdtJjYB94dIrU79LS87bnBLAVaI17ogCLgl4PvIlVkJLVGDmgzFgE2nqWrzOxCfUBd2FWeI0i0B5
+ 5Gg9u3xLqg0nsuMtEXmT7feKF3uUcpzZAFB4PEKxjt5i3mQ6DCkN5ue7t7yKhil8Wy2Nx5I32oJ1/c8+kOJk26gDE+0BNkhepwCdTZ3CgamFwBHOlHy0nQwg
+ ipzeq3DZfq6cgyBEnjhnOOt592HwaZsP283Z0G6ZxRwpHLyq1uSlR7neQqaziq/TeSF230jCKg8yRVNzgilQ/LcvHGBHFiXZtDteK3POlhuJt7rC5iBVueUQ
+ Sl9sOzOgcJa9dD+rrETadFh/JqjRMaMOyYrn21MyYt5JW+LzWAGkAdXaOHjEN2siznRW7tjK0je9h27wEKyZjGdXVhfphTVoY0sMSkrHOCY/mwJcWf4Jyf/T
+ 0ns+7vFWLWTbByemKeaJcI2RG9iQXipUnNetoNCVFFKW7d0KraJcdVrUTkc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 3:24 PM Pali Rohár <pali.rohar@gmail.com> wrote:
-> On Wednesday 15 January 2020 14:50:10 Arnd Bergmann wrote:
-> > On Wed, Jan 15, 2020 at 2:38 PM Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > On Wednesday 15 January 2020 22:30:59 Namjae Jeon wrote:
-> > > > 2020-01-15 19:10 GMT+09:00, Arnd Bergmann <arnd@arndb.de>:
-> > However, in user space, every user may set their own timezone with
-> > the 'TZ' variable, and the default timezone may be different inside of a
-> > container based on the contents of /etc/timezone in its root directory.
->
-> So kernel timezone is shared across all containers, right?
+On 1/10/20 11:54 AM, Stanimir Varbanov wrote:
+> Hi Hans,
+> 
+> On 1/9/20 10:57 AM, Hans Verkuil wrote:
+>> On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
+>>> Hi Hans,
+>>>
+>>> On 1/8/20 6:09 PM, Hans Verkuil wrote:
+>>>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>>>>> This event indicate that the source color bit-depth is changed
+>>>>> during run-time. The client must get the new format and re-allocate
+>>>>> buffers for it. This can usually happens with video decoder (encoders)
+>>>>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>>>>> or vice versa.
+>>>>>
+>>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>>> ---
+>>>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>>>  include/uapi/linux/videodev2.h                  | 1 +
+>>>>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> index 42659a3d1705..fad853d440cf 100644
+>>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> @@ -402,7 +402,13 @@ call.
+>>>>>  	that many Video Capture devices are not able to recover from a temporary
+>>>>>  	loss of signal and so restarting streaming I/O is required in order for
+>>>>>  	the hardware to synchronize to the video signal.
+>>>>> -
+>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>>>>> +      - 0x0002
+>>>>> +      - This event gets triggered when color bit-depth change is detected
+>>>>> +	from a video decoder. Applications will have to query the new pixel
+>>>>> +	format and re-negotiate the queue. In most cases the streaming must be
+>>>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>>>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>>>
+>>>> I think this is too specific for decoders. Something similar to the
+>>>> CH_RESOLUTION description would be more appropriate:
+>>>>
+>>>>       - This event gets triggered when a color bit-depth change (but not a
+>>>> 	resolution change!) is detected	at an input. This can come from an
+>>>
+>>> What you mean by "but not a resolution change" here? Resolution change
+>>> and bit-depth change cannot occur on the same time, or something else.
+>>
+>> What I was trying to say is that a resolution change implies a possible bit-depth
+>> change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
+>> a bit-depth change but no resolution change.
+>>
+>> V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
+>> new format, CH_COLOR_DEPTH implies that only the bit depth changed.
+> 
+> CH_COLOR_DEPTH implies format re-negotiation as well. In Venus case
+> 8->10bit change will change the format of OPB buffers (now it is not
+> possible because of lack of v4l modifiers) and DPB buffers becomes
+> compressed raw buffers (to optimize bandwidth).
+> 
+>>
+>> Which actually makes me wonder: is there a difference between the two change flags
+>> w.r.t. userspace behavior? If there is, then that should be carefully documented,
+>> if there isn't, then is this new flag really needed?
+> 
+> Looking into semantics of v4l events, CH_COLOR_DEPTH makes sense because
+> it describes what actually changed (similar to CH_RESOLUTION). I would
+> say that v4l2_event::type V4L2_EVENT_SOURCE_CHANGE implies format
+> re-negotiation and v4l2_event::src_change just informs userland what
+> exactly is changed.
+> 
+> I'll postpone this patch until we have clear vision what will be the
+> usage in user-space.
+> 
 
-Yes.
+My main problem regarding semantics is what should be done if you disconnect
+and reconnect an HDMI (for example) connector. You get a V4L2_EVENT_SOURCE_CHANGE
+when the new signal is detected, but should it just set V4L2_EVENT_SRC_CH_RESOLUTION
+(as it does today), or also V4L2_EVENT_SRC_CH_COLOR_DEPTH?
 
-> > You can use it to access removable media that were written in
-> > a different timezone or a partition that is shared with another OS
-> > running on the same machine but with different timezone settings.
->
-> So... basically all userspace <--> kernel API which works with timestamp
-> do not have information about timezone right? creat(), utime() or
-> utimensat() just pass timestamp without timezone information. Is this
-> timestamp mean to be in UTC or in local user time zone (as specified by
-> user's TZ= env variable)?
+In my view V4L2_EVENT_SRC_CH_COLOR_DEPTH only makes sense if the resolution
+stays the same, but only the color depth changes.
 
-As a rule, all timekeeping in the kernel is done in terms of UTC. You can
-see what the current exceptions are using
+BTW, one thing that will be added here as well in the future is a
+V4L2_EVENT_SRC_CH_COLORIMETRY for when the colorspace etc. information changes,
+but nothing else. In that case there is no need to renegotiate the format etc.,
+it's just the interpretation of the video data that changes.
 
-$ git grep -wl sys_tz
-Documentation/filesystems/vfat.txt
-arch/alpha/kernel/osf_sys.c
-arch/nds32/kernel/vdso.c
-arch/powerpc/kernel/time.c
-arch/s390/kernel/time.c
-arch/sparc/kernel/vdso.c
-drivers/media/platform/vivid/vivid-rds-gen.c
-drivers/media/platform/vivid/vivid-vbi-gen.c
-drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-drivers/scsi/3w-9xxx.c
-drivers/scsi/3w-sas.c
-drivers/scsi/aacraid/commsup.c
-drivers/scsi/arcmsr/arcmsr_hba.c
-drivers/scsi/mvumi.c
-drivers/scsi/mvumi.h
-drivers/scsi/smartpqi/smartpqi_init.c
-fs/affs/amigaffs.c
-fs/affs/inode.c
-fs/affs/super.c
-fs/fat/misc.c
-fs/hfs/hfs_fs.h
-fs/hfs/inode.c
-fs/hfs/sysdep.c
-fs/hpfs/hpfs_fn.h
-fs/udf/udftime.c
-include/linux/time.h
-kernel/debug/kdb/kdb_main.c
-kernel/time/ntp.c
-kernel/time/time.c
-kernel/time/timekeeping.c
-kernel/time/vsyscall.c
-net/netfilter/nft_meta.c
-net/netfilter/xt_time.c
-tools/testing/selftests/x86/test_vdso.c
+An alternative approach is to define a V4L2_EVENT_SRC_CH_ALL bit mask, OR-ing
+all the V4L2_EVENT_SRC_CH_* defines, and change all drivers that use
+V4L2_EVENT_SRC_CH_RESOLUTION at the moment to use V4L2_EVENT_SRC_CH_ALL instead,
+and only drivers that detect that only one of these changes took place will
+use a specific V4L2_EVENT_SRC_CH_ flag. This will be primarily codec drivers,
+I believe.
 
-The vdso and kernel/time/ code are for maintaining the timezone through
-settimeofday()/gettimeofday(), and the drivers should probably all be changed
-to use UTC. The file systems (affs, fat, hfs, hpfs and udf) do this for
-compatibility with other operating systems that store the metadata in
-localtime.
+There aren't that many of those, so this shouldn't be too difficult to do.
 
-       Arnd
+Perhaps this is the cleanest approach to this problem...
+
+Regards,
+
+	Hans
