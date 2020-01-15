@@ -7,135 +7,163 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E23C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23A1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 660A524655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892C72467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bePGKMYx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o1ZZ2zv4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAOI2y (ORCPT
+        id S1729169AbgAOI3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:28:54 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:56807 "EHLO
+        Wed, 15 Jan 2020 03:29:01 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:56752 "EHLO
         mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgAOI2c (ORCPT
+        with ESMTP id S1729021AbgAOI2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:28:32 -0500
+        Wed, 15 Jan 2020 03:28:31 -0500
 Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200115082830epoutp043d9bb18a0df39dabcb758f9b128679f5~qAhVnpPjJ0500305003epoutp04E
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200115082830epoutp043d9bb18a0df39dabcb758f9b128679f5~qAhVnpPjJ0500305003epoutp04E
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200115082827epoutp04aeae77ae44dd6c898446b6d5119f5289~qAhS1GVRy0500305003epoutp047
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200115082827epoutp04aeae77ae44dd6c898446b6d5119f5289~qAhS1GVRy0500305003epoutp047
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579076910;
-        bh=Vl3K76ctdGp141COTWoYQOF+6xn4+/PDupmo6U2ImZk=;
+        s=mail20170921; t=1579076907;
+        bh=VuLy76nAW1zpWZfRklTvRkY12/GY4Q49CsvlPMo2oYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bePGKMYxmVrk6PFU3o2YN2aAq+vqaOPLkHAUBEQWFjQ/4rVom0Uj6UdsS15W7dAo3
-         iri5YH643ciSSOBh5P+SwigUyxFGHw72UXlHNv6tRVhfWsE0cKGu/B2ApVnbNV6vl4
-         iUVwkXTkLk3ztL0b6Mu3jmqlKvZLHXna3FumUNUE=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200115082829epcas1p3209c93f77c6b6fe5c33972db996af650~qAhVCsTtX1260012600epcas1p3S;
-        Wed, 15 Jan 2020 08:28:29 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47yL7c5dtpzMqYkt; Wed, 15 Jan
-        2020 08:28:28 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FC.6E.52419.B2DCE1E5; Wed, 15 Jan 2020 17:28:27 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082826epcas1p3475ce2b4d03234dc96ced428be582eb3~qAhSXqXdQ0883908839epcas1p3y;
+        b=o1ZZ2zv4gSQeZqj/1a3C7lcC/Rd5kke+pjL3XucS0L1ySa9bLyzlSy286LPFlATgR
+         M2x+i9gIuIoRibA0oNBUsfFLpDMI7efjVMojl3Cr/bqcVU94wHmtoZhFGN/RiP5x36
+         Oqt1XM4Dt472ichXWNuqGErUC76EZWisqU7V/1ms=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115082826epcas1p272e195c703d88ad72b6651781848d659~qAhSWxclX1293712937epcas1p2a;
         Wed, 15 Jan 2020 08:28:26 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200115082826epsmtrp1d583802d1489ee3814aba47b6e7efccb~qAhSW6h5O0484504845epsmtrp1L;
-        Wed, 15 Jan 2020 08:28:26 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-13-5e1ecd2bd3db
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47yL7Y3hBSzMqYkt; Wed, 15 Jan
+        2020 08:28:25 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1D.AE.57028.92DCE1E5; Wed, 15 Jan 2020 17:28:25 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59~qAhQ1adgy1355713557epcas1p1D;
+        Wed, 15 Jan 2020 08:28:25 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115082825epsmtrp20291efc5240484179245ebac1df5e36b~qAhQ0pIYW1143311433epsmtrp2V;
+        Wed, 15 Jan 2020 08:28:25 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-81-5e1ecd297da0
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AF.4A.10238.A2DCE1E5; Wed, 15 Jan 2020 17:28:26 +0900 (KST)
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4E.3C.06569.92DCE1E5; Wed, 15 Jan 2020 17:28:25 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.88.103.87]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082826epsmtip13b5ff6f257339c40dd6564ee20020d24~qAhSKhnrh0110201102epsmtip1j;
-        Wed, 15 Jan 2020 08:28:26 +0000 (GMT)
+        20200115082824epsmtip1e2f4ad21954d04a5af2a6f841f4ed71c~qAhQpZtMm0110201102epsmtip1i;
+        Wed, 15 Jan 2020 08:28:24 +0000 (GMT)
 From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
         arnd@arndb.de, Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v10 14/14] staging: exfat: make staging/exfat and fs/exfat
- mutually exclusive
-Date:   Wed, 15 Jan 2020 17:24:47 +0900
-Message-Id: <20200115082447.19520-15-namjae.jeon@samsung.com>
+Subject: [PATCH v10 11/14] exfat: add Kconfig and Makefile
+Date:   Wed, 15 Jan 2020 17:24:44 +0900
+Message-Id: <20200115082447.19520-12-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200115082447.19520-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTURjm3LvdTXFxmZYHI5uXRmnMNuf0Jq6iplyowIi+yXXTi0rb3drd
-        JOuHimWyYqb9sNShKCFORcmVzRJ1VmZRpJHah78q6GN9mNmXGe16Z/XvOc/7POd5z3teKSov
-        xWKkBaydsbG0icDCRVeH4tWqtfdjs9XuHjk5X31bQpY1d2Jka9sthJyYeoqSN/pGROSj3nqM
-        /F5TTFbdm0NI7++bYnLs4yfRpnBq7mc1oHy1UxKq390uoa4/KcEol9cDqJnLsZS/J4BlSfab
-        0vMZOpexKRg2x5JbwObpia07jVuMuhS1RqVZT6YSCpY2M3rCsC1LlVlgCrZHKAppkyNIZdEc
-        R6zbkG6zOOyMIt/C2fUEY801WTVqayJHmzkHm5eYYzGnadTqJF1QeciUX/bhPWJ1Y8dq5j1I
-        CagXO0GYFOLJ8EyTX8RjOX4NQE+32gnCg/gzgK7hUbFw+ArgqdGX6KJj3NscKvQB2N3+DP1r
-        udPkA04glWL4WvjLu5Q3ROEbYXfdgIjXoPgggIGHbglfiMSNcPRKB8JjEa6E7vrmhQQZrocz
-        3R2YkLYStnUNLPBhQf6m95GEvwjiAxisG6+WCCIDfPy8LGSIhG+HvSE+Br6pLJfwDUH8BJzu
-        D72gAsDX3/QC1sInnV1iXoLi8bCzd51Ax0HfnBvwGMWXwA+zZ8XCLTJYUS4XJEroGhtCBLwc
-        Ok9/CoVScKK2BQgjOQfgxbsu5ByIrf2X0AiAByxjrJw5j+E0Vu3/H3YZLKxfQuo10PVgmx/g
-        UkBEyBTPV2TLxXQhV2T2AyhFiSjZyIUgJculi44zNovR5jAxnB/ogoOsQmOW5liCy8zajRpd
-        klarJZNTUlN0WiJaltEYmy3H82g7c4RhrIxt0YdIw2JKQGl5gvxrRMOquC1tgdUzKsMBvS+z
-        9PCOjkZka1rzGrjb2zH9IoUxnN280bknQdmeEXg1aY1j2w5Gpc/u6vFFT54aSu1/XDNW1TAZ
-        2Lc3HTuvVO59DUAF++PFpR+9rkLDoL2sMtGDXln1rrK1ZaXsfcTR7VRxOahbkqSLEH15d5IQ
-        cfm0JgG1cfQfDnTYPJQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsWy7bCSnK7WWbk4g0mrdSz+TjrGbtG8eD2b
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju29nOzlarw0z7MFzzUD+01K05PcnWTYlBBkJQEKEd9DCt3diZ
+        lRpLkqmMXJlGYVlSI5gJC1tmpkynaXYxUckWW1gUhUgXpatlbTuz+ve8D8/zvc/7fi+GiE+g
+        8ViJwUKbDZSOQIXcjv6ktJSkx5J8WcupBPLXmUE+WXXVjZKu6/c45GTwOUJ29wxzyfGuiyj5
+        7dxxsv7hPIf0LAzwyLEPH7lbhZr5H2eA5k5TkK/xNrfxNXf9lajG4WkFmrl2icZ3ewbN4+/T
+        qYppqog2S2lDobGoxKBVEzt3F2QXKDNk8hT5JjKTkBooPa0mcnLzUnaU6ELxCOlhSlcaovIo
+        hiHSNqvMxlILLS02MhY1QZuKdCa5zJTKUHqm1KBNLTTqs+Qy2UZlSHlAVzw5PMU1OURHR2q9
+        aCV4JrQDAQbxdPgk8AC1AyEmxjsBbJt4wWeLWQCdLc+ixRcAf1fN8hctXud41NID4OtAE+ev
+        xdV8kmcHGIbi6+FPT2zYsBLfAm9e6OWGNQjeB+DMaHPkpRg8Cy7YGnlhzMXXwZm+ehDGIlwN
+        Z6ccPLbbGnj9Ri8SxoIQP+AZj0SC+AAKg5VVUVEOdFf3oCyOgdNDnmjUeDj3PsxjIVwBP3kR
+        lq4F8N1XNYsV0O++EcmM4EnQ3ZXG0onwznxzJA6CL4fvP7NjQVwEa6vFrGQddIz1c1i8Gtpr
+        PkabauC5Bm90P6cBtL2t454GkqZ/HVoAaAVxtInRa2lGbpL//2PtIHJ/ycpO0DiS6wM4Bohl
+        ImkgIV/Mow4zZXofgBhCrBQNnw9RoiKqrJw2GwvMpTqa8QFlaJH1SHxsoTF0zQZLgVy5UaFQ
+        kOkZmRlKBbFKlNMiyRfjWspCH6JpE21e9HEwQXwlaN2Q/ivx0l7VrWPicldfcNf3VU+nBf6a
+        3CPt1mtX4pxPVvS2eRJSZTk3HRXd5qn7nXWJC943yQMvXvVctcrWDl1EXzbmbysjcRrbn33l
+        cs3B0Syrc3usS/VpRfX3R/6lNsowYQwseQ72dGTFFUrO+qzTt1M61jQEupIH620Ny7MJLlNM
+        yZMRM0P9AXDeDoOVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsWy7bCSnK7mWbk4g93rmC3+TjrGbtG8eD2b
         xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyYXm8x8fRvJost/46wWlx6/4HFgcvj969JjB47Z91l
-        99g/dw27x+6bDWwefVtWMXp83iTncWj7G7YA9igum5TUnMyy1CJ9uwSujOZ3b5kK5rJVTP+7
-        iqmBcQ5rFyMnh4SAicS1LYuBbC4OIYHdjBL792xngkhISxw7cYa5i5EDyBaWOHy4GKLmA6PE
-        je5GdpA4m4C2xJ8toiDlIgKOEr27DrOA1DALnGaU6N74EGyOsECsxLa3K8FsFgFViblzFjOD
-        2LwCthKfN69lg9glL7F6wwGwOCdQ/MiWy+wgtpCAjcS0JyeZJjDyLWBkWMUomVpQnJueW2xY
-        YJiXWq5XnJhbXJqXrpecn7uJERykWpo7GC8viT/EKMDBqMTDq3BHNk6INbGsuDL3EKMEB7OS
-        CO/JGUAh3pTEyqrUovz4otKc1OJDjNIcLErivE/zjkUKCaQnlqRmp6YWpBbBZJk4OKUaGKPu
-        P5glLMQTsNxwSYzKP6Ngn+CCxlOGyn9rdv3L++npdlJ926HHe313Kd0Onigty/XQ6cS9LdMj
-        TP5qGU3ieiK2+LTD60MS6aIujAa8cbvDFPiPzY2cKZbXYJVxmFdtxZy1BU62q07JH8pcxW8Y
-        xBjCqGogZbpNeXfSfZ9eZU674LXLgoqMlFiKMxINtZiLihMBVqsQvE4CAAA=
-X-CMS-MailID: 20200115082826epcas1p3475ce2b4d03234dc96ced428be582eb3
+        99g/dw27x+6bDWwefVtWMXp83iTncWj7G7YA9igum5TUnMyy1CJ9uwSujOsnH7AU9PFWnOvY
+        z9bAeIOri5GTQ0LARGL/kstsXYxcHEICuxkljt1exw6RkJY4duIMcxcjB5AtLHH4cDFEzQdG
+        iTMtm8HibALaEn+2iIKUiwg4SvTuOswCUsMscJpRonvjQyaQhLCAlcS/1imsIDaLgKrEm4MT
+        GUFsXgFbiU8P+lghdslLrN5wgBnE5gSKH9lyGewGIQEbiWlPTjJNYORbwMiwilEytaA4Nz23
+        2LDAKC+1XK84Mbe4NC9dLzk/dxMjOEi1tHYwnjgRf4hRgINRiYdX4Y5snBBrYllxZe4hRgkO
+        ZiUR3pMzgEK8KYmVValF+fFFpTmpxYcYpTlYlMR55fOPRQoJpCeWpGanphakFsFkmTg4pRoY
+        Z8/0vJF4W3TnN/+cV32d02ewxZy4m/ObL7y65fGZjvWTrTsEWVxlrjEHRx1Z8jfxomuhySyt
+        J4Zno9wVVmlePF/Jdedy9dL/Akk3D/ir9my6GGkS+GZd1gvZmtmydZOuSCyUj606otoiK8Lf
+        vZwvxTZBiGl+l2CN9rGVe23uL+Ce/2zZToM3SizFGYmGWsxFxYkAd7CPuk4CAAA=
+X-CMS-MailID: 20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200115082826epcas1p3475ce2b4d03234dc96ced428be582eb3
+X-CMS-RootMailID: 20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59
 References: <20200115082447.19520-1-namjae.jeon@samsung.com>
-        <CGME20200115082826epcas1p3475ce2b4d03234dc96ced428be582eb3@epcas1p3.samsung.com>
+        <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make staging/exfat and fs/exfat mutually exclusive to select the one
-between two same filesystem.
+This adds the Kconfig and Makefile for exfat.
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
 Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 ---
- drivers/staging/exfat/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/exfat/Kconfig  | 21 +++++++++++++++++++++
+ fs/exfat/Makefile |  8 ++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
 
-diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
-index 292a19dfcaf5..9a0fccec65d9 100644
---- a/drivers/staging/exfat/Kconfig
-+++ b/drivers/staging/exfat/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- config STAGING_EXFAT_FS
- 	tristate "exFAT fs support"
--	depends on BLOCK
-+	depends on BLOCK && !EXFAT_FS
- 	select NLS
- 	help
- 	  This adds support for the exFAT file system.
+diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
+new file mode 100644
+index 000000000000..9eeaa6d06adf
+--- /dev/null
++++ b/fs/exfat/Kconfig
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++
++config EXFAT_FS
++	tristate "exFAT filesystem support"
++	select NLS
++	help
++	  This allows you to mount devices formatted with the exFAT file system.
++	  exFAT is typically used on SD-Cards or USB sticks.
++
++	  To compile this as a module, choose M here: the module will be called
++	  exfat.
++
++config EXFAT_DEFAULT_IOCHARSET
++	string "Default iocharset for exFAT"
++	default "utf8"
++	depends on EXFAT_FS
++	help
++	  Set this to the default input/output character set you'd
++	  like exFAT to use. It should probably match the character set
++	  that most of your exFAT filesystems use, and can be overridden
++	  with the "iocharset" mount option for exFAT filesystems.
+diff --git a/fs/exfat/Makefile b/fs/exfat/Makefile
+new file mode 100644
+index 000000000000..ed51926a4971
+--- /dev/null
++++ b/fs/exfat/Makefile
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# Makefile for the linux exFAT filesystem support.
++#
++obj-$(CONFIG_EXFAT_FS) += exfat.o
++
++exfat-y	:= inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o \
++	   file.o balloc.o
 -- 
 2.17.1
 
