@@ -2,239 +2,288 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CED3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0C0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABF024679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSf0U8Oq"
+	by mail.kernel.org (Postfix) with ESMTP id 01D6F24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAOCsh (ORCPT
+        id S1728928AbgAOCtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 21:48:37 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39142 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbgAOCsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 21:48:37 -0500
-Received: by mail-pj1-f68.google.com with SMTP id e11so5374786pjt.4;
-        Tue, 14 Jan 2020 18:48:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Sg5fwXgqypeNGg0cxshxZC3htmfkTgOsTSwPjyO8KRQ=;
-        b=jSf0U8Oq1NHwfHbPcxjHWZJDCQiKzMJlXB+44XEvkicd1UEelGtlppjRzgl8aisFta
-         zoNAal11qtUewecWoFqR+G1RykswiP/j247XR5CRkKlbvo29vgfVytKJmcVvLBbwn7K+
-         NJaEjUoawr6RgKbb1dt9AwhGTwO8ur2rR0F57JS3AwJAill2h/f7MtbYEP8g6Ny13Gi4
-         h2pFRz2rXoHjVirsMKzlPS1hDtTIvZhw4TTJDReo9zR4hI7VFIQnsitcm3rDx+lNxWo+
-         3Y4ljlWjl1cy9hhqOp/wTv5bQCZp360eAfN0pB6Ee3QgwANxHA2zwn+E8U6Y5Q3RZGVB
-         tiiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Sg5fwXgqypeNGg0cxshxZC3htmfkTgOsTSwPjyO8KRQ=;
-        b=TfTCNCk0ACDFuntim3ysvnzGsgbMhQok/4ROxOAPU/2FGLWMHBA9XiJ+k90zcN+ENe
-         4cYQvNoZ9ahA4P9xEkCIxV6HsbOCBMRI1rg012I53gGrrHnwbZRbrXxx5TzoR9mWYjpm
-         KVAJYvTuAWWaffmcdOy25GK6CAomNVxdSX3DU2Ee+pOzuK69oBbWQgouDJT7V8frBFRZ
-         uqpd3lN0HOuHeJ/rMfZR3DE20OFelW9pHQShEJgwanTZyf0bEFH1nCTqF0gkymxXWkh3
-         fZvBncLdqgHeGoOTNBLE+XDqYSjZTmTTzVjslu+v7BIaHVvqKD0FlnMyQ0/3EqcfRJmq
-         Li8Q==
-X-Gm-Message-State: APjAAAW1f71bpB6+1hTX+3g++WA/kkcCOompec+O95hOXCCNqhO/3uqB
-        7Bi8E/Laq46UefxoZiRwSd8=
-X-Google-Smtp-Source: APXvYqzprJY/PXBVzlf3V6acMBTwUyrkNwszghAXBDVHCbqurohXr5NrtphwnRX50hsSrnYsWGJPsQ==
-X-Received: by 2002:a17:90b:f0f:: with SMTP id br15mr32499554pjb.138.1579056516270;
-        Tue, 14 Jan 2020 18:48:36 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::cae7])
-        by smtp.gmail.com with ESMTPSA id c1sm20049859pfa.51.2020.01.14.18.48.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jan 2020 18:48:35 -0800 (PST)
-Date:   Tue, 14 Jan 2020 18:48:32 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     KP Singh <kpsingh@chromium.org>, James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200115024830.4ogd3mi5jy5hwr2v@ast-mbp.dhcp.thefacebook.com>
-References: <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
- <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100558550.31925@namei.org>
- <20200109194302.GA85350@google.com>
- <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
- <20200110152758.GA260168@google.com>
- <20200110175304.f3j4mtach4mccqtg@ast-mbp.dhcp.thefacebook.com>
- <554ab109-0c23-aa82-779f-732d10f53d9c@tycho.nsa.gov>
- <49a45583-b4fb-6353-a8d4-6f49287b26eb@tycho.nsa.gov>
+        Tue, 14 Jan 2020 21:49:42 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8720 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728862AbgAOCtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 21:49:41 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 03EB36A164696BC473C5;
+        Wed, 15 Jan 2020 10:49:40 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
+ 10:49:32 +0800
+Subject: Re: [PATCH v3 29/32] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+References: <20191224111055.11836-1-maz@kernel.org>
+ <20191224111055.11836-30-maz@kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        "Robert Richter" <rrichter@marvell.com>,
+        "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
+Date:   Wed, 15 Jan 2020 10:49:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <49a45583-b4fb-6353-a8d4-6f49287b26eb@tycho.nsa.gov>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20191224111055.11836-30-maz@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:42:22PM -0500, Stephen Smalley wrote:
-> On 1/14/20 11:54 AM, Stephen Smalley wrote:
-> > On 1/10/20 12:53 PM, Alexei Starovoitov wrote:
-> > > On Fri, Jan 10, 2020 at 04:27:58PM +0100, KP Singh wrote:
-> > > > On 09-Jan 14:47, Stephen Smalley wrote:
-> > > > > On 1/9/20 2:43 PM, KP Singh wrote:
-> > > > > > On 10-Jan 06:07, James Morris wrote:
-> > > > > > > On Thu, 9 Jan 2020, Stephen Smalley wrote:
-> > > > > > > 
-> > > > > > > > On 1/9/20 1:11 PM, James Morris wrote:
-> > > > > > > > > On Wed, 8 Jan 2020, Stephen Smalley wrote:
-> > > > > > > > > 
-> > > > > > > > > > The cover letter subject line and the
-> > > > > > > > > > Kconfig help text refer to it as a
-> > > > > > > > > > BPF-based "MAC and Audit policy".  It
-> > > > > > > > > > has an enforce config option that
-> > > > > > > > > > enables the bpf programs to deny access,
-> > > > > > > > > > providing access control. IIRC,
-> > > > > > > > > > in
-> > > > > > > > > > the earlier discussion threads, the BPF
-> > > > > > > > > > maintainers suggested that Smack
-> > > > > > > > > > and
-> > > > > > > > > > other LSMs could be entirely
-> > > > > > > > > > re-implemented via it in the future, and
-> > > > > > > > > > that
-> > > > > > > > > > such an implementation would be more optimal.
-> > > > > > > > > 
-> > > > > > > > > In this case, the eBPF code is similar to a
-> > > > > > > > > kernel module, rather than a
-> > > > > > > > > loadable policy file.  It's a loadable
-> > > > > > > > > mechanism, rather than a policy, in
-> > > > > > > > > my view.
-> > > > > > > > 
-> > > > > > > > I thought you frowned on dynamically loadable
-> > > > > > > > LSMs for both security and
-> > > > > > > > correctness reasons?
-> > > > > > 
-> > > > > > Based on the feedback from the lists we've updated the design for v2.
-> > > > > > 
-> > > > > > In v2, LSM hook callbacks are allocated dynamically using BPF
-> > > > > > trampolines, appended to a separate security_hook_heads and run
-> > > > > > only after the statically allocated hooks.
-> > > > > > 
-> > > > > > The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
-> > > > > > still remains __lsm_ro_after_init and cannot be modified. We are still
-> > > > > > working on v2 (not ready for review yet) but the general idea can be
-> > > > > > seen here:
-> > > > > > 
-> > > > > >      https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
-> > > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > Evaluating the security impact of this is the next
-> > > > > > > step. My understanding
-> > > > > > > is that eBPF via BTF is constrained to read only access to hook
-> > > > > > > parameters, and that its behavior would be entirely restrictive.
-> > > > > > > 
-> > > > > > > I'd like to understand the security impact more
-> > > > > > > fully, though.  Can the
-> > > > > > > eBPF code make arbitrary writes to the kernel, or
-> > > > > > > read anything other than
-> > > > > > > the correctly bounded LSM hook parameters?
-> > > > > > > 
-> > > > > > 
-> > > > > > As mentioned, the BPF verifier does not allow writes to BTF types.
-> > > > > > 
-> > > > > > > > And a traditional security module would necessarily fall
-> > > > > > > > under GPL; is the eBPF code required to be
-> > > > > > > > likewise?  If not, KRSI is a
-> > > > > > > > gateway for proprietary LSMs...
-> > > > > > > 
-> > > > > > > Right, we do not want this to be a GPL bypass.
-> > > > > > 
-> > > > > > This is not intended to be a GPL bypass and the BPF verifier checks
-> > > > > > for license compatibility of the loaded program with GPL.
-> > > > > 
-> > > > > IIUC, it checks that the program is GPL compatible if it
-> > > > > uses a function
-> > > > > marked GPL-only.  But what specifically is marked GPL-only
-> > > > > that is required
-> > > > > for eBPF programs using KRSI?
-> > > > 
-> > > > Good point! If no-one objects, I can add it to the BPF_PROG_TYPE_LSM
-> > > > specific verification for the v2 of the patch-set which would require
-> > > > all BPF-LSM programs to be GPL.
-> > > 
-> > > I don't think it's a good idea to enforce license on the program.
-> > > The kernel doesn't do it for modules.
-> > > For years all of BPF tracing progs were GPL because they have to use
-> > > GPL-ed helpers to do anything meaningful.
-> > > So for KRSI just make sure that all helpers are GPL-ed as well.
-> > 
-> > IIUC, the example eBPF code included in this patch series showed a
-> > program that used a GPL-only helper for the purpose of reporting event
-> > output to userspace. But it could have just as easily omitted the use of
-> > that helper and still implemented its own arbitrary access control model
-> > on the LSM hooks to which it attached.  It seems like the question is
-> > whether the kernel developers are ok with exposing the entire LSM hook
-> > interface and all the associated data structures to non-GPLd code,
-> > irrespective of what helpers it may or may not use.
+Hi Marc, [This is from Nianyao]
+
+On 2019/12/24 19:10, Marc Zyngier wrote:
+> In order to let a guest buy in the new, active-less SGIs, we
+> need to be able to switch between the two modes.
 > 
-> Also, to be clear, while kernel modules aren't necessarily GPL, prior to
-> this patch series, all Linux security modules were necessarily GPLd in order
-> to use the LSM interface. 
+> Handle this by stopping all guest activity, transfer the state
+> from one mode to the other, and resume the guest.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  include/kvm/arm_vgic.h      |  3 ++
+>  virt/kvm/arm/vgic/vgic-v3.c |  2 +
+>  virt/kvm/arm/vgic/vgic-v4.c | 96 +++++++++++++++++++++++++++++++++++++
+>  virt/kvm/arm/vgic/vgic.h    |  1 +
+>  4 files changed, 102 insertions(+)
+> 
+> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+> index 63457908c9c4..69f4164d6477 100644
+> --- a/include/kvm/arm_vgic.h
+> +++ b/include/kvm/arm_vgic.h
+> @@ -231,6 +231,9 @@ struct vgic_dist {
+>  	/* distributor enabled */
+>  	bool			enabled;
+>  
+> +	/* Wants SGIs without active state */
+> +	bool			nassgireq;
+> +
+>  	struct vgic_irq		*spis;
+>  
+>  	struct vgic_io_device	dist_iodev;
+> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
+> index c2fdea201747..c79a251c4974 100644
+> --- a/virt/kvm/arm/vgic/vgic-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-v3.c
+> @@ -540,6 +540,8 @@ int vgic_v3_map_resources(struct kvm *kvm)
+>  		goto out;
+>  	}
+>  
+> +	if (kvm_vgic_global_state.has_gicv4_1)
+> +		vgic_v4_configure_vsgis(kvm);
+>  	dist->ready = true;
+>  
+>  out:
+> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+> index c2fcde104ea2..063785fd2dc7 100644
+> --- a/virt/kvm/arm/vgic/vgic-v4.c
+> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+> @@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
+> +{
+> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
+> +	vpe->sgi_config[irq->intid].group 	= irq->group;
+> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
+> +}
+> +
+> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
+> +{
+> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
+> +	int i;
+> +
+> +	/*
+> +	 * With GICv4.1, every virtual SGI can be directly injected. So
+> +	 * let's pretend that they are HW interrupts, tied to a host
+> +	 * IRQ. The SGI code will do its magic.
+> +	 */
+> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+> +		struct irq_desc *desc;
+> +		int ret;
+> +
+> +		if (irq->hw) {
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +			continue;
+> +		}
+> +
+> +		irq->hw = true;
+> +		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
 
-Because they use securityfs_create_file() GPL-ed api, right?
-but not because module license is enforced.
+I think we need to check whether irq_find_mapping returns 0.
 
-> So allowing non-GPL eBPF-based LSMs would be a
-> change.
+> +		vgic_v4_sync_sgi_config(vpe, irq);
+> +		/*
+> +		 * SGIs are initialised as disabled. Enable them if
+> +		 * required by the rest of the VGIC init code.
+> +		 */
+> +		desc = irq_to_desc(irq->host_irq);
+> +		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
+> +					      false);
 
-I don't see it this way. seccomp progs technically unlicensed. Yet they can
-disallow any syscall. Primitive KRSI progs like
-int bpf-prog(void*) { return REJECT; }
-would be able to do selectively disable a syscall with an overhead acceptable
-in production systems (unlike seccomp). I want this use case to be available to
-people. It's a bait, because to do real progs people would need to GPL them.
-Key helpers bpf_perf_event_output, bpf_ktime_get_ns, bpf_trace_printk are all
-GPL-ed. It may look that most networking helpers are not-GPL, but real life is
-different. To debug programs bpf_trace_printk() is necessary. To have
-communication with user space bpf_perf_event_output() is necssary. To measure
-anything or implement timestamps bpf_ktime_get_ns() is necessary. So today all
-meaninful bpf programs are GPL. Those that are not GPL probably exist, but
-they're toy programs. Hence I have zero concerns about GPL bypass coming from
-tracing, networking, and, in the future, KRSI progs too.
+If irq->host_irq is not valid , in irq_domain_activate_irq, it will trigger NULL pointer
+dereference in host kernel.
+I meet a problem here. When hw support GIC4.1, and host kernel is started with
+kvm-arm.vgic_v4_enable=0, starting a virtual machine will trigger NULL pointer
+dereference in host. The following is error info:
+
+[    7.913815] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+[    7.913818] Mem abort info:
+[    7.913819]   ESR = 0x96000007
+[    7.913821]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    7.913823]   SET = 0, FnV = 0
+[    7.913825]   EA = 0, S1PTW = 0
+[    7.913827] Data abort info:
+[    7.913828]   ISV = 0, ISS = 0x00000007
+[    7.913830]   CM = 0, WnR = 0
+[    7.913832] user pgtable: 64k pages, 48-bit VAs, pgdp=00000824405a0800
+[    7.913835] [0000000000000038] pgd=0000082444120003, pud=0000082444120003, pmd=0000082444130003, pte=0000000000000000
+[    7.913840] Internal error: Oops: 96000007 [#1] SMP
+[    7.913842] Modules linked in:
+[    7.913845] CPU: 1 PID: 1918 Comm: qemu-system-aar Tainted: G        W         5.5.0-rc2-14819-g4e11d8f-dirty #20
+[    7.913849] pstate: 80400009 (Nzcv daif +PAN -UAO)
+[    7.913852] pc : irq_domain_activate_irq+0x0/0x58
+[    7.913854] lr : vgic_v4_configure_vsgis+0x108/0x208
+[    7.913857] sp : ffff8000160af7b0
+[    7.913858] x29: ffff8000160af7b0 x28: ffff082445030000
+[    7.913861] x27: 0000000000000004 x26: ffff0824456032c8
+[    7.913864] x25: 0000000000000000 x24: ffff8000118d1130
+[    7.913868] x23: 0000000000000001 x22: ffff8000118d0000
+[    7.913871] x21: 0000000000000000 x20: ffff082445602360
+[    7.913874] x19: ffff082445603348 x18: 0000000000000010
+[    7.913877] x17: 0000000000000050 x16: 0000000000000001
+[    7.913880] x15: ffff8000110eb258 x14: ffffffffffffffff
+[    7.913883] x13: ffff8000910cfb17 x12: ffff8000110cfb24
+[    7.913886] x11: ffff8000110f8000 x10: 0000000000000040
+[    7.913889] x9 : ffff8000110f8fe0 x8 : ffff8000110f8fd8
+[    7.913892] x7 : ffff082420000270 x6 : 0000000000000000
+[    7.913895] x5 : ffff082420000248 x4 : 0000000000000000
+[    7.913898] x3 : 0000000000000000 x2 : 0000000000000000
+[    7.913901] x1 : 0000000000000000 x0 : 0000000000000028
+[    7.913904] Call trace:
+[    7.913907]  irq_domain_activate_irq+0x0/0x58
+[    7.913909]  vgic_mmio_write_v3_misc+0xf0/0x100
+[    7.913912]  dispatch_mmio_write+0x78/0x100
+[    7.913915]  __kvm_io_bus_write+0xbc/0xf8
+[    7.913918]  kvm_io_bus_write+0x48/0x80
+[    7.913921]  io_mem_abort+0x128/0x288
+[    7.913924]  kvm_handle_guest_abort+0x2c0/0xe88
+[    7.913927]  handle_exit+0x6c/0x1d8
+[    7.913930]  kvm_arch_vcpu_ioctl_run+0x454/0x6e8
+[    7.913932]  kvm_vcpu_ioctl+0x310/0x9e0
+[    7.913935]  do_vfs_ioctl+0x604/0xbd0
+[    7.913938]  ksys_ioctl+0x78/0xa8
+[    7.913940]  __arm64_sys_ioctl+0x1c/0x28
+[    7.913943]  el0_svc_handler+0x7c/0x188
+[    7.913946]  el0_sync_handler+0x138/0x258
+[    7.913948]  el0_sync+0x140/0x180
+[    7.913952] Code: a8c87bfd d65f03c0 97fe9008 d503201f (f9400803)
+[    7.913954] ---[ end trace e0d0e4b407d388f3 ]---
+
+Thanks,
+
+> +		if (!WARN_ON(ret)) {
+> +			/* Transfer pending state */
+> +			ret = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    irq->pending_latch);
+> +			WARN_ON(ret);
+> +			irq->pending_latch = false;
+> +		}
+> +
+> +		vgic_put_irq(vcpu->kvm, irq);
+> +	}
+> +}
+> +
+> +static void vgic_v4_disable_vsgis(struct kvm_vcpu *vcpu)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+> +		struct irq_desc *desc;
+> +		int ret;
+> +
+> +		if (!irq->hw) {
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +			continue;
+> +		}
+> +
+> +		irq->hw = false;
+> +		ret = irq_get_irqchip_state(irq->host_irq,
+> +					    IRQCHIP_STATE_PENDING,
+> +					    &irq->pending_latch);
+> +		WARN_ON(ret);
+> +
+> +		desc = irq_to_desc(irq->host_irq);
+> +		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
+> +
+> +		vgic_put_irq(vcpu->kvm, irq);
+> +	}
+> +}
+> +
+> +/* Must be called with the kvm lock held */
+> +void vgic_v4_configure_vsgis(struct kvm *kvm)
+> +{
+> +	struct vgic_dist *dist = &kvm->arch.vgic;
+> +	struct kvm_vcpu *vcpu;
+> +	int i;
+> +
+> +	kvm_arm_halt_guest(kvm);
+> +
+> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+> +		if (dist->nassgireq)
+> +			vgic_v4_enable_vsgis(vcpu);
+> +		else
+> +			vgic_v4_disable_vsgis(vcpu);
+> +	}
+> +
+> +	kvm_arm_resume_guest(kvm);
+> +}
+> +
+>  /**
+>   * vgic_v4_init - Initialize the GICv4 data structures
+>   * @kvm:	Pointer to the VM being initialized
+> diff --git a/virt/kvm/arm/vgic/vgic.h b/virt/kvm/arm/vgic/vgic.h
+> index c7fefd6b1c80..769e4802645e 100644
+> --- a/virt/kvm/arm/vgic/vgic.h
+> +++ b/virt/kvm/arm/vgic/vgic.h
+> @@ -316,5 +316,6 @@ void vgic_its_invalidate_cache(struct kvm *kvm);
+>  bool vgic_supports_direct_msis(struct kvm *kvm);
+>  int vgic_v4_init(struct kvm *kvm);
+>  void vgic_v4_teardown(struct kvm *kvm);
+> +void vgic_v4_configure_vsgis(struct kvm *kvm);
+>  
+>  #endif
+> 
+
