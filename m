@@ -2,124 +2,170 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4131C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ABDC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4E222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579103705;
-	bh=jLqDV64pAlXOUia4wz8vrkob1sYuRxZFLQiK/Lx0pyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z+3vneobuXrx36r7dxLF77OrQ0DThKcYqCk7kA72HXtPF4YPQAinQV6NycDRrSQqY
-	 wC78OhjRoTly0JDRl95AWltmYzqrbxBKtJjEq/Qy7gBSRooIFy0KI+841LlE836itk
-	 fpii/jrJ2Zq/w+gjx2GhGfptaebhhWkYxtNiQAME=
+	by mail.kernel.org (Postfix) with ESMTP id C759524671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EJT87qqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAOPzF (ORCPT
+        id S1729010AbgAOP4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:55:05 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42206 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOPzE (ORCPT
+        Wed, 15 Jan 2020 10:56:25 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37023 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAOP4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:55:04 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so16495242otd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:55:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B7DX59sNSuvGuHSzjzaWJDesXQ6glcdz/pP97LB2HkM=;
-        b=FFxAVyr1V7JUmo0pWJl4pkl1Kr+EpGtQgG13k0lQj1/CTigJfhsRCXWTE7ETBPJAaB
-         yGBPYEcG5VpulsGNXrIz5cTbaAfUDGOSHvZZT7n80MbDRorH4FGCVQA3R5JtU12wU5I/
-         k2gmsCMn/hu0Zwe7eDcLoQweMzywvJqUtT5r93vV6dJASaxhcSX5gNC/j7sL7Erkn1sV
-         E7PaLU8NrQs5bH/Mjyau54HKB9DADOH1P5rFOB/NzWMalGXa1v59vP88KrmP/00+43xO
-         bsYr0LDlejxE6PZdsaiWL+7I0+bGkXlJf7LKnGRJGDEsyQn1M8tYFba/0KlNSYEr51x8
-         RFAw==
-X-Gm-Message-State: APjAAAUPdeqrzCVePbTiSgask0UEfkoentE3YkbhWCD3EcZORmELHx8d
-        OSGPf5i0Gw/7ttKRbQKbXEVfy90=
-X-Google-Smtp-Source: APXvYqx2pcihIVSmeCGqufVbZx1Yl++7VxWX3QPGGHijj7H5Ipsd7zodjxRl9HW/P+x8u4/g7j75Ew==
-X-Received: by 2002:a05:6830:1487:: with SMTP id s7mr3028356otq.269.1579103703272;
-        Wed, 15 Jan 2020 07:55:03 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m68sm5758004oig.50.2020.01.15.07.55.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:55:03 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 22040c
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 15 Jan 2020 09:43:35 -0600
-Date:   Wed, 15 Jan 2020 09:43:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mark.rutland@arm.com, vkoul@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        ulf.hansson@linaro.org, srinivas.kandagatla@linaro.org,
-        broonie@kernel.org, manivannan.sadhasivam@linaro.org,
-        andrew.smirnov@gmail.com, rjones@gateworks.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        aisheng.dong@nxp.com, richard.hu@technexion.com, angus@akkea.ca,
-        cosmin.stoica@nxp.com, l.stach@pengutronix.de,
-        rabeeh@solid-run.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, jun.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-spi@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 4/7] dt-bindings: spi: imx: Add
- i.MX8MM/i.MX8MN/i.MX8MP compatible
-Message-ID: <20200115154335.GA15650@bogus>
-References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
- <1578893602-14395-4-git-send-email-Anson.Huang@nxp.com>
+        Wed, 15 Jan 2020 10:56:24 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115155622euoutp0296e5c4fed3383a3954ab4956bc0a3623~qGoYji4AO2656126561euoutp02v
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:56:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115155622euoutp0296e5c4fed3383a3954ab4956bc0a3623~qGoYji4AO2656126561euoutp02v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579103782;
+        bh=XfQrDuwfMB1/RW0gP/rZygphaWkcyV/9F+qlQtlGsz0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=EJT87qqZn043G+lRyCAE+TGe447nFmTU9kEWnurY9QBw7MdxMuvvd04eBToTUQaZP
+         XNpaqqPDjnAS4gblSdLQGOojZ9Y3fyEDu7Kt57C0XzdDkZAxFrdZSF/gP6NtB+MIiq
+         EgV7hF3gTeWBXWnpc4tTMwk6Borrrkc3NwhR8qJU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115155622eucas1p2f01c2676156c662ae0c524fb40518570~qGoYE2iMk0833708337eucas1p2D;
+        Wed, 15 Jan 2020 15:56:22 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 06.96.60698.6263F1E5; Wed, 15
+        Jan 2020 15:56:22 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115155621eucas1p1db3f830ef52babfd58d4bd4340d174c3~qGoXaEVMA3131631316eucas1p1D;
+        Wed, 15 Jan 2020 15:56:21 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115155621eusmtrp25a03846dd255ad40c2db5a3b98c31a06~qGoXZMF371584215842eusmtrp21;
+        Wed, 15 Jan 2020 15:56:21 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-ce-5e1f3626edaf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CD.32.08375.5263F1E5; Wed, 15
+        Jan 2020 15:56:21 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115155620eusmtip15e37a477548de28762c8dee44115842e~qGoWQCP9I0722007220eusmtip1n;
+        Wed, 15 Jan 2020 15:56:20 +0000 (GMT)
+Subject: Re: [PATCH 7/7] devfreq: move statistics to separate struct
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Javi Merino <javi.merino@arm.com>,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?UTF-8?Q?=c3=98rjan_Eide?= <orjan.eide@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        a.hajda@samsung.com, robin.murphy@arm.com
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <4da95c7f-7fc7-afb5-e569-4403e705f658@samsung.com>
+Date:   Wed, 15 Jan 2020 16:56:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578893602-14395-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d710f606-0013-ade3-904e-a56f0404eca7@arm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUxTQRSGM3frBS25FJEjm9pERIxbRB3UEEh4aNAHfVExUqlypQYKpLVu
+        iangBiSioiJWFAERrShIcQENiYAlCqUgiwQBRTFSFMNmIgho2wuRt2/mnP//z5kMS0oGaU/2
+        YPwhXh2viJMyztRT05hlhd/6hfLVta/n4I5HDTR+P/qNxl8vPiFxTksbjcsmTonw7eEsGl/4
+        8p3EFkuJCJuTf4hw6Rdbtbkim8Ej52sQzrJUEjg3+bQIP6zpEuEPSfcYXGmspvCrwV4a9/ak
+        MyFusqJbRUhWru8SyfJfWglZqSGVkRnv6GTpZQYkGyn13Sba7bw5mo87eJhXrwqOclaaX3QT
+        if3sUWNqAXESXRClIScWuED4frOVSUPOrIS7h6Aiq48WDqMIPnW2UsJhBMFo7iA1IymyNhF2
+        lnCFCEy5/kLTAAKDRfB148KgPiOZsfM8bgm0NXY5nEgun4Yr2TccaobbCJfOGZCdxVwwDD1O
+        dzBlE/RP1juM3LldMPypmhZ6XOHN9V7HFE7cJjiXYnIwyXlAR28OIfBCeDaQTdrDgLvKwrvG
+        HiSMHQZJzdWEwG7QX1s2/QLe8LfcLrYLHiGYTOmbVj9DUHh5ihG6NkFnw7iNWVvEMiiuWGVH
+        4EKhachLQBdoH3AVZnCBjKfXSOFaDClnJYKHH5TcLWFmUtPK75MXkVQ/azP9rG30s7bR/4+9
+        jSgD8uC1GlUMr1kbzx9ZqVGoNNr4mJX7E1SlyPYP66Zqfz1HlRP7qhDHIulcsXLCVy6hFYc1
+        x1RVCFhSOk/8JstHLhFHK44d59UJe9XaOF5ThbxYSuohXptnjZRwMYpDfCzPJ/LqmSrBOnme
+        RErznImIMHPjxnUm97H7ARELrH/q//rE5VOD4V9Ned0P5k8p/H6qwuly3c38vmAiJ9DYFqvs
+        DyrejjM79ugyQpeeWVzwMTKyRbs1ynriMZb+XpRS7J25o21nvS5zywZcF9TdPV47NZbtSu8/
+        oPVfDu0hLYu7dG+lO4rkDZ9DzM1SSqNUrAkg1RrFP6L8HKmDAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4XV1VM/k4g5NLZSxurTvHanH9y3NW
+        i6cTtjJbzL9yjdViy59mdosFn2awWvQ/fs1scf78BnaLs01v2C02PQbKXt41h83ic+8RRosZ
+        5/cxWSxsamG3WHvkLrvF7cYVbBb7Nh9msTj44QmrxZOHfWwOwh5r5q1h9Ng56y67x+I9L5k8
+        Nq3qZPPYvKTeo2/LKkaPz5vkAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62M
+        TJX07WxSUnMyy1KL9O0S9DLO7r7HVPCKo2Jz51KmBsZ+9i5GTg4JAROJNS8vMoHYQgJLGSWm
+        3RHqYuQAistIHF9fBlEiLPHnWhdbFyMXUMlrRonmo4tYQBLCAi4SZyY1sYHYIgKqEtcu3GUB
+        KWIWWMoq8fvdbhaIjt/MEtsvHgXrYBOwkpjYvooRxOYVsJP4uLEPzGYB6n719wzYRaICERKH
+        d8yCqhGUODnzCVgvp4C1RHvHMTCbWUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUmoWkfRaS
+        lllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMP63Hfu5eQfjpY3BhxgFOBiV
+        eHgz/sjFCbEmlhVX5h5ilOBgVhLhPTlDNk6INyWxsiq1KD++qDQntfgQoynQcxOZpUST84Gp
+        Ka8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+MM2bN24WnK1eFu
+        sxw5dizaaO0SEZK0ISy+a4pwy/8fhpqXTG7HrJxxyHXKQesFZgsWXfx3q6VEXVVYSLJR3mp3
+        ZOSxL7ErJy56fGMKe3CQ4cJj0ueYKhKXM02s5Z6UZ/rAcpdkx/1w2w4NlfcHGQuTpicn/HBP
+        S/thJxF8IETIRSJDbbOvhxJLcUaioRZzUXEiAEAOZ+0VAwAA
+X-CMS-MailID: 20200115155621eucas1p1db3f830ef52babfd58d4bd4340d174c3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a
+References: <20191113091336.5218-1-k.konieczny@samsung.com>
+        <CGME20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a@eucas1p2.samsung.com>
+        <20191113091336.5218-8-k.konieczny@samsung.com>
+        <4942d2ad-fef7-89be-91c1-c02c319546ff@samsung.com>
+        <38350d81-e916-b386-6727-f4c85689c172@samsung.com>
+        <85a29ce4-0f89-2b50-b046-dba747208933@samsung.com>
+        <4ed6b8bf-b415-c42d-33d6-d2ed0504eaf4@samsung.com>
+        <d9d13537-f4c9-4420-c3bc-438bc87c5e6a@samsung.com>
+        <d710f606-0013-ade3-904e-a56f0404eca7@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 01:33:19PM +0800, Anson Huang wrote:
-> Add compatbile for imx8mm/imx8mn/imx8mp.
 
-checkpatch reports a typo.
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+On 12/16/19 2:01 PM, Lukasz Luba wrote:
+> Hi Bartek,
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch
-> ---
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> [added Dietmar, Robin, Andrzej (for upcoming DRM drm-misc-next)]
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> index 2d32641..33bc58f 100644
-> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> @@ -10,7 +10,10 @@ Required properties:
->    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
->    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
->    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
-> -  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
-> +  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-> +  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-> +  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
-> +  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
->  - reg : Offset and length of the register set for the device
->  - interrupts : Should contain CSPI/eCSPI interrupt
->  - clocks : Clock specifiers for both ipg and per clocks.
-> -- 
-> 2.7.4
+> On 11/15/19 12:40 PM, Bartlomiej Zolnierkiewicz wrote:
+
+[...]
+
+>> Hmmm.. fixing partition_enable_opps() should be trivial but I wonder
+>> why we are carrying devfreq_cooling.c code in upstream kernel at all?
 > 
+> Well, the devfreq_cooling.c is going to have a client in mainline:
+> the GPU driver - Panfrost.
+> 
+> It is already in DRM branch 'drm-misc-next':
+> https://patchwork.freedesktop.org/patch/342848/
+
+OK, thanks for explaining this.
+
+> Regarding the devfreq_cooling.c code structure.
+> I am currently working on cleaning up the devfreq cooling code and
+> adding Energy Model instead for private freq, power tables. It will be
+> in similar fashion as it is done in cpufreq_cooling. The model will
+> be also simplified so hopefully more clients would come.
+> It is under internal review and will be posted shortly.
+
+Great to hear this and thank you for working on it.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
