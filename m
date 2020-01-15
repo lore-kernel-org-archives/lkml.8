@@ -2,108 +2,278 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867A5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A42C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D87C222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC532081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fbq1ONyf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RgyHccKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAOUFP (ORCPT
+        id S1729792AbgAOUGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:05:15 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41698 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgAOUFP (ORCPT
+        Wed, 15 Jan 2020 15:06:46 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57815 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729377AbgAOUGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:05:15 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJsYRj159328;
-        Wed, 15 Jan 2020 20:05:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=gyDthlyFU7qngJOjt5wFT45Eoa0mJNNxsALA0YG9p84=;
- b=Fbq1ONyfo9UVx9WRUhdV4aIidvDS22t/9x7pEnMlD7QJi2vTr6JzzFLOFnGUWDUMbOev
- bRxUcoPUtCxaR8kozJktbGJBun0Lobzqoq+sozLeR6GJbIN0Xm1S5vJ8Y59rEhvNwKbJ
- ohSxcQHUsPW3PHTBKhLdugkWSnP5ms1V9/5FqvFjVb32jRC2dRz3rAIK5DYWpJLJ7Asf
- I6uSBopo54KARJOmfRnS5P31jjEqIslzsvsX8IX1iVjBnRnKz2cShSpDKSvubudF/QI4
- vlo6nIQfVq2jl3goR2CWGDTPCxNLz6yNHe2K+j0/gw7cRd1n2gxAfzm4S0SOyjZHbGKF lQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xf73txc97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 20:05:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJsag8191303;
-        Wed, 15 Jan 2020 20:05:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xhy220edh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 20:05:06 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FK54CV004135;
-        Wed, 15 Jan 2020 20:05:04 GMT
-Received: from [10.159.151.219] (/10.159.151.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 12:05:04 -0800
-Subject: Re: [PATCH v3 2/2] SGE buffer and max_inline data must have same size
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, monis@mellanox.com,
-        dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-kernel@vger.kernel.org
-References: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
- <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
- <20200115182721.GE25201@ziepe.ca>
- <93b8e890-c4a9-6050-88b7-3667c023dd34@oracle.com>
-Message-ID: <70651c3f-e5cb-2a33-1682-6564255e2307@oracle.com>
-Date:   Wed, 15 Jan 2020 12:05:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 15:06:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579118804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hZZ6QGHlswsnWLIhtTgYkdMVsWArToLiB6OrJPcJkRk=;
+        b=RgyHccKGSTNHc9E3+WZ0uxIVvXJy20g9dpj9RWJtule7ouZLZXHkmG4jr6LSR/bsPNYCEb
+        zgrNAMSxBopZzPa2RnTWZtBJn3U4hnhpoLvdSNpIUbPTUNYA2Uxevjio5//+5GEysk8dyu
+        Tbm9m3sfJ+pcgizqZ7dyn9EFUWoo4rc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-C3FWJw7ZPD-RPcPBzl-2Eg-1; Wed, 15 Jan 2020 15:06:43 -0500
+X-MC-Unique: C3FWJw7ZPD-RPcPBzl-2Eg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC2B7800D48;
+        Wed, 15 Jan 2020 20:06:41 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E9FD82486;
+        Wed, 15 Jan 2020 20:06:39 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 13:06:38 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     zhenyuw@linux.intel.com, intel-gvt-dev@lists.freedesktop.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio: introduce vfio_dma_rw to read/write a
+ range of IOVAs
+Message-ID: <20200115130638.6926dd08@w520.home>
+In-Reply-To: <20200115035303.12362-1-yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+        <20200115035303.12362-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <93b8e890-c4a9-6050-88b7-3667c023dd34@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150153
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 14 Jan 2020 22:53:03 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-On 1/15/20 11:57 AM, Rao Shoaib wrote:
->
->> I seem to recall the if the requested max can't be satisified then
->> that is an EINVAL?
->>
->> And the init->cap should be updated with the actual allocation.
->
-> Since the user request for both (sge's and inline data) has been 
-> satisfied I decided not to update the values in case the return values 
-> are being checked. If you prefer that I update the values I can do that.
->
-> Shoaib
->
-In my original v1 patch I did update init->cap, I must have overlooked 
-it. I will resubmit the patch with that change once I hear back from you 
-about the enforcement.
+> vfio_dma_rw will read/write a range of user space memory pointed to by
+> IOVA into/from a kernel buffer without pinning the user space memory.
+> 
+> TODO: mark the IOVAs to user space memory dirty if they are written in
+> vfio_dma_rw().
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/vfio/vfio.c             | 45 +++++++++++++++++++
+>  drivers/vfio/vfio_iommu_type1.c | 76 +++++++++++++++++++++++++++++++++
+>  include/linux/vfio.h            |  5 +++
+>  3 files changed, 126 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index c8482624ca34..8bd52bc841cf 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+>  }
+>  EXPORT_SYMBOL(vfio_unpin_pages);
+>  
+> +/*
+> + * Read/Write a range of IOVAs pointing to user space memory into/from a kernel
+> + * buffer without pinning the user space memory
+> + * @dev [in]  : device
+> + * @iova [in] : base IOVA of a user space buffer
+> + * @data [in] : pointer to kernel buffer
+> + * @len [in]  : kernel buffer length
+> + * @write     : indicate read or write
+> + * Return error code on failure or 0 on success.
+> + */
+> +int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
+> +		   size_t len, bool write)
+> +{
+> +	struct vfio_container *container;
+> +	struct vfio_group *group;
+> +	struct vfio_iommu_driver *driver;
+> +	int ret = 0;
+> +
+> +	if (!dev || !data || len <= 0)
+> +		return -EINVAL;
+> +
+> +	group = vfio_group_get_from_dev(dev);
+> +	if (!group)
+> +		return -ENODEV;
+> +
+> +	ret = vfio_group_add_container_user(group);
+> +	if (ret)
+> +		goto out;
+> +
+> +	container = group->container;
+> +	driver = container->iommu_driver;
+> +
+> +	if (likely(driver && driver->ops->dma_rw))
+> +		ret = driver->ops->dma_rw(container->iommu_data,
+> +					   iova, data, len, write);
+> +	else
+> +		ret = -ENOTTY;
+> +
+> +	vfio_group_try_dissolve_container(group);
+> +out:
+> +	vfio_group_put(group);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(vfio_dma_rw);
+> +
+>  static int vfio_register_iommu_notifier(struct vfio_group *group,
+>  					unsigned long *events,
+>  					struct notifier_block *nb)
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 2ada8e6cdb88..a2d850b97ae6 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mm.h>
+> +#include <linux/mmu_context.h>
+>  #include <linux/rbtree.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/sched/mm.h>
+> @@ -2326,6 +2327,80 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
+>  	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
+>  }
+>  
+> +static size_t vfio_iommu_type1_rw_dma_nopin(struct vfio_iommu *iommu,
+> +					    dma_addr_t iova, void *data,
+> +					    size_t count, bool write)
 
-Shoaib
+"_nopin"?  It might be pinned, but that's irrelevant to this interface.
+Maybe "_chunk" as we're only trying to operate on the chunk of the whole
+that fits within the next vfio_dma?  Also swapping rw_dma vs dma_rw,
+pick one.
+
+> +{
+> +	struct mm_struct *mm;
+> +	unsigned long vaddr;
+> +	struct vfio_dma *dma;
+> +	bool kthread = current->mm == NULL;
+> +	size_t done = 0;
+> +	size_t offset;
+> +
+> +	dma = vfio_find_dma(iommu, iova, 1);
+> +	if (!dma)
+> +		return 0;
+> +
+> +	if (write && !(dma->prot & IOMMU_WRITE))
+> +		return 0;
+
+Good catch, but users can also designate a mapping without read
+permissions, in which case this interface should not allow read either.
+Thanks,
+
+Alex
+
+> +
+> +	mm = get_task_mm(dma->task);
+> +
+> +	if (!mm)
+> +		return 0;
+> +
+> +	if (kthread)
+> +		use_mm(mm);
+> +	else if (current->mm != mm)
+> +		goto out;
+> +
+> +	offset = iova - dma->iova;
+> +
+> +	if (count > dma->size - offset)
+> +		count = dma->size - offset;
+> +
+> +	vaddr = dma->vaddr + offset;
+> +
+> +	if (write)
+> +		done = __copy_to_user((void __user *)vaddr, data, count) ?
+> +				       0 : count;
+> +	else
+> +		done = __copy_from_user(data, (void __user *)vaddr, count) ?
+> +					0 : count;
+> +
+> +	if (kthread)
+> +		unuse_mm(mm);
+> +out:
+> +	mmput(mm);
+> +	return done;
+> +}
+> +
+> +static int vfio_iommu_type1_dma_rw(void *iommu_data, dma_addr_t iova,
+> +				   void *data, size_t count, bool write)
+> +{
+> +	struct vfio_iommu *iommu = iommu_data;
+> +	int ret = 0;
+> +	size_t done = 0;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	while (count > 0) {
+> +		done = vfio_iommu_type1_rw_dma_nopin(iommu, iova, data,
+> +						   count, write);
+> +		if (!done) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		count -= done;
+> +		data += done;
+> +		iova += done;
+> +	}
+> +
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+>  	.name			= "vfio-iommu-type1",
+>  	.owner			= THIS_MODULE,
+> @@ -2338,6 +2413,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+>  	.unpin_pages		= vfio_iommu_type1_unpin_pages,
+>  	.register_notifier	= vfio_iommu_type1_register_notifier,
+>  	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
+> +	.dma_rw			= vfio_iommu_type1_dma_rw,
+>  };
+>  
+>  static int __init vfio_iommu_type1_init(void)
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index e42a711a2800..962f76a2d668 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
+>  					     struct notifier_block *nb);
+>  	int		(*unregister_notifier)(void *iommu_data,
+>  					       struct notifier_block *nb);
+> +	int		(*dma_rw)(void *iommu_data, dma_addr_t iova,
+> +				   void *data, size_t count, bool write);
+>  };
+>  
+>  extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
+> @@ -107,6 +109,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
+>  extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
+>  			    int npage);
+>  
+> +extern int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
+> +		       size_t len, bool write);
+> +
+>  /* each type has independent events */
+>  enum vfio_notify_type {
+>  	VFIO_IOMMU_NOTIFY = 0,
 
