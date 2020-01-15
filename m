@@ -2,106 +2,108 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520DBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E12C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26725222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bpGcNk0K"
+	by mail.kernel.org (Postfix) with ESMTP id 8F49D2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgAOD05 (ORCPT
+        id S1728916AbgAODfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:26:57 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55389 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgAOD04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:26:56 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so6777187pjz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:26:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Iae/mJgVCLpfLGSuYynupuWE+Z4MahohKNOA3VuWzvQ=;
-        b=bpGcNk0KuEcv+Ht10XLkBn/HP68yrADkbQzthX19bcUJf/xKxwL4QilvYOrq63iLtP
-         QXHGouASBxogJp3LM3yUP91HjYlur9dWJbk1ZdvMkGziZgmXfsEb4avARPSYrYz4rAi2
-         OvLl6gWqyFfYMDOctvwF2bIE93PVsy8D7diUVOYObx1xhI1j8NNS0J3jP1ta1FEOYUhN
-         fJkqV4C0RQGqlxMN8DMVvJKf7dAkzkAKKtQ1NBTJvxMf445Hmw2mTio4MwQ4BCYmKke0
-         akfN3Qikj18K8eS4W8yDU5sAvOYFxPTnfoLGu4VRBE1cm/xaJ5NtSGJk5PobXwkuqimc
-         oTRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Iae/mJgVCLpfLGSuYynupuWE+Z4MahohKNOA3VuWzvQ=;
-        b=tandvyes4i4sxS4Sgf/XLnXc5jnbERXX6ARUeTOx4ko/VSslHUXLzzevQ3UL1//gyc
-         UzNuXPFf+B9TaRbqar/camqcT45RgKK8s9gic7LL2Xj+XBnX+HILiMwY99NW1fe2u91K
-         Vr1eBfPm3kO8aGYj+Q7BL5y/N/46sN3FHR+1+jGIPKw4nWnDqiZJogUW66asW61O3kho
-         O3wwjrYh43bdANm+evRPAqUpvfYvP1TbBHSt7nvG6a+vOuLMWE17a367MVNSZWMMcejE
-         BByWDh4u1Me3SYyr8Pxgwu4wodX/4nxvvKO5c9j+NX+u6RdwuPH9bL+4iCyFTRMceYHS
-         smMg==
-X-Gm-Message-State: APjAAAWHhCI2F+MXNPXXi5phNbn4fhWEmZOXpBMprsg3Ux9UuoWHHuCS
-        FOgGHFVnu8pNDqyR8cY6aKUI3g==
-X-Google-Smtp-Source: APXvYqwymAKsgPxc8cksJon02QT8iWkblHOgN2DfaxP7yMktruZkpOMfqWcYVlLtqQMUC1ww0gHogA==
-X-Received: by 2002:a17:902:7e49:: with SMTP id a9mr22409863pln.230.1579058815911;
-        Tue, 14 Jan 2020 19:26:55 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id a6sm18050644pgg.25.2020.01.14.19.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 19:26:54 -0800 (PST)
-Date:   Tue, 14 Jan 2020 19:26:53 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Wei Yang <richardw.yang@linux.intel.com>
-cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@kernel.org>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, alexander.duyck@gmail.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200115010722.GA4916@richard>
-Message-ID: <alpine.DEB.2.21.2001141924330.114086@chino.kir.corp.google.com>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com> <20200111000352.efy6krudecpshezh@box> <20200114093122.GH19428@dhcp22.suse.cz> <20200114103112.o6ozdbkfnzdsc2ke@box> <20200114105921.eo2vdwikrvtt3gkb@box> <20200115010722.GA4916@richard>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 14 Jan 2020 22:35:18 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:59598 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728884AbgAODfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:35:18 -0500
+Received: from localhost.cn (unknown [10.40.23.12])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx39lkiB5e_EQFAA--.3S2;
+        Wed, 15 Jan 2020 11:35:01 +0800 (CST)
+From:   Guoyun Sun <sunguoyun@loongson.cn>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guoyun Sun <sunguoyun@loongson.cn>
+Subject: [PATCH V2] mips/vdso: Support mremap() for vDSO
+Date:   Wed, 15 Jan 2020 11:35:00 +0800
+Message-Id: <1579059300-6636-1-git-send-email-sunguoyun@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx39lkiB5e_EQFAA--.3S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7trWfWFWrAr1xWw4fGFyrCrg_yoW8uF17pw
+        nIyF1qg3ykZw1UGr9rtr4rZa98Jw48JFW5Jryjqr1Yyw48GrWUArWFya1xurykCFyqya1F
+        gw45AFyrGF98CF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VACjcxG62k0Y48FwI0_Jr0_Gr1lYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14
+        v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E
+        6IAqYI8I648v4I1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+        VjvjDU0xZFpf9x0JUDrcfUUUUU=
+X-CM-SenderInfo: 5vxqw3hr1x0qxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020, Wei Yang wrote:
+vDSO VMA address is saved in mm_context for the purpose of using
+restorer from vDSO page to return to userspace after signal handling.
 
-> >split_huge_page_to_list() has page lock taken.
-> >
-> >free_transhuge_page() is in the free path and doesn't susceptible to the
-> >race.
-> >
-> >deferred_split_scan() is trickier. list_move() should be safe against
-> >list_empty() as it will not produce false-positive list_empty().
-> >list_del_init() *should* (correct me if I'm wrong) be safe because the page
-> >is freeing and memcg will not touch the page anymore.
-> >
-> >deferred_split_huge_page() is a problematic one. It called from
-> >page_remove_rmap() path witch does require page lock. I don't see any
-> >obvious way to exclude race with mem_cgroup_move_account() here.
-> >Anybody else?
-> 
-> If my understanding is correct, the reason is deferred_split_huge_page()
-> doesn't has page lock taken, right?
-> 
+In Checkpoint Restore in Userspace (CRIU) project we place vDSO VMA
+on restore back to the place where it was on the dump.
 
-I think the fix that you have proposed has inspired some deeper looks at 
-the locking around the deferred split queue and the hope was that perhaps 
-this could be protected by the page lock but it was found that at least in 
-one path that isn't taken.  So I believe your fix is still needed and any 
-possible optimizations in this area can be proposed on top.
+Make vDSO code track the VMA address by supplying .mremap() fops
+the same way it's done for x86 and arm by:
+commit b059a453b1cf ("x86/vdso: Add mremap hook to vm_special_mapping")
+commit 739586951b8a ("arm64/vdso: Support mremap() for vDSO").
+
+Signed-off-by: Guoyun Sun <sunguoyun@loongson.cn>
+---
+ arch/mips/vdso/genvdso.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index b66b6b1..be57b83 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -251,6 +251,18 @@ int main(int argc, char **argv)
+ 	fprintf(out_file, "#include <linux/linkage.h>\n");
+ 	fprintf(out_file, "#include <linux/mm.h>\n");
+ 	fprintf(out_file, "#include <asm/vdso.h>\n");
++	fprintf(out_file, "static int vdso_mremap(\n");
++	fprintf(out_file, "	const struct vm_special_mapping *sm,\n");
++	fprintf(out_file, "	struct vm_area_struct *new_vma)\n");
++	fprintf(out_file, "{\n");
++	fprintf(out_file, "	unsigned long new_size =\n");
++	fprintf(out_file, "	new_vma->vm_end - new_vma->vm_start;\n");
++	fprintf(out_file, "	if (vdso_image.size != new_size)\n");
++	fprintf(out_file, "		return -EINVAL;\n");
++	fprintf(out_file, "	current->mm->context.vdso =\n");
++	fprintf(out_file, "	(void __user *)(new_vma->vm_start);\n");
++	fprintf(out_file, "	return 0;\n");
++	fprintf(out_file, "}\n");
+ 
+ 	/* Write out the stripped VDSO data. */
+ 	fprintf(out_file,
+@@ -275,6 +287,7 @@ int main(int argc, char **argv)
+ 	fprintf(out_file, "\t.mapping = {\n");
+ 	fprintf(out_file, "\t\t.name = \"[vdso]\",\n");
+ 	fprintf(out_file, "\t\t.pages = vdso_pages,\n");
++	fprintf(out_file, "\t\t.mremap = vdso_mremap,\n");
+ 	fprintf(out_file, "\t},\n");
+ 
+ 	/* Calculate and write symbol offsets to <output file> */
+-- 
+2.1.0
+
