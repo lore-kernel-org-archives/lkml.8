@@ -2,101 +2,128 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7B2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A08C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11856214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520282073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCx3UTfD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6iKcKmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAOObs (ORCPT
+        id S1728992AbgAOOc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:31:48 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:46073 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAOObr (ORCPT
+        Wed, 15 Jan 2020 09:32:29 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46810 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbgAOOc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:31:47 -0500
-Received: by mail-lj1-f175.google.com with SMTP id j26so18784621ljc.12;
-        Wed, 15 Jan 2020 06:31:46 -0800 (PST)
+        Wed, 15 Jan 2020 09:32:29 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n9so8595607pff.13;
+        Wed, 15 Jan 2020 06:32:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sOQxzN5NDYoxiTphKC0O7iNLkeFOG3BsOaRsIHhZ6bo=;
-        b=JCx3UTfDxTUmVC1HYZ86QsSoFC4PJw/IYDcDJt7AbB9OB4T9cKnzURfMo45Oboso6I
-         gITD2YhfQR51/LoxOhH5QAcda0pni3/gVXbN2GlROKU2XSn2iescZNzq7yMojnuVZSYr
-         mp17IyTWtSTTYC3qDcI604in59dNDHw+IHGi+3U9LSgj1FGylg0OuvDzfM1zLnakHe7i
-         w0IT0OQQ+VVwohV3I4gXx9DmV8Wjy0BdbMoUkuvSayWVQ1PX2yK0je9uBfL2t/2DTd5X
-         g9KrXB/uk4cohgCw0238l8fdgZiOlo58WgFmxaaqZJSmKeOent00heBB1kWBRFy/NREv
-         tx6g==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=AW5FEWoDJwDFc/WQwLsHxIf6AFLLut1rZzzGZ9vWOpY=;
+        b=H6iKcKmTgboAXSO3Px7Tko+E1/lxGnivawh6bq1dbGVlTRFloV0UFqmnvqqaxIbLwF
+         +lp1/xvTk8qPwgyDZkRxZJm+5iUdCcOA8o27z2sn8QXrDtaqP2gK+J0U9nHmUIBDEGIc
+         ZBaY6OeKAcZHHT9QqZ/6eQOYb2y1DIFGPgzK43GeEQG5dPRgNz1X0eaxQhQPmz6fzqr9
+         Dh8mhnTTOJq9Fxb4hz3E50ZkvA42bMliqXCyO9xSVhjuG4Dr544c3+mV5cfCGgRgUvwP
+         pA+q7Mtd5FXd+SNiu0jZT0VDr9deTg/9vg5k6wHooz7f3SDZxLIWgiEtufYzZovdh3vm
+         iEMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sOQxzN5NDYoxiTphKC0O7iNLkeFOG3BsOaRsIHhZ6bo=;
-        b=CKiBVE2x0L9pEMyzP8SVOxkOJq79+QyEPkPn+GErpTUsty2Gy2QiJCmM1RNCoU88OJ
-         SKLziwV5OJIA++ZMVbGrJ5B2pECSvtE0nTHMpkEmehErXFdm/TdcquVhx4leDfdob4Ih
-         kQRpgfxSpPQgMalgFP4Fmw6EwCy0CRIsoPB5sr1vGB4W++hYw+rr9Pz5X7oSBIgFHHHj
-         WW9secl2JGCiYfI/phhgEUBHK9ysr3kQw7oT4Zc3DpaJeTD88oLEjdDU6vUBnBW5p/hH
-         Gb6zAAJsEcaa9fNMMhZdguKcSbsrz1f68ZiCe+oSfXTHrP0F2Xa+AFljEZja+7zJmJBG
-         6cOg==
-X-Gm-Message-State: APjAAAVDnT8NQFf/vEzR1wD3HxeclxmVgjWslBYDq8tzhjlVFwMqrVpC
-        r6+b2PPOuTbd8aCocnaG0xRUlsy3f6dUSWMdUno=
-X-Google-Smtp-Source: APXvYqxBNivdjDB9UAkh5jr3+ZntG61mIWj3gXLK7oRj/tKsNxCCY+tZKMT6VBSs4qeRqL3G6ZRLGxcHmyl1IEfTyBE=
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr2005368ljo.41.1579098705191;
- Wed, 15 Jan 2020 06:31:45 -0800 (PST)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=AW5FEWoDJwDFc/WQwLsHxIf6AFLLut1rZzzGZ9vWOpY=;
+        b=XDj4O2E02LnXYw2PUCodhcp425m/VwXH92mjkPhy39xlqrCTwnfD0wWIXF8ExYBfE8
+         z70q/qR+JjTwLUFrEZ7RBeLgvVQda7UGfzEin0d940vzs2RtrzOhXLqzWnLRuIw/nBGP
+         NnPtaM4VyHDPmsWrGj0AMcGXNBoEYW7sbGUsvr8ZvclTeepWP0OZUZ8sVmh9R7QSysTZ
+         8TpOeMa3mM8t7IrZNfy0j+GqKWJBx6kYCv8zpQDWzllJ2Xij2tmS+UOyENYv4gy5I7Jr
+         H3tbxCpMI/vha6fZ8THbQjaoya4fDg4Eu/VuCl3AVueKNvzYAgB74uxQFkR25G02rD6G
+         xbaw==
+X-Gm-Message-State: APjAAAVgfpV7HBcpV68NJwJ/71t+2N6fhrjLfZVKL+2jpml+DvRom13x
+        8rP99pqfdAZ6cPtJpf04l7k=
+X-Google-Smtp-Source: APXvYqwcJjGoZ4pMhGfBXSdq11PcQoKPSLEcaN0RUFkJDuX2//TLd9pCarwi0wqtUHwekcWjkpW1aQ==
+X-Received: by 2002:a62:1c88:: with SMTP id c130mr31762846pfc.195.1579098748572;
+        Wed, 15 Jan 2020 06:32:28 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:9:2ce3:5c73:b928:d080])
+        by smtp.gmail.com with ESMTPSA id l10sm29297pjy.5.2020.01.15.06.32.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 06:32:27 -0800 (PST)
+To:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+From:   Shiping Ji <shiping.linux@gmail.com>
+Subject: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
+Date:   Wed, 15 Jan 2020 06:32:27 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20191212033952.5967-1-afaerber@suse.de> <20191212033952.5967-23-afaerber@suse.de>
- <20191221202755.GN32732@amd> <506d0697-1820-7811-1b38-910355812948@suse.de>
- <20191221210406.GA13125@amd> <1b3fc7f2-3c10-9b11-37ac-1bc7b0aa47d8@suse.de>
- <CANiq72nA9OLa0SjY8W055J_2A32tcp7S98SruKSdWH2dm25VKw@mail.gmail.com> <56f7cd23-2156-a6e4-15fe-3efd5ccf851b@suse.de>
-In-Reply-To: <56f7cd23-2156-a6e4-15fe-3efd5ccf851b@suse.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 15 Jan 2020 15:31:34 +0100
-Message-ID: <CANiq72nUkMj5bg8CDAg-2G0wdAjAe2CdHL5mb2cwWXF_d4Qgtw@mail.gmail.com>
-Subject: Re: [RFC 22/25] leds: tm1826: Add combined glyph support
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, linux-realtek-soc@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+This is the device tree bindings for new EDAC driver dmc520_edac.c.
 
-On Sun, Dec 22, 2019 at 4:14 AM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
-e:
->
-> Please find the full series on, e.g., LAKML:
->
-> https://patchwork.kernel.org/cover/11286939/
+Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+Reviewed-by: James Morse <james.morse@arm.com>
 
-Sorry for the late reply. Thanks for the pointer!
+---
+     Changes in v9:
+         - Replaced the vendor specific interrupt-config property with interrupt-names
 
-> As explained in the cover letter, the problem here is that I don't know
-> the model or manufacturer of these unmarked white-plastic-frame LED
-> displays. So we have neither a filename to use in auxdisplay/ nor a DT
-> compatible string to use for those displays.
+---
+ .../devicetree/bindings/edac/arm-dmc520.txt   | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
 
-For the filename, I don't think it is a big deal. Just use whatever
-you think would fit best, even if it is a generic name. The most
-important bit is having a clear Kconfig (and being disabled by
-default).
-
-Cheers,
-Miguel
+diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+new file mode 100644
+index 000000000000..4a673f091918
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+@@ -0,0 +1,22 @@
++* ARM DMC-520 EDAC node
++
++Required properties:
++- compatible  : "brcm,dmc-520", "arm,dmc-520".
++- reg   : Address range of the DMC-520 registers.
++- interrupts  : DMC-520 interrupt numbers. The example below specifies
++     two interrupt lines for dram_ecc_errc_int and
++     dram_ecc_errd_int.
++- interrupt-names : This is an array of names corresponding to the interrupt
++     line numbers. The valid interrupt names are the followings:
++     ram_ecc_errc, ram_ecc_errd, dram_ecc_errc, dram_ecc_errd,
++     failed_access, failed_prog, link_err, temperature_event,
++     arch_fsm, phy_request
++
++Example:
++
++dmc0: dmc@200000 {
++ compatible = "brcm,dmc-520", "arm,dmc-520";
++ reg = <0x200000 0x80000>;
++ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
++ interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
++};
+-- 
+2.17.1
