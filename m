@@ -2,148 +2,175 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA131C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684DBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E30E20661
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B4C222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cAx0cyUW"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fu01RFtI";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="FsSgminD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgAOQPx (ORCPT
+        id S1729012AbgAOQQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:15:53 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:45761 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOQPx (ORCPT
+        Wed, 15 Jan 2020 11:16:20 -0500
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:45988 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726418AbgAOQQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:15:53 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115161552euoutp01cfd3ec29e7d2cae25c5db6e4a784ee23~qG5ZisoSi1100611006euoutp01c
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 16:15:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115161552euoutp01cfd3ec29e7d2cae25c5db6e4a784ee23~qG5ZisoSi1100611006euoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579104952;
-        bh=inWqZzir4b7TF3yBvBHSvQfLl3bhWeO5xiEb0HOgFs4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=cAx0cyUWNb6IDxhC5VvRQnMODf26K38sn/8lNkt3M54u5B+IkCSq3pUwspZaYl0IU
-         NQMgk38MCbOfCh0pUbWRSoYrqLjBD2yxZCCO3We2SlyQ+QkxDE3cLabNJ4p6TEwt2E
-         PMg0XTfdNDvQvrF8E+4yXYAIP5v9Nsl1L79vHYN4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200115161551eucas1p1acd5be96f9f48c1b3c1c2875e20127b2~qG5ZbeHoY3038430384eucas1p1r;
-        Wed, 15 Jan 2020 16:15:51 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 1F.55.60679.7BA3F1E5; Wed, 15
-        Jan 2020 16:15:51 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115161551eucas1p12019c2c12ce2a8fbb00e0fff86c89c37~qG5ZGmPxM1400014000eucas1p1p;
-        Wed, 15 Jan 2020 16:15:51 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200115161551eusmtrp1c3226a878d5338e65c37739811cf28a7~qG5ZGDq_81487414874eusmtrp14;
-        Wed, 15 Jan 2020 16:15:51 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-40-5e1f3ab72f00
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7B.64.08375.7BA3F1E5; Wed, 15
-        Jan 2020 16:15:51 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115161549eusmtip1b2ba369c8294f5c41cdf951a84dc9277~qG5XNN1xn1836618366eusmtip1x;
-        Wed, 15 Jan 2020 16:15:49 +0000 (GMT)
-Subject: Re: [PATCH] fbdev: remove object duplication in Makefile
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <a5baddef-59d6-28f6-f882-90d8957089aa@samsung.com>
-Date:   Wed, 15 Jan 2020 17:15:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200106081352.27730-1-masahiroy@kernel.org>
+        Wed, 15 Jan 2020 11:16:20 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 14D76C0646;
+        Wed, 15 Jan 2020 16:16:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579104979; bh=Pm+KzXesAkYAGe4VNi485/QuOtVc2zfN8tF3kYYW09U=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=fu01RFtIon+g/XHAM3eiRXBmWTF93F2qh1C9Ha/fOB8PH7Ztb4LUEjmZT/cck1oXe
+         cHQuBpYUR2DPhJWtiq9hDyOxJzt1aSqtZmkVAZ+bkYRM3RTb81DLBZuAoYDST12b9l
+         lAGs+osT8B7Gbp2/f2W6yCvwCkkWSuIQEwPr1wa5WY+vJzYgRRmNEUlza/wus0Z+Ks
+         UBwYygKc14T1cnmw4GHGUDCe4DOqY/5uOpNGi3ldgLuTN6iPz1qgWfKsD/DqjyN2Du
+         MrJEOkcDvxZd0tNsf1iLQ8wiCaE2KE0LklzB8sGfAd0MlsKgr0c68edvqh6fAQWutO
+         loouKHj1xP+og==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7EFD8A007F;
+        Wed, 15 Jan 2020 16:16:05 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 Jan 2020 08:15:51 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 15 Jan 2020 08:15:50 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WvXNKNqz4HSyhGh2YA1gmjdtO9mW8HAoXRk+dPYfew9Z5/kQuILvfilnC+u1/gLhhIWWOOYSO+vjdaI+wbkfMe3/MOZCHlDNTxFRcOa/yXBgu2qrO0jU5lOg/wQU4PRSt4t90ZEUeXq/Ibd0PnS+dYw4cFy0cxGyleG0LBkRXUDZ8qMEY0HFkigzjYTeI9ouc+AeH8r72D5uOX2NTCygBO0haP3SMaQfJbbTI7uYgPtMkKlQCBkcn6JSLBnwDlaZqPMIKFRFRAioO1WfzXfexlsFhwl0sNzBW6/XVr1jWpaSCwRw9A1iuPLymePzTzRlkCHPhNlXojdOdu9oWEk/7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w34eBEERU37rQYTi8ro7STXXUOAIvWiiXBlp26m7YZ0=;
+ b=C3NZog2UKARhhbeUoN1CsY1OGFnOD7+IzAQ3Kswn5sFIBzx7+Ov42axsbMtQG6EeaIKP7spAu8UMm9efroByXefw+TJJP2aK8g0DUmGu5RFhDdWFV9Ul0qp5z+0cmph24RvoqY90a4rvRDfYXs6TYRg7Xg/YFabkaoVOJnIaC3py8vaUSyd/KseB4d5uejR9uDIk6ig1SEBxkhODEfw9IwE4ZYGDNDF0Ntl8lTlW2VeXj8a5Sq7wRPJlrioUe/Ipy2r4d+2VmCL25fx9+e3ht76EamU0oTKKk5r4+4HIphFvGReb8J9Q4Gm2jOspGq6brIwTCIUp4pFnb0uU9Ibtrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w34eBEERU37rQYTi8ro7STXXUOAIvWiiXBlp26m7YZ0=;
+ b=FsSgminDsBrIvgc4sqIU4YUE0UVdgZUMGMOspTgfR4aCJfRwfSE5SUHlZcx8KVsm1f3IwGa0rxg+qd6W+lZQsnqHS7HAWB0tM/Z2VjnsBaBRyQLoJpv8XrAIjtCmtkxKf0BLkxI47cA4a8W9pHb9t4m6sAEhIMnP/uqt0Mmt9ho=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB2851.namprd12.prod.outlook.com (20.179.65.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Wed, 15 Jan 2020 16:15:48 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.015; Wed, 15 Jan 2020
+ 16:15:48 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ong Boon Leong <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Jakub Kicinski <kubakici@wp.pl>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Tan Tee Min <tee.min.tan@intel.com>,
+        "Voon Weifeng" <weifeng.voon@intel.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net v2 1/4] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Topic: [PATCH net v2 1/4] net: stmmac: Fix incorrect location to set
+ real_num_rx|tx_queues
+Thread-Index: AQHVy3L8yN7x0daunUum4okkbbxKDafr5uCg
+Date:   Wed, 15 Jan 2020 16:15:48 +0000
+Message-ID: <BN8PR12MB3266F3619CDF78C14179E025D3370@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200115071003.42820-1-boon.leong.ong@intel.com>
+ <20200115071003.42820-2-boon.leong.ong@intel.com>
+In-Reply-To: <20200115071003.42820-2-boon.leong.ong@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRmVeSWpSXmKPExsWy7djP87rbreTjDA59MbG48vU9m8WJvg+s
-        Fpd3zWGzePjgBqsDi8emVZ1sHve7jzN5fN4kF8AcxWWTkpqTWZZapG+XwJXx5doz9oKvHBUb
-        b7xma2BsYO9i5OSQEDCRaNq3grmLkYtDSGAFo8S9m6+hnC+MEssXzGODcD4zSkxqO8kM0/Lz
-        XAMjRGI5o8TRJ71MEM5bRomelzdZQaqEBRwlvv17xgZiiwhoSdxZ2gEWZxZIkDi96B4LiM0m
-        YCUxsX0VI4jNK2An8eTxdbAaFgFVicvdh8HiogIREp8eHGaFqBGUODnzCVgvJ1Bvw/H5bBAz
-        xSVuPZnPBGHLS2x/OwfsBwmBbnaJUy8+Q53tIrHk2lsoW1ji1fEt0BCQkTg9uYcFomEdo8Tf
-        jhdQ3duBITD5HxtElbXEnXO/gGwOoBWaEut36UOEHSUeTVjDBBKWEOCTuPFWEOIIPolJ26Yz
-        Q4R5JTrahCCq1SQ2LNvABrO2a+dK5gmMSrOQvDYLyTuzkLwzC2HvAkaWVYziqaXFuempxUZ5
-        qeV6xYm5xaV56XrJ+bmbGIFJ5fS/4192MO76k3SIUYCDUYmHN+OPXJwQa2JZcWXuIUYJDmYl
-        Ed6TM2TjhHhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamCM
-        m7Zk6Rkht+kPfduu1BotfBL1aGFyz7WqNJGkH7q3zKa3TGXLlnFO/Ka5x+UN0+z28vu7jSpP
-        xkxcnL/v/UmH8uk3VdYZ/8/st/pmVG26I4LvrdWukplmpUUP/Aw3Vy74tz3W4qJ//6VAgWzD
-        JkGlAjbDU79f8sZEVnfc3M/eOK/1ycq9lzWVWIozEg21mIuKEwGEd1iSJgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xu7rbreTjDBbdkre48vU9m8WJvg+s
-        Fpd3zWGzePjgBqsDi8emVZ1sHve7jzN5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-        ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfx5doz9oKvHBUbb7xma2BsYO9i5OSQEDCR+Hmu
-        gRHEFhJYyihxartyFyMHUFxG4vj6MogSYYk/17rYuhi5gEpeM0r8btsMVi8s4Cjx7d8zNhBb
-        REBL4s7SDlaQXmaBBIln81Ig6nsZJZa2/mYFqWETsJKY2L4KrJdXwE7iyePrYHEWAVWJy92H
-        weKiAhESh3fMgqoRlDg58wkLiM0J1NtwfD7YLmYBdYk/8y4xQ9jiEreezGeCsOUltr+dwzyB
-        UWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMD42Xbs5+YdjJc2
-        Bh9iFOBgVOLhzfgjFyfEmlhWXJl7iFGCg1lJhPfkDNk4Id6UxMqq1KL8+KLSnNTiQ4ymQM9N
-        ZJYSTc4HxnZeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGRm/d
-        acZynCvL1zKb9bXfDO1/mP9s88LWqdWJ8ziKffxTtz8MPvhv40unK47qcss81+/hbn5903FJ
-        rRUTf/lMs426vIdd3j3d1RSXwMMm/MR8xvaujCmL9X4o2Vd7vM2/Ub3O4u5D9dhGpu97jMQP
-        8vtsP/a9aFN+69EZH8+enrvdvNhqfdF5JZbijERDLeai4kQAPDo6z7UCAAA=
-X-CMS-MailID: 20200115161551eucas1p12019c2c12ce2a8fbb00e0fff86c89c37
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200106081436epcas5p3dc6a4023510ef179e9ce94a056c75fb8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200106081436epcas5p3dc6a4023510ef179e9ce94a056c75fb8
-References: <CGME20200106081436epcas5p3dc6a4023510ef179e9ce94a056c75fb8@epcas5p3.samsung.com>
-        <20200106081352.27730-1-masahiroy@kernel.org>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 230d6895-e2b4-4285-b6e3-08d799d62f19
+x-ms-traffictypediagnostic: BN8PR12MB2851:
+x-microsoft-antispam-prvs: <BN8PR12MB2851866EDB989038CF82798BD3370@BN8PR12MB2851.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(110136005)(54906003)(8676002)(4326008)(66946007)(7416002)(81166006)(71200400001)(7696005)(66476007)(52536014)(8936002)(186003)(33656002)(86362001)(9686003)(498600001)(2906002)(26005)(66446008)(66556008)(76116006)(81156014)(64756008)(6506007)(55016002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2851;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5OFhQlQJBfH74J4XKFp7CAso182YOEgBQVqc+/kt/rN+JlkwPjae7m0yxN0LPn/T1nMfSTTVkX13ofT19IIktcG3kiY9UFm+Xddn1nfqbxK9LRSi4p9oMmsJEZp5qEsxkhbrIsnP9aRhv83qu+H4nJgI2H9kMWU204mM/aQm8LaumpVMlC1NHKGTQ3wsUCgsdkVNvigs8D3KvUHAWOlfHOa/DnM9DOapRAI4ItFBfg7aYIqZ0jhqXDLI+9kzccPKYPAI3m7Jx5t9ebr/9c1pCwjN5HSITBifS4aNeyKaCMNFM8i0t9wurESpZzIqjpA2miIQhBY+xAZ/BTaip5eCbkXAsxzyqEpUouwWhE3iuPjITKxZcyIbGOcZm4DqmqlI3uFmntpZpR+Uyv1Jg2KepSyOvN+vNN6jJ2p/QlVNBnh3jFXlTJfmISsXhLQwHIuQ
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 230d6895-e2b4-4285-b6e3-08d799d62f19
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 16:15:48.7680
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e2q0WQVWVP2LFoaXMqOkGWP3MgWkRthpPFkuD4wdMZUqYIH7Tkppf6E9Z6mkFimx6nRGFiS/QHYC58wek14aBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2851
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ong Boon Leong <boon.leong.ong@intel.com>
+Date: Jan/15/2020, 07:10:00 (UTC+00:00)
 
-On 1/6/20 9:13 AM, Masahiro Yamada wrote:
-> The objects in $(fb-objs) $(fb-y) $(fb-m) are linked to fb.ko .
-> 
-> This line adds $(fb-y) to fb-objs, so the objects from $(fb-y) are
-> listed twice as the dependency of the module.
-> 
-> It works because Kbuild trims the duplicated objects from linking,
-> but there is no good reason to have this line.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-
-Patch queued for v5.6, thanks.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+> From: Aashish Verma <aashishx.verma@intel.com>
+>=20
+> netif_set_real_num_tx_queues() & netif_set_real_num_rx_queues() should be
+> used to inform network stack about the real Tx & Rx queue (active) number
+> in both stmmac_open() and stmmac_resume(), therefore, we move the code
+> from stmmac_dvr_probe() to stmmac_hw_setup().
+>=20
+> Fixes: c02b7a914551 ("net: stmmac: use netif_set_real_num_{rx,tx}_queues"=
+)
+> Signed-off-by: Aashish Verma <aashishx.verma@intel.com>
+> Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 > ---
-> 
->  drivers/video/fbdev/core/Makefile | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/video/fbdev/core/Makefile b/drivers/video/fbdev/core/Makefile
-> index 37710316a680..26cbc965497c 100644
-> --- a/drivers/video/fbdev/core/Makefile
-> +++ b/drivers/video/fbdev/core/Makefile
-> @@ -16,7 +16,6 @@ fb-y				  += fbcon_rotate.o fbcon_cw.o fbcon_ud.o \
->  				     fbcon_ccw.o
->  endif
->  endif
-> -fb-objs                           := $(fb-y)
->  
->  obj-$(CONFIG_FB_CFB_FILLRECT)  += cfbfillrect.o
->  obj-$(CONFIG_FB_CFB_COPYAREA)  += cfbcopyarea.o
-> 
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/=
+net/ethernet/stmicro/stmmac/stmmac_main.c
+> index 80d59b775907..0780e00580a2 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -2624,6 +2624,10 @@ static int stmmac_hw_setup(struct net_device *dev,=
+ bool init_ptp)
+>  	if (priv->dma_cap.vlins)
+>  		stmmac_enable_vlan(priv, priv->hw, STMMAC_VLAN_INSERT);
+> =20
+> +	/* Configure real RX and TX queues */
+> +	netif_set_real_num_rx_queues(dev, priv->plat->rx_queues_to_use);
+> +	netif_set_real_num_tx_queues(dev, priv->plat->tx_queues_to_use);
+> +
+
+Nack. You need to hold rtnl lock when calling this and at suspend / resume=
+=20
+you don't.
+
+---
+Thanks,
+Jose Miguel Abreu
