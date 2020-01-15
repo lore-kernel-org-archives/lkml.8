@@ -2,170 +2,138 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE9CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F2BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BB92077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A16A2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="SH07mGd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgAOMLP (ORCPT
+        id S1730328AbgAOMMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:11:15 -0500
-Received: from mga05.intel.com ([192.55.52.43]:34661 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgAOMLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:11:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 04:11:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="219971966"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jan 2020 04:11:13 -0800
-Received: from [10.125.252.177] (abudanko-mobl.ccr.corp.intel.com [10.125.252.177])
-        by linux.intel.com (Postfix) with ESMTP id 5EA1E580409;
-        Wed, 15 Jan 2020 04:11:07 -0800 (PST)
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
- <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
- <20200110140234.GO2844@hirez.programming.kicks-ass.net>
- <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
- <20200110164531.GA2598@kernel.org>
- <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
- <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
- <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
- <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
- <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
- <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
- <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
- <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
- <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
- <20200115184538.bb8604e914dcc0eaeaf357fd@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2610ef96-40c4-5ff1-f972-104d418a3ac8@linux.intel.com>
-Date:   Wed, 15 Jan 2020 15:11:06 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200115184538.bb8604e914dcc0eaeaf357fd@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 Jan 2020 07:12:20 -0500
+Received: from mail-co1nam11on2084.outbound.protection.outlook.com ([40.107.220.84]:24056
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730191AbgAOMMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:12:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ETqoM2s6c0MVVUUsz+HPVX9fcViEXpXSnItJof9FD0PTuBMEoI+fl9Asd/UFDRpQ1Z7T/uh+qboRdi1mq+DvnV+8QRcexrCYtoplgjsbYx1PdbbcFqu5z0iod9v88uptQb5WhmyB/H+kvlSISGhS4r7DmL+jo38oaXU/WvRj0kf6RsN4wh93jS04zjwqY9uZJAHiS9wOMg60W/02Z2Wb5hmlK9YW+TF/VBFivThTmnROLK8+6y8Hi2ihwIjwYq/Z0UVCdFGMX+9P7XjxlMEnY92hKoaYRTWFGKbCGcSwFSeZzkfI0OrMuhWZ0dsNgqU4RCIpqJCNcERDhZz4CKp29g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJKgaa7pmmCRqtSbENrnVw4XdApYgK6og7UgQlebpmM=;
+ b=bHvR5VKlHyhKXbNDkzzLgymElcdY4OJjvrLsKDuQm+bIi02S6FdxeJh77Zr1snNEvort3++pxVPentDqWQpLf5dRS6/bVczjsG+qVCjl6I/gD6BD3erj03+27g5Ofe/UI1Qf71RKFQpEHz1DeKEvHUpEf+4RUJroY111pnYcc+VzsV3Y0s6bjtX4Pdhm23PJ9lkmA59R+hgx09KS+wwV8lilj6Ot35kEu2bz+izC5ASTb58MDrIW8NVkVm+b++KsfK8cO3K/aDA29iSFV9SiWadRgX8OfuDJiGpMfRs3yKgc4ysW3ZSV2LU6YfnwLbG+sE2BfpFjXsoWzvPiOCPzEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJKgaa7pmmCRqtSbENrnVw4XdApYgK6og7UgQlebpmM=;
+ b=SH07mGd1q2IVwui1+8PucbC9mju2s5OkzOB+daVoaSMvbwnyCMv8y4hbOf7vdFs7Zy+oL+fzIB82tkpmFuqCM8jCsmXJjC5aOUU0W8RrCyPG3G8DKAc7G/h46Okv5mPhfgb0lQUqEphdkjiTagg6aqW47FF397NeoSr+n6Q/x/g=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB3934.namprd11.prod.outlook.com (10.255.180.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Wed, 15 Jan 2020 12:12:10 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2623.018; Wed, 15 Jan 2020
+ 12:12:09 +0000
+Received: from pc-42.silabs.com (37.71.187.125) by PR2PR09CA0009.eurprd09.prod.outlook.com (2603:10a6:101:16::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 15 Jan 2020 12:12:08 +0000
+From:   =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?utf-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <Jerome.Pouiller@silabs.com>,
+        Pascal Prime <Pascal.Prime@silabs.com>,
+        Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH 01/65] staging: wfx: revert unexpected change in debugfs
+ output
+Thread-Topic: [PATCH 01/65] staging: wfx: revert unexpected change in debugfs
+ output
+Thread-Index: AQHVy50CgXXZf+D1OU60c4tUE9Izlw==
+Date:   Wed, 15 Jan 2020 12:12:09 +0000
+Message-ID: <20200115121041.10863-2-Jerome.Pouiller@silabs.com>
+References: <20200115121041.10863-1-Jerome.Pouiller@silabs.com>
+In-Reply-To: <20200115121041.10863-1-Jerome.Pouiller@silabs.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2PR09CA0009.eurprd09.prod.outlook.com
+ (2603:10a6:101:16::21) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.25.0
+x-originating-ip: [37.71.187.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e3cdbf29-fc88-4812-4960-08d799b42534
+x-ms-traffictypediagnostic: MN2PR11MB3934:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB3934172B84FC814C30BB14D293370@MN2PR11MB3934.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:220;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(136003)(376002)(366004)(346002)(199004)(189003)(54906003)(110136005)(86362001)(956004)(2616005)(316002)(36756003)(71200400001)(52116002)(7696005)(478600001)(8936002)(81156014)(8676002)(4326008)(81166006)(6486002)(2906002)(26005)(66946007)(16526019)(186003)(5660300002)(66574012)(1076003)(66556008)(64756008)(66446008)(85182001)(66476007)(85202003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3934;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kFCS2mMuil2Ju5OoK+WzY+/gRjQjSKqy1xc0p12AFqYM4uv0g+TKh2x+XvfNLSJb0Qiq+MeGzcQDZJit1A9bTZbfIz2egMTQNW5iMY6j83VuADfnCEy8yWqliY8toH1dqO3N+a+r7tHRkKwjVCRYjt4VPAFhBEoYYljQkTHiZhJdYr3GVAVXYZ2zOLehSrhXbQc/v0UGWHe1/yGd8LwcrK8Dvz2f89XKc1pRxuDJiL0tDJhWdM2WyhCO/BfOYadY2l0vrtoT1sYjqLEF/RE/3f8sThs3l+0r/Lu1HQXBE1PqxjOUDFTYWrcnCCWn263JT1UeP/t5uPVn6ckhBhrv1wJzdyZl6IrAOeTsEwynCLJnghhrENFkH7YTR4vU1jSIsVVxHAor2CazYt1dAmLjwjRq8wdlSVIddmQl+7r+XiQpF+CB4bzLLizmEVCv7aqc
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0BA67E860FF98E48B3A2DC1D62D69292@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3cdbf29-fc88-4812-4960-08d799b42534
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 12:12:09.6429
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NMVx9Nh0uy6i403LGCNareI46n4IHfntyzv22zNJvmZ2Z8Ct9pNYtnnCYczRyR9c4IVX46SOxH+ZLAwOWBdWeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3934
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 15.01.2020 12:45, Masami Hiramatsu wrote:
-> On Tue, 14 Jan 2020 21:50:33 +0300
-> Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
-> 
->>
->> On 14.01.2020 21:06, Alexei Starovoitov wrote:
->>> On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
->>> <alexey.budankov@linux.intel.com> wrote:
->>>>>>
->>>>>> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
->>>>>> to open it for enabling/disabling kprobes, not for creation.
->>>>>>
->>>>>> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
->>>>>> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
->>>>>> it should check the max number of probes to be created by something like
->>>>>> ulimit)
->>>>>> I think nowadays we have fixed all such kernel crash problems on x86,
->>>>>> but not sure for other archs, especially on the devices I can not reach.
->>>>>> I need more help to stabilize it.
->>>>>
->>>>> I don't see how enable/disable is any safer than creation.
->>>>> If there are kernel bugs in kprobes the kernel will crash anyway.
->>>>> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
->>>>> CAP_* is about delegation of root privileges to non-root.
->>>>> Delegating some of it is ok, but disallowing creation makes it useless
->>>>> for bpf tracing, so we would need to add another CAP later.
->>>>> Hence I suggest to do it right away instead of breaking
->>>>> sys_perf_even_open() access into two CAPs.
->>>>>
->>>>
->>>> Alexei, Masami,
->>>>
->>>> Thanks for your meaningful input.
->>>> If we know in advance that it still can crash the system in some cases and on
->>>> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
->>>> such delegation looks premature until the crashes are avoided. So it looks like
->>>> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
->>>> a separate patch set.
->>>
->>> perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
->>
-> 
-> OK, anyway, for higher security, admin may not give CAP_SYS_PERFMON to
-> unpriviledged users, since it might allows users to analyze kernel, which
-> can lead security concerns.
-
-FWIW,
-Discovered security related hardware issues could be mitigated in software and 
-here [1] is the official procedure documented on how to follow up, so this could
-be a draft plan to approach eBPF perf_events related hardware issues, if required.
-
-[1] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
-
-> 
->> Sure, software cannot guarantee, but known software bugs could still be fixed,
->> that's what I meant.
-> 
-> Agreed, bugs must be fixed anyway.
-> 
-> Thank you,
-> 
->>> imo adding a cap just for pmc is pointless.
->>> if you add a new cap it should cover all of sys_perf_event_open syscall.
->>> subdividing it into sw vs hw counters, kprobe create vs enable, etc will
->>> be the source of ongoing confusion. nack to such cap.
->>>
->>
->> Well, as this patch set already covers complete perf_event_open functionality,
->> and also eBPF related parts too, could you please review and comment on it?
->> Does the patches 2/9 and 5/9 already bring all required extentions?
->>
->> Thanks,
->> Alexey
-> 
-> 
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKSXQg
+YXBwZWFycyB0aGF0IGNvbW1pdCA4YzcxMjhjNGNmNGUgKCJzdGFnaW5nOiBhbGlnbiB0byBmaXgg
+d2FybmluZ3Mgb2YKbGluZSBvdmVyIDgwIGNoYXJhY3RlcnMiKSBkbyBzbGlnaHRseSBtb3JlIHRo
+YW4gd2hhdCBpcyBleHBsYWluZWQgaW4KY29tbWl0IGxvZy4KCkVzcGVjaWFsbHksIGl0IGNoYW5n
+ZXMgdGhlIG91dHB1dCBvZiB0aGUgZmlsZSByeF9zdGF0cyBmcm9tIGRlYnVnZnMuCkZyb20gc29t
+ZSBwb2ludCBvZiB2aWV3LCB0aGlzIGZpbGUgY2FuIGJlIGNvbnNpZGVyZWQgYXMgYSBwYXJ0IG9m
+IHRoZQpBUEkuIEFueSBjaGFuZ2Ugb24gaXQgc2hvdWxkIGJlIGNsZWFybHkgYW5ub3VuY2VkLgoK
+U2luY2UgdGhlIGNoYW5nZSBpbnRyb2R1Y2VkIGRvZXMgbm90IHNlZW1zIHRvIGhhdmUgYW55IGp1
+c3RpZmljYXRpb24sCnJldmVydCBpdC4KClJlcG9ydGVkLWJ5OiBQYXNjYWwgUHJpbWUgPHBhc2Nh
+bC5wcmltZUBzaWxhYnMuY29tPgpDYzogSnVsZXMgSXJlbmdlIDxqYmkub2N0YXZlQGdtYWlsLmNv
+bT4KRml4ZXM6IDhjNzEyOGM0Y2Y0ZSAoInN0YWdpbmc6IGFsaWduIHRvIGZpeCB3YXJuaW5ncyBv
+ZiBsaW5lIG92ZXIgODAgY2hhcmFjdGVycyIpClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWls
+bGVyIDxqZXJvbWUucG91aWxsZXJAc2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL3N0YWdpbmcvd2Z4
+L2RlYnVnLmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2RlYnVnLmMgYi9kcml2ZXJz
+L3N0YWdpbmcvd2Z4L2RlYnVnLmMKaW5kZXggZDE3YTc1MjQyMzY1Li4xMTY0YWJhMTE4YTEgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93ZngvZGVidWcuYworKysgYi9kcml2ZXJzL3N0YWdp
+bmcvd2Z4L2RlYnVnLmMKQEAgLTE0NSw3ICsxNDUsNyBAQCBzdGF0aWMgaW50IHdmeF9yeF9zdGF0
+c19zaG93KHN0cnVjdCBzZXFfZmlsZSAqc2VxLCB2b2lkICp2KQogCQkgICBzdC0+cHdyX2Nsa19m
+cmVxLAogCQkgICBzdC0+aXNfZXh0X3B3cl9jbGsgPyAieWVzIiA6ICJubyIpOwogCXNlcV9wcmlu
+dGYoc2VxLAotCQkgICAiTi4gb2YgZnJhbWVzOiAlZCwgUEVSICh4MTBlNCk6ICVkLCBUaHJvdWdo
+cHV0OiAlZEticHMvc1xuIiwKKwkJICAgIk51bS4gb2YgZnJhbWVzOiAlZCwgUEVSICh4MTBlNCk6
+ICVkLCBUaHJvdWdocHV0OiAlZEticHMvc1xuIiwKIAkJICAgc3QtPm5iX3J4X2ZyYW1lLCBzdC0+
+cGVyX3RvdGFsLCBzdC0+dGhyb3VnaHB1dCk7CiAJc2VxX3B1dHMoc2VxLCAiICAgICAgIE51bS4g
+b2YgICAgICBQRVIgICAgIFJTU0kgICAgICBTTlIgICAgICBDRk9cbiIpOwogCXNlcV9wdXRzKHNl
+cSwgIiAgICAgICAgZnJhbWVzICAoeDEwZTQpICAgIChkQm0pICAgICAoZEIpICAgIChrSHopXG4i
+KTsKLS0gCjIuMjUuMAoK
