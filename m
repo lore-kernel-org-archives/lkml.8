@@ -2,211 +2,122 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB8FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26413C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AB02187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15352187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jNgkV9pO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgAOIcq (ORCPT
+        id S1728993AbgAOIds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:32:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48731 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgAOIcq (ORCPT
+        Wed, 15 Jan 2020 03:33:48 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37366 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbgAOIdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:32:46 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ire6G-0003Op-LB; Wed, 15 Jan 2020 09:32:28 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ire6E-0001jx-6Z; Wed, 15 Jan 2020 09:32:26 +0100
-Date:   Wed, 15 Jan 2020 09:32:26 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Han Xu <han.xu@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, esben@geanix.com,
-        boris.brezillon@collabora.com, festevam@gmail.com,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] mtd: rawnand: gpmi: refine the runtime pm ops
-Message-ID: <20200115083226.lbwtfvoevp3k33qt@pengutronix.de>
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
- <1579038243-28550-6-git-send-email-han.xu@nxp.com>
+        Wed, 15 Jan 2020 03:33:46 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so16788882wmf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:33:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WpuKpiDRvGzuOKGz765acle30K2AapAgvO0dQxkTLhY=;
+        b=jNgkV9pOWBh6UAJ1PXeVfZpoCLEkrt5tE1fLX1d0hpCo+qtWxgbGVRX7MnaYc0XJ3m
+         eHw0DOLOVM3vj8nJqdCRoIqnoF8NdAX5+8VI8WDbvTU5nCl38z4y5dCewj92rilzsEM9
+         n35aDnjpZP3U0vdjmu3CzjLKybHJLZ5D1p27zms1nvGo83WD56mx1oTVDxJGwLokGSdl
+         FrUFsaOnGs4HbZLNkEQMz/3l/ojgoA3qowGgapvll6xqXQM81Yce4jvmvKnX7HHk7Cdb
+         Q1hlPFF216XNb5Urdj4tepa3NqINe+u+vbZBifcdgQUvqgW1jCBLksXOKCHbeB52Uv9X
+         rQtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WpuKpiDRvGzuOKGz765acle30K2AapAgvO0dQxkTLhY=;
+        b=nA9aKk8EItPx+TO1LTT5BarwXLX7lwHTWZVZ5lnQpuuNh3S5w32rX4zZTf3EfP5P2J
+         9u7aMT+9fIJj6d5C4pcNXHhjNYmYt04jo9iB+KxQlpxeJTcXvPfMQHwF4UwmT2r2w4l3
+         aHXeWoL5irQmBa8gs8LA9WLeOsHHwBCTmDuvvT9aCun+ikVtFH1KHviESJYq82Wwhaer
+         a8wYw5dpuffxC1TrDphzMZ6LJnoAhhsTC2FoHctyVRdqD7Hn/vRhlb8nMplTA06clN4q
+         yxwiSj9ABVtGvuZ2yvZqL+cF27e1xOPYT5gazD2cGK/2cI5Nr0ZGH5qtAm8NKFuCmxUN
+         4GCA==
+X-Gm-Message-State: APjAAAXNbbQLONz58yRHfRuIwvnRlPZz0DfBm40TSh3qV7D2MK/J4c9W
+        t87X9La64DQJgDW4747nTNP5Kw==
+X-Google-Smtp-Source: APXvYqyTbNPBM+b0H7a+geOBj4EY/YVa2dv7LeznO4hME0KN8z55nb/XzKzrODJRYwtnGQHSFMXehQ==
+X-Received: by 2002:a1c:dcd5:: with SMTP id t204mr33506655wmg.34.1579077224548;
+        Wed, 15 Jan 2020 00:33:44 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id z123sm23648038wme.18.2020.01.15.00.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 00:33:43 -0800 (PST)
+Date:   Wed, 15 Jan 2020 08:34:03 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v9 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
+Message-ID: <20200115083403.GE325@dell>
+References: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+ <b58952aedd1cce08aa4d7f346007a24923bb2b64.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1579038243-28550-6-git-send-email-han.xu@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:17:31 up 191 days, 14:27, 88 users,  load average: 0.39, 0.32,
- 0.30
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b58952aedd1cce08aa4d7f346007a24923bb2b64.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:44:02AM +0800, Han Xu wrote:
-> several changes for runtime code in gpmi-nand driver
-> 
-> - Always invoke runtime get/put in same function to balance the usage
-> counter.
-> 
-> - leverage the runtime pm for system pm, move acquire dma to runtime pm
-> to acquire dma only when needed.
-> 
-> - add pm_runtime_dont_use_autosuspend in err path. If driver failed to
-> probe before runtime pm timeout, such as NAND not mounted in socket,
-> runtime suspend won't be called without the change.
+On Sat, 11 Jan 2020, Matti Vaittinen wrote:
 
-Using a bullet list in a commit message is often a sign that the patch
-should be split into multiple patches...
-
+> ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
+> a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> and a 32.768 kHz clock gate.
 > 
-> Signed-off-by: Han Xu <han.xu@nxp.com>
+> Document the dt bindings drivers are using.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 56 +++++++++++-----------
->  1 file changed, 29 insertions(+), 27 deletions(-)
+> No changes since v8  
 > 
-> diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> index fcc7325f2a10..73644c96fa9b 100644
-> --- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> @@ -183,7 +183,6 @@ static int gpmi_init(struct gpmi_nand_data *this)
->  	 */
->  	writel(BM_GPMI_CTRL1_DECOUPLE_CS, r->gpmi_regs + HW_GPMI_CTRL1_SET);
->  
-> -	return 0;
->  err_out:
->  	pm_runtime_mark_last_busy(this->dev);
->  	pm_runtime_put_autosuspend(this->dev);
-> @@ -556,7 +555,6 @@ static int bch_set_geometry(struct gpmi_nand_data *this)
->  	/* Set *all* chip selects to use layout 0. */
->  	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
->  
-> -	ret = 0;
->  err_out:
->  	pm_runtime_mark_last_busy(this->dev);
->  	pm_runtime_put_autosuspend(this->dev);
+>  .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++++++++++++
+>  1 file changed, 193 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
 
-While I agree that this "ret = 0" is unnecessary because 'ret' holds the
-successful return value of the last function called, I still think it's
-nice to make it explicit that this is the success path of this function.
+I only have patches 2-6, so I cannot help with merging.
 
-If you disagree please at least make this a separate patch.
-
-> @@ -1213,10 +1211,6 @@ static int acquire_resources(struct gpmi_nand_data *this)
->  	if (ret)
->  		goto exit_regs;
->  
-> -	ret = acquire_dma_channels(this);
-> -	if (ret)
-> -		goto exit_regs;
-> -
->  	ret = gpmi_get_clks(this);
->  	if (ret)
->  		goto exit_clock;
-> @@ -2656,15 +2650,9 @@ static int gpmi_nand_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto exit_acquire_resources;
->  
-> -	ret = __gpmi_enable_clk(this, true);
-> -	if (ret)
-> -		goto exit_nfc_init;
-> -
-> +	pm_runtime_enable(&pdev->dev);
->  	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
->  	pm_runtime_use_autosuspend(&pdev->dev);
-> -	pm_runtime_set_active(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> -	pm_runtime_get_sync(&pdev->dev);
->  
->  	ret = gpmi_init(this);
->  	if (ret)
-> @@ -2674,15 +2662,12 @@ static int gpmi_nand_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto exit_nfc_init;
->  
-> -	pm_runtime_mark_last_busy(&pdev->dev);
-> -	pm_runtime_put_autosuspend(&pdev->dev);
-> -
->  	dev_info(this->dev, "driver registered.\n");
->  
->  	return 0;
->  
->  exit_nfc_init:
-> -	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_dont_use_autosuspend(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  	release_resources(this);
->  exit_acquire_resources:
-> @@ -2694,7 +2679,6 @@ static int gpmi_nand_remove(struct platform_device *pdev)
->  {
->  	struct gpmi_nand_data *this = platform_get_drvdata(pdev);
->  
-> -	pm_runtime_put_sync(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  
->  	nand_release(&this->nand);
-> @@ -2706,10 +2690,11 @@ static int gpmi_nand_remove(struct platform_device *pdev)
->  #ifdef CONFIG_PM_SLEEP
->  static int gpmi_pm_suspend(struct device *dev)
->  {
-> -	struct gpmi_nand_data *this = dev_get_drvdata(dev);
-> +	int ret;
->  
-> -	release_dma_channels(this);
-> -	return 0;
-> +	ret = pm_runtime_force_suspend(dev);
-> +
-> +	return ret;
->  }
->  
->  static int gpmi_pm_resume(struct device *dev)
-> @@ -2717,9 +2702,11 @@ static int gpmi_pm_resume(struct device *dev)
->  	struct gpmi_nand_data *this = dev_get_drvdata(dev);
->  	int ret;
->  
-> -	ret = acquire_dma_channels(this);
-> -	if (ret < 0)
-> +	ret = pm_runtime_force_resume(dev);
-> +	if (ret) {
-> +		dev_err(this->dev, "Error in resume %d\n", ret);
->  		return ret;
-> +	}
->  
->  	/* re-init the GPMI registers */
->  	ret = gpmi_init(this);
-> @@ -2743,18 +2730,33 @@ static int gpmi_pm_resume(struct device *dev)
->  }
->  #endif /* CONFIG_PM_SLEEP */
->  
-> -static int __maybe_unused gpmi_runtime_suspend(struct device *dev)
-> +#define gpmi_enable_clk(x)	__gpmi_enable_clk(x, true)
-> +#define gpmi_disable_clk(x)	__gpmi_enable_clk(x, false)
-
-These defines do not add any value.
-
-Sascha
+My guess is that some of the other patches will have dependencies or
+be dependants of the MFD changes, thus someone else will either have
+to merge the set and send out a pull-request for the other maintainers
+to consume, or you will have to send the whole set out again. 
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
