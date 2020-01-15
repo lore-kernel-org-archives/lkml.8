@@ -2,123 +2,119 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B196FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1793EC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965562084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E149E2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SdVmbgcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgAOR2V (ORCPT
+        id S1729080AbgAOR2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:28:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:40436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbgAOR2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:28:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0203B328;
-        Wed, 15 Jan 2020 09:28:21 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362133F6C4;
-        Wed, 15 Jan 2020 09:28:20 -0800 (PST)
-Subject: Re: [stable] [PATCH 1/2] coresight: etb10: Do not call
- smp_processor_id from preemptible
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20200108110541.318672-1-suzuki.poulose@arm.com>
- <20200109143537.GE1706@sasha-vm>
- <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
- <20200115151118.GC3740793@kroah.com>
- <d3cd59e0-8fa2-9e69-534f-15f13cb14897@arm.com>
- <20200115172126.GB4127163@kroah.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <b8c38ac4-4b47-59b3-e0d4-22be3f6aca42@arm.com>
-Date:   Wed, 15 Jan 2020 17:28:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 12:28:42 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58336 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgAOR2l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:28:41 -0500
+Received: from pendragon.ideasonboard.com (85-76-106-26-nat.elisa-mobile.fi [85.76.106.26])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8BAC62BA;
+        Wed, 15 Jan 2020 18:28:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579109319;
+        bh=GTgiNckxVZKqQw4JXS+z539Vsk6pXreiOLeWxF8/ceY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SdVmbgcjhqKpJ6Wp78xWcDXte9rFyELUrb4onsnKzjwGOxjSb7NdZ3JO8pgAC+UR4
+         lkH+/JafgnTAVEJLgfP6tAsR8l/X2R9Fj93XpskQSZYhqmL/xpJsuPwW3wzRManz+R
+         yKMhx+dbsUoHh8vfVPbJgYMEiLuvhOciARjT4tLw=
+Date:   Wed, 15 Jan 2020 19:28:22 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     mchehab@kernel.org, hyun.kwon@xilinx.com, vkoul@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2] media: xilinx: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Message-ID: <20200115172822.GB7139@pendragon.ideasonboard.com>
+References: <20200110071648.15690-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115172126.GB4127163@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110071648.15690-1-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 17:21, Greg KH wrote:
-> On Wed, Jan 15, 2020 at 04:44:29PM +0000, Suzuki Kuruppassery Poulose wrote:
->>
->> Hi Greg,
->>
->> On 15/01/2020 15:11, Greg KH wrote:
->>> On Thu, Jan 09, 2020 at 02:36:17PM +0000, Suzuki Kuruppassery Poulose wrote:
->>>> On 09/01/2020 14:35, Sasha Levin wrote:
->>>>> On Wed, Jan 08, 2020 at 11:05:40AM +0000, Suzuki K Poulose wrote:
->>>>>> [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
->>>>>>
->>>>>> During a perf session we try to allocate buffers on the "node" associated
->>>>>> with the CPU the event is bound to. If it is not bound to a CPU, we
->>>>>> use the current CPU node, using smp_processor_id(). However this is
->>>>>> unsafe
->>>>>> in a pre-emptible context and could generate the splats as below :
->>>>>>
->>>>>> BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
->>>>>>
->>>>>> Use NUMA_NO_NODE hint instead of using the current node for events
->>>>>> not bound to CPUs.
->>>>>>
->>>>>> Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
->>>>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>>>> Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
->>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>>>> Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
->>>>>>
->>>>>
->>>>> I've queued this for 4.9-4.19. There was a simple conflict on 4.9 which
->>>>> also had to be resolved.
->>>>>
->>>>
->>>>
->>>> Thanks Sasha !
->>>
->>> Note, these had to all be dropped as they broke the build :(
->>>
->>> So can you please send us patches that at least build?  :)
->>>
->>
->> Do you have a build failure log ? I did build test it before sending it
->> over. I tried it again on 4.9, 4.14 and 4.19. I don't hit any build
->> failures here.
->>
->> Please could you share the log if you have it handy ?
+Hi Peter,
+
+(CC'ing Hans)
+
+Thank you for the patch.
+
+On Fri, Jan 10, 2020 at 09:16:48AM +0200, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
 > 
-> It was in the stable -rc review emails, I don't have it handy, sorry.
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
 > 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-I think there is a bit of confusion here. If you're referring to
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-https://lkml.org/lkml/2020/1/11/634
+and taken in my tree. Hans, you asked me on IRC to review this, did you
+plan to get it merged upstream yourself ? If so I'll drop it.
 
-as the build failure report, this is precisely my series fixes.
-I sent this series to address the build break reported by Nathan.
-The original patches were picked up from the "Fixes" tag automatically
-which broke the build due to missing "event" parameter. This series
-fixes those build issues and for sure builds fine for the affected
-versions. Trust me ;-)
-
-Cheers
-Suzuki
-
-
-
-> greg k-h
+> ---
+> Hi,
 > 
+> Changes since v1:
+> - Fix cleanup path when DMA request failed as suggested by Laurent
+> - Print error only in case when the error is not EPROBE_DEFER
+> 
+>  drivers/media/platform/xilinx/xilinx-dma.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+> index b211380a11f2..3bb54a4db6a4 100644
+> --- a/drivers/media/platform/xilinx/xilinx-dma.c
+> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+> @@ -725,10 +725,11 @@ int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
+>  
+>  	/* ... and the DMA channel. */
+>  	snprintf(name, sizeof(name), "port%u", port);
+> -	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
+> -	if (dma->dma == NULL) {
+> -		dev_err(dma->xdev->dev, "no VDMA channel found\n");
+> -		ret = -ENODEV;
+> +	dma->dma = dma_request_chan(dma->xdev->dev, name);
+> +	if (IS_ERR(dma->dma)) {
+> +		ret = PTR_ERR(dma->dma);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dma->xdev->dev, "no VDMA channel found\n");
+>  		goto error;
+>  	}
+>  
+> @@ -752,7 +753,7 @@ void xvip_dma_cleanup(struct xvip_dma *dma)
+>  	if (video_is_registered(&dma->video))
+>  		video_unregister_device(&dma->video);
+>  
+> -	if (dma->dma)
+> +	if (!IS_ERR_OR_NULL(dma->dma))
+>  		dma_release_channel(dma->dma);
+>  
+>  	media_entity_cleanup(&dma->video.entity);
 
+-- 
+Regards,
+
+Laurent Pinchart
