@@ -2,163 +2,167 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7842CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B451C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508892072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C032072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="ahqVmnPg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DuFQLnaI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Toqv6jeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgAOFM4 (ORCPT
+        id S1726554AbgAOFO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:12:56 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:53717 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbgAOFM4 (ORCPT
+        Wed, 15 Jan 2020 00:14:27 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35053 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgAOFO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:12:56 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 70D5022139;
-        Wed, 15 Jan 2020 00:12:55 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 15 Jan 2020 00:12:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=rqjA/bBm6Efiy
-        JMjxSo/r1phlA8NYcHSBKYtzL6xSvg=; b=ahqVmnPgT6/E3N+HpzLzYB9zvFmX/
-        7B0gvaO4WXUtZSG0UIdhlIC/S/uHJJRx422n1LjwWc7hcP9SyNsK8x3FWyGehSyg
-        2s7nIQbuVpDr6SALmjUAyLdSwZnZ9TTI7Q8Z0Ry0J3OeBMU+klWip9rSjeRSsSqs
-        ENZ50XWZ2YyUBJb9SvPmMn8b4pWy+UvlenSyajT3MQAJlJgo4EYjdMidRknprbvP
-        VTbRDj2wboTYaGUs1YwcPmEQe4IaWO0pOqMjU5OaowqiowSCRg2DV9cPK2EDnQY6
-        m9nm64yFH0bxa4724MjEsFhtnOmTJ1cGblU+nsKvgh2I+TXTRnGLiRBUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=rqjA/bBm6EfiyJMjxSo/r1phlA8NYcHSBKYtzL6xSvg=; b=DuFQLnaI
-        oTlOBXoh69lZ44fxyNbKv4kd0dMv52rrVDabMHL393XbsTKI4C8/CV3HQjDsyp24
-        c+iFVwbevg3xikbpFu3g93dSutP0+fC4j07xKo16RXDIrvSkkclKm5ZF2wWphkZx
-        fLlIqTDjhI+Gl43dHYdf4XIz16Jk9QG4EPHsoAkXH+v6Y/aM81dQhiZ7SZ+xW4D6
-        TcI2hrlQCAIA0snAG/Oa2hn3qOoejkC0KA+/XdUar9v+DUP1w18Mwj86f97evgDU
-        mWwDBEgkv1GHKQ/S2HdU24DHn82NHpTQMo/qQmS7FvR5OcHzP25rp7CPvH+J1EVE
-        setRR6Gny8Wpeg==
-X-ME-Sender: <xms:V58eXrMQq7sLEazI-j0kdhMz-BFkruJyn3htCWKjbxd7499rS1pLLQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdektdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
-    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:V58eXublo9bFwQuGN3nCY7FFSrUKPvlWtbd9i4XmB_PAT3mh7W5tDw>
-    <xmx:V58eXv6w8pW7bmQ2hn52-3EPeHtRBwgES2Qo9g_xToUQHFNpSHsCiA>
-    <xmx:V58eXjy38VQzkYFQA_W_yuwapQ_2BRrmbQYwWaBGkxYJRrPcrZsqDg>
-    <xmx:V58eXu0_AxDj2RC6Rx1-EuaYjGrdQpz26vHNkwRPviZ33DvsAzW3dA>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BE86180065;
-        Wed, 15 Jan 2020 00:12:54 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 1/2] Input: axp20x-pek - Respect userspace wakeup configuration
-Date:   Tue, 14 Jan 2020 23:12:52 -0600
-Message-Id: <20200115051253.32603-2-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200115051253.32603-1-samuel@sholland.org>
-References: <20200115051253.32603-1-samuel@sholland.org>
+        Wed, 15 Jan 2020 00:14:26 -0500
+Received: by mail-oi1-f196.google.com with SMTP id k4so14283100oik.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 21:14:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1V7MW/ylG5HH52qKYnJfjENVm5zMbyLo/1xAyipVPNU=;
+        b=Toqv6jeGfvvxWRkr5nvZFkzGlWyXW0qh9bEcuwG/GucvkAKkjZSDtLzEWNyuJz0kAn
+         3LFtDjFZjvJ7Cjg7QuoSNUcSCrCzCprhHwc/fgBE3nhH6SR9YUsAAdK89gezNLJwSh+u
+         U2JRzqaD9IF3wcMHh/XVE6mg6as3ybZqHT9UQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1V7MW/ylG5HH52qKYnJfjENVm5zMbyLo/1xAyipVPNU=;
+        b=RDjnvjYNKrwet8Bkwxdcs82u+C5untbFb6n6bu/LfFoNEVwkBzye96yLJPhIPiR2SW
+         vYL1W2Ku2wZGH4FLmRXY7DWbtQ2So8ITmdy+qYlOialJ4Y/MRa3wYWG/3haXXrNhZcBp
+         HA2aG7xs//cLhQt1o0/VGEOgMea88o6DlQUXggmgi5DRxlodSpE+TD1RZGEYSWErpusX
+         b/1KmXAey4VcnMj91nYtpKMjuy4T4qjLgCqk8NB4CtSFMDVFO84LyInow+cU84RLVdJA
+         5bn2XdX1qxpq44XUEgfrIXA/MfpWqRRgGIzHX85zK3y9GR7KMmi/2bLoB5I+k3iqSy+J
+         o26g==
+X-Gm-Message-State: APjAAAXdjviXFFLNl1Gtf2clOjyhxSYa5ey5Y4ghNMnQ8mL+Nvuh61DY
+        j+NdQal1fxMXax3IFWZhvvkorRHzy4g4Ww==
+X-Google-Smtp-Source: APXvYqx6n8vR72Y3mR4jSjGgejOzofKvuTdN3bKxqiis0/X51PRVsceOS/LP5oESybg48JHMtBhokg==
+X-Received: by 2002:aca:1309:: with SMTP id e9mr19752381oii.7.1579065264730;
+        Tue, 14 Jan 2020 21:14:24 -0800 (PST)
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
+        by smtp.gmail.com with ESMTPSA id q13sm6194232otc.5.2020.01.14.21.14.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 21:14:23 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id d62so14215348oia.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 21:14:23 -0800 (PST)
+X-Received: by 2002:aca:d0b:: with SMTP id 11mr19753910oin.71.1579065262776;
+ Tue, 14 Jan 2020 21:14:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200114033226.16786-1-gtk_ruiwang@mediatek.com> <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
+In-Reply-To: <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Wed, 15 Jan 2020 14:14:11 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MXu9+9C7iUZST_OCwfren7kggFTG41DArF6yzRa_0hf4w@mail.gmail.com>
+Message-ID: <CAPBb6MXu9+9C7iUZST_OCwfren7kggFTG41DArF6yzRa_0hf4w@mail.gmail.com>
+Subject: Re: media: mtk-vcodec: reset segment data then trig decoder
+To:     gtk_ruiwang <gtk_ruiwang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unlike most other power button drivers, this driver unconditionally
-enables its wakeup IRQ. It should be using device_may_wakeup() to
-respect the userspace configuration of wakeup sources.
+On Wed, Jan 15, 2020 at 12:47 PM Alexandre Courbot
+<acourbot@chromium.org> wrote:
+>
+> On Tue, Jan 14, 2020 at 12:32 PM <gtk_ruiwang@mediatek.com> wrote:
+> >
+> > From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
+> >
+> > VP9 bitstream specification indicate segment data should reset to
+> > default when meet key frames, intra only frames or enable error
+> > resilience mode. So memset segmentation map buffer before every
+> > decode process is not appropriate.
+> >
+> > Reset segment data only when needed, then trig decoder hardware
+> >
+> > Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
+> > ---
+> >  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    | 19 +++++++++++++++----
+> >  1 file changed, 15 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> > index 24c1f0bf2147..42c9c3c98076 100644
+> > --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> > +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> > @@ -110,7 +110,9 @@ struct vp9_sf_ref_fb {
+> >   * @buf_len_sz_c : size used to store cbcr plane ufo info (AP-R, VPU-W)
+> >
+> >   * @profile : profile sparsed from vpu (AP-R, VPU-W)
+> > - * @show_frame : display this frame or not (AP-R, VPU-W)
+> > + * @show_frame : [BIT(0)] display this frame or not (AP-R, VPU-W)
+> > + *     [BIT(14)] reset segment data or not (AP-R, VPU-W)
+> > + *     [BIT(15)] trig decoder hardware or not (AP-R, VPU-W)
+> >   * @show_existing_frame : inform this frame is show existing frame
+> >   *     (AP-R, VPU-W)
+> >   * @frm_to_show_idx : index to show frame (AP-R, VPU-W)
+> > @@ -494,12 +496,12 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
+> >                                         frm_to_show->fb->base_y.size);
+> >                 }
+> >                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
+> > -                       if (vsi->show_frame)
+> > +                       if (vsi->show_frame & BIT(0))
+> >                                 vp9_add_to_fb_disp_list(inst, inst->cur_fb);
+> >                 }
+> >         } else {
+> >                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
+> > -                       if (vsi->show_frame)
+> > +                       if (vsi->show_frame & BIT(0))
+> >                                 vp9_add_to_fb_disp_list(inst, frm_to_show->fb);
+> >                 }
+> >         }
+> > @@ -870,13 +872,22 @@ static int vdec_vp9_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+> >                                         vsi->sf_frm_sz[idx]);
+> >                         }
+> >                 }
+> > -               memset(inst->seg_id_buf.va, 0, inst->seg_id_buf.size);
+> >                 ret = vpu_dec_start(&inst->vpu, data, 3);
+> >                 if (ret) {
+> >                         mtk_vcodec_err(inst, "vpu_dec_start failed");
+> >                         goto DECODE_ERROR;
+> >                 }
+> >
+> > +               if ((vsi->show_frame & BIT(15)) &&
+> > +                   (vsi->show_frame & BIT(14))) {
+>
+> Using the new bits in this manner means this patch is not compatible
+> with the older firmware.
+>
+> On an older firmware, these bits will be 0, which means the decoder
+> will never be started. To preserve compatibility, the behavior should
+> be reversed: *do not* reset and/or start the decoder if the bits are
+> set.
+>
+> Also both bits are only used together - we should either separate the
+> data segment reset and decoder start, or rely on only one bit for
+> this.
 
-Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
-nested off of regmap-irq's threaded interrupt handler. The device core
-ignores such interrupts, so to actually disable wakeup, we must
-explicitly disable all non-wakeup interrupts during suspend.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- drivers/input/misc/axp20x-pek.c | 37 ++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-index 17c1cca74498..0ace3fe3d7dc 100644
---- a/drivers/input/misc/axp20x-pek.c
-+++ b/drivers/input/misc/axp20x-pek.c
-@@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
- 	}
- 
- 	if (axp20x_pek->axp20x->variant == AXP288_ID)
--		enable_irq_wake(axp20x_pek->irq_dbr);
-+		device_init_wakeup(&pdev->dev, true);
- 
- 	return 0;
- }
-@@ -352,6 +352,40 @@ static int axp20x_pek_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused axp20x_pek_suspend(struct device *dev)
-+{
-+	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-+
-+	/*
-+	 * As nested threaded IRQs are not automatically disabled during
-+	 * suspend, we must explicitly disable non-wakeup IRQs.
-+	 */
-+	if (device_may_wakeup(dev)) {
-+		enable_irq_wake(axp20x_pek->irq_dbf);
-+		enable_irq_wake(axp20x_pek->irq_dbr);
-+	} else {
-+		disable_irq(axp20x_pek->irq_dbf);
-+		disable_irq(axp20x_pek->irq_dbr);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused axp20x_pek_resume(struct device *dev)
-+{
-+	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev)) {
-+		disable_irq_wake(axp20x_pek->irq_dbf);
-+		disable_irq_wake(axp20x_pek->irq_dbr);
-+	} else {
-+		enable_irq(axp20x_pek->irq_dbf);
-+		enable_irq(axp20x_pek->irq_dbr);
-+	}
-+
-+	return 0;
-+}
-+
- static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
- {
- 	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-@@ -371,6 +405,7 @@ static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
- }
- 
- static const struct dev_pm_ops axp20x_pek_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(axp20x_pek_suspend, axp20x_pek_resume)
- #ifdef CONFIG_PM_SLEEP
- 	.resume_noirq = axp20x_pek_resume_noirq,
- #endif
--- 
-2.23.0
-
+Ah, looks like I missed the fact that the decoder is still started
+even when these bits are not set. So this indeed looks
+backward-compatible. Please ignore my comment.
