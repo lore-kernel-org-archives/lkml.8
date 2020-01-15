@@ -2,155 +2,176 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B90C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05400C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7A124679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pR0xeT9J"
+	by mail.kernel.org (Postfix) with ESMTP id D970824655
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbgAOJoT (ORCPT
+        id S1729541AbgAOJpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:44:19 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54078 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729459AbgAOJoS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:44:18 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00F9hunI123963;
-        Wed, 15 Jan 2020 03:43:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579081436;
-        bh=I1GbB9LPbUbIMdwYtUqwmved9scdWddLN73TisHwbc8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pR0xeT9JuRIQ161rA/RXCC7rCxdgEQFO6BBN87pGN9iJY6fhVLiQ2Cg2pQvNgYBTW
-         vISvIVgt0OWNGpI++9Cu9qycZMARXF9HrLqGcnL3DYS2DYBTQGMYo/LHHnTzlMuPi7
-         fgvT3kK+IAGAnclmPFE+6bkaQSPurbAzf53EkyEY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00F9hu7e089171
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jan 2020 03:43:56 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
- Jan 2020 03:43:55 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 15 Jan 2020 03:43:55 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00F9hpEC035930;
-        Wed, 15 Jan 2020 03:43:51 -0600
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     <santosh.shilimkar@oracle.com>, Sekhar Nori <nsekhar@ti.com>,
-        <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>, <frowand.list@gmail.com>
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
- <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
- <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
-Date:   Wed, 15 Jan 2020 11:44:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 04:45:24 -0500
+Received: from relay.sw.ru ([185.231.240.75]:43806 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729459AbgAOJpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:45:23 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1irfEj-0002LN-LS; Wed, 15 Jan 2020 12:45:17 +0300
+Subject: Re: [PATCH RESEND] mm: fix tick_sched timer blocked by
+ pgdat_resize_lock
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
+ <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
+ <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
+ <c7ac0338-78a6-2ae3-465c-2d6371d96a72@linux.alibaba.com>
+ <9420eab3-5e5e-150f-53c9-6cd40bacf859@virtuozzo.com>
+ <ba242ee6-22be-3047-5a88-e6b39e1509ef@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <e87a04fa-c96b-c15e-126e-46f1cc2885d1@virtuozzo.com>
+Date:   Wed, 15 Jan 2020 12:45:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <ba242ee6-22be-3047-5a88-e6b39e1509ef@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 14/01/2020 20.06, santosh.shilimkar@oracle.com wrote:
->>>>> Can you please giver your Acked-by for the ringacc patches if they are
->>>>> still OK from your point of view as you had offered to take them
->>>>> before
->>>>> I got comments from Lokesh.
+On 14.01.2020 11:54, Shile Zhang wrote:
+> 
+> 
+> On 2020/1/13 16:11, Kirill Tkhai wrote:
+>> On 13.01.2020 03:54, Shile Zhang wrote:
+>>>
+>>> On 2020/1/10 19:42, Kirill Tkhai wrote:
+>>>> On 10.01.2020 12:30, Shile Zhang wrote:
+>>>>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
+>>>>> will be called inside 'pgdatinit' kthread to initialise the deferred
+>>>>> pages with local interrupts disabled. Which is introduced by
+>>>>> commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
+>>>>> pages").
 >>>>>
->>>> Sure. But you really need to split the series so that dma engine and
->>>> soc driver patches can be applied independently.
+>>>>> But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
+>>>>> default), especially in small system with NRCPUS <= 2. In this case, the
+>>>>> interrupts are disabled on boot CPU during memory initialising, which
+>>>>> caused the tick_sched timer be blocked, leading to wall clock stuck.
+>>>>>
+>>>>> Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
+>>>>> deferred pages")
+>>>>>
+>>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>>>>> ---
+>>>>>    include/linux/memory_hotplug.h | 16 ++++++++++++++--
+>>>>>    1 file changed, 14 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>>>>> index ba0dca6aac6e..be69a6dc4fee 100644
+>>>>> --- a/include/linux/memory_hotplug.h
+>>>>> +++ b/include/linux/memory_hotplug.h
+>>>>> @@ -6,6 +6,8 @@
+>>>>>    #include <linux/spinlock.h>
+>>>>>    #include <linux/notifier.h>
+>>>>>    #include <linux/bug.h>
+>>>>> +#include <linux/sched.h>
+>>>>> +#include <linux/smp.h>
+>>>>>      struct page;
+>>>>>    struct zone;
+>>>>> @@ -282,12 +284,22 @@ static inline bool movable_node_is_enabled(void)
+>>>>>    static inline
+>>>>>    void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
+>>>>>    {
+>>>>> -    spin_lock_irqsave(&pgdat->node_size_lock, *flags);
+>>>>> +    /*
+>>>>> +     * Disable local interrupts on boot CPU will stop the tick_sched
+>>>>> +     * timer, which will block jiffies(wall clock) update.
+>>>>> +     */
+>>>>> +    if (current->cpu != get_boot_cpu_id())
+>>>>> +        spin_lock_irqsave(&pgdat->node_size_lock, *flags);
+>>>>> +    else
+>>>>> +        spin_lock(&pgdat->node_size_lock);
+>>>>>    }
+>>>>>    static inline
+>>>>>    void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
+>>>>>    {
+>>>>> -    spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
+>>>>> +    if (current->cpu != get_boot_cpu_id())
+>>>>> +        spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
+>>>>> +    else
+>>>>> +        spin_unlock(&pgdat->node_size_lock);
+>>>>>    }
+>>>>>    static inline
+>>>>>    void pgdat_resize_init(struct pglist_data *pgdat)
+>>>> 1)Linux kernel is *preemptible*. Kernel with CONFIG_PREEMPT_RT option even may preempt
+>>>> *kernel* code in the middle of function. When you are executing a code containing
+>>>> pgdat_resize_lock() and pgdat_resize_unlock(), the process may migrate to another cpu
+>>>> between them.
+>>>>
+>>>> bool cpu               another cpu
+>>>> ----------------------------------
+>>>> pgdat_resize_lock()
+>>>>     spin_lock()
+>>>>     --> migrate to another cpu
+>>>>                         pgdat_resize_unlock()
+>>>>                         spin_unlock_irqrestore(<uninitialized flags>)
+>>>>
+>>>> (Yes, in case of CONFIG_PREEMPT_RT, process is preemptible even after spin_lock() call).
+>>>>
+>>>> This looks like a bad helpers, and we should not introduce such the design.
+>>> Hi Kirill,
 >>>
->>> The ringacc is a build and runtime dependency for the DMA. I have hoped
->>> that all of them can go via DMAengine (hence asking for your ACK on the
->>> drivers/soc/ti/ patches) for 5.6.
->>>
->>>> Can you please do that?
->>>
->>> This late in the merge window that would really mean that I will miss
->>> another release for the KS3 DMA...
->>> I can live with that if you can pick the ringacc for 5.6 and if Vinod
->>> takes the DMAengine core changes as well.
->>>
->>> That would leave only the DMA drivers for 5.7 and we can also queue up
->>> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
->>> sa2ul, etc).
->>>
->>> If they go independently and nothing makes it to 5.6 then 5.8 is the
->>> realistic target for the DMA support for the KS3 family of devices...
+>>> Thanks for your comments!
+>>> Sorry for I'm not very clear about this lock/unlock, but I encountered this issue
+>>> with "CONFIG_PREEMPT is not set".
+>> The thing is we simply shouldn't introduce such the primitives since the thread
+>> may migrate to another cpu, while you own the lock. This looks like a buggy design.
 >>
->> Thats too many kernel versions to get this important piece in.
+>>>> 2)I think there is no the problem this patch solves. Do we really this statistics?
+>>>> Can't we simple remove print message from deferred_init_memmap() and solve this?
+>>> Sorry for I've not put this issue very clearly. It's *not* just one statistics log
+>>> with wrong time calculate, but the wall clock is stuck.
+>>> So the 'systemd-analyze' command also give a wrong time as I mentioned in the cover
+>>> letter. I don't think is OK just remove the log, it cannot solve the wall clock latency.
+>> Have you tried temporary enabling interrupts in the middle of cycle after a huge enough
+>> memory block is initialized? Something like:
 >>
->> Santosh, if you do not have anything else queued up that clashes with
->> this, can the whole series be picked up by Vinod with your ack on the
->> drivers/soc/ti/ pieces?
+>> deferred_init_memmap()
+>> {
+>>     while (spfn < epfn) {
+>>         nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+>>         local_irq_enable();
+>>         local_irq_disable();
+>>     }
+>> }
+> 
+> Yes, I'd tried this for issue confirm, before I sent this patch. Likes I mentioned the debug log in cover letter, I also add mdelay between local_irq_enable/disable, this system jiffies is stuck without update.
+> So I think there must be problem to use spin_lock_irqsave in early boot path on boot CPU.
+
+This time SMP is enabled. You have many threads are running. Interrupts are enabled
+and they occur. So, it's OK to disable interrupts for some time.
+
+My opinion is we should try to enable interrupts in the cycle after some fixed
+amount of memory is initialized. Say, every 1GB. This should resolve two problems:
+handling timer interrupt with update jiffies at time, and keeping the fix for the issue,
+that Pavel fixed in 3a2d7fa8a3d5.
+
+>> Or, maybe, enable/disable interrupts somewhere inside deferred_init_maxorder().
 >>
-> I would prefer driver patches to go via driver tree.
+>>>> Also, you may try to check that sched_clock() gives better results with interrupts
+>>>> disabled (on x86 it uses rdtsc, when it's possible. But it also may fallback to
+>>>> jiffies-based clock in some hardware cases, and they also won't go with interrupts
+>>>> disabled).
+> 
 
-Not sure what you mean by 'driver patches'...
-The series to enable DMA support on TI's K3 platform consists:
-Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
-Patch 3-6: DMAengine core patches to add new features needed for k3-udma
-Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
-
-Patch 10 depends on the ringacc and the DMAengine core patches
-Patch 11 depends on patch 10
-
-I kept it as a single series in hope that they will go via one subsystem
-tree to avoid build dependency issues and will have a good amount of
-time in linux-next for testing.
-
->> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
->> with just the drivers/soc/ti parts applied so you can merge that branch
->> in case you end up having to send up anything that conflicts.
->>
-> As suggested on other email to Peter, these DMA engine related patches
-> should be queued up since they don't have any dependency. Based on
-> the status of that patchset, will take care of pulling in the driver
-> patches either for this merge window or early part of next merge window.
-
-OK, I'll send the two patch for ringacc as a separate series.
-
-Vinod: Would it be possible for you to pick up the DMAengine core
-patches (patch 3-6)?
-The UDMA driver patches have hard dependency on DMAengine core and
-ringacc, not sure how they are going to go in...
-
-> Regards,
-> Santosh
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
