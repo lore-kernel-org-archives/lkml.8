@@ -2,87 +2,97 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8C3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0FFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27CCB24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579046921;
-	bh=wbhPX9Vbp+snlnJ/SyfonoQPcccQXBxTU4uyKfkHh4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q3YzrEfzyGesC0e7YWCSnWg9okErfMA3S1A9ls0X80Adf3AAPy0unk6bHcDpZj3YT
-	 5uJqWEeWPr6fFvjsuSl97hbMyCyGlpZq9ZkwYFwuyAYZpBOyG06iBmIVnvTEiLEBXf
-	 QMfyxcoUDrkTargO2Tm1VnVOJUmJ/qcTGhVSpqfY=
+	by mail.kernel.org (Postfix) with ESMTP id D46B924673
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAOAIk (ORCPT
+        id S1728911AbgAOAJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 19:08:40 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37890 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgAOAIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 19:08:39 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z9so12384243oth.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 16:08:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0caRa5XG3dj99WMQy0XFQRo3RUPxiFm3CleZQAkYe78=;
-        b=IcbpdA7fht7j1NlslV6zKKdSxqXnLItF2xQGp92KgESCpRErCyiHa82kofV6fHdfUc
-         k3wa1Hn78ZORLjp+oz0vsEsoPVqY6edDWz2/n5lY/qPaFgDJbctEi3PHfTUhQ9xA5qjg
-         bIRxgzoH0vcf+RTe7ZEtX8TNSxHdBvLZ7Skw1PdlmpZyFqmI/KsbxUk1y7NmEeSedAQL
-         bfMpmfXyEckxf/w5s5x7xnQoD/oN+vLgjiKTf8B16p3nhYxl3O15pKJe/+IaVm501GQH
-         WP2ej3a3D02lAUbX0ryCAVIhfxV+DWKSodnqzPfp1bjRore15sh/SPJgPK+5erVM47BW
-         o3Mw==
-X-Gm-Message-State: APjAAAU2BNIkR9Hj0SlqpHGLAX5WYeTfOQzwbKpZUdKqZ3wouLZIUIxI
-        yYvmNXBG2Dz63sJOxXghq7O+iRU=
-X-Google-Smtp-Source: APXvYqyiQh5RK5HH2Kgk89kiSDZT8GI6ZOMcBt8rWeFsxq7LHU28pmp2iSVKkPdnrEIq/9QrGl+u7w==
-X-Received: by 2002:a9d:de9:: with SMTP id 96mr799504ots.222.1579046918871;
-        Tue, 14 Jan 2020 16:08:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 15sm5111201oin.5.2020.01.14.16.08.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 16:08:38 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2209ae
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 18:08:37 -0600
-Date:   Tue, 14 Jan 2020 18:08:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: devantech-srf04.yaml: add pm feature
-Message-ID: <20200115000837.GA11941@bogus>
-References: <20200109083814.GA5368@arbad>
+        Tue, 14 Jan 2020 19:09:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:8608 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728656AbgAOAJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 19:09:35 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 16:09:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="273468527"
+Received: from emkilgox-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.0.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2020 16:09:33 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 00/10] soundwire: bus: fix race conditions, add suspend-resume
+Date:   Tue, 14 Jan 2020 18:08:34 -0600
+Message-Id: <20200115000844.14695-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109083814.GA5368@arbad>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 09:38:16 +0100, Andreas Klinger wrote:
-> Add GPIO line and startup time for usage of power management
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../iio/proximity/devantech-srf04.yaml         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
+The existing mainline code for SoundWire does not handle critical race
+conditions, and does not have any support for pm_runtime suspend or
+clock-stop modes needed for e.g. jack detection or external VAD.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+As suggested by Vinod, these patches for the bus are shared first -
+with the risk that they are separated from their actual use in Intel
+drivers, so reviewers might wonder why they are needed in the first
+place.
+
+For reference, the complete set of 90+ patches required for SoundWire
+on Intel platforms is available here:
+
+https://github.com/thesofproject/linux/pull/1692
+
+These patches are not Intel-specific and are likely required for
+e.g. Qualcomm-based implementations.
+
+All the patches in this series were generated during the joint
+Intel-Realtek validation effort on Intel reference designs and
+form-factor devices. The support for the initialization_complete
+signaling is already available in the Realtek codecs drivers merged in
+the ASoC tree (rt700, rt711, rt1308, rt715)
+
+Pierre-Louis Bossart (8):
+  soundwire: bus: fix race condition with probe_complete signaling
+  soundwire: bus: fix race condition with enumeration_complete signaling
+  soundwire: bus: fix race condition with initialization_complete
+    signaling
+  soundwire: bus: add PM/no-PM versions of read/write functions
+  soundwire: bus: write Slave Device Number without runtime_pm
+  soundwire: bus: add helper to clear Slave status to UNATTACHED
+  soundwire: bus: disable pm_runtime in sdw_slave_delete
+  soundwire: bus: don't treat CMD_IGNORED as error on ClockStop
+
+Rander Wang (2):
+  soundwire: bus: fix io error when processing alert event
+  soundwire: bus: add clock stop helpers
+
+ drivers/soundwire/bus.c       | 509 ++++++++++++++++++++++++++++++++--
+ drivers/soundwire/bus.h       |   9 +
+ drivers/soundwire/bus_type.c  |   5 +
+ drivers/soundwire/slave.c     |   4 +
+ include/linux/soundwire/sdw.h |  24 ++
+ 5 files changed, 526 insertions(+), 25 deletions(-)
+
+-- 
+2.20.1
+
