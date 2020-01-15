@@ -2,170 +2,109 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ABDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739A2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C759524671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D822187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EJT87qqZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pfZQgYjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgAOP4Z (ORCPT
+        id S1729040AbgAOP4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:56:25 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37023 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgAOP4Y (ORCPT
+        Wed, 15 Jan 2020 10:56:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46936 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOP4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:56:24 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115155622euoutp0296e5c4fed3383a3954ab4956bc0a3623~qGoYji4AO2656126561euoutp02v
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:56:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115155622euoutp0296e5c4fed3383a3954ab4956bc0a3623~qGoYji4AO2656126561euoutp02v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579103782;
-        bh=XfQrDuwfMB1/RW0gP/rZygphaWkcyV/9F+qlQtlGsz0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=EJT87qqZn043G+lRyCAE+TGe447nFmTU9kEWnurY9QBw7MdxMuvvd04eBToTUQaZP
-         XNpaqqPDjnAS4gblSdLQGOojZ9Y3fyEDu7Kt57C0XzdDkZAxFrdZSF/gP6NtB+MIiq
-         EgV7hF3gTeWBXWnpc4tTMwk6Borrrkc3NwhR8qJU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200115155622eucas1p2f01c2676156c662ae0c524fb40518570~qGoYE2iMk0833708337eucas1p2D;
-        Wed, 15 Jan 2020 15:56:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 06.96.60698.6263F1E5; Wed, 15
-        Jan 2020 15:56:22 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115155621eucas1p1db3f830ef52babfd58d4bd4340d174c3~qGoXaEVMA3131631316eucas1p1D;
-        Wed, 15 Jan 2020 15:56:21 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115155621eusmtrp25a03846dd255ad40c2db5a3b98c31a06~qGoXZMF371584215842eusmtrp21;
-        Wed, 15 Jan 2020 15:56:21 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-ce-5e1f3626edaf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CD.32.08375.5263F1E5; Wed, 15
-        Jan 2020 15:56:21 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115155620eusmtip15e37a477548de28762c8dee44115842e~qGoWQCP9I0722007220eusmtip1n;
-        Wed, 15 Jan 2020 15:56:20 +0000 (GMT)
-Subject: Re: [PATCH 7/7] devfreq: move statistics to separate struct
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Javi Merino <javi.merino@arm.com>,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?UTF-8?Q?=c3=98rjan_Eide?= <orjan.eide@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        a.hajda@samsung.com, robin.murphy@arm.com
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <4da95c7f-7fc7-afb5-e569-4403e705f658@samsung.com>
-Date:   Wed, 15 Jan 2020 16:56:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <d710f606-0013-ade3-904e-a56f0404eca7@arm.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUxTQRSGM3frBS25FJEjm9pERIxbRB3UEEh4aNAHfVExUqlypQYKpLVu
-        iangBiSioiJWFAERrShIcQENiYAlCqUgiwQBRTFSFMNmIgho2wuRt2/mnP//z5kMS0oGaU/2
-        YPwhXh2viJMyztRT05hlhd/6hfLVta/n4I5HDTR+P/qNxl8vPiFxTksbjcsmTonw7eEsGl/4
-        8p3EFkuJCJuTf4hw6Rdbtbkim8Ej52sQzrJUEjg3+bQIP6zpEuEPSfcYXGmspvCrwV4a9/ak
-        MyFusqJbRUhWru8SyfJfWglZqSGVkRnv6GTpZQYkGyn13Sba7bw5mo87eJhXrwqOclaaX3QT
-        if3sUWNqAXESXRClIScWuED4frOVSUPOrIS7h6Aiq48WDqMIPnW2UsJhBMFo7iA1IymyNhF2
-        lnCFCEy5/kLTAAKDRfB148KgPiOZsfM8bgm0NXY5nEgun4Yr2TccaobbCJfOGZCdxVwwDD1O
-        dzBlE/RP1juM3LldMPypmhZ6XOHN9V7HFE7cJjiXYnIwyXlAR28OIfBCeDaQTdrDgLvKwrvG
-        HiSMHQZJzdWEwG7QX1s2/QLe8LfcLrYLHiGYTOmbVj9DUHh5ihG6NkFnw7iNWVvEMiiuWGVH
-        4EKhachLQBdoH3AVZnCBjKfXSOFaDClnJYKHH5TcLWFmUtPK75MXkVQ/azP9rG30s7bR/4+9
-        jSgD8uC1GlUMr1kbzx9ZqVGoNNr4mJX7E1SlyPYP66Zqfz1HlRP7qhDHIulcsXLCVy6hFYc1
-        x1RVCFhSOk/8JstHLhFHK44d59UJe9XaOF5ThbxYSuohXptnjZRwMYpDfCzPJ/LqmSrBOnme
-        RErznImIMHPjxnUm97H7ARELrH/q//rE5VOD4V9Ned0P5k8p/H6qwuly3c38vmAiJ9DYFqvs
-        DyrejjM79ugyQpeeWVzwMTKyRbs1ynriMZb+XpRS7J25o21nvS5zywZcF9TdPV47NZbtSu8/
-        oPVfDu0hLYu7dG+lO4rkDZ9DzM1SSqNUrAkg1RrFP6L8HKmDAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4XV1VM/k4g5NLZSxurTvHanH9y3NW
-        i6cTtjJbzL9yjdViy59mdosFn2awWvQ/fs1scf78BnaLs01v2C02PQbKXt41h83ic+8RRosZ
-        5/cxWSxsamG3WHvkLrvF7cYVbBb7Nh9msTj44QmrxZOHfWwOwh5r5q1h9Ng56y67x+I9L5k8
-        Nq3qZPPYvKTeo2/LKkaPz5vkAtij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62M
-        TJX07WxSUnMyy1KL9O0S9DLO7r7HVPCKo2Jz51KmBsZ+9i5GTg4JAROJNS8vMoHYQgJLGSWm
-        3RHqYuQAistIHF9fBlEiLPHnWhdbFyMXUMlrRonmo4tYQBLCAi4SZyY1sYHYIgKqEtcu3GUB
-        KWIWWMoq8fvdbhaIjt/MEtsvHgXrYBOwkpjYvooRxOYVsJP4uLEPzGYB6n719wzYRaICERKH
-        d8yCqhGUODnzCVgvp4C1RHvHMTCbWUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUmoWkfRaS
-        lllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMP63Hfu5eQfjpY3BhxgFOBiV
-        eHgz/sjFCbEmlhVX5h5ilOBgVhLhPTlDNk6INyWxsiq1KD++qDQntfgQoynQcxOZpUST84Gp
-        Ka8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+MM2bN24WnK1eFu
-        sxw5dizaaO0SEZK0ISy+a4pwy/8fhpqXTG7HrJxxyHXKQesFZgsWXfx3q6VEXVVYSLJR3mp3
-        ZOSxL7ErJy56fGMKe3CQ4cJj0ueYKhKXM02s5Z6UZ/rAcpdkx/1w2w4NlfcHGQuTpicn/HBP
-        S/thJxF8IETIRSJDbbOvhxJLcUaioRZzUXEiAEAOZ+0VAwAA
-X-CMS-MailID: 20200115155621eucas1p1db3f830ef52babfd58d4bd4340d174c3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a
-References: <20191113091336.5218-1-k.konieczny@samsung.com>
-        <CGME20191113091354eucas1p265de4985d167814f5080fbdf21b75a0a@eucas1p2.samsung.com>
-        <20191113091336.5218-8-k.konieczny@samsung.com>
-        <4942d2ad-fef7-89be-91c1-c02c319546ff@samsung.com>
-        <38350d81-e916-b386-6727-f4c85689c172@samsung.com>
-        <85a29ce4-0f89-2b50-b046-dba747208933@samsung.com>
-        <4ed6b8bf-b415-c42d-33d6-d2ed0504eaf4@samsung.com>
-        <d9d13537-f4c9-4420-c3bc-438bc87c5e6a@samsung.com>
-        <d710f606-0013-ade3-904e-a56f0404eca7@arm.com>
+        Wed, 15 Jan 2020 10:56:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n9so8695921pff.13;
+        Wed, 15 Jan 2020 07:56:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HwV9sGACUDknSqn3rZRjdfv8PQfY2jtJrBDpPLg25bE=;
+        b=pfZQgYjBcjyCtn6E2E//UIWWV7YF8uAjc6ggh4p5mbPc/GNDh/t8TClwCoKqEY9iKm
+         31WcNv/TU4fwcs85/hvITBoBQwLVXKXc/pq1wY9AFtXF2yclNcKLougfpxo4Rk7HthPf
+         JKGNTLguhyvB97/Am9L/CUP3MrCj/46w4fxjcRfkXO25T4sy6vMUxLTAtfX+DvZ+ztaN
+         0TJinWp2KwiFxkOa5ztbYrQZYs73Hv1EuT6dgymCzvzr+fdm6LEZUH2G+6yYELu7EAOO
+         KM6yEegZ79mbzuNRVufVKJ2z4+wCZyjhs7MRMvV9HWkgyOvBGAQgQiMD9SVbFGb4EqZn
+         upRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HwV9sGACUDknSqn3rZRjdfv8PQfY2jtJrBDpPLg25bE=;
+        b=b923+AWd4Tbl6fSwkJWwPGNQd+KJvHj6/EZEx5adh0wg1gk9OrL9kLT/bIj6hELgy+
+         t+cLRehQy/+d1hxYjOEnNdgR/cyWO+T4SUsgidp51lDK84zcahQ3pk3DCE+BL1lI3lG+
+         4lYmRcoR9MiOPxjLNTboDEdAF44eRBDfx1nMDIuL9ZxTSLOi5/lpZg0EWATPHOF7wiCS
+         fbG4wtVJGFmw+in8l7wH5fvQAiJqs9xReBrri4lMyVEx8PFfMzXA1jvklUlIhLUwBIg1
+         6vEVXEuR2zJbKLGUtnZ5OMd9W5crNTByJIk4oDvTBYeF96isAg8aS+9N2D5RpMhMlEa/
+         84OA==
+X-Gm-Message-State: APjAAAU/k43JoVzS1Ey5XideiIShi5rk90jd6PSPLi8SOgyR/8XwszIF
+        fq5fe5pnFKULoK2/dZiyz6IF8Md8EZc=
+X-Google-Smtp-Source: APXvYqwfBfFNxEYPBk1P4r0u33EcwZqChtsYsDBcPVXmULzU6XIoKIK5xPGRQ8bZGAylr4brUje92g==
+X-Received: by 2002:a63:4b50:: with SMTP id k16mr34152524pgl.386.1579103797712;
+        Wed, 15 Jan 2020 07:56:37 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee8:ed72:75ba:e01f:bdbc:c547])
+        by smtp.gmail.com with ESMTPSA id b8sm22755599pfr.64.2020.01.15.07.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 07:56:37 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     wei.liu@kernel.org, paul@xen.org
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] net: xen-netback: hash.c: Use built-in RCU list checking
+Date:   Wed, 15 Jan 2020 21:25:53 +0530
+Message-Id: <20200115155553.13471-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-On 12/16/19 2:01 PM, Lukasz Luba wrote:
-> Hi Bartek,
-> 
-> [added Dietmar, Robin, Andrzej (for upcoming DRM drm-misc-next)]
-> 
-> On 11/15/19 12:40 PM, Bartlomiej Zolnierkiewicz wrote:
+list_for_each_entry_rcu has built-in RCU and lock checking.
+Pass cond argument to list_for_each_entry_rcu.
 
-[...]
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+---
+ drivers/net/xen-netback/hash.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->> Hmmm.. fixing partition_enable_opps() should be trivial but I wonder
->> why we are carrying devfreq_cooling.c code in upstream kernel at all?
-> 
-> Well, the devfreq_cooling.c is going to have a client in mainline:
-> the GPU driver - Panfrost.
-> 
-> It is already in DRM branch 'drm-misc-next':
-> https://patchwork.freedesktop.org/patch/342848/
+diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
+index 10d580c3dea3..6b7532f7c936 100644
+--- a/drivers/net/xen-netback/hash.c
++++ b/drivers/net/xen-netback/hash.c
+@@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
+ 
+ 	found = false;
+ 	oldest = NULL;
+-	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
++	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
++				lockdep_is_held(&vif->hash.cache.lock)) {
+ 		/* Make sure we don't add duplicate entries */
+ 		if (entry->len == len &&
+ 		    memcmp(entry->tag, tag, len) == 0)
+@@ -102,7 +103,8 @@ static void xenvif_flush_hash(struct xenvif *vif)
+ 
+ 	spin_lock_irqsave(&vif->hash.cache.lock, flags);
+ 
+-	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
++	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
++				lockdep_is_held(&vif->hash.cache.lock)) {
+ 		list_del_rcu(&entry->link);
+ 		vif->hash.cache.count--;
+ 		kfree_rcu(entry, rcu);
+-- 
+2.17.1
 
-OK, thanks for explaining this.
-
-> Regarding the devfreq_cooling.c code structure.
-> I am currently working on cleaning up the devfreq cooling code and
-> adding Energy Model instead for private freq, power tables. It will be
-> in similar fashion as it is done in cpufreq_cooling. The model will
-> be also simplified so hopefully more clients would come.
-> It is under internal review and will be posted shortly.
-
-Great to hear this and thank you for working on it.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
