@@ -2,97 +2,159 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B76C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D18C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C63206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrzSeApf"
+	by mail.kernel.org (Postfix) with ESMTP id 2561A206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgAOMvz (ORCPT
+        id S1729106AbgAOMyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:51:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43662 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgAOMvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:51:54 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so18406373ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:51:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hsr/oi2XrIAmmbP163wTd/MCf3p12+DUNarrq/kg9sg=;
-        b=xrzSeApfEb6DAeNeLYgX7j/LWntJQinaR4oIz/1UnnXu31QZuRkQ52mokkML3w8Th9
-         JVP9mym3jJOxZFbTcKpBGqRYr07Rpg9oPhhSDckVL4EsjgxxDh3/hXwjCGteoDMIefKA
-         pGfIEuCLB/Df5dpac286FNC1PHf+NkSl4HINYNkXJoeMO1uHTz3tJDmGOEgQK7sWlVFT
-         ZK1UkQu6k8Soyq9q4i3Tp0N1aKP6UvvuGZA1nesiRI8PNDriNECKpTDTkV+Fu4NA2NXU
-         fRjEYbkMP1JDI+CdFPuSoCJYALL41ulOLRNW6lpUezYXwr3DYKnTfd5SOPcPXzBJFDnV
-         cl/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hsr/oi2XrIAmmbP163wTd/MCf3p12+DUNarrq/kg9sg=;
-        b=nfeVXlEQWz/t3x7Cj1M5ydjEEEsfEYhAJbehEyL3BSPBoOMR6oeboF8FpRd7hCbdZ8
-         QqtcitPpreU4RYM7/rLO4yCG/QCjFywJnTsdP7xvMPbocKFwZgUJBtcq63fnj0YTqA58
-         BSCDGQl+4ZI8jCM9qZfxvD79IYlZhC9n+Uv8UENpsMmhiWZdBs1j7wvNDXzoxg4Q61J2
-         66Kzfg8cfC2GQbRnGm31Hq3hEro465F1F257U47AmkiDpaCoGG0y7pNHhaWJAks2iV4w
-         BI3gavmGhmo0jV4dim9QNth/gCQMdCiHUk0PApfc+0SDJoP3l+PmiWkNwTkKHBZSJsnm
-         axZA==
-X-Gm-Message-State: APjAAAUZocLCot2wYaIbEQg8na5sDIQlfcTfHW9vzT77JnjESuhSMrvo
-        6n4uGVyyUbLsOYPDUaermp45jKmzXNNrDHvxDiAXIw==
-X-Google-Smtp-Source: APXvYqyPLiNMYFjq+10C4y9GPJ4omzojNt3A/uO0N7XjKPjzPb413C4mDt6k4ydemhY/RqaqtsTUqp4qjoKTT9DRbqA=
-X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr1762433ljo.32.1579092712068;
- Wed, 15 Jan 2020 04:51:52 -0800 (PST)
+        Wed, 15 Jan 2020 07:54:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58658 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgAOMyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:54:37 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 96AD3AD2D;
+        Wed, 15 Jan 2020 12:54:34 +0000 (UTC)
+Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in
+ mpol_parse_str()
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
+        aarcange@redhat.com, hughd@google.com, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        yang.shi@linux.alibaba.com
+References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz>
+Date:   Wed, 15 Jan 2020 13:54:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200109094001.24343-1-jay.xu@rock-chips.com> <20200113011616.19791-1-jay.xu@rock-chips.com>
-In-Reply-To: <20200113011616.19791-1-jay.xu@rock-chips.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 13:51:40 +0100
-Message-ID: <CACRpkdY_EHQbF4rRyGwoxEk8LeWfmRzmCd=8=SY95LPXMHYOmw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl/rockchip: splite soc data to separated driver
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     David Wu <david.wu@rock-chips.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 2:16 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+On 1/15/20 6:54 AM, Dan Carpenter wrote:
+> What we are trying to do is change the '=' character to a NUL terminator
+> and then at the end of the function we restore it back to an '='.  The
+> problem is there are two error paths where we jump to the end of the
+> function before we have replaced the '=' with NUL.  We end up putting
+> the '=' in the wrong place (possibly one element before the start of
+> the buffer).
 
-> * Decrease codes of pinctrl-rockchip.c from 4,000 lines to 2000 by
-> separating soc data to a new file.
->
-> * Move rockchip pinctrl related struct definations to a head file.
->
-> * Keep legency pinctrl-rockchip.c under driver/pinctrl but not to
-> compile it, conveniently for reviewers.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+Bleh.
 
-This patch looks good, two things are missing:
+> Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
+> Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-- Review from Heiko
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-- A change to MAINTAINERS so that the file pattern still
-  matches
+CC stable perhaps? Can this (tmpfs mount options parsing AFAICS?) become
+part of unprivileged operation in some scenarios?
 
-Should someone from Rockchip also sign up as comaintainer
-for this driver by the way? (Though the people at Rockchip
-posting patches for this seem to change a bit.)
+> ---
+>  mm/mempolicy.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 067cf7d3daf5..1340c5c496b5 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -2817,6 +2817,9 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
+>  	char *flags = strchr(str, '=');
+>  	int err = 1, mode;
+>  
+> +	if (flags)
+> +		*flags++ = '\0';	/* terminate mode string */
+> +
+>  	if (nodelist) {
+>  		/* NUL-terminate mode or flags string */
+>  		*nodelist++ = '\0';
+> @@ -2827,9 +2830,6 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
+>  	} else
+>  		nodes_clear(nodes);
+>  
+> -	if (flags)
+> -		*flags++ = '\0';	/* terminate mode string */
+> -
+>  	mode = match_string(policy_modes, MPOL_MAX, str);
+>  	if (mode < 0)
+>  		goto out;
+> 
 
-Yours,
-Linus Walleij
