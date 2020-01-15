@@ -2,84 +2,97 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93427C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5709C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512BA2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3905222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVPvbGtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbgAOXIq (ORCPT
+        id S1731033AbgAOXJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:08:46 -0500
-Received: from mga18.intel.com ([134.134.136.126]:13350 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgAOXIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:08:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:08:45 -0800
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="218316397"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:08:45 -0800
-Message-ID: <cc71a016de155310f7593bfe3091eea094d400b4.camel@linux.intel.com>
-Subject: Re: [PATCH v16 0/9] mm / virtio: Provide support for free page
- reporting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
-        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, osalvador@suse.de
-Date:   Wed, 15 Jan 2020 15:08:45 -0800
-In-Reply-To: <20200103210509.29237.18426.stgit@localhost.localdomain>
-References: <20200103210509.29237.18426.stgit@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 15 Jan 2020 18:09:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49748 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730222AbgAOXJM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:09:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579129751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3kh6FESOjeCOQkkcKQDJe6CbgaZZXbwDLWZRH4+4Tss=;
+        b=GVPvbGtFcnGveGIMa5BThYYNfc6o/LWMZmq72lZRl5UUytzmpeqe7UebDBxGpiXvxM5yip
+        wbEj0mA1k3MpmNZcS6DbaZKr3iMpZ6ZS2s1m4b4uRZwsMAaYkbJaSApXwiApWfBCT3w3OJ
+        VwX3/PJql9fJPf5hj5u9J6m6FnAnZCE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-UC9E83_LNMupIBVLbIZ7aA-1; Wed, 15 Jan 2020 18:09:09 -0500
+X-MC-Unique: UC9E83_LNMupIBVLbIZ7aA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18964800D41;
+        Wed, 15 Jan 2020 23:09:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EFA35D9C9;
+        Wed, 15 Jan 2020 23:09:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <7233E240-8EE5-4CD1-B8A4-A90925F51A1B@dilger.ca>
+References: <7233E240-8EE5-4CD1-B8A4-A90925F51A1B@dilger.ca> <C0F67EC5-7B5D-4179-9F28-95B84D9CC326@dilger.ca> <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com> <20200115133101.GA28583@lst.de> <23762.1579121702@warthog.procyon.org.uk>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Problems with determining data presence by examining extents?
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7025.1579129743.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 15 Jan 2020 23:09:03 +0000
+Message-ID: <7026.1579129743@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-03 at 13:16 -0800, Alexander Duyck wrote:
-> This series provides an asynchronous means of reporting free guest pages
-> to a hypervisor so that the memory associated with those pages can be
-> dropped and reused by other processes and/or guests on the host. Using
-> this it is possible to avoid unnecessary I/O to disk and greatly improve
-> performance in the case of memory overcommit on the host.
+Andreas Dilger <adilger@dilger.ca> wrote:
 
-<snip>
+> > It would also have to say that blocks of zeros shouldn't be optimised =
+away.
+> =
 
-> 
-> Changes from v15:
-> https://lore.kernel.org/lkml/20191205161928.19548.41654.stgit@localhost.localdomain/
-> Rebased on linux-next-20191219
-> Split out patches for budget and moving head to last page processed
->   Updated budget code to reduce how much memory is reported per pass
->   Added logic to also rotate the list if we exit due a page isolation failure
-> Added migratetype as argument in __putback_isolated_page
+> I don't necessarily see that as a requirement, so long as the filesystem
+> stores a "block" at that offset, but it could dedupe all zero-filled blo=
+cks
+> to the same "zero block".  That still allows saving storage space, while
+> keeping the semantics of "this block was written into the file" rather t=
+han
+> "there is a hole at this offset".
 
-It's been about a week and a half since I posted the set and haven't
-really gotten much feedback other than a suggestion of a slight tweak to
-the titles for patches 7 & 8 to mention page_reporting. I'm mainly looking
-for input on patches 3, 4, 7 and 8 since those are the ones that contain
-most of the changes based on recent feedback.
+Yeah, that's more what I was thinking of.  Provided I can find out that
+something is present, it should be fine.
 
-I'm wondering if there is any remaining concerns or if these patches are
-in a state where they are ready to be pulled into the MM tree?
-
-Thanks.
-
-- Alex
+David
 
