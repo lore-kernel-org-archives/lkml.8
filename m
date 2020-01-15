@@ -2,119 +2,146 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE25C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8BBC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9401D24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6599B24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s6n7uOoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgAOJjK (ORCPT
+        id S1729525AbgAOJjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:39:10 -0500
-Received: from relay.sw.ru ([185.231.240.75]:43588 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729396AbgAOJjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:39:09 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1irf8N-0002JO-Tx; Wed, 15 Jan 2020 12:38:44 +0300
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
- <3eec2097-75a3-1e1d-06d9-44ee5eaf1312@virtuozzo.com>
- <20200114191239.GB178589@google.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com>
-Date:   Wed, 15 Jan 2020 12:38:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 04:39:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35589 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbgAOJjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:39:20 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so15020606wro.2;
+        Wed, 15 Jan 2020 01:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ZfnLElFWa6G1bLX7+mNV41fXukHAYDx919Y3lEHje0o=;
+        b=s6n7uOoRZciHM+AWw01UFjo/YPOlfTf2uKFE40T1I7QMhf5q9n+zdss3nKXJnbP6l2
+         zsUa0RxZLYJQoZn9srzAcKf7lKlAidY2SzzdsDXE1WzsEbTTVFApd6LlUbUy038kdJFg
+         H2677lS15IjLvEumD3425/7ybsP76IpE3tru4DydDRPfjOADd6GwEMTXlkBDC1Lz/GaF
+         ekCn/TMELJ/pXK/zNW0bEyCFCkELKhBXE9gdqc1E5ZNvhh8d7LR/4lXSxybFc5hqt8Ey
+         ZBGm0kU/+CxWKQqpi5p2YBgoZpBH9650hkR3DjoNUKrkMOIRT0tV5CuXkFacmCiQGKyN
+         17nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZfnLElFWa6G1bLX7+mNV41fXukHAYDx919Y3lEHje0o=;
+        b=TtcVC+D1yDuDM0ZZRuv6Tk3hMLUVDL0leI7EPh/QX0MYbPvjr85aVgPRvsMhfaUl/G
+         f36ch2s+KT0D9ES7iPoa49xTszlbNyl5wFgQbBwTtYqWI+lXEEAUVnrAfQgB+oN9qs5Y
+         +A6DbxpZb/yqev+7KT/Ssm1fvVr5hbTBtLoaLh/oDJ+bF1qbOrwCOFSq0bucWDs+8ZUd
+         ZRHRHKCvi6uJxUafcPWQLmvt0n+wyil3Va1ZcnLBXfiCnzfPZvqgAAf04kqpP8kbJQm9
+         jCSuDDEXBd/1C9kgs7aeY6n8F34BL6JnqryHJM4mzL1UNnGZ3DOEH78pdhxDb16SH7eO
+         S+lw==
+X-Gm-Message-State: APjAAAXSjYmLd04r3PvxCjlPP44pb/2Ye/3L7k3p6+KOt5Min2lgrkhl
+        t4q2+a2JsM4+JQwOl/VRCmw=
+X-Google-Smtp-Source: APXvYqxBXwCDlcnH2Sq70fnoWbE1++IW5U2XzenIZYo8cRzNgUv/sPzrBdcTC2riWlQM/pVqne21aQ==
+X-Received: by 2002:a5d:494f:: with SMTP id r15mr31311049wrs.143.1579081157963;
+        Wed, 15 Jan 2020 01:39:17 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id a1sm22403351wmj.40.2020.01.15.01.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 01:39:17 -0800 (PST)
+Date:   Wed, 15 Jan 2020 10:39:15 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
+Subject: Re: [PATCH v10 11/14] exfat: add Kconfig and Makefile
+Message-ID: <20200115093915.cjef2jadiwe2eul4@pali>
+References: <20200115082447.19520-1-namjae.jeon@samsung.com>
+ <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
+ <20200115082447.19520-12-namjae.jeon@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200114191239.GB178589@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200115082447.19520-12-namjae.jeon@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.01.2020 22:12, Minchan Kim wrote:
-> On Tue, Jan 14, 2020 at 11:39:28AM +0300, Kirill Tkhai wrote:
->> On 13.01.2020 22:18, Daniel Colascione wrote:
->>> On Mon, Jan 13, 2020, 12:47 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>>> +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
->>>>> +             size_t, len_in, int, behavior, unsigned long, flags)
->>>>
->>>> I don't like the interface. The fact we have pidfd does not mean,
->>>> we have to use it for new syscalls always. A user may want to set
->>>> madvise for specific pid from console and pass pid as argument.
->>>> pidfd would be an overkill in this case.
->>>> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
->>>> allow this?
->>>
->>> All new APIs should use pidfds: they're better than numeric PIDs
->>
->> Yes
->>
->>> in every way.
->>
->> No
->>
->>> If a program wants to allow users to specify processes by
->>> numeric PID, it can parse that numeric PID, open the corresponding
->>> pidfd, and then use that pidfd with whatever system call it wants.
->>> It's not necessary to support numeric PIDs at the system call level to
->>> allow a console program to identify a process by numeric PID.
->>
->> No. It is overkill. Ordinary pid interfaces also should be available.
->> There are a lot of cases, when they are more comfortable. Say, a calling
->> of process_madvise() from tracer, when a tracee is stopped. In this moment
->> the tracer knows everything about tracee state, and pidfd brackets
->> pidfd_open() and close() around actual action look just stupid, and this
->> is cpu time wasting.
->>
->> Another example is a parent task, which manages parameters of its children.
->> It knows everything about them, whether they are alive or not. Pidfd interface
->> will just utilize additional cpu time here.
->>
->> So, no. Both interfaces should be available.
-> 
-> Sounds like that you want to support both options for every upcoming API
-> which deals with pid. I'm not sure how it's critical for process_madvise
-> API this case. In general, we sacrifice some performance for the nicer one
-> and later, once it's reported as hurdle for some workload, we could fix it
-> via introducing new flag. What I don't like at this moment is to make
-> syscall complicated with potential scenarios without real workload.
+On Wednesday 15 January 2020 17:24:44 Namjae Jeon wrote:
+> This adds the Kconfig and Makefile for exfat.
+>=20
+> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> ---
+>  fs/exfat/Kconfig  | 21 +++++++++++++++++++++
+>  fs/exfat/Makefile |  8 ++++++++
+>  2 files changed, 29 insertions(+)
+>  create mode 100644 fs/exfat/Kconfig
+>  create mode 100644 fs/exfat/Makefile
+>=20
+> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
+> new file mode 100644
+> index 000000000000..9eeaa6d06adf
+> --- /dev/null
+> +++ b/fs/exfat/Kconfig
+> @@ -0,0 +1,21 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +config EXFAT_FS
+> +	tristate "exFAT filesystem support"
+> +	select NLS
+> +	help
+> +	  This allows you to mount devices formatted with the exFAT file system.
+> +	  exFAT is typically used on SD-Cards or USB sticks.
+> +
+> +	  To compile this as a module, choose M here: the module will be called
+> +	  exfat.
+> +
+> +config EXFAT_DEFAULT_IOCHARSET
+> +	string "Default iocharset for exFAT"
+> +	default "utf8"
+> +	depends on EXFAT_FS
+> +	help
+> +	  Set this to the default input/output character set you'd
+> +	  like exFAT to use. It should probably match the character set
+> +	  that most of your exFAT filesystems use, and can be overridden
+> +	  with the "iocharset" mount option for exFAT filesystems.
 
-Yes, I suggest allowing both options for every new process api. This may be
-performance-critical for some workloads. Say, CRIU may exercise a lot of
-inter-process calls during container restore and additional system calls
-will slow down online migration. And there should be many another examples.
+Hello! This description is incorrect. iocharset option specify what
+character set is expected by VFS layer and not character set used by
+exFAT filesystem. exFAT filesystem always uses UTF-16 as this is the
+only allowed by exFAT specification.
 
-At least you have to call the first argument in more generic way from the start.
-Not "int pidfd", but something like "idtype_t id" instead. This allows to extend
-it in the future.
+> diff --git a/fs/exfat/Makefile b/fs/exfat/Makefile
+> new file mode 100644
+> index 000000000000..ed51926a4971
+> --- /dev/null
+> +++ b/fs/exfat/Makefile
+> @@ -0,0 +1,8 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +#
+> +# Makefile for the linux exFAT filesystem support.
+> +#
+> +obj-$(CONFIG_EXFAT_FS) +=3D exfat.o
+> +
+> +exfat-y	:=3D inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o=
+ \
+> +	   file.o balloc.o
 
-Kirill
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
