@@ -2,82 +2,78 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DBDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E9CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAD3214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tjJPtw9y"
+	by mail.kernel.org (Postfix) with ESMTP id C850E214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgAOOd7 (ORCPT
+        id S1729019AbgAOOfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:33:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41876 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAOOd6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:33:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ocli91BL+s6cyrAhg7WkojTpfADiap1nxPT4SxAedzw=; b=tjJPtw9yH/qzdfnHd/0Tg4XM1
-        N9ZXDuLEoPijn7fFyz59nCDWohkV/2dOvJPpDU2It+cHWikpgvom4e+7YXHwBqQc4oreE0txkzog2
-        u4bejyWBAGiUhyDSKG7+7Al1NNJsZOFrKx5UGxrj+3+dDvqucqU8+FhJ3USoyzBXXSAisoZmm2cfm
-        afIPFnROkNQz4LDeaWq0KbPlBaRljjAQDwDaX8voRwgRmcEb3rsccJ59uqAxpHC3EVmBAKZMy2DQS
-        22DWjrnw26k46n22bIWnsoloZtuqV/66JWl9HMpXEAGfQBSyH1z0WePlruqGDLBo5fwTUb4SK+rC4
-        G0f5/Lh8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irjjy-0001bu-Cy; Wed, 15 Jan 2020 14:33:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0596130257C;
-        Wed, 15 Jan 2020 15:32:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 599A720B2867B; Wed, 15 Jan 2020 15:33:47 +0100 (CET)
-Date:   Wed, 15 Jan 2020 15:33:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: RFC: hold i_rwsem until aio completes
-Message-ID: <20200115143347.GL2827@hirez.programming.kicks-ass.net>
-References: <20200114161225.309792-1-hch@lst.de>
- <20200114192700.GC22037@ziepe.ca>
- <20200115065614.GC21219@lst.de>
- <20200115132428.GA25201@ziepe.ca>
+        Wed, 15 Jan 2020 09:35:08 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgAOOfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:35:07 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7E27371AF80249D83CBA;
+        Wed, 15 Jan 2020 22:35:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 15 Jan 2020 22:34:55 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shuming Fan <shumingf@realtek.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: rt700: fix return value check in rt700_sdw_probe()
+Date:   Wed, 15 Jan 2020 14:30:27 +0000
+Message-ID: <20200115143027.94364-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115132428.GA25201@ziepe.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:24:28AM -0400, Jason Gunthorpe wrote:
+In case of error, the function devm_regmap_init() returns ERR_PTR() and
+never returns NULL. The NULL test in the return value check should be
+replaced with IS_ERR().
 
-> I was interested because you are talking about allowing the read/write side
-> of a rw sem to be held across a return to user space/etc, which is the
-> same basic problem.
+Fixes: 7d2a5f9ae41e ("ASoC: rt700: add rt700 codec driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ sound/soc/codecs/rt700-sdw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-No it is not; allowing the lock to be held across userspace doesn't
-change the owner. This is a crucial difference, PI depends on there
-being a distinct owner. That said, allowing the lock to be held across
-userspace still breaks PI in that it completely wrecks the ability to
-analyze the critical section.
+diff --git a/sound/soc/codecs/rt700-sdw.c b/sound/soc/codecs/rt700-sdw.c
+index 314103601af3..a4b95425886f 100644
+--- a/sound/soc/codecs/rt700-sdw.c
++++ b/sound/soc/codecs/rt700-sdw.c
+@@ -460,8 +460,8 @@ static int rt700_sdw_probe(struct sdw_slave *slave,
+ 
+ 	regmap = devm_regmap_init(&slave->dev, NULL,
+ 		&slave->dev, &rt700_regmap);
+-	if (!regmap)
+-		return -EINVAL;
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
+ 
+ 	rt700_init(&slave->dev, sdw_regmap, regmap, slave);
+
+
+
