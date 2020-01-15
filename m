@@ -2,103 +2,111 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED59C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F21D2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AC320723
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:54:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g7IWQlXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgAOXwt (ORCPT
+        id S1731272AbgAOXyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:52:49 -0500
-Received: from mga06.intel.com ([134.134.136.31]:54823 "EHLO mga06.intel.com"
+        Wed, 15 Jan 2020 18:54:03 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:40228 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbgAOXws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:52:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:52:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="373102555"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga004.jf.intel.com with ESMTP; 15 Jan 2020 15:52:38 -0800
-Date:   Wed, 15 Jan 2020 15:52:37 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 08/12] fs/xfs: Add lock/unlock mode to xfs
-Message-ID: <20200115235237.GA24522@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-9-ira.weiny@intel.com>
- <20200113221957.GN8247@magnolia>
+        id S1729016AbgAOXyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:54:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vZVudi2gBuyHBZjmOkQ+epG4bVJAbZTvIrxTIDCHEJc=; b=g7IWQlXltCA0UdQn0qVVxvlIE1
+        SKL7IPC5l1obdNuFHrw0x61WK7HrHXVqVZ2YDKFP3vxUq7j67oJsR2r0G26xh2zqTM2qqHfgL342Y
+        FF9o5dRTDOmBcfgGx60WuiDJPeSdRydnKCfQGLFa7MOLQbQMJR8QC70t5uSY3bj85IcE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1irsU1-0002WZ-4N; Thu, 16 Jan 2020 00:53:57 +0100
+Date:   Thu, 16 Jan 2020 00:53:57 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
+        rmk+kernel@armlinux.org.uk, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] net: phy: Maintain MDIO device and bus
+ statistics
+Message-ID: <20200115235357.GG2475@lunn.ch>
+References: <20200115204228.26094-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113221957.GN8247@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200115204228.26094-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:19:57PM -0800, Darrick J. Wong wrote:
-> On Fri, Jan 10, 2020 at 11:29:38AM -0800, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
+> +#define MDIO_BUS_STATS_ADDR_ATTR(field, addr, file)			\
+> +static ssize_t mdio_bus_##field##_##addr##_show(struct device *dev,	\
+> +						struct device_attribute *attr, \
+> +						char *buf)		\
+> +{									\
+> +	struct mii_bus *bus = to_mii_bus(dev);				\
+> +	return mdio_bus_stats_##field##_show(&bus->stats[addr], buf);	\
+> +}									\
 
-[snip]
+Hi Florian
 
-> >  
-> > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> > index 401da197f012..e8fd95b75e5b 100644
-> > --- a/fs/xfs/xfs_inode.c
-> > +++ b/fs/xfs/xfs_inode.c
-> > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
-> >   *
-> >   * Basic locking order:
-> >   *
-> > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> > + * i_rwsem -> i_dax_sem -> i_mmap_lock -> page_lock -> i_ilock
-> 
-> Mmmmmm, more locks.  Can we skip the extra lock if CONFIG_FSDAX=n or if
-> the filesystem devices don't support DAX at all?
+Lots of Macro magic here. But it is reasonably understandable.
+However, the compiler is maybe not doing the best of jobs:
 
-I've looked into this a bit more and I think skipping on CONFIG_FSDAX=n is ok
-but doing so on individual devices is not going to be possible because we don't
-have that information at the vfs layer.
+00000064 l     F .text	00000030 mdio_bus_reads_31_show
+00000094 l     F .text	00000030 mdio_bus_reads_30_show
+000000c4 l     F .text	00000030 mdio_bus_reads_29_show
+000000f4 l     F .text	00000030 mdio_bus_reads_28_show
+00000124 l     F .text	00000030 mdio_bus_reads_27_show
+00000154 l     F .text	00000030 mdio_bus_reads_26_show
+00000184 l     F .text	00000030 mdio_bus_reads_25_show
+000001b4 l     F .text	00000034 mdio_bus_reads_24_show
+000001e8 l     F .text	00000034 mdio_bus_reads_23_show
+0000021c l     F .text	00000034 mdio_bus_reads_22_show
+00000250 l     F .text	00000034 mdio_bus_reads_21_show
+00000284 l     F .text	00000034 mdio_bus_reads_20_show
+000002b8 l     F .text	00000034 mdio_bus_reads_19_show
+000002ec l     F .text	00000034 mdio_bus_reads_18_show
+00000320 l     F .text	00000034 mdio_bus_reads_17_show
+00000354 l     F .text	00000034 mdio_bus_reads_16_show
+00000388 l     F .text	00000034 mdio_bus_reads_15_show
+000003bc l     F .text	00000034 mdio_bus_reads_14_show
+000003f0 l     F .text	00000034 mdio_bus_reads_13_show
+00000424 l     F .text	00000034 mdio_bus_reads_12_show
+00000458 l     F .text	00000034 mdio_bus_reads_11_show
+0000048c l     F .text	00000034 mdio_bus_reads_10_show
+000004c0 l     F .text	00000034 mdio_bus_reads_9_show
+000004f4 l     F .text	00000034 mdio_bus_reads_8_show
+00000528 l     F .text	00000034 mdio_bus_reads_7_show
+0000055c l     F .text	00000034 mdio_bus_reads_6_show
+00000590 l     F .text	00000034 mdio_bus_reads_5_show
+000005c4 l     F .text	00000034 mdio_bus_reads_4_show
+000005f8 l     F .text	00000034 mdio_bus_reads_3_show
+0000062c l     F .text	00000034 mdio_bus_reads_2_show
+00000660 l     F .text	00000034 mdio_bus_reads_1_show
+00000694 l     F .text	00000034 mdio_bus_reads_0_show
 
-I'll continue to think about how to mitigate this more while I add CONFIG_FSDAX
-checks before rolling out a new patch set.
+It appears to be inlining everything, so end up with lots of
+functions, and they are not tiny.
 
-> 
-> Also, I don't think we're actually following the i_rwsem -> i_daxsem
-> order in fallocate, and possibly elsewhere too?
-> 
-> Does the vfs have to take the i_dax_sem to do remapping things like
-> reflink?  (Pretend that reflink and dax are compatible for the moment)
-> 
+I'm wondering if we can get ride of this per address
+reads/write/transfer function. Could you stuff the addr into var of
+struct dev_ext_attribute?
 
-I spoke with Dan today about this and we believe the answer is going to be yes.
-However, not until the code is added to support DAX in reflink.  Because
-currently this is only required for places which use "IS_DAX()" to see the
-state of the inode.
+https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L813
 
-Currently the vfs layer does not have any IS_DAX() checks in the reflink path.
-But when they are added they will be required to take this sem.
-
-Ira
-
+	Andrew
