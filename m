@@ -2,98 +2,215 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C56C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC80AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184742084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D04F2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgAOHRw (ORCPT
+        id S1729186AbgAOHSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:17:52 -0500
-Received: from mga17.intel.com ([192.55.52.151]:62547 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgAOHRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:17:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 23:17:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
-   d="scan'208";a="225478126"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jan 2020 23:17:47 -0800
-Subject: Re: [PATCH] mmc: sdhci: fix minimum clock rate for v3 controller
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org
-References: <3f3b2ac4634802af591a20b1b98dc8d0158aec45.1577962196.git.mirq-linux@rere.qmqm.pl>
- <4264051e-6126-83c3-e49e-3d9050ff35ce@intel.com>
- <20200114155333.GA29422@qmqm.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6ebf8a7e-faf2-aca8-edc1-e64254043f5f@intel.com>
-Date:   Wed, 15 Jan 2020 09:16:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 02:18:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54515 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgAOHSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 02:18:09 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ircwC-0004eU-FT; Wed, 15 Jan 2020 08:18:00 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ircw9-0007ei-NA; Wed, 15 Jan 2020 08:17:57 +0100
+Date:   Wed, 15 Jan 2020 08:17:57 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V3 2/3] dt-bindings: pinctrl: Convert i.MX8MM to
+ json-schema
+Message-ID: <20200115071757.bmblie3skdswuj2r@pengutronix.de>
+References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
+ <1579051845-30378-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200114155333.GA29422@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579051845-30378-2-git-send-email-Anson.Huang@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:16:59 up 60 days, 22:35, 54 users,  load average: 0.02, 0.06,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/01/20 5:53 pm, Micha³ Miros³aw wrote:
-> On Tue, Jan 14, 2020 at 03:08:08PM +0200, Adrian Hunter wrote:
->> On 2/01/20 12:51 pm, Micha³ Miros³aw wrote:
->>> For SDHCIv3+ with programmable clock mode, minimal clock frequency is
->>> still base clock / max(divider). Minimal programmable clock frequency is
->>> always greater than minimal divided clock frequency. Without this patch,
->>> SDHCI uses out-of-spec initial frequency when multiplier is big enough:
->>>
->>> mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
->>> [for 480 MHz source clock divided by 1024]
->>
->> The maximum divisor in programmable clock mode is 1024.  So I do not
->> understand what is wrong.  Can you explain some more?
-> 
-> This part of code misses the fact, that you can choose (switch) between
-> base clock mode and programmable clock mode. The code in
-> sdhci_calc_clk() already does the choosing part. This is actually
-> required on high programmable clock base to get conformant frequency for
-> the card initialization phase.
+Hi Anson,
 
-Ok, so please add that explanation to the commit message, and add a comment
-in the code too.
-
+On 20-01-15 09:30, Anson Huang wrote:
+> Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
 > 
-> Best Regards,
-> Micha³ Miros³aw
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Change since V2:
+> 	- the lisence should be GPL-2.0
+> ---
+>  .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        | 36 -----------
+>  .../bindings/pinctrl/fsl,imx8mm-pinctrl.yaml       | 69 ++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
 > 
-> [...]
->>> index 275102c0a1bf..0036ddf85674 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -3902,11 +3902,9 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>  	if (host->ops->get_min_clock)
->>>  		mmc->f_min = host->ops->get_min_clock(host);
->>>  	else if (host->version >= SDHCI_SPEC_300) {
->>> -		if (host->clk_mul) {
->>> -			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
->>> +		if (host->clk_mul)
->>>  			max_clk = host->max_clk * host->clk_mul;
->>> -		} else
->>> -			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
->>> +		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
->>>  	} else
->>>  		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+> deleted file mode 100644
+> index e4e01c0..0000000
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -* Freescale IMX8MM IOMUX Controller
+> -
+> -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> -for common binding part and usage.
+> -
+> -Required properties:
+> -- compatible: "fsl,imx8mm-iomuxc"
+> -- reg: should contain the base physical address and size of the iomuxc
+> -  registers.
+> -
+> -Required properties in sub-nodes:
+> -- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> -  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+> -  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
+> -  Reference Manual for detailed CONFIG settings.
+> -
+> -Examples:
+> -
+> -&uart1 {
+> -       pinctrl-names = "default";
+> -       pinctrl-0 = <&pinctrl_uart1>;
+> -};
+> -
+> -iomuxc: pinctrl@30330000 {
+> -        compatible = "fsl,imx8mm-iomuxc";
+> -        reg = <0x0 0x30330000 0x0 0x10000>;
+> -
+> -        pinctrl_uart1: uart1grp {
+> -                fsl,pins = <
+> -                        MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX             0x140
+> -                        MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX             0x140
+> -                >;
+> -        };
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+> new file mode 100644
+> index 0000000..8b2de93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mm-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale IMX8MM IOMUX Controller
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +description:
+> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> +  for common binding part and usage.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8mm-iomuxc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +# Client device subnode's properties
+> +patternProperties:
+> +  'grp$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +
+> +    properties:
+> +      fsl,pins:
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        description:
+> +          each entry consists of 6 integers and represents the mux and config
+> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+> +          be found in <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last
+> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
+> +          refer to i.MX8M Mini Reference Manual for detailed CONFIG settings.
+> +
+> +    required:
+> +      - fsl,pins
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Pinmux controller node
+> +  - |
+> +    iomuxc: pinctrl@30330000 {
+> +        compatible = "fsl,imx8mm-iomuxc";
+> +        reg = <0x30330000 0x10000>;
+> +
+> +        pinctrl_uart2: uart2grp {
+> +            fsl,pins = <
+> +                0x23C 0x4A4 0x4FC 0x0 0x0	0x140
 
+Why we can't use the pinctrl defines like
+MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX anymore?
+
+Regards,
+  Marco
+
+> +                0x240 0x4A8 0x000 0x0 0x0	0x140
+> +            >;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
