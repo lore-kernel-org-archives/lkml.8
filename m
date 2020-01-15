@@ -7,158 +7,179 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7F8C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB53C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FF224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BE824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uVIpAFmd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFhBroBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgAOOOV (ORCPT
+        id S1728928AbgAOOO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:14:21 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38048 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbgAOOOT (ORCPT
+        Wed, 15 Jan 2020 09:14:29 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45844 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730031AbgAOONW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:14:19 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l35so7763658pje.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:14:19 -0800 (PST)
+        Wed, 15 Jan 2020 09:13:22 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so15855431wrj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gt6F4uTsWktpFFyX7CiQDNWqBR7Eg8dmS5mipvr7KTw=;
-        b=uVIpAFmd6iprxfTy28Obl/jazf2tlIos2uTiAZBgwcDBz+3vvvMkRyeviyyY2UMM7C
-         GW+vdPPOaxlHMB6D5wJW168wbl5t/fR260nHisVeCOhNu4tAQuse+tfzv4bmfdbhQeC2
-         qFcrcl8RukC+2AF5PWnwLkFDs5LE9lgVgMSDDUJrtOabLhR8fWUGLXMUJBTSMgGNQ5lx
-         SBE0UNlJOAFXqxcM+X464j+hHJXj0lYAilwpJftSueRHiyCJeTWvA8MXslELoR01JGbA
-         uI7aCFSf23kkvX722CgrN7MZeLI2NPmEO0jN3/BjJbkBUN3Cjoo+V/71k2aJzxe1jkwz
-         CfQQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6uupSatp1wSHjPtFQUOGaipgCxDGUITI3uZDbwiKKdA=;
+        b=UFhBroBK623fOOHnv4hUWAelOBD5EEl7ceoSImfULI8dolkMB+xHhasMiFDPwGSYIE
+         QtN15Zcg4KPJfGlLYfSu0WUWPYTmUaHfBm7TtjbLu5zHpflqnwQLrO+Mp8Aq53kY/0U0
+         n7+vdXVA+Q20n7vjII7/IE38b4DhF3T0sM492xNPTBwDS2v9GuSIR3WO113is9NkaR0J
+         BmXUtWz1dmXSbmRVqCa9Do65TQDEPN89g0CcJIG37KUnCi0o7KLAmLVG/d+0gTjocA9t
+         WRcB82VLLqn2PJolZL4RZa2CpZx2zlzOhf8+3cg6+iH3yAY9p88tlKDaD6H8ujwL7DTo
+         sQAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gt6F4uTsWktpFFyX7CiQDNWqBR7Eg8dmS5mipvr7KTw=;
-        b=VeihLvcIDMnZ/qJgl01vjv4e5KgILQ6aYQe6okbMewmKCep666SCJdEtoV95NQKzzH
-         t8L5WYataQfXU6nm3Cor1cI1JbpcAKta9Q+kOtvOs/0FmOXPT/OvQn0jGaEPk2yT86jV
-         hJvTinlx/3XDss1JR+mfCNo1xvHyKVPfZucHYkSyMEtYu8Ga0DL3coAhVwnYcB+G/XSr
-         HCwb5x33IJ47Rb5Ttd7UOfv9y76BBW7rJdaufOO+rx09yQ5x6o4L3Q1remw4MbmhULKu
-         41sKfCcfslYcEo4r+HIT8vhf5CsIRu6HSptGW8BgMQeTfwMrFVH6nOY7UgYr3Wj8+qd+
-         Pl0A==
-X-Gm-Message-State: APjAAAW8VUyblIHognGasVHQsV0/zTWq2g5GZDv2lUNOjy+cxNDWs/DM
-        cBkRU959AwqP7Db+HWR7/8JF/w==
-X-Google-Smtp-Source: APXvYqw1WVju2xcX7lOnVABkuUPrOjdfIgwbmNj8fzUvwYrfsT29oM2IUDuh72sKOdrUgFxHL/6b5Q==
-X-Received: by 2002:a17:90a:1ae9:: with SMTP id p96mr36512294pjp.8.1579097658957;
-        Wed, 15 Jan 2020 06:14:18 -0800 (PST)
-Received: from localhost.localdomain ([104.238.63.136])
-        by smtp.gmail.com with ESMTPSA id a15sm22591980pfh.169.2020.01.15.06.14.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 Jan 2020 06:14:18 -0800 (PST)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, dave.jiang@intel.com,
-        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org
-Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v12 3/4] crypto: hisilicon - Remove module_param uacce_mode
-Date:   Wed, 15 Jan 2020 22:12:47 +0800
-Message-Id: <1579097568-17542-4-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
+         :references:mime-version:content-transfer-encoding;
+        bh=6uupSatp1wSHjPtFQUOGaipgCxDGUITI3uZDbwiKKdA=;
+        b=PF9/khQrztce/jVXQbUSC7beASuHAKtY3hOfutNJupadiNtRqop431CABGF5wB9+TQ
+         NmYRGfz5WmPdqKImANEaOM1Fu0A59sOKDa7XFLOyLDTVuytRxXaTbnlaNjuAAZAV5l2S
+         n4uWsnujTUcAB126IFPbzIyGb/Jm9DMVL5tM9QmiNxXfWviekJt4H4jRUQwTG0NUrsZH
+         WLKNBhWiZQrCQzkLevHZcU8WfSkz2T6qmmRqo9gXKHZ9TYQOnKDxORxlKhNrVxdNnjP9
+         J6Je5Ypz3VtgoBCJymO/HlAo6DlWu/xpBUcP8Da9z1zhdpDJ59j2SxKukIeilcfaVOBC
+         b/kQ==
+X-Gm-Message-State: APjAAAUe13srT4bLvdGtdF6kzeazbzyGz9oFGQgloNwwxU36yrQjkhzp
+        7SmexiWkTMK2m5SnvYLc1uEWrg==
+X-Google-Smtp-Source: APXvYqy+y5/WNIlUiRygmiwuZvM1BhCHTwU0YKhbrM9Q0bpz03HYrEIConEdEnUwSo0oTxImfTY/WQ==
+X-Received: by 2002:a5d:4481:: with SMTP id j1mr32581140wrq.348.1579097600477;
+        Wed, 15 Jan 2020 06:13:20 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:13:19 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 11/19] usb: dwc3: Add support for usb-conn-gpio connectors
+Date:   Wed, 15 Jan 2020 14:13:25 +0000
+Message-Id: <20200115141333.1222676-12-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
+References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the module_param uacce_mode, which is not used currently.
+This patch adds the ability to probe and enumerate a connector based on
+usb-conn-gpio. A device node label gpio_usb_connector is used to identify
+a usb-conn-gpio as a child of the USB interface.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+You would use usb-conn-gpio when a regulator in your system provides VBUS
+directly to the connector instead of supplying via the USB PHY.
+
+The parent device must have the "usb-role-switch" property, so that when
+the usb-conn-gpio driver calls usb_role_switch_set_role() the notification
+in dwc3 will run and the block registers will be updated to match the state
+detected at the connector.
+
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+CC: ShuFan Lee <shufan_lee@richtek.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jun Li <lijun.kernel@gmail.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/crypto/hisilicon/zip/zip_main.c | 31 ++++++-------------------------
- 1 file changed, 6 insertions(+), 25 deletions(-)
+ drivers/usb/dwc3/drd.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 31ae6a7..853b97e 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -298,9 +298,6 @@ static u32 pf_q_num = HZIP_PF_DEF_Q_NUM;
- module_param_cb(pf_q_num, &pf_q_num_ops, &pf_q_num, 0444);
- MODULE_PARM_DESC(pf_q_num, "Number of queues in PF(v1 1-4096, v2 1-1024)");
+diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+index 865341facece..c6bb7cb809d5 100644
+--- a/drivers/usb/dwc3/drd.c
++++ b/drivers/usb/dwc3/drd.c
+@@ -11,6 +11,7 @@
+ #include <linux/of_graph.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
++#include <linux/of_platform.h>
  
--static int uacce_mode;
--module_param(uacce_mode, int, 0);
--
- static u32 vfs_num;
- module_param(vfs_num, uint, 0444);
- MODULE_PARM_DESC(vfs_num, "Number of VFs to enable(1-63)");
-@@ -796,6 +793,7 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	pci_set_drvdata(pdev, hisi_zip);
- 
- 	qm = &hisi_zip->qm;
-+	qm->use_dma_api = true;
- 	qm->pdev = pdev;
- 	qm->ver = rev_id;
- 
-@@ -803,20 +801,6 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	qm->dev_name = hisi_zip_name;
- 	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ? QM_HW_PF :
- 								QM_HW_VF;
--	switch (uacce_mode) {
--	case 0:
--		qm->use_dma_api = true;
--		break;
--	case 1:
--		qm->use_dma_api = false;
--		break;
--	case 2:
--		qm->use_dma_api = true;
--		break;
--	default:
--		return -EINVAL;
--	}
--
- 	ret = hisi_qm_init(qm);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to init qm!\n");
-@@ -1015,12 +999,10 @@ static int __init hisi_zip_init(void)
- 		goto err_pci;
- 	}
- 
--	if (uacce_mode == 0 || uacce_mode == 2) {
--		ret = hisi_zip_register_to_crypto();
--		if (ret < 0) {
--			pr_err("Failed to register driver to crypto.\n");
--			goto err_crypto;
--		}
-+	ret = hisi_zip_register_to_crypto();
-+	if (ret < 0) {
-+		pr_err("Failed to register driver to crypto.\n");
-+		goto err_crypto;
- 	}
- 
+ #include "debug.h"
+ #include "core.h"
+@@ -557,9 +558,32 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
+ 	dwc3_set_mode(dwc, mode);
  	return 0;
-@@ -1035,8 +1017,7 @@ static int __init hisi_zip_init(void)
- 
- static void __exit hisi_zip_exit(void)
- {
--	if (uacce_mode == 0 || uacce_mode == 2)
--		hisi_zip_unregister_from_crypto();
-+	hisi_zip_unregister_from_crypto();
- 	pci_unregister_driver(&hisi_zip_pci_driver);
- 	hisi_zip_unregister_debugfs();
  }
++
++static int dwc3_register_gpio_usb_connector(struct dwc3 *dwc)
++{
++	struct device		*dev = dwc->dev;
++	struct device_node	*np = dev->of_node, *con_np;
++	int			ret;
++
++	con_np = of_get_child_by_name(np, "gpio_usb_connector");
++	if (!np) {
++		dev_dbg(dev, "no usb_connector child node specified\n");
++		return 0;
++	}
++
++	ret = of_platform_populate(np, NULL, NULL, dev);
++	if (ret) {
++		dev_err(dev, "failed to register usb_connector - %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
+ #else
+ #define ROLE_SWITCH 0
+ #define dwc3_setup_role_switch(x) 0
++#define dwc3_register_gpio_usb_connector(x) 0
+ #endif
+ 
+ int dwc3_drd_init(struct dwc3 *dwc)
+@@ -575,6 +599,9 @@ int dwc3_drd_init(struct dwc3 *dwc)
+ 		ret = dwc3_setup_role_switch(dwc);
+ 		if (ret < 0)
+ 			return ret;
++		ret = dwc3_register_gpio_usb_connector(dwc);
++		if (ret < 0)
++			return ret;
+ 	} else if (dwc->edev) {
+ 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+ 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
 -- 
-2.7.4
+2.24.0
 
