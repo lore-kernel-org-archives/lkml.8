@@ -2,157 +2,179 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F67BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0602C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5077124658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01DD24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgAOBbo (ORCPT
+        id S1728925AbgAOBfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:31:44 -0500
-Received: from mga09.intel.com ([134.134.136.24]:44895 "EHLO mga09.intel.com"
+        Tue, 14 Jan 2020 20:35:02 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51052 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbgAOBbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:31:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 17:31:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
-   d="scan'208";a="217951596"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jan 2020 17:31:41 -0800
-Date:   Wed, 15 Jan 2020 09:36:31 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        alazar@bitdefender.com, edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200115013631.GA5975@local-michael-cet-test.sh.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
- <20200110180458.GG21485@linux.intel.com>
- <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
- <20200113173358.GC1175@linux.intel.com>
- <20200114030820.GA4583@local-michael-cet-test.sh.intel.com>
- <20200114185808.GI16784@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114185808.GI16784@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1728882AbgAOBfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 20:35:01 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 035F420052D;
+        Wed, 15 Jan 2020 02:34:59 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2694D200519;
+        Wed, 15 Jan 2020 02:34:53 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 180BD402A8;
+        Wed, 15 Jan 2020 09:34:46 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
+Date:   Wed, 15 Jan 2020 09:30:43 +0800
+Message-Id: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:58:08AM -0800, Sean Christopherson wrote:
-> On Tue, Jan 14, 2020 at 11:08:20AM +0800, Yang Weijiang wrote:
-> > On Mon, Jan 13, 2020 at 09:33:58AM -0800, Sean Christopherson wrote:
-> > > On Mon, Jan 13, 2020 at 04:10:50PM +0800, Yang Weijiang wrote:
-> > > > On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> > > > > On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > > > > > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> > > > > >  		if ((error_code & PFERR_WRITE_MASK) &&
-> > > > > >  		    spte_can_locklessly_be_made_writable(spte))
-> > > > > >  		{
-> > > > > > -			new_spte |= PT_WRITABLE_MASK;
-> > > > > > +			/*
-> > > > > > +			 * Record write protect fault caused by
-> > > > > > +			 * Sub-page Protection, let VMI decide
-> > > > > > +			 * the next step.
-> > > > > > +			 */
-> > > > > > +			if (spte & PT_SPP_MASK) {
-> > > > > > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> > > > > 
-> > > > > There's got to be a better way to handle SPP exits than adding a helper
-> > > > > to retrieve the instruction length.
-> > > > >
-> > > > The fault instruction was skipped by kvm_skip_emulated_instruction()
-> > > > before, but Paolo suggested leave the re-do or skip option to user-space
-> > > > to make it flexible for write protection or write tracking, so return
-> > > > length to user-space.
-> > > 
-> > > Sorry, my comment was unclear.  I have no objection to punting the fault
-> > > to userspace, it's the mechanics of how it's done that I dislike.
-> > > 
-> > > Specifically, (a) using run->exit_reason to propagate the SPP exit up the
-> > > stack, e.g. instead of modifying affected call stacks to play nice with
-> > > any exit to userspace, (b) assuming ->get_insn_len() will always be
-> > > accurate, e.g. see the various caveats in skip_emulated_instruction() for
-> > > both VMX and SVM, and (c) duplicating the state capture code in every
-> > > location that can encounter a SPP fault.
-> >
-> > How about calling skip_emulated_instruction() in KVM before exit to
-> 
-> I'm confused.  It sounds like KVM_EXIT_SPP provides the instruction length
-> because it skips an instruction before exiting to userspace.  But if KVM
-> is is emulating an instruction, it shouldn't be doing
-> {kvm_}skip_emulated_instruction(), e.g. if emulation fails due to a SPP
-> violation (returns KVM_EXIT_SPP) then GUEST_RIP should still point at the
-> exiting instruction.  Ditto for the fast_page_fault() case, RIP shouldn't
-> be advanced.
-There're two SPP usages, one is for write-protection the other is for
-write-tracking. If the first case is being used, KVM ignores the write
-, i.e., write to the memory is discarded. The second case is, if
-userspace is tracking memory write through SPP, then it's notified via
-KVM_EXIT_SPP but still let the write take effect by unprotecting the
-subpage, i.e., like generic 4KB access-tracking.
+Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
 
-In the first case, no necessity to re-try the faulted instruction,
-the second case, a re-try is necessary, so I would skip current instruction
-first, then if it's actually the second case, userspace should take action
-based on the instruction lenght returned.
-> 
-> What am I missing?
->
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- the lisence should be GPL-2.0.
+---
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 -----------
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 69 ++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
 
-> > userspace, but still return the skipped instruction length, if userspace
-> > would like to re-execute the instruction, it can unwind RIP or simply
-> > rely on KVM?
-> 
-> I'm not convinced the instruction length needs to be provided to userspace
-> for this case.  Obviously it's not difficult to provide the info, I just
-> don't understand the value added by doing so.  As above, RIP shouldn't
-> need to be unwound, and blindly skipping an instruction seems like an odd
-> thing for a VMI engine to do.
-In the last review by Paolo, he mentioned SPP could be used in
-access-tracing manner, it's flexible to provide instruction length to
-userspace, so I removed instruction-skip in KVM but let userspace to
-decide.
-> 
-> > > What I'm hoping is that it's possible to modify the call stacks to
-> > > explicitly propagate an exit to userspace and/or SPP fault, and shove all
-> > > the state capture into a common location, e.g. handle_ept_violation().
-> > >
-> > The problem is, the state capture code in fast_page_fault() and
-> > emulation case share different causes, the former is generic occurence
-> > of SPP induced EPT violation, the latter is atually a "faked" one while
-> > detecting emulation instruction is writing some SPP protected area, so I
-> > seperated them.
-> 
-> Can we make SPP dependent on unrestricted guest so that the only entry
-> point to the emulator is through handle_ept_violation()?  And thus the
-> only path to triggering KVM_EXIT_SPP would also be through
-> handle_ept_violation(); (I think, might be forgetting a different emulation
-> path).
-> 
-I don't got your point, from my understanding, instruction emulation is
-used in several cases regarless of guest working mode. As long as any memory write happens
-e.g., string ops, port ops etc, SPP write-protection
-check should be applied to let the userspace capture the event.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+deleted file mode 100644
+index 66de750..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-* Freescale IMX8MQ IOMUX Controller
+-
+-Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-for common binding part and usage.
+-
+-Required properties:
+-- compatible: "fsl,imx8mq-iomuxc"
+-- reg: should contain the base physical address and size of the iomuxc
+-  registers.
+-
+-Required properties in sub-nodes:
+-- fsl,pins: each entry consists of 6 integers and represents the mux and config
+-  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+-  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
+-  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
+-  Reference Manual for detailed CONFIG settings.
+-
+-Examples:
+-
+-&uart1 {
+-       pinctrl-names = "default";
+-       pinctrl-0 = <&pinctrl_uart1>;
+-};
+-
+-iomuxc: pinctrl@30330000 {
+-        compatible = "fsl,imx8mq-iomuxc";
+-        reg = <0x0 0x30330000 0x0 0x10000>;
+-
+-        pinctrl_uart1: uart1grp {
+-                fsl,pins = <
+-                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
+-                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
+-                >;
+-        };
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+new file mode 100644
+index 0000000..e010808
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IMX8MQ IOMUX Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description:
++  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++  for common binding part and usage.
++
++properties:
++  compatible:
++    const: fsl,imx8mq-iomuxc
++
++  reg:
++    maxItems: 1
++
++# Client device subnode's properties
++patternProperties:
++  'grp$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      fsl,pins:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        description:
++          each entry consists of 6 integers and represents the mux and config
++          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
++          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
++          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
++          integer CONFIG is the pad setting value like pull-up on this pin. Please
++          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
++
++    required:
++      - fsl,pins
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    iomuxc: pinctrl@30330000 {
++        compatible = "fsl,imx8mq-iomuxc";
++        reg = <0x30330000 0x10000>;
++
++        pinctrl_uart1: uart1grp {
++            fsl,pins = <
++                0x234 0x49C 0x4F4 0x0 0x0	0x49
++                0x238 0x4A0 0x4F4 0x0 0x0	0x49
++            >;
++        };
++    };
++
++...
+-- 
+2.7.4
 
-> >
-> > > Side topic, assuming the userspace VMI is going to be instrospecting the
-> > > faulting instruction, won't it decode the instruction?  I.e. calculate
-> > > the instruction length anyways?
