@@ -2,132 +2,150 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1143C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA73C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A742224658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46C124658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:37:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ngHv0k88"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QtF3py1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgAOBhQ (ORCPT
+        id S1728909AbgAOBhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:37:16 -0500
-Received: from mail-eopbgr50082.outbound.protection.outlook.com ([40.107.5.82]:28434
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728874AbgAOBhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:37:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AHOZg60NGhOJOPwhvYy0VX9j3UQPDwokkexXZZaXvJWzddOswaPKcnIGmSOlPP+h0lxShzpjwHo2yFhzlslqoQp7ok+GWbbeWkvJ0maS0HwdHKSlVvadrnR2rEAJOWR7NNfLVaJBRXlq/8INTgViHGcWbBhCJLTulC2Za5uy0dToLOrfzSSCB6QlFqvrJN1VOtJDZJQ2w5mHD3NwLmn3X6Y1lzRcCv8ipjxwnqgRdbRH61/9PqSPfxr+7eveG7ort1N6AzC/4XBqi89f2fSK+0qispperkrtU+IFnlYq8A15Vja3B36iYj9prfncz6o5QtVpTyqjJ1qqJ7vpyVz5+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n0RDVdt2GzDWXA2g9R4fbEbkiljqwrAwk47vn2ojkaQ=;
- b=javhOPV9sJb9fSBhkMOhzIbHafvzhZHK06soHM4e5zIeYEZYn89GYMaSXhlxFaRs8YkDnMgOfCrd8RLkbOhnxQxD2aKRgsCNbvy9WpEHO4P2i1IoBfopwg+C7I2SIip1B/jAwybN1h0xk7/hwfZwEdJnfeKMCHqyON3wUmWG8zHtk/UcvJWTRMikRU+IIuC+lBH+ZNkm1aqZ3qNLrYXZ5DgEV6i8Op7hgrtCIBgjk7JRdDSJpK1yhSK5rDstjxnWdJ4W0BEpXyD5yoQqTy6qjYT+jitXol59fSyCFfGzY3seV3gwksPi5il6//wGLVDGTVDDeShyfsmnqfPwjyKiGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n0RDVdt2GzDWXA2g9R4fbEbkiljqwrAwk47vn2ojkaQ=;
- b=ngHv0k88ufTK7abo9pilKUJPqU9WNSPUiJ9ss9a06AFjVpyBhY0u8AlWZT4kWncmMI3KsX8bZlhCSxUwSxkhXkJi/wj6KNN4Zq1OQ8Mg82RIIQPsNdZ+Ke0Cq/VGWGdkWkZm01OV+HauAsTe5+znHLY4MYD+t7ssPOV7jRYAlL8=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3884.eurprd04.prod.outlook.com (52.134.71.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 15 Jan 2020 01:37:11 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2644.015; Wed, 15 Jan 2020
- 01:37:11 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
- json-schema
-Thread-Topic: [PATCH V2 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
- json-schema
-Thread-Index: AQHVx2u+Jm02FmzcjEemG6LxK5AAHqfq4oOAgAAWwEA=
-Date:   Wed, 15 Jan 2020 01:37:11 +0000
-Message-ID: <DB3PR0402MB391625FBD72C16E3C84ADCA7F5370@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1578629120-25793-1-git-send-email-Anson.Huang@nxp.com>
- <20200115001357.GA16961@bogus>
-In-Reply-To: <20200115001357.GA16961@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e155d372-c940-4aad-8738-08d7995b7140
-x-ms-traffictypediagnostic: DB3PR0402MB3884:|DB3PR0402MB3884:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3884E210FB5C9AFA570C4B7FF5370@DB3PR0402MB3884.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(189003)(199004)(76116006)(9686003)(86362001)(55016002)(4326008)(66946007)(66476007)(66556008)(64756008)(66446008)(2906002)(6916009)(478600001)(44832011)(71200400001)(8676002)(81156014)(8936002)(81166006)(316002)(7416002)(54906003)(7696005)(186003)(6506007)(5660300002)(33656002)(26005)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3884;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZwXp1uVi+4BcMAsSjutAFdf4DWF1xv334EpgbDoNw3Z6gPgw59L6ecdAm+L1ESDlYEarEngfaWlDOeOA4RLdDLxrCrr9iIxnoaBD+rQ5DoYngIMFecCrEiggs1rSwa7GMlUjtxKwkhzNs9Z4zjmgcGsDJZMpFsiw/b4dydvwk1KohYbgTSIPoBe9ARCnscdKtjqHGTCS8HNhdL6fzpdzmCGdVZ8dsFs7r2F384QJqzY1ic3rrS5nPWHSDHbg6jPXGUsicWLfaF549nM60l8WZs4IB4ktySli62t00u/ARFCcEZQPhuyN/Hxw7e+BV3wdhqcE5E0WKpZziFno3L2IwNj+hfQaWBNobor7iIhmIf+2bH1KISrEGgkoCi9WKGmuulQTa8wTof+uqAnBWn/h3S3dRPrdcXhT8XzqH9L2fXCyXzzJ2lXSV9+UNqMVdh15
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 14 Jan 2020 20:37:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43536 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbgAOBhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 20:37:53 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p27so6049155pli.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 17:37:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zdsjxjvH/tUzmnwmoZCV321rPDTpQdI6rQfaTbsVcek=;
+        b=QtF3py1rm3eu6XA5nji+v+VyJkcjLjIc3YXtcyDs5jPzHYtKdo+D4Ih/7ihMTj17pA
+         ByVQfA4PTcgJVCJAg6UrUwuzDis4Ls9IjBJF/FTJyZQpAsyFwAAjPtz+NME9DIVzStb5
+         b1Vr3ZrPcqLk2YVpSdY91aK8x+hpToNe5mfhQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zdsjxjvH/tUzmnwmoZCV321rPDTpQdI6rQfaTbsVcek=;
+        b=kxeLObbWsR5HetTR+g2lm2xpfd05+zAWUQi0NjkGqoWCpRYavuaEcpCo20cJzg5+Vs
+         V84aOmbgE8EcpMXIiz5aB0WGFkUOPxxd1iCAzwTUhNlWZgXjHt98adRlQgdaMzuY6uNH
+         vBcCCcpO/9KYD4QBt1W9njMAUMOOewKsp+oAdjPG4ARXIiomvhnrp1bXimuiTnTK+Wzv
+         JVUKEQWwNINdIYB/kJiZk+V5j4iu+IrywwITdB+uiagzD4VyN4tgAHliYZ3Z8Y3NpA7Q
+         PHTwqQQQjgc8V8KUKmk9459BifNywsMIgiM95YIpjKlnPJgVr3UDbiieMkoDb5lhgP1K
+         k6QQ==
+X-Gm-Message-State: APjAAAU+ZnMt4dknUGtbkMyZZpqZ+uYmDkPfAGMhIrCjNs6AqFyvc79M
+        yUYczbEuqtgc4Ur8lqjWI+1sMGt7RuskHA==
+X-Google-Smtp-Source: APXvYqz28WpmXl65RH3fAV23Fy7l4mAowqzKZ18QFkXC1WuOSJjgmtIlb3J9Cy51syq+QYmwbMGRLQ==
+X-Received: by 2002:a17:902:b087:: with SMTP id p7mr30291576plr.10.1579052272503;
+        Tue, 14 Jan 2020 17:37:52 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y76sm19949275pfc.87.2020.01.14.17.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 17:37:52 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH] drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh
+Date:   Tue, 14 Jan 2020 17:37:51 -0800
+Message-Id: <20200115013751.249588-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e155d372-c940-4aad-8738-08d7995b7140
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 01:37:11.6433
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LEfWKwBfF9UIZJrmCYrGNji1yO+Oa8T4DvzBNqMZbtqwbdWuuJ0WGrClXJOEqaW7IK/pwgFozND9ZdVgGYAxmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3884
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFJvYg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjIgMS8zXSBkdC1iaW5kaW5nczogcGlu
-Y3RybDogQ29udmVydCBpLk1YOE1RIHRvIGpzb24tDQo+IHNjaGVtYQ0KPiANCj4gT24gRnJpLCBK
-YW4gMTAsIDIwMjAgYXQgMTI6MDU6MThQTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4g
-Q29udmVydCB0aGUgaS5NWDhNUSBwaW5jdHJsIGJpbmRpbmcgdG8gRFQgc2NoZW1hIGZvcm1hdCB1
-c2luZw0KPiA+IGpzb24tc2NoZW1hDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
-ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYxOg0K
-PiA+IAktIHVzZSAiZ3JwJCIgaW5zdGVhZCBvZiAiLWdycCQiOw0KPiA+IAktIHVzZSBzcGFjZSBp
-bnN0ZWFkIG9mIHRhYiBmb3IgInJlZiQiOw0KPiA+IAktIGFkZCBtaXNzZWQgInJlZyIgcHJvcGVy
-dHk7DQo+ID4gCS0gcmVtb3ZlIHRoZSAibWF4SXRlbSIgZm9yICJmc2wscGlucyIgdG8gYXZvaWQg
-YnVpbGQgd2FybmluZywgYXMgdGhlDQo+IGl0ZW0gbnVtYmVyIGlzIGNoYW5nYWJsZS4NCj4gPiAt
-LS0NCj4gPiAgLi4uL2JpbmRpbmdzL3BpbmN0cmwvZnNsLGlteDhtcS1waW5jdHJsLnR4dCAgICAg
-ICAgfCAzNiAtLS0tLS0tLS0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9mc2wsaW14OG1x
-LXBpbmN0cmwueWFtbCAgICAgICB8IDY5DQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspLCAzNiBkZWxldGlvbnMoLSkgIGRlbGV0
-ZSBtb2RlDQo+ID4gMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BpbmN0cmwvZnNsLGlteDhtcS1waW5jdHJsLnR4dA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQN
-Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9mc2wsaW14OG1x
-LXBpbmN0cmwueWFtbA0KPiANCj4gQWN0dWFsbHksIGl0IGxvb2tzIGxpa2UgeW91IGNhbiBjb21i
-aW5lIGFsbCAzIGludG8gYSBzaW5nbGUgc2NoZW1hLiBUaGUgb25seSBkaWZmDQo+IGlzIHRoZSBj
-b21wYXRpYmxlIHN0cmluZy4NCg0KVGhlIGhlYWRlciBmaWxlcyBuYW1lLCByZWZlcmVuY2UgbWFu
-dWFsIG5hbWUgYW5kIHRoZSBleGFtcGxlcyBhcmUgYWxzbyBkaWZmZXJlbnQsDQpzbywgcGVyc29u
-YWxseSwgSSBwcmVmZXIgdG8gaGF2ZSB0aGVtIHNlcGFyYXRlbHkgaWYgbm8gc3Ryb25nIG9iamVj
-dGlvbi4NCg0KVGhhbmtzLA0KQW5zb24NCg==
+This tracepoint is hit now that we call into the rpmh code from the cpu
+idle path. Let's move this to be an rcuidle tracepoint so that we avoid
+the RCU idle splat below
+
+ =============================
+ WARNING: suspicious RCU usage
+ 5.4.10 #68 Tainted: G S
+ -----------------------------
+ drivers/soc/qcom/trace-rpmh.h:72 suspicious rcu_dereference_check() usage!
+
+ other info that might help us debug this:
+
+ RCU used illegally from idle CPU!
+ rcu_scheduler_active = 2, debug_locks = 1
+ RCU used illegally from extended quiescent state!
+ 5 locks held by swapper/2/0:
+  #0: ffffff81745d6ee8 (&(&genpd->slock)->rlock){+.+.}, at: genpd_lock_spin+0x1c/0x2c
+  #1: ffffff81745da6e8 (&(&genpd->slock)->rlock/1){....}, at: genpd_lock_nested_spin+0x24/0x34
+  #2: ffffff8174f2ca20 (&(&genpd->slock)->rlock/2){....}, at: genpd_lock_nested_spin+0x24/0x34
+  #3: ffffff8174f2c300 (&(&drv->client.cache_lock)->rlock){....}, at: rpmh_flush+0x48/0x24c
+  #4: ffffff8174f2c150 (&(&tcs->lock)->rlock){+.+.}, at: rpmh_rsc_write_ctrl_data+0x74/0x270
+
+ stack backtrace:
+ CPU: 2 PID: 0 Comm: swapper/2 Tainted: G S                5.4.10 #68
+ Call trace:
+  dump_backtrace+0x0/0x174
+  show_stack+0x20/0x2c
+  dump_stack+0xc8/0x124
+  lockdep_rcu_suspicious+0xe4/0x104
+  __tcs_buffer_write+0x230/0x2d0
+  rpmh_rsc_write_ctrl_data+0x210/0x270
+  rpmh_flush+0x84/0x24c
+  rpmh_domain_power_off+0x78/0x98
+  _genpd_power_off+0x40/0xc0
+  genpd_power_off+0x168/0x208
+  genpd_power_off+0x1e0/0x208
+  genpd_power_off+0x1e0/0x208
+  genpd_runtime_suspend+0x1ac/0x220
+  __rpm_callback+0x70/0xfc
+  rpm_callback+0x34/0x8c
+  rpm_suspend+0x218/0x4a4
+  __pm_runtime_suspend+0x88/0xac
+  psci_enter_domain_idle_state+0x3c/0xb4
+  cpuidle_enter_state+0xb8/0x284
+  cpuidle_enter+0x38/0x4c
+  call_cpuidle+0x3c/0x68
+  do_idle+0x194/0x260
+  cpu_startup_entry+0x24/0x28
+  secondary_start_kernel+0x150/0x15c
+
+Fixes: a65a397f2451 ("cpuidle: psci: Add support for PM domains by using genpd")
+Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+I think the commit that this is "Fixes"ing is a stable commit, but I'm
+not positive.
+
+ drivers/soc/qcom/rpmh-rsc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index e278fc11fe5c..b71822131f59 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -277,7 +277,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
+ 		write_tcs_cmd(drv, RSC_DRV_CMD_MSGID, tcs_id, j, msgid);
+ 		write_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j, cmd->addr);
+ 		write_tcs_cmd(drv, RSC_DRV_CMD_DATA, tcs_id, j, cmd->data);
+-		trace_rpmh_send_msg(drv, tcs_id, j, msgid, cmd);
++		trace_rpmh_send_msg_rcuidle(drv, tcs_id, j, msgid, cmd);
+ 	}
+ 
+ 	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
+-- 
+Sent by a computer, using git, on the internet
+
