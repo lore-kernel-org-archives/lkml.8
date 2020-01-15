@@ -2,81 +2,86 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEB3C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6A9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F53214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:00:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZd/LM+V"
+	by mail.kernel.org (Postfix) with ESMTP id 4728224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579107705;
+	bh=eOi5R+y1PHXXhkCj84dFj6bDFzmL2yN20+wjZc//NUk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=dq7o/n0gfdqKR4xhzAEnoiMT+PxQAq5vctYYYiyJSIpOXnweBP6rTK1E/l+ZaJUPa
+	 ILj5mENIoiWctZDyD1J6/8KFZlbvhGf9IXyPeuyNxy/zoE+OVIMAbK1jVxGm8WlFif
+	 L2oyh0KhYRZt9mmqYcmgqZHsaxWs9LEBK7UhxcpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgAORAK (ORCPT
+        id S1729016AbgAORBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:00:10 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48163 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbgAORAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:00:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579107608;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oBQnQpVm4eKdteh8IhTOrm9qQNdOr/TSGOdEhhv2XDw=;
-        b=WZd/LM+VhyfI69Xb8chtjnTkq6RCuqJVSEkVO6HoyvGqJ3ODl1na73n7mtKgu4BaNRIUKq
-        5JOxKcR4qqqSHXOigZ40YNYLznZDHP0M6RgXIHE8DEUr81uRbBTp6eNuJ/wHDC8A2dqW7q
-        /aWE+8V3utRbH6m+V2mwUTbMLem02Nc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-233-xcn94VcLNdidfkTKf6Vnqg-1; Wed, 15 Jan 2020 12:00:04 -0500
-X-MC-Unique: xcn94VcLNdidfkTKf6Vnqg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jan 2020 12:01:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726418AbgAORBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:01:44 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B90F800D4C;
-        Wed, 15 Jan 2020 17:00:02 +0000 (UTC)
-Received: from asgard.redhat.com (ovpn-112-36.ams2.redhat.com [10.36.112.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C89460BE0;
-        Wed, 15 Jan 2020 17:00:00 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 17:59:57 +0100
-From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] io_uring: fix compat for IORING_REGISTER_FILES_UPDATE
-Message-ID: <20200115165957.GJ1333@asgard.redhat.com>
-References: <20200115163538.GA13732@asgard.redhat.com>
- <cce5ac48-641d-3051-d22c-dab7aaa5704c@kernel.dk>
- <20200115165017.GI1333@asgard.redhat.com>
- <a039f869-6377-b8b0-e170-0b5c17ebd4da@kernel.dk>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F4FE214AF;
+        Wed, 15 Jan 2020 17:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579107703;
+        bh=eOi5R+y1PHXXhkCj84dFj6bDFzmL2yN20+wjZc//NUk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=L0OaVMAz60Ii0HQk32z784XU+N8eFgGcdoFAR3XfA0/I5QK6KoWzdDae9BDQfendb
+         XmvlfJaxi/b8SLAkTuYMUavXjbwjxQbnBdo8mXHp8MKvjeIKt+qC2ngT9Af/ZjWAVJ
+         g97BX0mZU4ONjlqd5sHwDbI7oExQ0b/drjnyBRBc=
+Date:   Wed, 15 Jan 2020 11:01:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
+        Doug Meyer <dmeyer@gigaio.com>
+Subject: Re: [PATCH v2 0/7]  Switchtec Gen4 Support
+Message-ID: <20200115170142.GA171752@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a039f869-6377-b8b0-e170-0b5c17ebd4da@kernel.dk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200115035648.2578-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:53:27AM -0700, Jens Axboe wrote:
-> We'd need it in a union for this to work.
+On Tue, Jan 14, 2020 at 08:56:41PM -0700, Logan Gunthorpe wrote:
+> Hi,
+> 
+> Here are the cleaned up version of the patches for Gen4 support in
+> switchtec. The end result is mostly the same, save some very minor
+> changes, but the organization into commits has been reworked per
+> Bjorn's feedback. This set is also rebased onto pci/switchtec.
 
-Note that union usage may be a bit problematic, as it may lead to difference
-in behaviour (and possible subtle bugs, as a result) between native 32-bit
-kernel and 64-bit one in compat mode due to the fact that u64_to_user_ptr
-doesn't check higher 32 bits on 32 bit kernels; it is mostly ignored
-in the case of plain __u64 usage, as it is less likely to pass garbage
-in the higher 32 bits in that case, but the issue, nevertheless, stands,
-so I'd propose to check these bits in case the union approach
-is implemented.
+Beautiful.  Applied to pci/switchtec, thank you very much!
 
+> Kelvin Cao (2):
+>   PCI/switchtec: Add gen4 support for the flash information interface
+>   PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+> 
+> Logan Gunthorpe (5):
+>   PCI/switchtec: Rename generation specific constants
+>   PCI/switchtec: Introduce Generation Variable
+>   PCI/switchtec: Refactor ioctl_flash_part_info()
+>   PCI/switchtec: Separate out gen3 register structures into unionse
+>   PCI/switchtec: Add gen4 support for the system info registers
+> 
+>  drivers/pci/quirks.c                 |  18 ++
+>  drivers/pci/switch/switchtec.c       | 334 +++++++++++++++++++++------
+>  include/linux/switchtec.h            | 148 ++++++++++--
+>  include/uapi/linux/switchtec_ioctl.h |  13 +-
+>  4 files changed, 424 insertions(+), 89 deletions(-)
+> 
+> --
+> 2.20.1
