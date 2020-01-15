@@ -2,305 +2,93 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333F5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0613BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C742187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15DC2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZkT8PNj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgAOJEJ (ORCPT
+        id S1729334AbgAOJEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:04:09 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35537 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729066AbgAOJEI (ORCPT
+        Wed, 15 Jan 2020 04:04:32 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:60633 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729184AbgAOJEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:04:08 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 15so12108984lfr.2;
-        Wed, 15 Jan 2020 01:04:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v7xyxbrWrmQHv15hNOtb1rNt3cvQ3UbCl0qWcUWm23U=;
-        b=mOmMLjXvBObeEkHunnyLFHe4EyUYdfmbDPNz70TiwZzs82duxFiueHgtYY9B7PO6l7
-         mVLdNzRfZ/ToVMojwci8dPl4RD4C0vnjR7RBWQ9A/tHp9b4VHeq1eEe7MEfY4OHAfg+L
-         Y8q+TXahBmXmPfPxAOKm+Y7Sd0pB1wL9NfN8STKMBZ60sbI4aH+d7O0o1zTxzWeAwEm7
-         nM3LqNh/PgDOS75zc9Jclo3RyqRlK1uF2E4NjhAoLkE9NVqFIsGnE73QrPd++9x7ucRm
-         9VvcLBvTIKU0gdXS9FQvYjvZ6QFKo44ehIqLFIyf6vbxOxJfe49+WZcSAs+VF8iAmecx
-         +N3A==
-X-Gm-Message-State: APjAAAV5IPtWIZAQSC69l5vjBwAEwHdTRIDEmXLjGTsWx8FD5nSBbIAW
-        Upts6rCaFjZoMxzh4KSq0XI=
-X-Google-Smtp-Source: APXvYqyGfdTX6RrZDVjXBRauZVf3Q9N5G7sMwPobV3KU2h8X4F5vvHMO2CtRbmgKTzKFzpbP1Jrgdw==
-X-Received: by 2002:a19:4b87:: with SMTP id y129mr4178428lfa.32.1579079044407;
-        Wed, 15 Jan 2020 01:04:04 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id f26sm8771370ljn.104.2020.01.15.01.04.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 01:04:03 -0800 (PST)
-Date:   Wed, 15 Jan 2020 11:03:56 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RESEND PATCH v9 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Message-ID: <b58952aedd1cce08aa4d7f346007a24923bb2b64.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 15 Jan 2020 04:04:31 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579079071; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=SEmOCijvsdwGF7pEkrg8FPnYkaWi/mjXIm3JEWQ3QPA=; b=ZkT8PNj6foZxE2PqNeZGKce7/oVrzBIdlQ37jsL19Kk63K6m+cpsu9pc1Y8S/bMtBpDkaf23
+ G2K9nLXgzMU4McliaSO4Og+TBTsFBkcQkH9SDwf6oKvs6yQe+vIqMBpHWKQHrtKnNk9LKjR6
+ gZsB+q5RFaWBQBsNzSHBveqxOsE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1ed59e.7f1f0790f6f8-smtp-out-n01;
+ Wed, 15 Jan 2020 09:04:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EBAE0C447A2; Wed, 15 Jan 2020 09:04:28 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1EFEC43383;
+        Wed, 15 Jan 2020 09:04:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1EFEC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, ath10k@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
+References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
+        <87zhevsrwk.fsf@codeaurora.org>
+Date:   Wed, 15 Jan 2020 11:04:22 +0200
+In-Reply-To: <87zhevsrwk.fsf@codeaurora.org> (Kalle Valo's message of "Fri, 10
+        Jan 2020 09:16:11 +0200")
+Message-ID: <87r201xf8p.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
-a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-and a 32.768 kHz clock gate.
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-Document the dt bindings drivers are using.
+> Bjorn Andersson <bjorn.andersson@linaro.org> writes:
+>
+>> On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
+>> will reset due to an NoC error. So this adds an optional clock to the ath10k
+>> binding and makes sure it's enabled while the WiFi firmware needs it.
+>>
+>> Bjorn Andersson (2):
+>>   ath10k: Add optional qdss clk
+>>   arm64: dts: qcom: sm8150: Specify qdss clock for wifi
+>>
+>>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 2 +-
+>>  arch/arm64/boot/dts/qcom/sm8150.dtsi                          | 4 ++--
+>>  drivers/net/wireless/ath/ath10k/snoc.c                        | 2 +-
+>>  3 files changed, 4 insertions(+), 4 deletions(-)
+>
+> Via which tree are these supposed to go? I'll take patch 1 and arm
+> mantainers take patch 2, or what?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-No changes since v8
-
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++++++++++++
- 1 file changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-new file mode 100644
-index 000000000000..4fbb9e734284
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-@@ -0,0 +1,193 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd71828-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71828 Power Management Integrated Circuit bindings
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  BD71828GW is a single-chip power management IC for battery-powered portable
-+  devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-+  single-cell linear charger. Also included is a Coulomb counter, a real-time
-+  clock (RTC), and a 32.768 kHz clock gate.
-+
-+properties:
-+  compatible:
-+    const: rohm,bd71828
-+
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description: |
-+      The first cell is the pin number and the second cell is used to specify
-+      flags. See ../gpio/gpio.txt for more information.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  rohm,charger-sense-resistor-ohms:
-+    minimum: 10000000
-+    maximum: 50000000
-+    description: |
-+      BD71827 and BD71828 have SAR ADC for measuring charging currents.
-+      External sense resistor (RSENSE in data sheet) should be used. If some
-+      other but 30MOhm resistor is used the resistance value should be given
-+      here in Ohms.
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd71828-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+  leds:
-+    $ref: ../leds/rohm,bd71828-leds.yaml
-+
-+  gpio-reserved-ranges:
-+    description: |
-+      Usage of BD71828 GPIO pins can be changed via OTP. This property can be
-+      used to mark the pins which should not be configured for GPIO. Please see
-+      the ../gpio/gpio.txt for more information.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - "#clock-cells"
-+  - regulators
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        pmic: pmic@4b {
-+            compatible = "rohm,bd71828";
-+            reg = <0x4b>;
-+
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+
-+            clocks = <&osc 0>;
-+            #clock-cells = <0>;
-+            clock-output-names = "bd71828-32k-out";
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-reserved-ranges = <0 1>, <2 1>;
-+
-+            rohm,charger-sense-resistor-ohms = <10000000>;
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck3: BUCK3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <1200000>;
-+                    regulator-max-microvolt = <2000000>;
-+                };
-+                buck4: BUCK4 {
-+                    regulator-name = "buck4";
-+                    regulator-min-microvolt = <1000000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                buck5: BUCK5 {
-+                    regulator-name = "buck5";
-+                    regulator-min-microvolt = <2500000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                buck6: BUCK6 {
-+                    regulator-name = "buck6";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck7: BUCK7 {
-+                    regulator-name = "buck7";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                ldo1: LDO1 {
-+                    regulator-name = "ldo1";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo2: LDO2 {
-+                    regulator-name = "ldo2";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo3: LDO3 {
-+                    regulator-name = "ldo3";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo4: LDO4 {
-+                    regulator-name = "ldo4";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo5: LDO5 {
-+                    regulator-name = "ldo5";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo6: LDO6 {
-+                    regulator-name = "ldo6";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                ldo7_reg: LDO7 {
-+                    regulator-name = "ldo7";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+            };
-+
-+            leds {
-+                compatible = "rohm,bd71828-leds";
-+
-+                led-1 {
-+                    rohm,led-compatible = "bd71828-grnled";
-+                    function = LED_FUNCTION_INDICATOR;
-+                    color = <LED_COLOR_ID_GREEN>;
-+                };
-+                led-2 {
-+                    rohm,led-compatible = "bd71828-ambled";
-+                    function = LED_FUNCTION_CHARGING;
-+                    color = <LED_COLOR_ID_AMBER>;
-+                };
-+            };
-+        };
-+    };
--- 
-2.21.0
-
+No reply, so I'm planning to take patch 1. Please holler if I
+misunderstood.
 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
