@@ -2,136 +2,152 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727EAC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4183020728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585382084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRg8LUg4"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KvJonJS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgAOUgE (ORCPT
+        id S1729266AbgAOUgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:36:04 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39101 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729117AbgAOUgE (ORCPT
+        Wed, 15 Jan 2020 15:36:52 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46515 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbgAOUgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:36:04 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so7316797plp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:36:03 -0800 (PST)
+        Wed, 15 Jan 2020 15:36:51 -0500
+Received: by mail-qt1-f196.google.com with SMTP id e25so5658774qtr.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:36:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=1Kq7E7yB24oMF+8U5r1ALJcHmpKEZz9xaZhS6OI6Yd4=;
-        b=ZRg8LUg4vdi4RxUvpoJXMnuBXx2F26/54JF3ieqqhSeu7kjxGyhT3/oddQU+q8Z7s7
-         lPZa8OTSazVRRzSMR8O5oJUem5OpTjPZ8TBG8fqQlAxUi80tRp1f9DnexBuFtgR9j1Jp
-         +hjK5uojBbqE0LgCgcb3JBW37j3ksV4VrI1nWftapInUH+PU/aHhvgspg9Q9rMFpCDVD
-         g3+S9ykt3mK73wKLYpHXFBFszLEYgx+/tDIubNkMAhVmrkHyNo33UZs5HnaxiFNcDGMS
-         aj6mybsFjceeC42Co5zGOEz3owBKFRAiHwkJRGDKX6+uBP/spgAmYSGlcUZ7lGeJUpe0
-         Iyyg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NAKUDwP/e+r+t9LGTDNQ9rNpiXN3ioEIzxfesocrhDI=;
+        b=KvJonJS+Dd0Iz0+3I2Kj9fRb9q3FU6BDpqEfY5leVMoT5F/QO9MUZSIazysdh7j3us
+         nk3a76Gs9jPYjrm6iM29FvRdFyd+3nOYz/tirrGsrnX7BAD/a7oUj5EldPv0QOyEPr6+
+         GXvo2UF5C2wYkvsaDBU+URYqWdj3Kyi9aqvtvXP0bkCNHLW925pNsQ9K5n7NweUtYJyz
+         pW7uqE8xBBpzRAzJ/Kot7TWgLVFJAHTBzL/zpVtflaYalpWKKDtA/EnyIBqMwi5qMmvE
+         /7Ka6Cc6HBvVJI+rlXs1zhhGUioFMYxelkxWWuQJC+bDWBPWtho6i0ufMEMYV4MqAT7K
+         K+kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=1Kq7E7yB24oMF+8U5r1ALJcHmpKEZz9xaZhS6OI6Yd4=;
-        b=GngD7uORvhAdPuS9UrsLSlVSQjaaAdNHti9ZgFv5fdjEx0XPTNx393wfsNC4OI6DqZ
-         FJuDXhN0ScLonUkjWRBFC+wlNjCrb3mAy1jHDoEHQBfUbpjzNcDRjviaC+3bnM+VNy6J
-         M+yHij5e5JwprZc27Wq3gmx4+wbB4gZR5D9SV+tzfLRfDyVwe7hq5druFeAVtsE29/UQ
-         b/tvn5QFUgKu+CTCwi5zaxWraOW6b82nl/B8RuUXmxyl0CErFovpdZTTKTlTE4LQxVgh
-         iL72JA+sZ+x0rh4pW4ix6lmJiS22wjnG88Cak3KUkwCBUCmTgTti/iq6JBcE/R5W1bXr
-         /cpg==
-X-Gm-Message-State: APjAAAXRVVEeERIHr5DW7xvuqtHPntGtxfV5MRaznIjOoW5P+/2/BLAL
-        DFPVDdhnno7jrddKL/6ooOqG/CLzTz8=
-X-Google-Smtp-Source: APXvYqxwjKrQRKb5VvbIT0wsat36G6HJjkLFrgS7bVZJZ0KZ6aWzfUG3AL9YY+kuQq+0Qh+1xnNlIQ==
-X-Received: by 2002:a17:902:9885:: with SMTP id s5mr28095711plp.217.1579120563073;
-        Wed, 15 Jan 2020 12:36:03 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id h11sm21070101pgv.38.2020.01.15.12.36.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 12:36:02 -0800 (PST)
-Date:   Wed, 15 Jan 2020 12:36:02 -0800 (PST)
-X-Google-Original-Date: Wed, 15 Jan 2020 12:35:41 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v6 0/5] Add support for SBI v0.2 
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        aou@eecs.berkeley.edu, anup@brainfault.org,
-        linux-riscv@lists.infradead.org, rppt@linux.ibm.com,
-        Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de,
-        atishp@atishpatra.org
-To:     Atish Patra <Atish.Patra@wdc.com>
-In-Reply-To: <20191218213918.16676-1-atish.patra@wdc.com>
-References: <20191218213918.16676-1-atish.patra@wdc.com>
-Message-ID: <mhng-9ed825c6-0972-46ac-aeac-89a57bf73cac@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NAKUDwP/e+r+t9LGTDNQ9rNpiXN3ioEIzxfesocrhDI=;
+        b=atg2RmWcobM5gx19xcbqS6tNiyy92ZS7LpwIrIWO9wecFffd3aMk9GazRc0guXT8qe
+         43aWYzvNeFB1WsaLkYXd9uWD+DNKYhnGNtH8MI9aow4xkUavrHrYcInGRJTp8Dws/J9O
+         rfulUQkdViN9uMUPhRWyyGIcafeSKhcIu4CyrHd9jI/zClFy6ZYRHoqEQ7vsl9zVPNG7
+         xhEHs7OpEnQMHcYPWYsjrXuDnSBPmTaZDYDEvddFZAkjTBPR/KaqTcpeBjd/htKI9d8V
+         P73fvQu1rN/raACtKjrrD9JJOdByLljRF7un59bpHkuYssp7dPx4URDLFPbgH1RT58iV
+         f2IQ==
+X-Gm-Message-State: APjAAAWZ7Q5SJV+uG7MJstJXUVugu6qeH2AjEvTlEuCkMH2tHxMuAOLM
+        /mMd8OwP+ltfOOlZHNbC2cL9YA==
+X-Google-Smtp-Source: APXvYqxC0Ph+Y/AoR5bEI9/y5gzcaUeyBY6AMwhJR+GAt8K7RQMX4zLW+JPOJzlbzq+RGFKHMulisA==
+X-Received: by 2002:ac8:2b26:: with SMTP id 35mr417020qtu.341.1579120610811;
+        Wed, 15 Jan 2020 12:36:50 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g81sm9019830qkb.70.2020.01.15.12.36.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 12:36:50 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1irpPF-0006pM-SD; Wed, 15 Jan 2020 16:36:49 -0400
+Date:   Wed, 15 Jan 2020 16:36:49 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Rao Shoaib <rao.shoaib@oracle.com>
+Cc:     linux-rdma@vger.kernel.org, monis@mellanox.com,
+        dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] SGE buffer and max_inline data must have same size
+Message-ID: <20200115203649.GF25201@ziepe.ca>
+References: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
+ <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
+ <20200115182721.GE25201@ziepe.ca>
+ <93b8e890-c4a9-6050-88b7-3667c023dd34@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <93b8e890-c4a9-6050-88b7-3667c023dd34@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:39:13 PST (-0800), Atish Patra wrote:
-> The Supervisor Binary Interface(SBI) specification[1] now defines a
-> base extension that provides extendability to add future extensions
-> while maintaining backward compatibility with previous versions.
-> The new version is defined as 0.2 and older version is marked as 0.1.
->
->
-> This series adds support v0.2 and a unified calling convention
-> implementation between 0.1 and 0.2. It also add other SBI v0.2
-> functionality defined in [2]. The base support for SBI v0.2 is already
-> available in OpenSBI v0.5. This series needs additional patches[3] in
-> OpenSBI.
->
-> Tested on both BBL, OpenSBI with/without the above patch series.
->
-> [1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
-> [2] https://github.com/riscv/riscv-sbi-doc/pull/27
-> [3] http://lists.infradead.org/pipermail/opensbi/2019-November/000738.html
->
-> Changes from v5->v6
-> 1. Fixed few compilation issues around config.
-> 2. Fixed hart mask generation issues for RFENCE & IPI extensions.
->
-> Changes from v4->v5
-> 1. Fixed few minor comments related to static & inline.
-> 2. Make sure that every patch is boot tested individually.
->
-> Changes from v3->v4.
-> 1. Rebased on for-next.
-> 2. Fixed issuses with checkpatch --strict.
-> 3. Unfied all IPI/fence related functions.
-> 4. Added Hfence related SBI calls.
->
-> Changes from v2->v3.
-> 1. Moved v0.1 extensions to a new config.
-> 2. Added support for relacement extensions of v0.1 extensions.
->
-> Changes from v1->v2
-> 1. Removed the legacy calling convention.
-> 2. Moved all SBI related calls to sbi.c.
-> 3. Moved all SBI related macros to uapi.
->
-> Atish Patra (5):
-> RISC-V: Mark existing SBI as 0.1 SBI.
-> RISC-V: Add basic support for SBI v0.2
-> RISC-V: Add SBI v0.2 extension definitions
-> RISC-V: Introduce a new config for SBI v0.1
-> RISC-V: Implement new SBI v0.2 extensions
->
-> arch/riscv/Kconfig           |   6 +
-> arch/riscv/include/asm/sbi.h | 178 +++++++-----
-> arch/riscv/kernel/sbi.c      | 522 ++++++++++++++++++++++++++++++++++-
-> arch/riscv/kernel/setup.c    |   2 +
-> 4 files changed, 635 insertions(+), 73 deletions(-)
+On Wed, Jan 15, 2020 at 11:57:08AM -0800, Rao Shoaib wrote:
+> 
+> On 1/15/20 10:27 AM, Jason Gunthorpe wrote:
+> > On Mon, Jan 13, 2020 at 04:41:20PM -0800, rao Shoaib wrote:
+> > > From: Rao Shoaib <rao.shoaib@oracle.com>
+> > > 
+> > > SGE buffer size and max_inline data should be same. Maximum of the
+> > > two values requested is used.
+> > > 
+> > > Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
+> > >   drivers/infiniband/sw/rxe/rxe_qp.c | 23 +++++++++++------------
+> > >   1 file changed, 11 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+> > > index aeea994..41c669c 100644
+> > > +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+> > > @@ -235,18 +235,17 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+> > >   		return err;
+> > >   	qp->sk->sk->sk_user_data = qp;
+> > > -	qp->sq.max_wr		= init->cap.max_send_wr;
+> > > -	qp->sq.max_sge		= init->cap.max_send_sge;
+> > > -	qp->sq.max_inline	= init->cap.max_inline_data;
+> > > -
+> > > -	wqe_size = max_t(int, sizeof(struct rxe_send_wqe) +
+> > > -			 qp->sq.max_sge * sizeof(struct ib_sge),
+> > > -			 sizeof(struct rxe_send_wqe) +
+> > > -			 qp->sq.max_inline);
+> > > -
+> > > -	qp->sq.queue = rxe_queue_init(rxe,
+> > > -				      &qp->sq.max_wr,
+> > > -				      wqe_size);
+> > > +	wqe_size = max_t(int, init->cap.max_send_sge * sizeof(struct ib_sge),
+> > > +			 init->cap.max_inline_data);
+> > > +	qp->sq.max_sge = wqe_size/sizeof(struct ib_sge);
+> > > +	qp->sq.max_inline = wqe_size;
+> > > +
+> > > +	wqe_size += sizeof(struct rxe_send_wqe);
+> > Where does this limit the user's request to RXE_MAX_WQE_SIZE ?
+> 
+> My understanding is that the user request can only specify sge's and/or
+> inline data. The check for those is made in rxe_qp_chk_cap. Since max sge's
+> and max inline data are constrained by RXE_MAX_WQE_SIZE the limit is
+> enforced.
 
-Thanks.  I had a few comments on the spec, but this looks good given what's in
-the draft.
+Okay, that is fine, it is a bit obtuse because of how distant
+rxe_qp_chk_cap() is from this function, lets just add a comment
+
+> > I seem to recall the if the requested max can't be satisified then
+> > that is an EINVAL?
+> > 
+> > And the init->cap should be updated with the actual allocation.
+> 
+> Since the user request for both (sge's and inline data) has been satisfied I
+> decided not to update the values in case the return values are being
+> checked. If you prefer that I update the values I can do that.
+
+If the sizes are increased then the driver is supposed to return the
+actual maximums.
+
+It is easy, I will fix it.
+
+Also, your patches don't apply cleanly. You need to send patches
+against the rdma for-next tree
+
+And subjects should start with some 'RDMA/rxe: ' tag
+
+I fixed it all and applied to for-next
+
+Thanks,
+Jason
