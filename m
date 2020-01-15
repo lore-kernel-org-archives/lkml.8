@@ -2,97 +2,78 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5709C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3905222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVPvbGtF"
+	by mail.kernel.org (Postfix) with ESMTP id 043D02051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgAOXJM (ORCPT
+        id S1730418AbgAOXLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:09:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49748 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730222AbgAOXJM (ORCPT
+        Wed, 15 Jan 2020 18:11:03 -0500
+Received: from mailoutvs55.siol.net ([185.57.226.246]:57398 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729394AbgAOXLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:09:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579129751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3kh6FESOjeCOQkkcKQDJe6CbgaZZXbwDLWZRH4+4Tss=;
-        b=GVPvbGtFcnGveGIMa5BThYYNfc6o/LWMZmq72lZRl5UUytzmpeqe7UebDBxGpiXvxM5yip
-        wbEj0mA1k3MpmNZcS6DbaZKr3iMpZ6ZS2s1m4b4uRZwsMAaYkbJaSApXwiApWfBCT3w3OJ
-        VwX3/PJql9fJPf5hj5u9J6m6FnAnZCE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-UC9E83_LNMupIBVLbIZ7aA-1; Wed, 15 Jan 2020 18:09:09 -0500
-X-MC-Unique: UC9E83_LNMupIBVLbIZ7aA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18964800D41;
-        Wed, 15 Jan 2020 23:09:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EFA35D9C9;
-        Wed, 15 Jan 2020 23:09:04 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <7233E240-8EE5-4CD1-B8A4-A90925F51A1B@dilger.ca>
-References: <7233E240-8EE5-4CD1-B8A4-A90925F51A1B@dilger.ca> <C0F67EC5-7B5D-4179-9F28-95B84D9CC326@dilger.ca> <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com> <20200115133101.GA28583@lst.de> <23762.1579121702@warthog.procyon.org.uk>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Problems with determining data presence by examining extents?
+        Wed, 15 Jan 2020 18:11:02 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 7ECF95229C0;
+        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id G8KZ7vYm0PJ9; Thu, 16 Jan 2020 00:10:59 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 2E8355229D0;
+        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id C0A525229C0;
+        Thu, 16 Jan 2020 00:10:58 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
+Date:   Thu, 16 Jan 2020 00:10:58 +0100
+Message-ID: <4200557.LvFx2qVVIh@jernej-laptop>
+In-Reply-To: <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
+References: <20200115194216.173117-1-jernej.skrabec@siol.net> <20200115194216.173117-2-jernej.skrabec@siol.net> <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7025.1579129743.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 15 Jan 2020 23:09:03 +0000
-Message-ID: <7026.1579129743@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andreas Dilger <adilger@dilger.ca> wrote:
+Hi!
 
-> > It would also have to say that blocks of zeros shouldn't be optimised =
-away.
-> =
+Dne sreda, 15. januar 2020 ob 22:57:31 CET je Rob Herring napisal(a):
+> On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol.net> 
+wrote:
+> > OrangePi 3 can optionally have eMMC. Add a compatible for it.
+> 
+> Is this just a population option or a different board layout? If the
+> former, I don't think you need a new compatible, just add/enable a
+> node for the eMMC.
 
-> I don't necessarily see that as a requirement, so long as the filesystem
-> stores a "block" at that offset, but it could dedupe all zero-filled blo=
-cks
-> to the same "zero block".  That still allows saving storage space, while
-> keeping the semantics of "this block was written into the file" rather t=
-han
-> "there is a hole at this offset".
+I have only board with eMMC but I imagine it's the former. Even so, current 
+approach with Allwinner boards is to have two different board DT files, one for 
+each variant. This can be seen from Documentation/devicetree/bindings/arm/
+sunxi.yaml which has a lot of compatibles ending with "-emmc". I guess reason 
+for that is to avoid having MMC controller being powered on for no reason.
 
-Yeah, that's more what I was thinking of.  Provided I can find out that
-something is present, it should be fine.
+Best regards,
+Jernej
 
-David
+
+
 
