@@ -2,146 +2,155 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8BBC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B90C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6599B24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7A124679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s6n7uOoR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pR0xeT9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgAOJjU (ORCPT
+        id S1729526AbgAOJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:39:20 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35589 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbgAOJjU (ORCPT
+        Wed, 15 Jan 2020 04:44:19 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54078 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729459AbgAOJoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:39:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so15020606wro.2;
-        Wed, 15 Jan 2020 01:39:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZfnLElFWa6G1bLX7+mNV41fXukHAYDx919Y3lEHje0o=;
-        b=s6n7uOoRZciHM+AWw01UFjo/YPOlfTf2uKFE40T1I7QMhf5q9n+zdss3nKXJnbP6l2
-         zsUa0RxZLYJQoZn9srzAcKf7lKlAidY2SzzdsDXE1WzsEbTTVFApd6LlUbUy038kdJFg
-         H2677lS15IjLvEumD3425/7ybsP76IpE3tru4DydDRPfjOADd6GwEMTXlkBDC1Lz/GaF
-         ekCn/TMELJ/pXK/zNW0bEyCFCkELKhBXE9gdqc1E5ZNvhh8d7LR/4lXSxybFc5hqt8Ey
-         ZBGm0kU/+CxWKQqpi5p2YBgoZpBH9650hkR3DjoNUKrkMOIRT0tV5CuXkFacmCiQGKyN
-         17nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZfnLElFWa6G1bLX7+mNV41fXukHAYDx919Y3lEHje0o=;
-        b=TtcVC+D1yDuDM0ZZRuv6Tk3hMLUVDL0leI7EPh/QX0MYbPvjr85aVgPRvsMhfaUl/G
-         f36ch2s+KT0D9ES7iPoa49xTszlbNyl5wFgQbBwTtYqWI+lXEEAUVnrAfQgB+oN9qs5Y
-         +A6DbxpZb/yqev+7KT/Ssm1fvVr5hbTBtLoaLh/oDJ+bF1qbOrwCOFSq0bucWDs+8ZUd
-         ZRHRHKCvi6uJxUafcPWQLmvt0n+wyil3Va1ZcnLBXfiCnzfPZvqgAAf04kqpP8kbJQm9
-         jCSuDDEXBd/1C9kgs7aeY6n8F34BL6JnqryHJM4mzL1UNnGZ3DOEH78pdhxDb16SH7eO
-         S+lw==
-X-Gm-Message-State: APjAAAXSjYmLd04r3PvxCjlPP44pb/2Ye/3L7k3p6+KOt5Min2lgrkhl
-        t4q2+a2JsM4+JQwOl/VRCmw=
-X-Google-Smtp-Source: APXvYqxBXwCDlcnH2Sq70fnoWbE1++IW5U2XzenIZYo8cRzNgUv/sPzrBdcTC2riWlQM/pVqne21aQ==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr31311049wrs.143.1579081157963;
-        Wed, 15 Jan 2020 01:39:17 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id a1sm22403351wmj.40.2020.01.15.01.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 01:39:17 -0800 (PST)
-Date:   Wed, 15 Jan 2020 10:39:15 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
-Subject: Re: [PATCH v10 11/14] exfat: add Kconfig and Makefile
-Message-ID: <20200115093915.cjef2jadiwe2eul4@pali>
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
- <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
- <20200115082447.19520-12-namjae.jeon@samsung.com>
+        Wed, 15 Jan 2020 04:44:18 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00F9hunI123963;
+        Wed, 15 Jan 2020 03:43:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579081436;
+        bh=I1GbB9LPbUbIMdwYtUqwmved9scdWddLN73TisHwbc8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pR0xeT9JuRIQ161rA/RXCC7rCxdgEQFO6BBN87pGN9iJY6fhVLiQ2Cg2pQvNgYBTW
+         vISvIVgt0OWNGpI++9Cu9qycZMARXF9HrLqGcnL3DYS2DYBTQGMYo/LHHnTzlMuPi7
+         fgvT3kK+IAGAnclmPFE+6bkaQSPurbAzf53EkyEY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00F9hu7e089171
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jan 2020 03:43:56 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
+ Jan 2020 03:43:55 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 15 Jan 2020 03:43:55 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00F9hpEC035930;
+        Wed, 15 Jan 2020 03:43:51 -0600
+Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+To:     <santosh.shilimkar@oracle.com>, Sekhar Nori <nsekhar@ti.com>,
+        <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>, <frowand.list@gmail.com>
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+ <20191223110458.30766-3-peter.ujfalusi@ti.com>
+ <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+ <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+ <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
+ <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
+ <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
+Date:   Wed, 15 Jan 2020 11:44:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200115082447.19520-12-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 January 2020 17:24:44 Namjae Jeon wrote:
-> This adds the Kconfig and Makefile for exfat.
->=20
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/Kconfig  | 21 +++++++++++++++++++++
->  fs/exfat/Makefile |  8 ++++++++
->  2 files changed, 29 insertions(+)
->  create mode 100644 fs/exfat/Kconfig
->  create mode 100644 fs/exfat/Makefile
->=20
-> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
-> new file mode 100644
-> index 000000000000..9eeaa6d06adf
-> --- /dev/null
-> +++ b/fs/exfat/Kconfig
-> @@ -0,0 +1,21 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +config EXFAT_FS
-> +	tristate "exFAT filesystem support"
-> +	select NLS
-> +	help
-> +	  This allows you to mount devices formatted with the exFAT file system.
-> +	  exFAT is typically used on SD-Cards or USB sticks.
-> +
-> +	  To compile this as a module, choose M here: the module will be called
-> +	  exfat.
-> +
-> +config EXFAT_DEFAULT_IOCHARSET
-> +	string "Default iocharset for exFAT"
-> +	default "utf8"
-> +	depends on EXFAT_FS
-> +	help
-> +	  Set this to the default input/output character set you'd
-> +	  like exFAT to use. It should probably match the character set
-> +	  that most of your exFAT filesystems use, and can be overridden
-> +	  with the "iocharset" mount option for exFAT filesystems.
 
-Hello! This description is incorrect. iocharset option specify what
-character set is expected by VFS layer and not character set used by
-exFAT filesystem. exFAT filesystem always uses UTF-16 as this is the
-only allowed by exFAT specification.
 
-> diff --git a/fs/exfat/Makefile b/fs/exfat/Makefile
-> new file mode 100644
-> index 000000000000..ed51926a4971
-> --- /dev/null
-> +++ b/fs/exfat/Makefile
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Makefile for the linux exFAT filesystem support.
-> +#
-> +obj-$(CONFIG_EXFAT_FS) +=3D exfat.o
-> +
-> +exfat-y	:=3D inode.o namei.o dir.o super.o fatent.o cache.o nls.o misc.o=
- \
-> +	   file.o balloc.o
+On 14/01/2020 20.06, santosh.shilimkar@oracle.com wrote:
+>>>>> Can you please giver your Acked-by for the ringacc patches if they are
+>>>>> still OK from your point of view as you had offered to take them
+>>>>> before
+>>>>> I got comments from Lokesh.
+>>>>>
+>>>> Sure. But you really need to split the series so that dma engine and
+>>>> soc driver patches can be applied independently.
+>>>
+>>> The ringacc is a build and runtime dependency for the DMA. I have hoped
+>>> that all of them can go via DMAengine (hence asking for your ACK on the
+>>> drivers/soc/ti/ patches) for 5.6.
+>>>
+>>>> Can you please do that?
+>>>
+>>> This late in the merge window that would really mean that I will miss
+>>> another release for the KS3 DMA...
+>>> I can live with that if you can pick the ringacc for 5.6 and if Vinod
+>>> takes the DMAengine core changes as well.
+>>>
+>>> That would leave only the DMA drivers for 5.7 and we can also queue up
+>>> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
+>>> sa2ul, etc).
+>>>
+>>> If they go independently and nothing makes it to 5.6 then 5.8 is the
+>>> realistic target for the DMA support for the KS3 family of devices...
+>>
+>> Thats too many kernel versions to get this important piece in.
+>>
+>> Santosh, if you do not have anything else queued up that clashes with
+>> this, can the whole series be picked up by Vinod with your ack on the
+>> drivers/soc/ti/ pieces?
+>>
+> I would prefer driver patches to go via driver tree.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Not sure what you mean by 'driver patches'...
+The series to enable DMA support on TI's K3 platform consists:
+Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
+Patch 3-6: DMAengine core patches to add new features needed for k3-udma
+Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
+
+Patch 10 depends on the ringacc and the DMAengine core patches
+Patch 11 depends on patch 10
+
+I kept it as a single series in hope that they will go via one subsystem
+tree to avoid build dependency issues and will have a good amount of
+time in linux-next for testing.
+
+>> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
+>> with just the drivers/soc/ti parts applied so you can merge that branch
+>> in case you end up having to send up anything that conflicts.
+>>
+> As suggested on other email to Peter, these DMA engine related patches
+> should be queued up since they don't have any dependency. Based on
+> the status of that patchset, will take care of pulling in the driver
+> patches either for this merge window or early part of next merge window.
+
+OK, I'll send the two patch for ringacc as a separate series.
+
+Vinod: Would it be possible for you to pick up the DMAengine core
+patches (patch 3-6)?
+The UDMA driver patches have hard dependency on DMAengine core and
+ringacc, not sure how they are going to go in...
+
+> Regards,
+> Santosh
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
