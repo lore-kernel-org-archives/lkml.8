@@ -2,111 +2,153 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB82C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8900CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF277222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF302467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NGkEro7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAOPIu (ORCPT
+        id S1729160AbgAOPJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:08:50 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60033 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbgAOPIt (ORCPT
+        Wed, 15 Jan 2020 10:09:10 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54175 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbgAOPJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:08:49 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1irkHg-0002o3-J0; Wed, 15 Jan 2020 16:08:40 +0100
-Message-ID: <09e1c98df542ea3abf636ba5c109391ff0025e2c.camel@pengutronix.de>
-Subject: Re: [PATCH 05/19] phy: qualcomm: usb: Add SuperSpeed PHY driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        Sriharsha Allenki's <sallenki@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Date:   Wed, 15 Jan 2020 16:08:40 +0100
-In-Reply-To: <20200115141333.1222676-6-bryan.odonoghue@linaro.org>
-References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
-         <20200115141333.1222676-6-bryan.odonoghue@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 15 Jan 2020 10:09:10 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115150908euoutp013440f42927bb65d310eb12d832c9e163~qF-JH8frj2496124961euoutp01C
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:09:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115150908euoutp013440f42927bb65d310eb12d832c9e163~qF-JH8frj2496124961euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579100948;
+        bh=pgc0KbIHRZtV95G/YdItWgVEQnJDvr037YYBXdbWFl8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=NGkEro7EDp2UhDipKS1U4C+qMuVCgMjDl7mzkBMYf5p36+EapQEYEyyU7hx7a0xHh
+         On+OaTOUZyfGfVg6Ap8Bg0/wiFjAvEnYPGyB3OiGeEXcxc8uCJGD6rI3hy+NcS6JpQ
+         RrnX/ujtCw6CKHyg6kDa8yGRf7QKoLpzXktw6W0E=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115150908eucas1p283cbcbee603710bc567640c991d16d20~qF-I9hzn81992219922eucas1p2X;
+        Wed, 15 Jan 2020 15:09:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 0F.0D.60679.41B2F1E5; Wed, 15
+        Jan 2020 15:09:08 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115150907eucas1p2c04f054556f4751704eab807edc807e4~qF-IaDPiU1970519705eucas1p2d;
+        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200115150907eusmtrp1a93425a3f9c857758d4679fc42bb4876~qF-IZW_HC0299102991eusmtrp1I;
+        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-49-5e1f2b14df6f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id BA.DC.07950.31B2F1E5; Wed, 15
+        Jan 2020 15:09:07 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115150907eusmtip2493072d5318fb15fcb5d627b60128478~qF-IEsI8p0507205072eusmtip20;
+        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
+Subject: Re: [PATCH] video: fbdev: arcfb: add missed free_irq
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Jaya Kumar <jayalk@intworks.biz>, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <76ebce76-6f24-c4c4-f067-3989a2c41710@samsung.com>
+Date:   Wed, 15 Jan 2020 16:09:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191116154416.19390-1-hslester96@gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djPc7oi2vJxBo2z5C2ufH3PZjH70Etm
+        i2nH/jFZnOj7wGpxedccNgdWj52z7rJ7bGvex+pxv/s4k8fnTXIBLFFcNimpOZllqUX6dglc
+        GYs3XWMueMZZcWbiD9YGxr/sXYycHBICJhKrb7xn62Lk4hASWMEoseDvASjnC6PEkv9TWSCc
+        z4wSr7Z9hGvpWbCJCSKxnFHi6pF97BDOW0aJu28mALVwcAgL2Eos2lgD0iAioC7xeddOsBpm
+        gSZGidP3exlBEmwCVhIT21eB2bwCdhJ/bsxlBrFZBFQlXj9pZAKxRQUiJD49OMwKUSMocXLm
+        ExYQmxOo9/T8i2AXMQuIS9x6Mp8JwpaX2P52DjPIMgmBRewSz67NYAQ5SELAReL0lViID4Ql
+        Xh3fAvWNjMTpyT0sEPXrGCX+dryAat7OKLF88j82iCpriTvnfrGBDGIW0JRYv0sfIuwo8fz6
+        W2aI+XwSN94KQtzAJzFp23SoMK9ER5sQRLWaxIZlG9hg1nbtXMk8gVFpFpLPZiH5ZhaSb2Yh
+        7F3AyLKKUTy1tDg3PbXYKC+1XK84Mbe4NC9dLzk/dxMjMM2c/nf8yw7GXX+SDjEKcDAq8fBm
+        /JGLE2JNLCuuzD3EKMHBrCTCe3KGbJwQb0piZVVqUX58UWlOavEhRmkOFiVxXuNFL2OFBNIT
+        S1KzU1MLUotgskwcnFINjJt9rjrpluU8EfRa/D9y0lFHdtEN2gJn/a9stfc7IWp1RqfgX8is
+        PR8nMX3j1Nts7+iSIp9YsPz+qb9RDCcn/5kq3vV9l81nm4SiR/P5U7n3lTX/akjMV1jHv3GK
+        1gq7wiz9gtKHr6eJzWWZ+2mLrOEXF6fnq76993mremT/6zuP9Tymh895b6jEUpyRaKjFXFSc
+        CAAxPzWZLwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xe7rC2vJxBhc/mFhc+fqezWL2oZfM
+        FtOO/WOyONH3gdXi8q45bA6sHjtn3WX32Na8j9XjfvdxJo/Pm+QCWKL0bIryS0tSFTLyi0ts
+        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MhZvusZc8Iyz4szEH6wNjH/Z
+        uxg5OSQETCR6Fmxi6mLk4hASWMoo8btvCpDDAZSQkTi+vgyiRljiz7UuNoia14wSDatPsoDU
+        CAvYSizaWANSIyKgLvF51052kBpmgSZGiQuHFzFCNPQySszbvYEZpIpNwEpiYvsqRhCbV8BO
+        4s+NuWBxFgFViddPGplAbFGBCInDO2ZB1QhKnJz5hAXE5gTqPT3/ItjVzEDb/sy7xAxhi0vc
+        ejKfCcKWl9j+dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNz
+        NzEC42rbsZ9bdjB2vQs+xCjAwajEw3vgn1ycEGtiWXFl7iFGCQ5mJRHekzNk44R4UxIrq1KL
+        8uOLSnNSiw8xmgI9N5FZSjQ5HxjzeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
+        Uotg+pg4OKUaGOfur0hs0uN4vOvJrf684C/6vA/qFhk8Pb5hsqzJx428RrE/FlyYe6DEMVLq
+        wBa/IzWZlinzp5cxycjfWnYwLnrZy2OLOJpCpN++5Hziu+J7jDhTabPYrCXvt5kFnpH/GbHs
+        yte+hflfyjlVls8tN43ZIyR8+PjzP/9XnzTQiOfIDZ2bvPZ9zlUlluKMREMt5qLiRABX0wpP
+        wQIAAA==
+X-CMS-MailID: 20200115150907eucas1p2c04f054556f4751704eab807edc807e4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c
+References: <CGME20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c@eucas1p2.samsung.com>
+        <20191116154416.19390-1-hslester96@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-15 at 14:13 +0000, Bryan O'Donoghue wrote:
-> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+
+On 11/16/19 4:44 PM, Chuhong Yuan wrote:
+> The driver forgets to free irq in remove which is requested in
+> probe.
+> Add the missed call to fix it.
 > 
-> Controls Qualcomm's SS phy 1.0.0 implemented in the QCS404 and some
-> other Qualcomm platforms.
-> 
-> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original code.
-> 
-> [bod: Removed dependency on extcon.
->       Switched to gpio-usb-conn to handle VBUS On/Off
->       Switched to usb-role-switch to bind gpio-usb-conn to DWC3]
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-> Cc: Sriharsha Allenki's <sallenki@codeaurora.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > ---
->  drivers/phy/qualcomm/Kconfig           |  11 ++
->  drivers/phy/qualcomm/Makefile          |   1 +
->  drivers/phy/qualcomm/phy-qcom-usb-ss.c | 246 +++++++++++++++++++++++++
->  3 files changed, 258 insertions(+)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
+>  drivers/video/fbdev/arcfb.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-[...]
-> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-ss.c b/drivers/phy/qualcomm/phy-qcom-usb-ss.c
-> new file mode 100644
-> index 000000000000..109e455cb509
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-usb-ss.c
-> @@ -0,0 +1,246 @@
-[...]
-> +static int qcom_ssphy_init_reset(struct ssphy_priv *priv)
-> +{
-> +	priv->reset_com = devm_reset_control_get_optional(priv->dev, "com");
+> diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
+> index a48741aab240..7aed01f001a4 100644
+> --- a/drivers/video/fbdev/arcfb.c
+> +++ b/drivers/video/fbdev/arcfb.c
+> @@ -590,8 +590,11 @@ static int arcfb_probe(struct platform_device *dev)
+>  static int arcfb_remove(struct platform_device *dev)
+>  {
+>  	struct fb_info *info = platform_get_drvdata(dev);
+> +	struct arcfb_par *par = info->par;
+>  
+>  	if (info) {
+> +		if (irq)
+> +			free_irq(par->irq, info);
+>  		unregister_framebuffer(info);
 
-Please use devm_reset_control_get_optional_exclusive() here ...
+We cannot free IRQ while framebuffer is registered (as we can
+deadlock in arcfb_ioctl()).
 
-> +	if (IS_ERR(priv->reset_com)) {
-> +		dev_err(priv->dev, "Failed to get reset control com\n");
-> +		return PTR_ERR(priv->reset_com);
-> +	}
-> +
-> +	if (priv->reset_com) {
-> +		/* if reset_com is present, reset_phy is no longer optional */
-> +		priv->reset_phy = devm_reset_control_get(priv->dev, "phy");
+Also it seems that ordering in the probe function is wrong
+(it should not request IRQ or initialize the hardware after
+registering framebuffer).
 
-... and devm_reset_control_get_exclusive() here.
+>  		vfree((void __force *)info->screen_base);
+>  		framebuffer_release(info);
 
-regards
-Philipp
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
