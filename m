@@ -2,128 +2,87 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C32C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A807C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C282467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF5C2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZIhJzIZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBa2IZ4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgAOOPf (ORCPT
+        id S1730735AbgAOOPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:15:35 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47729 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbgAOONG (ORCPT
+        Wed, 15 Jan 2020 09:15:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32109 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730614AbgAOOPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:13:06 -0500
+        Wed, 15 Jan 2020 09:15:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579097585;
+        s=mimecast20190719; t=1579097743;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oPe3kFF2Bb1O7X4SloqQNMyAocrzl53edv79XqrSw8w=;
-        b=QZIhJzIZb0lds96zfNbvsBnj1jHWYzmWmyh5zWn8LK8rKCLOnzpVQ9Db3AnvA6sAbvlTUk
-        AcXJGNtHSMXGLA3ieNc5narNyoGAVSJVFTjyy8GQ3Dgvked3IFrOBcWSfV3LeMHJkbEgT2
-        +uAOzmtON8j89KWVa+Lql3fcIFsmNkM=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-Z5upZVgIOEqfTPVCm2XywA-1; Wed, 15 Jan 2020 09:13:03 -0500
-X-MC-Unique: Z5upZVgIOEqfTPVCm2XywA-1
-Received: by mail-lj1-f200.google.com with SMTP id f15so4189028ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=oPe3kFF2Bb1O7X4SloqQNMyAocrzl53edv79XqrSw8w=;
-        b=penhH09mXE9NPuAITJZZrQw1x6zK8ab/e+RgC3/k6yfoKewgkMjM5zBtv7DYYmBBGK
-         dwk22ozbv1vsMvVMBuCt2Xjqt7mnoahR8TYTkvgYxdvCV8Ig0/Z2WIw2ev0kQNtRNtrm
-         At0iODO9waGWsVkq+BIiUDTj6dLvDamS7Aaxzmzg9ONi/3SbONR3Kx3MxMt6Dguautqv
-         Zfsc5DqmV8EWNl9JC2wpppjJXWZMzeVk85w3v5yTi3861UwKvvQOZ+4onE6VVw8UXfPF
-         SGLsprpw04uXiuq1ZGDopilS22AE3n4ePnWHvUjEzXSVH/OxH4WTt/MIkRBSWMknTJOc
-         uVyA==
-X-Gm-Message-State: APjAAAXsnhmGaQVSct++v4tMCTDh/hW6fhFL1u1P6NuafFw9DLXDNjkG
-        ozDqdAWXv5cuo6+/kw9nmQSK0x5lq0FvMDimAc63Lx9PqEGdzSFtNnBV/P2fK/wD9mny64RRCIK
-        qL/pOtOrw5RRcGgMeoN3tfj9h
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr2055257ljg.144.1579097582542;
-        Wed, 15 Jan 2020 06:13:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwrg/AW4KpvxAvki+r+HLehAl3nNAsz0zEr6ykcSYmLONYcH6h74z5xLROKfDYU1h5kzRfemw==
-X-Received: by 2002:a2e:8145:: with SMTP id t5mr2055217ljg.144.1579097582258;
-        Wed, 15 Jan 2020 06:13:02 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id h24sm9348451ljc.84.2020.01.15.06.13.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 06:13:01 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BC5CA1808D8; Wed, 15 Jan 2020 15:12:59 +0100 (CET)
-Subject: [PATCH bpf-next v2 10/10] tools/runqslower: Remove tools/lib/bpf from
- include path
-From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Date:   Wed, 15 Jan 2020 15:12:59 +0100
-Message-ID: <157909757970.1192265.2735388097487906951.stgit@toke.dk>
-In-Reply-To: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
-User-Agent: StGit/0.21
+        bh=OUWgGIVsJ8NZwOLyNUY7Hd2Km2oSlO39xhYqMQdHPRE=;
+        b=SBa2IZ4OujszdbTdvi6vrsZ8WupQHWa0QTj3+i1P7L91iJV9jGhD4dl+qCXsgW7+izJ+VA
+        8NcDvQevfqKQUlTeo8xvcEXbLsnsj8dDG8BxB2+nihCY5gzsQAfYDeRO6X852DVrkwHyAn
+        etKCTbACmZ205VmLFGDW+ysamgk6Kok=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-amsWRQ3cP4KKzpO788M-xQ-1; Wed, 15 Jan 2020 09:15:39 -0500
+X-MC-Unique: amsWRQ3cP4KKzpO788M-xQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A81BA801A05;
+        Wed, 15 Jan 2020 14:15:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 420885C545;
+        Wed, 15 Jan 2020 14:15:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200115083854.GB23039@lst.de>
+References: <20200115083854.GB23039@lst.de> <4467.1579020509@warthog.procyon.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, tytso@mit.edu, adilger.kernel@dilger.ca,
+        darrick.wong@oracle.com, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Problems with determining data presence by examining extents?
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <24479.1579097734.1@warthog.procyon.org.uk>
+Date:   Wed, 15 Jan 2020 14:15:34 +0000
+Message-ID: <24480.1579097734@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+Christoph Hellwig <hch@lst.de> wrote:
 
-Since we are now consistently using the bpf/ prefix on #include directives,
-we don't need to include tools/lib/bpf in the include path. Remove it to
-make sure we don't inadvertently introduce new includes without the prefix.
+> The whole idea of an out of band interface is going to be racy and suffer
+> from implementation loss.  I think what you want is something similar to
+> the NFSv4.2 READ_PLUS operation - give me that if there is any and
+> otherwise tell me that there is a hole.  I think this could be a new
+> RWF_NOHOLE or similar flag, just how to return the hole size would be
+> a little awkward.  Maybe return a specific negative error code (ENODATA?)
+> and advance the iov anyway.
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
----
- tools/bpf/runqslower/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just having call_iter_read() return a short read could be made to suffice...
+provided the filesystem doesn't return data I haven't written in (which could
+cause apparent corruption) and does return data I have written in (otherwise I
+have to go back to the server).
 
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index 3b7ae76c8ec4..89338cd16fd2 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -5,7 +5,7 @@ LLC := llc
- LLVM_STRIP := llvm-strip
- DEFAULT_BPFTOOL := $(OUTPUT)/sbin/bpftool
- BPFTOOL ?= $(DEFAULT_BPFTOOL)
--LIBBPF_INCLUDE := -I$(abspath ../../lib) -I$(abspath ../../lib/bpf)
-+LIBBPF_INCLUDE := -I$(abspath ../../lib)
- LIBBPF_SRC := $(abspath ../../lib/bpf)
- CFLAGS := -g -Wall
- 
+David
 
