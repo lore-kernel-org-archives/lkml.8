@@ -6,145 +6,111 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0271C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF67C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A89B12081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ACC2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgAOVaW (ORCPT
+        id S1730128AbgAOVaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:30:22 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11624 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729701AbgAOVaN (ORCPT
+        Wed, 15 Jan 2020 16:30:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730092AbgAOVaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:30:13 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FLRMYQ068842;
-        Wed, 15 Jan 2020 16:30:00 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw1npc0-1
+        Wed, 15 Jan 2020 16:30:22 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FLRSn5145089;
+        Wed, 15 Jan 2020 16:30:04 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xhbpt0egw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 16:30:00 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FLR7GX017572;
-        Wed, 15 Jan 2020 21:29:58 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 2xf74pjj3k-1
+        Wed, 15 Jan 2020 16:30:04 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FLQO3T008401;
+        Wed, 15 Jan 2020 21:30:04 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma05wdc.us.ibm.com with ESMTP id 2xhjdv2ec7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 21:29:58 +0000
+        Wed, 15 Jan 2020 21:30:04 +0000
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FLTvkd47251876
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FLU2VV53739796
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 21:29:57 GMT
+        Wed, 15 Jan 2020 21:30:03 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6937E6E04C;
-        Wed, 15 Jan 2020 21:29:57 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B65186E059;
+        Wed, 15 Jan 2020 21:30:02 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85B666E054;
-        Wed, 15 Jan 2020 21:29:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D81506E050;
+        Wed, 15 Jan 2020 21:30:01 +0000 (GMT)
 Received: from talon7.ibm.com (unknown [9.41.103.158])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Jan 2020 21:29:56 +0000 (GMT)
+        Wed, 15 Jan 2020 21:30:01 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
         robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
         andrew@aj.id.au, eajames@linux.ibm.com
-Subject: [PATCH v6 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
-Date:   Wed, 15 Jan 2020 15:29:43 -0600
-Message-Id: <1579123790-6894-6-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v6 10/12] ARM: dts: aspeed: ast2600: Add XDMA Engine
+Date:   Wed, 15 Jan 2020 15:29:48 -0600
+Message-Id: <1579123790-6894-11-git-send-email-eajames@linux.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
 References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-15_03:2020-01-15,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=1 adultscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001150161
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=840 impostorscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=1 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001150161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+Add a node for the XDMA engine with all the necessary information.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- .../devicetree/bindings/soc/aspeed/xdma.txt        | 40 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 ++++
- 2 files changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+ arch/arm/boot/dts/aspeed-g6.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-new file mode 100644
-index 0000000..074bda5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
-@@ -0,0 +1,40 @@
-+Aspeed AST25XX and AST26XX XDMA Engine
-+
-+The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform automatic
-+DMA operations over PCI between the SOC (acting as a BMC) and a host processor.
-+
-+Required properties:
-+ - compatible		: must be "aspeed,ast2500-xdma" or
-+			  "aspeed,ast2600-xdma"
-+ - reg			: contains the address and size of the memory region
-+			  associated with the XDMA engine registers
-+ - clocks		: clock specifier for the clock associated with the
-+			  XDMA engine
-+ - resets		: reset specifier for the syscon reset associated with
-+			  the XDMA engine
-+ - interrupts-extended	: two interrupt cells; the first specifies the global
-+			  interrupt for the XDMA engine and the second
-+			  specifies the PCI-E reset or PERST interrupt.
-+ - aspeed,scu		: a phandle to the syscon node for the system control
-+			  unit of the SOC
-+ - memory		: contains the address and size of the memory area to
-+			  be used by the XDMA engine for DMA operations
-+
-+Optional properties:
-+ - pcie-device		: should be either "bmc" or "vga", corresponding to
-+			  which device should be used by the XDMA engine for
-+			  DMA operations. If this property is not set, the XDMA
-+			  engine will use the BMC PCI-E device.
-+
-+Example:
-+
-+    xdma@1e6e7000 {
-+        compatible = "aspeed,ast2500-xdma";
-+        reg = <0x1e6e7000 0x100>;
-+        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-+        resets = <&syscon ASPEED_RESET_XDMA>;
-+        interrupts-extended = <&vic 6>, <&scu_ic ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
-+        aspeed,scu = <&syscon>;
-+        pcie-device = "bmc";
-+        memory = <0x9f000000 0x01000000>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 75057ab..48d0ffd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2744,6 +2744,12 @@ S:	Maintained
- F:	drivers/media/platform/aspeed-video.c
- F:	Documentation/devicetree/bindings/media/aspeed-video.txt
+diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
+index 6557212..974cfa3 100644
+--- a/arch/arm/boot/dts/aspeed-g6.dtsi
++++ b/arch/arm/boot/dts/aspeed-g6.dtsi
+@@ -3,6 +3,7 @@
  
-+ASPEED XDMA ENGINE DRIVER
-+M:	Eddie James <eajames@linux.ibm.com>
-+L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/ast2600-clock.h>
++#include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
+ 
+ / {
+ 	model = "Aspeed BMC";
+@@ -291,6 +292,18 @@
+ 				quality = <100>;
+ 			};
+ 
++			xdma: xdma@1e6e7000 {
++				compatible = "aspeed,ast2600-xdma";
++				reg = <0x1e6e7000 0x100>;
++				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
++				resets = <&syscon ASPEED_RESET_DEV_XDMA>;
++				interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++						      <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
++				pcie-device = "bmc";
++				aspeed,scu = <&syscon>;
++				status = "disabled";
++			};
 +
- ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
- M:	Corentin Chary <corentin.chary@gmail.com>
- L:	acpi4asus-user@lists.sourceforge.net
+ 			gpio0: gpio@1e780000 {
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
 -- 
 1.8.3.1
 
