@@ -2,121 +2,260 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B9AC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75E2C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAE920728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725CB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="l3NLCWBQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aU2dtLHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgAOQzr (ORCPT
+        id S1728946AbgAOQ6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:55:47 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:37901 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAOQzq (ORCPT
+        Wed, 15 Jan 2020 11:58:20 -0500
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:42196 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgAOQ6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:55:46 -0500
-Received: by mail-qk1-f175.google.com with SMTP id k6so16281249qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:55:46 -0800 (PST)
+        Wed, 15 Jan 2020 11:58:20 -0500
+Received: by mail-qv1-f73.google.com with SMTP id p3so11410816qvt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FPFBNeVEX0/iA2zW+3P39jtu411peuzYQwYNyRGywAY=;
-        b=l3NLCWBQOEKrvK2JK/Zpgr1tIdj/9joXe8PKlcfxKiMKnFz6Beu1JSdeUL+m4r/BpU
-         wakcl80DcORdCiYIOh9k2O+yVImroYtnNb/mf7XhtZHrVpKKloy0lhzN0w9Ebw5M219e
-         iCaGujiyLPqRiPi6TLC09B6pF/dRPzOXZKtJaYQMqj5i3k0DsuCl53s0aJg+Tg0+qz/Y
-         Z0/qHGpBkefnRS44gN79nUqYQl3NHdYexV3fh8HNY3TnqjdjTiiHl1FjQh1kt0bdwA6d
-         UFB8o0dsA4Nj26djQO9e+dlfrZr/gLfwTWniIWcTVLjhIQ7J8omXsDKnz0uluJ56sllX
-         9bsA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=1xyFxbboVErs2lDyuCkQizXSlJ3hz4CWgsOgebKOGj4=;
+        b=aU2dtLHigZRJd+hlW8EQuXLHMX2F9ZXY7sCEvFpLeh51N7x7lJHs85kOd8HFZMs1f8
+         oq7jGjUtbQQubJ99O/Af/0JWQL2OAC9LpF5RfG186nDtgWI71DXLdV1w2UqevG4rUBCQ
+         0Qd2GJpH/WZoe9ZioaZM28D7Bg3LFOc+A9x/iEj9tjgfWyb86mn7IDSdd33MbGQzd1SM
+         3ZA7edHXg8mTIrburBDoA4BCh1L0EkorUWKQZZqITF9tLl3qG4Op0QbKBdvApS0cM6R/
+         4NScpwma4R4e/Na3FDvZPNEFqyu40EbjXri1/pCAI1aBQl5nEjqOXNVyWaGxau01HeC/
+         JDFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FPFBNeVEX0/iA2zW+3P39jtu411peuzYQwYNyRGywAY=;
-        b=ip9SkQOsNVcAqYRqs5mwh8+bZxEOhuIa4R1yR9bx9pTFRX0cLkq57QZAQ86Bsz3mci
-         MdTCZ0WxKoDd4q1iNhK6l6oLYDE1g8nuhI6JJ6OzqtwVbtLqyzLXnEup98wQ89qLAoGT
-         kcxyEhnu3ZOSoOqQzS8F+jqO9OB9ttkqzzKvOkb7MuzT4YRoyf1nS9AJaqaahal8oDmg
-         ylY2JI2HzXOU/Ne582nUzvdRsFF58hdUs8oTK0vY6aZv81hBODhik5f4pefnQj4SaNE6
-         vMg4mVIOW/1BbDzf9eEkiy4ZybGQrJ3ZgqyNJliPngztypqGik6TwPnHjzixSbMO1APy
-         6SXw==
-X-Gm-Message-State: APjAAAVlHGfJ0DFSToNRfS1BUH2VTcRA6jnI3rj5bl9qCNKVXMFXOoBD
-        cgCsuOG92FvhkgHlt1yMxqGNW3cUh2A=
-X-Google-Smtp-Source: APXvYqzhOz4JR1/HdclghA76Mn55l8him78waefGfymoKZLbbSR4NLC0xIPzpN27WDG45b1iUiylCQ==
-X-Received: by 2002:a05:620a:139b:: with SMTP id k27mr28027169qki.112.1579107345574;
-        Wed, 15 Jan 2020 08:55:45 -0800 (PST)
-Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id k4sm8698193qki.35.2020.01.15.08.55.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 08:55:44 -0800 (PST)
-Date:   Wed, 15 Jan 2020 11:55:43 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Ivan Babrou <ivan@cloudflare.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: Lower than expected CPU pressure in PSI
-Message-ID: <20200115165543.GA47772@cmpxchg.org>
-References: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
- <20200109161632.GB8547@cmpxchg.org>
- <CABWYdi1Hs3Jgn5Rq=4X9w2+kG4mfsbGuV=8UMS=6mr=SVjOfVw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABWYdi1Hs3Jgn5Rq=4X9w2+kG4mfsbGuV=8UMS=6mr=SVjOfVw@mail.gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=1xyFxbboVErs2lDyuCkQizXSlJ3hz4CWgsOgebKOGj4=;
+        b=aJsgAZhawGsAlUWISShZU8rMMDLqwbJSO0q4ZkiOT+4O3MK3wDUDneUXINNFqvETXS
+         W+yc2ga8iKmuHCroep30iuvkIVo8Dwnq5QhYm8Nc1J6hvt4etUQsPAA5mJC4ImP9jEF+
+         CzRaShj89yTn2zcA3tE0wLz5nYyH4T4VSuPJp5SNUN8f0m/HSQXMS4FAbTrzwEe3FUF9
+         Yklndn6k3Q2/7OJLMGcsUa9FY8zkG5+HrD08CGiyK8IxtMqLvl5Bi7BMZZN/aKvNaTsh
+         hcr5sIsea9bM4r53cA2PvSXM1PD1TYAVScXPjQGZCZpYim68aJYi6kY3m4QGgBAh4+yG
+         sg5Q==
+X-Gm-Message-State: APjAAAU6BuT57BnOUYfJVqt1nnjtnkl2d6b4o6h3/xgeidbII50bAUVw
+        rofHWUDlRxeCfpicq1IrIFeUn/5AeQ==
+X-Google-Smtp-Source: APXvYqxJE/Ataswadww4mtWXwvOLdKAEh1UpAz1OhNLbQMvG5lheRc9H7MVreNjGxDM52EbxfEmCm11qZg==
+X-Received: by 2002:ac8:330e:: with SMTP id t14mr4605524qta.232.1579107498675;
+ Wed, 15 Jan 2020 08:58:18 -0800 (PST)
+Date:   Wed, 15 Jan 2020 17:57:49 +0100
+Message-Id: <20200115165749.145649-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+Subject: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, arnd@arndb.de, mpe@ellerman.id.au,
+        christophe.leroy@c-s.fr, dja@axtens.net, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:28:32AM -0800, Ivan Babrou wrote:
-> I applied the patch on top of 5.5.0-rc3 and it's definitely better
-> now, both competing cgroups report 500ms/s delay. Feel free to add
-> Tested-by from me.
+Add explicit KCSAN checks for bitops.
 
-Thanks, Ivan!
+Signed-off-by: Marco Elver <elver@google.com>
+---
+The same patch was previously sent, but at that point the updated bitops
+instrumented infrastructure was not yet in mainline:
+ http://lkml.kernel.org/r/20191115115524.GA77379@google.com
 
-> I'm still seeing /unified/system.slice at 385ms/s and /unified.slice
-> at 372ms/s, do you have an explanation for that part? Maybe it's
-> totally reasonable, but warrants a patch for documentation.
+Note that test_bit() is an atomic bitop, and KCSAN treats it as such,
+although it is in the non-atomic header. Currently it cannot be moved:
+ http://lkml.kernel.org/r/87pnh5dlmn.fsf@dja-thinkpad.axtens.net
+---
+ include/asm-generic/bitops/instrumented-atomic.h     | 7 +++++++
+ include/asm-generic/bitops/instrumented-lock.h       | 5 +++++
+ include/asm-generic/bitops/instrumented-non-atomic.h | 8 ++++++++
+ 3 files changed, 20 insertions(+)
 
-Yes, this is a combination of CPU pinning and how pressure is
-calculated in SMP systems.
+diff --git a/include/asm-generic/bitops/instrumented-atomic.h b/include/asm-generic/bitops/instrumented-atomic.h
+index 18ce3c9e8eec..eb3abf7e5c08 100644
+--- a/include/asm-generic/bitops/instrumented-atomic.h
++++ b/include/asm-generic/bitops/instrumented-atomic.h
+@@ -12,6 +12,7 @@
+ #define _ASM_GENERIC_BITOPS_INSTRUMENTED_ATOMIC_H
+ 
+ #include <linux/kasan-checks.h>
++#include <linux/kcsan-checks.h>
+ 
+ /**
+  * set_bit - Atomically set a bit in memory
+@@ -26,6 +27,7 @@
+ static inline void set_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch_set_bit(nr, addr);
+ }
+ 
+@@ -39,6 +41,7 @@ static inline void set_bit(long nr, volatile unsigned long *addr)
+ static inline void clear_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch_clear_bit(nr, addr);
+ }
+ 
+@@ -55,6 +58,7 @@ static inline void clear_bit(long nr, volatile unsigned long *addr)
+ static inline void change_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch_change_bit(nr, addr);
+ }
+ 
+@@ -68,6 +72,7 @@ static inline void change_bit(long nr, volatile unsigned long *addr)
+ static inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_test_and_set_bit(nr, addr);
+ }
+ 
+@@ -81,6 +86,7 @@ static inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
+ static inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_test_and_clear_bit(nr, addr);
+ }
+ 
+@@ -94,6 +100,7 @@ static inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
+ static inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_test_and_change_bit(nr, addr);
+ }
+ 
+diff --git a/include/asm-generic/bitops/instrumented-lock.h b/include/asm-generic/bitops/instrumented-lock.h
+index ec53fdeea9ec..2c80dca31e27 100644
+--- a/include/asm-generic/bitops/instrumented-lock.h
++++ b/include/asm-generic/bitops/instrumented-lock.h
+@@ -12,6 +12,7 @@
+ #define _ASM_GENERIC_BITOPS_INSTRUMENTED_LOCK_H
+ 
+ #include <linux/kasan-checks.h>
++#include <linux/kcsan-checks.h>
+ 
+ /**
+  * clear_bit_unlock - Clear a bit in memory, for unlock
+@@ -23,6 +24,7 @@
+ static inline void clear_bit_unlock(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch_clear_bit_unlock(nr, addr);
+ }
+ 
+@@ -38,6 +40,7 @@ static inline void clear_bit_unlock(long nr, volatile unsigned long *addr)
+ static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch___clear_bit_unlock(nr, addr);
+ }
+ 
+@@ -53,6 +56,7 @@ static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
+ static inline bool test_and_set_bit_lock(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_test_and_set_bit_lock(nr, addr);
+ }
+ 
+@@ -72,6 +76,7 @@ static inline bool
+ clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_clear_bit_unlock_is_negative_byte(nr, addr);
+ }
+ /* Let everybody know we have it. */
+diff --git a/include/asm-generic/bitops/instrumented-non-atomic.h b/include/asm-generic/bitops/instrumented-non-atomic.h
+index 95ff28d128a1..8479af8b3309 100644
+--- a/include/asm-generic/bitops/instrumented-non-atomic.h
++++ b/include/asm-generic/bitops/instrumented-non-atomic.h
+@@ -12,6 +12,7 @@
+ #define _ASM_GENERIC_BITOPS_INSTRUMENTED_NON_ATOMIC_H
+ 
+ #include <linux/kasan-checks.h>
++#include <linux/kcsan-checks.h>
+ 
+ /**
+  * __set_bit - Set a bit in memory
+@@ -25,6 +26,7 @@
+ static inline void __set_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch___set_bit(nr, addr);
+ }
+ 
+@@ -40,6 +42,7 @@ static inline void __set_bit(long nr, volatile unsigned long *addr)
+ static inline void __clear_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch___clear_bit(nr, addr);
+ }
+ 
+@@ -55,6 +58,7 @@ static inline void __clear_bit(long nr, volatile unsigned long *addr)
+ static inline void __change_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	arch___change_bit(nr, addr);
+ }
+ 
+@@ -69,6 +73,7 @@ static inline void __change_bit(long nr, volatile unsigned long *addr)
+ static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch___test_and_set_bit(nr, addr);
+ }
+ 
+@@ -83,6 +88,7 @@ static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
+ static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch___test_and_clear_bit(nr, addr);
+ }
+ 
+@@ -97,6 +103,7 @@ static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
+ static inline bool __test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
+ 	kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_write(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch___test_and_change_bit(nr, addr);
+ }
+ 
+@@ -108,6 +115,7 @@ static inline bool __test_and_change_bit(long nr, volatile unsigned long *addr)
+ static inline bool test_bit(long nr, const volatile unsigned long *addr)
+ {
+ 	kasan_check_read(addr + BIT_WORD(nr), sizeof(long));
++	kcsan_check_atomic_read(addr + BIT_WORD(nr), sizeof(long));
+ 	return arch_test_bit(nr, addr);
+ }
+ 
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
 
-The stall times are defined as lost compute potential - which scales
-with the number of concurrent threads - normalized to wallclock
-time. See the "Multiple CPUs" section in kernel/sched/psi.c.
-
-By restricting the CPUs in system.slice, there is less compute
-available in that group than in the parent, which means that the
-relative loss of potential can be higher.
-
-It's a bit unintuitive because most cgroup metrics are plain numbers
-that add up to bigger numbers as you go up the tree. If we exported
-both the numerator (waste) and denominator (compute potential) here,
-the numbers would act more conventionally, with parent numbers always
-bigger than the child's. But because pressure is normalized to
-wallclock time, you only see the ratio at each level, and that can
-shrink as you go up the tree if lower levels are CPU-constrained.
-
-We could have exported both numbers, but for most usecases that would
-be more confusing than helpful. And in practice it's the ratio that
-really matters: the pressure in the leaf cgroups is high due to the
-CPU restriction; but when you go higher up the tree and look at not
-just the pinned tasks, but also include tasks in other groups that
-have more CPUs available to them, the aggregate productivity at that
-level *is* actually higher.
-
-I hope that helps!
