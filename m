@@ -2,84 +2,159 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B581C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C89C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 486D72075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Br2os3uc"
+	by mail.kernel.org (Postfix) with ESMTP id C0A052075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgAOK2R (ORCPT
+        id S1729813AbgAOK2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:28:17 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33572 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbgAOK2R (ORCPT
+        Wed, 15 Jan 2020 05:28:25 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55103 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbgAOK2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:28:17 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so17980228lji.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:28:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fl2+hd9MOPqIs4AdIyHBX9dTYx9KGtCqWmRO6vACTV0=;
-        b=Br2os3ucvC2+tntLkVdA5cJ16P+fmWVjSbnj7VdWkvVHHxoK1LaEJIjdWDCHj8Ckgg
-         +fAPPBqF/IXQSDKQeCVlV85ECsPEpHuoQpFgzYbBKEdu89gXKwwF9VFW5KTI3IRZPTBV
-         cmfYoL+9tmZWzIotq6YCEPDH9s+jgKX8KUPwH7O/hlReD5KrNtoERgiAmioTyHEWQyzV
-         XyMgTf0MdAfAnj2pb1mkEiz4jxmVhWFYdCe8hsUbRTx4zUuc+2JtWeK0XjntyENUxuye
-         jeFGBOqjG+1YCYdb/+GRlNzshuGnIjEgep9owtQmkiLemZmtskhmuUwRW+GAI44HEW4C
-         jp6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fl2+hd9MOPqIs4AdIyHBX9dTYx9KGtCqWmRO6vACTV0=;
-        b=Pe6dqnh+pxMMDNC81upspKuMGBosgqa8GTi3T+1GMyvJYML0vHOvLFry9TXSggZWIx
-         NSWOOy8OYPVlqnFCB7rWlfmnvZn2TfIlruwYhr877g445RbpHBD9rgR6z/mDVmuyr+lB
-         wRqJTMq7eRPeFaA4fBdZXlQE05Y1k0iVvmrL7Tae5xzWc+I9MiakvkRzhz8KBAqnkNOg
-         W407GtGlWrmowLMPfbcBzuBYLJm2yR6KLTcYVXfvgM89cVmKrBaNiA0R/lVJPCE5zHVM
-         eqPtTlI5Z27yL4uCyfxwCfGUuMhfTHZH0+ZKhMx1p6eQm1pT2q4PZNBzKfa/FnzDOkM+
-         Qp6A==
-X-Gm-Message-State: APjAAAXzwySEEMbzhzbMhjG+Q+JxJhcgQLZfQTf2PyZ3fcyPlJ3w3N6v
-        TBebZ3uAmNNjEJUpFNrBNDiRT1KyByr1QGAep6o1cA==
-X-Google-Smtp-Source: APXvYqxaEEPlzZFLh39WCF1YWNM8pO+8/3eb5wMYnow6KlO3Ow7rl0uvCV06EirMeY33Q27yWVMo25R0SKDVRfErk0g=
-X-Received: by 2002:a2e:918c:: with SMTP id f12mr1346817ljg.66.1579084094788;
- Wed, 15 Jan 2020 02:28:14 -0800 (PST)
+        Wed, 15 Jan 2020 05:28:24 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id a19f27fe6dcc38b1; Wed, 15 Jan 2020 11:28:22 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: remove redundant call to cpufreq_update_util
+Date:   Wed, 15 Jan 2020 11:28:21 +0100
+Message-ID: <1877134.NLrey8JjuQ@kreacher>
+In-Reply-To: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
+References: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-References: <20200114150253.28716-1-brgl@bgdev.pl>
-In-Reply-To: <20200114150253.28716-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 11:28:03 +0100
-Message-ID: <CACRpkda3QhVATZ5of97xDWYnAb6b1o+gMsKE6mDnJrzAUmNV_A@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpio: mockup: minor maintenance
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 4:02 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Wednesday, January 15, 2020 11:20:20 AM CET Vincent Guittot wrote:
+> With commit bef69dd87828 ("sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_util()")
+> update_load_avg() has become the central point for calling cpufreq (not
+> including the update of blocked load). This change helps to simplify
+> further the number of call to cpufreq_update_util() and to remove last
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Just two tweaks to the testing driver: update the license tag to conform
-> with the current SPDX list and sort the headers alphabetically for easier
-> maintenance.
+s/call/calls/
 
-Thanks Bartosz,
+And the patch looks reasonable to me.
 
-I just applied both patches so you don't need to bother with pull requests
-for these two.
+> redundant ones. With update_load_avg(), we are now sure that
+> cpufreq_update_util() will be called after every task attachment to a
+> cfs_rq and especially after propagating this event down to the util_avg of
+> the root cfs_rq, which is the level that is used by cpufreq governors like
+> schedutil to set the frequency of a CPU.
+> 
+> The SCHED_CPUFREQ_MIGRATION flag forces an early call to cpufreq when the
+> migration happens in a cgroup whereas util_avg of root cfs_rq is not yet
+> updated and this call is duplicated with the one that happens immediately
+> after when the migration event reaches the root cfs_rq. The dedicated flag
+> SCHED_CPUFREQ_MIGRATION is now useless and can be removed. The interface of
+> attach_entity_load_avg() can also be simplified accordingly.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Yours,
-Linus Walleij
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  include/linux/sched/cpufreq.h |  1 -
+>  kernel/sched/fair.c           | 14 +++++++-------
+>  2 files changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/sched/cpufreq.h b/include/linux/sched/cpufreq.h
+> index cc6bcc1e96bc..3ed5aa18593f 100644
+> --- a/include/linux/sched/cpufreq.h
+> +++ b/include/linux/sched/cpufreq.h
+> @@ -9,7 +9,6 @@
+>   */
+>  
+>  #define SCHED_CPUFREQ_IOWAIT	(1U << 0)
+> -#define SCHED_CPUFREQ_MIGRATION	(1U << 1)
+>  
+>  #ifdef CONFIG_CPU_FREQ
+>  struct cpufreq_policy;
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 2d170b5da0e3..023aa42aaac7 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -801,7 +801,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+>  		 * For !fair tasks do:
+>  		 *
+>  		update_cfs_rq_load_avg(now, cfs_rq);
+> -		attach_entity_load_avg(cfs_rq, se, 0);
+> +		attach_entity_load_avg(cfs_rq, se);
+>  		switched_from_fair(rq, p);
+>  		 *
+>  		 * such that the next switched_to_fair() has the
+> @@ -3114,7 +3114,7 @@ static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
+>  {
+>  	struct rq *rq = rq_of(cfs_rq);
+>  
+> -	if (&rq->cfs == cfs_rq || (flags & SCHED_CPUFREQ_MIGRATION)) {
+> +	if (&rq->cfs == cfs_rq) {
+>  		/*
+>  		 * There are a few boundary cases this might miss but it should
+>  		 * get called often enough that that should (hopefully) not be
+> @@ -3520,7 +3520,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+>   * Must call update_cfs_rq_load_avg() before this, since we rely on
+>   * cfs_rq->avg.last_update_time being current.
+>   */
+> -static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> +static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+>  	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+>  
+> @@ -3556,7 +3556,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  
+>  	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
+>  
+> -	cfs_rq_util_change(cfs_rq, flags);
+> +	cfs_rq_util_change(cfs_rq, 0);
+>  
+>  	trace_pelt_cfs_tp(cfs_rq);
+>  }
+> @@ -3614,7 +3614,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  		 *
+>  		 * IOW we're enqueueing a task on a new CPU.
+>  		 */
+> -		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
+> +		attach_entity_load_avg(cfs_rq, se);
+>  		update_tg_load_avg(cfs_rq, 0);
+>  
+>  	} else if (decayed) {
+> @@ -3871,7 +3871,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  static inline void remove_entity_load_avg(struct sched_entity *se) {}
+>  
+>  static inline void
+> -attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags) {}
+> +attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+>  static inline void
+>  detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+>  
+> @@ -10439,7 +10439,7 @@ static void attach_entity_cfs_rq(struct sched_entity *se)
+>  
+>  	/* Synchronize entity with its cfs_rq */
+>  	update_load_avg(cfs_rq, se, sched_feat(ATTACH_AGE_LOAD) ? 0 : SKIP_AGE_LOAD);
+> -	attach_entity_load_avg(cfs_rq, se, 0);
+> +	attach_entity_load_avg(cfs_rq, se);
+>  	update_tg_load_avg(cfs_rq, false);
+>  	propagate_entity_cfs_rq(se);
+>  }
+> 
+
+
+
+
