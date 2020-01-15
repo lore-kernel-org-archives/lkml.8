@@ -2,167 +2,184 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B451C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A51C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C032072B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Toqv6jeG"
+	by mail.kernel.org (Postfix) with ESMTP id 4074B2072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgAOFO1 (ORCPT
+        id S1726555AbgAOFPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:14:27 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35053 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgAOFO0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:14:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id k4so14283100oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 21:14:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1V7MW/ylG5HH52qKYnJfjENVm5zMbyLo/1xAyipVPNU=;
-        b=Toqv6jeGfvvxWRkr5nvZFkzGlWyXW0qh9bEcuwG/GucvkAKkjZSDtLzEWNyuJz0kAn
-         3LFtDjFZjvJ7Cjg7QuoSNUcSCrCzCprhHwc/fgBE3nhH6SR9YUsAAdK89gezNLJwSh+u
-         U2JRzqaD9IF3wcMHh/XVE6mg6as3ybZqHT9UQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1V7MW/ylG5HH52qKYnJfjENVm5zMbyLo/1xAyipVPNU=;
-        b=RDjnvjYNKrwet8Bkwxdcs82u+C5untbFb6n6bu/LfFoNEVwkBzye96yLJPhIPiR2SW
-         vYL1W2Ku2wZGH4FLmRXY7DWbtQ2So8ITmdy+qYlOialJ4Y/MRa3wYWG/3haXXrNhZcBp
-         HA2aG7xs//cLhQt1o0/VGEOgMea88o6DlQUXggmgi5DRxlodSpE+TD1RZGEYSWErpusX
-         b/1KmXAey4VcnMj91nYtpKMjuy4T4qjLgCqk8NB4CtSFMDVFO84LyInow+cU84RLVdJA
-         5bn2XdX1qxpq44XUEgfrIXA/MfpWqRRgGIzHX85zK3y9GR7KMmi/2bLoB5I+k3iqSy+J
-         o26g==
-X-Gm-Message-State: APjAAAXdjviXFFLNl1Gtf2clOjyhxSYa5ey5Y4ghNMnQ8mL+Nvuh61DY
-        j+NdQal1fxMXax3IFWZhvvkorRHzy4g4Ww==
-X-Google-Smtp-Source: APXvYqx6n8vR72Y3mR4jSjGgejOzofKvuTdN3bKxqiis0/X51PRVsceOS/LP5oESybg48JHMtBhokg==
-X-Received: by 2002:aca:1309:: with SMTP id e9mr19752381oii.7.1579065264730;
-        Tue, 14 Jan 2020 21:14:24 -0800 (PST)
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
-        by smtp.gmail.com with ESMTPSA id q13sm6194232otc.5.2020.01.14.21.14.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 21:14:23 -0800 (PST)
-Received: by mail-oi1-f180.google.com with SMTP id d62so14215348oia.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 21:14:23 -0800 (PST)
-X-Received: by 2002:aca:d0b:: with SMTP id 11mr19753910oin.71.1579065262776;
- Tue, 14 Jan 2020 21:14:22 -0800 (PST)
+        Wed, 15 Jan 2020 00:15:21 -0500
+Received: from mga12.intel.com ([192.55.52.136]:60301 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbgAOFPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 00:15:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 21:15:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
+   d="scan'208";a="248284425"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jan 2020 21:15:19 -0800
+Received: from [10.252.24.8] (abudanko-mobl.ccr.corp.intel.com [10.252.24.8])
+        by linux.intel.com (Postfix) with ESMTP id 6688E5802B0;
+        Tue, 14 Jan 2020 21:15:12 -0800 (PST)
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+ <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+ <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+ <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+ <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
+ <20200110164531.GA2598@kernel.org>
+ <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
+ <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+ <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+ <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+ <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
+ <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+ <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
+ <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
+ <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
+ <CAADnVQKSb8ZEq7mG0XwGx_btLxoEU5XDTu_p6eseDGuO-G+5tw@mail.gmail.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <40881285-ce6c-e6f1-1272-feb86eef0973@linux.intel.com>
+Date:   Wed, 15 Jan 2020 08:15:10 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200114033226.16786-1-gtk_ruiwang@mediatek.com> <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
-In-Reply-To: <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Wed, 15 Jan 2020 14:14:11 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MXu9+9C7iUZST_OCwfren7kggFTG41DArF6yzRa_0hf4w@mail.gmail.com>
-Message-ID: <CAPBb6MXu9+9C7iUZST_OCwfren7kggFTG41DArF6yzRa_0hf4w@mail.gmail.com>
-Subject: Re: media: mtk-vcodec: reset segment data then trig decoder
-To:     gtk_ruiwang <gtk_ruiwang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Longfei Wang <longfei.wang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAADnVQKSb8ZEq7mG0XwGx_btLxoEU5XDTu_p6eseDGuO-G+5tw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 12:47 PM Alexandre Courbot
-<acourbot@chromium.org> wrote:
->
-> On Tue, Jan 14, 2020 at 12:32 PM <gtk_ruiwang@mediatek.com> wrote:
-> >
-> > From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
-> >
-> > VP9 bitstream specification indicate segment data should reset to
-> > default when meet key frames, intra only frames or enable error
-> > resilience mode. So memset segmentation map buffer before every
-> > decode process is not appropriate.
-> >
-> > Reset segment data only when needed, then trig decoder hardware
-> >
-> > Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
-> > ---
-> >  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    | 19 +++++++++++++++----
-> >  1 file changed, 15 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> > index 24c1f0bf2147..42c9c3c98076 100644
-> > --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> > +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> > @@ -110,7 +110,9 @@ struct vp9_sf_ref_fb {
-> >   * @buf_len_sz_c : size used to store cbcr plane ufo info (AP-R, VPU-W)
-> >
-> >   * @profile : profile sparsed from vpu (AP-R, VPU-W)
-> > - * @show_frame : display this frame or not (AP-R, VPU-W)
-> > + * @show_frame : [BIT(0)] display this frame or not (AP-R, VPU-W)
-> > + *     [BIT(14)] reset segment data or not (AP-R, VPU-W)
-> > + *     [BIT(15)] trig decoder hardware or not (AP-R, VPU-W)
-> >   * @show_existing_frame : inform this frame is show existing frame
-> >   *     (AP-R, VPU-W)
-> >   * @frm_to_show_idx : index to show frame (AP-R, VPU-W)
-> > @@ -494,12 +496,12 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
-> >                                         frm_to_show->fb->base_y.size);
-> >                 }
-> >                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
-> > -                       if (vsi->show_frame)
-> > +                       if (vsi->show_frame & BIT(0))
-> >                                 vp9_add_to_fb_disp_list(inst, inst->cur_fb);
-> >                 }
-> >         } else {
-> >                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
-> > -                       if (vsi->show_frame)
-> > +                       if (vsi->show_frame & BIT(0))
-> >                                 vp9_add_to_fb_disp_list(inst, frm_to_show->fb);
-> >                 }
-> >         }
-> > @@ -870,13 +872,22 @@ static int vdec_vp9_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
-> >                                         vsi->sf_frm_sz[idx]);
-> >                         }
-> >                 }
-> > -               memset(inst->seg_id_buf.va, 0, inst->seg_id_buf.size);
-> >                 ret = vpu_dec_start(&inst->vpu, data, 3);
-> >                 if (ret) {
-> >                         mtk_vcodec_err(inst, "vpu_dec_start failed");
-> >                         goto DECODE_ERROR;
-> >                 }
-> >
-> > +               if ((vsi->show_frame & BIT(15)) &&
-> > +                   (vsi->show_frame & BIT(14))) {
->
-> Using the new bits in this manner means this patch is not compatible
-> with the older firmware.
->
-> On an older firmware, these bits will be 0, which means the decoder
-> will never be started. To preserve compatibility, the behavior should
-> be reversed: *do not* reset and/or start the decoder if the bits are
-> set.
->
-> Also both bits are only used together - we should either separate the
-> data segment reset and decoder start, or rely on only one bit for
-> this.
 
-Ah, looks like I missed the fact that the decoder is still started
-even when these bits are not set. So this indeed looks
-backward-compatible. Please ignore my comment.
+On 15.01.2020 4:52, Alexei Starovoitov wrote:
+> On Tue, Jan 14, 2020 at 10:50 AM Alexey Budankov
+> <alexey.budankov@linux.intel.com> wrote:
+>>
+>>
+>> On 14.01.2020 21:06, Alexei Starovoitov wrote:
+>>> On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
+>>> <alexey.budankov@linux.intel.com> wrote:
+>>>>>>
+>>>>>> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
+>>>>>> to open it for enabling/disabling kprobes, not for creation.
+>>>>>>
+>>>>>> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
+>>>>>> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
+>>>>>> it should check the max number of probes to be created by something like
+>>>>>> ulimit)
+>>>>>> I think nowadays we have fixed all such kernel crash problems on x86,
+>>>>>> but not sure for other archs, especially on the devices I can not reach.
+>>>>>> I need more help to stabilize it.
+>>>>>
+>>>>> I don't see how enable/disable is any safer than creation.
+>>>>> If there are kernel bugs in kprobes the kernel will crash anyway.
+>>>>> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
+>>>>> CAP_* is about delegation of root privileges to non-root.
+>>>>> Delegating some of it is ok, but disallowing creation makes it useless
+>>>>> for bpf tracing, so we would need to add another CAP later.
+>>>>> Hence I suggest to do it right away instead of breaking
+>>>>> sys_perf_even_open() access into two CAPs.
+>>>>>
+>>>>
+>>>> Alexei, Masami,
+>>>>
+>>>> Thanks for your meaningful input.
+>>>> If we know in advance that it still can crash the system in some cases and on
+>>>> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
+>>>> such delegation looks premature until the crashes are avoided. So it looks like
+>>>> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
+>>>> a separate patch set.
+>>>
+>>> perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
+>>
+>> Sure, software cannot guarantee, but known software bugs could still be fixed,
+>> that's what I meant.
+>>
+>>> imo adding a cap just for pmc is pointless.
+>>> if you add a new cap it should cover all of sys_perf_event_open syscall.
+>>> subdividing it into sw vs hw counters, kprobe create vs enable, etc will
+>>> be the source of ongoing confusion. nack to such cap.
+>>>
+>>
+>> Well, as this patch set already covers complete perf_event_open functionality,
+>> and also eBPF related parts too, could you please review and comment on it?
+>> Does the patches 2/9 and 5/9 already bring all required extentions?
+> 
+> yes. the current patches 2 and 5 look good to me.
+
+Thanks. I appreciate your cooperation.
+
+> I would only change patch 1 to what Andy was proposing earlier:
+
+Could you please share the link to the proposal to get more details?
+In this patch set discussion there was only this [1] on more generic 
+naming of PERFMON cap from Andi Kleen.
+
+> 
+> static inline bool perfmon_capable(void)
+> {
+> if (capable_noaudit(CAP_PERFMON))
+>   return capable(CAP_PERFMON);
+> if (capable_noaudit(CAP_SYS_ADMIN))
+>   return capable(CAP_SYS_ADMIN);
+> 
+> return capable(CAP_PERFMON);
+> }
+
+Yes, this makes sense and adds up.
+
+> I think Andy was trying to preserve the order of audit events.
+> 
+> I'm also suggesting to drop SYS from the cap name. It doesn't add any value
+> to the name.
+
+Agreed, CAP_PERFMON sounds more generic, as it actually is.
+
+Gratefully,
+Alexey
+
+[1] https://lore.kernel.org/lkml/20191211203648.GA862919@tassilo.jf.intel.com/
