@@ -2,130 +2,74 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE128C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28518C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09B3222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4tXtc1M"
+	by mail.kernel.org (Postfix) with ESMTP id EAD9A222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgAOVt7 (ORCPT
+        id S1730291AbgAOVuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:49:59 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46794 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgAOVt6 (ORCPT
+        Wed, 15 Jan 2020 16:50:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49328 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgAOVuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:49:58 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so8803613pgb.13;
-        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
-        b=a4tXtc1MsCd/AAzWT05JSh0STp4V5v5W99JdSxxo99mNSaIXM1by4ESzPtCgimSYtf
-         yc3f8FEAN+rUJOHgIEy+DQS+Sa4utJG00V1IOHvECTDTK7skX4jRZ/OUhe/01+hF5Ixe
-         lyeKKaoWQsvpmJ2VTwm/3aNFoihGj47IMsTWE/ZIFD05lm8Ci2/5aTKCFsZ8eM/BAyCs
-         Fu30t4D1017WOfYNAKXPw8iJjteKzY2JdnKAXAOMn5As4QOqq8ydLQNIqMp1tmTObzuX
-         LOHRSeigSiOYXWKbXxFrcQ8yJDx2FHyo0M1CxfEqKNdWl+ZWBR9hzi+Sq5VKxYiTak9f
-         gSIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
-        b=rgqIw+iH1DtTp9ZVxkSJcf3vMaiS8SA//n1KlZ1H9X6CqblbHGvNVNnWlCSVkTImyn
-         iWWNHNSuqhTJAnyltLnJPVPTwh5IN8cxocrsGIQ7NP1vF83DxfE+P9gq42B7PMgmp2NJ
-         ZjnyZc6OPkn9xH6fkc9xJlZsNoSk6HGwNhV2woKADdGa5vqSvPJkm+mynVftxb6H5lpI
-         bhoaO3kkcVUF0xci/T0ThYcQ28kfXrBNgoct28ptzN/nMb9Y5g4egrsUpTHTPt9n8dyj
-         /LixlCggYTO++ND8h9yhw1nV2ERr3pH5PTRh29YT1x06XgvMit0DP7CbvzpgOBv9rXIt
-         oR+A==
-X-Gm-Message-State: APjAAAXU7IFk4/Jf/oEP0qUqOEmQ2G1oQX3AlEAeqD6+jF15ADoKYtq/
-        fGJ/8BNKLNV75/QPxdmc9E8=
-X-Google-Smtp-Source: APXvYqw4tFFtqVWsYBb0+omdhX/b6+0lKkDeJt8gEEiG7Cy/SI84NzstJLCZb3wIXZ0ERZYaEEflqw==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr34166607pgt.283.1579124998023;
-        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:f:2cdd:5c73:b928:d080])
-        by smtp.gmail.com with ESMTPSA id b65sm22584179pgc.18.2020.01.15.13.49.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 13:49:57 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>, sashal@kernel.org
-Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        shji@microsoft.com, ruizhao@microsoft.com,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <20200115213848.GO20975@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
-Date:   Wed, 15 Jan 2020 13:49:56 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 16:50:24 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irqYO-0001iT-88; Wed, 15 Jan 2020 22:50:20 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 97E47101228; Wed, 15 Jan 2020 22:50:19 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Maarten ter Huurne <maarten@treewalker.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v3] clocksource: Add driver for the Ingenic JZ47xx OST
+In-Reply-To: <1579121936.3.1@crapouillou.net>
+References: <1579110897.3.0@crapouillou.net> <87y2u8xzq0.fsf@nanos.tec.linutronix.de> <1579121936.3.1@crapouillou.net>
+Date:   Wed, 15 Jan 2020 22:50:19 +0100
+Message-ID: <87muaoxuck.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200115213848.GO20975@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/2020 1:38 PM, Borislav Petkov wrote:
-> On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
->> New driver supports error detection and correction on the devices with ARM
->> DMC-520 memory controller.
->>
->> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
->> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
->> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-> This mail still has your From: because I guess you pasted the patch in
-> the mail.
-> 
-> But, if you look at what I wrote here:
-> 
-> https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
-> 
-> you'll see the
-> 
-> From: Lei Wang <leiwang_git@outlook.com>
-> 
-> which is the last From: in the mail and that is taken by git as the
-> author of the patch.
-> 
-> However, if I apply this mail of yours, it will make you the
-> author. Because in git there can be only one author per patch
-> and other authors can be additionally accredited with the
-> Co-developed-by: tag from the same doc I was pointing at before:
-> Documentation/process/submitting-patches.rst
+Paul Cercueil <paul@crapouillou.net> writes:
+> Le mer., janv. 15, 2020 at 20:54, Thomas Gleixner <tglx@linutronix.de> 
+>> That lock still a massive contention point as clock readouts can be 
+>> pretty
+>> frequent depending on workloads. Just think about tracing ...
+>> 
+>> So I really would avoid both the lock and that ugly 64bit readout 
+>> thing.
 >
-> Looking at this driver, however, you have supplied three authors. And I
-> think you guys need to discuss it amongst yourselves who is going to be
-> the author of this driver in the git history.
+> The 64bit readout thing is gone in V3.
+>
+> The lock cannot go away unless we have a way to retrieve the underlying 
+> mmio pointer from the regmap, which the regmap maintainers will never 
+> accept. So I can't really change that now. Besides, 
+> drivers/clocksource/ingenic-timer.c also registers a clocksource that's 
+> read with the regmap, and nobody complained.
 
-Lei will be the author of this driver in the git history. I could ask her to send the patch again if that's the correct way to go. Please confirm.
- 
-> If there are more questions, I'm pretty sure Sasha would be glad to
-> explain to you how the whole authorship thing works and what the
-> implications are.
+I don't complain. I just told you that a spinlock in that code path is
+really suboptimal.
 
-Thanks, Sasha is currently OOF until April 19th. 
+I missed the one in the other driver, but the same problem exists there.
 
---
-Best regards,
-Shiping Ji
+Thanks,
+
+        tglx
