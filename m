@@ -2,289 +2,135 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FAAC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE2FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13FE2081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579106727;
-	bh=Y4IYUVVjZSqNT4KHF506A9nSH7m+8bY0oPsOq9XflGA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=GyyG6VVSZmOBLHTJu0FLtriNrUcItiHAqEapJ/sGlpVaKYR+ohT/K9AXOOgFLTNJC
-	 3Q+yfDQlnhUKKO6UI+dZL7qNSnaaGpVGcRtHaGcVWJGcm6Mx+5cVnRICSfa/DSacE2
-	 ky0PF3tTAutCRjcqgz11HJtzHFZCXkXcjmRNEP7E=
+	by mail.kernel.org (Postfix) with ESMTP id C6CA52465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P8qtmWdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgAOQpZ (ORCPT
+        id S1728913AbgAOQru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:45:25 -0500
-Received: from conuserg-09.nifty.com ([210.131.2.76]:16849 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOQpZ (ORCPT
+        Wed, 15 Jan 2020 11:47:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46677 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAOQru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:45:25 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 00FGivO6011079;
-        Thu, 16 Jan 2020 01:44:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 00FGivO6011079
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579106697;
-        bh=SZOkYphT7E9GHjXKlgV0QDCeNekw7U6rZwFuYSvNizY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lx0ln1tP6OWFky+GojsB/NB82j+COpWI/RRYP8E8JvKhGC0+W3VmISGmKk0JzRu20
-         6T5YjGFgNyG/mUf6BInQa2RW84MR/ix0cDo0fv9sN/IHYvDZuVnIDESalqMhOIGgcK
-         YUzSoUmhVnwIE9KSNOsy/7h3rp2Y9jr9D62IKYFQCxRgSKgO36Q09hqtjEtJvDsvYJ
-         n5AfMXRtb1cIVxujBoqX0bm8NJfXTZV+hnjHfD6CjU2dhOJLn+JgdvkATwbyIAI5cd
-         J90vyX2mxOmWpHG3ge+atVdTS0YOxaXG5WpOygW17cpakQZrkaSWRmrLKUWefCcRlk
-         qizmzh+kUmj2A==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: most: remove header include path to drivers/staging
-Date:   Thu, 16 Jan 2020 01:44:51 +0900
-Message-Id: <20200115164451.13203-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jan 2020 11:47:50 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so8447483pgb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:47:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=v/2Up0PFtIlsPxiJvXtazrmjOUMQoxRhjvtQu6hdcr4=;
+        b=P8qtmWdJtJ7m7pW+HgRUOb1CJbaL+4F5Y2LnAnWC3VsYXsiS8aj1YOif00meRaRXAm
+         TNOvNw0b4CYtgRIumf3okxBeTk+VVIX92ubWcBHtyliJwkgXChgNE33azRcmikfawhEl
+         x7Yfwi3+81XfqpLHFiXMabdiaEmjdnEsa8Chk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=v/2Up0PFtIlsPxiJvXtazrmjOUMQoxRhjvtQu6hdcr4=;
+        b=tWr7avT8c3DUtccGN68TT9kK7b7uPC44vRNTpfK3QfSSqXjRH9crV0Cp3fMGj6ylfx
+         fcuwFg8HB/oJkHoJYj70QNvQIMQXT2XBxITnJdWpuxa+sAepogqDTQK+QO72xNku43uK
+         uyTpGNNGodZpWHQmBZV8ChNmAO9+/Ms4V1o2GVpXwIiilKkIZSbpkmpPTVOGXu0TSnQ2
+         zi0L9gbHXcQcdMGEFFt9e5BmPTaC7w8hvnSXqhgYKwhTcdzLPnKCqYsIMLruux6cgweM
+         OIsYORscaZf4llTh1BbvRWk6J15E4SGjOskKwxGbrLvXWQkvk6gDcGr6ZyrDRE5YOXVu
+         BHzg==
+X-Gm-Message-State: APjAAAW6qdmRwBye+TqYLmPaRkPqCwWqujK1jVIthrwWq1Ao0txZ0ZJU
+        8yyPjEM2vvmBamgyzv7LYKQHVA==
+X-Google-Smtp-Source: APXvYqzerLLGTfjo+7XW33KV3+WCWZxbLyQn0HybE49ZK/8BTObIJ/ZnneFo7LZI7i5hytZcqXaAXg==
+X-Received: by 2002:aa7:951c:: with SMTP id b28mr31482777pfp.97.1579106869688;
+        Wed, 15 Jan 2020 08:47:49 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u18sm21192621pgi.44.2020.01.15.08.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 08:47:49 -0800 (PST)
+Message-ID: <5e1f4235.1c69fb81.7041e.36a0@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
+References: <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/4] alarmtimer: Make alarmtimer platform device child of RTC device
+User-Agent: alot/0.8.1
+Date:   Wed, 15 Jan 2020 08:47:48 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to add "ccflags-y += -I $(srctree)/drivers/staging"
-just for including <most/most.h>.
+Quoting Thomas Gleixner (2020-01-15 02:07:09)
+> Doug Anderson <dianders@chromium.org> writes:
+> > On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+> >> index 4b11f0309eee..ccb6aea4f1d4 100644
+> >> --- a/kernel/time/alarmtimer.c
+> >> +++ b/kernel/time/alarmtimer.c
+> >> @@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *=
+dev,
+> >>         unsigned long flags;
+> >>         struct rtc_device *rtc =3D to_rtc_device(dev);
+> >>         struct wakeup_source *__ws;
+> >> +       struct platform_device *pdev;
+> >>         int ret =3D 0;
+> >>
+> >>         if (rtcdev)
+> >> @@ -99,6 +100,7 @@ static int alarmtimer_rtc_add_device(struct device =
+*dev,
+> >>                 return -1;
+> >>
+> >>         __ws =3D wakeup_source_register(dev, "alarmtimer");
+> >> +       pdev =3D platform_device_register_data(dev, "alarmtimer", -1, =
+NULL, 0);
+> >
+> > Don't you need to check for an error here?  If pdev is an error you'll
+> > continue on your merry way.  Before your patch if you got an error
+> > registering the device it would have caused probe to fail.
+>=20
+> Yes, that return value should be checked
+>=20
 
-Use the #include "..." directive with the correct relative path.
+Ok. Should __ws also be checked for error? I'm currently thinking of this p=
+atch
+and then simplifying it in patch 3 of this series by removing __ws. Or
+the series can swap patch 2 and 3.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-Changes in v2:
- - rebase on linux-next
-
- drivers/staging/most/Makefile       | 1 -
- drivers/staging/most/cdev/Makefile  | 1 -
- drivers/staging/most/cdev/cdev.c    | 3 ++-
- drivers/staging/most/configfs.c     | 3 ++-
- drivers/staging/most/core.c         | 3 ++-
- drivers/staging/most/dim2/Makefile  | 1 -
- drivers/staging/most/dim2/dim2.c    | 2 +-
- drivers/staging/most/i2c/Makefile   | 1 -
- drivers/staging/most/i2c/i2c.c      | 2 +-
- drivers/staging/most/net/Makefile   | 1 -
- drivers/staging/most/net/net.c      | 3 ++-
- drivers/staging/most/sound/Makefile | 1 -
- drivers/staging/most/sound/sound.c  | 3 ++-
- drivers/staging/most/usb/Makefile   | 1 -
- drivers/staging/most/usb/usb.c      | 3 ++-
- drivers/staging/most/video/Makefile | 1 -
- drivers/staging/most/video/video.c  | 2 +-
- 17 files changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/staging/most/Makefile b/drivers/staging/most/Makefile
-index 85ea5a434ced..20a99ecb37c4 100644
---- a/drivers/staging/most/Makefile
-+++ b/drivers/staging/most/Makefile
-@@ -2,7 +2,6 @@
- obj-$(CONFIG_MOST) += most_core.o
- most_core-y := core.o
- most_core-y += configfs.o
--ccflags-y += -I $(srctree)/drivers/staging/
- 
- obj-$(CONFIG_MOST_CDEV)	+= cdev/
- obj-$(CONFIG_MOST_NET)	+= net/
-diff --git a/drivers/staging/most/cdev/Makefile b/drivers/staging/most/cdev/Makefile
-index 9f4a8b8c9c27..ef90cd71994a 100644
---- a/drivers/staging/most/cdev/Makefile
-+++ b/drivers/staging/most/cdev/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_CDEV) += most_cdev.o
- 
- most_cdev-objs := cdev.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
-index 59f346d1f4af..71943d17f825 100644
---- a/drivers/staging/most/cdev/cdev.c
-+++ b/drivers/staging/most/cdev/cdev.c
-@@ -16,7 +16,8 @@
- #include <linux/kfifo.h>
- #include <linux/uaccess.h>
- #include <linux/idr.h>
--#include <most/most.h>
-+
-+#include "../most.h"
- 
- #define CHRDEV_REGION_SIZE 50
- 
-diff --git a/drivers/staging/most/configfs.c b/drivers/staging/most/configfs.c
-index 9818f6c8b22a..034ab96ef69e 100644
---- a/drivers/staging/most/configfs.c
-+++ b/drivers/staging/most/configfs.c
-@@ -10,7 +10,8 @@
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/configfs.h>
--#include <most/most.h>
-+
-+#include "most.h"
- 
- #define MAX_STRING_SIZE 80
- 
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index af542ed6c7f0..4958921f3bb3 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -21,7 +21,8 @@
- #include <linux/kthread.h>
- #include <linux/dma-mapping.h>
- #include <linux/idr.h>
--#include <most/most.h>
-+
-+#include "most.h"
- 
- #define MAX_CHANNELS	64
- #define STRING_SIZE	80
-diff --git a/drivers/staging/most/dim2/Makefile b/drivers/staging/most/dim2/Makefile
-index 116f04d69244..861adacf6c72 100644
---- a/drivers/staging/most/dim2/Makefile
-+++ b/drivers/staging/most/dim2/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_DIM2) += most_dim2.o
- 
- most_dim2-objs := dim2.o hal.o sysfs.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/dim2/dim2.c b/drivers/staging/most/dim2/dim2.c
-index 9eb10fc0903e..15c6aa8fa1ea 100644
---- a/drivers/staging/most/dim2/dim2.c
-+++ b/drivers/staging/most/dim2/dim2.c
-@@ -21,7 +21,7 @@
- #include <linux/sched.h>
- #include <linux/kthread.h>
- 
--#include <most/most.h>
-+#include "../most.h"
- #include "hal.h"
- #include "errors.h"
- #include "sysfs.h"
-diff --git a/drivers/staging/most/i2c/Makefile b/drivers/staging/most/i2c/Makefile
-index 2b3769dc19e7..71099dd0f85b 100644
---- a/drivers/staging/most/i2c/Makefile
-+++ b/drivers/staging/most/i2c/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_I2C) += most_i2c.o
- 
- most_i2c-objs := i2c.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/i2c/i2c.c b/drivers/staging/most/i2c/i2c.c
-index d07719c38fc9..2980f7065846 100644
---- a/drivers/staging/most/i2c/i2c.c
-+++ b/drivers/staging/most/i2c/i2c.c
-@@ -14,7 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/err.h>
- 
--#include <most/most.h>
-+#include "../most.h"
- 
- enum { CH_RX, CH_TX, NUM_CHANNELS };
- 
-diff --git a/drivers/staging/most/net/Makefile b/drivers/staging/most/net/Makefile
-index f0ac64dee71b..1582c97eb204 100644
---- a/drivers/staging/most/net/Makefile
-+++ b/drivers/staging/most/net/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_NET) += most_net.o
- 
- most_net-objs := net.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/net/net.c b/drivers/staging/most/net/net.c
-index db4273256ce8..8218c9a06cb5 100644
---- a/drivers/staging/most/net/net.c
-+++ b/drivers/staging/most/net/net.c
-@@ -15,7 +15,8 @@
- #include <linux/list.h>
- #include <linux/wait.h>
- #include <linux/kobject.h>
--#include <most/most.h>
-+
-+#include "../most.h"
- 
- #define MEP_HDR_LEN 8
- #define MDP_HDR_LEN 16
-diff --git a/drivers/staging/most/sound/Makefile b/drivers/staging/most/sound/Makefile
-index a3d086c6ca70..f0cd9d8d213e 100644
---- a/drivers/staging/most/sound/Makefile
-+++ b/drivers/staging/most/sound/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_SOUND) += most_sound.o
- 
- most_sound-objs := sound.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/sound/sound.c b/drivers/staging/most/sound/sound.c
-index 23baf4bd7c12..44cf2334834f 100644
---- a/drivers/staging/most/sound/sound.c
-+++ b/drivers/staging/most/sound/sound.c
-@@ -17,7 +17,8 @@
- #include <sound/pcm_params.h>
- #include <linux/sched.h>
- #include <linux/kthread.h>
--#include <most/most.h>
-+
-+#include "../most.h"
- 
- #define DRIVER_NAME "sound"
- #define STRING_SIZE	80
-diff --git a/drivers/staging/most/usb/Makefile b/drivers/staging/most/usb/Makefile
-index 83cf2ead7122..c2b207339aec 100644
---- a/drivers/staging/most/usb/Makefile
-+++ b/drivers/staging/most/usb/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_USB) += most_usb.o
- 
- most_usb-objs := usb.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/usb/usb.c b/drivers/staging/most/usb/usb.c
-index 491b38e91e9d..35217ca65cbb 100644
---- a/drivers/staging/most/usb/usb.c
-+++ b/drivers/staging/most/usb/usb.c
-@@ -23,7 +23,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/etherdevice.h>
- #include <linux/uaccess.h>
--#include <most/most.h>
-+
-+#include "../most.h"
- 
- #define USB_MTU			512
- #define NO_ISOCHRONOUS_URB	0
-diff --git a/drivers/staging/most/video/Makefile b/drivers/staging/most/video/Makefile
-index 2d857d3cbcc8..856175fec8b6 100644
---- a/drivers/staging/most/video/Makefile
-+++ b/drivers/staging/most/video/Makefile
-@@ -2,4 +2,3 @@
- obj-$(CONFIG_MOST_VIDEO) += most_video.o
- 
- most_video-objs := video.o
--ccflags-y += -I $(srctree)/drivers/staging/
-diff --git a/drivers/staging/most/video/video.c b/drivers/staging/most/video/video.c
-index 9e9e45ac386e..d32ae49d617b 100644
---- a/drivers/staging/most/video/video.c
-+++ b/drivers/staging/most/video/video.c
-@@ -21,7 +21,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- 
--#include <most/most.h>
-+#include "../most.h"
- 
- #define V4L2_CMP_MAX_INPUT  1
- 
--- 
-2.17.1
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index ccb6aea4f1d4..3e1f4056e384 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -103,7 +103,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 	pdev =3D platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
+=20
+ 	spin_lock_irqsave(&rtcdev_lock, flags);
+-	if (!rtcdev) {
++	if (__ws && pdev && !rtcdev) {
+ 		if (!try_module_get(rtc->owner)) {
+ 			ret =3D -1;
+ 			goto unlock;
+@@ -115,6 +115,8 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 		ws =3D __ws;
+ 		__ws =3D NULL;
+ 		pdev =3D NULL;
++	} else {
++		ret =3D - 1;
+ 	}
+ unlock:
+ 	spin_unlock_irqrestore(&rtcdev_lock, flags);
 
