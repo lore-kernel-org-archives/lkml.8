@@ -2,107 +2,144 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC05C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB498C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E9324681
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579059676;
-	bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvtmkGhRL6x/1hX+VMRl5enf90ctBxXiq5tTD0Win12DpIZMYqJ+EYiFa/ciLWZzj
-	 9KEtu4UBBcbofV0wz9/IPoikQgGwvCU0Px/Rc/m0uvSACXBL/h+KMeyQdfPBeAkEtA
-	 pnP2LjVq/0k6qPt46PCKGOony1GLX0R8YGGJEdHA=
+	by mail.kernel.org (Postfix) with ESMTP id B6075206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgAODlO (ORCPT
+        id S1729011AbgAODnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:41:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 22:43:24 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50257 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgAODkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:40:51 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E6ED222C3;
-        Wed, 15 Jan 2020 03:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579059650;
-        bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9cEIHzPQuncy3JNYZdId3xal8IPCiO9Wwr57oKx99+i3pcdtkF+kUfOW6wtyVwtj
-         KCVYDNWKR3+busVG47m5ApFhZtsxnF5WOwW3wP26ELaJK7C9A9Nb51BhHn0QF2Szhy
-         d3wStf3FX3GjCMrQs2TDyHpxP+qSbE48mONW5Awk=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH -tip V3 1/2] kprobes: Suppress the suspicious RCU warning on kprobes
-Date:   Wed, 15 Jan 2020 12:40:46 +0900
-Message-Id: <157905964590.2268.3265472584921714383.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157905963533.2268.4672153983131918123.stgit@devnote2>
-References: <157905963533.2268.4672153983131918123.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        id S1728885AbgAODnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:43:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 19:43:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
+   d="scan'208";a="273519332"
+Received: from unknown (HELO [10.239.161.118]) ([10.239.161.118])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2020 19:43:20 -0800
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <8f9acfb3-28e0-8d3e-08e0-77f04410cf38@linux.intel.com>
+Date:   Wed, 15 Jan 2020 11:43:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anders reported that the lockdep warns that suspicious
-RCU list usage in register_kprobe() (detected by
-CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
-access kprobe_table[] by hlist_for_each_entry_rcu()
-without rcu_read_lock.
+On 2020/1/14 23:40, Vineeth Remanan Pillai wrote:
+> On Mon, Jan 13, 2020 at 8:12 PM Tim Chen <tim.c.chen@linux.intel.com> wrote:
+> 
+>> I also encountered kernel panic with the v4 code when taking cpu offline or online
+>> when core scheduler is running.  I've refreshed the previous patch, along
+>> with 3 other patches to fix problems related to CPU online/offline.
+>>
+>> As a side effect of the fix, each core can now operate in core-scheduling
+>> mode or non core-scheduling mode, depending on how many online SMT threads it has.
+>>
+>> Vineet, are you guys planning to refresh v4 and update it to v5?  Aubrey posted
+>> a port to the latest kernel earlier.
+>>
+> Thanks for the updated patch Tim.
+> 
+> We have been testing with v4 rebased on 5.4.8 as RC kernels had given us
+> trouble in the past. v5 is due soon and we are planning to release v5 when
+> 5.5 comes out. As of now, v5 has your crash fixes and Aubrey's changes
+> related to load balancing.
 
-If we call get_kprobe() from the breakpoint handler context,
-it is run with preempt disabled, so this is not a problem.
-But in other cases, instead of rcu_read_lock(), we locks
-kprobe_mutex so that the kprobe_table[] is not updated.
-So, current code is safe, but still not good from the view
-point of RCU.
+It turns out my load balancing related changes need to be refined.
+For example, we don't migrate task if the task's core cookie does not match
+with CPU's core cookie, but if the entire core is idle, we should allow task
+migration, something like the following:
 
-Joel suggested that we can silent that warning by passing
-lockdep_is_held() to the last argument of
-hlist_for_each_entry_rcu().
+I plan to do this after my Chinese New Year holiday(Feb 3rd).
 
-Add lockdep_is_held(&kprobe_mutex) at the end of the
-hlist_for_each_entry_rcu() to suppress the warning.
+Thanks,
+-Aubrey
 
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Suggested-by: Joel Fernandes <joel@joelfernandes.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/kprobes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 2625c241ac00..bd484392d789 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
- 	struct kprobe *p;
- 
- 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
--	hlist_for_each_entry_rcu(p, head, hlist) {
-+	hlist_for_each_entry_rcu(p, head, hlist,
-+				 lockdep_is_held(&kprobe_mutex)) {
- 		if (p->addr == addr)
- 			return p;
+----------------------------------------------------------------------------------
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 4728f5e..75e0172 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7366,8 +7366,9 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
+ 	 * We do not migrate tasks that are:
+ 	 * 1) throttled_lb_pair, or
+ 	 * 2) cannot be migrated to this CPU due to cpus_ptr, or
+-	 * 3) running (obviously), or
+-	 * 4) are cache-hot on their current CPU.
++	 * 3) task's cookie does not match with this CPU's core cookie
++	 * 4) running (obviously), or
++	 * 5) are cache-hot on their current CPU.
+ 	 */
+ 	if (throttled_lb_pair(task_group(p), env->src_cpu, env->dst_cpu))
+ 		return 0;
+@@ -7402,6 +7403,25 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
+ 		return 0;
  	}
-
+ 
++#ifdef CONFIG_SCHED_CORE
++	if (sched_core_enabled(cpu_rq(env->dst_cpu))) {
++		bool idle_core = true;
++		int cpu;
++
++		for_each_cpu(cpu, cpu_smt_mask(env->dst_cpu)) {
++			if (!available_idle_cpu(cpu))
++				idle_core = false;
++		}
++		/*
++		 * Don't migrate task if task's cookie does not match
++		 * with core cookie, unless the entire core is idle.
++		 */
++		if (!idle_core && p->core_cookie !=
++		    cpu_rq(env->dst_cpu)->core->core_cookie)
++			return 0;
++	}
++#endif
++
+ 	/* Record that we found atleast one task that could run on dst_cpu */
+ 	env->flags &= ~LBF_ALL_PINNED;
+ 
+-- 
+2.7.4
