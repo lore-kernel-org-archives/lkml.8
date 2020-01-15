@@ -2,131 +2,75 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578F4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B784C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6DD2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KyBFHK4t"
+	by mail.kernel.org (Postfix) with ESMTP id ED3EA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAOPVc (ORCPT
+        id S1729102AbgAOPVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:21:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52555 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729011AbgAOPVa (ORCPT
+        Wed, 15 Jan 2020 10:21:35 -0500
+Received: from mail-out.m-online.net ([212.18.0.9]:49480 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgAOPVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:21:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579101689;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zTA4sx+gNFDojMXAsEt7yLk4iNXaE/P+y/1BDCCWUNA=;
-        b=KyBFHK4tuz2NBRrLscXv585YgCF8DrI2QkjiWDMar0tRgLOsMwlDWkS1yh8EkOANG6ngXN
-        HE9S0Yt5btwoRW6zqb+wzU3118KuE8MsAhRxYpwFIu7FhrK56IM9l2CVPiZ7H+bSZ4zTH2
-        90GifVtPXeXQYf5wuGzlc/mVVl8l2q8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-YiC0dQjHOfKz--2joi_dgQ-1; Wed, 15 Jan 2020 10:21:25 -0500
-X-MC-Unique: YiC0dQjHOfKz--2joi_dgQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jan 2020 10:21:32 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 47yWJ93y9wz1qrJ9;
+        Wed, 15 Jan 2020 16:21:29 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 47yWJ9364kz1qtds;
+        Wed, 15 Jan 2020 16:21:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id quKjM1C8Obmr; Wed, 15 Jan 2020 16:21:27 +0100 (CET)
+X-Auth-Info: ZwfjEOAw3ySj2X4yZtG+NNy+Kpmgp833t+DsGDP+I1c=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A3A71136DFF;
-        Wed, 15 Jan 2020 15:21:19 +0000 (UTC)
-Received: from carbon (ovpn-200-25.brq.redhat.com [10.40.200.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D09DE196AE;
-        Wed, 15 Jan 2020 15:21:07 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 16:21:05 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com, brouer@redhat.com
-Subject: Re: [PATCH bpf-next v2 01/10] samples/bpf: Don't try to remove
- user's homedir on clean
-Message-ID: <20200115162105.51c2847a@carbon>
-In-Reply-To: <157909756981.1192265.5504476164632952530.stgit@toke.dk>
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
-        <157909756981.1192265.5504476164632952530.stgit@toke.dk>
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 15 Jan 2020 16:21:27 +0100 (CET)
+Subject: Re: [PATCH] regulator: core: fixup regulator_is_equal() helper
+To:     Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+References: <87ftgh8qnn.wl-kuninori.morimoto.gx@renesas.com>
+ <20200115141235.GK3897@sirena.org.uk>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <66c63cfc-840b-8c57-8e70-f2f2824462c8@denx.de>
+Date:   Wed, 15 Jan 2020 16:21:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200115141235.GK3897@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 15:12:49 +0100
-Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> wrote:
+On 1/15/20 3:12 PM, Mark Brown wrote:
+> On Wed, Jan 15, 2020 at 10:17:00AM +0900, Kuninori Morimoto wrote:
+>>
+>> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>>
+>> commit b059b7e0ec320 ("regulator: core: Add regulator_is_equal() helper")
+>> added regulator_is_equal() helper.
+>> But it has unneeded ";" if CONFIG_REGULATOR was not defined.
+>> Thus, we will have this error
+> 
+> Thanks but Stephen already sent a fix.
 
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->=20
-> The 'clean' rule in the samples/bpf Makefile tries to remove backup
-> files (ending in ~). However, if no such files exist, it will instead try
-> to remove the user's home directory. While the attempt is mostly harmless,
-> it does lead to a somewhat scary warning like this:
->=20
-> rm: cannot remove '~': Is a directory
->=20
-> Fix this by using find instead of shell expansion to locate any actual
-> backup files that need to be removed.
->=20
-> Fixes: b62a796c109c ("samples/bpf: allow make to be run from samples/bpf/=
- directory")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-
-Kind of scary make clean command!
-
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-
-
-> ---
->  samples/bpf/Makefile |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 5b89c0370f33..f86d713a17a5 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -254,7 +254,7 @@ all:
-> =20
->  clean:
->  	$(MAKE) -C ../../ M=3D$(CURDIR) clean
-> -	@rm -f *~
-> +	@find $(CURDIR) -type f -name '*~' -delete
-
-
---=20
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Sorry for the mess again.
