@@ -2,174 +2,145 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032CCC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973BCC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7841222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:47:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="blCG6NNq"
+	by mail.kernel.org (Postfix) with ESMTP id 758E4222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgAODrs (ORCPT
+        id S1729045AbgAODt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:47:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37838 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgAODrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:47:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so14916222otn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:47:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXE1pb9ZXSzUXM/cWp0vEuD1ufr49jnlyg/BuiYZBlA=;
-        b=blCG6NNqmLU0+Yk3taOGfpNtJDvgllIRe1SUqtLakI2cGhtlgR7yOi6ZEASVsLviqR
-         iyMUzuQ2s8+c3MOxNrGvBQg30aRdU8eM6KVBNxY9j8LAW4rePBASrqJ9bvNU+hQpe2Ea
-         utDje7lx9JZAIV6DHWN8teCJ5y4glPgV1PECY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fXE1pb9ZXSzUXM/cWp0vEuD1ufr49jnlyg/BuiYZBlA=;
-        b=JSmPGx9T+2FhggVeYzSvlosdhvGeJKzSq0Ee6GVSO8P7cLFudpLLhBY5PVWE/xPfSr
-         eoNpwEqQaIVTJRkGwdRPGrdwqSiBSF79GG7mfKjrAW6JnLhQXZoU26sdtBpZvGhsJ1Q6
-         SO2LBTmWI8pbeVo/VkNK1hmGvU4LU76ZLjaPhJokoyKkNzOj1QsMDlRAnp+fAFrTlzZG
-         IMoGl65T/fjeslp1YZkz4ploseugDV7j+IefGa596pGkQaodiQAqyWm7jpFLGKCmTPv4
-         gG4BRT5pb1/97tlxEXqC2YmlOuUbbWeYGyZPQdqq6anU9rW91LTZN+qZgyURONwZN+0G
-         469w==
-X-Gm-Message-State: APjAAAX7MfA7kQHaiARBZbfukPgTGl13lt/T8gF+MdqBiXh5TPxV1jel
-        EklXzi8fUEKp4paGmYmXm7QSPsIJOtk=
-X-Google-Smtp-Source: APXvYqwrPnmWW+62YL/e85eL4cNdtFPK538r5TBymcHF4kBo89RrM7Yz7uKz7aNoPMvfFg6RIls4Mw==
-X-Received: by 2002:a9d:198b:: with SMTP id k11mr1311190otk.295.1579060065239;
-        Tue, 14 Jan 2020 19:47:45 -0800 (PST)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
-        by smtp.gmail.com with ESMTPSA id m185sm5300864oia.26.2020.01.14.19.47.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 19:47:44 -0800 (PST)
-Received: by mail-ot1-f44.google.com with SMTP id 59so14871486otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:47:43 -0800 (PST)
-X-Received: by 2002:a05:6830:13da:: with SMTP id e26mr1239454otq.97.1579060063207;
- Tue, 14 Jan 2020 19:47:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20200114033226.16786-1-gtk_ruiwang@mediatek.com>
-In-Reply-To: <20200114033226.16786-1-gtk_ruiwang@mediatek.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Wed, 15 Jan 2020 12:47:32 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
-Message-ID: <CAPBb6MXhiNK84PuUy8=RUUeSh5j4VXw-Ar5SbZDHZAobp7xpEQ@mail.gmail.com>
-Subject: Re: media: mtk-vcodec: reset segment data then trig decoder
-To:     gtk_ruiwang <gtk_ruiwang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tue, 14 Jan 2020 22:49:58 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8721 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728884AbgAODt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:49:58 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 42F61B4ECE60620A8E73;
+        Wed, 15 Jan 2020 11:49:56 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
+ 11:49:46 +0800
+Subject: Re: [PATCH v3 29/32] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Longfei Wang <longfei.wang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, srv_heupstream@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+References: <20191224111055.11836-1-maz@kernel.org>
+ <20191224111055.11836-30-maz@kernel.org>
+ <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <6e24d53e-64d9-a682-6753-9e16155c7fde@huawei.com>
+Date:   Wed, 15 Jan 2020 11:49:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:32 PM <gtk_ruiwang@mediatek.com> wrote:
->
-> From: gtk_ruiwang <gtk_ruiwang@mediatek.com>
->
-> VP9 bitstream specification indicate segment data should reset to
-> default when meet key frames, intra only frames or enable error
-> resilience mode. So memset segmentation map buffer before every
-> decode process is not appropriate.
->
-> Reset segment data only when needed, then trig decoder hardware
->
-> Signed-off-by: Rui Wang <gtk_ruiwang@mediatek.com>
-> ---
->  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> index 24c1f0bf2147..42c9c3c98076 100644
-> --- a/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> +++ b/drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
-> @@ -110,7 +110,9 @@ struct vp9_sf_ref_fb {
->   * @buf_len_sz_c : size used to store cbcr plane ufo info (AP-R, VPU-W)
->
->   * @profile : profile sparsed from vpu (AP-R, VPU-W)
-> - * @show_frame : display this frame or not (AP-R, VPU-W)
-> + * @show_frame : [BIT(0)] display this frame or not (AP-R, VPU-W)
-> + *     [BIT(14)] reset segment data or not (AP-R, VPU-W)
-> + *     [BIT(15)] trig decoder hardware or not (AP-R, VPU-W)
->   * @show_existing_frame : inform this frame is show existing frame
->   *     (AP-R, VPU-W)
->   * @frm_to_show_idx : index to show frame (AP-R, VPU-W)
-> @@ -494,12 +496,12 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
->                                         frm_to_show->fb->base_y.size);
->                 }
->                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
-> -                       if (vsi->show_frame)
-> +                       if (vsi->show_frame & BIT(0))
->                                 vp9_add_to_fb_disp_list(inst, inst->cur_fb);
->                 }
->         } else {
->                 if (!vp9_is_sf_ref_fb(inst, inst->cur_fb)) {
-> -                       if (vsi->show_frame)
-> +                       if (vsi->show_frame & BIT(0))
->                                 vp9_add_to_fb_disp_list(inst, frm_to_show->fb);
->                 }
->         }
-> @@ -870,13 +872,22 @@ static int vdec_vp9_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
->                                         vsi->sf_frm_sz[idx]);
->                         }
->                 }
-> -               memset(inst->seg_id_buf.va, 0, inst->seg_id_buf.size);
->                 ret = vpu_dec_start(&inst->vpu, data, 3);
->                 if (ret) {
->                         mtk_vcodec_err(inst, "vpu_dec_start failed");
->                         goto DECODE_ERROR;
->                 }
->
-> +               if ((vsi->show_frame & BIT(15)) &&
-> +                   (vsi->show_frame & BIT(14))) {
+Hi,
 
-Using the new bits in this manner means this patch is not compatible
-with the older firmware.
+On 2020/1/15 10:49, Shaokun Zhang wrote:
+> Hi Marc, [This is from Nianyao]
+> 
+> On 2019/12/24 19:10, Marc Zyngier wrote:
+>> In order to let a guest buy in the new, active-less SGIs, we
+>> need to be able to switch between the two modes.
+>>
+>> Handle this by stopping all guest activity, transfer the state
+>> from one mode to the other, and resume the guest.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
 
-On an older firmware, these bits will be 0, which means the decoder
-will never be started. To preserve compatibility, the behavior should
-be reversed: *do not* reset and/or start the decoder if the bits are
-set.
+[...]
 
-Also both bits are only used together - we should either separate the
-data segment reset and decoder start, or rely on only one bit for
-this.
+>> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+>> index c2fcde104ea2..063785fd2dc7 100644
+>> --- a/virt/kvm/arm/vgic/vgic-v4.c
+>> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+>> @@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+>>   	return IRQ_HANDLED;
+>>   }
+>>   
+>> +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
+>> +{
+>> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
+>> +	vpe->sgi_config[irq->intid].group 	= irq->group;
+>> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
+>> +}
+>> +
+>> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
+>> +	int i;
+>> +
+>> +	/*
+>> +	 * With GICv4.1, every virtual SGI can be directly injected. So
+>> +	 * let's pretend that they are HW interrupts, tied to a host
+>> +	 * IRQ. The SGI code will do its magic.
+>> +	 */
+>> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+>> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+>> +		struct irq_desc *desc;
+>> +		int ret;
+>> +
+>> +		if (irq->hw) {
+>> +			vgic_put_irq(vcpu->kvm, irq);
+>> +			continue;
+>> +		}
+>> +
+>> +		irq->hw = true;
+>> +		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
+> 
+> I think we need to check whether irq_find_mapping returns 0.
+> 
+>> +		vgic_v4_sync_sgi_config(vpe, irq);
+>> +		/*
+>> +		 * SGIs are initialised as disabled. Enable them if
+>> +		 * required by the rest of the VGIC init code.
+>> +		 */
+>> +		desc = irq_to_desc(irq->host_irq);
+>> +		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
+>> +					      false);
+> 
+> If irq->host_irq is not valid , in irq_domain_activate_irq, it will trigger NULL pointer
+> dereference in host kernel.
+> I meet a problem here. When hw support GIC4.1, and host kernel is started with
+> kvm-arm.vgic_v4_enable=0, starting a virtual machine will trigger NULL pointer
+> dereference in host.
 
-> +                       memset(inst->seg_id_buf.va, 0, inst->seg_id_buf.size);
-> +                       ret = vpu_dec_start(&inst->vpu, NULL, 0);
-> +                       if (ret) {
-> +                               mtk_vcodec_err(inst, "vpu trig decoder failed");
-> +                               goto DECODE_ERROR;
-> +                       }
-> +               }
-> +
->                 ret = validate_vsi_array_indexes(inst, vsi);
->                 if (ret) {
->                         mtk_vcodec_err(inst, "Invalid values from VPU.");
-> --
-> 2.18.0
+I think the thing is that we should _not_ try to configure vSGIs at all
+if kvm-arm.vgic_v4_enable=0 (which indicates we don't allow use of the
+GICv4 of direct injection).
+
+We currently set kvm_vgic_global_state.has_gicv4_1 to true if HW support
+GICv4.1, regardless whatever the gicv4_enable is (see patch#23 -
+vgic_v3_probe).  I think this is what actually needs fixing.
+
+
+Thanks,
+Zenghui
+
