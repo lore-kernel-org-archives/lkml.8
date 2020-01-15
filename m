@@ -2,118 +2,162 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829F3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15610C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F6D2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFFB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAORRm (ORCPT
+        id S1728988AbgAORUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:17:42 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36925 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgAORRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:17:42 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1irmIV-0006pD-6G; Wed, 15 Jan 2020 17:17:39 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <shallyn@cisco.com>, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Eric Paris <eparis@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
-Date:   Wed, 15 Jan 2020 18:17:36 +0100
-Message-Id: <20200115171736.16994-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 15 Jan 2020 12:20:55 -0500
+Received: from mga11.intel.com ([192.55.52.93]:9254 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgAORUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:20:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 09:20:54 -0800
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="226188020"
+Received: from efgreve-mobl2.amr.corp.intel.com ([10.254.8.33])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 09:20:51 -0800
+Message-ID: <df95e688271b4cc0e2313daeeae85507c566fc04.camel@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] iio: accel: kxcjk1013: Support orientation matrix
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Robert Yang <decatf@gmail.com>,
+        =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 15 Jan 2020 09:20:05 -0800
+In-Reply-To: <20200112203301.30235-1-digetx@gmail.com>
+References: <20200112203301.30235-1-digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-introduced the ability to opt out of audit messages for accesses to
-various proc files since they are not violations of policy.
-While doing so it somehow switched the check from ns_capable() to
-has_ns_capability{_noaudit}(). That means it switched from checking the
-subjective credentials of the task to using the objective credentials. I
-couldn't find the original lkml thread and so I don't know why this switch
-was done. But it seems wrong since ptrace_has_cap() is currently only used
-in ptrace_may_access(). And it's used to check whether the calling task
-(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-to operate on the target task (object). According to the cred.h comments
-this would mean the subjective credentials of the calling task need to be
-used.
-This switches it to use security_capable() because we only call
-ptrace_has_cap() in ptrace_may_access() and in there we already have a
-stable reference to the calling tasks creds under cred_guard_mutex so
-there's no need to go through another series of dereferences and rcu
-locking done in ns_capable{_noaudit}().
+On Sun, 2020-01-12 at 23:33 +0300, Dmitry Osipenko wrote:
+> Hardware could be physically mounted in any possible direction and
+> userpspace needs to be aware of the mounting orientation in order to
+> process sensor's data correctly. In particular this helps iio-sensor-
+> proxy
+> to report display's orientation properly on a phone/tablet devices.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Cc: Serge Hallyn <shallyn@cisco.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric Paris <eparis@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- kernel/ptrace.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index cb9ddcc08119..b2fe800cae9a 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -264,12 +264,14 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
- 	return ret;
- }
- 
--static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-+static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-+			  unsigned int mode)
- {
- 	if (mode & PTRACE_MODE_NOAUDIT)
--		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
- 	else
--		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE,
-+					CAP_OPT_NOAUDIT);
- }
- 
- /* Returns 0 on success, -errno on denial. */
-@@ -321,7 +323,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	    gid_eq(caller_gid, tcred->sgid) &&
- 	    gid_eq(caller_gid, tcred->gid))
- 		goto ok;
--	if (ptrace_has_cap(tcred->user_ns, mode))
-+	if (ptrace_has_cap(cred, tcred->user_ns, mode))
- 		goto ok;
- 	rcu_read_unlock();
- 	return -EPERM;
-@@ -340,7 +342,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
--	     !ptrace_has_cap(mm->user_ns, mode)))
-+	     !ptrace_has_cap(cred, mm->user_ns, mode)))
- 	    return -EPERM;
- 
- 	return security_ptrace_access_check(task, mode);
-
-base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
--- 
-2.25.0
+> ---
+>  drivers/iio/accel/kxcjk-1013.c       | 27 +++++++++++++++++++++++++-
+> -
+>  include/linux/iio/accel/kxcjk_1013.h |  3 +++
+>  2 files changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/kxcjk-1013.c
+> b/drivers/iio/accel/kxcjk-1013.c
+> index fee535d6e45b..c9924a65c32a 100644
+> --- a/drivers/iio/accel/kxcjk-1013.c
+> +++ b/drivers/iio/accel/kxcjk-1013.c
+> @@ -130,6 +130,7 @@ struct kxcjk1013_data {
+>  	struct i2c_client *client;
+>  	struct iio_trigger *dready_trig;
+>  	struct iio_trigger *motion_trig;
+> +	struct iio_mount_matrix orientation;
+>  	struct mutex mutex;
+>  	s16 buffer[8];
+>  	u8 odr_bits;
+> @@ -983,6 +984,20 @@ static const struct iio_event_spec
+> kxcjk1013_event = {
+>  				 BIT(IIO_EV_INFO_PERIOD)
+>  };
+>  
+> +static const struct iio_mount_matrix *
+> +kxcjk1013_get_mount_matrix(const struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan)
+> +{
+> +	struct kxcjk1013_data *data = iio_priv(indio_dev);
+> +
+> +	return &data->orientation;
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info kxcjk1013_ext_info[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_TYPE,
+> kxcjk1013_get_mount_matrix),
+> +	{ }
+> +};
+> +
+>  #define KXCJK1013_CHANNEL(_axis) {					
+> \
+>  	.type = IIO_ACCEL,						
+> \
+>  	.modified = 1,							
+> \
+> @@ -999,6 +1014,7 @@ static const struct iio_event_spec
+> kxcjk1013_event = {
+>  		.endianness = IIO_LE,					
+> \
+>  	},								
+> \
+>  	.event_spec = &kxcjk1013_event,				\
+> +	.ext_info = kxcjk1013_ext_info,					
+> \
+>  	.num_event_specs = 1						
+> \
+>  }
+>  
+> @@ -1267,11 +1283,18 @@ static int kxcjk1013_probe(struct i2c_client
+> *client,
+>  	data->client = client;
+>  
+>  	pdata = dev_get_platdata(&client->dev);
+> -	if (pdata)
+> +	if (pdata) {
+>  		data->active_high_intr = pdata->active_high_intr;
+> -	else
+> +		data->orientation = pdata->orientation;
+> +	} else {
+>  		data->active_high_intr = true; /* default polarity */
+>  
+> +		ret = iio_read_mount_matrix(&client->dev, "mount-
+> matrix",
+> +					    &data->orientation);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	if (id) {
+>  		data->chipset = (enum kx_chipset)(id->driver_data);
+>  		name = id->name;
+> diff --git a/include/linux/iio/accel/kxcjk_1013.h
+> b/include/linux/iio/accel/kxcjk_1013.h
+> index 8c3c78bc9f91..ea0ecb774371 100644
+> --- a/include/linux/iio/accel/kxcjk_1013.h
+> +++ b/include/linux/iio/accel/kxcjk_1013.h
+> @@ -7,8 +7,11 @@
+>  #ifndef __IIO_KXCJK_1013_H__
+>  #define __IIO_KXCJK_1013_H__
+>  
+> +#include <linux/iio/iio.h>
+> +
+>  struct kxcjk_1013_platform_data {
+>  	bool active_high_intr;
+> +	struct iio_mount_matrix orientation;
+>  };
+>  
+>  #endif
 
