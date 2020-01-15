@@ -2,296 +2,165 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2023CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF29C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E361C24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579106532;
-	bh=vjko50FmDt2UVx7s7dkC4h+TY7ecAco1ZYFz1nhr/Q0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=T6HyY+JqqUKynzYZH+1gKquDtrB0tgXoX/t5m9VTGMDyTS0kSEG6+Xl+AYoNeDF4z
-	 uKJLKfCnctyLRReu798MPrROsBuZTiaOYh959a7vmzPKMS/oiJwhDrR2va/lSC5xmJ
-	 n4dyu8mV16DAglf/vu64BqKnUD6Z8wd3DqN58sXs=
+	by mail.kernel.org (Postfix) with ESMTP id AE5F62081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAOQmL (ORCPT
+        id S1729005AbgAOQnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:42:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34748 "EHLO mail.kernel.org"
+        Wed, 15 Jan 2020 11:43:45 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59258 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgAOQmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:42:10 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470312081E;
-        Wed, 15 Jan 2020 16:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579106529;
-        bh=vjko50FmDt2UVx7s7dkC4h+TY7ecAco1ZYFz1nhr/Q0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=CrJcrB++nluNYKf/mwXWojkgdHPndUFdi30j3DWcEtQX+IjkjDKekXcJVeM3iZrot
-         Wb1PfwS8oTXRhB751jRhOSLmfIQWUxetR5Hv/v8WZHbN5MQ7bnrTw3feD27iMCdvvC
-         I0a5cTUF0382tLyvOBAoWVOuYRpxlrRrG63htL5c=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F25083520BAE; Wed, 15 Jan 2020 08:42:08 -0800 (PST)
-Date:   Wed, 15 Jan 2020 08:42:08 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the rcu tree
-Message-ID: <20200115164208.GA14832@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191212160622.021517d3@canb.auug.org.au>
- <20191212060200.GW2889@paulmck-ThinkPad-P72>
- <CANn89iKJhsMLUBNbkXSr1+t+38POFU8jWrP+tU3JWLjs__HuPw@mail.gmail.com>
- <CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com>
+        id S1726483AbgAOQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:43:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 08:43:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="226170948"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jan 2020 08:43:42 -0800
+Subject: Re: [PATCH v11 2/4] uacce: add uacce driver
+To:     zhangfei <zhangfei.gao@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+References: <1578710919-12141-1-git-send-email-zhangfei.gao@linaro.org>
+ <1578710919-12141-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200111194006.GD435222@kroah.com>
+ <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
+ <20200114145934.GA1960403@kroah.com>
+ <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <9454d674-85db-32ba-4f28-eb732777d59d@intel.com>
+Date:   Wed, 15 Jan 2020 09:43:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:57:24PM -0800, Eric Dumazet wrote:
-> On Wed, Dec 11, 2019 at 10:38 PM Eric Dumazet <edumazet@google.com> wrote:
-> > On Wed, Dec 11, 2019 at 10:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > On Thu, Dec 12, 2019 at 04:06:22PM +1100, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > >
-> > > > After merging the rcu (I think) tree, today's linux-next build (x86_64
-> > > > allnoconfig) produced this warning:
-> > > >
-> > > > kernel/time/timer.c: In function 'schedule_timeout':
-> > > > kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > > >   969 |   long diff = timer->expires - expires;
-> > > >       |               ~~~~~^~~~~~~~~
-> > > >
-> > > > Introduced by (bisected to) commit
-> > > >
-> > > >   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
-> > > >
-> > > > x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
-> > >
-> > > Well, if the timer is pending, then ->expires has to have been
-> > > initialized, but off where the compiler cannot see it, such as during a
-> > > previous call to __mod_timer().  And the change may have made it harder
-> > > for the compiler to see all of these relationships, but...
-> > >
-> > > I don't see this warning with gcc version 7.4.0.  Just out of curiosity,
-> > > what are you running, Stephen?
-> > >
-> > > Eric, any thoughts for properly educating the compiler on this one?
-> >
-> > Ah... the READ_ONCE() apparently turns off the compiler ability to
-> > infer that this branch should not be taken.
-> >
-> > Since __mod_timer() is inlined we could perhaps add a new option
-> >
-> > diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> > index 4820823515e9..8bbce552568b 100644
-> > --- a/kernel/time/timer.c
-> > +++ b/kernel/time/timer.c
-> > @@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct
-> > timer_list *timer,
-> >
-> >  #define MOD_TIMER_PENDING_ONLY         0x01
-> >  #define MOD_TIMER_REDUCE               0x02
-> > +#define MOD_TIMER_NOTPENDING           0x04
-> >
-> >  static inline int
-> >  __mod_timer(struct timer_list *timer, unsigned long expires, unsigned
-> > int options)
-> > @@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned
-> > long expires, unsigned int option
-> >          * the timer is re-modified to have the same timeout or ends up in the
-> >          * same array bucket then just return:
-> >          */
-> > -       if (timer_pending(timer)) {
-> > +       if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
-> >                 /*
-> >                  * The downside of this optimization is that it can result in
-> >                  * larger granularity than you would get from adding a new
-> > @@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
-> >
-> >         timer.task = current;
-> >         timer_setup_on_stack(&timer.timer, process_timeout, 0);
-> > -       __mod_timer(&timer.timer, expire, 0);
-> > +       __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
-> >         schedule();
-> >         del_singleshot_timer_sync(&timer.timer);
-> 
-> 
-> Also add_timer() can benefit from the same hint, since it seems inlined as well.
-> 
-> (untested patch)
 
-Apologies for the delay, fat fingers and holidays...  :-/
 
-I folded this into your earlier patch, resulting in the patch at the
-end.  Could you please let me know whether this matches your intent?
-
-							Thanx, Paul
-
-> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> index 4820823515e9..568564ae3597 100644
-> --- a/kernel/time/timer.c
-> +++ b/kernel/time/timer.c
-> @@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct
-> timer_list *timer,
+On 1/15/20 4:18 AM, zhangfei wrote:
+> Hi, Greg
 > 
->  #define MOD_TIMER_PENDING_ONLY         0x01
->  #define MOD_TIMER_REDUCE               0x02
-> +#define MOD_TIMER_NOTPENDING           0x04
+> On 2020/1/14 下午10:59, Greg Kroah-Hartman wrote:
+>> On Mon, Jan 13, 2020 at 11:34:55AM +0800, zhangfei wrote:
+>>> Hi, Greg
+>>>
+>>> Thanks for the review.
+>>>
+>>> On 2020/1/12 上午3:40, Greg Kroah-Hartman wrote:
+>>>> On Sat, Jan 11, 2020 at 10:48:37AM +0800, Zhangfei Gao wrote:
+>>>>> +static int uacce_fops_open(struct inode *inode, struct file *filep)
+>>>>> +{
+>>>>> +    struct uacce_mm *uacce_mm = NULL;
+>>>>> +    struct uacce_device *uacce;
+>>>>> +    struct uacce_queue *q;
+>>>>> +    int ret = 0;
+>>>>> +
+>>>>> +    uacce = xa_load(&uacce_xa, iminor(inode));
+>>>>> +    if (!uacce)
+>>>>> +        return -ENODEV;
+>>>>> +
+>>>>> +    if (!try_module_get(uacce->parent->driver->owner))
+>>>>> +        return -ENODEV;
+>>>> Why are you trying to grab the module reference of the parent device?
+>>>> Why is that needed and what is that going to help with here?
+>>>>
+>>>> This shouldn't be needed as the module reference of the owner of the
+>>>> fileops for this module is incremented, and the "parent" module depends
+>>>> on this module, so how could it be unloaded without this code being
+>>>> unloaded?
+>>>>
+>>>> Yes, if you build this code into the kernel and the "parent" driver 
+>>>> is a
+>>>> module, then you will not have a reference, but when you remove that
+>>>> parent driver the device will be removed as it has to be unregistered
+>>>> before that parent driver can be removed from the system, right?
+>>>>
+>>>> Or what am I missing here?
+>>> The refcount here is preventing rmmod "parent" module after fd is 
+>>> opened,
+>>> since user driver has mmap kernel memory to user space, like mmio, 
+>>> which may
+>>> still in-use.
+>>>
+>>> With the refcount protection, rmmod "parent" module will fail until
+>>> application free the fd.
+>>> log like: rmmod: ERROR: Module hisi_zip is in use
+>> But if the "parent" module is to be unloaded, it has to unregister the
+>> "child" device and that will call the destructor in here and then you
+>> will tear everything down and all should be good.
+>>
+>> There's no need to "forbid" a module from being unloaded, even if it is
+>> being used.  Look at all networking drivers, they work that way, right?
+> Thanks Greg for the kind suggestion.
 > 
->  static inline int
->  __mod_timer(struct timer_list *timer, unsigned long expires, unsigned
-> int options)
-> @@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned
-> long expires, unsigned int option
->          * the timer is re-modified to have the same timeout or ends up in the
->          * same array bucket then just return:
->          */
-> -       if (timer_pending(timer)) {
-> +       if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
->                 /*
->                  * The downside of this optimization is that it can result in
->                  * larger granularity than you would get from adding a new
-> @@ -1133,7 +1134,7 @@ EXPORT_SYMBOL(timer_reduce);
->  void add_timer(struct timer_list *timer)
->  {
->         BUG_ON(timer_pending(timer));
-> -       mod_timer(timer, timer->expires);
-> +       __mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
->  }
->  EXPORT_SYMBOL(add_timer);
+> I still have one uncertainty.
+> Does uacce has to block process continue accessing the mmapped area when 
+> remove "parent" module?
+> Uacce can block device access the physical memory when parent module 
+> call uacce_remove.
+> But application is still running, and suppose it is not the kernel 
+> driver's responsibility to call unmap.
 > 
-> @@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
+> I am looking for some examples in kernel,
+> looks vfio does not block process continue accessing when 
+> vfio_unregister_iommu_driver either.
 > 
->         timer.task = current;
->         timer_setup_on_stack(&timer.timer, process_timeout, 0);
-> -       __mod_timer(&timer.timer, expire, 0);
-> +       __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
->         schedule();
->         del_singleshot_timer_sync(&timer.timer);
+> In my test, application will keep waiting after rmmod parent, until 
+> ctrl+c, when unmap is called.
+> During the process, kernel does not report any error.
 > 
-------------------------------------------------------------------------
+> Do you have any advice?
 
-commit 704c46852c8f8c15cc0ecb45b19f8d3cd983faa6
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Thu Nov 7 11:37:38 2019 -0800
+Would it work to call unmap_mapping_range() on the char dev 
+inode->i_mappings? I think you need to set the vma->fault function ptr 
+for the vm_operations_struct in the original mmap(). After the mappings 
+are unmapped, you can set a state variable to trigger the return of 
+VM_FAULT_SIGBUS in the ->fault function when the user app accesses the 
+mmap region again and triggers a page fault. The user app needs to be 
+programmed to catch exceptions to deal with that.
 
-    timer: Use hlist_unhashed_lockless() in timer_pending()
-    
-    The timer_pending() function is mostly used in lockless contexts, so
-    Without proper annotations, KCSAN might detect a data-race [1].
-    
-    Using hlist_unhashed_lockless() instead of hand-coding it seems
-    appropriate (as suggested by Paul E. McKenney).
-    
-    [1]
-    
-    BUG: KCSAN: data-race in del_timer / detach_if_pending
-    
-    write to 0xffff88808697d870 of 8 bytes by task 10 on cpu 0:
-     __hlist_del include/linux/list.h:764 [inline]
-     detach_timer kernel/time/timer.c:815 [inline]
-     detach_if_pending+0xcd/0x2d0 kernel/time/timer.c:832
-     try_to_del_timer_sync+0x60/0xb0 kernel/time/timer.c:1226
-     del_timer_sync+0x6b/0xa0 kernel/time/timer.c:1365
-     schedule_timeout+0x2d2/0x6e0 kernel/time/timer.c:1896
-     rcu_gp_fqs_loop+0x37c/0x580 kernel/rcu/tree.c:1639
-     rcu_gp_kthread+0x143/0x230 kernel/rcu/tree.c:1799
-     kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-     ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-    
-    read to 0xffff88808697d870 of 8 bytes by task 12060 on cpu 1:
-     del_timer+0x3b/0xb0 kernel/time/timer.c:1198
-     sk_stop_timer+0x25/0x60 net/core/sock.c:2845
-     inet_csk_clear_xmit_timers+0x69/0xa0 net/ipv4/inet_connection_sock.c:523
-     tcp_clear_xmit_timers include/net/tcp.h:606 [inline]
-     tcp_v4_destroy_sock+0xa3/0x3f0 net/ipv4/tcp_ipv4.c:2096
-     inet_csk_destroy_sock+0xf4/0x250 net/ipv4/inet_connection_sock.c:836
-     tcp_close+0x6f3/0x970 net/ipv4/tcp.c:2497
-     inet_release+0x86/0x100 net/ipv4/af_inet.c:427
-     __sock_release+0x85/0x160 net/socket.c:590
-     sock_close+0x24/0x30 net/socket.c:1268
-     __fput+0x1e1/0x520 fs/file_table.c:280
-     ____fput+0x1f/0x30 fs/file_table.c:313
-     task_work_run+0xf6/0x130 kernel/task_work.c:113
-     tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-     exit_to_usermode_loop+0x2b4/0x2c0 arch/x86/entry/common.c:163
-    
-    Reported by Kernel Concurrency Sanitizer on:
-    CPU: 1 PID: 12060 Comm: syz-executor.5 Not tainted 5.4.0-rc3+ #0
-    Hardware name: Google Google Compute Engine/Google Compute Engine,
-    
-    Signed-off-by: Eric Dumazet <edumazet@google.com>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    [ paulmck: Pulled in Eric's later amendments. ]
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 1e6650e..0dc19a8 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -164,7 +164,7 @@ static inline void destroy_timer_on_stack(struct timer_list *timer) { }
-  */
- static inline int timer_pending(const struct timer_list * timer)
- {
--	return timer->entry.pprev != NULL;
-+	return !hlist_unhashed_lockless(&timer->entry);
- }
- 
- extern void add_timer_on(struct timer_list *timer, int cpu);
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4820823..568564a 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct timer_list *timer,
- 
- #define MOD_TIMER_PENDING_ONLY		0x01
- #define MOD_TIMER_REDUCE		0x02
-+#define MOD_TIMER_NOTPENDING		0x04
- 
- static inline int
- __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int options)
-@@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned int option
- 	 * the timer is re-modified to have the same timeout or ends up in the
- 	 * same array bucket then just return:
- 	 */
--	if (timer_pending(timer)) {
-+	if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
- 		/*
- 		 * The downside of this optimization is that it can result in
- 		 * larger granularity than you would get from adding a new
-@@ -1133,7 +1134,7 @@ EXPORT_SYMBOL(timer_reduce);
- void add_timer(struct timer_list *timer)
- {
- 	BUG_ON(timer_pending(timer));
--	mod_timer(timer, timer->expires);
-+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
- }
- EXPORT_SYMBOL(add_timer);
- 
-@@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
- 
- 	timer.task = current;
- 	timer_setup_on_stack(&timer.timer, process_timeout, 0);
--	__mod_timer(&timer.timer, expire, 0);
-+	__mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
- 	schedule();
- 	del_singleshot_timer_sync(&timer.timer);
- 
+> 
+>>>>> +static void uacce_release(struct device *dev)
+>>>>> +{
+>>>>> +    struct uacce_device *uacce = to_uacce_device(dev);
+>>>>> +
+>>>>> +    kfree(uacce);
+>>>>> +    uacce = NULL;
+>>>> That line didn't do anything :)
+>>> Yes, this is a mistake.
+>>> It is up to caller to set to NULL to prevent release multi times.
+>> Release function is called by the driver core which will not touch the
+>> value again.
+> Yes, I understand, it's my mistake. Will remove it.
+> 
+> Thanks
