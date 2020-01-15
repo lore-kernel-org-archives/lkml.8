@@ -2,76 +2,64 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18453C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A502467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB4B206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:31:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgAOQ3U (ORCPT
+        id S1728912AbgAOQbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:29:20 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54681 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgAOQ3T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:29:19 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irlXg-0004mW-B5; Wed, 15 Jan 2020 17:29:16 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irlXf-0003Us-Nz; Wed, 15 Jan 2020 17:29:15 +0100
-Date:   Wed, 15 Jan 2020 17:29:15 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        Adam.Thomson.Opensource@diasemi.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
-Message-ID: <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
-References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-4-m.felsch@pengutronix.de>
+        Wed, 15 Jan 2020 11:31:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39478 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgAOQbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:31:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0FC5BAB7F;
+        Wed, 15 Jan 2020 16:31:41 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 43D81DA791; Wed, 15 Jan 2020 17:31:28 +0100 (CET)
+Date:   Wed, 15 Jan 2020 17:31:28 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Kusanagi Kouichi <slash@ac.auone-net.jp>
+Cc:     dsterba@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: Implement lazytime
+Message-ID: <20200115163128.GT3929@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Kusanagi Kouichi <slash@ac.auone-net.jp>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>
+ <20200114212107.GM3929@twin.jikos.cz>
+ <20200115134536820.LBFZ.46476.ppp.dion.ne.jp@dmta0009.auone-net.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108104746.1765-4-m.felsch@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:28:40 up 61 days,  7:47, 54 users,  load average: 0.00, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200115134536820.LBFZ.46476.ppp.dion.ne.jp@dmta0009.auone-net.jp>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-On 20-01-08 11:47, Marco Felsch wrote:
-> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> be used as input, output or have a special use-case.
+On Wed, Jan 15, 2020 at 10:45:36PM +0900, Kusanagi Kouichi wrote:
+> On 2020-01-14 22:21:07 +0100, David Sterba wrote:
+> > On Tue, Jan 14, 2020 at 05:53:24PM +0900, Kusanagi Kouichi wrote:
+> > > I tested with xfstests and lazytime didn't cause any new failures.
+> > 
+> > The changelog should describe what the patch does (the 'why' part too,
+> > but this is obvious from the subject in this case). That fstests pass
+> > without new failures is nice but there should be a specific test for
+> > that or instructions in the changelog how to test.
 > 
-> The patch adds the support for the normal input/output use-case.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> To test lazytime, I set the following variables:
+> TEST_FS_MOUNT_OPTS="-o lazytime,space_cache=v2"
+> MOUNT_OPTIONS="-o lazytime,space_cache=v2"
 
-Is it possible to get this into 5.6?
-
-Regards,
-  Marco
-
+How did you verify that the lazy time updates were applied properly?
