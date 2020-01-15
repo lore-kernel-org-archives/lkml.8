@@ -2,97 +2,97 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EEEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181D9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA47B222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B3724671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:54:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZNbq1c+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgAOJyb (ORCPT
+        id S1729615AbgAOJyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:54:31 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9618 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729504AbgAOJya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:54:30 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79DE1587D749E023B9B4;
-        Wed, 15 Jan 2020 17:54:29 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 Jan
- 2020 17:54:23 +0800
-Subject: Re: [f2fs-dev] [PATCH -next] f2fs: remove set but not used variable
- 'cs_block'
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Yuehaibing <yuehaibing@huawei.com>
-CC:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191224124359.15040-1-yuehaibing@huawei.com>
- <673efe18-d528-2e9b-6d44-a6a7a22086f3@huawei.com>
- <62ce1981-9061-f798-a65d-9599ceceb4b8@huawei.com>
- <20191226082419.ljbhystwkhp2d4gh@shindev.dhcp.fujisawa.hgst.com>
- <20200115023328.bummaaa7pdnao5qk@shindev.dhcp.fujisawa.hgst.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0aea7754-2114-cc78-3453-bc608bacd45a@huawei.com>
-Date:   Wed, 15 Jan 2020 17:54:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 15 Jan 2020 04:54:41 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:16904 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729504AbgAOJyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:54:41 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47yN325rrnzKt;
+        Wed, 15 Jan 2020 10:54:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1579082079; bh=sxzTUCMMAQefhnz1DPOUyOGPD2XGl5ktWwEOSWo2bj0=;
+        h=Date:From:Subject:To:Cc:From;
+        b=ZNbq1c+dvSJrUfpTUQARYgA/3BdK/p9VWUQ5x7c26GOuNwgV2bxpSM1IVh+7WR0UQ
+         nybo0PAh9YgsqOn8/gbbI3KP/ry+fzXciSnBOexUrl2+S/Hi7s7lxNh3PC40jbUVAA
+         Tc/zIKWvbWpg7grk68YUNjZbrF2joZ44RLisH+UkM9dia7SLSBgEthcfbJdGwIFw7w
+         vBdStuSe8RTWe/gogkupioXUUFFUpGCWjfPB1aMItwtCxA78kKLaSn0dG8yTEuugjG
+         vhuf2Dj0aTJzgZfzGZ9WqdVBJoEfVW2TnbdRzQNxxN9wHRt3hXLXkjo9r2U++hC/6x
+         P3sBiy1pP4veA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Wed, 15 Jan 2020 10:54:35 +0100
+Message-Id: <ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v3] mmc: sdhci: fix minimum clock rate for v3 controller
 MIME-Version: 1.0
-In-Reply-To: <20200115023328.bummaaa7pdnao5qk@shindev.dhcp.fujisawa.hgst.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/15 10:33, Shinichiro Kawasaki wrote:
-> On Dec 26, 2019 / 17:24, Shin'ichiro Kawasaki wrote:
->> On Dec 26, 2019 / 14:05, Yuehaibing wrote:
->>> On 2019/12/26 11:44, Chao Yu wrote:
->>>> On 2019/12/24 20:43, YueHaibing wrote:
->>>>> fs/f2fs/segment.c: In function fix_curseg_write_pointer:
->>>>> fs/f2fs/segment.c:4485:35: warning: variable cs_block set but not used [-Wunused-but-set-variable]
->>>>>
->>>>> It is never used since commit 362d8a920384 ("f2fs: Check
->>>>> write pointer consistency of open zones") , so remove it.
->>>>
->>>> Thanks for the fix!
->>>>
->>>> Do you mind merging this patch to original patch? as it's still
->>>> pending in dev branch.
->>>
->>> It's ok for me.
->>>
->>
->> Thank you for this catch and the fix. Appreciated.
-> 
-> I have merged YueHaibing's change to the write pointer consistency fix patch
-> and sent out as the v6 series. Thanks again for finding out the unused variable.
-> 
-> I was not sure if I should add Chao Yu's reviewed by tag to the patch from which
-> the unused variable was removed. To be strict, I didn't add the tag. Just
-> another quick review by Chao will be appreciated.
+For SDHCIv3+ with programmable clock mode, minimal clock frequency is
+still base clock / max(divider). Minimal programmable clock frequency is
+always greater than minimal divided clock frequency. Without this patch,
+SDHCI uses out-of-spec initial frequency when multiplier is big enough:
 
-Thanks for the revision. :)
+mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
+[for 480 MHz source clock divided by 1024]
 
-I guess Jaegeuk can merge that kind of fix into original patch, and
-meanwhile keeping old Reviewed-by tag in that patch.
+The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
 
-Thanks,
+Cc: stable@vger.kernel.org
+Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ v3: commitmsg/comment rewording
+ v2: extend commitmsg and add comment
+---
+ drivers/mmc/host/sdhci.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> 
-> --
-> Best Regards,
-> Shin'ichiro Kawasaki.
-> 
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 96609c961465..24fb6d710de6 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -3903,11 +3903,13 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	if (host->ops->get_min_clock)
+ 		mmc->f_min = host->ops->get_min_clock(host);
+ 	else if (host->version >= SDHCI_SPEC_300) {
+-		if (host->clk_mul) {
+-			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
++		if (host->clk_mul)
+ 			max_clk = host->max_clk * host->clk_mul;
+-		} else
+-			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
++		/*
++		 * Divided Clock Mode minimum clock rate is always less than
++		 * Programmable Clock Mode minimum clock rate.
++		 */
++		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+ 	} else
+ 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
+ 
+-- 
+2.20.1
+
