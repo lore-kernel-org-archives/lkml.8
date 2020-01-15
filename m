@@ -2,160 +2,109 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF26C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A614C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2468C24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012232077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRBbbcPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgAOR6L convert rfc822-to-8bit (ORCPT
+        id S1729067AbgAOSAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:58:11 -0500
-Received: from mail-oln040092255042.outbound.protection.outlook.com ([40.92.255.42]:42240
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbgAOR6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:58:10 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B9T+DB4Ni3F5mrwJp9i4VKTEe81i5pHMMML3TwAooJOQIanBmSeGg77hG9NBnH9Ai5kFpTkERFme/P/8PPmHeTyjSj0yw5m+eZv1NrIbJbrooQqoADhfqB8xxdM1PY+gaqEUwsewiIfsXW2sDe5trlX71jpZJ80r7f5QtyeWt1ekYJgXBLa5iCbn4SoBa9qyf2boYZMFSncBzzENo+hwll8HBhgRxeVf7Ybu3MKj+lNwjifBT6iOvltwPnjENQovmA+cB4w8E906V6BVy23QJogIH1qpH3Upl/nJg9ehfN/H5b2QxQgegAPXgQFUfVBO8IE6YsTIauUHsW7hnj9Ycw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jTZHIDttUSLS5LHeRxgppXH/XS/ZolcfcQDNSghrvKM=;
- b=gZ2bmNfh4grBQ5F+xpPoSMN31TuFgz01+f036ueiCu5pE4BNC7Fl2x1EljSbKz9qiCgNOpRrRT+xLJRZy+UmN4MuNhYyuiTtJ3UtEWACGeOK2TYAcRadEXeEvBXsCQQqa+OSK5Y3uNJYy8ssjOMh75eKiiont6o/g2bjllxc7TU2TI85cAjcYMhNu6qSqLbI8U00YyYWy6fcObSpvdoFR5zCYJggjG4GnQWvnaryPz0Vy+9SN9BjJayTfF3R7fBqW9Zpj7hV7Yd115BJ4jLUlJnAd4/tqHHlx1X5t0KmUV+dGfCENpwXTlefV4fqEqeEmo1eiuqz77qth0YEOYc7Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT223.eop-APC01.prod.protection.outlook.com
- (10.152.252.192) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
- 2020 17:58:05 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
- PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:58:05 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
- 2020 17:58:05 +0000
-Received: from nicholas-dell-linux (61.69.138.108) by MEXPR01CA0139.ausprd01.prod.outlook.com (2603:10c6:200:2e::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 17:58:03 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink resource
- if necessary
-Thread-Topic: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Thread-Index: AQHVy81WZ0aY/Rpcq0KYMVH4glqmEQ==
-Date:   Wed, 15 Jan 2020 17:58:05 +0000
-Message-ID: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MEXPR01CA0139.ausprd01.prod.outlook.com
- (2603:10c6:200:2e::24) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:756F20CC4212D69BCB7AD88E73210CA08FC6953FE0F7CBC6D12E48230490FBCF;UpperCasedChecksum:9DBBA6096AE45A3C91CADFCAF97D76357282033536A95D1D4FC692A21538CDD2;SizeAsReceived:7794;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [isfTshrZaUMoGiqt2tK+qf8qWlR7JcNC]
-x-microsoft-original-message-id: <20200115175758.GA4526@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 9c1637dd-0271-414f-f24a-08d799e478d9
-x-ms-exchange-slblob-mailprops: mBy7Mai7yE5NBIk4d/kkaYf19Kf5IaBBWDTNUgNopOAkOjQJjzlAjhv6afDIGsMI3TDXoosU/8nWIBIPe1ZYGNAM7EcMeQCVqcmqMloMKCdjHs9VrT0Ktz4vw13u2mB685eDdd2Y2tNvjnuaKUuRHqPwDNV5mvWELo2qBgUHMZNcV7QYRXoA/fRRx38e7+fiCzncrre5jjGOmF1cUBfxtmVHr2q16TKzVV0T1yUhgdFQxsstmYi6/oLu+DprnIRW2Q5HBUmcJHBjjhqOw6q1HdxNe6gO3jheS2HxtSH7AtVehNpEX96cQcDGZVmOfLDVtUZqnQDfGH38ZYKFWbLe8tC3mjNtKL0U/DXqUdDxJ5dtOd05BBapRspXADbFnu1bqvhr61Uznv38HvWNOQxM74KMC3S9HcEPAhHr/jcE564T0ZijzQhWiLsu/RfdVkmS6L+hpWWITVsHPqd//dFQwJe/7dKY14JWbNt7fERqcP+2Vuy0xo+bPlceqYFht6pPdzrZflv2sox52a3mvEbV8LxKrMbb6Bd65Uh0q7l4tPMytJVBIs07JSK6wukcCMhUBjR2nvR8GiPs6E1QoUm6orKjxJzEtGxZgWT7NVLzRsS/zPr3sLiZwqRusl7vata/dZV1ZeScO18PpH4JVPHdco5+Rwa4raP+A6tDdQWpxjV5/vMf2eD54DS6lNK2M3oYm15a9QoRLu8jMvzgOtk0aA1ddl5JfC6g
-x-ms-traffictypediagnostic: PU1APC01HT223:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zSVERXP9nG5xbFo4f7IvalaEt5KZ/NelxKhFjoI4VwYu6OInlJChAuraikNUUHGvYlA4OHPL7VlRgze9m2vfzntFrOOchK1fRTQYbYKQUfFOu/OPA5ljnS8iCUNA0IARVnm4ojEC6rQAoBqvgCg15G9Xyk/QxeG5PRFKkFXgwO0rPA3Lj+kjHDHm4x+arcFC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E58127C42896484F834B46D4DE8BCD89@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 15 Jan 2020 13:00:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20356 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbgAOSAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:00:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579111203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2XapLbaOtcjtrElHHMAQ6OSRlBJ67a4EYmsF6AdwXZg=;
+        b=dRBbbcPZrzgky2JoOpuTTQUjxkjh3ez+SBUhUU+lWhw/Otl0+inHTPPAxGCS1CXABbD3BE
+        cY9buOI56UJcdMMdG9Uq2ySDnHIrW9iuk7uCQbURU/q/9Clw2pkbZliqs7pMC9jNeXFsHg
+        KzUSInuYK2/VPyudysu6XEeodTb4hhk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-436-w6tOIuM1PgmuxL2nIqCYQw-1; Wed, 15 Jan 2020 13:00:02 -0500
+X-MC-Unique: w6tOIuM1PgmuxL2nIqCYQw-1
+Received: by mail-wm1-f70.google.com with SMTP id l11so1710958wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:00:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2XapLbaOtcjtrElHHMAQ6OSRlBJ67a4EYmsF6AdwXZg=;
+        b=FdiI87kQmxi8ZHZrzoMmByDD0CsJz1zWHoleoV3D8487b+51wl/HifxUhJX3De6uFt
+         Xd50VzoNTC5QgOF7WVdN+1/8t+NZMZsIYsvcyUHwwwxTHk4PEJgfk8xmaMXREaD8QcWu
+         Z4SsyDIyCyms3lVerneuAkVBEJBHOgfSYjPKvLaVvUkwnRe62BO18JTY86OxTgbtNlD6
+         8vwajDHBlJK6DmsM354z2ysNBaIsC73bf9u8yFJ7ky0t8mVOQtyU+G4GxR4L1tapiQPv
+         QiQOzuxPH/vSbp1aG82Vwl2l9MRyU4Uk2kmvy0gGHKhmb+XwwNU4dOFUn3tghcbd4Aee
+         c7FA==
+X-Gm-Message-State: APjAAAVcQuLPUvHU5l3wSrfnznjG5/OD2bFJlQ+PTOZO2fM/M2Kr7Op+
+        nw5H5G4yP4XS/9h3ww7tJNzeGacsC1CLLiUjkfF9QZnoeMErGD5CudhgrjCvIquYojcTUac2jjd
+        fDm4wSiulUoip3AZTfVRnEjLO
+X-Received: by 2002:a1c:ddc5:: with SMTP id u188mr1105008wmg.83.1579111200956;
+        Wed, 15 Jan 2020 10:00:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzdUK4jOChizY1OyBzEt6w49Iopmn3hI+6kXX9D66YP3w9/PZYQxXldJQx6hbbrlNINM/u8jw==
+X-Received: by 2002:a1c:ddc5:: with SMTP id u188mr1104980wmg.83.1579111200755;
+        Wed, 15 Jan 2020 10:00:00 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:436:e17d:1fd9:d92a? ([2001:b07:6468:f312:436:e17d:1fd9:d92a])
+        by smtp.gmail.com with ESMTPSA id f17sm794870wmc.8.2020.01.15.09.59.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 09:59:59 -0800 (PST)
+Subject: Re: [PATCH 0/2] KVM: VMX: PT (RTIT) bug fix and cleanup
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Luwei Kang <luwei.kang@intel.com>
+References: <20191210232433.4071-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <697cee10-cd6e-9bb6-608b-a20fc0c39f7f@redhat.com>
+Date:   Wed, 15 Jan 2020 18:59:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c1637dd-0271-414f-f24a-08d799e478d9
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:58:05.8345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT223
+In-Reply-To: <20191210232433.4071-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove checks for resource size in extend_bridge_window(). This is
-necessary to allow the pci_bus_distribute_available_resources() to
-function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-allocate resources. Because the kernel parameter sets the size of all
-hotplug bridges to be the same, there are problems when nested hotplug
-bridges are encountered. Fitting a downstream hotplug bridge with size X
-and normal bridges with non-zero size Y into parent hotplug bridge with
-size X is impossible, and hence the downstream hotplug bridge needs to
-shrink to fit into its parent.
+On 11/12/19 00:24, Sean Christopherson wrote:
+> Add a missing non-canonical check on writes to the RTIT address MSRs
+> and tack on a cleanup patch.
+> 
+> ** ALL PATCHES ARE COMPLETELY UNTESTED **
+> 
+> Untested due to lack of hardware.
+> 
+> Sean Christopherson (2):
+>   KVM: VMX: Add non-canonical check on writes to RTIT address MSRs
+>   KVM: VMX: Add helper to consolidate up PT/RTIT WRMSR fault logic
+> 
+>  arch/x86/kvm/vmx/vmx.c | 57 ++++++++++++++++++++++++------------------
+>  1 file changed, 33 insertions(+), 24 deletions(-)
+> 
 
-Add check for if bridge is extended or shrunken and reflect that in the
-call to pci_dbg().
+Queued, thanks.
 
-Do not change resource size if new size is zero (if we have run out of a
-bridge window resource) to prevent the PCI resource assignment code from
-attempting to assign a zero-sized resource. If this happens, we are
-running out of resource space, anyway, so not shrinking the resource
-will not deny space for other resources. This prevents the following
-from happening:
-
-pcieport 0000:07:04.0: can't enable device: BAR 13 [io  0x1000-0x0fff] not claimed
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
----
- drivers/pci/setup-bus.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 50d14921a..074501a75 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1836,16 +1836,24 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
- 				 struct list_head *add_list,
- 				 resource_size_t new_size)
- {
--	resource_size_t add_size;
-+	resource_size_t add_size, size = resource_size(res);
- 
- 	if (res->parent)
- 		return;
- 
--	if (resource_size(res) >= new_size)
-+	if (!new_size)
- 		return;
- 
--	add_size = new_size - resource_size(res);
--	pci_dbg(bridge, "bridge window %pR extended by %pa\n", res, &add_size);
-+	if (new_size > size) {
-+		add_size = new_size - size;
-+		pci_dbg(bridge, "bridge window %pR extended by %pa\n", res,
-+			&add_size);
-+	} else if (new_size < size) {
-+		add_size = size - new_size;
-+		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
-+			&add_size);
-+	}
-+
- 	res->end = res->start + new_size - 1;
- 	remove_from_list(add_list, res);
- }
--- 
-2.25.0
+Paolo
 
