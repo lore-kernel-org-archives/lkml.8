@@ -2,130 +2,180 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8D6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2648C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47504207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8966D2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:07:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7CD6zPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgAOWG5 (ORCPT
+        id S1730117AbgAOWHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:06:57 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34443 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgAOWG5 (ORCPT
+        Wed, 15 Jan 2020 17:07:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40259 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729016AbgAOWG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:06:57 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so17547832otf.1;
-        Wed, 15 Jan 2020 14:06:56 -0800 (PST)
+        Wed, 15 Jan 2020 17:06:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579126017;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2oZ0/KEDQ6dTwiAcIr2E5jK3OjJKgPjKG2s+1U8IzDY=;
+        b=F7CD6zPgqEcj45Vc3Y5yVQs1h8jAohsbwZat45fNNg8W5YBLs8phGcT6ceCgxiQ2IlQNuo
+        D3Lj1pBPbhno8r1eEJ4A+4959bU9tatNcFHf1P4ajQ9tsMeGI+PG6haZY7XONT0fEZL8HZ
+        R3EJy18qylTINOJcIa+5ctd5b/t+Tf4=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-YYQIgyw9Pi-DbZI6-LtiGg-1; Wed, 15 Jan 2020 17:06:56 -0500
+X-MC-Unique: YYQIgyw9Pi-DbZI6-LtiGg-1
+Received: by mail-lj1-f199.google.com with SMTP id h23so4464097ljk.14
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 14:06:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QA72jMIQiIcv6qKeAvOBZo5//ESBp/sElxNZhuRd/aw=;
-        b=Ku0iu43+DRp7ADCgca45A3oFR4oD6KSyxvayLrXjC1YHUgRX7tN9VwCUaRy3T+rs1d
-         HrDz7EMyz1DhwJfQ1AUHgaJZjIDig6WGjYe+yHk90CNXS7z5kCKJnRKawqAUMqFcQGJt
-         nm4lFsr+AuxGP41OLyp+FhHA3IIk/1bS4z3AFny+YxaCKXjCF5kJu2b5LK/tU/+LUgf6
-         3GJxh8RQYaGMzfnhpcOJIUCw4UvdyE3lYZsqr9YtMIp3PtdicX9+ldwaqMQbmy3xQ9WF
-         uDaAJdaGqWeuRWZqfhKkIKPgwcP20tZ4V9zReNN0apzTlKfIiNPo1UWg0RZVIoU29PFW
-         L++Q==
-X-Gm-Message-State: APjAAAWRWblEbCoV8Z5OTo5yqxGA+upBFl31WX3+iBWiAKObZi53GQ5I
-        z68KEOfGIXtyLZtChCRJIEcMjYACkx4JACjb/ac=
-X-Google-Smtp-Source: APXvYqwUReB61qJ2CDHEnYmnlWNvkGwBGaJEh4v0341plcso6oNlKga1A3x3SDtLiNVKbUvoihUE/WDHebZDXkh8m9k=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr4374295otd.39.1579126016415;
- Wed, 15 Jan 2020 14:06:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-2-geert+renesas@glider.be> <20200115210104.GA28904@ravnborg.org>
-In-Reply-To: <20200115210104.GA28904@ravnborg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jan 2020 23:06:45 +0100
-Message-ID: <CAMuHMdUEqWWKS_85pNSbAdFBUuGTEzgwE1bd9+x_mN_uzd254Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to
- DT schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=2oZ0/KEDQ6dTwiAcIr2E5jK3OjJKgPjKG2s+1U8IzDY=;
+        b=loc/ecAl8KCge/1x0xjsu2cbK8/fCPsgeBFbiI8Oi9ViX9n8B2Ig93xLjW+tgsP28e
+         lurv97TCGkhxJXtB9f7vxUSxX0hESdbUxLnf0kWK1oJ4p0CT8hq9etkFzJQdRG4JHt2a
+         n2ceX/0udJXUMindCe1JqAAfISORoO42lg0ODQl7up5zRq2QOopcOEFciDUFQJ2z6IOv
+         aedNRK+IzNhyyknssUPApjszarUIpDoMNzEFhNB6RAG2WISJTkTzWHSsMomdBwvMtvVM
+         3FDpobNDw0jwMOEqXXkHKthDvW4ZGlJ1/M/pevwa4yTUB0fRKPea2Y6avV8fL5f3xza3
+         kG/A==
+X-Gm-Message-State: APjAAAXGtgCFpav01SEyd1lS8+ccxgDx+N3AvBrxvjcsvDjrC/nCuiFo
+        k7KNYog9nqwKz5kbgc+VVb+LYbc+jm7ZSVYXbYEvXXRiqo9EqMS+89qTOikD8wqgA9uoY0P1e9S
+        ZDmidTmh1bOvJNRtUUVqmeB8T
+X-Received: by 2002:a2e:3e03:: with SMTP id l3mr298591lja.237.1579126014930;
+        Wed, 15 Jan 2020 14:06:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyICy0H3yi0QO3D1AnqbT83z5lYl+AEoYsdeygh7OdbhjgdnK2+SYcwTz5CjSsgq/x/PPJOpQ==
+X-Received: by 2002:a2e:3e03:: with SMTP id l3mr298563lja.237.1579126014662;
+        Wed, 15 Jan 2020 14:06:54 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id k5sm9561045lfd.86.2020.01.15.14.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 14:06:53 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id BEFA11804D6; Wed, 15 Jan 2020 23:06:52 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH bpf-next v2 02/10] tools/bpf/runqslower: Fix override option for VMLINUX_BTF
+In-Reply-To: <CAEf4BzbqY8zivZy637Xy=iTECzBAYQ7vo=M7TvsLM2Yp12bJpg@mail.gmail.com>
+References: <157909756858.1192265.6657542187065456112.stgit@toke.dk> <157909757089.1192265.9038866294345740126.stgit@toke.dk> <CAEf4BzbqY8zivZy637Xy=iTECzBAYQ7vo=M7TvsLM2Yp12bJpg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 15 Jan 2020 23:06:52 +0100
+Message-ID: <87v9pctlvn.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-On Wed, Jan 15, 2020 at 10:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> On Wed, Jan 15, 2020 at 01:45:44PM +0100, Geert Uytterhoeven wrote:
-> > Convert the DT binding documentation for Sitronix ST7735R displays to DT
-> > schema.
-> >
-> > Add a reference to the Adafruit 1.8" LCD while at it.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
+> On Wed, Jan 15, 2020 at 6:13 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
+dhat.com> wrote:
+>>
+>> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>>
+>> The runqslower tool refuses to build without a file to read vmlinux BTF
+>> from. The build fails with an error message to override the location by
+>> setting the VMLINUX_BTF variable if autodetection fails. However, the
+>> Makefile doesn't actually work with that override - the error message is
+>> still emitted.
 >
-> > diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> > new file mode 100644
-> > index 0000000000000000..21bccc91f74255e1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> > @@ -0,0 +1,65 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> Use (GPL-2.0-only OR BSD-2-Clause) for new binding files.
+> Do you have example command with VMLINUX_BTF override that didn't work
+> (and what error message was emitted)?
 
-I used GPL-2.0-only, as this is a conversion of an existing binding file,
-covered by the default GPL-2.0-only of the Linux kernel source tree.
+Before this patch:
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sitronix ST7735R Display Panels Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - David Lechner <david@lechnology.com>
-> > +
-> > +description:
-> > +  This binding is for display panels using a Sitronix ST7735R controller in
-> > +  SPI mode.
-> > +
-> > +allOf:
-> > +  - $ref: panel/panel-common.yaml#
+$ cd ~/build/linux/tools/bpf/runqslower
+$ make
+Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it ex=
+plicitly".  Stop.
+
+$ make VMLINUX_BTF=3D~/build/linux/vmlinux
+Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it ex=
+plicitly".  Stop.
+
+>> Fix this by only doing auto-detection if no override is set. And while
+>> we're at it, also look for a vmlinux file in the current kernel build dir
+>> if none if found on the running kernel.
+>>
+>> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
+>> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>> ---
+>>  tools/bpf/runqslower/Makefile |   16 ++++++++++------
+>>  1 file changed, 10 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefi=
+le
+>> index cff2fbcd29a8..fb93ce2bf2fe 100644
+>> --- a/tools/bpf/runqslower/Makefile
+>> +++ b/tools/bpf/runqslower/Makefile
+>> @@ -10,12 +10,16 @@ CFLAGS :=3D -g -Wall
+>>
+>>  # Try to detect best kernel BTF source
+>>  KERNEL_REL :=3D $(shell uname -r)
+>> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
+>> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
+>> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
+>> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
+>> -else
+>> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explici=
+tly")
+>> +ifeq ("$(VMLINUX_BTF)","")
+>> +  ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
+>> +  VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
+>> +  else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
+>> +  VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
+>> +  else ifneq ("$(wildcard $(abspath ../../../vmlinux))","")
+>> +  VMLINUX_BTF :=3D $(abspath ../../../vmlinux)
 >
-> I am no binding expert so I do not know how to add it.
-> But the old binding described that this MUST be a child of spi.
-> This is missing here.
->
-> Other panels using spi does not have it - so it is probarly OK.
+> I'm planning to mirror runqslower into libbpf Github repo and this
+> ../../../vmlinux piece will be completely out of place in that
+> context. Also it only will help when building kernel in-tree. So I'd
+> rather not add this.
 
-Yeah, I couldn't find any examples of expressing that requirement in yaml.
+Well building the kernel in-tree is something people sometimes want to do ;)
 
-Gr{oetje,eeting}s,
+Specifically, the selftests depend on this, so we should at least fix
+those; but I guess it could work to just pass in VMLINUX_BTF as part of
+the make -C from the selftests dir? I'll try that...
 
-                        Geert
+-Toke
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
