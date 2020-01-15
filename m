@@ -2,75 +2,78 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B784C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD51C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3EA2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6956D222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579101740;
+	bh=xQmCyFQKagD5zDRlX3Qlfs8hMu8+HZwNUQzGdVyqi5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G5ELH3An/9q8HmaEkJ05aipSTExYvk8ekGUJ/6YhBSY02aySMJ8qHVs5oDJmKhGGt
+	 68MBGGz4UzFO+e+DfIJKhXlUTycjzwrxOhyaWBVQJu6HDaSPEx6rQ0kj0aK5giMxkZ
+	 KP8MpoCGoSX1pdm+OymWeCxUAsx3gJriS0Ph0u2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgAOPVf (ORCPT
+        id S1729049AbgAOPWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:21:35 -0500
-Received: from mail-out.m-online.net ([212.18.0.9]:49480 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgAOPVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:21:32 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 47yWJ93y9wz1qrJ9;
-        Wed, 15 Jan 2020 16:21:29 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 47yWJ9364kz1qtds;
-        Wed, 15 Jan 2020 16:21:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id quKjM1C8Obmr; Wed, 15 Jan 2020 16:21:27 +0100 (CET)
-X-Auth-Info: ZwfjEOAw3ySj2X4yZtG+NNy+Kpmgp833t+DsGDP+I1c=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
+        Wed, 15 Jan 2020 10:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgAOPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:22:19 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 15 Jan 2020 16:21:27 +0100 (CET)
-Subject: Re: [PATCH] regulator: core: fixup regulator_is_equal() helper
-To:     Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-References: <87ftgh8qnn.wl-kuninori.morimoto.gx@renesas.com>
- <20200115141235.GK3897@sirena.org.uk>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <66c63cfc-840b-8c57-8e70-f2f2824462c8@denx.de>
-Date:   Wed, 15 Jan 2020 16:21:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 309C32053B;
+        Wed, 15 Jan 2020 15:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579101738;
+        bh=xQmCyFQKagD5zDRlX3Qlfs8hMu8+HZwNUQzGdVyqi5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fVw5yj+U1NPrGHrcpdvUVYorEbTy7dsunxncXsx5tOnJfYg8xDWzdUYV5T3JpRMj3
+         kfhnPv44rNtofwxqnyHr36yJhL8caHMOIOVaXUPv4gIDfGdiFfXjVNr88CAT66S/Cw
+         PLEbNEbRTfxGN9Yv+jMz+F9EOeYQuNQhYpTPRa5Y=
+Date:   Wed, 15 Jan 2020 16:22:15 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        zhiyuan.lv@intel.com, hang.yuan@intel.com,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
+ global include
+Message-ID: <20200115152215.GA3830321@kroah.com>
+References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
+ <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
+ <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
 MIME-Version: 1.0
-In-Reply-To: <20200115141235.GK3897@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 3:12 PM, Mark Brown wrote:
-> On Wed, Jan 15, 2020 at 10:17:00AM +0900, Kuninori Morimoto wrote:
->>
->> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->>
->> commit b059b7e0ec320 ("regulator: core: Add regulator_is_equal() helper")
->> added regulator_is_equal() helper.
->> But it has unneeded ";" if CONFIG_REGULATOR was not defined.
->> Thus, we will have this error
+On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
+> Now that the GVT interface to hypervisors does not depend on i915/GVT
+> internals anymore, we can move the headers to the global include/.
 > 
-> Thanks but Stephen already sent a fix.
+> This makes out-of-tree modules for hypervisor integration possible.
 
-Sorry for the mess again.
+What kind of out-of-tree modules do you need/want for this?  And why do
+they somehow have to be out of the tree?  We want them in the tree, and
+so should you, as it will save you time and money if they are.
+
+Also, as Christoph said, adding exports for functions that are not used
+by anything within the kernel tree itself is not ok, that's not how we
+work.
+
+thanks,
+
+greg k-h
