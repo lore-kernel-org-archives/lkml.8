@@ -2,120 +2,95 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFC4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E1EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1180A24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDEF2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="B5o0Q+Qb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCmVuyT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbgAOXji (ORCPT
+        id S1731036AbgAOXkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:39:38 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51827 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbgAOXjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:39:37 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ykLs4sxMz9sR1;
-        Thu, 16 Jan 2020 10:39:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579131575;
-        bh=bM+tz2kFdbTfR+m35IrApP9n+YHuTQq0hXIrBD1g6p0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B5o0Q+Qbz+Fh9nE6jGV8mxlgxUvMrP7QnMN7U8rJQtga5PK4LN11cKBT/wLOLs4YP
-         XuuAQ+Bsk3h7dQ/zO7fab/eJr7Cxr4uhtJBmsVRPA+PgjEJ/yxN53hXroCdOuOKYOI
-         G7bcHeM5X2XLDhiLYdnIe0Axc0SBLxrU0i7U4WOHBcmlZY0kXD0cH0eJ+Lv/Y2HtlN
-         qnJ8Vu/9spGH3FAwSo+F+6zs/eA2zf+UOzdgE8mt36GSlxCcpJs1KMdLt98Flz6JRN
-         soQ0lm8kiGof8G9XlKjoX8QxuJzgqqnC47fhhJTpIaLHyzovjA8fUUdGyoLkFITU1E
-         nE9c9dUXrF6Hw==
-Date:   Thu, 16 Jan 2020 10:39:32 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: Re: [PATCH] powerpc: Do not consider weak unresolved symbol
- relocations as bad
-Message-ID: <20200116103932.2e603cf9@canb.auug.org.au>
-In-Reply-To: <20200115204648.7179-1-alex@ghiti.fr>
-References: <20200115204648.7179-1-alex@ghiti.fr>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/X0ES/Pzabz50rIWcgod6J4G";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 15 Jan 2020 18:40:53 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34571 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729619AbgAOXkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:40:53 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s94so2420366pjc.1;
+        Wed, 15 Jan 2020 15:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=AzbtYII6ZVOKx6F0wY5VC0oFwSgB112mnSOGZkVBBbM=;
+        b=MCmVuyT4rQe2DIH3kN8C3aiPBlTcuRPbUqaB0AS6IkaQTDwQ851ULpadpoLfZEGZEI
+         rt55jt+QGD1Oho4uKmWmc4dxDMmBvb9AUySg7ruTAjoshyxoTNOFj3GkZyhojMuVHysy
+         bGyLReIheavsFYG9Uot0bLQUi5WOXaepzfz5EoJn183CPJrXVC3eTJUnuYx+8d4/nB5d
+         QBaTdvZuU3ERzdholPzl2tiNwnc/TI5rYx8VijpeKTua1cAp2F0tf21T35KEkDD6zABE
+         OyMdBv6rpQU9lNBZ6it5xXT4R5miXA2lrr0B8H6op+ZMKrGvn5E1AQHxzLGZeLoFcVu6
+         ij0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=AzbtYII6ZVOKx6F0wY5VC0oFwSgB112mnSOGZkVBBbM=;
+        b=Q+xZvhp++jPWieuNymYmQC5R9EXox9jITDwGDw/M9HlE+CGkIaa43Ha+8pGxb++TpD
+         AxmNoqhBkRnxWDM+JxN5QyKhgPh3EgqGXKa/JcW4gk6CNeQUfZZAKOOS3nFC2qcViKoX
+         4w8KyT8L7hRt1ap+9VHIbM7rfysMqQpFU+MY7A1HxHEJGY4KZg4GiVVgATS6gYbHSyg4
+         pVXvNVay8grnTZBjkUoRVkCH7vtxNk3U3E2AzHmbsXj3c7ncfBekCCA+JoLlNLS8PXCs
+         gIGItmliRsYVhnEgqhO35RNboC7bz0cTUj/nhrEyB74GGVh1sZTaLCZytgYgbU5Pdbzd
+         nT/A==
+X-Gm-Message-State: APjAAAV4M8QY2i5X8489K5HsKrfYmOB5MiA0Z4PtV6KOPhZm0aeKfp/D
+        K0LIq9R4xsBt7rrqtLdKlC0=
+X-Google-Smtp-Source: APXvYqzQJQYQH9DjDTHOiuAVrravKNL8ADSaJjt7EbkacKAEQPVfGrTVHybO0GiGnbz3t1G4TQUvVw==
+X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr3020162pjp.119.1579131652518;
+        Wed, 15 Jan 2020 15:40:52 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s21sm22905918pfe.20.2020.01.15.15.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 15:40:51 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
+Date:   Wed, 15 Jan 2020 15:40:50 -0800
+Message-Id: <20200115234050.30408-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/X0ES/Pzabz50rIWcgod6J4G
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 10 Jan 2020 18:29:35 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
+> With the introduction of the Raspberry Pi 4 we were forced to explicitly
+> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
+> memory area, which is not good enough to perform DMA operations on that
+> device. To bypass this limitation a dedicated CMA DT node was created,
+> explicitly indicating the acceptable memory range and size.
+> 
+> That said, compatibility between boards is a must on the Raspberry Pi
+> ecosystem so this creates a common CMA DT node so as for DT overlays to
+> be able to update CMA's properties regardless of the board being used.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-Hi Alexandre,
-
-Thanks for sorting this out.  Just a few comments below.
-
-On Wed, 15 Jan 2020 15:46:48 -0500 Alexandre Ghiti <alex@ghiti.fr> wrote:
->
-
-> =20
->  # Have Kbuild supply the path to objdump so we handle cross compilation.
-                                            ^
-"and nm"
-
-> +# Remove from the bad relocations those that match an undefined weak sym=
-bol
-> +# which will result in an absolute relocation to 0.
-> +# Weak unresolved symbols are of that form in nm output:
-> +# "                  w _binary__btf_vmlinux_bin_end"
-> +undef_weak_symbols=3D$($nm "$vmlinux" | awk -e '$1 ~ /w/ { print $2 }')
-> +
-> +while IFS=3D read -r weak_symbol; do
-> +	bad_relocs=3D"$(echo -n "$bad_relocs" | sed "/$weak_symbol/d")"
-> +done <<< "$undef_weak_symbols"
-
-This is not a bash script, and the above is a bashism :-(
-Also, my version of awk (mawk) doesn't have a -e option.
-
-How about something like :
-
-undef_weak_symbols=3D$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
-if [ "$undef_weak_symbols" ]; then
-	bad_relocs=3D"$(echo "$bad_relocs" | grep -F -w -v "$undef_weak_symbols")"
-fi
-
-Or do this near the top and add the grep to the others.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/X0ES/Pzabz50rIWcgod6J4G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4forQACgkQAVBC80lX
-0GyunwgAkZoBTpQAhgoODm6QrksXXQEyfUW4a4mYnW8Q62gQraQoNVv0H9M1Irnu
-1W7s/FfgvSNAom/ST78bdY0mPdADH0TZmyyRJbv2EIYvnwUdXva5UwAboMLCacnW
-PZKeC8ox9F57/Td+tDK7okuk/uO17KKp+Uo70DeDeS2i8KUZyUJxD+mO7y173pUj
-hNt25ESQEqrC4Lvu9I16kyLjxvjzMRv4unaQIy3htYQCbxF7/X1Lu33FEhvAJ9vx
-4BY7VWCaE2KNUMEaupSvJiXKfKWWGw6uMNZysIM17C5CfdHZvhaeMNYjNq03A6tX
-jalLi/Ycc9raelW8W8CmcuHx5CzvDA==
-=q+Te
------END PGP SIGNATURE-----
-
---Sig_/X0ES/Pzabz50rIWcgod6J4G--
+Applied to devicetree/next, thanks!
+--
+Florian
