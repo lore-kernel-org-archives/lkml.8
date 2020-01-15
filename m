@@ -2,457 +2,206 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D1AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A91AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF6E2467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF222467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g+rOR8Dg"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="XmTMhAP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgAOI3H (ORCPT
+        id S1729251AbgAOI3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:29:07 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:55798 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728984AbgAOI22 (ORCPT
+        Wed, 15 Jan 2020 03:29:14 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1040 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729188AbgAOI3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:28:28 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200115082825epoutp02416abac3612205d43264ef975ae63dd0~qAhRN3k5d2022820228epoutp02Y
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200115082825epoutp02416abac3612205d43264ef975ae63dd0~qAhRN3k5d2022820228epoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579076905;
-        bh=CVUXmbB24BmLbWoNrk2fifv2H0w4HmCTgbCkeN4nerQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+rOR8DgwBfJ3X3KLVFDcXlb0nZ0EPWT9mGLVF/RLgAaBbEKSYFgWRHHxJQEZsNzR
-         TIdImjBi9ZFNvnQIWwg1XLSHybSz6UBcXjO9KNChF48O4NVprERMydFIm/a7mUBS+r
-         bJx0mkvkQUWaGGIoFrMoQAqMoJnjAiYFJTkcaivI=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200115082825epcas1p3f00422c89cc571964a556a0d7bc4f443~qAhQ0Ywjq0348603486epcas1p3e;
-        Wed, 15 Jan 2020 08:28:25 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47yL7X0nlDzMqYkk; Wed, 15 Jan
-        2020 08:28:24 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.96.48019.72DCE1E5; Wed, 15 Jan 2020 17:28:23 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082823epcas1p27ec5ff6d384f148d826529f573173b04~qAhPU54s11766717667epcas1p2G;
-        Wed, 15 Jan 2020 08:28:23 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200115082823epsmtrp14280b22c7e1dec6d88d7409e4d50056a~qAhPTu4bj0486204862epsmtrp1B;
-        Wed, 15 Jan 2020 08:28:23 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-7e-5e1ecd278bce
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1C.4A.10238.72DCE1E5; Wed, 15 Jan 2020 17:28:23 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082823epsmtip127d6ae275a468f076b9a422f7165eca8~qAhPFogxe0089400894epsmtip1j;
-        Wed, 15 Jan 2020 08:28:23 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
-        arnd@arndb.de, Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v10 08/14] exfat: add exfat cache
-Date:   Wed, 15 Jan 2020 17:24:41 +0900
-Message-Id: <20200115082447.19520-9-namjae.jeon@samsung.com>
+        Wed, 15 Jan 2020 03:29:06 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F8Rn5V008078;
+        Wed, 15 Jan 2020 09:29:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=x+t2q3oFR0/g2C2BlDWSZ5LQ8cOF3XZQewhkJ5cwYOM=;
+ b=XmTMhAP5BALer3IXtna0VSBMeosJlsVZHeDd4umTM1DaQgbw75ixQe/EJPR43iAVacNe
+ ZTob3sj8auKOmZfRu2ChsRnMvIYJt6Sr3cj/kuJdJoJyLa2qI4d4Bw6r4Aq/sL3nywu+
+ s6NQp8yIVOqIGM9fv4vkBj+4mnhdInbd+hqRH0iIeSHyGWgWk7sOgfuXL3CNZBHxurCZ
+ z1FLNk5MjzAA/o4gQjl0T4fm8RtEIVawoREl/XH5NR0GbP8BF54vI8cnYUkEUdpEyjM0
+ 6XJkAk4eUkIWY/tBSsPT0z/Z+7KxrpNMhWRq4vRBivQgLx6JQu85QQekW719/X1PUXPI YQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78sa27p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 09:29:00 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3FF4110002A;
+        Wed, 15 Jan 2020 09:29:00 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2D13A210777;
+        Wed, 15 Jan 2020 09:29:00 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan 2020 09:28:59
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC:     <arnaud.pouliquen@st.com>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v3] rpmsg: core: add API to get MTU
+Date:   Wed, 15 Jan 2020 09:27:22 +0100
+Message-ID: <20200115082722.13102-1-arnaud.pouliquen@st.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115082447.19520-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsWy7bCmnq7GWbk4g3VLmCz+TjrGbtG8eD2b
-        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyYXm8x8fRvJost/46wWlx6/4HFgcvj969JjB47Z91l
-        99g/dw27x+6bDWwefVtWMXp83iTncWj7G7YA9qgcm4zUxJTUIoXUvOT8lMy8dFsl7+B453hT
-        MwNDXUNLC3MlhbzE3FRbJRefAF23zByg85QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqp
-        BSk5BYYGBXrFibnFpXnpesn5uVaGBgZGpkCVCTkZ+57pFnx1q5h0bxtrA+NUyy5GTg4JAROJ
-        3ttz2UBsIYEdjBJP7pZD2J8YJX4+04awvzFK9C0wgKn/+WE5SxcjF1B8L6PE0btPWOAatp+X
-        62Lk4GAT0Jb4s0UUJCwiYC+xefYBsHpmgYOMEm8uzGUHqREWMJT48EcTpIZFQFViy50lYDfw
-        CthIbL7axQqxS15i9YYDzCA2p4CtxJEtl9kh4gfYJBb/dgMZIyHgIjHxKS9EWFji1fEtUCVS
-        Ei/729ghSqolPu5nhgh3MEq8+G4LYRtL3Fy/gRWkhFlAU2L9Ln2IsKLEzt9zGUFsZgE+iXdf
-        e1ghpvBKdLQJQZSoSvRdOswEYUtLdLV/gFrqIbFz+WN2SHBMYJSY+DdwAqPcLIQFCxgZVzGK
-        pRYU56anFhsWmCBH1CZGcLLTstjBuOeczyFGAQ5GJR5ehTuycUKsiWXFlbmHGCU4mJVEeE/O
-        AArxpiRWVqUW5ccXleakFh9iNAWG4kRmKdHkfGAiziuJNzQ1MjY2tjAxMzczNVYS53VdIBcn
-        JJCeWJKanZpakFoE08fEwSnVwLi6u+2R57Og2X1Rl3u1y2SVsm8sdPpafvquNKN8aUbDgWKX
-        bg3ebbNiI/4fPllReoiraI7tnLTcyyfnnFA+eOrRvSjXwN7VB/hfuouxXrGOq7JjO2HPZK0S
-        1aK6cs6q5Zbhn68x/pGwf+C24mPnu/jghxMdFssuU/w6eeIlKY7v9wI5szh1U5VYijMSDbWY
-        i4oTAb21k6WMAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSnK76Wbk4gy2zJSz+TjrGbtG8eD2b
-        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyYXm8x8fRvJost/46wWlx6/4HFgcvj969JjB47Z91l
-        99g/dw27x+6bDWwefVtWMXp83iTncWj7G7YA9igum5TUnMyy1CJ9uwSujH3PdAu+ulVMureN
-        tYFxqmUXIyeHhICJxM8Py1lAbCGB3YwSTz5zQsSlJY6dOMPcxcgBZAtLHD5cDFHygVHi+u5U
-        kDCbgLbEny2iIGERAUeJ3l2HgaZwcTALnGaU6N74kAmkRljAUOLDH02QGhYBVYktd5awgdi8
-        AjYSm692sUJskpdYveEAM4jNKWArcWTLZXaIVTYS056cZJrAyLeAkWEVo2RqQXFuem6xYYFh
-        Xmq5XnFibnFpXrpecn7uJkZwcGpp7mC8vCT+EKMAB6MSD6/CHdk4IdbEsuLK3EOMEhzMSiK8
-        J2cAhXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamDUeB38
-        7Wf6/rRv7AtrRZacmXhQbv/NfV5zGH9MFr3W6X3MZOXBRWtq3swMbU5a3iFivZE/o9F32uX8
-        1rhZnxY/cnG4fCu2vUHm4Na8VcKTjzrxuJ3V7HMyn3mkq49p2Ra2Gs/6/k+nrDOXT4qZ1FRh
-        +iGQ+1lv+6u+V/X1041nTMlXmJT+yC5IiaU4I9FQi7moOBEAi0w6tUoCAAA=
-X-CMS-MailID: 20200115082823epcas1p27ec5ff6d384f148d826529f573173b04
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200115082823epcas1p27ec5ff6d384f148d826529f573173b04
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
-        <CGME20200115082823epcas1p27ec5ff6d384f148d826529f573173b04@epcas1p2.samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_06:2020-01-14,2020-01-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the implementation of exfat cache.
+Return the rpmsg buffer MTU for sending message, so rpmsg users
+can split a long message in several sub rpmsg buffers.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 ---
- fs/exfat/cache.c | 325 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 325 insertions(+)
- create mode 100644 fs/exfat/cache.c
+V2[1] to V3
+  - fix parameter description in rpmsg_device_ops struct
 
-diff --git a/fs/exfat/cache.c b/fs/exfat/cache.c
-new file mode 100644
-index 000000000000..03d0824fc368
---- /dev/null
-+++ b/fs/exfat/cache.c
-@@ -0,0 +1,325 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  linux/fs/fat/cache.c
+[1]: https://lore.kernel.org/patchwork/patch/1124684/
+---
+ drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+ drivers/rpmsg/rpmsg_internal.h   |  2 ++
+ drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+ include/linux/rpmsg.h            | 10 ++++++++++
+ 4 files changed, 43 insertions(+)
+
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index e330ec4dfc33..a6ef54c4779a 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ }
+ EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+ 
++/**
++ * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
++ * @ept: the rpmsg endpoint
 + *
-+ *  Written 1992,1993 by Werner Almesberger
++ * This function returns maximum buffer size available for a single message.
 + *
-+ *  Mar 1999. AV. Changed cache, so that it uses the starting cluster instead
-+ *	of inode number.
-+ *  May 1999. AV. Fixed the bogosity with FAT32 (read "FAT28"). Fscking lusers.
-+ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ * Return: the maximum transmission size on success and an appropriate error
++ * value on failure.
 + */
 +
-+#include <linux/slab.h>
-+#include <asm/unaligned.h>
-+#include <linux/buffer_head.h>
-+
-+#include "exfat_raw.h"
-+#include "exfat_fs.h"
-+
-+#define EXFAT_CACHE_VALID	0
-+#define EXFAT_MAX_CACHE		16
-+
-+struct exfat_cache {
-+	struct list_head cache_list;
-+	unsigned int nr_contig;	/* number of contiguous clusters */
-+	unsigned int fcluster;	/* cluster number in the file. */
-+	unsigned int dcluster;	/* cluster number on disk. */
-+};
-+
-+struct exfat_cache_id {
-+	unsigned int id;
-+	unsigned int nr_contig;
-+	unsigned int fcluster;
-+	unsigned int dcluster;
-+};
-+
-+static struct kmem_cache *exfat_cachep;
-+
-+static void exfat_cache_init_once(void *c)
++ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
 +{
-+	struct exfat_cache *cache = (struct exfat_cache *)c;
++	if (WARN_ON(!ept))
++		return -EINVAL;
++	if (!ept->ops->get_mtu)
++		return -ENOTSUPP;
 +
-+	INIT_LIST_HEAD(&cache->cache_list);
++	return ept->ops->get_mtu(ept);
++}
++EXPORT_SYMBOL(rpmsg_get_mtu);
++
+ /*
+  * match an rpmsg channel with a channel info struct.
+  * this is used to make sure we're not creating rpmsg devices for channels
+diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+index 3fc83cd50e98..e6f88ee90ff6 100644
+--- a/drivers/rpmsg/rpmsg_internal.h
++++ b/drivers/rpmsg/rpmsg_internal.h
+@@ -47,6 +47,7 @@ struct rpmsg_device_ops {
+  * @trysendto:		see @rpmsg_trysendto(), optional
+  * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+  * @poll:		see @rpmsg_poll(), optional
++ * @get_mtu:		see @rpmsg_get_mtu(), optional
+  *
+  * Indirection table for the operations that a rpmsg backend should implement.
+  * In addition to @destroy_ept, the backend must at least implement @send and
+@@ -66,6 +67,7 @@ struct rpmsg_endpoint_ops {
+ 			     void *data, int len);
+ 	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+ 			     poll_table *wait);
++	ssize_t (*get_mtu)(struct rpmsg_endpoint *ept);
+ };
+ 
+ int rpmsg_register_device(struct rpmsg_device *rpdev);
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 376ebbf880d6..6e48fdf24555 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -175,6 +175,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
+ 				  int len, u32 dst);
+ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+ 					   u32 dst, void *data, int len);
++static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+ 
+ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+ 	.destroy_ept = virtio_rpmsg_destroy_ept,
+@@ -184,6 +185,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+ 	.trysend = virtio_rpmsg_trysend,
+ 	.trysendto = virtio_rpmsg_trysendto,
+ 	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
++	.get_mtu = virtio_rpmsg_get_mtu,
+ };
+ 
+ /**
+@@ -699,6 +701,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+ 	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
+ }
+ 
++static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
++{
++	struct rpmsg_device *rpdev = ept->rpdev;
++	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
++
++	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
 +}
 +
-+int exfat_cache_init(void)
+ static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
+ 			     struct rpmsg_hdr *msg, unsigned int len)
+ {
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d1c018..88d7892ca93d 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+ __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+ 			poll_table *wait);
+ 
++ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
++
+ #else
+ 
+ static inline int register_rpmsg_device(struct rpmsg_device *dev)
+@@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+ 	return 0;
+ }
+ 
++static inline ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
 +{
-+	exfat_cachep = kmem_cache_create("exfat_cache",
-+				sizeof(struct exfat_cache),
-+				0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD,
-+				exfat_cache_init_once);
-+	if (!exfat_cachep)
-+		return -ENOMEM;
-+	return 0;
++	/* This shouldn't be possible */
++	WARN_ON(1);
++
++	return -ENXIO;
 +}
 +
-+void exfat_cache_shutdown(void)
-+{
-+	if (!exfat_cachep)
-+		return;
-+	kmem_cache_destroy(exfat_cachep);
-+}
-+
-+void exfat_cache_init_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	spin_lock_init(&ei->cache_lru_lock);
-+	ei->nr_caches = 0;
-+	ei->cache_valid_id = EXFAT_CACHE_VALID + 1;
-+	INIT_LIST_HEAD(&ei->cache_lru);
-+}
-+
-+static inline struct exfat_cache *exfat_cache_alloc(void)
-+{
-+	return kmem_cache_alloc(exfat_cachep, GFP_NOFS);
-+}
-+
-+static inline void exfat_cache_free(struct exfat_cache *cache)
-+{
-+	WARN_ON(!list_empty(&cache->cache_list));
-+	kmem_cache_free(exfat_cachep, cache);
-+}
-+
-+static inline void exfat_cache_update_lru(struct inode *inode,
-+		struct exfat_cache *cache)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	if (ei->cache_lru.next != &cache->cache_list)
-+		list_move(&cache->cache_list, &ei->cache_lru);
-+}
-+
-+static unsigned int exfat_cache_lookup(struct inode *inode,
-+		unsigned int fclus, struct exfat_cache_id *cid,
-+		unsigned int *cached_fclus, unsigned int *cached_dclus)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	static struct exfat_cache nohit = { .fcluster = 0, };
-+	struct exfat_cache *hit = &nohit, *p;
-+	unsigned int offset = EXFAT_EOF_CLUSTER;
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-+		/* Find the cache of "fclus" or nearest cache. */
-+		if (p->fcluster <= fclus && hit->fcluster < p->fcluster) {
-+			hit = p;
-+			if (hit->fcluster + hit->nr_contig < fclus) {
-+				offset = hit->nr_contig;
-+			} else {
-+				offset = fclus - hit->fcluster;
-+				break;
-+			}
-+		}
-+	}
-+	if (hit != &nohit) {
-+		exfat_cache_update_lru(inode, hit);
-+
-+		cid->id = ei->cache_valid_id;
-+		cid->nr_contig = hit->nr_contig;
-+		cid->fcluster = hit->fcluster;
-+		cid->dcluster = hit->dcluster;
-+		*cached_fclus = cid->fcluster + offset;
-+		*cached_dclus = cid->dcluster + offset;
-+	}
-+	spin_unlock(&ei->cache_lru_lock);
-+
-+	return offset;
-+}
-+
-+static struct exfat_cache *exfat_cache_merge(struct inode *inode,
-+		struct exfat_cache_id *new)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *p;
-+
-+	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-+		/* Find the same part as "new" in cluster-chain. */
-+		if (p->fcluster == new->fcluster) {
-+			if (new->nr_contig > p->nr_contig)
-+				p->nr_contig = new->nr_contig;
-+			return p;
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static void exfat_cache_add(struct inode *inode,
-+		struct exfat_cache_id *new)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *cache, *tmp;
-+
-+	if (new->fcluster == EXFAT_EOF_CLUSTER) /* dummy cache */
-+		return;
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	if (new->id != EXFAT_CACHE_VALID &&
-+	    new->id != ei->cache_valid_id)
-+		goto unlock;	/* this cache was invalidated */
-+
-+	cache = exfat_cache_merge(inode, new);
-+	if (cache == NULL) {
-+		if (ei->nr_caches < EXFAT_MAX_CACHE) {
-+			ei->nr_caches++;
-+			spin_unlock(&ei->cache_lru_lock);
-+
-+			tmp = exfat_cache_alloc();
-+			if (!tmp) {
-+				spin_lock(&ei->cache_lru_lock);
-+				ei->nr_caches--;
-+				spin_unlock(&ei->cache_lru_lock);
-+				return;
-+			}
-+
-+			spin_lock(&ei->cache_lru_lock);
-+			cache = exfat_cache_merge(inode, new);
-+			if (cache != NULL) {
-+				ei->nr_caches--;
-+				exfat_cache_free(tmp);
-+				goto out_update_lru;
-+			}
-+			cache = tmp;
-+		} else {
-+			struct list_head *p = ei->cache_lru.prev;
-+
-+			cache = list_entry(p,
-+					struct exfat_cache, cache_list);
-+		}
-+		cache->fcluster = new->fcluster;
-+		cache->dcluster = new->dcluster;
-+		cache->nr_contig = new->nr_contig;
-+	}
-+out_update_lru:
-+	exfat_cache_update_lru(inode, cache);
-+unlock:
-+	spin_unlock(&ei->cache_lru_lock);
-+}
-+
-+/*
-+ * Cache invalidation occurs rarely, thus the LRU chain is not updated. It
-+ * fixes itself after a while.
-+ */
-+static void __exfat_cache_inval_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache *cache;
-+
-+	while (!list_empty(&ei->cache_lru)) {
-+		cache = list_entry(ei->cache_lru.next,
-+				   struct exfat_cache, cache_list);
-+		list_del_init(&cache->cache_list);
-+		ei->nr_caches--;
-+		exfat_cache_free(cache);
-+	}
-+	/* Update. The copy of caches before this id is discarded. */
-+	ei->cache_valid_id++;
-+	if (ei->cache_valid_id == EXFAT_CACHE_VALID)
-+		ei->cache_valid_id++;
-+}
-+
-+void exfat_cache_inval_inode(struct inode *inode)
-+{
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+
-+	spin_lock(&ei->cache_lru_lock);
-+	__exfat_cache_inval_inode(inode);
-+	spin_unlock(&ei->cache_lru_lock);
-+}
-+
-+static inline int cache_contiguous(struct exfat_cache_id *cid,
-+		unsigned int dclus)
-+{
-+	cid->nr_contig++;
-+	return cid->dcluster + cid->nr_contig == dclus;
-+}
-+
-+static inline void cache_init(struct exfat_cache_id *cid,
-+		unsigned int fclus, unsigned int dclus)
-+{
-+	cid->id = EXFAT_CACHE_VALID;
-+	cid->fcluster = fclus;
-+	cid->dcluster = dclus;
-+	cid->nr_contig = 0;
-+}
-+
-+int exfat_get_cluster(struct inode *inode, unsigned int cluster,
-+		unsigned int *fclus, unsigned int *dclus,
-+		unsigned int *last_dclus, int allow_eof)
-+{
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	unsigned int limit = sbi->num_clusters;
-+	struct exfat_inode_info *ei = EXFAT_I(inode);
-+	struct exfat_cache_id cid;
-+	unsigned int content;
-+
-+	if (ei->start_clu == EXFAT_FREE_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to exfat cache (entry 0x%08x)",
-+			ei->start_clu);
-+		return -EIO;
-+	}
-+
-+	*fclus = 0;
-+	*dclus = ei->start_clu;
-+	*last_dclus = *dclus;
-+
-+	/*
-+	 * Don`t use exfat_cache if zero offset or non-cluster allocation
-+	 */
-+	if (cluster == 0 || *dclus == EXFAT_EOF_CLUSTER)
-+		return 0;
-+
-+	cache_init(&cid, EXFAT_EOF_CLUSTER, EXFAT_EOF_CLUSTER);
-+
-+	if (exfat_cache_lookup(inode, cluster, &cid, fclus, dclus) ==
-+			EXFAT_EOF_CLUSTER) {
-+		/*
-+		 * dummy, always not contiguous
-+		 * This is reinitialized by cache_init(), later.
-+		 */
-+		WARN_ON(cid.id != EXFAT_CACHE_VALID ||
-+			cid.fcluster != EXFAT_EOF_CLUSTER ||
-+			cid.dcluster != EXFAT_EOF_CLUSTER ||
-+			cid.nr_contig != 0);
-+	}
-+
-+	if (*fclus == cluster)
-+		return 0;
-+
-+	while (*fclus < cluster) {
-+		/* prevent the infinite loop of cluster chain */
-+		if (*fclus > limit) {
-+			exfat_fs_error(sb,
-+				"detected the cluster chain loop (i_pos %u)",
-+				(*fclus));
-+			return -EIO;
-+		}
-+
-+		if (exfat_ent_get(sb, *dclus, &content))
-+			return -EIO;
-+
-+		*last_dclus = *dclus;
-+		*dclus = content;
-+		(*fclus)++;
-+
-+		if (content == EXFAT_EOF_CLUSTER) {
-+			if (!allow_eof) {
-+				exfat_fs_error(sb,
-+				       "invalid cluster chain (i_pos %u, last_clus 0x%08x is EOF)",
-+				       *fclus, (*last_dclus));
-+				return -EIO;
-+			}
-+
-+			break;
-+		}
-+
-+		if (!cache_contiguous(&cid, *dclus))
-+			cache_init(&cid, *fclus, *dclus);
-+	}
-+
-+	exfat_cache_add(inode, &cid);
-+	return 0;
-+}
+ #endif /* IS_ENABLED(CONFIG_RPMSG) */
+ 
+ /* use a macro to avoid include chaining to get THIS_MODULE */
 -- 
 2.17.1
 
