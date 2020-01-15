@@ -2,147 +2,211 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C3DC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BC3C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD3F2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:15:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sLJnaZh+"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8132187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgAOSPG (ORCPT
+        id S1729253AbgAOSPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:15:06 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47868 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729011AbgAOSPF (ORCPT
+        Wed, 15 Jan 2020 13:15:40 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:36722 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729191AbgAOSPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:15:05 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FID4P1074941;
-        Wed, 15 Jan 2020 18:14:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=yFUfzyH2YoDWvOLB9nWPhKlDX/Fse9xv2kghokm2tN8=;
- b=sLJnaZh+TOmqzsWppei+lP7DoO8FZ5/i8yXdmno25Nh6nbAM5+bbcJJIrrELK4isDnbQ
- Dnc/DjN0BqcEVQV3OBy87C+MdPsQLIngCUVjDL9xtqk1W2pHhA90TmXPIcAjMmMyqwGf
- yTiwKRQfvWH+NEGKRRx74AhnLVKNMIJmy1hHlMz5RymgX6UnVh6pSjKn0xt+FA/dZpXZ
- nCf7CfSA0y3KTDgowCe5HGRCOYCeQDdXrDmd8estJT8LpWp2bIuxe5nv+B1nD+6MPNIl
- 4uLeXYHI7f59uEIuN19G54tygBf7/uloxqHzRfw2bJz3Ays5kJ1k4TwK/+KBieHFtAHV MA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xf73twrnc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:14:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIETd3162262;
-        Wed, 15 Jan 2020 18:14:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xj61k6gt9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:14:42 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FIEe2X008926;
-        Wed, 15 Jan 2020 18:14:40 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 10:14:39 -0800
-Date:   Wed, 15 Jan 2020 21:15:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sean Young <sean@mess.org>
-Cc:     Phong Tran <tranmanphong@gmail.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de,
-        syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        glider@google.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] media: dvb: check return value digitv_ctrl_msg
-Message-ID: <20200115181315.GG9562@kadam>
-References: <0000000000004f3d820596d8c51c@google.com>
- <20191203004138.21223-1-tranmanphong@gmail.com>
- <20200115173226.GA24471@gofer.mess.org>
- <20200115180116.GA21151@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115180116.GA21151@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150140
+        Wed, 15 Jan 2020 13:15:39 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id qiFR2100G5USYZQ01iFRFR; Wed, 15 Jan 2020 19:15:37 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1irnCP-00012V-EX; Wed, 15 Jan 2020 19:15:25 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1irnCP-00068y-Bs; Wed, 15 Jan 2020 19:15:25 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 0/5] gpio: Add GPIO Aggregator
+Date:   Wed, 15 Jan 2020 19:15:18 +0100
+Message-Id: <20200115181523.23556-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:01:17PM +0300, Dan Carpenter wrote:
-> On Wed, Jan 15, 2020 at 05:32:26PM +0000, Sean Young wrote:
-> > Hello,
-> > 
-> > On Tue, Dec 03, 2019 at 07:41:38AM +0700, Phong Tran wrote:
-> > > For fixing syzbot "KMSAN: uninit-value in digitv_rc_query"
-> > > 
-> > > In scenario testing for syzbot, failure reading from
-> > > digitv_ctrl_msg() [1].
-> > > 
-> > > Eg:
-> > > [   91.846657][ T3844] dvb-usb: bulk message failed: -22 (7/0)
-> > > 
-> > > digitv_rc_query() always return 0. But in this case a wrong thing happens.
-> > > 
-> > > Reported-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-> > > Tested-by: syzbot+6bf9606ee955b646c0e1@syzkaller.appspotmail.com
-> > 
-> > A fix for this was already merged I'm afraid, see commit eecc70d22ae5
-> > ("media: digitv: don't continue if remote control state can't be read").
-> > 
-> > > [1]: https://syzkaller.appspot.com/text?tag=CrashLog&x=16860a63600000
-> > > [2]: https://groups.google.com/d/msg/syzkaller-bugs/-TXIJAZ0J9Q/T4PEUQoeAQAJ
-> > > 
-> > > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> > > ---
-> > >  drivers/media/usb/dvb-usb/digitv.c | 12 ++++++++----
-> > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/usb/dvb-usb/digitv.c b/drivers/media/usb/dvb-usb/digitv.c
-> > > index dd5bb230cec1..61bc8945e6b9 100644
-> > > --- a/drivers/media/usb/dvb-usb/digitv.c
-> > > +++ b/drivers/media/usb/dvb-usb/digitv.c
-> > > @@ -231,17 +231,21 @@ static struct rc_map_table rc_map_digitv_table[] = {
-> > >  static int digitv_rc_query(struct dvb_usb_device *d, u32 *event, int *state)
-> > >  {
-> > >  	int i;
-> > > -	u8 key[5];
-> > > +	u8 key[5] = { 0 };
-> > 
-> > The merged commit does not change this line. Why was this changed?
-> > 
-> 
-> It would fix the problem that key[0] is never initialized...  But the
-> correct fix is to make key 4 elements long and delete key[0].
+	Hi all,
 
-Phong,
+GPIO controllers are exported to userspace using /dev/gpiochip*
+character devices.  Access control to these devices is provided by
+standard UNIX file system permissions, on an all-or-nothing basis:
+either a GPIO controller is accessible for a user, or it is not.
+Currently no mechanism exists to control access to individual GPIOs.
 
-Presumably you can fix this?  You will have to renumber key[1] to
-key[0] and key[2] to key[1] etc...  Add a fixes tag.
+Hence this adds a GPIO driver to aggregate existing GPIOs, and expose
+them as a new gpiochip.  This is useful for implementing access control,
+and assigning a set of GPIOs to a specific user.  Furthermore, this
+simplifies and hardens exporting GPIOs to a virtual machine, as the VM
+can just grab the full GPIO controller, and no longer needs to care
+about which GPIOs to grab and which not, reducing the attack surface.
 
-Fixes: 774c0de4aed4 ("V4L/DVB (4616): [PATCH] Nebula DigiTV USB RC support")
+Recently, other use cases have been discovered[1]:
+  - Describing simple GPIO-operated devices in DT, and using the GPIO
+    Aggregator as a generic GPIO driver for userspace, which is useful
+    for industrial control.
 
-Otherwise if you want I can send the patch.
+Changes compared to v3[2] (more details in the individual patches):
+  - Drop controversial GPIO repeater,
+  - Drop support for legacy sysfs interface based name matching,
+  - Drop applied "gpiolib: Add GPIOCHIP_NAME definition",
+  - Documentation improvements,
+  - Lots of small cleanups.
 
-regards,
-dan carpenter
+Changes compared to v2[3] (more details in the individual patches):
+  - Integrate GPIO Repeater functionality,
+  - Absorb GPIO forwarder library, as the Aggregator and Repeater are
+    now a single driver,
+  - Use the aggregator parameters to create a GPIO lookup table instead
+    of an array of GPIO descriptors,
+  - Add documentation,
+  - New patches:
+      - "gpiolib: Add GPIOCHIP_NAME definition",
+      - "gpiolib: Add support for gpiochipN-based table lookup",
+      - "gpiolib: Add support for GPIO line table lookup",
+      - "dt-bindings: gpio: Add gpio-repeater bindings",
+      - "docs: gpio: Add GPIO Aggregator/Repeater documentation",
+      - "MAINTAINERS: Add GPIO Aggregator/Repeater section".
+  - Dropped patches:
+      - "gpio: Export gpiod_{request,free}() to modular GPIO code",
+      - "gpio: Export gpiochip_get_desc() to modular GPIO code",
+      - "gpio: Export gpio_name_to_desc() to modular GPIO code",
+      - "gpio: Add GPIO Forwarder Helper".
 
+Changes compared to v1[4]:
+  - Drop "virtual", rename to gpio-aggregator,
+  - Create and use new GPIO Forwarder Helper, to allow sharing code with
+    the GPIO inverter,
+  - Lift limit on the maximum number of GPIOs,
+  - Improve parsing of GPIO specifiers,
+  - Fix modular build.
+
+Aggregating GPIOs and exposing them as a new gpiochip was suggested in
+response to my proof-of-concept for GPIO virtualization with QEMU[5][6].
+
+For the first use case, aggregated GPIO controllers are instantiated and
+destroyed by writing to atribute files in sysfs.
+Sample session on the Renesas Koelsch development board:
+
+  - Unbind LEDs from leds-gpio driver:
+
+        echo leds > /sys/bus/platform/drivers/leds-gpio/unbind
+
+  - Create aggregators:
+
+    $ echo e6052000.gpio 19,20 \
+        > /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator gpio-aggregator.0: gpio 0 => gpio-953 (gpio-aggregator.0)
+    gpio-aggregator gpio-aggregator.0: gpio 1 => gpio-954 (gpio-aggregator.0)
+    gpiochip_find_base: found new base at 778
+    gpio gpiochip8: (gpio-aggregator.0): added GPIO chardev (254:8)
+    gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-aggregator.0)
+
+    $ echo e6052000.gpio 21 e6050000.gpio 20-22 \
+        > /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator gpio-aggregator.1: gpio 0 => gpio-955 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 1 => gpio-1012 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 2 => gpio-1013 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 3 => gpio-1014 (gpio-aggregator.1)
+    gpiochip_find_base: found new base at 774
+    gpio gpiochip9: (gpio-aggregator.1): added GPIO chardev (254:9)
+    gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-aggregator.1)
+
+  - Adjust permissions on /dev/gpiochip[89] (optional)
+
+  - Control LEDs:
+
+    $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
+    $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
+    $ gpioset gpiochip9 0=0     # LED8 OFF
+    $ gpioset gpiochip9 0=1     # LED8 ON
+
+  - Destroy aggregators:
+
+    $ echo gpio-aggregator.0 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+    $ echo gpio-aggregator.1 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+
+Thanks!
+
+References:
+  [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+      (https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/)
+  [2] "[PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater"
+      (https://lore.kernel.org/lkml/20191127084253.16356-1-geert+renesas@glider.be/)
+  [3] "[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver"
+      (https://lore.kernel.org/linux-gpio/20190911143858.13024-1-geert+renesas@glider.be/)
+  [4] "[PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver"
+      (https://lore.kernel.org/lkml/20190705160536.12047-1-geert+renesas@glider.be/)
+  [5] "[PATCH QEMU POC] Add a GPIO backend"
+      (https://lore.kernel.org/linux-renesas-soc/20181003152521.23144-1-geert+renesas@glider.be/)
+  [6] "Getting To Blinky: Virt Edition / Making device pass-through
+       work on embedded ARM"
+      (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
+
+Geert Uytterhoeven (5):
+  gpiolib: Add support for gpiochipN-based table lookup
+  gpiolib: Add support for GPIO line table lookup
+  gpio: Add GPIO Aggregator
+  docs: gpio: Add GPIO Aggregator documentation
+  MAINTAINERS: Add GPIO Aggregator section
+
+ .../admin-guide/gpio/gpio-aggregator.rst      | 102 ++++
+ Documentation/admin-guide/gpio/index.rst      |   1 +
+ MAINTAINERS                                   |   7 +
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-aggregator.c                | 574 ++++++++++++++++++
+ drivers/gpio/gpiolib.c                        |  33 +-
+ include/linux/gpio/machine.h                  |  15 +-
+ 8 files changed, 732 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+ create mode 100644 drivers/gpio/gpio-aggregator.c
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
