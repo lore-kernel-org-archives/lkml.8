@@ -2,261 +2,131 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8EEC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC48C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0649D2081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EC1222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579121542;
+	bh=YAMT4GqllrslSkD9BR0wa3v1n8fnVFdaxgMWcQCGiFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UXMWvTegaK+94wpMo+M4UIM91QKl8fAfWNAelbCPAIZp41pC3Ghs0IbYrGcQ8ZsmH
+	 1otLDQDoJrvsRJvqnWI/7XfZIQmXFnzGxdspI536WISKlTF7kzo4SqroRDqRWptURB
+	 uV0Q1zGjG8Lv3gUiisPRpxvkiniXm41SII6m9VRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbgAOUvO (ORCPT
+        id S1729736AbgAOUwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:51:14 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:48082 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729134AbgAOUvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:51:14 -0500
-Received: by mail-io1-f72.google.com with SMTP id 13so11183469iof.14
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:51:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vEE2HyKhkVDNRXNOyE1vYA/8ZWUBKHgQTg5sSl3HwOA=;
-        b=MiNGYNBhNo5ebJrE3H3oHEgFZSd22ee/vXNSnTG9CTBUM8yEc0hO+fUxMJp7vVSK5w
-         bgcsqARIXr+cdPRq8aG10t7DZxNjzmpWQUGaijjCTb9bHzUKrr8ukczO/k+NFhRjKaDQ
-         u7dN3G6z9Eh9pgbiEkhSBEA5CDWA7xu1wWiV7ZJc5+CzYYDpVg3hFGsE+FJevr6pl4ue
-         gN/9T1nyoubtDNmvr8/FjJtWLI5gw/dMf0Dn0bpAn2Jjf+UKJ/RHHVwq9HNGntUbh5O2
-         sO8/rklfBhBld4H06/pBU9+pBjh093WFdERLNRbVdDDHT33gIydpjZeWkr6PsGOoz+wk
-         qYEg==
-X-Gm-Message-State: APjAAAWj32FmZ159pHOgb4SJu65DMA6Y4r3AQpp8lsp7WWQsCrY8uSwM
-        rLjDPIQXqege7OZMIjyPf7lxDEfIGJ6QvQq/xbIR23OhHkz0
-X-Google-Smtp-Source: APXvYqyQ3dTy3XEsffyTige13zIps6556crkEDYAvQ7cUxRv5OyBAXcHY6np7Du0sw+l7RfoimBiQA2WVvhpVavVILq6U7z9PYdF
+        Wed, 15 Jan 2020 15:52:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728596AbgAOUwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:52:21 -0500
+Received: from earth.universe (dyndsl-095-033-170-011.ewe-ip-backbone.de [95.33.170.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C1AE2077B;
+        Wed, 15 Jan 2020 20:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579121540;
+        bh=YAMT4GqllrslSkD9BR0wa3v1n8fnVFdaxgMWcQCGiFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KR2jHDWtMzKMC7+luRtgc6uzI7E6RL2RYXkwvgtrQ/OrPejSuosrT52kbz/rj3h7x
+         H9tGv4hgT3iLXADTCVU2fbGkm4lfGc7FrLM7D2TM9dT8btIuWYCs5MAzLvx99Ddg0N
+         MfRSPDhyfWchBxm2p04Pi62WjWw3G2SuLTo4yUw8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 8BE583C0C7C; Wed, 15 Jan 2020 21:52:18 +0100 (CET)
+Date:   Wed, 15 Jan 2020 21:52:18 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Claudiu.Beznea@microchip.com
+Cc:     Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] at91-sama5d2_shdwc shutdown controller
+Message-ID: <20200115205218.wudf5dai2sj6pvvk@earth.universe>
+References: <1576855878-13213-1-git-send-email-claudiu.beznea@microchip.com>
+ <3d0c5a04-25fb-5ae6-fd3a-4049e293eab1@microchip.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b297:: with SMTP id b145mr24413785iof.19.1579121472791;
- Wed, 15 Jan 2020 12:51:12 -0800 (PST)
-Date:   Wed, 15 Jan 2020 12:51:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007178ef059c33de66@google.com>
-Subject: INFO: task hung in ovs_vport_cmd_del
-From:   syzbot <syzbot+d6f697f97a60a6430fa7@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yd3evbzfobjk36fk"
+Content-Disposition: inline
+In-Reply-To: <3d0c5a04-25fb-5ae6-fd3a-4049e293eab1@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--yd3evbzfobjk36fk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    555089fd bpftool: Fix printing incorrect pointer in btf_du..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1790e421e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=609c965f105b4789
-dashboard link: https://syzkaller.appspot.com/bug?extid=d6f697f97a60a6430fa7
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Hi
 
-Unfortunately, I don't have any reproducer for this crash yet.
+It wasn't lost, I just did not yet collect patches for the next
+merge window. I queued the complete patchset to my for-next branch
+now.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d6f697f97a60a6430fa7@syzkaller.appspotmail.com
+-- Sebastian
 
-INFO: task syz-executor.0:1552 blocked for more than 143 seconds.
-       Not tainted 5.5.0-rc4-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D27912  1552   9613 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  ovs_lock net/openvswitch/datapath.c:105 [inline]
-  ovs_vport_cmd_del+0x77/0x770 net/openvswitch/datapath.c:2227
-  genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
-  genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
-  genl_rcv_msg+0x67d/0xea0 net/netlink/genetlink.c:734
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45af49
-Code: e8 3c 1f 00 00 eb aa cc cc cc cc cc cc cc cc cc cc 64 48 8b 0c 25 f8  
-ff ff ff 48 3b 61 10 76 40 48 83 ec 28 48 89 6c 24 20 48 <8d> 6c 24 20 48  
-8b 42 10 48 8b 4a 18 48 8b 52 08 48 89 14 24 48 89
-RSP: 002b:00007fbec8448c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbec84496d4
-R13: 00000000004ca99c R14: 00000000004e3e08 R15: 00000000ffffffff
-INFO: task syz-executor.0:1554 blocked for more than 143 seconds.
-       Not tainted 5.5.0-rc4-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D27912  1554   9613 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  ovs_lock net/openvswitch/datapath.c:105 [inline]
-  ovs_vport_cmd_del+0x77/0x770 net/openvswitch/datapath.c:2227
-  genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
-  genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
-  genl_rcv_msg+0x67d/0xea0 net/netlink/genetlink.c:734
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45af49
-Code: e8 3c 1f 00 00 eb aa cc cc cc cc cc cc cc cc cc cc 64 48 8b 0c 25 f8  
-ff ff ff 48 3b 61 10 76 40 48 83 ec 28 48 89 6c 24 20 48 <8d> 6c 24 20 48  
-8b 42 10 48 8b 4a 18 48 8b 52 08 48 89 14 24 48 89
-RSP: 002b:00007fbec8427c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbec84286d4
-R13: 00000000004ca99c R14: 00000000004e3e08 R15: 00000000ffffffff
+On Tue, Jan 14, 2020 at 10:34:55AM +0000, Claudiu.Beznea@microchip.com wrot=
+e:
+> Hi Sebastian,
+>=20
+> I know you may busy, I just want to be sure that you didn't forgot this s=
+eries.
+>=20
+> Thank you,
+> Claudiu Beznea
+>=20
+> On 20.12.2019 17:31, Claudiu Beznea wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
+the content is safe
+> >=20
+> > PMC master clock register offset is different b/w sam9x60 and
+> > other SoCs. Since there is a need of this register offset in
+> > shutdown procedure we need to have it per SoC. This is what
+> > this series does.
+> >=20
+> > Changes in v2:
+> > - do not use r5 as intermediary registers in at91_poweroff
+> >=20
+> > Claudiu Beznea (2):
+> >   power: reset: at91-poweroff: introduce struct shdwc_reg_config
+> >   power: reset: at91-poweroff: use proper master clock register offset
+> >=20
+> >  drivers/power/reset/at91-sama5d2_shdwc.c | 72 +++++++++++++++++++++---=
+--------
+> >  1 file changed, 47 insertions(+), 25 deletions(-)
+> >=20
+> > --
+> > 2.7.4
+> >=20
+> >=20
 
-Showing all locks held in the system:
-4 locks held by kworker/u4:2/90:
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at: __write_once_size  
-include/linux/compiler.h:226 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at: arch_atomic64_set  
-arch/x86/include/asm/atomic64_64.h:34 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at: atomic64_set  
-include/asm-generic/atomic-instrumented.h:855 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at: atomic_long_set  
-include/asm-generic/atomic-long.h:40 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at: set_work_data  
-kernel/workqueue.c:615 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at:  
-set_work_pool_and_clear_pending kernel/workqueue.c:642 [inline]
-  #0: ffff88821b78e528 ((wq_completion)netns){+.+.}, at:  
-process_one_work+0x88b/0x1740 kernel/workqueue.c:2235
-  #1: ffffc900011a7dc0 (net_cleanup_work){+.+.}, at:  
-process_one_work+0x8c1/0x1740 kernel/workqueue.c:2239
-  #2: ffffffff8a4c5ec8 (pernet_ops_rwsem){++++}, at: cleanup_net+0xae/0xaf0  
-net/core/net_namespace.c:559
-  #3: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_lock  
-net/openvswitch/datapath.c:105 [inline]
-  #3: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_exit_net+0x201/0xc30  
-net/openvswitch/datapath.c:2469
-1 lock held by khungtaskd/1124:
-  #0: ffffffff899a3f80 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
-2 locks held by getty/9573:
-  #0: ffff888093ade090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017fb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9574:
-  #0: ffff8880a9abd090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000179b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9575:
-  #0: ffff888096c78090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000182b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9576:
-  #0: ffff8880938eb090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000183b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9577:
-  #0: ffff88809871e090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000180b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9578:
-  #0: ffff888096c77090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000181b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9579:
-  #0: ffff8882156e7090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900011342e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by syz-executor.0/1552:
-  #0: ffffffff8a524008 (cb_lock){++++}, at: genl_rcv+0x1a/0x40  
-net/netlink/genetlink.c:744
-  #1: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_lock  
-net/openvswitch/datapath.c:105 [inline]
-  #1: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_vport_cmd_del+0x77/0x770  
-net/openvswitch/datapath.c:2227
-2 locks held by syz-executor.0/1554:
-  #0: ffffffff8a524008 (cb_lock){++++}, at: genl_rcv+0x1a/0x40  
-net/netlink/genetlink.c:744
-  #1: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_lock  
-net/openvswitch/datapath.c:105 [inline]
-  #1: ffffffff8a72d420 (ovs_mutex){+.+.}, at: ovs_vport_cmd_del+0x77/0x770  
-net/openvswitch/datapath.c:2227
+--yd3evbzfobjk36fk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-=============================================
+-----BEGIN PGP SIGNATURE-----
 
-NMI backtrace for cpu 0
-CPU: 0 PID: 1124 Comm: khungtaskd Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1 skipped: idling at native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4fe4IACgkQ2O7X88g7
++pop7w//bJTENOImq1Uw2WD17tRxI1UogZR6C7G3iQuBCimiyvw+QTNFwOzSmIkp
+P6zhrTeWBvyfYHWOFGynGfA99ISNYf8Ok3mFxLI7ov44JIHJkSoHOcIW6OFjloDz
+0G9Udiz88HCZ11gPIidfmhCdS5dLXmic0XCC/C1wiaVs1taJ358wQMStq5c4S7CE
+7E+sM/TUvC4/Zx9g3zrW/bitFaqbWVPk80V3odBhl9FFh8i640xbiU+U8uQ/Leak
++J6K/BqO1uI2CVwU9d+NaADCUjSzQJelWM06PG21OkaFq8VFeFiRyxOtvStmQpDd
+BXByY4HxHPlGdvhVwSE1+VBSxK+r+NbN3MESBK4rE9jisfPvxvWK8osx8jmoivDM
+2VAHluRnUI4OS5Ab/HyxwcecX8tczdrTkmgCvK+EYthhqHZx5GPAKz2k4/qKq6Jo
+6+SLbKg2l2tT7vxR+dGLRD4uie8QtQvxHwIReCT1oLXB3qDoWMRc7iqfx5TOQpm6
+hYDjshmM2FhqU9+zJpxwXUC1KZUkiccvRpAPPfCyGN9vOEeaD2PLRRTGFrKBGTOd
+sA0uh55hfIlwWVh/qNBL6CQs58VeHUgznbDX1C8B9zX3QGmEX0grP7n/Z933d8ZC
+o/glSnVJ/+r0L0goB5p+J1PEv7WLs6jbplZXlngyP12Dg4+KZGw=
+=F7P+
+-----END PGP SIGNATURE-----
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--yd3evbzfobjk36fk--
