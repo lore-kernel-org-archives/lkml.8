@@ -2,109 +2,105 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA90FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00031C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC22D22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auOyDPgV"
+	by mail.kernel.org (Postfix) with ESMTP id C1F5A22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579092136;
+	bh=nSCqvKODAoL0joKlazTXynwBxMDxfJl7wyUtw2MF4Uw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=isde2PUIf2SjNW0yuLhnvZu+BuCXmoYr0QBHQ1vJwagvA01oD0FYDLnKO32gyPmm5
+	 NNT1yIdc5zmoAnlxZ70W+3OLHlg9fdWc06Ayo/X0Go4Z4CDJ6vSgdlFZ0FqspcEd2h
+	 RlFzHQ6PuxZyaKjSnBrrq0bsKJtpCFF6QSNloVCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgAOMmJ (ORCPT
+        id S1729080AbgAOMmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:42:09 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39977 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgAOMmJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:42:09 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s21so6806395plr.7;
-        Wed, 15 Jan 2020 04:42:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=S3wXxo3Bh9oayGWM8jZCD/Gnpt0hNiPJrwn1QYGnm2M=;
-        b=auOyDPgVe8RTFRbA5W4EWOXH32dZQVkLy+zdkE2NamNJ/gwg8H60PNu7Lv559iQMy8
-         +Uf1+gYH+3O1bRayk3SvFe+zasRl5E+RgFunTFI3s7zr7bU7UuUa1QBxGBGG0LzjsDze
-         bQi12uwfRkAMQ5ouovUAbj1CdKvwlrV11g8viM4XpvGwjw2uUTQyDBK5JpP66aykCgEz
-         vY4fGSxWClC5AyfgITKjn2lhV5F/HnF4oPzRneGRvIa3bOxw9iqRyEE2i+Uo3Kw/jc2L
-         Y+091uGOMmax/zqpjYMMcGDh7guRcl1dBh8eCVyHEDYj1tDqyt/XpXF5PcMLIDmaHqeV
-         6Ijg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S3wXxo3Bh9oayGWM8jZCD/Gnpt0hNiPJrwn1QYGnm2M=;
-        b=eKYFOa5Difh9Yh9R3Y+jSTyOD29VUmaVGTMQ4zKH0AabHevzPixaWMNLHOmFl2wzZu
-         /x/Chy8EiaZkkoYHEgXKJ8iVWF4bSIiZe4u/KWyHPN+goMXnq+OHAG8pZF38rfCQFjrb
-         o48VmKalx83eO1E022+2Rih2HLlhkM3z7s0AfFP9Y3z49O/v34kPCVlY1O4WNMvdTK5r
-         GUI35HeH6DY31cP1GYNG3jDAt+nEPhzwIhbN5nnE3qdzYwR5xGAFO1NuxEo6FGca0E8e
-         YtnC8iJUc5gd/DdvjJXbqvsmz9MlpLMeFzHcARFvOOc7ww5JyHN8DXQ4acmdgXnSqXBx
-         sCnw==
-X-Gm-Message-State: APjAAAVSdZb2Dyw8SK4OLqdPS9DdnORovjxQ8hdfUpKUtiBz+2ij22RA
-        Q5HLTqseG8Qicv9ZQeo4xr8=
-X-Google-Smtp-Source: APXvYqzyYSD1kqH06PWZT5j+hjPxOJVeYfDpiBoVq5NBAlR42H2eqCY0MexVhcMO00FKLXtnuMtjCw==
-X-Received: by 2002:a17:902:bd08:: with SMTP id p8mr31051161pls.39.1579092128653;
-        Wed, 15 Jan 2020 04:42:08 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee2:fbb9:75ba:e01f:bdbc:c547])
-        by smtp.gmail.com with ESMTPSA id y23sm12638990pjj.3.2020.01.15.04.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 04:42:08 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     wei.liu@kernel.org, paul@xen.org, davem@davemloft.net
-Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paulmck@kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] net: xen-netbank: hash.c: Use built-in RCU list checking
-Date:   Wed, 15 Jan 2020 18:11:28 +0530
-Message-Id: <20200115124129.5684-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jan 2020 07:42:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgAOMmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:42:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D5F22522;
+        Wed, 15 Jan 2020 12:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579092133;
+        bh=nSCqvKODAoL0joKlazTXynwBxMDxfJl7wyUtw2MF4Uw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KjuBOnTNvH+42s0Re5I/lqzWJeCybk8Hvm0vqAsrClq3TeGojXX8g8bSAiD/mF/jL
+         Xlb0Jw+h2ug9g8theJAoWLXVcQ+EvDQXjcJWSPtj0XgJPmw1TA5wUb6mG+kbAgap0Y
+         s5DHa8i6hMFZ4l7wzb1QBAzxo+q7UpP2RnUtCR4k=
+Date:   Wed, 15 Jan 2020 13:42:10 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH-next 3/3] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+Message-ID: <20200115124210.GA3486045@kroah.com>
+References: <20200109215444.95995-1-dima@arista.com>
+ <20200109215444.95995-4-dima@arista.com>
+ <20200110164643.GB1822445@kroah.com>
+ <a6a3ee46-9537-c287-b366-797c787c28b6@arista.com>
+ <41435a7b-48a2-438c-998a-14481fbc3a1a@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41435a7b-48a2-438c-998a-14481fbc3a1a@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Tue, Jan 14, 2020 at 07:10:47PM +0000, Dmitry Safonov wrote:
+> On 1/10/20 10:32 PM, Dmitry Safonov wrote:
+> > On 1/10/20 4:46 PM, Greg Kroah-Hartman wrote:
+> > [..]
+> >>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> >>> index 6ac9dfed3423..f70eba032d0b 100644
+> >>> --- a/drivers/tty/serial/serial_core.c
+> >>> +++ b/drivers/tty/serial/serial_core.c
+> >>> @@ -3081,6 +3081,38 @@ void uart_insert_char(struct uart_port *port, unsigned int status,
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(uart_insert_char);
+> >>>  
+> >>> +const char sysrq_toggle_seq[] = CONFIG_MAGIC_SYSRQ_SERIAL_SEQUENCE;
+> >>> +
+> >>> +static void uart_sysrq_on(struct work_struct *w)
+> >>> +{
+> >>> +	sysrq_toggle_support(1);
+> >>> +	pr_info("SysRq is enabled by magic sequience on serial\n");
+> >>
+> >> Do we want to say what serial port it is enabled on?
+> > 
+> > Makes sense, will add.
+> 
+> Ah, I've managed to forget to mention that I didn't add the port name
+> into the message in v2. I experimented a bit - it's getting a bit
+> complicated how-to protect (char *name) for just this message.
+> Like, SysRq can be theoretically enabled on two serials at the same
+> moment - so some locking is needed to make the printed name sane.
+> 
+> As sysrq_toggle_support() is a global-enable knob for sysrq (also can be
+> switched in /proc/sys/kernel/sysrq) I'm not sure if it's worth to
+> complicate code to print through which serial console SysRq has been
+> enabled.
+> 
+> I can still do it in v3 if you insist.
 
-list_for_each_entry_rcu has built-in RCU and lock checking.
-Pass cond argument to list_for_each_entry_rcu.
+No worries, if it's too hard to get to, that's fine.  If it was
+available, it would have been nice to have.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/net/xen-netback/hash.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+thanks,
 
-diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
-index 10d580c3dea3..30709bc9d170 100644
---- a/drivers/net/xen-netback/hash.c
-+++ b/drivers/net/xen-netback/hash.c
-@@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
- 
- 	found = false;
- 	oldest = NULL;
--	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
-+	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
-+							lockdep_is_held(&vif->hash.cache.lock)) {
- 		/* Make sure we don't add duplicate entries */
- 		if (entry->len == len &&
- 		    memcmp(entry->tag, tag, len) == 0)
-@@ -102,7 +103,8 @@ static void xenvif_flush_hash(struct xenvif *vif)
- 
- 	spin_lock_irqsave(&vif->hash.cache.lock, flags);
- 
--	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
-+	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
-+							lockdep_is_held(&vif->hash.cache.lock)) {
- 		list_del_rcu(&entry->link);
- 		vif->hash.cache.count--;
- 		kfree_rcu(entry, rcu);
--- 
-2.17.1
-
+greg k-h
