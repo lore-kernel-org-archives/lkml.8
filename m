@@ -2,96 +2,166 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38786C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A12C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BAF24683
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E300F2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNmywsPb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Zni2LUe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgAOVPZ (ORCPT
+        id S1729842AbgAOVQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:15:25 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40510 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729605AbgAOVPY (ORCPT
+        Wed, 15 Jan 2020 16:16:11 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:59982 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729134AbgAOVQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:15:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579122923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Wed, 15 Jan 2020 16:16:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1579122967; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=muxxPebkhn0816OH3sFQELSDbHRR8DpTYRznlvVGJa4=;
-        b=VNmywsPbgevR9vgB36yWIw5kDP6PA+6T8OZGrDDmBeHDkvRsGDX9q8CG7mKzshZccpeEnN
-        V5m02vJ+eKhYw9uH/GA6TlIS9b/q+UBR9+jJ3Tawxsg+66XrwqxcGRQ2i88qWTub4lcZUg
-        0dl/wxXCfEeLt72l4UYfn8Nwdapv+mc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-7a51uNlGMiaVLisYQv0icw-1; Wed, 15 Jan 2020 16:15:19 -0500
-X-MC-Unique: 7a51uNlGMiaVLisYQv0icw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDB941005502;
-        Wed, 15 Jan 2020 21:15:17 +0000 (UTC)
-Received: from treble (ovpn-121-224.rdu2.redhat.com [10.10.121.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D31AD60BE0;
-        Wed, 15 Jan 2020 21:15:15 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 15:15:13 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] x86/cpu: Update cached HLE state on write to
- TSX_CTRL_CPUID_CLEAR
-Message-ID: <20200115211513.mxzembrm4hf44d6j@treble>
-References: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
+        bh=jKAektEMk3dDvQFgHsowwSKIu5ew5qUHWRblTQXzHFw=;
+        b=Zni2LUe8aCzgd+JjU/p68g5Vnt8ezP3ky8vYPVLMTdje6sEpYv118/+EzsMcBHF+3x09PG
+        AQoYRruV4gmCmlEBP4vEdNaRoIv030EFNfnDuKSegIPBUgOVdxx4nIsV8s/WXj+mMZGKhq
+        GZwqCMna33m+D4kXeSOoMm5VX3LSsV4=
+Date:   Wed, 15 Jan 2020 18:15:51 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 3/5] remoteproc: Add prepare/unprepare callbacks
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1579122951.3.2@crapouillou.net>
+In-Reply-To: <20191221202039.GG549437@yoga>
+References: <20191210164014.50739-1-paul@crapouillou.net>
+        <20191210164014.50739-3-paul@crapouillou.net> <20191221202039.GG549437@yoga>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:50:54PM -0800, Pawan Gupta wrote:
-> /proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-> be present on boot cpu even if it was disabled during the bootup. This
-> is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-> state is changed via a new MSR IA32_TSX_CTRL.
-> 
-> Update the cached HLE bit also since it is expected to change after an
-> update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
-> 
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Hi Bjorn,
 
-From the Intel TAA deep dive page [1], it says:
 
-  "On processors that enumerate IA32_ARCH_CAPABILITIES[TSX_CTRL] (bit
-   7)=1, HLE prefix hints are always ignored."
+Le sam., d=E9c. 21, 2019 at 12:20, Bjorn Andersson=20
+<bjorn.andersson@linaro.org> a =E9crit :
+> On Tue 10 Dec 08:40 PST 2019, Paul Cercueil wrote:
+>=20
+>>  The .prepare() callback is called before the firmware is loaded to
+>>  memory. This is useful for instance in the case where some setup is
+>>  required for the memory to be accessible.
+>>=20
+>=20
+> Would it make sense to somehow tie this prepare/unprepare to the=20
+> actual
+> struct rproc_mem_entry that needs the resource enabled?
 
-So if the CPU has IA32_TSX_CTRL, HLE is implicitly disabled, so why
-would the HLE bit have been set in CPUID in the first place?
+Do you need such granularity?
 
-[1] https://software.intel.com/security-software-guidance/insights/deep-dive-intel-transactional-synchronization-extensions-intel-tsx-asynchronous-abort
+In my case, the three memories need the same clock to be enabled.
 
--- 
-Josh
+-Paul
+
+
+>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2-v4: No change
+>>=20
+>>   drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
+>>   include/linux/remoteproc.h           |  4 ++++
+>>   2 files changed, 19 insertions(+), 1 deletion(-)
+>>=20
+>>  diff --git a/drivers/remoteproc/remoteproc_core.c=20
+>> b/drivers/remoteproc/remoteproc_core.c
+>>  index 0a9fc7fdd1c3..3ea5f675a148 100644
+>>  --- a/drivers/remoteproc/remoteproc_core.c
+>>  +++ b/drivers/remoteproc/remoteproc_core.c
+>>  @@ -1299,11 +1299,19 @@ static int rproc_start(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	struct device *dev =3D &rproc->dev;
+>>   	int ret;
+>>=20
+>>  +	if (rproc->ops->prepare) {
+>>  +		ret =3D rproc->ops->prepare(rproc);
+>>  +		if (ret) {
+>>  +			dev_err(dev, "Failed to prepare rproc: %d\n", ret);
+>>  +			return ret;
+>>  +		}
+>>  +	}
+>>  +
+>>   	/* load the ELF segments to memory */
+>>   	ret =3D rproc_load_segments(rproc, fw);
+>>   	if (ret) {
+>>   		dev_err(dev, "Failed to load program segments: %d\n", ret);
+>>  -		return ret;
+>>  +		goto unprepare_rproc;
+>>   	}
+>>=20
+>>   	/*
+>>  @@ -1354,6 +1362,9 @@ static int rproc_start(struct rproc *rproc,=20
+>> const struct firmware *fw)
+>>   	rproc_unprepare_subdevices(rproc);
+>>   reset_table_ptr:
+>>   	rproc->table_ptr =3D rproc->cached_table;
+>>  +unprepare_rproc:
+>>  +	if (rproc->ops->unprepare)
+>>  +		rproc->ops->unprepare(rproc);
+>>=20
+>>   	return ret;
+>>   }
+>>  @@ -1483,6 +1494,9 @@ static int rproc_stop(struct rproc *rproc,=20
+>> bool crashed)
+>>=20
+>>   	rproc->state =3D RPROC_OFFLINE;
+>>=20
+>>  +	if (rproc->ops->unprepare)
+>>  +		rproc->ops->unprepare(rproc);
+>>  +
+>>   	dev_info(dev, "stopped remote processor %s\n", rproc->name);
+>>=20
+>>   	return 0;
+>>  diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>  index 5f201f0c86c3..a6272d1ba384 100644
+>>  --- a/include/linux/remoteproc.h
+>>  +++ b/include/linux/remoteproc.h
+>>  @@ -355,6 +355,8 @@ enum rsc_handling_status {
+>>=20
+>>   /**
+>>    * struct rproc_ops - platform-specific device handlers
+>>  + * @prepare:	prepare the device for power up (before the firmware=20
+>> is loaded)
+>>  + * @unprepare:	unprepare the device after it is stopped
+>>    * @start:	power on the device and boot it
+>>    * @stop:	power off the device
+>>    * @kick:	kick a virtqueue (virtqueue id given as a parameter)
+>>  @@ -371,6 +373,8 @@ enum rsc_handling_status {
+>>    * @get_boot_addr:	get boot address to entry point specified in=20
+>> firmware
+>>    */
+>>   struct rproc_ops {
+>>  +	int (*prepare)(struct rproc *rproc);
+>>  +	void (*unprepare)(struct rproc *rproc);
+>>   	int (*start)(struct rproc *rproc);
+>>   	int (*stop)(struct rproc *rproc);
+>>   	void (*kick)(struct rproc *rproc, int vqid);
+>>  --
+>>  2.24.0
+>>=20
+
+=
 
