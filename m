@@ -2,91 +2,107 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D740AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3147BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F482081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:18:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OqdshJ+s"
+	by mail.kernel.org (Postfix) with ESMTP id 04F132081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgAOJS2 (ORCPT
+        id S1729469AbgAOJSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:18:28 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44526 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729377AbgAOJS0 (ORCPT
+        Wed, 15 Jan 2020 04:18:47 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61079 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgAOJSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:18:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579079906; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=LwpyJ0UYPR60KAvjTtDBpUcnBmCujeM5UzXPAG1UXVM=;
- b=OqdshJ+skMLiMQKXatqTOXUU7eZ4OwaAdF3lEl71m0TrFWFY9kO8lY4EJrknYBEcXkah3S0l
- jLwKDjIpZBkdC8QqPPqX5HzlvX5BLy+NqGVqphTdIXBvei4W16IsUI2c3RqM72nC9LgAEh8i
- cOvIcgFcAupo7Ya6CSipsqRH9rg=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1ed8dd.7f4002311fb8-smtp-out-n02;
- Wed, 15 Jan 2020 09:18:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1A5C0C43383; Wed, 15 Jan 2020 09:18:20 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8CF1EC433CB;
-        Wed, 15 Jan 2020 09:18:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8CF1EC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 Jan 2020 04:18:46 -0500
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00F9IWri066843;
+        Wed, 15 Jan 2020 18:18:32 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
+ Wed, 15 Jan 2020 18:18:32 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00F9ISbV066781
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 15 Jan 2020 18:18:32 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: [patch] mm, oom: dump stack of victim when reaping failed
+To:     Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <alpine.DEB.2.21.2001141519280.200484@chino.kir.corp.google.com>
+ <20200115084336.GW19428@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <9a7cbbf0-4283-f932-e422-84b4fb42a055@I-love.SAKURA.ne.jp>
+Date:   Wed, 15 Jan 2020 18:18:25 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200115084336.GW19428@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH -next] ath11k: add dependency for struct ath11k member
- debug
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191213012417.130719-1-maowenan@huawei.com>
-References: <20191213012417.130719-1-maowenan@huawei.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     <davem@davemloft.net>, <msinada@codeaurora.org>,
-        <periyasa@codeaurora.org>, <mpubbise@codeaurora.org>,
-        <julia.lawall@lip6.fr>, <milehu@codeaurora.org>,
-        <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200115091820.1A5C0C43383@smtp.codeaurora.org>
-Date:   Wed, 15 Jan 2020 09:18:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mao Wenan <maowenan@huawei.com> wrote:
-
-> If CONFIG_ATH11K, CONFIG_MAC80211_DEBUGFS are set,
-> and CONFIG_ATH11K_DEBUGFS is not set, below error can be found,
-> drivers/net/wireless/ath/ath11k/debugfs_sta.c: In function ath11k_dbg_sta_open_htt_peer_stats:
-> drivers/net/wireless/ath/ath11k/debugfs_sta.c:411:4: error: struct ath11k has no member named debug
->   ar->debug.htt_stats.stats_req = stats_req;
+On 2020/01/15 17:43, Michal Hocko wrote:
+> On Tue 14-01-20 15:20:04, David Rientjes wrote:
+>> When a process cannot be oom reaped, for whatever reason, currently the
+>> list of locks that are held is currently dumped to the kernel log.
+>>
+>> Much more interesting is the stack trace of the victim that cannot be
+>> reaped.  If the stack trace is dumped, we have the ability to find
+>> related occurrences in the same kernel code and hopefully solve the
+>> issue that is making it wedged.
+>>
+>> Dump the stack trace when a process fails to be oom reaped.
 > 
-> It is to add the dependency for the member of struct ath11k.
+> Yes, this is really helpful.
+
+tsk would be a thread group leader, but the thread which got stuck is not
+always a thread group leader. Maybe dump all threads in that thread group
+without PF_EXITING (or something) ?
+
 > 
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> Signed-off-by: David Rientjes <rientjes@google.com>
+> 
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> 
+> Thanks!
+> 
+>> ---
+>>  mm/oom_kill.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+>> --- a/mm/oom_kill.c
+>> +++ b/mm/oom_kill.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/sched/mm.h>
+>>  #include <linux/sched/coredump.h>
+>>  #include <linux/sched/task.h>
+>> +#include <linux/sched/debug.h>
+>>  #include <linux/swap.h>
+>>  #include <linux/timex.h>
+>>  #include <linux/jiffies.h>
+>> @@ -620,6 +621,7 @@ static void oom_reap_task(struct task_struct *tsk)
+>>  
+>>  	pr_info("oom_reaper: unable to reap pid:%d (%s)\n",
+>>  		task_pid_nr(tsk), tsk->comm);
+>> +	sched_show_task(tsk);
+>>  	debug_show_all_locks();
+>>  
+>>  done:
+> 
 
-Arnd already did something what I proposed:
-https://patchwork.kernel.org/patch/11321921/
-
-Patch set to Superseded.
-
--- 
-https://patchwork.kernel.org/patch/11289709/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
