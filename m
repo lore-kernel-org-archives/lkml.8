@@ -2,80 +2,111 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDB6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60727C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9CE24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E832467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OSL13EnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgAOH7s (ORCPT
+        id S1729022AbgAOIAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:59:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46361 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgAOH7s (ORCPT
+        Wed, 15 Jan 2020 03:00:44 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51241 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728988AbgAOIAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:59:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irdaQ-0006J7-HF; Wed, 15 Jan 2020 08:59:34 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 9147A101225; Wed, 15 Jan 2020 08:59:33 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [patch 09/15] clocksource: Add common vdso clock mode storage
-In-Reply-To: <f6c5ce65-be49-add3-5959-85fa9cdc75a2@c-s.fr>
-References: <20200114185237.273005683@linutronix.de> <20200114185947.500141436@linutronix.de> <f6c5ce65-be49-add3-5959-85fa9cdc75a2@c-s.fr>
-Date:   Wed, 15 Jan 2020 08:59:33 +0100
-Message-ID: <874kwxb15m.fsf@nanos.tec.linutronix.de>
+        Wed, 15 Jan 2020 03:00:43 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so16719381wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GYF/DnlQgs0gWW5ovHy/i9c/eiB+rqjkrsxQJeg0VgE=;
+        b=OSL13EnCr58+/Jy2CAY7JUMNaer6GjpBYGtcO8Lm6VXlpX7/sjRVrcEpHJrWt3MXao
+         sOMFij5RVNC/vB2rBhf2PpSRyBxSMMrVXFj/ZuClHUlB4zeP1xvKnpBMJjZC896upMDx
+         pdMzyIjLqI6TXr0D0N+3qK7bLO6rmMZMg3o2Ovle3wcyv6xSRPfnKDapqr2oaN79UNuR
+         lo15fKsiOQxDn8My+q+RIDFTY9EPZKyvD/DS6s2dTp5oREvoBEelzwmPJMimNa345pSS
+         C4ytCDLYb5xpLNle2SWtZzbMuemq3sDt77k7Y2QN63t/r5djh4IpdruTiVp5w58ZOp82
+         GX+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GYF/DnlQgs0gWW5ovHy/i9c/eiB+rqjkrsxQJeg0VgE=;
+        b=qmfHLB67l3eEVfun7zdOFGsQj4Jkq+NGzsiJjZmW8K/TWsKLIXSKIg17uhqmMpFXQF
+         ED+PDNmvAMjYWRy/nxqpzBiOccYgjzjHciAxX6CN5mDJTkIiG8WW3OXW2TnRQtbnasbk
+         MJPKWBE9gDWErQAUqOsHfCNnvnb0Y5I78+GmtHITJ/85XcV589bLuDeRhrXQoHu8B2cp
+         Mj1/xDWsG/HMdPQHfmJtl/bQAx+CQ0X0j9Jq0dxwzikthfB1mp3Ug89T5im0XtzpTXqU
+         qzn+puTJ+R1mjnp/b4cBWCWI5b1RQEBaOjSY8D90kijNz10l1NHtj+QTFYIqwJeGjqES
+         FSvA==
+X-Gm-Message-State: APjAAAWujVu1LsM37bk8WrIQg3eI2CTnZW0wxhio4nw0Yh/IGVeOfagm
+        93kQs4KvwKnFNhgwz78HqNW26w==
+X-Google-Smtp-Source: APXvYqxVBHePDZFSLFy/b/HLtH4cLhZKLLeFdGF56PzZlj4pOAw+avsLwlunjnJ0XyKdMeObyl6u5A==
+X-Received: by 2002:a1c:3dd5:: with SMTP id k204mr31244611wma.92.1579075241550;
+        Wed, 15 Jan 2020 00:00:41 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id w13sm23148601wru.38.2020.01.15.00.00.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 00:00:40 -0800 (PST)
+Date:   Wed, 15 Jan 2020 08:00:53 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, nicolas.ferre@microchip.com,
+        ludovic.desroches@microchip.com, vkoul@kernel.org,
+        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
+        mkl@pengutronix.de, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 10/17] dt-bindings: atmel-smc: add
+ microchip,sam9x60-smc
+Message-ID: <20200115080053.GC325@dell>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-11-git-send-email-claudiu.beznea@microchip.com>
+ <20200114095538.GJ3137@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200114095538.GJ3137@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> --- a/kernel/time/vsyscall.c
->> +++ b/kernel/time/vsyscall.c
->> @@ -72,12 +72,19 @@ void update_vsyscall(struct timekeeper *
->>   	struct vdso_data *vdata = __arch_get_k_vdso_data();
->>   	struct vdso_timestamp *vdso_ts;
->>   	u64 nsec;
->> +	s32 mode;
->
-> gcc will claim 'mode' is unused when CONFIG_GENERIC_VDSO_CLOCK_MODE is 
-> not defined.
+On Tue, 14 Jan 2020, Alexandre Belloni wrote:
 
-I know. It's intermediate and goes away a few patches later, but yes I
-can fix it up.
+> On 10/01/2020 18:18:02+0200, Claudiu Beznea wrote:
+> > Add microchip,sam9x60-smc to DT bindings documentation.
+> > 
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> Applied, thanks.
 
-Thanks,
+Remind me why you are applying this patch please?
 
-        tglx
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
