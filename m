@@ -2,210 +2,109 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA90FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FF124681
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC22D22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Ab+/pPPP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auOyDPgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgAOMlb (ORCPT
+        id S1729064AbgAOMmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:41:31 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:43670 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgAOMlZ (ORCPT
+        Wed, 15 Jan 2020 07:42:09 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39977 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgAOMmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:41:25 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 4CB163F635;
-        Wed, 15 Jan 2020 13:41:22 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=Ab+/pPPP;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id shKYmSDydQYd; Wed, 15 Jan 2020 13:41:19 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id F21ED3F53F;
-        Wed, 15 Jan 2020 13:41:17 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 45AC6360330;
-        Wed, 15 Jan 2020 13:41:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1579092077; bh=yrdRqk8zeOWPmhZofIhk1/nGPgfdMhOICzAax4gY3mE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ab+/pPPPQWptTJ86kUR4awCZ6QJ8cug3urdlh8111r+G4gZxmHMzQRZ9nBK6Fnc/K
-         gPIDiqJ4JRv8ncuAgEbQizIdzNMusYVV9a+wLXBliold154d9LT+1B6pw84StD3WlG
-         EJV1JBgL/wioPT8xoqS+SUlyCoq2SiGDThvhDnEg=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH v5 1/2] mm: Add a vmf_insert_mixed_prot() function
-Date:   Wed, 15 Jan 2020 13:41:06 +0100
-Message-Id: <20200115124107.3845-2-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200115124107.3845-1-thomas_os@shipmail.org>
-References: <20200115124107.3845-1-thomas_os@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jan 2020 07:42:09 -0500
+Received: by mail-pl1-f195.google.com with SMTP id s21so6806395plr.7;
+        Wed, 15 Jan 2020 04:42:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=S3wXxo3Bh9oayGWM8jZCD/Gnpt0hNiPJrwn1QYGnm2M=;
+        b=auOyDPgVe8RTFRbA5W4EWOXH32dZQVkLy+zdkE2NamNJ/gwg8H60PNu7Lv559iQMy8
+         +Uf1+gYH+3O1bRayk3SvFe+zasRl5E+RgFunTFI3s7zr7bU7UuUa1QBxGBGG0LzjsDze
+         bQi12uwfRkAMQ5ouovUAbj1CdKvwlrV11g8viM4XpvGwjw2uUTQyDBK5JpP66aykCgEz
+         vY4fGSxWClC5AyfgITKjn2lhV5F/HnF4oPzRneGRvIa3bOxw9iqRyEE2i+Uo3Kw/jc2L
+         Y+091uGOMmax/zqpjYMMcGDh7guRcl1dBh8eCVyHEDYj1tDqyt/XpXF5PcMLIDmaHqeV
+         6Ijg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=S3wXxo3Bh9oayGWM8jZCD/Gnpt0hNiPJrwn1QYGnm2M=;
+        b=eKYFOa5Difh9Yh9R3Y+jSTyOD29VUmaVGTMQ4zKH0AabHevzPixaWMNLHOmFl2wzZu
+         /x/Chy8EiaZkkoYHEgXKJ8iVWF4bSIiZe4u/KWyHPN+goMXnq+OHAG8pZF38rfCQFjrb
+         o48VmKalx83eO1E022+2Rih2HLlhkM3z7s0AfFP9Y3z49O/v34kPCVlY1O4WNMvdTK5r
+         GUI35HeH6DY31cP1GYNG3jDAt+nEPhzwIhbN5nnE3qdzYwR5xGAFO1NuxEo6FGca0E8e
+         YtnC8iJUc5gd/DdvjJXbqvsmz9MlpLMeFzHcARFvOOc7ww5JyHN8DXQ4acmdgXnSqXBx
+         sCnw==
+X-Gm-Message-State: APjAAAVSdZb2Dyw8SK4OLqdPS9DdnORovjxQ8hdfUpKUtiBz+2ij22RA
+        Q5HLTqseG8Qicv9ZQeo4xr8=
+X-Google-Smtp-Source: APXvYqzyYSD1kqH06PWZT5j+hjPxOJVeYfDpiBoVq5NBAlR42H2eqCY0MexVhcMO00FKLXtnuMtjCw==
+X-Received: by 2002:a17:902:bd08:: with SMTP id p8mr31051161pls.39.1579092128653;
+        Wed, 15 Jan 2020 04:42:08 -0800 (PST)
+Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee2:fbb9:75ba:e01f:bdbc:c547])
+        by smtp.gmail.com with ESMTPSA id y23sm12638990pjj.3.2020.01.15.04.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 04:42:08 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     wei.liu@kernel.org, paul@xen.org, davem@davemloft.net
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: [PATCH] net: xen-netbank: hash.c: Use built-in RCU list checking
+Date:   Wed, 15 Jan 2020 18:11:28 +0530
+Message-Id: <20200115124129.5684-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
-The TTM module today uses a hack to be able to set a different page
-protection than struct vm_area_struct::vm_page_prot. To be able to do
-this properly, add the needed vm functionality as vmf_insert_mixed_prot().
+list_for_each_entry_rcu has built-in RCU and lock checking.
+Pass cond argument to list_for_each_entry_rcu.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 ---
- include/linux/mm.h       |  2 ++
- include/linux/mm_types.h |  7 ++++++-
- mm/memory.c              | 43 ++++++++++++++++++++++++++++++++++++----
- 3 files changed, 47 insertions(+), 5 deletions(-)
+ drivers/net/xen-netback/hash.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cc292273e6ba..29575d3c1e47 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2548,6 +2548,8 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
- 			unsigned long pfn, pgprot_t pgprot);
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
- 			pfn_t pfn);
-+vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
-+			pfn_t pfn, pgprot_t pgprot);
- vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
- 		unsigned long addr, pfn_t pfn);
- int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 2222fa795284..aff6cdc784e0 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -307,7 +307,12 @@ struct vm_area_struct {
- 	/* Second cache line starts here. */
+diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
+index 10d580c3dea3..30709bc9d170 100644
+--- a/drivers/net/xen-netback/hash.c
++++ b/drivers/net/xen-netback/hash.c
+@@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
  
- 	struct mm_struct *vm_mm;	/* The address space we belong to. */
--	pgprot_t vm_page_prot;		/* Access permissions of this VMA. */
-+
-+	/*
-+	 * Access permissions of this VMA.
-+	 * See vmf_insert_mixed_prot() for discussion.
-+	 */
-+	pgprot_t vm_page_prot;
- 	unsigned long vm_flags;		/* Flags, see mm.h. */
+ 	found = false;
+ 	oldest = NULL;
+-	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
++	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
++							lockdep_is_held(&vif->hash.cache.lock)) {
+ 		/* Make sure we don't add duplicate entries */
+ 		if (entry->len == len &&
+ 		    memcmp(entry->tag, tag, len) == 0)
+@@ -102,7 +103,8 @@ static void xenvif_flush_hash(struct xenvif *vif)
  
- 	/*
-diff --git a/mm/memory.c b/mm/memory.c
-index b1ca51a079f2..269a8a871e83 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1646,6 +1646,9 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
-  * vmf_insert_pfn_prot should only be used if using multiple VMAs is
-  * impractical.
-  *
-+ * See vmf_insert_mixed_prot() for a discussion of the implication of using
-+ * a value of @pgprot different from that of @vma->vm_page_prot.
-+ *
-  * Context: Process context.  May allocate using %GFP_KERNEL.
-  * Return: vm_fault_t value.
-  */
-@@ -1719,9 +1722,9 @@ static bool vm_mixed_ok(struct vm_area_struct *vma, pfn_t pfn)
- }
+ 	spin_lock_irqsave(&vif->hash.cache.lock, flags);
  
- static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
--		unsigned long addr, pfn_t pfn, bool mkwrite)
-+		unsigned long addr, pfn_t pfn, pgprot_t pgprot,
-+		bool mkwrite)
- {
--	pgprot_t pgprot = vma->vm_page_prot;
- 	int err;
- 
- 	BUG_ON(!vm_mixed_ok(vma, pfn));
-@@ -1764,10 +1767,42 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 	return VM_FAULT_NOPAGE;
- }
- 
-+/**
-+ * vmf_insert_mixed_prot - insert single pfn into user vma with specified pgprot
-+ * @vma: user vma to map to
-+ * @addr: target user address of this page
-+ * @pfn: source kernel pfn
-+ * @pgprot: pgprot flags for the inserted page
-+ *
-+ * This is exactly like vmf_insert_mixed(), except that it allows drivers to
-+ * to override pgprot on a per-page basis.
-+ *
-+ * Typically this function should be used by drivers to set caching- and
-+ * encryption bits different than those of @vma->vm_page_prot, because
-+ * the caching- or encryption mode may not be known at mmap() time.
-+ * This is ok as long as @vma->vm_page_prot is not used by the core vm
-+ * to set caching and encryption bits for those vmas (except for COW pages).
-+ * This is ensured by core vm only modifying these page table entries using
-+ * functions that don't touch caching- or encryption bits, using pte_modify()
-+ * if needed. (See for example mprotect()).
-+ * Also when new page-table entries are created, this is only done using the
-+ * fault() callback, and never using the value of vma->vm_page_prot,
-+ * except for page-table entries that point to anonymous pages as the result
-+ * of COW.
-+ *
-+ * Context: Process context.  May allocate using %GFP_KERNEL.
-+ * Return: vm_fault_t value.
-+ */
-+vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
-+				 pfn_t pfn, pgprot_t pgprot)
-+{
-+	return __vm_insert_mixed(vma, addr, pfn, pgprot, false);
-+}
-+
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
- 		pfn_t pfn)
- {
--	return __vm_insert_mixed(vma, addr, pfn, false);
-+	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, false);
- }
- EXPORT_SYMBOL(vmf_insert_mixed);
- 
-@@ -1779,7 +1814,7 @@ EXPORT_SYMBOL(vmf_insert_mixed);
- vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
- 		unsigned long addr, pfn_t pfn)
- {
--	return __vm_insert_mixed(vma, addr, pfn, true);
-+	return __vm_insert_mixed(vma, addr, pfn, vma->vm_page_prot, true);
- }
- EXPORT_SYMBOL(vmf_insert_mixed_mkwrite);
- 
+-	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
++	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
++							lockdep_is_held(&vif->hash.cache.lock)) {
+ 		list_del_rcu(&entry->link);
+ 		vif->hash.cache.count--;
+ 		kfree_rcu(entry, rcu);
 -- 
-2.21.0
+2.17.1
 
