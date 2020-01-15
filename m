@@ -2,85 +2,78 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4C4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2D0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187812467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5EE24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAONSf (ORCPT
+        id S1728885AbgAONUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:18:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58824 "EHLO mail.kernel.org"
+        Wed, 15 Jan 2020 08:20:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43588 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAONSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:18:34 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C2CE2084D;
-        Wed, 15 Jan 2020 13:18:33 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 08:18:30 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: sched/fair: scheduler not running high priority process on idle
- cpu
-Message-ID: <20200115081830.036ade4e@gandalf.local.home>
-In-Reply-To: <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
-        <20200114115906.22f952ff@gandalf.local.home>
-        <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
-        <20200114124812.4d5355ae@gandalf.local.home>
-        <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726088AbgAONUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:20:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B050FADDC;
+        Wed, 15 Jan 2020 13:20:17 +0000 (UTC)
+Subject: Re: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
+To:     James Tai <james.tai@realtek.com>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20200103060441.1109-1-afaerber@suse.de>
+ <51cf409ed1a44f038a5f1df133986063@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <6ac92228-8dcb-3927-e3ee-d9564ec7d20e@suse.de>
+Date:   Wed, 15 Jan 2020 14:20:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <51cf409ed1a44f038a5f1df133986063@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 12:44:19 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+Am 15.01.20 um 09:13 schrieb James Tai:
+>> Reserve memory regions for RPC and TEE.
+>>
+>> Fixes: e5a9e237608d ("arm64: dts: realtek: Add RTD1619 SoC and Realtek
+>> Mjolnir EVB")
+>> Cc: James Tai <james.tai@realtek.com>
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>   arch/arm64/boot/dts/realtek/rtd16xx.dtsi | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+[...]
+> Acked-by: James Tai <james.tai@realtek.com>
 
-> > Yes, even with CONFIG_PREEMPT, Linux has no guarantees of latency for
-> > any task regardless of priority. If you have latency requirements, then
-> > you need to apply the PREEMPT_RT patch (which may soon make it to
-> > mainline this year!), which spin locks and bh wont stop a task from
-> > scheduling (unless they need the same lock)  
+Thanks, applied to linux-realtek.git v5.6/dt:
 
-Every time you add something to allow higher priority processes to run
-with less latency you add overhead. By just adding that spinlock check
-or to migrate a process to a idle cpu will add a measurable overhead,
-and as you state, distros won't like that.
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.6/dt
 
-It's a constant game of give and take.
+Regards,
+Andreas
 
-> 
-> Running the driver bh (which is often significant) from a high priority
-> worker thread instead of a softint (which isn't much different to the
-> 'hardint' it is scheduled from) probably doesn't cost much (in-kernel
-> process switches shouldn't be much more than a stack switch).
-> That would benefit RT processes since they could be higher
-> priority than the bh code.
-> Although you'd probably want a 'strongly preferred' cpu for them.
-
-BTW, I believe distros compile with "CONFIG_IRQ_FORCED_THREADING" which
-means if you add to the kernel command line "threadirqs" the interrupts
-will be run as threads. Which allows for even more preemption.
-
--- Steve
-
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
