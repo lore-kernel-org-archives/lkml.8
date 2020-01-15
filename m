@@ -2,211 +2,190 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B5EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040C9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F1B222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B6D222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iv3d2Ny2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nYY/KOn2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgAOQSs (ORCPT
+        id S1729019AbgAOQTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:18:48 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33670 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAOQSr (ORCPT
+        Wed, 15 Jan 2020 11:19:07 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:46618 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgAOQTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:18:47 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so8441061pgk.0;
-        Wed, 15 Jan 2020 08:18:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kFZXMHBry+L47F+qM+tBs/CLu4eTyxiD1l9sMPZiabg=;
-        b=Iv3d2Ny2zXWbM48eUhUk9dHw9fNN1BcoCyW/u65PYOuMwrAkjU2P+BGI0tngaLBpto
-         huTFtiCH4La8U2zXlXyDNMmaMziDo8X5HU/+ZtQ+y0C4wBgHF8jH1BXCrh/SyLmbfl2x
-         rDtq4s4iAV+n4MruclgcbNUN7r7MjpeKKn0UIuWS51B48+1kk5nKkDoQ5jjBsYVbrisk
-         hfc38kUyWjMaKdZD16BWMWjTVfqqDcQlPn4rS70dfPtDrBmDyKILDVqz6ZYgDIl/H266
-         LXWbxCF5O49sLI22T5xVfuEOc0UefKb+aTLfH7MiSL+szmBlEsbvLsehJuuvtFxL2dyP
-         ee5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kFZXMHBry+L47F+qM+tBs/CLu4eTyxiD1l9sMPZiabg=;
-        b=SqvSxQLLZQqbdCeo64k7YBGnwjMUertqTFSINjSmhmvrdWbiOXD5pOa46TY4dsKg6Z
-         L1GlLVMrxyzAaAFpxLfoRz3JS4ZHylFRACXfbwyAHn8/XOIECTY1TJYwFeTyq1oZ5EJN
-         3qjANKxGCqOLWfXOgtZlMrXaQPGhXHdsVGR8xPslYA6QHwJRbAvi+SXZtfkGl2jxXKgP
-         ZzrLkwfcLyJXST+tADT9Lei+HXi3lJ8U53VPw7jVzAXaGRoZ4EcmoVZ9m1Brw/XIpmjG
-         Rf/uLxmc+OUf3xbkYyZGtPRNTseEBzU+fyjMuw4hBiFbcNpuXBabGNRqJ5dB5yd1X0gp
-         R5TA==
-X-Gm-Message-State: APjAAAUemlDOOkXLm2FQORXnmgHoYCCNnzy/1Y4n3nct0Q8buqhslGpv
-        Ol5gxwtyR8Ejhsh27Yb4/w4=
-X-Google-Smtp-Source: APXvYqyAzKfeOQN1KEqcuJJsYULzFNW7nRQf0FhEjcUHl8gG0GpWS07Xin657lcnmljGgLIQkCfndA==
-X-Received: by 2002:aa7:824d:: with SMTP id e13mr32114420pfn.247.1579105126655;
-        Wed, 15 Jan 2020 08:18:46 -0800 (PST)
-Received: from ziggy.stardust ([37.223.145.31])
-        by smtp.gmail.com with ESMTPSA id t63sm22592758pfb.70.2020.01.15.08.18.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 08:18:45 -0800 (PST)
-Subject: Re: [PATCH v12 4/4] watchdog: mtk_wdt: mt2712: Add reset controller
-To:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
-        linux@roeck-us.net, p.zabel@pengutronix.de,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
-        jiaxin.yu@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
- <20200115085828.27791-5-yong.liang@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
- fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
- OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
- gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
- 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
- EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
- fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
- ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
- HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
- 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtClNYXR0aGlhcyBC
- cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPokCUgQTAQIAPAIbAwYLCQgHAwIGFQgC
- CQoLBBYCAwECHgECF4AWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCWt3scQIZAQAKCRDZFAuy
- VhMC8WzRD/4onkC+gCxG+dvui5SXCJ7bGLCu0xVtiGC673Kz5Aq3heITsERHBV0BqqctOEBy
- ZozQQe2Hindu9lasOmwfH8+vfTK+2teCgWesoE3g3XKbrOCB4RSrQmXGC3JYx6rcvMlLV/Ch
- YMRR3qv04BOchnjkGtvm9aZWH52/6XfChyh7XYndTe5F2bqeTjt+kF/ql+xMc4E6pniqIfkv
- c0wsH4CkBHqoZl9w5e/b9MspTqsU9NszTEOFhy7p2CYw6JEa/vmzR6YDzGs8AihieIXDOfpT
- DUr0YUlDrwDSrlm/2MjNIPTmSGHH94ScOqu/XmGW/0q1iar/Yr0leomUOeeEzCqQtunqShtE
- 4Mn2uEixFL+9jiVtMjujr6mphznwpEqObPCZ3IcWqOFEz77rSL+oqFiEA03A2WBDlMm++Sve
- 9jpkJBLosJRhAYmQ6ey6MFO6Krylw1LXcq5z1XQQavtFRgZoruHZ3XlhT5wcfLJtAqrtfCe0
- aQ0kJW+4zj9/So0uxJDAtGuOpDYnmK26dgFN0tAhVuNInEVhtErtLJHeJzFKJzNyQ4GlCaLw
- jKcwWcqDJcrx9R7LsCu4l2XpKiyxY6fO4O8DnSleVll9NPfAZFZvf8AIy3EQ8BokUsiuUYHz
- wUo6pclk55PZRaAsHDX/fNr24uC6Eh5oNQ+v4Pax/gtyybkCDQRd1TkHARAAt1BBpmaH+0o+
- deSyJotkrpzZZkbSs5ygBniCUGQqXpWqgrc7Uo/qtxOFL91uOsdX1/vsnJO9FyUv3ZNI2Thw
- NVGCTvCP9E6u4gSSuxEfVyVThCSPvRJHCG2rC+EMAOUMpxokcX9M2b7bBEbcSjeP/E4KTa39
- q+JJSeWliaghUfMXXdimT/uxpP5Aa2/D/vcUUGHLelf9TyihHyBohdyNzeEF3v9rq7kdqamZ
- Ihb+WYrDio/SzqTd1g+wnPJbnu45zkoQrYtBu58n7u8oo+pUummOuTR2b6dcsiB9zJaiVRIg
- OqL8p3K2fnE8Ewwn6IKHnLTyx5T/r2Z0ikyOeijDumZ0VOPPLTnwmb780Nym3LW1OUMieKtn
- I3v5GzZyS83NontvsiRd4oPGQDRBT39jAyBr8vDRl/3RpLKuwWBFTs1bYMLu0sYarwowOz8+
- Mn+CRFUvRrXxociw5n0P1PgJ7vQey4muCZ4VynH1SeVb3KZ59zcQHksKtpzz2OKhtX8FCeVO
- mHW9u4x8s/oUVMZCXEq9QrmVhdIvJnBCqq+1bh5UC2Rfjm/vLHwt5hes0HDstbCzLyiA0LTI
- ADdP77RN2OJbzBkCuWE21YCTLtc8kTQlP+G8m23K5w8k2jleCSKumprCr/5qPyNlkie1HC4E
- GEAfdfN+uLsFw6qPzSAsmukAEQEAAYkEbAQYAQgAIBYhBOa5khjA8sMlHCw6F9kUC7JWEwLx
- BQJd1TkHAhsCAkAJENkUC7JWEwLxwXQgBBkBCAAdFiEEUdvKHhzqrUYPB/u8L21+TfbCqH4F
- Al3VOQcACgkQL21+TfbCqH79RRAAtlb6oAL9y8JM5R1T3v02THFip8OMh7YvEJCnezle9Apq
- C6Vx26RSQjBV1JwSBv6BpgDBNXarTGCPXcre6KGfX8u1r6hnXAHZNHP7bFGJQiBv5RqGFf45
- OhOhbjXCyHc0jrnNjY4M2jTkUC+KIuOzasvggU975nolC8MiaBqfgMB2ab5W+xEiTcNCOg3+
- 1SRs5/ZkQ0iyyba2FihSeSw3jTUjPsJBF15xndexoc9jpi0RKuvPiJ191Xa3pzNntIxpsxqc
- ZkS1HSqPI63/urNezeSejBzW0Xz2Bi/b/5R9Hpxp1AEC3OzabOBATY/1Bmh2eAVK3xpN2Fe1
- Zj7HrTgmzBmSefMcSXN0oKQWEI5tHtBbw5XUj0Nw4hMhUtiMfE2HAqcaozsL34sEzi3eethZ
- IvKnIOTmllsDFMbOBa8oUSoaNg7GzkWSKJ59a9qPJkoj/hJqqeyEXF+WTCUv6FcA8BtBJmVf
- FppFzLFM/QzF5fgDZmfjc9czjRJHAGHRMMnQlW88iWamjYVye57srNq9pUql6A4lITF7w00B
- 5PXINFk0lMcNUdkWipu24H6rJhOO6xSP4n6OrCCcGsXsAR5oH3d4TzA9iPYrmfXAXD+hTp82
- s+7cEbTsCJ9MMq09/GTCeroTQiqkp50UaR0AvhuPdfjJwVYZfmMS1+5IXA/KY6DbGBAAs5ti
- AK0ieoZlCv/YxOSMCz10EQWMymD2gghjxojf4iwB2MbGp8UN4+++oKLHz+2j+IL08rd2ioFN
- YCJBFDVoDRpF/UnrQ8LsH55UZBHuu5XyMkdJzMaHRVQc1rzfluqx+0a/CQ6Cb2q7J2d45nYx
- 8jMSCsGj1/iU/bKjMBtuh91hsbdWCxMRW0JnGXxcEUklbhA5uGj3W4VYCfTQxwK6JiVt7JYp
- bX7JdRKIyq3iMDcsTXi7dhhwqsttQRwbBci0UdFGAG4jT5p6u65MMDVTXEgYfZy0674P06qf
- uSyff73ivwvLR025akzJui8MLU23rWRywXOyTINz8nsPFT4ZSGT1hr5VnIBs/esk/2yFmVoc
- FAxs1aBO29iHmjJ8D84EJvOcKfh9RKeW8yeBNKXHrcOV4MbMOts9+vpJgBFDnJeLFQPtTHuI
- kQXT4+yLDvwOVAW9MPLfcHlczq/A/nhGVaG+RKWDfJWNSu/mbhqUQt4J+RFpfx1gmL3yV8NN
- 7JXABPi5M97PeKdx6qc/c1o3oEHH8iBkWZIYMS9fd6rtAqV3+KH5Ors7tQVtwUIDYEvttmeO
- ifvpW6U/4au4zBYfvvXagbyXJhG9mZvz+jN1cr0/G2ZC93IbjFFwUmHtXS4ttQ4pbrX6fjTe
- lq5vmROjiWirpZGm+WA3Vx9QRjqfMdS5Ag0EXdU5SAEQAJu/Jk58uOB8HSGDSuGUB+lOacXC
- bVOOSywZkq+Ayv+3q/XIabyeaYMwhriNuXHjUxIORQoWHIHzTCqsAgHpJFfSHoM4ulCuOPFt
- XjqfEHkA0urB6S0jnvJ6ev875lL4Yi6JJO7WQYRs/l7OakJiT13GoOwDIn7hHH/PGUqQoZlA
- d1n5SVdg6cRd7EqJ+RMNoud7ply6nUSCRMNWbNqbgyWjKsD98CMjHa33SB9WQQSQyFlf+dz+
- dpirWENCoY3vvwKJaSpfeqKYuqPVSxnqpKXqqyjNnG9W46OWZp+JV5ejbyUR/2U+vMwbTilL
- cIUpTgdmxPCA6J0GQjmKNsNKKYgIMn6W4o/LoiO7IgROm1sdn0KbJouCa2QZoQ0+p/7mJXhl
- tA0XGZhNlI3npD1lLpjdd42lWboU4VeuUp4VNOXIWU/L1NZwEwMIqzFXl4HmRi8MYbHHbpN5
- zW+VUrFfeRDPyjrYpax+vWS+l658PPH+sWmhj3VclIoAU1nP33FrsNfp5BiQzao30rwe4ntd
- eEdPENvGmLfCwiUV2DNVrmJaE3CIUUl1KIRoB5oe7rJeOvf0WuQhWjIU98glXIrh3WYd7vsf
- jtbEXDoWhVtwZMShMvp7ccPCe2c4YBToIthxpDhoDPUdNwOssHNLD8G4JIBexwi4q7IT9lP6
- sVstwvA5ABEBAAGJAjYEGAEIACAWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCXdU5SAIbDAAK
- CRDZFAuyVhMC8bXXD/4xyfbyPGnRYtR0KFlCgkG2XWeWSR2shSiM1PZGRPxR888zA2WBYHAk
- 7NpJlFchpaErV6WdFrXQjDAd9YwaEHucfS7SAhxIqdIqzV5vNFrMjwhB1N8MfdUJDpgyX7Zu
- k/Phd5aoZXNwsCRqaD2OwFZXr81zSXwE2UdPmIfTYTjeVsOAI7GZ7akCsRPK64ni0XfoXue2
- XUSrUUTRimTkuMHrTYaHY3544a+GduQQLLA+avseLmjvKHxsU4zna0p0Yb4czwoJj+wSkVGQ
- NMDbxcY26CMPK204jhRm9RG687qq6691hbiuAtWABeAsl1AS+mdS7aP/4uOM4kFCvXYgIHxP
- /BoVz9CZTMEVAZVzbRKyYCLUf1wLhcHzugTiONz9fWMBLLskKvq7m1tlr61mNgY9nVwwClMU
- uE7i1H9r/2/UXLd+pY82zcXhFrfmKuCDmOkB5xPsOMVQJH8I0/lbqfLAqfsxSb/X1VKaP243
- jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
- +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
- y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <987a7ccf-3d1b-9d4b-d766-63925268c21e@gmail.com>
-Date:   Wed, 15 Jan 2020 17:18:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Jan 2020 11:19:07 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115161906euoutp01740429bb85296bbf1d031d3ce063e86c~qG8OQSsik1277712777euoutp01Z
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 16:19:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115161906euoutp01740429bb85296bbf1d031d3ce063e86c~qG8OQSsik1277712777euoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579105146;
+        bh=ncRAnEl+POE1Y5QLwdp3gNB9GHD8c9MdSU3l2ecI1nc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nYY/KOn2/pxQSS7NwmLVs1iBfmePp5oi7xqqjtnJa/3Ej/j4wCRz+gYJKzEObMFYL
+         17mh3fTN802do4XRyFtd1B8yZDOdLVOc+KbFzKM6iUQO2FL30vo6225IqtkJEcNMYe
+         NDtkr/dpzk4cIMcbWw0Lwt0X1r2e9rD5TUP2Tt+Q=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200115161905eucas1p155d50e6f51933f2342b5d1df64ef0054~qG8N9tPQC1203412034eucas1p1A;
+        Wed, 15 Jan 2020 16:19:05 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 6A.59.61286.97B3F1E5; Wed, 15
+        Jan 2020 16:19:05 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115161905eucas1p21ba0a0cc496c4c20c10d88967b337006~qG8Njxu4-1153211532eucas1p28;
+        Wed, 15 Jan 2020 16:19:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200115161905eusmtrp15507b380e74fa61a412ec90b306ae611~qG8NjIAKs1743517435eusmtrp1u;
+        Wed, 15 Jan 2020 16:19:05 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-e9-5e1f3b793a21
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 78.B4.08375.97B3F1E5; Wed, 15
+        Jan 2020 16:19:05 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115161904eusmtip2d3b57e42959cbce3a73c8e4759520175~qG8M4k3Fw1686316863eusmtip2H;
+        Wed, 15 Jan 2020 16:19:04 +0000 (GMT)
+Subject: Re: [PATCH] video: fbdev: nvidia: clean up indentation issues and
+ comment block
+To:     Colin King <colin.king@canonical.com>
+Cc:     Antonino Daplas <adaplas@gmail.com>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <26ccc9eb-6edb-3ec6-5714-0bb470366b17@samsung.com>
+Date:   Wed, 15 Jan 2020 17:19:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200115085828.27791-5-yong.liang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200113144627.219967-1-colin.king@canonical.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djPc7qV1vJxBi9Oalv87P7CZvF7dS+b
+        xZWv79kstt6StjjR94HV4vKuOWwObB6zGnrZPHbOusvucb/7OJPH501yASxRXDYpqTmZZalF
+        +nYJXBlbF8gWtAtXXJl/nLGBcQ1fFyMnh4SAicSMFZcZuxi5OIQEVjBK9M0+xgLhfGGUuHB3
+        LTuE85lR4uOVo4wwLSsvTmGGSCxnlLjf+BvKecso8fLzGqYuRg4OYYEoiWsvskBMEQFNifPn
+        ikBKmEFWrFi2hA1kEJuAlcTE9lVgQ3kF7CTaXvSygtgsAqoSbX3N7CC2qECExKcHh1khagQl
+        Ts58wgJicwrYS8zctIEJxGYWEJe49WQ+lC0vsf3tHLB7JAQWsUuceXmXGeQICQEXiXnLlSAe
+        EJZ4dXwLO4QtI3F6cg8LRP06Rom/HS+gmrczSiyf/I8Nospa4s65X2wgg5iBvlm/Sx9ipqPE
+        qUW2ECafxI23ghAn8ElM2jYdaiuvREebEMQMNYkNyzawwWzt2rmSeQKj0iwkj81C8swsJM/M
+        Qli7gJFlFaN4amlxbnpqsWFearlecWJucWleul5yfu4mRmCiOf3v+KcdjF8vJR1iFOBgVOLh
+        zfgjFyfEmlhWXJl7iFGCg1lJhPfkDNk4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmk
+        J5akZqemFqQWwWSZODilGhinp003Tu/7u1W1w4vhz2J13c0P55152ujsd6hv8ZK/278ePtRe
+        IZCQxbqjr4q3ZfnUgwcOndh9dtIb1UBbsx3SM+TtMx81dFaenGA5xStA7HXE14n8629F/JHl
+        zDrjrS/Ld1PI1dDlaMsGP5MZJYreW3wzpnFeuHKnL0Pho6PnZ52VB2y6g+YpsRRnJBpqMRcV
+        JwIAnGZjVTADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7qV1vJxBus/81n87P7CZvF7dS+b
+        xZWv79kstt6StjjR94HV4vKuOWwObB6zGnrZPHbOusvucb/7OJPH501yASxRejZF+aUlqQoZ
+        +cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehlbF8gWtAtXXJl/nLGB
+        cQ1fFyMnh4SAicTKi1OYQWwhgaWMEiemO3cxcgDFZSSOry+DKBGW+HOti62LkQuo5DWjxMv2
+        DmaQGmGBKIlrL7JATBEBTYnz54pASpgFVjBKXL5ygRGifhKjxJWrMxhBBrEJWElMbF8FZvMK
+        2Em0vehlBbFZBFQl2vqa2UFsUYEIicM7ZkHVCEqcnPmEBcTmFLCXmLlpAxOIzSygLvFn3iVm
+        CFtc4taT+VBxeYntb+cwT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9d
+        Lzk/dxMjMLK2Hfu5eQfjpY3BhxgFOBiVeHgz/sjFCbEmlhVX5h5ilOBgVhLhPTlDNk6INyWx
+        siq1KD++qDQntfgQoynQcxOZpUST84FRn1cSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1
+        OzW1ILUIpo+Jg1OqgVGwMWbtgV7ufmnhoL5tFaYmffddLn6a9DFGLDSh+Y23SWrSPbdQq1rX
+        GJ7y66u0V2+4el5xoUnDucxQndfHxLXi3Wo7lZzmLeN+dDttQ0LDHveUtwrqT5sOZuw7sDzP
+        M3PD5fLNIc1L/dvO3vu5UyWzP1341ZoIjlt9+2WvT1L9bn8/a31qjhJLcUaioRZzUXEiAOrJ
+        MTfCAgAA
+X-CMS-MailID: 20200115161905eucas1p21ba0a0cc496c4c20c10d88967b337006
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200113144633eucas1p191c367b401a4c984fbf593794534aa7a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200113144633eucas1p191c367b401a4c984fbf593794534aa7a
+References: <CGME20200113144633eucas1p191c367b401a4c984fbf593794534aa7a@eucas1p1.samsung.com>
+        <20200113144627.219967-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 15/01/2020 09:58, Yong Liang wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
+On 1/13/20 3:46 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Add reset controller for 2712.
-> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
-> camera, codec and connectivity) software reset functionality.
+> There is a hunk of code that is incorrectly indented, clean up the
+> indentation and a comment block. Also remove block braces around a
+> one line statement on an if condition and add missing spaces after
+> if keywords.
 > 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+Patch queued for v5.6, thanks.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
 > ---
->  drivers/watchdog/mtk_wdt.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/video/fbdev/nvidia/nvidia.c | 41 ++++++++++++++---------------
+>  1 file changed, 20 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index e88aacb0404d..d6a6393f609d 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -9,6 +9,7 @@
->   * Based on sunxi_wdt.c
->   */
+> diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
+> index c583c018304d..c24de9107958 100644
+> --- a/drivers/video/fbdev/nvidia/nvidia.c
+> +++ b/drivers/video/fbdev/nvidia/nvidia.c
+> @@ -168,27 +168,26 @@ static int nvidia_panel_tweak(struct nvidia_par *par,
+>  {
+>  	int tweak = 0;
 >  
-> +#include <dt-bindings/reset-controller/mt2712-resets.h>
->  #include <dt-bindings/reset-controller/mt8183-resets.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> @@ -67,6 +68,10 @@ struct mtk_wdt_data {
->  	int toprgu_sw_rst_num;
->  };
->  
-> +static const struct mtk_wdt_data mt2712_data = {
-> +	.toprgu_sw_rst_num = MT2712_TOPRGU_SW_RST_NUM,
-> +};
+> -   if (par->paneltweak) {
+> -	   tweak = par->paneltweak;
+> -   } else {
+> -	   /* begin flat panel hacks */
+> -	   /* This is unfortunate, but some chips need this register
+> -	      tweaked or else you get artifacts where adjacent pixels are
+> -	      swapped.  There are no hard rules for what to set here so all
+> -	      we can do is experiment and apply hacks. */
+> -
+> -	   if(((par->Chipset & 0xffff) == 0x0328) && (state->bpp == 32)) {
+> -		   /* At least one NV34 laptop needs this workaround. */
+> -		   tweak = -1;
+> -	   }
+> -
+> -	   if((par->Chipset & 0xfff0) == 0x0310) {
+> -		   tweak = 1;
+> -	   }
+> -	   /* end flat panel hacks */
+> -   }
+> -
+> -   return tweak;
+> +	if (par->paneltweak) {
+> +		tweak = par->paneltweak;
+> +	} else {
+> +		/* Begin flat panel hacks.
+> +		 * This is unfortunate, but some chips need this register
+> +		 * tweaked or else you get artifacts where adjacent pixels are
+> +		 * swapped.  There are no hard rules for what to set here so all
+> +		 * we can do is experiment and apply hacks.
+> +		 */
+> +		if (((par->Chipset & 0xffff) == 0x0328) && (state->bpp == 32)) {
+> +			/* At least one NV34 laptop needs this workaround. */
+> +			tweak = -1;
+> +		}
 > +
->  static const struct mtk_wdt_data mt8183_data = {
->  	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
->  };
-> @@ -314,6 +319,7 @@ static int mtk_wdt_resume(struct device *dev)
->  #endif
+> +		if ((par->Chipset & 0xfff0) == 0x0310)
+> +			tweak = 1;
+> +		/* end flat panel hacks */
+> +	}
+> +
+> +	return tweak;
+>  }
 >  
->  static const struct of_device_id mtk_wdt_dt_ids[] = {
-> +	{ .compatible = "mediatek,mt2712-wdt", .data = &mt2712_data },
->  	{ .compatible = "mediatek,mt6589-wdt" },
->  	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
->  	{ /* sentinel */ }
+>  static void nvidia_screen_off(struct nvidia_par *par, int on)
 > 
