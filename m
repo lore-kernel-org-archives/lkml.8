@@ -2,89 +2,200 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B24C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0095DC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AD224679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93122084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579113979;
+	bh=FOsge55tBvLYEwlzzKuLeN6gBOiH1dEahfHM7dijZEw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BKifT4psR03E6P0tJ2EJfESvjcJq0Jc3Y+IndFYA4r1GrPEqbGVpLKACcXo+0pFnX
+	 LFPoiPpdKC0KsaAa9k54D1CcN6LTnYEe3ivcEFxTL/TBaW5Ap/SJFbjIgWU3g5EXvW
+	 jBcRenlWtbR01V42+bPbqAncByIXXG8rpFajsiQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgAOSqO (ORCPT
+        id S1729369AbgAOSqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:46:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:41216 "EHLO foss.arm.com"
+        Wed, 15 Jan 2020 13:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729019AbgAOSqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:46:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04A51328;
+        id S1729213AbgAOSqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:46:13 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 127D42467E;
+        Wed, 15 Jan 2020 18:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579113972;
+        bh=FOsge55tBvLYEwlzzKuLeN6gBOiH1dEahfHM7dijZEw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LSGcEUXbSKsbd9ds0arTnLwToy4tfyimSrxa9soZRGtsja83+M8zMqmVeY0dOO2Rl
+         8lRECXd1A582Qnj3rIZnjFXyMcNjwq1Kj6aEaauB2B2V6oAkYIZkgjs9XjCCdCcFmq
+         5TXRoCz1Ic0gWbSk58JVZMj87o9dkCkGQm7/9txc=
+Received: by mail-qv1-f45.google.com with SMTP id u10so7864922qvi.2;
         Wed, 15 Jan 2020 10:46:12 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1AF53F6C4;
-        Wed, 15 Jan 2020 10:46:09 -0800 (PST)
-Subject: Re: [PATCH 0/2] Add EDAC support for Kryo CPU core caches
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, tsoni@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, psodagud@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org, baicar@os.amperecomputing.com
-References: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <0769b7cb-4e01-eb83-8ad4-b29b4fafafd4@arm.com>
-Date:   Wed, 15 Jan 2020 18:46:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+X-Gm-Message-State: APjAAAVgXeigop/mkdmNQzEkUh6PbbA+HeSzwORBc9UVdCV0wdiK3eFP
+        gNR2JEtG5bVZcOu+P9sDLo4u7tchFxAZq7LByw==
+X-Google-Smtp-Source: APXvYqwQhjjzzNFgQnH5Gk5PRAKtRXel22AUyoHHJ3Medi+wBx9id7b4qDaR088fF4MRTSFeU19h0F3baEcf1arCNNo=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr26956612qvo.20.1579113971121;
+ Wed, 15 Jan 2020 10:46:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz> <20200114233857.25933-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20200114233857.25933-2-chris.packham@alliedtelesis.co.nz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 15 Jan 2020 12:45:59 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+AOiFV4Kcu=r3-kz42ZqSVR_0ZuKtnz8ak_sksW0D0wQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+AOiFV4Kcu=r3-kz42ZqSVR_0ZuKtnz8ak_sksW0D0wQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Document binding for generic SPI multiplexer
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        anthony.derosa@syscall7.com, linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+On Tue, Jan 14, 2020 at 5:39 PM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add binding documentation for the spi-mux driver. This allows a generic
+> multiplexer to be used to provide access to multiple SPI devices.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  .../devicetree/bindings/spi/spi-mux.yaml      | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-mux.yaml
 
-(CC: +Tyler)
+Be sure to run 'make dt_binding_check'.
 
-On 05/12/2019 09:52, Sai Prakash Ranjan wrote:
-> This series implements EDAC support for error reporting on
-> Kryo{3,4}XX CPU caches L1,L2, L3-SCU. All the cores(big.LITTLE)
-> in Kryo{3,4}XX CPUs implement RAS extensions and use interrupt
-> based ECC mechanism to report errors.
-> 
-> This series has been tested on SC7180, SDM845, SM8150 SoCs with
-> Kryo{3,4}XX CPU cores based on ARM Cortex-A55, Cortex-A75 and
-> Cortex-A76.
-> 
-> This implementation is platform specific in contrast to the
-> patch posted last time for generic error reporting on arm cortex
-> implementations with RAS extensions by Kyle Yan.
->  - https://patchwork.kernel.org/patch/10161955/
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mux.yaml b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> new file mode 100644
+> index 000000000000..1026d03a69c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-mux.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-I think that series was dropped because it was too soc-specific and overlaps with the v8.2
-kernel first support. That series was superseded by:
-lore.kernel.org/r/1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com
+Dual license new bindings please:
 
-Can you work with Tyler on a combined series? The combined support may need to look quite
-different. (DT and big/little being the obvious differences).
+(GPL-2.0-only OR BSD-2-Clause)
 
-I'm afraid this is the tip of the kernel-first-RAS iceberg.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/spi-mux.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic SPI Multiplexer
+> +
+> +description: |
+> +  This binding describes a SPI bus multiplexer to route the SPI chip select
+> +  signals. This can be used when you need more devices than the SPI controller
+> +  has chip selects available. An example setup is shown in ASCII art; the actual
+> +  setting of the multiplexer to a channel needs to be done by a specific SPI mux
+> +  driver.
+> +
+> +        MOSI /--------------------------------+--------+--------+--------\
+> +        MISO |/------------------------------+|-------+|-------+|-------\|
+> +         SCL ||/----------------------------+||------+||------+||------\||
+> +             |||                            |||      |||      |||      |||
+> +      +------------+                        |||      |||      |||      |||
+> +      | SoC  |||   |                      +-+++-+  +-+++-+  +-+++-+  +-+++-+
+> +      |      |||   |                      | dev |  | dev |  | dev |  | dev |
+> +      |   +--+++-+ | CS-X  +------+\      +--+--+  +--+--+  +--+--+  +--+--+
+> +      |   | SPI  +-|-------+ Mux  |\\   CS-0 |        |        |        |
+> +      |   +------+ |       +--+---+\\\-------/   CS-1 |        |        |
+> +      |            |          |    \\\----------------/   CS-2 |        |
+> +      |   +------+ |          |     \\-------------------------/   CS-3 |
+> +      |   | ?    +-|----------/      \----------------------------------/
+> +      |   +------+ |
+> +      +------------+
+> +
+> +allOf:
+> +  - $ref: "/schemas/spi/spi-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: spi-mux
+> +
+> +  mux-control:
+> +    $ref: "/schemas/mux/mux-controller.yaml#"
 
+That file doesn't exist. If it did, it would still be wrong as that
+would be the provider side and this is the client.
 
-Thanks,
+The correct name is also 'mux-controls'.
 
-James
+You can assume it has a schema already and you just need to define how
+many entries it has (maxItems: 1).
+
+> +
+> +required:
+> +   - compatible
+> +   - reg
+> +   - spi-max-frequency
+> +   - mux-control
+> +
+> +examples:
+> +   - |
+> +     mux: mux-controller {
+> +       compatible = "gpio-mux";
+> +       #mux-control-cells = <0>;
+> +
+> +       mux-gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+> +     };
+> +
+> +     spi {
+> +       spi-mux {
+
+spi-mux@0
+
+> +         compatible = "spi-mux";
+> +         #address-cells = <1>;
+> +         #size-cells = <0>;
+> +         reg = <0>;
+> +         spi-max-frequency = <100000000>;
+
+I don't think this makes sense here. The mux doesn't really have any
+frequency given the clock and data lines aren't routed thru the mux
+(though maybe that's possible if some isolation is needed).
+
+> +
+> +         mux-control = <&mux>
+> +         mux-control-names = "spi";
+
+Not documented. Drop it as it's not all that useful when there's only 1 entry.
+
+> +
+> +         spi-flash@0 {
+> +           compatible = "jedec,spi-nor";
+> +           #address-cells = <1>;
+> +           #size-cells = <1>;
+> +           reg = <0>;
+> +           spi-max-frequency = <40000000>;
+> +         };
+> +
+> +         spi-device@1 {
+> +           compatible = "spidev";
+
+Not a valid compatible.
+
+> +           reg = <1>;
+> +           spi-max-frequency = <10000000>;
+> +         };
+> +       };
+> +     };
+> --
+> 2.25.0
+>
