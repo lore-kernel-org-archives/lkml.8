@@ -2,155 +2,105 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF25C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D684C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 369212084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="gCV8d+IV"
+	by mail.kernel.org (Postfix) with ESMTP id 38FB824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAOR3b (ORCPT
+        id S1728961AbgAORbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:29:31 -0500
-Received: from USFB19PA34.eemsg.mail.mil ([214.24.26.197]:3817 "EHLO
-        USFB19PA34.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgAOR3a (ORCPT
+        Wed, 15 Jan 2020 12:31:11 -0500
+Received: from mailout.easymail.ca ([64.68.200.34]:40796 "EHLO
+        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAORbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:29:30 -0500
-X-EEMSG-check-017: 44953522|USFB19PA34_ESA_OUT04.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.70,323,1574121600"; 
-   d="scan'208";a="44953522"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by USFB19PA34.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 15 Jan 2020 17:29:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1579109369; x=1610645369;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Jk+Kfbr+0xRlb22n1RNuNfeIYJyPIruB9ZGTtBdVio4=;
-  b=gCV8d+IVVXaeD7XLTEpTOvNdhF7Ca1RrqGk2nNOKZXa7BFEoqPYlSc8P
-   FXP4SpNwn5saXgiCIANjDdQC5w/FXPsIq2WqytCKs0zc9x0Wu9idhHnjx
-   Ogou900neOyhfuzRhbKbAkBgkTyhu/g3A9zbpUwfN9tU5YFbM3vtwg3pT
-   akZ5QNwHmKk1LglIxgIcPMTC2JsLDbjPs2evohSGjsQbr1EKCh3eC8yvL
-   3giluZ3c1ujeYY24MU1Npm94AHRZnNHeSODpZyN6xpDAKKGXWw5/duefe
-   zq5OJi7dd2RruYfj/vkk9DtQpSXz122I28WKhgnMxScs3k8q2ECxm/ZXc
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.70,323,1574121600"; 
-   d="scan'208";a="31989775"
-IronPort-PHdr: =?us-ascii?q?9a23=3AvS3D8hzGhb0aQcrXCy+O+j09IxM/srCxBDY+r6?=
- =?us-ascii?q?Qd0e8RKfad9pjvdHbS+e9qxAeQG9mCt7Qc0KGH4uigATVGvc/a9ihaMdRlbF?=
- =?us-ascii?q?wssY0uhQsuAcqIWwXQDcXBSGgEJvlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk?=
- =?us-ascii?q?2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+IA+5oAnMucQam5duJ6g+xh?=
- =?us-ascii?q?bNpnZDZuBayX91KV6JkBvw+8m98IR//yhMvv4q6tJNX7j9c6kkV7JTES4oM3?=
- =?us-ascii?q?oy5M3ltBnDSRWA634BWWgIkRRGHhbI4gjiUpj+riX1uOx92DKHPcLtVrA7RS?=
- =?us-ascii?q?6i76ZwRxD2jioMKiM0/3vWisx0i6JbvQ6hqhliyIPafI2ZKPxzdb7GcNgEWW?=
- =?us-ascii?q?ROQNpeVy1ZAoO9cYQPCfYBPf1FpIX5vlcCsAeyCRWpCO7pxDBInHv21rAk3e?=
- =?us-ascii?q?onHw/NwQgsE8sQvHnQqdn4MroZX+Kow6nS1TjNcu1Y2Tn95obLfB4ur/6DUr?=
- =?us-ascii?q?BsfsTe0kQvCwHIg0+MpYD5MT6Y1OIAuHWb4ep6UuKvjnYqpRxtojex3scsip?=
- =?us-ascii?q?fGhoQIwV7Z8CV22oI1JdmmR097fNWpF4BQuDyBN4ZtXsMjQ31nuCY9yrEcv5?=
- =?us-ascii?q?67ZzIFxI4oxx7YdfyKao6F6Q/tWuaWJDd3nnNleLSnihax70eg0Ov8Wdew0F?=
- =?us-ascii?q?pQqSpFiNbMu3YQ3BLQ8siKUuZx80iu1DqV1w3f9/tILV47mKbFMZIt37g9nY?=
- =?us-ascii?q?cJv0vZBC/5gkD2gbeTdkUj5+en9fzqYq7jpp+AL490jRz+Mrg2lsy/H+s4Ng?=
- =?us-ascii?q?8OUnCH+eumzr3j/FD5QK5Qgv03lKnZvpfaJd8FqaGlGQNVzoYi5Aq/Dzehyt?=
- =?us-ascii?q?gYm2UILElZdx6diojpOlXOLOj5Dfe5nVusjC9my+3JM7DuGJnALmXPnK3/cb?=
- =?us-ascii?q?ty9UJQ0hc/wcha551OC7EBJPzzWlX2tNzdFhI5KBG7w/38BdVh1oIRRWKPAq?=
- =?us-ascii?q?iDPKPUql+H/PgjI+aLZI8LoDr9MeQq5+byjX8lnl8QZaqp3YMMaHC5GPRmLE?=
- =?us-ascii?q?WZbGHwjdcBC2cKuQ8+TO33iF2HSzJTYGyyX60k7DEhFI2mFZvDRpyqgLGZ2C?=
- =?us-ascii?q?e7H5tWZn1JC1yVEnfnaZ+EW/ESZyKWOcJhjDMEWqa7S4M71hGhqhX6y7x5Ie?=
- =?us-ascii?q?rQ4CEYsojj1Ndt7e3JiR4y7SB0D9ia02yVVG50hm0ISiQo3KBwv0N90E2P0a?=
- =?us-ascii?q?tmjPxCE9xc+fdJXh09NZ7GwOxwE8ryVR7ZfteVVFamRc2rATUwTtI33t8PbF?=
- =?us-ascii?q?9xG868gR/fwiqqGb4Vl6CLBZAt96Lc2GX+J9t5y3nYz6QhkVYmTdVVNWG8ha?=
- =?us-ascii?q?5w6RLTB4jXnEWdjaqqcr4c3CHV/meZ0WWOpF1YUBJ3UajdR38ffVfWoM/65k?=
- =?us-ascii?q?zcVb+uD6ooMg9bxc6FMKtKZcXjjU9aS/f7JNTef2Wxln+tChmSwLOMbZTle2?=
- =?us-ascii?q?EG0SXcD0gEnB4c8mycNQclASegrHjSDDpwGlLze0ns6/VxqGunTk8oyAGHd0?=
- =?us-ascii?q?9h17+y+h4Pn/ycSugT06kCuCg7rjV7Ale908jRC9qaqAprZL9cbs8l4FdbyW?=
- =?us-ascii?q?LZsBRwPp++IK98nV4RbwN3v0Tt1xhsFopAkdIqrHQvzApzNKKY1UlNdzSC3Z?=
- =?us-ascii?q?D/IrfXMHX9/Aiza67K3VHTyMqW+qcA6PsisVXjugCpGVQ5/np709lVyXyc5p?=
- =?us-ascii?q?DLDAoPVJL9SEE39wJ1p7vCeCky+5vU1WFwMamzqjLC3tIpC/Ehyhm8ZddfN6?=
- =?us-ascii?q?2FGRT9E80dAMiuJ+gqlEazYh0YO+BS8bY+P9m6ePuexK6rIOFgkSq+jWRF/I?=
- =?us-ascii?q?BwyU2M9y17Su7H25YK3euU0ReAVzf5lF2hqNz4mZhYZTEOGWqy0TPrBJRPaa?=
- =?us-ascii?q?10YIkEE2GuL9eqydlkiJ7tQWBX9FGsB14d18+pfACdb1353QFKyUsXpnmnkz?=
- =?us-ascii?q?OizzNoizEpsraf3CvWzuTgbhUHPGhLRGl5gFfjJoi0iN8aXEy2YAQziBSl4k?=
- =?us-ascii?q?P6zbBBpKtjN2nTXVtIfy/uImFnUKuwubqPbspU5ZMntiVXV+u8YVSERbLnvx?=
- =?us-ascii?q?Qa1CbjFXNExD8nbzGqpon5nxtihW2BLHZztnvZedpsxRfe/tPcQ+Vc0SEcRC?=
- =?us-ascii?q?ZilDnXAEazP8Oz8dWVkJfJqvq+WH65Vp1PbSnrypuNtC665WJ2GhCwgvGzmt?=
- =?us-ascii?q?LmEQg51i/0ysNmVSPWoxbgeoPrzbi1Mfp7fkl0A1/x89B6FZ9gkoQun5EQxW?=
- =?us-ascii?q?MXiYmV/XodlmfzNNRb2b/7bHYXQj4L2dHV6hD/2EJ/NnKJ2575VnKFz8tjfd?=
- =?us-ascii?q?a1fmAW2icn4MBME6iZ96BLnStvolq/qALRYOV9njIHxfsp8n4ajPkDuBAxwS?=
- =?us-ascii?q?WFHrASAU5YMDTvlxuS4dCxtqRXaX2hcberzkZxgdehDLSaqAFGRHn5YosiHT?=
- =?us-ascii?q?N37shnK1LM13vz6o7geNnRcNIcrQeUnA3ej+hULpIxmeEHhSR8Nm7noXIlzO?=
- =?us-ascii?q?s7hwR03Z6mpIiHN3lt/KWhDx9YNj31fNge+j/2gqpEgsmW2IWvFI17GjoXRJ?=
- =?us-ascii?q?voUe6oEDUKuPT8KQmOCjI8pWmAFLrfBwCf7ENmrnLJE5yxK36XI3wZx814RB?=
- =?us-ascii?q?aBPExfnBwUXDIik548Cg+qxNLucEdj6T8K4VL4sQFDyudzNxniVGffqxylaj?=
- =?us-ascii?q?QqR5iFKhpZ8AVC613SMcyE4eJ5BztY8YG5rAyRNmybYBxFAnwTVUyaGV/jO6?=
- =?us-ascii?q?Kj6sTa/OiGGOW+Kv/OYbKAqexCTfuIw4yg0pd+9TaWKsqPJmViD+E82kdbUn?=
- =?us-ascii?q?B5AdrWmzoMSywXjC/Na8+bpBGh+ix4oMC/9+nrWATy6oSVF7tSMNJv+xasja?=
- =?us-ascii?q?eELe6Qiz5zKSxE2ZMU2X/I1L8f0UYUiyFvazatFrAAujTWTK7KlK9YEQQbaz?=
- =?us-ascii?q?ltO8ZT6qI83xVCOdTcitzp1r54j+Y1B01ZWlzmn8GjfdYKLH2lNFPbGEaLM6?=
- =?us-ascii?q?yLJSbWzMH5eq68RrpQjOJbtx20pzmXCVPsPjOGlzPxTRCgLflMjD2HPBxZoI?=
- =?us-ascii?q?y9awttBnblTNL6ax27NsV7jTgxwb0ygHPFK3IcPCN6c0xTsr2Q9yRYgvN4G2?=
- =?us-ascii?q?xE8HVpN/WLmyGc7+PAMJYZreNrAjhol+Jd+Hk60aZa7CdeS/FulivdtcRirE?=
- =?us-ascii?q?2hkumK0jBnSgZBqi5XhIKXukVvIafZ9p5eVnvf8hMC92OQBAkQq9tjFNLvp7?=
- =?us-ascii?q?pcyt7OlfG7FDAX0OqcxsoaCMicfMGfK3snPhrBEz7OCw4EUDvtMnvQ0QgVlP?=
- =?us-ascii?q?CU623QrZUgrJXosIQBR6UdV1EvEP4eTEN/E5hKKo95di0rnKTdj8MS43e66h?=
- =?us-ascii?q?7LS4ESupHBS+LXGvjkNSyYkagBYhwE3Lf1BZocO5e92EF4bFR+2oPQFBn+R9?=
- =?us-ascii?q?dI9xZ9Yxc0rUMFy313Smk+ygqxcQ+2yGMCHv6z2Bgtg01xZvp7p2Sk2Es+Ol?=
- =?us-ascii?q?ef/Hh4q0I2g9iwxGnLITM=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BHAQAXSx9e/wHyM5BkGwEBAQEBAQEFAQEBEQEBAwMBA?=
- =?us-ascii?q?QGBe4F9gRhUASASKoQPiQOGXgaBN4lukHIDVAkBAQEBAQEBAQEtCgEBhEACg?=
- =?us-ascii?q?iM4EwIQAQEBBAEBAQEBBQMBAWyFNwyCOykBgnkBAQEBAyMEEUEQCxUDAgImA?=
- =?us-ascii?q?gJXBgEMBgIBAYJjPwGCViUPpiR1fzOENQGBFINKgTgGgQ4oiU+CY3mBB4ERJ?=
- =?us-ascii?q?w+CXT6CS4UOgl4EkBGHGUaXVIJCgkmEdI5tBhuabo5ciF2UNCI3gSErCAIYC?=
- =?us-ascii?q?CEPO4JsEgE9GA2IDReIZIVdIwMwAgEBAY1bAQE?=
-Received: from tarius.tycho.ncsc.mil (HELO tarius.infosec.tycho.ncsc.mil) ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 15 Jan 2020 17:29:26 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.infosec.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 00FHSbTP160596;
-        Wed, 15 Jan 2020 12:28:39 -0500
-Subject: Re: [PATCH bpf-next v2 04/10] bpf: lsm: Add mutable hooks list for
- the BPF LSM
-To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-References: <20200115171333.28811-1-kpsingh@chromium.org>
- <20200115171333.28811-5-kpsingh@chromium.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <cd1d9d9f-1b68-8d2c-118a-334e4c71eb57@tycho.nsa.gov>
-Date:   Wed, 15 Jan 2020 12:30:08 -0500
+        Wed, 15 Jan 2020 12:31:11 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mailout.easymail.ca (Postfix) with ESMTP id 9B58021A7A;
+        Wed, 15 Jan 2020 17:31:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo06-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+        by localhost (emo06-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2Cya_KbpAvt9; Wed, 15 Jan 2020 17:31:09 +0000 (UTC)
+Received: from mail.gonehiking.org (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        by mailout.easymail.ca (Postfix) with ESMTPA id CACE220A05;
+        Wed, 15 Jan 2020 17:30:57 +0000 (UTC)
+Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
+        by mail.gonehiking.org (Postfix) with ESMTP id D9A3E3F012;
+        Wed, 15 Jan 2020 10:30:56 -0700 (MST)
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Kairui Song <kasong@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org, Jerry Hoemann <Jerry.Hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20200110214217.GA88274@google.com>
+ <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
+ <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
+ <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv>
+ <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+ <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
+ <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
+ <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
+From:   Khalid Aziz <khalid@gonehiking.org>
+Autocrypt: addr=khalid@gonehiking.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+Date:   Wed, 15 Jan 2020 10:30:56 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200115171333.28811-5-kpsingh@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -158,65 +108,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 12:13 PM, KP Singh wrote:
-> From: KP Singh <kpsingh@google.com>
+On 1/13/20 10:07 AM, Kairui Song wrote:
+> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>>
+>>> Hi, there are some previous works about this issue, reset PCI devices
+>>> in kdump kernel to stop ongoing DMA:
+>>>
+>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
+>>> https://lore.kernel.org/patchwork/cover/343767/
+>>>
+>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
+>>> https://lore.kernel.org/patchwork/patch/379191/
+>>>
+>>> And didn't get merged, that patch are trying to fix some DMAR error
+>>> problem, but resetting devices is a bit too destructive, and the
+>>> problem is later fixed in IOMMU side. And in most case the DMA seems
+>>> harmless, as they targets first kernel's memory and kdump kernel only
+>>> live in crash memory.
+>>
+>> I was going to ask the same. If the kdump kernel had IOMMU on, would
+>> that still be a problem?
 > 
-> - The list of hooks registered by an LSM is currently immutable as they
->    are declared with __lsm_ro_after_init and they are attached to a
->    security_hook_heads struct.
-> - For the BPF LSM we need to de/register the hooks at runtime. Making
->    the existing security_hook_heads mutable broadens an
->    attack vector, so a separate security_hook_heads is added for only
->    those that ~must~ be mutable.
-> - These mutable hooks are run only after all the static hooks have
->    successfully executed.
+> It will still fail, doing DMA is not a problem, it only go wrong when
+> a device's upstream bridge is mistakenly shutdown before the device
+> shutdown.
 > 
-> This is based on the ideas discussed in:
+>>
+>>> Also, by the time kdump kernel is able to scan and reset devices,
+>>> there are already a very large time window where things could go
+>>> wrong.
+>>>
+>>> The currently problem observed only happens upon kdump kernel
+>>> shutdown, as the upper bridge is disabled before the device is
+>>> disabledm so DMA will raise error. It's more like a problem of wrong
+>>> device shutting down order.
+>>
+>> The way it was described earlier "During this time, the SUT sometimes
+>> gets a PCI error that raises an NMI." suggests that it isn't really
+>> restricted to kexec/kdump.
+>> Any attached device without an active driver might attempt spurious or
+>> malicious DMA and trigger the same during normal operation.
+>> Do you have available some more reporting of what happens during the
+>> PCIe error handling?
 > 
->    https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugged-nimbus-611.internal
+> Let me add more info about this:
 > 
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
-[...]
-> diff --git a/security/security.c b/security/security.c
-> index cd2d18d2d279..4a2eb4c089b2 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -652,20 +653,21 @@ static void __init lsm_early_task(struct task_struct *task)
->   								\
->   		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
->   			P->hook.FUNC(__VA_ARGS__);		\
-> +		CALL_BPF_LSM_VOID_HOOKS(FUNC, __VA_ARGS__);	\
->   	} while (0)
->   
-> -#define call_int_hook(FUNC, IRC, ...) ({			\
-> -	int RC = IRC;						\
-> -	do {							\
-> -		struct security_hook_list *P;			\
-> -								\
-> +#define call_int_hook(FUNC, IRC, ...) ({				\
-> +	int RC = IRC;							\
-> +	do {								\
-> +		struct security_hook_list *P;				\
->   		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
-> -			RC = P->hook.FUNC(__VA_ARGS__);		\
-> -			if (RC != 0)				\
-> -				break;				\
-> -		}						\
-> -	} while (0);						\
-> -	RC;							\
-> +			RC = P->hook.FUNC(__VA_ARGS__);			\
-> +			if (RC != 0)					\
-> +				break;					\
-> +		}							\
-> +		RC = CALL_BPF_LSM_INT_HOOKS(RC, FUNC, __VA_ARGS__);	\
-
-Let's not clobber the return code from the other LSMs with the bpf one.
-
-> +	} while (0);							\
-> +	RC;								\
->   })
->   
->   /* Security operations */
+> On the machine where I can reproduce this issue, the first kernel
+> always runs fine, and kdump kernel works fine during dumping the
+> vmcore, even if I keep the kdump kernel running for hours, nothing
+> goes wrong. If there are DMA during normal operation that will cause
+> problem, this should have exposed it.
 > 
 
+This is the part that is puzzling me. Error shows up only when kdump
+kernel is being shut down. kdump kernel can run for hours without this
+issue. What is the operation from downstream device that is resulting in
+uncorrectable error - is it indeed a DMA request? Why does that
+operation from downstream device not happen until shutdown?
+
+I just want to make sure we fix the right problem in the right way.
+
+--
+Khalid
