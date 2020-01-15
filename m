@@ -2,150 +2,142 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449CEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48B02187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2DE24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwuEbm4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAOPwc convert rfc822-to-8bit (ORCPT
+        id S1728946AbgAOPx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:52:32 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:57647 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgAOPwb (ORCPT
+        Wed, 15 Jan 2020 10:53:57 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36223 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgAOPx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:52:31 -0500
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MHG4c-1iw6Xd3h6e-00DJTn; Wed, 15 Jan 2020 16:52:30 +0100
-Received: by mail-qk1-f172.google.com with SMTP id j9so16107856qkk.1;
-        Wed, 15 Jan 2020 07:52:29 -0800 (PST)
-X-Gm-Message-State: APjAAAVA1f2vTcfnXM0zsPyCU81xT4xBVoeAFP1pTfuRx4GmJcKTOral
-        AKY7fHyBbhf96+NdSHfd30KbELP72alDGqm5wVk=
-X-Google-Smtp-Source: APXvYqyGRd69VGhmXUx6e4teyjZqa0NYLVdbqN2FyC+i0ZdlSzOVavJ0u2B/XLAnvT0F0550ujfZyMpnj3oOoBBM23g=
-X-Received: by 2002:a37:84a:: with SMTP id 71mr27099157qki.138.1579103548648;
- Wed, 15 Jan 2020 07:52:28 -0800 (PST)
-MIME-Version: 1.0
-References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
- <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
- <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
- <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
- <20200115142428.ugsp3binf2vuiarq@pali> <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
- <20200115153943.qw35ya37ws6ftlnt@pali>
-In-Reply-To: <20200115153943.qw35ya37ws6ftlnt@pali>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 16:52:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
-Message-ID: <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
-Subject: Re: [PATCH v10 09/14] exfat: add misc operations
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <linkinjeon@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:S6ZEsT6whPDpodLWS5C/v6xe4qXptO7E7I36/HFhoLteqD60zXz
- Pc6bW5a3OyyL8LyNe9jf2lQX3Ax0Ffmv5tftXg7y85jpOQLgAKz/zWoQQjPqOBs3y0gKQ/Z
- eWgOu2BTN0WaOk3tHYoBDcGVBsMQ+zzlPd2DFjlQ8+v7/o/SCQAwsF2G0EEkqvYV5oS8w8f
- 2LrjbvhzEodeuKJO6wM7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XL8nm85kI74=:kDlDUKeQW/8k4eFOwF0MIt
- unCk3LtmTlOuSt5JAdR4XQ81fSdKdPkD07RW+1n0d8z/YKNDLUoHhSSbv/9Dp5lR5D02i6u02
- +tAPBeTSBzhZiMkhfcw3MwUCIJ/RLXK4laf0p4hAdXONQ513qdVST7p9r29NMsF1xRME+N6AW
- ZKBbzH9ZZAajRhjnWnXHbIWDWCWzWozDVRYM30FEJoT/ZRBQDSyDorvEgOmd8Pgu96GsLemGE
- aGeu5BNGg0s1CpIDoIJqqOx8Ll1mBva4fGwzSdfx5ude4dxGMQG+3tttjGH4V2GWPMA1UJfx4
- SliHA1QRuP1DyAQklkA+ktCsThk8/uId6ggRtHoAMd2TruJHiiLYWkvY+B6E7xPwx1CC6gMBz
- ptpK8J3Ze3ss64kNqonFLzg8E+/wXlI7RguIn/LZ9QCmzte3fn6YO9p3TGOg9pVMCQKbXT10m
- uFkelFjs7rVM6ezAZJo4Oo935XmcX0UNKe6xX9CFv98F1hIXgY/izM1F7j+DGwtUAJaim6kyp
- QGfLKuz5Pk1zm6nFB5fsYFEzgOKeJ68vDcv/6mc9zG3+EAgnJfg1xUOYvEJuATMa8G+Fb+eK7
- Xxpy0tKqSQuJkTskHKgw78G4sT7BecjAoNB8zcReB6HZZLEGetAINrLoNZYgTXl5EpijPi5qx
- X1aqIloNBmCL1mYkW9Qazl7Ve3tHWB68SSpH46VByJTk1eM2vVBk/xocw5VHrnyXwkNJkPClf
- 7FgNdTHkiVc2J2mR4yqoxc0iDOVLbo8eWtgmQuEQHRORnT9dE+zkW2lebN1ePfQ/QQHyCMJ1Z
- 996OJG8qeFtkS68Ja4bZ83bMLzY3m57y6USqp4w9HaMDUmxxUW9mZq3rlfTjl9yo46wcGVxpG
- BcUa2ROG9acicwginVkw==
+        Wed, 15 Jan 2020 10:53:57 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x184so8721956pfb.3;
+        Wed, 15 Jan 2020 07:53:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=c/GWPQtRfN7j/bEfY+uIGMfC4b83t2OdSqf9AvElNRM=;
+        b=EwuEbm4VZGa5Yrj1M1k5z/SPIhI/TyArbfnbVrC91uJvgqCXjVIYHF5u+M5/X1rdJT
+         70gnHeB+JCcWu5W4tgZ1AO7gppBRrmPJhPzaC6T7a/sQlFkxe/ild7vt8rZ9zah7jWtE
+         Z4I7BJFOJ5+XZh33RgFyQjHfnKNYYhB++PdcLYi7aYsJK1WIJ14lZtuiYXMErVz4EPyx
+         FBnF+th9KbYbdtNpiaWd7qI+ImCzrn0S2An3ip7vWxySJWmnkbLp+PgK4KcjGJTzLKfP
+         GnRrnYuLBNwEaidccyXlPF952M7ocLNt8U1ydpR/UJMCeb1xs020494ha66/l6yU+5jS
+         K+Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c/GWPQtRfN7j/bEfY+uIGMfC4b83t2OdSqf9AvElNRM=;
+        b=UWrGkG8Sp4FK/H64YWzWeXGaTWphFo1Va1yrdwuzC8Ux4w4hrVHrm25L7HWa3Aaynw
+         pura02OBQIzOSUFIayNO9GHhaLdgVjCVP6bGiXHZqCczurhPjVijNwC4GC8wvhiklPnX
+         BkMSOTq2V88A1brrEM8qnWDW9wVr6dPTSodemgyjuXvkxLf6+nORAAot4GrB5KYnhVXs
+         kEd66vm2JmxMjNjQHUg3epOr0/U0ho6y6wLyYOz+dxVV2A79MqibBUDwaSKB/ysxHvLu
+         TnNPtC6/jVWW1YtIc/s6QGQgZcxVIS19wP+Z7n2Je3q772cqCTS2oZSbZ8DwOuc9aXXd
+         tFBw==
+X-Gm-Message-State: APjAAAUlxARnCxjhLFD/t0zw1Vcrm22pZHtPuqbkDVP0blobqvsEtpLe
+        2Y/RCUcJXfRcFbJZGPhf7UTAjvmS
+X-Google-Smtp-Source: APXvYqyKceOTx9ZjZoes/c2uX1iezUq1hng9gL92ptSPdkUO9WPHZB3PUuC6MsV6ZBJ7g6f6sPoZEQ==
+X-Received: by 2002:aa7:8088:: with SMTP id v8mr32789472pff.142.1579103636329;
+        Wed, 15 Jan 2020 07:53:56 -0800 (PST)
+Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
+        by smtp.gmail.com with ESMTPSA id i66sm22664925pfg.85.2020.01.15.07.53.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 07:53:55 -0800 (PST)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH] net: stmmac: modified pcs mode support for RGMII
+Date:   Wed, 15 Jan 2020 23:53:23 +0800
+Message-Id: <20200115155323.15543-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 4:39 PM Pali Rohár <pali.rohar@gmail.com> wrote:
-> On Wednesday 15 January 2020 16:03:12 Arnd Bergmann wrote:
-> > The vdso and kernel/time/ code are for maintaining the timezone through
-> > settimeofday()/gettimeofday(), and the drivers should probably all be changed
-> > to use UTC. The file systems (affs, fat, hfs, hpfs and udf) do this for
-> > compatibility with other operating systems that store the metadata in
-> > localtime.
->
-> Ok. But situation for exFAT is quite different. exFAT timestamp
-> structure contains also timezone information. Other filesystems do not
-> store timezone into their metadata (IIRC udf is exception and also
-> stores timezone). So question is in which timezone we should store to
-> exFAT timestamps. This is not for compatibility with legacy systems, but
-> because of fact that filesystem supports feature which is not common for
-> other filesystems.
->
-> Also, to make it more complicated exFAT supports storing timestamps also
-> in "unspecified" (local user) timezone, which matches other linux
-> filesystems.
->
-> So for storing timestamp we have options:
->
-> * Store them without timezone
-> * Store them in sys_tz timezone
-> * Store them in timezone specified in mount option
-> * Store them in UTC timezone
->
-> And when reading timestamp from exFAT we need to handle both:
->
-> * Timestamps without timezone
-> * Timestamps with timezone
+snps databook noted that physical coding sublayer (PCS) interface
+that can be used when the MAC is configured for the TBI, RTBI, or
+SGMII PHY interface. we have RGMII and SGMII in a SoC and it also
+has the PCS block. it needs stmmac_init_phy and stmmac_mdio_register
+function for initializing phy when it used RGMII interface.
 
-Right.
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c   | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-> So what is the best way to handle timezone/timestamps?
->
-> For me it looks sane:
->
-> When storing use: mount option timezone. When not available then use
-> sys_tz. And when sys_tz is not set (it is possible?), do not specify
-> timezone at all. Maybe there should be a mount option which says that
-> timestamps on exfat are stored without timezone.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 6f51a265459d..9778e7e0c005 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -387,9 +387,8 @@ bool stmmac_eee_init(struct stmmac_priv *priv)
+ 	/* Using PCS we cannot dial with the phy registers at this stage
+ 	 * so we do not support extra feature like EEE.
+ 	 */
+-	if ((priv->hw->pcs == STMMAC_PCS_RGMII) ||
+-	    (priv->hw->pcs == STMMAC_PCS_TBI) ||
+-	    (priv->hw->pcs == STMMAC_PCS_RTBI))
++	if (priv->hw->pcs == STMMAC_PCS_TBI ||
++	    priv->hw->pcs == STMMAC_PCS_RTBI)
+ 		return false;
+ 
+ 	/* Check if MAC core supports the EEE feature. */
+@@ -2652,8 +2651,7 @@ static int stmmac_open(struct net_device *dev)
+ 	u32 chan;
+ 	int ret;
+ 
+-	if (priv->hw->pcs != STMMAC_PCS_RGMII &&
+-	    priv->hw->pcs != STMMAC_PCS_TBI &&
++	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ 	    priv->hw->pcs != STMMAC_PCS_RTBI) {
+ 		ret = stmmac_init_phy(dev);
+ 		if (ret) {
+@@ -4725,8 +4723,7 @@ int stmmac_dvr_probe(struct device *device,
+ 
+ 	stmmac_check_pcs_mode(priv);
+ 
+-	if (priv->hw->pcs != STMMAC_PCS_RGMII  &&
+-	    priv->hw->pcs != STMMAC_PCS_TBI &&
++	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ 	    priv->hw->pcs != STMMAC_PCS_RTBI) {
+ 		/* MDIO bus Registration */
+ 		ret = stmmac_mdio_register(ndev);
+@@ -4760,8 +4757,7 @@ int stmmac_dvr_probe(struct device *device,
+ error_netdev_register:
+ 	phylink_destroy(priv->phylink);
+ error_phy_setup:
+-	if (priv->hw->pcs != STMMAC_PCS_RGMII &&
+-	    priv->hw->pcs != STMMAC_PCS_TBI &&
++	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ 	    priv->hw->pcs != STMMAC_PCS_RTBI)
+ 		stmmac_mdio_unregister(ndev);
+ error_mdio_register:
+@@ -4806,8 +4802,7 @@ int stmmac_dvr_remove(struct device *dev)
+ 		reset_control_assert(priv->plat->stmmac_rst);
+ 	clk_disable_unprepare(priv->plat->pclk);
+ 	clk_disable_unprepare(priv->plat->stmmac_clk);
+-	if (priv->hw->pcs != STMMAC_PCS_RGMII &&
+-	    priv->hw->pcs != STMMAC_PCS_TBI &&
++	if (priv->hw->pcs != STMMAC_PCS_TBI &&
+ 	    priv->hw->pcs != STMMAC_PCS_RTBI)
+ 		stmmac_mdio_unregister(ndev);
+ 	destroy_workqueue(priv->wq);
+-- 
+2.17.1
 
-I would argue we should always store files in UTC, which seems to be
-the most consistent with other file systems, and can be understood
-by any other implementation that understands the timezone information
-on disk  or that expects UTC.
-
-> When reading timestamp with timezone: Convert timestamp to timezone
-> specified in mount option (or fallback to sys_tz or fallback to UTC).
-
-Here I would just convert to UTC, which is what we store in the
-in-memory struct inode anyway.
-
-> And when reading timestamp without timezone: Pass it as is without
-> conversion, ignoring all timezone mount options and sys_tz.
->
-> Arnd, what do you think about it?
-
-The last case (reading timestamp without timezone) is the only
-one that I think we have to decide on: when reading an inode from
-disk into memory, we have to convert it into UTC in some form.
-
-This is what I think the timezone mount option should be used
-for: if we don't know what the timezone was for the on-disk
-timestamp, use the one provided by the user. However, if none
-was specified, it should be either sys_tz or UTC (i.e. no
-conversion). I would prefer the use of UTC here given the
-problems with sys_tz, but sys_tz would be more consistent
-with how fs/fat works.
-
-    Arnd
