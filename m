@@ -2,104 +2,69 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466F9C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E50AC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1688F22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579126676;
-	bh=KRACwXXWKO/EznwyzDu7lnYus4D5z0F5HFebQ6mV67A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zSrVG4ISPtjqHVebM09Uzk2q/4g5SA9OnrejP0ZeVoSDHvJ01V74nsq74qYhJo7oP
-	 ogceavd4Wpa9r+Hwi7qTKfCJIgxcFI0J1Dr7iWXYs58Kphnjh3yZDac0dQy7jMAwtV
-	 QqxcQkYsm/l8nyL9SEB5nuxGze6oH/At67fTbsd4=
+	by mail.kernel.org (Postfix) with ESMTP id 63F9A2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbgAOWRz (ORCPT
+        id S1730592AbgAOWTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:17:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgAOWRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:17:55 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31C32187F;
-        Wed, 15 Jan 2020 22:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579126674;
-        bh=KRACwXXWKO/EznwyzDu7lnYus4D5z0F5HFebQ6mV67A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vQDz4L3I+zNXlHoV/yl0mng1PqZTdqI34xdNfY1tpzXxo7DwkfhndIBNVHQSuk5eS
-         bxE1ZS1d7WJnGwLZyKWeRL2QjzRf8jLzTN1R5FgFEY9cfNOCrkzdXaiKM2RS3tyd3U
-         Et/ca6hqUoSBV4mLJ/Y7o52mj9EGSwqjE4zs3zqQ=
-Date:   Thu, 16 Jan 2020 07:17:50 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net
-Subject: Re: [BUGFIX PATCH] selftests: Fix pthread link option
-Message-Id: <20200116071750.0bde391266ea7637ee041d8c@kernel.org>
-In-Reply-To: <20200115192528.kq44bg24ezsgo5hm@ast-mbp.dhcp.thefacebook.com>
-References: <157907976750.14189.12829891067375600434.stgit@devnote2>
-        <20200115192528.kq44bg24ezsgo5hm@ast-mbp.dhcp.thefacebook.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Jan 2020 17:19:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49401 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgAOWTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:19:55 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irr0v-0002IC-V0; Wed, 15 Jan 2020 23:19:50 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 0D22D101228; Wed, 15 Jan 2020 23:19:49 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
+        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
+Subject: Re: [PATCH] x86/cpu: clear X86_BUG_SPECTRE_V2 on Zhaoxin family 7 CPUs
+In-Reply-To: <1579075500-7065-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+References: <1579075500-7065-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+Date:   Wed, 15 Jan 2020 23:19:49 +0100
+Message-ID: <87h80wxsze.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 11:25:30 -0800
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Tony W Wang-oc <TonyWWang-oc@zhaoxin.com> writes:
 
-> On Wed, Jan 15, 2020 at 06:16:07PM +0900, Masami Hiramatsu wrote:
-> > To support pthread correctly, it is better to use -pthread
-> > instead of -lpthread.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/testing/selftests/bpf/Makefile               |    2 +-
-> >  tools/testing/selftests/membarrier/Makefile        |    2 +-
-> >  tools/testing/selftests/mqueue/Makefile            |    2 +-
-> >  tools/testing/selftests/net/Makefile               |    4 ++--
-> >  .../testing/selftests/powerpc/benchmarks/Makefile  |    4 ++--
-> >  tools/testing/selftests/powerpc/dscr/Makefile      |    2 +-
-> >  tools/testing/selftests/powerpc/mm/Makefile        |    2 +-
-> >  tools/testing/selftests/rseq/Makefile              |    2 +-
-> >  tools/testing/selftests/rtc/Makefile               |    2 +-
-> >  tools/testing/selftests/seccomp/Makefile           |    2 +-
-> >  tools/testing/selftests/timers/Makefile            |    2 +-
-> >  tools/testing/selftests/vm/Makefile                |    2 +-
-> >  12 files changed, 14 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> > index e2fd6f8d579c..419f58c53d12 100644
-> > --- a/tools/testing/selftests/bpf/Makefile
-> > +++ b/tools/testing/selftests/bpf/Makefile
-> > @@ -22,7 +22,7 @@ CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR)	\
-> >  	  -I$(GENDIR) -I$(TOOLSDIR) -I$(CURDIR)				\
-> >  	  -Dbpf_prog_load=bpf_prog_test_load				\
-> >  	  -Dbpf_load_program=bpf_test_load_program
-> > -LDLIBS += -lcap -lelf -lrt -lpthread
-> > +LDLIBS += -lcap -lelf -lrt -pthread
-> 
-> Please split this bit into separate patch and send it to bpf@vger targeting
-> bpf-next. selftests/bpf are going through a lot of changes and I'd like to
-> avoid any chance of conflicts.
+> These CPUs are not affected by spectre_v2, so clear spectre_v2 bug flag
+> in their specific initialization code.
+>  
+>  	if (cpu_has(c, X86_FEATURE_VMX))
+>  		centaur_detect_vmx_virtcap(c);
+> +
+> +	if (c->x86 == 7) {
+> +		setup_clear_cpu_cap(X86_BUG_SPECTRE_V2);
+> +		clear_bit(X86_BUG_SPECTRE_V2, (unsigned long *)cpu_caps_set);
 
-OK, I'll split it.
+No. Please use cpu_vuln_whitelist. It exists for exactly this
+purpose. You just need to extend it with a NO_SPECTRE_V2 bit.
 
-Thank you,
+Thanks,
+
+        tglx
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
