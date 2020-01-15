@@ -2,115 +2,167 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C87C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FCAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD902077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579077820;
-	bh=vwpx7jmy/UsNz4oukcDm0Up8DtcbyNZm+J/hXoV3gb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wXBwAn/gPoI2rwmntvHvMXc1IpWgs1PVAFeLEXPNpULNdS4U/xwLV07HkFmKVWX2l
-	 QeLL5kIwH/RWRoX1uBgexloSD1cAvWsOFjblAoRuxSnGjblzfdMjeNapf3OOf1Gt/K
-	 dJQagVMVfvunma8xhAozbEjezABmlz9Z3bWZCQhk=
+	by mail.kernel.org (Postfix) with ESMTP id 1264C2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEMqk30i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgAOInj (ORCPT
+        id S1729211AbgAOInx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:43:39 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36263 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbgAOInj (ORCPT
+        Wed, 15 Jan 2020 03:43:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34042 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729125AbgAOInw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:43:39 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so14872847wru.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:43:38 -0800 (PST)
+        Wed, 15 Jan 2020 03:43:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so14877150wrr.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:43:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=JgJxRJ3XdO/mGpmO1AU6iAV+74WpEq8F/G6duRRzsrg=;
+        b=LEMqk30iZ9eJOob2PxVAoEtQ1V1FVARgOanVxg23K23TlNYZofIhM5Fqmdd/gnvkvx
+         eP9aJ/Ziqn/M+7X5rPzPkKvKPi7jyNNozvGpW3EEgBdCtX5zLIrR7eTdUqkCWvq4cxfD
+         2+CbRb8GKVkX6UFLVUeNvb6XSytUrEHi1LWrYHtd7zN3fIq5UOXEGHX2CJeiWL7Qqn4+
+         jNhNc0ZaJaDDBz4KyimfYc+7gwzy6ULP+F1vYKkRLW9elOz5UpATUtESCYjDeyHSjrQb
+         1CckX2prCA/MWzouLK9b8znrzMyA3kINC0y/vdyLsAvbXQ224zNksdkjOfAR03vqxLUr
+         Ipyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S/PNDUAlVVVtYjvRnMN304qOmVqAvWD8J5Xrr48hgz4=;
-        b=ZR7bqr2lzCWXVFanap+oLk7W9SrOEm1sfsRPZq9dvLTHUHtUMQZbojiTUK5yo0I7vq
-         qv+ycjJIM8g9ZyriLul+qpwPKny4ixXJq22RXkd3b6X7n1uXHAmQtAvQ4pkB4qlF2STb
-         0WjKvpnMGMbraSuLunoV1AcOII2Ej+HtUYFYwbfbk1rnVGLUue5zwjEsC5lSNfjzo0iK
-         vmwY7r/+pV5q4/okh4gwDps6XzCApCiE/HF1dZw0mv/VR37xKdprRGejYiRQpXsHYJvC
-         Pxe+bZcNwEr7wjMG60MBHFsyjdbgDXqT1JpjKnx91+SFPwsg47U8JjMCdDnxy16aAD1w
-         OjVw==
-X-Gm-Message-State: APjAAAX0FGMklDhUv5LeTGd/dFd/yIhYmddVkSXJsi2QrfYXWeSBxglr
-        NGZGNn/XEwVRN8M4UO4ODAQ=
-X-Google-Smtp-Source: APXvYqwGLRWTLB0nzAWAVz8G3S+ZGQ2cWW5Hfuwg70alRK5byH//hBg1tHkuoYxkj7wUIgg9q1sI3g==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr28545870wrk.53.1579077817600;
-        Wed, 15 Jan 2020 00:43:37 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id t8sm23840123wrp.69.2020.01.15.00.43.36
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=JgJxRJ3XdO/mGpmO1AU6iAV+74WpEq8F/G6duRRzsrg=;
+        b=CW6OX8O+uY+YIAAzG0NQn4tAG7t1qwvRXbDXApVWJW9iwD2FKK24QSY54uiRJKQba+
+         CPIGpxveSQElfutvUGpU5b6cRiK8Y7pU+Otj7jh1hy3T/4o/28E55DTZJp9s6upDO5Nk
+         1bz9r8Pov3sBPjLFVhjbAYXnlNb2oPMLiN7Gft/NiNYXAk9jcOqZm1UpQ45xvIYuvsGZ
+         WPuf/7keS6K7/ci/LHXqN8b/ds7uV1hSBWqwuuiiRwYUjrKVUxX6xB8SEQ6r5qE78POr
+         n4oRVBF6ykLkyYo/UBBsL9WX/5P+DxOsbhAvoXql6UlSto8pa1rBI8qLkA8kHhOpkbJb
+         k1Jg==
+X-Gm-Message-State: APjAAAXXif3UDJS0Kp5Z6e9zwz7WgvxK03R/I+TPOCA4V52747nbN/ST
+        JWOXokfIQzkUeq+fuB1Av4aLEw==
+X-Google-Smtp-Source: APXvYqwpifldiukskyzSH16X5ZU/IcnLnfby0n/XDK7fM++cvEcfBnkYcVOF03qVLRnQbL3LwL5srA==
+X-Received: by 2002:adf:eb46:: with SMTP id u6mr30582601wrn.239.1579077830593;
+        Wed, 15 Jan 2020 00:43:50 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id e12sm23609153wrn.56.2020.01.15.00.43.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 00:43:36 -0800 (PST)
-Date:   Wed, 15 Jan 2020 09:43:36 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: dump stack of victim when reaping failed
-Message-ID: <20200115084336.GW19428@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2001141519280.200484@chino.kir.corp.google.com>
+        Wed, 15 Jan 2020 00:43:50 -0800 (PST)
+Date:   Wed, 15 Jan 2020 08:44:10 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 26/36] mfd: intel_soc_pmic: Add SCU IPC member to
+ struct intel_soc_pmic
+Message-ID: <20200115084410.GG325@dell>
+References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
+ <20200113135623.56286-27-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001141519280.200484@chino.kir.corp.google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200113135623.56286-27-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 14-01-20 15:20:04, David Rientjes wrote:
-> When a process cannot be oom reaped, for whatever reason, currently the
-> list of locks that are held is currently dumped to the kernel log.
+On Mon, 13 Jan 2020, Mika Westerberg wrote:
+
+> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+> be using this field going forward to access the SCU IPC instance.
 > 
-> Much more interesting is the stack trace of the victim that cannot be
-> reaped.  If the stack trace is dumped, we have the ability to find
-> related occurrences in the same kernel code and hopefully solve the
-> issue that is making it wedged.
+> While there add kernel-doc for the intel_soc_pmic structure.
 > 
-> Dump the stack trace when a process fails to be oom reaped.
-
-Yes, this is really helpful.
-
-> Signed-off-by: David Rientjes <rientjes@google.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks!
-
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  mm/oom_kill.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -26,6 +26,7 @@
->  #include <linux/sched/mm.h>
->  #include <linux/sched/coredump.h>
->  #include <linux/sched/task.h>
-> +#include <linux/sched/debug.h>
->  #include <linux/swap.h>
->  #include <linux/timex.h>
->  #include <linux/jiffies.h>
-> @@ -620,6 +621,7 @@ static void oom_reap_task(struct task_struct *tsk)
+> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+> index bfecd6bd4990..bda22d750be6 100644
+> --- a/include/linux/mfd/intel_soc_pmic.h
+> +++ b/include/linux/mfd/intel_soc_pmic.h
+> @@ -13,6 +13,20 @@
 >  
->  	pr_info("oom_reaper: unable to reap pid:%d (%s)\n",
->  		task_pid_nr(tsk), tsk->comm);
-> +	sched_show_task(tsk);
->  	debug_show_all_locks();
+>  #include <linux/regmap.h>
 >  
->  done:
+> +/**
+> + * struct intel_soc_pmic - Intel SoC PMIC data
+> + * @irq: Interrupt number
+
+Whose IRQ is this?  I guess the parent's/PMIC's?
+
+> + * @regmap: Pointer to the regmap structure
+
+Whose Regmap is this?  I guess the parent's/PMIC's?
+
+> + * @irq_chip_data: IRQ chip data for the PMIC itself
+> + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
+> + * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
+> + * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
+> + * @irq_chip_data_adc: Chained IRQ chip data for the ADC
+> + * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
+> + * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
+
+Documentation is an ideal place to expand out these abbreviations.
+
+> + * @dev: Pointer to the PMIC device
+> + * @scu: SCU IPC pointer used for IPC operations
+
+By this description I would have expected to find a struct of ops
+(operations [call-backs]), but instead I found this:
+
+ struct intel_scu_ipc_dev {
+         struct device *dev;
+         void __iomem *ipc_base;
+         void __iomem *i2c_base;
+         struct completion cmd_complete;
+         u8 irq_mode;
+ };
+
+Probably better to describe it as a "pointer to SCU (whatever that
+means) IPC (slightly more common, but still better to expand I think)
+device data structure".
+
+> + */
+>  struct intel_soc_pmic {
+>  	int irq;
+>  	struct regmap *regmap;
+> @@ -24,6 +38,7 @@ struct intel_soc_pmic {
+>  	struct regmap_irq_chip_data *irq_chip_data_chgr;
+>  	struct regmap_irq_chip_data *irq_chip_data_crit;
+>  	struct device *dev;
+> +	struct intel_scu_ipc_dev *scu;
+>  };
+>  
+>  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 
 -- 
-Michal Hocko
-SUSE Labs
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
