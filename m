@@ -2,124 +2,112 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3E8C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7832EC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02770207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E15F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgAOSgL (ORCPT
+        id S1729339AbgAOSgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:36:11 -0500
-Received: from mga02.intel.com ([134.134.136.20]:49268 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgAOSgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:36:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 10:36:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="220100394"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jan 2020 10:36:07 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: Perform non-canonical checks in 32-bit KVM
-Date:   Wed, 15 Jan 2020 10:36:05 -0800
-Message-Id: <20200115183605.15413-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jan 2020 13:36:16 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729157AbgAOSgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:36:14 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FIPeTs105831
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:36:13 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhbpsectt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:36:12 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 15 Jan 2020 18:36:11 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Jan 2020 18:36:09 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FIa88u47972486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 18:36:08 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E6854C046;
+        Wed, 15 Jan 2020 18:36:08 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84B074C04E;
+        Wed, 15 Jan 2020 18:36:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.153.48])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Jan 2020 18:36:07 +0000 (GMT)
+Subject: Re: [PATCH v2] ima: add the ability to query the hash of a given
+ file.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     KP Singh <kpsingh@chromium.org>,
+        Florent Revest <revest@chromium.org>
+Cc:     linux-integrity@vger.kernel.org, mjg59@google.com,
+        nramas@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Date:   Wed, 15 Jan 2020 13:36:07 -0500
+In-Reply-To: <20200113104830.GA28588@google.com>
+References: <20200106162524.164650-1-revest@chromium.org>
+         <20200113104830.GA28588@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011518-0008-0000-0000-00000349AB4B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011518-0009-0000-0000-00004A6A0255
+Message-Id: <1579113367.5032.19.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=933
+ impostorscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001150141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the CONFIG_X86_64 condition from the low level non-canonical
-helpers to effectively enable non-canonical checks on 32-bit KVM.
-Non-canonical checks are performed by hardware if the CPU *supports*
-64-bit mode, whether or not the CPU is actually in 64-bit mode is
-irrelevant.
+On Mon, 2020-01-13 at 11:48 +0100, KP Singh wrote:
+> On 06-Jan 17:25, Florent Revest wrote:
+> > From: Florent Revest <revest@google.com>
+> > 
+> > This allows other parts of the kernel (perhaps a stacked LSM allowing
+> > system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
+> > of a given file from IMA if it's present in the iint cache.
+> > 
+> > It's true that the existence of the hash means that it's also in the
+> > audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
+> > but it can be difficult to pull that information out for every
+> > subsequent exec.  This is especially true if a given host has been up
+> > for a long time and the file was first measured a long time ago.
+> > 
+> > This is based on Peter Moody's patch:
+> >  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
+> > 
+> > [1] https://lkml.org/lkml/2019/9/10/393
+> > 
+> > Signed-off-by: Florent Revest <revest@google.com>
+> 
+> Thanks for adding this Florent!
+> 
+> Reviewed-by: KP Singh <kpsingh@chromium.org>
 
-For the most part, skipping non-canonical checks on 32-bit KVM is ok-ish
-because 32-bit KVM always (hopefully) drops bits 63:32 of whatever value
-it's checking before propagating it to hardware, and architecturally,
-the expected behavior for the guest is a bit of a grey area since the
-vCPU itself doesn't support 64-bit mode.  I.e. a 32-bit KVM guest can
-observe the missed checks in several paths, e.g. INVVPID and VM-Enter,
-but it's debatable whether or not the missed checks constitute a bug
-because technically the vCPU doesn't support 64-bit mode.
+Thanks, this patch is now queued in next-integrity-testing.
 
-The primary motivation for enabling the non-canonical checks is defense
-in depth.  As mentioned above, a guest can trigger a missed check via
-INVVPID or VM-Enter.  INVVPID is straightforward as it takes a 64-bit
-virtual address as part of its 128-bit INVVPID descriptor and fails if
-the address is non-canonical, even if INVVPID is executed in 32-bit PM.
-Nested VM-Enter is a bit more convoluted as it requires the guest to
-write natural width VMCS fields via memory accesses and then VMPTRLD the
-VMCS, but it's still possible.  In both cases, KVM is saved from a true
-bug only because its flows that propagate values to hardware (correctly)
-take "unsigned long" parameters and so drop bits 63:32 of the bad value.
-
-Explicitly performing the non-canonical checks makes it less likely that
-a bad value will be propagated to hardware, e.g. in the INVVPID case,
-if __invvpid() didn't implicitly drop bits 63:32 then KVM would BUG() on
-the resulting unexpected INVVPID failure due to hardware rejecting the
-non-canonical address.
-
-The only downside to enabling the non-canonical checks is that it adds a
-relatively small amount of overhead, but the affected flows are not hot
-paths, i.e. the overhead is negligible.
-
-Note, KVM technically could gate the non-canonical checks on 32-bit KVM
-with static_cpu_has(X86_FEATURE_LM), but on bare metal that's an even
-bigger waste of code for everyone except the 0.00000000000001% of the
-population running on Yonah, and nested 32-bit on 64-bit already fudges
-things with respect to 64-bit CPU behavior.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.h | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index cab5e71f0f0f..3ff590ec0238 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -166,21 +166,13 @@ static inline u64 get_canonical(u64 la, u8 vaddr_bits)
- 
- static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
- {
--#ifdef CONFIG_X86_64
- 	return get_canonical(la, vcpu_virt_addr_bits(vcpu)) != la;
--#else
--	return false;
--#endif
- }
- 
- static inline bool emul_is_noncanonical_address(u64 la,
- 						struct x86_emulate_ctxt *ctxt)
- {
--#ifdef CONFIG_X86_64
- 	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
--#else
--	return false;
--#endif
- }
- 
- static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
--- 
-2.24.1
+Mimi
 
