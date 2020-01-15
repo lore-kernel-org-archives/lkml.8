@@ -2,221 +2,210 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A70AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE20CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFAD222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579081772;
-	bh=s7oQ95LUMoNiII/w7YJlT+AHtSuE4O6j/QDVgfxLDyM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NlZ87yX11SqjYxnRdAA9Zj9lY04jMQ6VtxZNyIzD73S1jYeb4A++gbkQA6VZFpu+R
-	 RKhvEkoMRt+r/83jrnVX6/9t+LZM7Qjvcty41bw8WbP0g7pQkjoa7owvckfzz2IKPH
-	 R/5u50tQxRDHUODHzD0Nih4/Ehc8eSlD/YiLvOLM=
+	by mail.kernel.org (Postfix) with ESMTP id 8472D24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:49:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lPfLb18x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgAOJtb (ORCPT
+        id S1729612AbgAOJtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:49:31 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35278 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbgAOJta (ORCPT
+        Wed, 15 Jan 2020 04:49:42 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2256 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729596AbgAOJtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:49:30 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k4so14830271oik.2;
-        Wed, 15 Jan 2020 01:49:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xlblpk3Q7AFTy8Enno95ZSx0IUH147BofZyxZsTxPpQ=;
-        b=TucKJXUCA3iBOurtQTxVBa/z8C9REkYA7BJC4bLHsU20pWHX8G0CPEON/zgGfgROz8
-         jwyhbLr5j2JjwsgdL2GIT3EzLxo7Di8fOQrERkdEJ7U7/QiPIC90oZ50fmH92oivcX4w
-         4nk8FEs52YgRW4roJaXdtPnaDSiUZuO+jsaSeqw5obwUuylTkiKm+kAy0NqZaqaEbJGp
-         HyvO4SXZNtNmMLSezXxOt1GFZUvU8xOr9u0riNPtbG6A2o43vIEf5c94v4ZdcUQ/+rNA
-         09NbTz5Mgy/U+8mMr6AAl1/vUPkueJt0UHwsbWG3+q7l+/SeT1Za/tB2usl63ImC6Iqf
-         Y4Og==
-X-Gm-Message-State: APjAAAVX1XL4PXVWExXRv2a3FQ2mHbtqRNbZ2YgU8z0/8nYn4u+xpCf+
-        7f32MQtaREYqi5KzILq3sFk0XhhtpRHD3q7EPg8=
-X-Google-Smtp-Source: APXvYqzvsE9JWkTyA/qGCPe6FC5SfX/eWtD++abCAXNNUKmVhLTpM4TrHUCIWNo6kY2HmIQTdm2QXbcLDAmQBj9bi24=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr21412346oig.103.1579081768509;
- Wed, 15 Jan 2020 01:49:28 -0800 (PST)
+        Wed, 15 Jan 2020 04:49:42 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ee0200000>; Wed, 15 Jan 2020 01:49:20 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Jan 2020 01:49:41 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Jan 2020 01:49:41 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 09:49:38 +0000
+Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-9-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
+Date:   Wed, 15 Jan 2020 09:49:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200115063410.131692-1-hsinyi@chromium.org>
-In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jan 2020 10:49:17 +0100
-Message-ID: <CAJZ5v0jng1hpPzYUcPj96G9c8aqNYCwDqLHyQEVC9tD=F1dObw@mail.gmail.com>
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200112173006.29863-9-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579081761; bh=wXVPa46cP+pROyKCHqR3kAtKischKYlkPmCIfUOgxpk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lPfLb18xer6SwCHkluAqfvFN1c8TMNV6FBZ/RGWSHU193XF3x+8rf2Qw/iZDdG9DD
+         vHD7ybwwyTKmba7bsORGFkcnuLA4kMX4S7co6um27kXJIAi6MO98SA2wExx/09WoYi
+         htGNvXU9URDYqqzeBFv8Lvv1EqaNzaaUKlDDnqgKbTH2/MhBxN5AwTwxftvQ2lkBXM
+         6M1tYg1AhKdQQjhnbvOqj6lx4WbOebUSglil6AV9fCmQhgbF7gJnSVyCjN8JpX1SDu
+         CACJdxY3IruWtQQv2eK7Zg66rpmnQKNDvdI+Uw5jy8KK0veZdhC7qJWwZ1OGs/hBVH
+         pr7D6TApQVDsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 7:35 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
->
-> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop. If architecture don't enable this
-> config, or some cpus somehow fails to offline, it would fallback to ipi
-> function.
->
-> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+
+
+On 12/01/2020 17:30, Dmitry Osipenko wrote:
+> This patch fixes few dozens of coding style problems reported by
+> checkpatch and prettifies code where makes sense.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> Change from v4:
-> * fix a few nits: naming, comments, remove Kconfig text...
->
-> Change from v3:
-> * Opt in config for architectures that support CONFIG_HOTPLUG_CPU
-> * Merge function offline_secondary_cpus() and freeze_secondary_cpus()
->   with an additional flag.
+>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
+>  1 file changed, 144 insertions(+), 132 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index dff21e80ffa4..7158bd3145c4 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
 
-This does not seem to be a very good idea, since
-freeze_secondary_cpus() does much more than you need for reboot.
+...
 
-For reboot, you basically only need to do something like this AFAICS:
-
-cpu_maps_update_begin();
-
-for_each_online_cpu(i) {
-        if (i != cpu)
-                _cpu_down(i, 1, CPUHP_OFFLINE);
-}
-cpu_hotplug_disabled++;
-
-cpu_maps_update_done();
-
-And you may put this into a function defined outside of CONFIG_PM_SLEEP.
-
->
-> Change from v2:
-> * Add another config instead of configed by CONFIG_HOTPLUG_CPU
-
-So why exactly is this new Kconfig option needed?
-
-Everybody supporting CPU hotplug seems to opt in anyway.
-
-[cut]
-
->
-> -int freeze_secondary_cpus(int primary)
-> +int freeze_secondary_cpus(int primary, bool reboot)
->  {
->         int cpu, error = 0;
->
-> @@ -1237,11 +1237,13 @@ int freeze_secondary_cpus(int primary)
->                 if (cpu == primary)
->                         continue;
->
-> -               if (pm_wakeup_pending()) {
-> +#ifdef CONFIG_PM_SLEEP
-> +               if (!reboot && pm_wakeup_pending()) {
->                         pr_info("Wakeup pending. Abort CPU freeze\n");
->                         error = -EBUSY;
->                         break;
->                 }
-> +#endif
-
-Please avoid using #ifdefs in function bodies.  This makes the code
-hard to maintain in the long term.
-
->
->                 trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
->                 error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
-> @@ -1250,7 +1252,9 @@ int freeze_secondary_cpus(int primary)
->                         cpumask_set_cpu(cpu, frozen_cpus);
->                 else {
->                         pr_err("Error taking CPU%d down: %d\n", cpu, error);
-> -                       break;
-> +                       /* When rebooting, offline as many CPUs as possible. */
-> +                       if (!reboot)
-> +                               break;
->                 }
->         }
->
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index c4d472b7f1b4..12f643b66e57 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -7,6 +7,7 @@
->
->  #define pr_fmt(fmt)    "reboot: " fmt
->
-> +#include <linux/cpu.h>
->  #include <linux/ctype.h>
->  #include <linux/export.h>
->  #include <linux/kexec.h>
-> @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
->         /* The boot cpu is always logical cpu 0 */
->         int cpu = reboot_cpu;
->
-> +#if !IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
->         cpu_hotplug_disable();
-> +#endif
-
-You can write this as
-
-if (!IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT))
-        cpu_hotplug_disable();
-
-That's what IS_ENABLED() is there for.
-
->
->         /* Make certain the cpu I'm about to reboot on is online */
->         if (!cpu_online(cpu))
-> @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
->
->         /* Make certain I only run on the appropriate processor */
->         set_cpus_allowed_ptr(current, cpumask_of(cpu));
-> +
-> +#if IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
-> +       /* Offline other cpus if possible */
-> +       freeze_secondary_cpus(cpu, true);
-> +#endif
-
-The above comment applies here too.
-
+> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
+>  		ch_regs->csr |= len_field;
 >  }
->
->  /**
-> --
+>  
+> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+> -	enum dma_transfer_direction direction, unsigned long flags,
+> -	void *context)
+> +static struct dma_async_tx_descriptor *
+> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
+> +			struct scatterlist *sgl,
+> +			unsigned int sg_len,
+> +			enum dma_transfer_direction direction,
+> +			unsigned long flags,
+> +			void *context)
+>  {
+>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> +	struct tegra_dma_sg_req *sg_req = NULL;
+> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+> +	enum dma_slave_buswidth slave_bw;
+>  	struct tegra_dma_desc *dma_desc;
+> -	unsigned int i;
+> -	struct scatterlist *sg;
+> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>  	struct list_head req_list;
+> -	struct tegra_dma_sg_req  *sg_req = NULL;
+> -	u32 burst_size;
+> -	enum dma_slave_buswidth slave_bw;
+> +	struct scatterlist *sg;
+> +	unsigned int burst_size;
+> +	unsigned int i;
+
+This is not really consistent with the rest of the changes by having 'i'
+and 'burst_size' on separate lines.
+
+>  
+>  	if (!tdc->config_init) {
+>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
+> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>  	}
+>  
+>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+> -				&burst_size, &slave_bw) < 0)
+> +			       &burst_size, &slave_bw) < 0)
+>  		return NULL;
+>  
+>  	INIT_LIST_HEAD(&req_list);
+> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>  		len = sg_dma_len(sg);
+>  
+>  		if ((len & 3) || (mem & 3) ||
+> -				(len > tdc->tdma->chip_data->max_dma_count)) {
+> +		    len > tdc->tdma->chip_data->max_dma_count) {
+>  			dev_err(tdc2dev(tdc),
+>  				"DMA length/memory address is not supported\n");
+>  			tegra_dma_desc_put(tdc, dma_desc);
+> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>  	return &dma_desc->txd;
+>  }
+>  
+> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
+> -	size_t period_len, enum dma_transfer_direction direction,
+> -	unsigned long flags)
+> +static struct dma_async_tx_descriptor *
+> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+> +			  size_t buf_len,
+> +			  size_t period_len,
+> +			  enum dma_transfer_direction direction,
+> +			  unsigned long flags)
+>  {
+>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> -	struct tegra_dma_desc *dma_desc = NULL;
+>  	struct tegra_dma_sg_req *sg_req = NULL;
+> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+> -	int len;
+> -	size_t remain_len;
+> -	dma_addr_t mem = buf_addr;
+> -	u32 burst_size;
+> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>  	enum dma_slave_buswidth slave_bw;
+> +	struct tegra_dma_desc *dma_desc;
+> +	dma_addr_t mem = buf_addr;
+> +	unsigned int burst_size;
+> +	size_t len, remain_len;
+>  
+>  	if (!buf_len || !period_len) {
+>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
+> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>  
+>  	len = period_len;
+>  	if ((len & 3) || (buf_addr & 3) ||
+> -			(len > tdc->tdma->chip_data->max_dma_count)) {
+> +	    len > tdc->tdma->chip_data->max_dma_count) {
+>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
+>  		return NULL;
+>  	}
+>  
+>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+> -				&burst_size, &slave_bw) < 0)
+> +			       &burst_size, &slave_bw) < 0)
+>  		return NULL;
+>  
+>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>  	int ret;
+>  
+>  	dma_cookie_init(&tdc->dma_chan);
+> -	tdc->config_init = false;
+
+Why is this removed? Does not seem to belong in this patch.
+
+Cheers
+Jon
+
+-- 
+nvpublic
