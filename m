@@ -2,125 +2,80 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA52DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3E2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9059214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NfPQfnBx"
+	by mail.kernel.org (Postfix) with ESMTP id 84189214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579100507;
+	bh=TmlbNmcEzww2kDeZ4p+usdgm4iI5QNe3NceQheUg6/Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xkA2bqCUy761H8Uk4oDM8Ufsv3yiD6WddWZZfj5BJ3fZRMc5oBw/S+NNQgqSXJ6YE
+	 YacgUbv1W24p+TC/VYd22EAncVyJdtHGF/lIscCgS4DFJtXBELEoHnX/2BExCsMc0l
+	 rWvT4jayo4BQR1IDiRLArIKUktgGDDkQMC7mePyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAOO7v (ORCPT
+        id S1729108AbgAOPBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:59:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44784 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726132AbgAOO7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:59:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579100387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IdF3CR86PjR3/icqlGPbxgEESDkiaecNDA80gTmcK8Q=;
-        b=NfPQfnBxgkWmpIfgBt9AALjjJmDTnZWKKY7HsMhx9s9lIZV5oSSx9WFVQz+569GSZNOBPT
-        1FN0QTrUpr3dPULNm15PDgcRgy3qz3EiiRchz1astmVrvb3l2OnMzVu5O4HDPNyh8zhWMO
-        u9wzA/2Luzhx4aUgEb5TuJ5O7cohlPc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-1uLPKIN8M2aufcEay_IGjQ-1; Wed, 15 Jan 2020 09:59:46 -0500
-X-MC-Unique: 1uLPKIN8M2aufcEay_IGjQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jan 2020 10:01:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728915AbgAOPBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:01:46 -0500
+Received: from cakuba.hsd1.ca.comcast.net (c-73-93-4-247.hsd1.ca.comcast.net [73.93.4.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40F5F100E722;
-        Wed, 15 Jan 2020 14:59:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86B68675AE;
-        Wed, 15 Jan 2020 14:59:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200115144839.GA30301@lst.de>
-References: <20200115144839.GA30301@lst.de> <20200115133101.GA28583@lst.de> <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com> <26093.1579098922@warthog.procyon.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Problems with determining data presence by examining extents?
+        by mail.kernel.org (Postfix) with ESMTPSA id C00DC2084D;
+        Wed, 15 Jan 2020 15:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579100505;
+        bh=TmlbNmcEzww2kDeZ4p+usdgm4iI5QNe3NceQheUg6/Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2BI4ywi51hU470G8nb+vHxNES95oo5JPsGSfejShH3ul2PYJeF5xOS9oMz6y5DAq1
+         1/5Gn8zUcNFYecVff+7Fwk5aQYPO6qOxusbqd3Id1XjhlnPFynQ7R8ibCC+F7iSzqJ
+         TbfiFBSg4HYL8DysXkEYCBdKhOw1CBEaAFiAIUWQ=
+Date:   Wed, 15 Jan 2020 07:01:45 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC 3/3] net/mlx5: Add FW upgrade reset support
+Message-ID: <20200115070145.3db10fe4@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <1579017328-19643-4-git-send-email-moshe@mellanox.com>
+References: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
+        <1579017328-19643-4-git-send-email-moshe@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28754.1579100378.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 15 Jan 2020 14:59:38 +0000
-Message-ID: <28755.1579100378@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+On Tue, 14 Jan 2020 17:55:28 +0200, Moshe Shemesh wrote:
+> Add support for FW upgrade reset.
+> On devlink reload the driver checks if there is a FW stored pending
+> upgrade reset. In such case the driver will set the device to FW upgrade
+> reset on next PCI link toggle and do link toggle after unload.
+> 
+> To do PCI link toggle, the driver ensures that no other device ID under
+> the same bridge by checking that all the PF functions under the same PCI
+> bridge have same device ID. If no other device it uses PCI bridge link
+> control to turn link down and up.
+> 
+> Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 
-> > Another thread could be writing to the file, and the raciness matters =
-if I
-> > want to cache the result of calling SEEK_HOLE - though it might be pos=
-sible
-> > just to mask it off.
-> =
+I'd have a slight preference for the reset to be an explicit command
+rather than something the driver does automatically on the reload if
+there are pending changes. Won't there ever be scenarios where users
+just want to hard reset the device for their own reason?
 
-> Well, if you have other threads changing the file (writing, punching hol=
-es,
-> truncating, etc) you have lost with any interface that isn't an atomic
-> give me that data or tell me its a hole.  And even if that if you allow
-> threads that aren't part of your fscache implementation to do the
-> modifications you have lost.  If on the other hand they are part of
-> fscache you should be able to synchronize your threads somehow.
-
-Another thread could be writing to the file at the same time, but not in t=
-he
-same block.  That's managed by netfs, most likely based on the pages and p=
-age
-flags attached to the netfs inode being cached in this particular file[*].
-
-What I was more thinking of is that SEEK_HOLE might run past the block of
-interest and into a block that's currently being written and see a partial=
-ly
-written block.
-
-[*] For AFS, this is only true of regular files; dirs and symlinks are cac=
-hed
-    as monoliths and are there entirely or not at all.
-
-> > However, SEEK_HOLE doesn't help with the issue of the filesystem 'alte=
-ring'
-> > the content of the file by adding or removing blocks of zeros.
-> =
-
-> As does any other method.  If you need that fine grained control you
-> need to track the information yourself.
-
-So, basically, I can't.  Okay.  I was hoping it might be possible to add a=
-n
-ioctl or something to tell filesystems not to do that with particular file=
-s.
-
-David
-
+If multiple devices under one bridge are a real concern (or otherwise
+interdependencies) would it make sense to mark the devices as "reload
+pending" and perform the reloads once all devices in the group has this
+mark set?
