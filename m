@@ -6,94 +6,80 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0EDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B581C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E0A24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486D72075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gWPeUiIl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Br2os3uc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgAOK2A (ORCPT
+        id S1729774AbgAOK2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:28:00 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53459 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgAOK2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:28:00 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yNnT3JS8z9sNx;
-        Wed, 15 Jan 2020 21:27:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579084077;
-        bh=5BX5OlZ3cL9ZYJfFFsrqoIGdVYAvou9z99rpn7nk698=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gWPeUiIl1aKxs9n0teqH4h1KX7q/F0QLv/X2wbS9eTbzTUNcNw71MXxQmZ3iDzs1o
-         7ZM8o07J3YcHyz1GvQAygCvB8TPcmJlAzJPbU/FDuskkD196XQBacO5y81cP0+rVTC
-         rccupVYg3Cqf6DEHfodUODDzAFv5YMMLiuxWNr7k1jqNFzemLTAfteYSjs5cEkldcW
-         GzRVazcfIRKytx2Mr4aYN9SHQLv8HgOGT6iBLNyxKwvMv8Q+iprjo34ThyDryco/9o
-         r3tvoGaOPxYgr55UW/w+zVbGuALizPRAYvYuSBfyBvhH4j3Rej79P5mCR2NbDXaZJn
-         kdOfVmj0A+N2g==
-Date:   Wed, 15 Jan 2020 21:27:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jean Pihet <jean.pihet@newoldbits.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the spi tree
-Message-ID: <20200115212739.474e8272@canb.auug.org.au>
-In-Reply-To: <CAORVsuWs=0su+y2iLfL7zUygW8UgT8WzTXoCJiyBGFp_UG8yFA@mail.gmail.com>
-References: <20200115132325.3ac3ca0f@canb.auug.org.au>
-        <CAORVsuWs=0su+y2iLfL7zUygW8UgT8WzTXoCJiyBGFp_UG8yFA@mail.gmail.com>
+        Wed, 15 Jan 2020 05:28:17 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33572 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729727AbgAOK2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:28:17 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so17980228lji.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:28:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fl2+hd9MOPqIs4AdIyHBX9dTYx9KGtCqWmRO6vACTV0=;
+        b=Br2os3ucvC2+tntLkVdA5cJ16P+fmWVjSbnj7VdWkvVHHxoK1LaEJIjdWDCHj8Ckgg
+         +fAPPBqF/IXQSDKQeCVlV85ECsPEpHuoQpFgzYbBKEdu89gXKwwF9VFW5KTI3IRZPTBV
+         cmfYoL+9tmZWzIotq6YCEPDH9s+jgKX8KUPwH7O/hlReD5KrNtoERgiAmioTyHEWQyzV
+         XyMgTf0MdAfAnj2pb1mkEiz4jxmVhWFYdCe8hsUbRTx4zUuc+2JtWeK0XjntyENUxuye
+         jeFGBOqjG+1YCYdb/+GRlNzshuGnIjEgep9owtQmkiLemZmtskhmuUwRW+GAI44HEW4C
+         jp6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fl2+hd9MOPqIs4AdIyHBX9dTYx9KGtCqWmRO6vACTV0=;
+        b=Pe6dqnh+pxMMDNC81upspKuMGBosgqa8GTi3T+1GMyvJYML0vHOvLFry9TXSggZWIx
+         NSWOOy8OYPVlqnFCB7rWlfmnvZn2TfIlruwYhr877g445RbpHBD9rgR6z/mDVmuyr+lB
+         wRqJTMq7eRPeFaA4fBdZXlQE05Y1k0iVvmrL7Tae5xzWc+I9MiakvkRzhz8KBAqnkNOg
+         W407GtGlWrmowLMPfbcBzuBYLJm2yR6KLTcYVXfvgM89cVmKrBaNiA0R/lVJPCE5zHVM
+         eqPtTlI5Z27yL4uCyfxwCfGUuMhfTHZH0+ZKhMx1p6eQm1pT2q4PZNBzKfa/FnzDOkM+
+         Qp6A==
+X-Gm-Message-State: APjAAAXzwySEEMbzhzbMhjG+Q+JxJhcgQLZfQTf2PyZ3fcyPlJ3w3N6v
+        TBebZ3uAmNNjEJUpFNrBNDiRT1KyByr1QGAep6o1cA==
+X-Google-Smtp-Source: APXvYqxaEEPlzZFLh39WCF1YWNM8pO+8/3eb5wMYnow6KlO3Ow7rl0uvCV06EirMeY33Q27yWVMo25R0SKDVRfErk0g=
+X-Received: by 2002:a2e:918c:: with SMTP id f12mr1346817ljg.66.1579084094788;
+ Wed, 15 Jan 2020 02:28:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Qf_b=7/3tSMR196pg1OnJo0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200114150253.28716-1-brgl@bgdev.pl>
+In-Reply-To: <20200114150253.28716-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Jan 2020 11:28:03 +0100
+Message-ID: <CACRpkda3QhVATZ5of97xDWYnAb6b1o+gMsKE6mDnJrzAUmNV_A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpio: mockup: minor maintenance
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Qf_b=7/3tSMR196pg1OnJo0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 14, 2020 at 4:02 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Hi Jean,
-
-On Wed, 15 Jan 2020 10:10:09 +0100 Jean Pihet <jean.pihet@newoldbits.com> w=
-rote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> I did not have this warning, it may be a combination of compiler
-> version and build flags. Do you need a fixup patch for it?
+> Just two tweaks to the testing driver: update the license tag to conform
+> with the current SPDX list and sort the headers alphabetically for easier
+> maintenance.
 
-That is up to Mark, really.  Unfortunately, Linus will probably get
-this warning during the merge window which he will complain about.
+Thanks Bartosz,
 
-It is really weird, as there are three other references to rx_wlen
-immediately before the one complained about ... so maybe this is a bug
-in the compiler I am using (gcc 9.2.1 from Debian, cross compiler
-ppc64le hosted).
+I just applied both patches so you don't need to bother with pull requests
+for these two.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Qf_b=7/3tSMR196pg1OnJo0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4e6RsACgkQAVBC80lX
-0Gx6Wwf+Ji5II4vWFmpzkIB9qJqtNt2wP+TjEN9PPgCMJQLLMZDvWDOmA6DVjs82
-3JvgyqPB4uZIb52XOp5NcZ3ySvaV2K117jCqdCAsEIuTljxQM7/6JHhh0cuEm1Yb
-ONkjH+V8+l+wvTIdxzPtz0XG3o9nNzemXWWHzUFNBvS38ClWS5aQFfzxRDt/Cint
-QxtJspLF5fd8GAm1sX/tuquzyN9U6rcIy8LXg+EIOEYBextx2ax8miOi+DOyTYYZ
-Wd2Oaui6jDiWJRqoa6w/iStxNNsf+3Md6OYxaYL3eMTKQE79naE2VSH0l6D0TUo6
-kxVD46IZGCvSEEoPpeUQUN7Qs0NMAA==
-=+m32
------END PGP SIGNATURE-----
-
---Sig_/Qf_b=7/3tSMR196pg1OnJo0--
+Yours,
+Linus Walleij
