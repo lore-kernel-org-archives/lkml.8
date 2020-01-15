@@ -2,89 +2,88 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0865C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C5FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843F22467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579075969;
-	bh=nk37Yuy3ehqNqReCRqm9scpbx9tu94gE73chRFUUDFI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j63SP85VANQa2HDbgH084r8cJNxLsTcwv6SL8UDYLiUULI+F+Z3PXvjnjBzZq8t2c
-	 UVhsz1IdCB9lusz2VrEUATNHeFAOJFQG+VXfZFhe4Rc3exiGsxehHMGKT0eFz8TOyl
-	 4oyhisdLBLoRZQtWaN2ZbX+gDFNggACjcAXqL3VY=
+	by mail.kernel.org (Postfix) with ESMTP id 44F5324671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAOIMs (ORCPT
+        id S1728921AbgAOINf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:12:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgAOIMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:12:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A66324671;
-        Wed, 15 Jan 2020 08:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579075968;
-        bh=nk37Yuy3ehqNqReCRqm9scpbx9tu94gE73chRFUUDFI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QPkM+mcjlqEHMQrqDspRSuC4hK//RkTdmwh5QwN0QtLbwd5a2ARrJ3NwlortMVWFE
-         XCZbdZ7TJImM+i0LJ8jOBpXwTciBu1mMiZfTKdZxnSnQfrcAcFSPMksq9/5bvGiGDE
-         rEo2DxmgHvWoM1p0FwPlNu1OVXqurh3PBgLIIsRA=
-Date:   Wed, 15 Jan 2020 09:12:45 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
-Message-ID: <20200115081245.GA2977551@kroah.com>
-References: <20200114094352.428808181@linuxfoundation.org>
- <1d43091c-c7ff-ed26-c3f9-207a291ed157@linaro.org>
+        Wed, 15 Jan 2020 03:13:35 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:44997 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgAOINf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:13:35 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00F8D6kv026743, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00F8D6kv026743
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 15 Jan 2020 16:13:06 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Wed, 15 Jan 2020 16:13:05 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 15 Jan 2020 16:13:05 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Wed, 15 Jan 2020 16:13:05 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
+Thread-Topic: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
+Thread-Index: AQHVwfu36TqhHnURlUOpX7OuLPDS7qfrcuCg
+Date:   Wed, 15 Jan 2020 08:13:05 +0000
+Message-ID: <51cf409ed1a44f038a5f1df133986063@realtek.com>
+References: <20200103060441.1109-1-afaerber@suse.de>
+In-Reply-To: <20200103060441.1109-1-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.154]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d43091c-c7ff-ed26-c3f9-207a291ed157@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 08:09:11PM -0600, Daniel Díaz wrote:
-> Hello!
-> 
-> On 1/14/20 4:00 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.4.12 release.
-> > There are 78 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
-
-Thanks for testing all of these and letting me know.
-
-greg k-h
+PiBSZXNlcnZlIG1lbW9yeSByZWdpb25zIGZvciBSUEMgYW5kIFRFRS4NCj4gDQo+IEZpeGVzOiBl
+NWE5ZTIzNzYwOGQgKCJhcm02NDogZHRzOiByZWFsdGVrOiBBZGQgUlREMTYxOSBTb0MgYW5kIFJl
+YWx0ZWsNCj4gTWpvbG5pciBFVkIiKQ0KPiBDYzogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRl
+ay5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5k
+ZT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpIHwg
+MTkgKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
+KykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4
+eC5kdHNpDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2eHguZHRzaQ0KPiBp
+bmRleCAzYzcwYTBkYTMyOWUuLjRkYzZjOWYxM2M0MyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02
+NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2eHguZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IEBAIC0xNCw2ICsxNCwyNSBAQA0KPiAgCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+Ow0KPiAgCSNzaXplLWNlbGxzID0gPDE+Ow0KPiANCj4gKwlyZXNlcnZl
+ZC1tZW1vcnkgew0KPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMg
+PSA8MT47DQo+ICsJCXJhbmdlczsNCj4gKw0KPiArCQlycGNfY29tbTogcnBjQDJmMDAwIHsNCj4g
+KwkJCXJlZyA9IDwweDJmMDAwIDB4MTAwMD47DQo+ICsJCX07DQo+ICsNCj4gKwkJcnBjX3Jpbmdi
+dWY6IHJwY0AxZmZlMDAwIHsNCj4gKwkJCXJlZyA9IDwweDFmZmUwMDAgMHg0MDAwPjsNCj4gKwkJ
+fTsNCj4gKw0KPiArCQl0ZWU6IHRlZUAxMDEwMDAwMCB7DQo+ICsJCQlyZWcgPSA8MHgxMDEwMDAw
+MCAweGYwMDAwMD47DQo+ICsJCQluby1tYXA7DQo+ICsJCX07DQo+ICsJfTsNCj4gKw0KPiAgCWNw
+dXMgew0KPiAgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gIAkJI3NpemUtY2VsbHMgPSA8MD47
+DQo+IC0tDQo+IDIuMTYuNA0KPiANCj4gDQpBY2tlZC1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlA
+cmVhbHRlay5jb20+DQo=
