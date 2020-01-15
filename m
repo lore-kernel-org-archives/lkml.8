@@ -2,116 +2,284 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63ACC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B78C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8F02077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:56:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhxVtzG0"
+	by mail.kernel.org (Postfix) with ESMTP id 37F8924671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAOR4L (ORCPT
+        id S1729182AbgAOR4U convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:56:11 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28114 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728998AbgAOR4L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:56:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579110970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GV34jCRlj0bUW9Hdc3YVHkEhV3RRfTTy/yTNeGCUOBw=;
-        b=DhxVtzG0B0ypYDj/o9pxyAaJB1hwU8yOLoojNf4edseVwZz2V2X5326yehnFO6xB9Smfa/
-        Rp1HiwWiWLC6CV1jpWsGpdvdW8BKZ12VfyRtXPu98V9mjGXsW/U3oFHjRNGLz+nBMRDBnV
-        JhumhBbwmFfL7lsX03+q0G8a1AGETq0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-393--fhFM0iLNcOm7VfUK-dBnA-1; Wed, 15 Jan 2020 12:56:09 -0500
-X-MC-Unique: -fhFM0iLNcOm7VfUK-dBnA-1
-Received: by mail-wr1-f71.google.com with SMTP id c6so8218797wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:56:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GV34jCRlj0bUW9Hdc3YVHkEhV3RRfTTy/yTNeGCUOBw=;
-        b=TjohhhUcc5734dAKG4dyyymyYSlAcXFkqx59sxvmglYpJsalYPrQol49UzmM5Z5MlZ
-         hGehjoqZwWorAj8KXVyYIbUmnRyzNk0lM1DWNm64PJQZuqI2WUbmXYkoAD3bXW5Mb61b
-         HJDoIw2iMZHxIKlqa7DkoiQg9bWO1beNECd9TA2fV+2AovU2oq/Ox+Ng1ed4ctMqJemi
-         RigPjekGgepHTmNVboqp7pzRPl6BNhTVd4oGrmBVwBKBqSuhxVE00mIoAAQ9o1QX11qG
-         zRhZPk8YDq6oVdr2ESBV55gBljGGOzZS79gHGPnhDo9z7jWWN0eRbXAM+A3C7hk0VlvQ
-         U3bA==
-X-Gm-Message-State: APjAAAWUR4SQZSweY8bysfV2Ya2AJuawrQUNhzU+igGeNg6SUo4EV3Za
-        4rZAPrCoXc28Rn2pu0juH2yC0XSCxEylDprnBsJhVqVqiZg/VHIhPgyAEIZPI9Y1oVIW1/AksT2
-        Zd3QA1YCFDSUAV9CQRohqINfT
-X-Received: by 2002:a1c:6809:: with SMTP id d9mr1192001wmc.70.1579110967952;
-        Wed, 15 Jan 2020 09:56:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy5jRb9sG9tgaQjC6Z2Vyf9uE+ik/Rcaq0+f+pFjwJrsjDeAZCwq5eCQZSoEbLS+qz7DEnDEw==
-X-Received: by 2002:a1c:6809:: with SMTP id d9mr1191984wmc.70.1579110967776;
-        Wed, 15 Jan 2020 09:56:07 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:436:e17d:1fd9:d92a? ([2001:b07:6468:f312:436:e17d:1fd9:d92a])
-        by smtp.gmail.com with ESMTPSA id p18sm747151wmg.4.2020.01.15.09.56.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 09:56:07 -0800 (PST)
-Subject: Re: [PATCH 0/6] Fix various comment errors
-To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cb8d499a-59c9-4b48-2823-ed5339035af8@redhat.com>
-Date:   Wed, 15 Jan 2020 18:56:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 Jan 2020 12:56:20 -0500
+Received: from mail-oln040092253041.outbound.protection.outlook.com ([40.92.253.41]:35765
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728998AbgAOR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:56:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fJmwvtZ/WucwBU3mchGlmJTe1Ctcna5om0E8TiKEiJXj33pUSJXLWSPwzKHJgYyjZjlDcMmbk4z25IoAxna05YGv4yUjW3IukZ3Bo0I265l45ZiGZ9aBlzNFd3Fdsm0bIEYs4TzlWLt8i19pxgcYGI3xu2GLI3eagHiMtMzFlpGPJdZggqex63pW89/ZmNAuvB8ShHRiHDrqUyDx8GOCyIpP32bg9/Gj0jKuwoResmOarh/R5VhvO7z9MgvWuMxr+fOHrcCnV/LHsRe21XMjuAuVwXOtXRCJ5hJ3hpMTAi2KiQBt5onzESCK7ynqMNpYG5y8L3+B2TRAl5zcssIS8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iEQe7Iih79GnSXeJEsBmkJIAY/cL4JwPgrFmrbpT5lc=;
+ b=Qgutj72eaR+60yhSRxlleB58F59JM3YeXfVT4UzMymcMPGvRzmtSbKb3zqFO1h0cuqRLrpbl+yo+L1aUrFjGSM/PqLE3tZ4+sP0zwdH+GgyDWq3Kqfgxkjrp7IMq9FbeG2Qlrc1otH9k/Zys7hRKZQmFZdJqZcHYuDT7lwPlzb68QW6OUtJUqHD4dRnoAXTTzoHIDsX9Gh1DCE6t0MTEiKcimT/dhxjLBNOmx13ZVjxBJN+Zr9C8XzHYuaW26n8yDAnoycxzm+2295zWwvhmhLzxxeMNSsZ3j074A6iG0UkYlWDCGjRQKiRRNmum0tY/t8mW4CPObWD5PLbHlAq/CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT115.eop-APC01.prod.protection.outlook.com
+ (10.152.252.59) by PU1APC01HT127.eop-APC01.prod.protection.outlook.com
+ (10.152.253.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
+ 2020 17:56:14 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
+ PU1APC01FT115.mail.protection.outlook.com (10.152.252.208) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 17:56:14 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
+ 2020 17:56:14 +0000
+Received: from nicholas-dell-linux (61.69.138.108) by ME4P282CA0001.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:90::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend Transport; Wed, 15 Jan 2020 17:56:12 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 3/3] PCI: Consider alignment of hot-added bridges when
+ distributing available resources
+Thread-Topic: [PATCH v2 3/3] PCI: Consider alignment of hot-added bridges when
+ distributing available resources
+Thread-Index: AQHVy80UqszJ0J6vUkOxHSiku/VLiw==
+Date:   Wed, 15 Jan 2020 17:56:14 +0000
+Message-ID: <PSXP216MB043850B82390137D625ACB4780370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME4P282CA0001.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:90::11) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:00C797530CBEBAF3A516F16B31241C14F0153178C8D1502DCAC6CB8E110CC6E9;UpperCasedChecksum:08E9F82DD3841E2349353B6D5BE7EB87FD170E346DD0CC696F53397E3AE901D7;SizeAsReceived:7826;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [ux6msHsNw4nbVPHXSk46Po4f4nRwWDAt]
+x-microsoft-original-message-id: <20200115175606.GA4509@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: f47a197f-3f31-4d4a-4e23-08d799e43652
+x-ms-exchange-slblob-mailprops: Xo9mRxKQURQLKonzPJ6/VvFsyF9p9aaO1jrIKmQss9FvRHjhTo3YyBr4oUjXOFNkdWz0S/b3aza7CCbNDOfHmZPcNsDNtB2f6KafbeOkjDs8cpsdfG6cc/Supjkd1udFoC4vJVsBDKPmUjJVVfCh4zjJu2vyeCZ0JIINWT3W031w3S2O3dhirErB80lCF0BQ3cak8YZB5xcEoF0Ow1OGlRx/N5PhLUtUWLApKABNsqyY4UcbSisXAmI1Oxf3r+hdu+KQd/zVh4cXvEVo78z7VI4SClythyftW1FfgUF3ghpQsT+vKf9QZLfHlbBq8jVDqMyNZACV9hnGT/bBlXZ0BIPJq7kwnD6Ji991G6OKPwYgD7MW0eqToenyJlLV11QgsiGJJCPgEfE0CxwXedjDHtS6OriktGqzGM61e4RxQq+uqZxxNgDNYYpFwLEASAdpuWiPTPx1U0y+tfuzvMR0Rhoo6AgNWsKWGsqMrYnBDM48JcoVtdGfunCuhcmPhMGmYEQSNORpt0u7bp5qsORFvN1HfFyoPVYyBz54p7biCyccCiZESRp5q+B5U6md7ezUQaMK9ZfVbifCnIbe/Sev3DHRuDbQ+Rim7Tfx3TWLfoqQCQlDXH1P/gQ5vZ3xrGLasqHIJr9kHlMhDQefad7tX2vHBTDAJMvGFxRyKh09No2YhKVigCTzrpbJzPtcMwgsWLo8Gcq1LE9QAmAA4tVVe9Fo2z80nlKvzVHhnEy05wQ10sYY2v7afjc+IWdTX0jn1FY9QK/8r+SThHIA1PPAfTQk+KqhZvfGj8+vyrEg5vEaQN0Pg7SNzdngz1q/sRJANNcDAQ6jwfrBgYylJbL3/9WXVnwEA+7IJ9NIyyjStgBRa+CN447LUHTuWxpOYjExy1cNc4mU66CfDstbQfUOf9Sq5LfC1T0YOoSj/l+bu1mWGn07DFLU+g==
+x-ms-traffictypediagnostic: PU1APC01HT127:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gZxTq7qMYeE9eexjuDicOMtukXIu+U4BTrCiUa9UpNC9DBRPnDum14EPTrvo58ENCdDsM0wi9tJuiUZJKeTPJCNOx9lqiZvluWCmBZomPYbvic5RWGSRuX3AlNteGVGJcQBxCMqVEc4hmtwNI3yqgXggB7ZdlViCGeTJAlebe3rARBwG05Z+CAF9QqxGpAbYqbMs7jCRc64AY51Uahk0ROBdpsWlj1ox8SvUFfskMzU=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1010D0DAD21C9E49ACA3165AB5525DE4@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f47a197f-3f31-4d4a-4e23-08d799e43652
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 17:56:14.2209
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/19 07:26, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> Fix various comment mistakes, such as typo, grammar mistake, out-dated
-> function name, writing error and so on. It is a bit tedious and many
-> thanks for review in advance.
-> 
-> Miaohe Lin (6):
->   KVM: Fix some wrong function names in comment
->   KVM: Fix some out-dated function names in comment
->   KVM: Fix some comment typos and missing parentheses
->   KVM: Fix some grammar mistakes
->   KVM: hyperv: Fix some typos in vcpu unimpl info
->   KVM: Fix some writing mistakes
-> 
->  arch/x86/include/asm/kvm_host.h       | 2 +-
->  arch/x86/kvm/hyperv.c                 | 6 +++---
->  arch/x86/kvm/ioapic.c                 | 2 +-
->  arch/x86/kvm/lapic.c                  | 4 ++--
->  arch/x86/kvm/vmx/nested.c             | 2 +-
->  arch/x86/kvm/vmx/vmcs_shadow_fields.h | 4 ++--
->  arch/x86/kvm/vmx/vmx.c                | 8 ++++----
->  virt/kvm/kvm_main.c                   | 6 +++---
->  8 files changed, 17 insertions(+), 17 deletions(-)
-> 
+Change pci_bus_distribute_available_resources() to better handle bridges
+with different resource alignment requirements.
 
-Queued, thanks.
+The arguments io, mmio and mmio_pref represent the start and end
+addresses of resource, in which we must fit the current bridge window.
 
-Paolo
+The steps taken by pci_bus_distribute_available_resources():
+
+	- For io, mmio and mmio_pref, increase .start to align with the
+	  alignment of the current bridge window (otherwise the current
+	  bridge window may not fit within the available range).
+
+	- For io, mmio and mmio_pref, adjust the current bridge window
+	  to the size after the above.
+
+	- Count the number of hotplug bridges and normal bridges on this
+	  bus.
+
+	- If the total number of bridges is one, give that bridge all of
+	  the resources and return.
+
+	- If there are no hotplug bridges, return.
+
+	- For io, mmio and mmio_pref, increase .start by the amount
+	  required for each bridge resource on the bus for non hotplug
+	  bridges, giving extra room to make up for alignment of those
+	  resources.
+
+	- For io, mmio and mmio_pref, calculate the resource size per
+	  hotplug bridge which is available after the previous steps.
+
+	- For io, mmio and mmio_pref, distribute the resources to each
+	  hotplug bridge, with the sizes calculated above.
+
+The motivation for fixing this is Thunderbolt with native PCI
+enumeration, enabling external graphics cards and other devices with
+bridge alignment higher than 1MB. This fixes the use case where the user
+hot-adds Thunderbolt devices containing PCI devices with BAR
+alignment >1M and having the resources fail to assign.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=199581
+Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 77 ++++++++++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 269082261..8b39b9ebb 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1863,9 +1863,7 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 					    struct resource mmio,
+ 					    struct resource mmio_pref)
+ {
+-	resource_size_t remaining_io, remaining_mmio, remaining_mmio_pref;
+-	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp;
+-	resource_size_t avail_io, avail_mmio, avail_mmio_pref;
++	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
+ 	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+ 	struct resource *io_res, *mmio_res, *mmio_pref_res;
+ 	struct pci_dev *dev, *bridge = bus->self;
+@@ -1874,6 +1872,23 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	mmio_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 1];
+ 	mmio_pref_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
+ 
++	/*
++	 * The alignment of this bridge is yet to be considered, hence it must
++	 * be done now before extending its bridge window.
++	 */
++	align = pci_resource_alignment(bridge, io_res);
++	if (!io_res->parent && align)
++		io.start = min(ALIGN(io.start, align), io.end + 1);
++
++	align = pci_resource_alignment(bridge, mmio_res);
++	if (!mmio_res->parent && align)
++		mmio.start = min(ALIGN(mmio.start, align), mmio.end + 1);
++
++	align = pci_resource_alignment(bridge, mmio_pref_res);
++	if (!mmio_pref_res->parent && align)
++		mmio_pref.start = min(ALIGN(mmio_pref.start, align),
++			mmio_pref.end + 1);
++
+ 	/*
+ 	 * Update additional resource list (add_list) to fill all the
+ 	 * extra resource space available for this port except the space
+@@ -1919,12 +1934,9 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 * extra space reduced by the minimal required space for the
+ 	 * non-hotplug bridges.
+ 	 */
+-	remaining_io = avail_io = resource_size(&io);
+-	remaining_mmio = avail_mmio = resource_size(&mmio);
+-	remaining_mmio_pref = avail_mmio_pref = resource_size(&mmio_pref);
+-
+ 	for_each_pci_bridge(dev, bus) {
+-		const struct resource *res;
++		resource_size_t used_size;
++		struct resource *res;
+ 
+ 		if (dev->is_hotplug_bridge)
+ 			continue;
+@@ -1934,24 +1946,39 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * bridge and devices below it occupy.
+ 		 */
+ 		res = &dev->resource[PCI_BRIDGE_RESOURCES + 0];
+-		if (!res->parent && avail_io > resource_size(res))
+-			remaining_io -= resource_size(res);
++		align = pci_resource_alignment(dev, res);
++		align = align ? ALIGN(io.start, align) - io.start : 0;
++		used_size = align + resource_size(res);
++		if (!res->parent)
++			io.start = min(io.start + used_size, io.end + 1);
+ 
+ 		res = &dev->resource[PCI_BRIDGE_RESOURCES + 1];
+-		if (!res->parent && avail_mmio > resource_size(res))
+-			remaining_mmio -= resource_size(res);
++		align = pci_resource_alignment(dev, res);
++		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
++		used_size = align + resource_size(res);
++		if (!res->parent)
++			mmio.start = min(mmio.start + used_size, mmio.end + 1);
+ 
+ 		res = &dev->resource[PCI_BRIDGE_RESOURCES + 2];
+-		if (!res->parent && avail_mmio_pref > resource_size(res))
+-			remaining_mmio_pref -= resource_size(res);
++		align = pci_resource_alignment(dev, res);
++		align = align ? ALIGN(mmio_pref.start, align) -
++			mmio_pref.start : 0;
++		used_size = align + resource_size(res);
++		if (!res->parent)
++			mmio_pref.start = min(mmio_pref.start + used_size,
++				mmio_pref.end + 1);
+ 	}
+ 
++	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
++	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
++	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
++		hotplug_bridges);
++
+ 	/*
+ 	 * Go over devices on this bus and distribute the remaining
+ 	 * resource space between hotplug bridges.
+ 	 */
+ 	for_each_pci_bridge(dev, bus) {
+-		resource_size_t align;
+ 		struct pci_bus *b;
+ 
+ 		b = dev->subordinate;
+@@ -1963,28 +1990,16 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * hotplug-capable downstream ports taking alignment into
+ 		 * account.
+ 		 */
+-		align = pci_resource_alignment(bridge, io_res);
+-		io_per_hp = div64_ul(avail_io, hotplug_bridges);
+-		io_per_hp = min(ALIGN(io_per_hp, align), remaining_io);
+-		remaining_io -= io_per_hp;
+-
+-		align = pci_resource_alignment(bridge, mmio_res);
+-		mmio_per_hp = div64_ul(avail_mmio, hotplug_bridges);
+-		mmio_per_hp = min(ALIGN(mmio_per_hp, align), remaining_mmio);
+-		remaining_mmio -= mmio_per_hp;
+-
+-		align = pci_resource_alignment(bridge, mmio_pref_res);
+-		mmio_pref_per_hp = div64_ul(avail_mmio_pref, hotplug_bridges);
+-		mmio_pref_per_hp = min(ALIGN(mmio_pref_per_hp, align),
+-			remaining_mmio_pref);
+-		remaining_mmio_pref -= mmio_pref_per_hp;
+-
+ 		io.end = io.start + io_per_hp - 1;
+ 		mmio.end = mmio.start + mmio_per_hp - 1;
+ 		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
+ 
+ 		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+ 						       mmio_pref);
++
++		io.start += io_per_hp;
++		mmio.start += mmio_per_hp;
++		mmio_pref.start += mmio_pref_per_hp;
+ 	}
+ }
+ 
+-- 
+2.25.0
 
