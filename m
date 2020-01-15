@@ -2,109 +2,176 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1442C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA38C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87376206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559E0206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9SrQ6pc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgAOKRd (ORCPT
+        id S1729678AbgAOKUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:17:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:34436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729585AbgAOKRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:17:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC0F031B;
-        Wed, 15 Jan 2020 02:17:32 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA53D3F6C4;
-        Wed, 15 Jan 2020 02:17:31 -0800 (PST)
-Date:   Wed, 15 Jan 2020 10:17:29 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>, julien@xen.org
-Subject: Re: [PATCH v2] arm64: cpufeature: Export matrix and other features
- to userspace
-Message-ID: <20200115101729.GB32549@lakrids.cambridge.arm.com>
-References: <20191216113337.13882-1-steven.price@arm.com>
- <20200115094916.GC21692@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115094916.GC21692@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Wed, 15 Jan 2020 05:20:31 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44319 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbgAOKUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:20:30 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so15151262wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:20:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3cRilsDs76jGrovYQZExnc/eKy0S8FlJfJBuDeunHFU=;
+        b=Y9SrQ6pci2o89dG5fviHgoM47ni1sll2QE5Dm11rXWoAgbu+dTfYRC+SFcqKp84qee
+         R1zybaPfUMz4epsA8yQcd7K8PtbMSvKikO2HHPgB99o8eViniPjgNHHFnCkF087jSvHw
+         b3D0+G8s9xoetAjNi4AiLHnoQeO5IEM2vOqwe2IfA1l84SXh/G2+XiRFGplAnOq3Jr7a
+         w+9sPsdEwgWFCzBG+md5Zl3tN+Dqu6fqWlU2eV/mfJ7vtk9dUCSEloObYMKRF11IOE9M
+         JWfa280mixVBLpv/MIrBVUn/8MSrNa0B3NrqjNPrEFNznXaTweliiHuxmRk88Zzu77xk
+         VUjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3cRilsDs76jGrovYQZExnc/eKy0S8FlJfJBuDeunHFU=;
+        b=lpb354DkfIRnr4FmXn6DFmyZsnrimBVlqf+J93HL3dH8ZMWsM+a8Srz/X7GFJRJYBx
+         AmCk/EoeheGrUoJHIRIFlyy5rK8DzygGIZ/LVPj8u3oqNdgBHJ4hG4d1IklSwpnFdkwF
+         4i/g9PuTGZM4SbRZBTVw+KuJKJyK8Jiso/TddMs8O5OTSUBDV5BJHU6rLU9IjGe6LVUO
+         cT6eoqXQHGtrYPoKYqxiIGWrzu28QLLzWVPbhxM5dyYEGCAz6cZToet3wa7ldxIB7Q4W
+         VZ5c2wOaODrhROJI/j6ROTmgEC5hAVsL6k/fiTQbKCRzeFPntcCOlx0KmyXnOeezmDYA
+         4eVA==
+X-Gm-Message-State: APjAAAUOVG5AV4WnKaWOSSbhLYufsYMfCUK//j/XcxZAR76ANNRtFPW9
+        HHj5JouHjvG9zi3ikprdZXTLBg==
+X-Google-Smtp-Source: APXvYqyLrSNjzSvJchLXd4GTfH7RH75LkIkuPITuFZkkr1mSKyL1QGzD9VY7fyjrYCpqZiAmVmZMGg==
+X-Received: by 2002:adf:ff8a:: with SMTP id j10mr31002460wrr.312.1579083628600;
+        Wed, 15 Jan 2020 02:20:28 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:d7b:8f95:a347:1d76])
+        by smtp.gmail.com with ESMTPSA id t25sm22633935wmj.19.2020.01.15.02.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 15 Jan 2020 02:20:27 -0800 (PST)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH] sched/fair: remove redundant call to cpufreq_update_util
+Date:   Wed, 15 Jan 2020 11:20:20 +0100
+Message-Id: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:49:17AM +0000, Will Deacon wrote:
-> On Mon, Dec 16, 2019 at 11:33:37AM +0000, Steven Price wrote:
-> > Export the features introduced as part of ARMv8.6 exposed in the
-> > ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1 registers. This introduces the
-> > Matrix features (ARMv8.2-I8MM, ARMv8.2-F64MM and ARMv8.2-F32MM) along
-> > with BFloat16 (Armv8.2-BF16), speculation invalidation (SPECRES) and
-> > Data Gathering Hint (ARMv8.0-DGH).
-> > 
-> > Signed-off-by: Julien Grall <julien.grall@arm.com>
-> > [Added other features in those registers]
-> > Signed-off-by: Steven Price <steven.price@arm.com>
-> > ---
-> > This is a v2 of Julien's patch[1] extended to export all the new
-> > features contained within the ID_AA64ISAR1_EL1 and ID_AA64ZFR0_EL1
-> > registers.
-> > 
-> > [1] https://lore.kernel.org/linux-arm-kernel/20191025171056.30641-1-julien.grall@arm.com/
-> > 
-> >  Documentation/arm64/cpu-feature-registers.rst | 16 ++++++++++
-> >  Documentation/arm64/elf_hwcaps.rst            | 31 +++++++++++++++++++
-> >  arch/arm64/include/asm/hwcap.h                |  8 +++++
-> >  arch/arm64/include/asm/sysreg.h               | 12 +++++++
-> >  arch/arm64/include/uapi/asm/hwcap.h           |  8 +++++
-> >  arch/arm64/kernel/cpufeature.c                | 20 ++++++++++++
-> >  arch/arm64/kernel/cpuinfo.c                   |  8 +++++
-> >  7 files changed, 103 insertions(+)
-> > 
-> > diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-> > index b6e44884e3ad..5382981533f8 100644
-> > --- a/Documentation/arm64/cpu-feature-registers.rst
-> > +++ b/Documentation/arm64/cpu-feature-registers.rst
-> > @@ -200,6 +200,14 @@ infrastructure:
-> >       +------------------------------+---------+---------+
-> >       | Name                         |  bits   | visible |
-> >       +------------------------------+---------+---------+
-> > +     | I8MM                         | [55-52] |    y    |
-> > +     +------------------------------+---------+---------+
-> > +     | DGH                          | [51-48] |    y    |
-> > +     +------------------------------+---------+---------+
-> > +     | BF16                         | [47-44] |    y    |
-> > +     +------------------------------+---------+---------+
-> > +     | SPECRES                      | [43-40] |    y    |
-> > +     +------------------------------+---------+---------+
-> 
-> I applied this for CI testing last night, but actually I think it's broken.
-> AFAICT, the instructions introduced by SPECRES are behind an SCTLR_EL1
-> enable (EnRCTX) which defaults to disabled, so we should either be enabling
-> them before setting the HWCAP or not exposing them at all.
-> 
-> Given that the instructions are not broadcast and are likely to be very
-> expensive, I don't think that exposing them to EL0 is a good idea.
-> 
-> In other words, I'll drop the SPECRES parts from this patch. Sound ok?
+With commit bef69dd87828 ("sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_util()")
+update_load_avg() has become the central point for calling cpufreq (not
+including the update of blocked load). This change helps to simplify
+further the number of call to cpufreq_update_util() and to remove last
+redundant ones. With update_load_avg(), we are now sure that
+cpufreq_update_util() will be called after every task attachment to a
+cfs_rq and especially after propagating this event down to the util_avg of
+the root cfs_rq, which is the level that is used by cpufreq governors like
+schedutil to set the frequency of a CPU.
 
-I completely agree. We deliberately avoided adding SPECRES for those
-reasons previously:
+The SCHED_CPUFREQ_MIGRATION flag forces an early call to cpufreq when the
+migration happens in a cgroup whereas util_avg of root cfs_rq is not yet
+updated and this call is duplicated with the one that happens immediately
+after when the migration event reaches the root cfs_rq. The dedicated flag
+SCHED_CPUFREQ_MIGRATION is now useless and can be removed. The interface of
+attach_entity_load_avg() can also be simplified accordingly.
 
-  https://lore.kernel.org/r/20191212144633.GE46910@lakrids.cambridge.arm.com
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ include/linux/sched/cpufreq.h |  1 -
+ kernel/sched/fair.c           | 14 +++++++-------
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-Thanks,
-Mark.
+diff --git a/include/linux/sched/cpufreq.h b/include/linux/sched/cpufreq.h
+index cc6bcc1e96bc..3ed5aa18593f 100644
+--- a/include/linux/sched/cpufreq.h
++++ b/include/linux/sched/cpufreq.h
+@@ -9,7 +9,6 @@
+  */
+ 
+ #define SCHED_CPUFREQ_IOWAIT	(1U << 0)
+-#define SCHED_CPUFREQ_MIGRATION	(1U << 1)
+ 
+ #ifdef CONFIG_CPU_FREQ
+ struct cpufreq_policy;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 2d170b5da0e3..023aa42aaac7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -801,7 +801,7 @@ void post_init_entity_util_avg(struct task_struct *p)
+ 		 * For !fair tasks do:
+ 		 *
+ 		update_cfs_rq_load_avg(now, cfs_rq);
+-		attach_entity_load_avg(cfs_rq, se, 0);
++		attach_entity_load_avg(cfs_rq, se);
+ 		switched_from_fair(rq, p);
+ 		 *
+ 		 * such that the next switched_to_fair() has the
+@@ -3114,7 +3114,7 @@ static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
+ {
+ 	struct rq *rq = rq_of(cfs_rq);
+ 
+-	if (&rq->cfs == cfs_rq || (flags & SCHED_CPUFREQ_MIGRATION)) {
++	if (&rq->cfs == cfs_rq) {
+ 		/*
+ 		 * There are a few boundary cases this might miss but it should
+ 		 * get called often enough that that should (hopefully) not be
+@@ -3520,7 +3520,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
+  * Must call update_cfs_rq_load_avg() before this, since we rely on
+  * cfs_rq->avg.last_update_time being current.
+  */
+-static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
++static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+ 	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
+ 
+@@ -3556,7 +3556,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ 
+ 	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
+ 
+-	cfs_rq_util_change(cfs_rq, flags);
++	cfs_rq_util_change(cfs_rq, 0);
+ 
+ 	trace_pelt_cfs_tp(cfs_rq);
+ }
+@@ -3614,7 +3614,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ 		 *
+ 		 * IOW we're enqueueing a task on a new CPU.
+ 		 */
+-		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
++		attach_entity_load_avg(cfs_rq, se);
+ 		update_tg_load_avg(cfs_rq, 0);
+ 
+ 	} else if (decayed) {
+@@ -3871,7 +3871,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+ static inline void remove_entity_load_avg(struct sched_entity *se) {}
+ 
+ static inline void
+-attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags) {}
++attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+ static inline void
+ detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
+ 
+@@ -10439,7 +10439,7 @@ static void attach_entity_cfs_rq(struct sched_entity *se)
+ 
+ 	/* Synchronize entity with its cfs_rq */
+ 	update_load_avg(cfs_rq, se, sched_feat(ATTACH_AGE_LOAD) ? 0 : SKIP_AGE_LOAD);
+-	attach_entity_load_avg(cfs_rq, se, 0);
++	attach_entity_load_avg(cfs_rq, se);
+ 	update_tg_load_avg(cfs_rq, false);
+ 	propagate_entity_cfs_rq(se);
+ }
+-- 
+2.7.4
+
