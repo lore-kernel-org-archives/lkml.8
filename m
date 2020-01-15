@@ -2,128 +2,170 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A131C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8F2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44644214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286DE2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GV97lfgr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSPCnteK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgAOSFY (ORCPT
+        id S1729271AbgAOSGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:05:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29407 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728921AbgAOSFX (ORCPT
+        Wed, 15 Jan 2020 13:06:14 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42042 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbgAOSGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:05:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579111522;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c69WbVq5j2P1XNGy+IhxAunAcPYacDdAW3b2A1FRx4E=;
-        b=GV97lfgr3eoyaBcEpsLAyyLhL9Wzt6kwi6DQAKaOMsetcpy5F+8Jkdh2IAcO6UBFRSoAdA
-        GZ24m+bEmGf4IfqAvByEt0YLUrA1wje4VvJ5r3wivREHQxoCfEzCtQrmhqdSRO0aAy5XZB
-        xy8FwiSDwb0m4E037rlv0JfxS6ABj5c=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-B4IZPcH8MBqsvBBrl6b06g-1; Wed, 15 Jan 2020 13:05:19 -0500
-X-MC-Unique: B4IZPcH8MBqsvBBrl6b06g-1
-Received: by mail-wr1-f71.google.com with SMTP id t3so8221930wrm.23
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:05:18 -0800 (PST)
+        Wed, 15 Jan 2020 13:06:13 -0500
+Received: by mail-qt1-f193.google.com with SMTP id j5so16546955qtq.9;
+        Wed, 15 Jan 2020 10:06:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ELr/XxVqul6D20WrUY/+l7F3oFFhw69GAu+JHpk3Rbk=;
+        b=mSPCnteKMSkRqwiFoHYESYY9gfGWLfp6Wj/BRJUP4Q4KxvpnfSxnw0X2O3+zDKrdi2
+         ekhtzKXCQeB5Bs/+1KwVMaTkntDXBIcn8z87XMb0VBhZ9vRds4BnOJ1RRijlj0bhsXHM
+         MZqAwB0pn1lfKVRjzfD44HEDbEIJxlOANTTPhWK6WNDmflh7dEDPIboreBKEPBUAh3kE
+         IAx9DqhXMDYiSV+XZ3WFIbmx316U4AmPfTEFqArYRwMbcAj7g7BvaI+9n4mjdfVvUFP2
+         s0RQjCh/hK3MfGFEow+MTXJv1aobh9vIOraqaNtR1Kin1ku2oqwOpZ5jPUKyq+siMEgq
+         +tWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c69WbVq5j2P1XNGy+IhxAunAcPYacDdAW3b2A1FRx4E=;
-        b=tTNz3K4jX15BtuVETeZmKUycv9wZ4APlSprvMpXTGsEzYmeTe+EAwTKE4gfLnX7YTS
-         lhKL1EovAdtYhop90GxJ1xQn8Ws2kec6txao/U0rbc9tWx9CwahPIygG8Vwv980nHXdO
-         hcRxDhz/4RtY+67rCMBzZFbdpb7BSCCWkfKPW6l+H6SrWbRyAF4Dg/C5Xnk7rVSB4NqK
-         o2hwCuLD/lhKK3y9gqPNyUvx9iz9qbI1jAfze1/SGA6d2Bx245MY9zXu9RgYwCd82g5C
-         oBgdyf449rz/Vf85hdYDiPLONN5XIEYVUzJ74UmA4H37a23KUilWlzqFmtjb5DCyiWSP
-         ANiw==
-X-Gm-Message-State: APjAAAWdL2tPZYQ7VVvmT3uH/AO1AYH4yddPWTqizo1QRetRwCWkJMWR
-        LiwHri75mMGAUFcqzqU4zdp75j6DgidB+Qc8hs1Y31YsPwQ2zkhNtpPZDQaNfrxDsFn4fy1grC5
-        48tSnUxT0RQC3MYpiVARN0Zlf
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr1242907wme.125.1579111517301;
-        Wed, 15 Jan 2020 10:05:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwhZlrV31iytYOe/i6rKaJ0a5p5+NIIM2FKS1E+7bLOwxTRHWKblRQPEorgppp4hxakTRh1tA==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr1242868wme.125.1579111517074;
-        Wed, 15 Jan 2020 10:05:17 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:436:e17d:1fd9:d92a? ([2001:b07:6468:f312:436:e17d:1fd9:d92a])
-        by smtp.gmail.com with ESMTPSA id z123sm905364wme.18.2020.01.15.10.05.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:05:16 -0800 (PST)
-Subject: Re: [PATCH 0/4] KVM: x86: Add checks on host-reserved cr4 bits
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jun Nakajima <jun.nakajima@intel.com>
-References: <20191210224416.10757-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0c7a9237-14fd-ff66-0c28-e979f7f7edd6@redhat.com>
-Date:   Wed, 15 Jan 2020 19:05:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ELr/XxVqul6D20WrUY/+l7F3oFFhw69GAu+JHpk3Rbk=;
+        b=o6P6EnTCuaZSr0tBobB7yb1CyQJQy+i75avetHdcLfLvhSlZRIPhgBTGLNZGWXUEVr
+         qCDwXRkx+sH557gWzBs3EK0drowdhqEIDCxtr0yVP2SzHahmy/Mxg0bxzYvAYMCYxLco
+         p27Bj7E3a9t/ylAGFj/sKqlgLuTELBlXhearyl1/RrgRQr5lYQNZa2+diHptJompcdUP
+         yBz9tom61Edd6dNQrIYt55Drgg9N5S08cE6chlzxllccxzGpszm1+jymDdIew/qyfola
+         HwqJPy2oO3LsaI7ZcWD0Zyf4aoanOHGtwSkIfFfCyOAT43Tk49gK7wWGDq6k9JEnNw9L
+         CosA==
+X-Gm-Message-State: APjAAAX1Y7CClWRwDv/055D8SB80n6uC+hQcEJjArGkuseilKvYokLLx
+        U7skErymyYvvFUjiopK35x5LtoU1GblZjvbSWsg=
+X-Google-Smtp-Source: APXvYqyxmKUFZijBXdkuTtHh/L21hbP+2dYNdVYZ+ehzOljvqjBV6f2i6/sb3FoGBrunVSLpiVTX+WlgbzOZ4rbNNQg=
+X-Received: by 2002:ac8:1385:: with SMTP id h5mr4640404qtj.59.1579111572469;
+ Wed, 15 Jan 2020 10:06:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210224416.10757-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
+In-Reply-To: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 15 Jan 2020 10:06:01 -0800
+Message-ID: <CAEf4Bza+dNoD7HbVQGtXBq=raz4DQg0yTShKZHRbCo+zHYfoSA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 00/10] tools: Use consistent libbpf include
+ paths everywhere
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 23:44, Sean Christopherson wrote:
-> KVM currently doesn't incorporate the platform's capabilities in its cr4
-> reserved bit checks and instead checks only whether KVM is aware of the
-> feature in general and whether or not userspace has advertised the feature
-> to the guest.
-> 
-> Lack of checking allows userspace/guest to set unsupported bits in cr4.
-> For the most part, setting unsupported bits will simply cause VM-Enter to
-> fail.  The one existing exception is OSXSAVE, which is conditioned on host
-> support as checking only guest_cpuid_has() would result in KVM attempting
-> XSAVE, leading to faults and WARNs.
-> 
-> 57-bit virtual addressing has introduced another case where setting an
-> unsupported bit (cr4.LA57) can induce a fault in the host.  In the LA57
-> case, userspace can set the guest's cr4.LA57 by advertising LA57 support
-> via CPUID and abuse the bogus cr4.LA57 to effectively bypass KVM's
-> non-canonical address check, ultimately causing a #GP when VMX writes
-> the guest's bogus address to MSR_KERNEL_GS_BASE during VM-Enter.
-> 
-> Given that the best case scenario is a failed VM-Enter, there's no sane
-> reason to allow setting unsupported bits in cr4.  Fix the LA57 bug by not
-> allowing userspace or the guest to set cr4 bits that are not supported
-> by the platform.
-> 
-> Sean Christopherson (4):
->   KVM: x86: Don't let userspace set host-reserved cr4 bits
->   KVM: x86: Ensure all logical CPUs have consistent reserved cr4 bits
->   KVM: x86: Drop special XSAVE handling from guest_cpuid_has()
->   KVM: x86: Add macro to ensure reserved cr4 bits checks stay in sync
-> 
->  arch/x86/kvm/cpuid.h   |  4 ---
->  arch/x86/kvm/svm.c     |  1 +
->  arch/x86/kvm/vmx/vmx.c |  1 +
->  arch/x86/kvm/x86.c     | 65 +++++++++++++++++++++++++++++-------------
->  4 files changed, 47 insertions(+), 24 deletions(-)
-> 
+On Wed, Jan 15, 2020 at 6:13 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> The recent commit 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h =
+are
+> taken from selftests dir") broke compilation against libbpf if it is inst=
+alled
+> on the system, and $INCLUDEDIR/bpf is not in the include path.
+>
+> Since having the bpf/ subdir of $INCLUDEDIR in the include path has never=
+ been a
+> requirement for building against libbpf before, this needs to be fixed. O=
+ne
+> option is to just revert the offending commit and figure out a different =
+way to
+> achieve what it aims for. However, this series takes a different approach=
+:
+> Changing all in-tree users of libbpf to consistently use a bpf/ prefix in
+> #include directives for header files from libbpf.
+>
+> This turns out to be a somewhat invasive change in the number of files to=
+uched;
+> however, the actual changes to files are fairly trivial (most of them are=
+ simply
+> made with 'sed'). Also, this approach has the advantage that it makes ext=
+ernal
+> and internal users consistent with each other, and ensures no future chan=
+ges
+> breaks things in the same way as the commit referenced above.
+>
+> The series is split to make the change for one tool subdir at a time, whi=
+le
+> trying not to break the build along the way. It is structured like this:
+>
+> - Patch 1-2: Trivial fixes to Makefiles for issues I discovered while cha=
+nging
+>   the include paths.
+>
+> - Patch 3-7: Change the include directives to use the bpf/ prefix, and up=
+dates
+>   Makefiles to make sure tools/lib/ is part of the include path, but with=
+out
+>   removing tools/lib/bpf
+>
+> - Patch 8: Change the bpf_helpers file in libbpf itself to use the bpf/ p=
+refix
+>   when including (the original source of breakage).
+>
+> - Patch 9-10: Remove tools/lib/bpf from include paths to make sure we don=
+'t
+>   inadvertently re-introduce includes without the bpf/ prefix.
+>
+> ---
 
-Queued, thanks.
+Thanks, Toke, for this clean up! I tested it locally for my set up:
+runqslower, bpftool, libbpf, and selftests all build fine, so it looks
+good. My only concern is with selftests/bpf Makefile, we shouldn't
+build anything outside of selftests/bpf. Let's fix that. Thanks!
 
-Paolo
+>
+> Toke H=C3=B8iland-J=C3=B8rgensen (10):
+>       samples/bpf: Don't try to remove user's homedir on clean
+>       tools/bpf/runqslower: Fix override option for VMLINUX_BTF
+>       tools/runqslower: Use consistent include paths for libbpf
+>       selftests: Use consistent include paths for libbpf
+>       bpftool: Use consistent include paths for libbpf
+>       perf: Use consistent include paths for libbpf
+>       samples/bpf: Use consistent include paths for libbpf
+>       libbpf: Fix include of bpf_helpers.h when libbpf is installed on sy=
+stem
+>       selftests: Remove tools/lib/bpf from include path
+>       tools/runqslower: Remove tools/lib/bpf from include path
+>
+>
 
+[...]
