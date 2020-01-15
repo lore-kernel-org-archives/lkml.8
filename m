@@ -2,34 +2,34 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3AC33CB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD03FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E131720728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA4820728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgAOMqF (ORCPT
+        id S1729247AbgAOMqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:46:05 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:49948 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729159AbgAOMqB (ORCPT
+        Wed, 15 Jan 2020 07:46:11 -0500
+Received: from andre.telenet-ops.be ([195.130.132.53]:57756 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbgAOMqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jan 2020 07:46:01 -0500
 Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id qclq2100K5USYZQ01clqWY; Wed, 15 Jan 2020 13:45:58 +0100
+        by andre.telenet-ops.be with bizsmtp
+        id qclr2100Q5USYZQ01clrg9; Wed, 15 Jan 2020 13:45:58 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-0003z3-3l; Wed, 15 Jan 2020 13:45:50 +0100
+        id 1iri3S-0003z0-3D; Wed, 15 Jan 2020 13:45:50 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-00012b-2R; Wed, 15 Jan 2020 13:45:50 +0100
+        id 1iri3S-00012X-03; Wed, 15 Jan 2020 13:45:50 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
         David Lechner <david@lechnology.com>,
@@ -45,66 +45,80 @@ Cc:     Sam Ravnborg <sam@ravnborg.org>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/5] dt-bindings: display: sitronix,st7735r: Add Okaya RH128128T
-Date:   Wed, 15 Jan 2020 13:45:45 +0100
-Message-Id: <20200115124548.3951-3-geert+renesas@glider.be>
+Subject: [PATCH v2 0/5] drm: Add support for Okaya RH128128T
+Date:   Wed, 15 Jan 2020 13:45:43 +0100
+Message-Id: <20200115124548.3951-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document support for the Okaya RH128128T display, which is a 128x128
-1.44" TFT display driven by a Sitronix ST7715R TFT Controller/Driver.
-It can be found on e.g. the Renesas YRSK-LCD-PMOD extension board, which
-comes with various Renesas development kits (e.g. Renesas Starter Kit+
-for RZ/A1H[1]).
+	Hi all,
 
-ST7715R and ST7735R are very similar.  Their major difference is that
-the former is restricted to displays of up to 132x132 pixels, while the
-latter supports displays up to 132x162 pixels.
+This patch series adds support for the Okaya RH128128T LCD to the
+existing ST7735R driver.  This is a 128x128 1.4" TFT display driven by a
+Sitronix ST7715R TFT Controller/Driver.  It is used on e.g. the Renesas
+YRSK-LCD-PMOD extension board, which is shipped with Renesas RSK+RZA1
+development boards[1], and with several other Renesas starter kits, for
+RX, Synergy, and RZ/T1 MCUs and SoCs.
+
+Changes compared to v1[2]:
+  - Convert DT bindings to DT schema,
+  - Add YRSK-LCD-PMOD reference and links,
+  - Add Reviewed-by,
+  - Split driver preparation and adding actual support in two separate
+    patches,
+  - Replace st7735r_priv.rgb by a pointer to struct st7735r_cfg,
+  - Change prefix of jd_t18003_t01_pipe_enable() and
+    jd_t18003_t01_pipe_funcs(),
+  - Update Kconfig help text,
+  - Improve file comment header.
+
+This has been tested using the r7s72100-rskrza1-pmod-spi.dtso and
+r7s72100-rskrza1-pmod2-lcd.dtso DT overlays[3].
+Note that for using this on RSK+RZA1, there is a dependency on RSPI
+cs-gpios support (now in linux-next).
+With DT overlays, this also depends on DT overlays[4] and gpio-hog
+overlay support[5].
+
+Thanks!
 
 [1] https://renesasrulz.com/the_vault/f/archive-forum/4981/upgrading-to-the-renesas-rz-a1h
+[1] https://lore.kernel.org/dri-devel/20200102141246.370-1-geert+renesas@glider.be/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/overlays
+[5] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
+    https://lore.kernel.org/lkml/20191230133852.5890-1-geert+renesas@glider.be/
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Rebase on top of DT schema conversion,
-  - Add YRSK-LCD-PMOD reference and links.
----
- .../devicetree/bindings/display/sitronix,st7735r.yaml  | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Geert Uytterhoeven (5):
+  dt-bindings: display: sitronix,st7735r: Convert to DT schema
+  dt-bindings: display: sitronix,st7735r: Add Okaya RH128128T
+  drm/mipi_dbi: Add support for display offsets
+  drm: tiny: st7735r: Prepare for adding support for more displays
+  drm: tiny: st7735r: Add support for Okaya RH128128T
 
-diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-index 21bccc91f74255e1..8892d79e6e100b79 100644
---- a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-+++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-@@ -10,8 +10,8 @@ maintainers:
-   - David Lechner <david@lechnology.com>
- 
- description:
--  This binding is for display panels using a Sitronix ST7735R controller in
--  SPI mode.
-+  This binding is for display panels using a Sitronix ST7715R or ST7735R
-+  controller in SPI mode.
- 
- allOf:
-   - $ref: panel/panel-common.yaml#
-@@ -25,6 +25,12 @@ properties:
-           - enum:
-               - jianda,jd-t18003-t01
-           - const: sitronix,st7735r
-+      - description:
-+          Okaya 1.44" 128x128 Color TFT LCD (E.g. Renesas YRSK-LCD-PMOD)
-+        items:
-+          - enum:
-+              - okaya,rh128128t
-+          - const: sitronix,st7715r
- 
-   spi-max-frequency:
-     maximum: 32000000
+ .../bindings/display/sitronix,st7735r.txt     | 35 ---------
+ .../bindings/display/sitronix,st7735r.yaml    | 71 +++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ drivers/gpu/drm/drm_mipi_dbi.c                | 30 +++++---
+ drivers/gpu/drm/tiny/Kconfig                  |  8 +-
+ drivers/gpu/drm/tiny/st7735r.c                | 76 +++++++++++++++----
+ include/drm/drm_mipi_dbi.h                    | 12 +++
+ 7 files changed, 170 insertions(+), 64 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+ create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+
 -- 
 2.17.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
