@@ -2,103 +2,87 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97249C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22A02073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLy6jB7e"
+	by mail.kernel.org (Postfix) with ESMTP id 6DFDD2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbgAOLlR (ORCPT
+        id S1730135AbgAOLlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:41:17 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39833 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbgAOLlR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:41:17 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b137so8098458pga.6;
-        Wed, 15 Jan 2020 03:41:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NJMMur67AR0jae8jF9nPUvI7tXT+F1ukuVAKqerILaA=;
-        b=ZLy6jB7emzIXTRq+hgGRXWDcMcxvW/MxXSJxSfSOPYL7BT0wZJ9RmS4ECrN5sU64LE
-         71VnbUoHLMD2ny/8BwRo+KG2gQA7bGfp/c2QH5oCx9lEUohAd0DsHdnMcGCSOzKVCnlr
-         Mftxp9UKelVq0dZNII4VpiKfsAqEX7e+j6ZNI2rKuKgbdOsjRgXUipJdNXXOuOO00RSp
-         AKY9pyE4551I+2MNDQFFvH4gpTkDWVZ7ONmC4AQvmgKjAtS9l0lVfRLd7k33KHBIOgzm
-         myCYp341wTatTXf6qFxdajiVM9GXXcETTVnhYtgNuLJHofVS12KZvjCVja3WwRgi/X8+
-         Gwwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NJMMur67AR0jae8jF9nPUvI7tXT+F1ukuVAKqerILaA=;
-        b=IGx0FlTttThZNisFPhgrzJksjMwZewSPz/nB+h0lwd1QlFB5ecQMRKQtYSv1IOrWx2
-         ERFjlWFdC7NUcY/gsLdbYrmYfO3fa8H68iQ0fqS2Krz1M3cFBldhqm3YC2gePCWsL8e2
-         Kj7H3mQNqiBkKaed4Z/XXFH2h5D3tpDxJMipDo7UauTbZyibL6WIWXknKo6vaWzc5rGJ
-         NxnDJMhKFnD5nYh2s3CaT5fQeWg1C5O2vkILQCX4J8Y8wO2z0Yec8tuEhs/l7ezzySAo
-         ryaXmavfJtzKxlipTAxCA28dtiflQ392SGXFvLmD0pM3+83vaSqrSONWJHy3dVJflWeX
-         rEqg==
-X-Gm-Message-State: APjAAAUKuGaLQEwRPgSdHThGSQpl6MVEad0CxFTHI8QWFVw1NTZPXVje
-        xJwyQ215jbg6O0UoflFEcuc=
-X-Google-Smtp-Source: APXvYqx7eBmWC19EHivXv+68lQFzkQ9AwswFFyZ1hC6yGbRYdKg3lmD3zxWhHuW82cTbauFGweytHg==
-X-Received: by 2002:a65:6451:: with SMTP id s17mr32436532pgv.188.1579088476475;
-        Wed, 15 Jan 2020 03:41:16 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee2:fbb9:d507:a4c2:d370:bd13])
-        by smtp.gmail.com with ESMTPSA id v4sm21300869pfn.181.2020.01.15.03.41.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 03:41:16 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     davem@davemloft.net, gregkh@linuxfoundation.org
-Cc:     paulmck@kernel.org, joel@joelfernandes.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        frextrite@gmail.com,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] net: wan: lapbether.c: Use built-in RCU list checking
-Date:   Wed, 15 Jan 2020 17:11:01 +0530
-Message-Id: <20200115114101.13068-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jan 2020 06:41:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:35530 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729900AbgAOLlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:41:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1E1931B;
+        Wed, 15 Jan 2020 03:41:21 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ABE23F6C4;
+        Wed, 15 Jan 2020 03:41:18 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:41:12 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, Sudeep Holla <sudeep.holla@arm.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+Message-ID: <20200115114112.GA3663@bogus>
+References: <20200115063410.131692-1-hsinyi@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Wed, Jan 15, 2020 at 02:34:10PM +0800, Hsin-Yi Wang wrote:
+> Currently system reboots uses architecture specific codes (smp_send_stop)
+> to offline non reboot CPUs. Most architecture's implementation is looping
+> through all non reboot online CPUs and call ipi function to each of them. Some
+> architecture like arm64, arm, and x86... would set offline masks to cpu without
+> really offline them. This causes some race condition and kernel warning comes
+> out sometimes when system reboots.
+>
+> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
+> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> checking online cpus would be an empty loop. If architecture don't enable this
+> config, or some cpus somehow fails to offline, it would fallback to ipi
+> function.
+>
 
-The only callers of the function lapbeth_get_x25_dev()
-are lapbeth_rcv() and lapbeth_device_event().
+What's the timing impact on systems with large number of CPUs(say 256 or
+more) ? I remember we added some change to reduce the wait times for
+offlining CPUs in system suspend path on arm64, still not negligible.
 
-lapbeth_rcv() uses rcu_read_lock() whereas lapbeth_device_event()
-is called with RTNL held (As mentioned in the comments).
-
-Therefore, pass lockdep_rtnl_is_held() as cond argument in
-list_for_each_entry_rcu();
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/net/wan/lapbether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 0f1217b506ad..e30d91a38cfb 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -64,7 +64,7 @@ static struct lapbethdev *lapbeth_get_x25_dev(struct net_device *dev)
- {
- 	struct lapbethdev *lapbeth;
- 
--	list_for_each_entry_rcu(lapbeth, &lapbeth_devices, node) {
-+	list_for_each_entry_rcu(lapbeth, &lapbeth_devices, node, lockdep_rtnl_is_held()) {
- 		if (lapbeth->ethdev == dev) 
- 			return lapbeth;
- 	}
--- 
-2.17.1
-
+--
+Regards,
+Sudeep
