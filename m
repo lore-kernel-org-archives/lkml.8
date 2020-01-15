@@ -2,161 +2,137 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE4AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CFDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FAC24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E29824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eq16sBhr"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PWfe/8B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgAOS06 (ORCPT
+        id S1729260AbgAOS1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:26:58 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37032 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgAOS05 (ORCPT
+        Wed, 15 Jan 2020 13:27:24 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43525 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729081AbgAOS1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:26:57 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIN5FU121958;
-        Wed, 15 Jan 2020 18:26:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=F6SQaCFi8PmmmsQylROI5thWFZ79H1A5nXmOx7Fhsqw=;
- b=eq16sBhr1nm2LAd1UoC2Ko1hyhCVTxJGFyyrkdx0g2/3AniqAFOfA2xaW5JZJa7GhOlL
- SjgttsTM7rmQSvWPBch+qegcifOmi15P72fO5zXBuBK3k3i98/fP/S3MLXnM5w1nlamd
- F8GApoOouXEsp1QpiCPTlR7Mxz8Y3BMcYOT+PbfpTI/FwwIM22gvZytazeDIxh8Hf3dG
- a+rUMGoA/TCEbbuG509sLVCn9Dc+8TNwlB5aNI8nAJOVOLR+C+7hBfUH6lbwYZvJ1YPD
- eDWNzm3y8OBkzUG3At4MoHzorh+zc1jWnuFwEO22dqOBGOnen/aMYbul4b0/gDLIqu9B oA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74sdw4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIOOOi072681;
-        Wed, 15 Jan 2020 18:26:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xj1aq9drw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:41 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FIQdkm008377;
-        Wed, 15 Jan 2020 18:26:39 GMT
-Received: from dhcp-10-159-239-64.vpn.oracle.com (/10.159.239.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 10:26:38 -0800
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, robh+dt@kernel.org, nm@ti.com,
-        ssantosh@kernel.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
-        tony@atomide.com, j-keerthy@ti.com, vigneshr@ti.com,
-        frowand.list@gmail.com
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
- <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
- <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
- <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
- <20200115122440.GI2818@vkoul-mobl>
-From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b1dba0ad-f7d6-607b-87f7-d3ca746d19ea@oracle.com>
-Date:   Wed, 15 Jan 2020 10:26:36 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 15 Jan 2020 13:27:23 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d18so16614236qtj.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:27:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nQJ4n7Imvc45CINTxiOSO7su9csn5NiNHGyhEXcXKpA=;
+        b=PWfe/8B1+aSqhrwQGQmtkMFUT5fR4OyKzUJlXMFoPW6bmaGMdbpBAwiMekAoGR486w
+         ERc4rKwrgN8NhKWCPBemLfh3viO7WUy/r/66W2AwS/aF++kvAk9aZPNapJZQHYxw5UYA
+         cZgjs4jOglZqmBlOdzNAWjL3jxc9OB7/kQ/RAQjEPACY9zWh+ZW5JW0LELCvHDOS8Zam
+         6Tg95meXrJ9LlxsISeKrzyC3tzO+8TBa7I5Xd4eMfyCKBWE3vVh4fP3PJbNftkqzyGGa
+         CaOKFDy3QlZ8YKYI57vmda7sHqIVjffIXbBjYqBTJIbwjxAViuNsjB8Q1v+L3jtTwCRi
+         njTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nQJ4n7Imvc45CINTxiOSO7su9csn5NiNHGyhEXcXKpA=;
+        b=rBg7xMmIdZcFpcnWLruG+4De0Dx8AfV6ldimBWiiqnCXLKVOloSC/gHU6CNZ5AkQco
+         mplGSRQKB+YWoHdz6DiqQsERxvzhqn8/LEzMpPH8FU15+tkIAIGwzjvhWs/mAxz/XfU7
+         jF5QlEMJPnX5BRn1bNaTdRHDxxcxfgGl531uV83NcO1TtA+qeFeCiiihKTpvcdthnAH5
+         YawHfA+IkPOmTRrHWObEjKM1PZsARospS52LHnuhRy73BadxXrUse6ocVfpC7d2hIICQ
+         gdylrJT33+m0FgDhw2/5mP7zeOHVdtKZyCPJTjUqhCdZHaaVWU+imoMDlZT/nm6WD0oO
+         yupw==
+X-Gm-Message-State: APjAAAUEZUuUIeDHSjrvNeRMabsmnLK9LilYdB8daAd/qo+YkB3+Ifak
+        PctR9vRYFd3L9HCTSgE5G9NvT3CNcpU=
+X-Google-Smtp-Source: APXvYqxrMZO9CYChw22Jq2odmveya/mceWiYXKXM3T17YYpGG0/8CHQp69lkNKDCSaawM8rHSVwKVw==
+X-Received: by 2002:ac8:7586:: with SMTP id s6mr4834838qtq.309.1579112842544;
+        Wed, 15 Jan 2020 10:27:22 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id b24sm9783378qto.71.2020.01.15.10.27.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 10:27:22 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1irnNx-000721-Kr; Wed, 15 Jan 2020 14:27:21 -0400
+Date:   Wed, 15 Jan 2020 14:27:21 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     rao Shoaib <rao.shoaib@oracle.com>
+Cc:     linux-rdma@vger.kernel.org, monis@mellanox.com,
+        dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] SGE buffer and max_inline data must have same size
+Message-ID: <20200115182721.GE25201@ziepe.ca>
+References: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
+ <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115122440.GI2818@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150141
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 1/15/20 4:24 AM, Vinod Koul wrote:
-> On 15-01-20, 11:44, Peter Ujfalusi wrote:
->>
-
->>> I would prefer driver patches to go via driver tree.
->>
->> Not sure what you mean by 'driver patches'...
->> The series to enable DMA support on TI's K3 platform consists:
->> Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
->> Patch 3-6: DMAengine core patches to add new features needed for k3-udma
->> Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
->>
->> Patch 10 depends on the ringacc and the DMAengine core patches
->> Patch 11 depends on patch 10
->>
->> I kept it as a single series in hope that they will go via one subsystem
->> tree to avoid build dependency issues and will have a good amount of
->> time in linux-next for testing.
->>
->>>> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
->>>> with just the drivers/soc/ti parts applied so you can merge that branch
->>>> in case you end up having to send up anything that conflicts.
->>>>
->>> As suggested on other email to Peter, these DMA engine related patches
->>> should be queued up since they don't have any dependency. Based on
->>> the status of that patchset, will take care of pulling in the driver
->>> patches either for this merge window or early part of next merge window.
->>
->> OK, I'll send the two patch for ringacc as a separate series.
->>
->> Vinod: Would it be possible for you to pick up the DMAengine core
->> patches (patch 3-6)?
->> The UDMA driver patches have hard dependency on DMAengine core and
->> ringacc, not sure how they are going to go in...
+On Mon, Jan 13, 2020 at 04:41:20PM -0800, rao Shoaib wrote:
+> From: Rao Shoaib <rao.shoaib@oracle.com>
 > 
-> Since they have build dependency, the usual method for this is:
+> SGE buffer size and max_inline data should be same. Maximum of the
+> two values requested is used.
 > 
-[...]
+> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
+>  drivers/infiniband/sw/rxe/rxe_qp.c | 23 +++++++++++------------
+>  1 file changed, 11 insertions(+), 12 deletions(-)
 > 
-> 2. Santosh picks up ring driver patches, provides a signed immutable tag
-> which I will pull in and apply the rest, i.e., dmaengine updates and new
-> dmaengine driver
-> 
-I have pushed the ring driver changes with an immutable tag and also 
-pushed out to next. I will know if it breaks anything in a day.
-If all good, will send out the pull request to ARM soc folks.
-Since its already late, its not guaranteed that driver will get
-picked up for 5.6 but will request and copy you on pull request. Based
-on the state of the pull request, I suggest you decide to
-pull my tag and rest of the dma patches to your tree so that we
-can avoid any breakage in linus's tree. Feel free to add my ack
-for rest of the DMA patchset.
+> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+> index aeea994..41c669c 100644
+> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+> @@ -235,18 +235,17 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+>  		return err;
+>  	qp->sk->sk->sk_user_data = qp;
+>  
+> -	qp->sq.max_wr		= init->cap.max_send_wr;
+> -	qp->sq.max_sge		= init->cap.max_send_sge;
+> -	qp->sq.max_inline	= init->cap.max_inline_data;
+> -
+> -	wqe_size = max_t(int, sizeof(struct rxe_send_wqe) +
+> -			 qp->sq.max_sge * sizeof(struct ib_sge),
+> -			 sizeof(struct rxe_send_wqe) +
+> -			 qp->sq.max_inline);
+> -
+> -	qp->sq.queue = rxe_queue_init(rxe,
+> -				      &qp->sq.max_wr,
+> -				      wqe_size);
+> +	wqe_size = max_t(int, init->cap.max_send_sge * sizeof(struct ib_sge),
+> +			 init->cap.max_inline_data);
+> +	qp->sq.max_sge = wqe_size/sizeof(struct ib_sge);
+> +	qp->sq.max_inline = wqe_size;
+> +
+> +	wqe_size += sizeof(struct rxe_send_wqe);
 
-git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
-tags/drivers_soc_for_5.6
+Where does this limit the user's request to RXE_MAX_WQE_SIZE ?
 
-Let me know if you have any concerns/questions.
+I seem to recall the if the requested max can't be satisified then
+that is an EINVAL?
 
-Regards,
-Santosh
+And the init->cap should be updated with the actual allocation.
+
+So more like:
+
+        if (init->cap.max_send_sge > RXE_MAX_SGE ||
+           init->cap.max_inline_data > RXE_MAX_INLINE)
+            return -EINVAL;
+
+	wqe_size = max_t(int, init->cap.max_sge * sizeof(struct ib_sge),
+			 init->cap.max_inline_data)
+                   sizeof(struct rxe_send_wqe);
+	qp->sq.max_sge = init->cap.max_send_sge = wqe_size/sizeof(struct ib_sge);
+	qp->sq.max_inline = init->cap.max_inline_data = wqe_size;
+	wqe_size += sizeof(struct rxe_send_wqe);
+
+Jason
