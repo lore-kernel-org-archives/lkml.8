@@ -2,179 +2,112 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F799C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4943EC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401E52053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WymoTkNO"
+	by mail.kernel.org (Postfix) with ESMTP id 1A1F92053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579101929;
+	bh=fXHwWrM70vqgMiNEcITYA/2VoMaOOkctg8qxw/jut9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jC9/ELh8cpECwODMu4F3ISdU8c5O8vI8tssTa6C1MqfOixR4YjtpdfQJxt9euStul
+	 wex97TKvDflLeN5U+wK3IEvZGFFBpbqaYE47fAgjbmWr6S/54HD1lpB8x2zCVcwdDn
+	 OI18/xhGQQV6c4Q+G12JLK7AwL6oZpbZAy9uYsPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAOPZY (ORCPT
+        id S1729126AbgAOPZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:25:24 -0500
-Received: from mail-qv1-f45.google.com ([209.85.219.45]:35232 "EHLO
-        mail-qv1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgAOPZX (ORCPT
+        Wed, 15 Jan 2020 10:25:28 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38699 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgAOPZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:25:23 -0500
-Received: by mail-qv1-f45.google.com with SMTP id u10so7532241qvi.2;
-        Wed, 15 Jan 2020 07:25:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NdUAz6sa4LFq6afQBt16w036Li3pPsTl72+VHxglyUI=;
-        b=WymoTkNOvsAbv2uEQGt6IfczcVaeXfk+I/Eou9+3zRmlSNjhJ/9Bl5+kLXBuKMSRhI
-         9WPEQM3yhGEUzBGlCnxpjQA2nccgUqhsXRAGsc+g/4JI9fC+gv2O72AjWIKyXJSi23Db
-         Bt6IM/YxabcHl/e73+0FAqLaeFmKErp78b9WiQYzQs7zcewjk4KoIJ6Kn5CZEf2fpOcR
-         mzSQKdeGRU086El7uINhsNKfhGwbInHrdpO6sNfDWmnHR8BghB8cnnaGzKMHC/p+Q6PC
-         XuMEIcpMrt+71iI7m1rG8ivm/uWk0VIpz9yIal8mZ1ZiD2xk9HPryeLsHhII/jWIrBH3
-         W1OQ==
+        Wed, 15 Jan 2020 10:25:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so14296209oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:25:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=NdUAz6sa4LFq6afQBt16w036Li3pPsTl72+VHxglyUI=;
-        b=cuZFZ6MoixroiwU/tA4IZ0uHer2gsPEXRjkDEo52QonwEZPmnqdWZpRghiZ7WssolY
-         hWQnvE84ItPVxbogXasvV9eQQTOEUIwgsJHOyCYJWEJK7iFD/zBVhrzmu/Q1Z607j/nC
-         nUveRPWdtDcyJjrxWWHa6WgJAeMPnSV+X/4Uw3KdUZJiX5zLwWFv+QTxmFOngl5h0S2i
-         Yv8sAs/dhqGt9ynDkmwkceVZlw4PcnV4Pe5nblC57PKr/XbtaPNrJzefSOBPPHuOCjgo
-         /YcmgkAcFngXS68+8Xq0/M2opBHVm8VswqYLzp35HVJZmYTTq7Jk93i0q77up3rUNnwW
-         ZYiA==
-X-Gm-Message-State: APjAAAUZf9j6Y3OLXhvCSEHH0j69lKGwBwvR6Et4qku3m/3BHUMWQ4ow
-        8SUK1aVXnEa8Kg2ITRocNdp6lSPujd4=
-X-Google-Smtp-Source: APXvYqyUN1ByxiF0SvZ5OkFkzDNyvHJgHkhpALNOo9q382TVQoFtNWKtSOgnbc8GEsKcHtFj6qaQ0g==
-X-Received: by 2002:ad4:5349:: with SMTP id v9mr22846777qvs.177.1579101922320;
-        Wed, 15 Jan 2020 07:25:22 -0800 (PST)
-Received: from planxty.redhat.com (rdwyon0600w-lp130-03-64-231-46-127.dsl.bell.ca. [64.231.46.127])
-        by smtp.gmail.com with ESMTPSA id x126sm8601708qkc.42.2020.01.15.07.25.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WFi9eiSujdmRgUALnYgUAdNpHS3NpE41hamHBXYiuxI=;
+        b=dxue5j6S0FArJ1t/i4Ca7hoRW2gCVp22oHSQ5ytUjiFFjOkwkIdm/tcaeYjW8Jwrvp
+         GRCBekR2Vu/6t9wcFmrn9GBGuiB8iOvpGxRjLQnTO3j66whtzfgbYCgZfRGBMU5/rajk
+         Nag4DYkKFJi/vEIaeKjuCR4ghP1FOxHn59dR7uMahYIKcUHyGmG+b+FZCUkichf7HhqJ
+         gBWegjY2d+toU6cM4sNBZX5p15DuOyYmNf/dx45zwhM3DBqE7GIsa86l0eFjID2Se1zm
+         nNXZDAArWbND/0UNy7qKs2s8MmPSVz+4d/sHEO9OBqHtOne0Cs4p/NJr5K3iOJVcLAMP
+         P9gw==
+X-Gm-Message-State: APjAAAXtdoQ/NvbJ1pW30DtQg3tO65Dq7l1DyZoZnaX6Pda3F45HoPcs
+        vJt4ouEkisYxkFZ8Ad/7alP2wM0=
+X-Google-Smtp-Source: APXvYqxbvTLnARgPUediqb3CMuoMub/gZrv57lgIAo/wn7U9reLTQJ51v4mzACCKYJLI0UH/PWUU8w==
+X-Received: by 2002:a05:6830:c2:: with SMTP id x2mr3211022oto.8.1579101924512;
+        Wed, 15 Jan 2020 07:25:24 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r63sm5687292oib.56.2020.01.15.07.25.23
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:25:21 -0800 (PST)
-From:   John Kacur <jkacur@redhat.com>
-To:     RT <linux-rt-users@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Clark Williams <williams@redhat.com>,
-        John Kacur <jkacur@redhat.com>
-Subject: [ANNOUNCE] rt-tests-1.6
-Date:   Wed, 15 Jan 2020 16:25:12 +0100
-Message-Id: <20200115152512.7057-1-jkacur@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Jan 2020 07:25:23 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 22040c
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 15 Jan 2020 09:25:22 -0600
+Date:   Wed, 15 Jan 2020 09:25:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: input: touchscreen: add compatible
+ string for Goodix GT917S
+Message-ID: <20200115152522.GA15943@bogus>
+References: <20200110162608.1066397-1-icenowy@aosc.io>
+ <20200110162608.1066397-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110162608.1066397-2-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a new feature to get a snapshot of a running instance of
-cyclictest without stopping it, by sending SIGUSR2 to the PID and
-reading a shared memory segment. This is especially useful if you are
-running cyclictest over a long period of time.
+On Sat, Jan 11, 2020 at 12:26:06AM +0800, Icenowy Zheng wrote:
+> Goodix GT917S is a new touchscreen chip from Goodix.
+> 
+> Add its compatible string to the device tree binding.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> index fc03ea4cf5ab..c5447b136eb3 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  				 or "goodix,gt911"
+>  				 or "goodix,gt9110"
+>  				 or "goodix,gt912"
+> +				 or "goodix,gt917s"
 
-We are now using SPDX tags.
+This binding is getting converted to schema, so you'll probably need to 
+respin. In any case,
 
-Then there are various fixes from different people. Thanks to everyone
-for contributing, keep-up the good work.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Clone
-git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git
-https://kernel.googlesource.com/pub/scm/utils/rt-tests/rt-tests.git
-
-Branch: unstable/devel/latest
-
-Tag: v1.6
-
-Tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests
-
-Older version tarballs are available here:
-https://kernel.org/pub/linux/utils/rt-tests/older
-
-Afzal Mohammed (2):
-  rt-tests: Allow cross compilation
-  rt-tests: Let git ignore cscope generated files
-
-Daniel Wagner (4):
-  pmqtest: Increase buffer to avoid overflow
-  sigwaittest: Increase buffer to avoid overflow
-  svsematest: Increase buffer to avoid overflow
-  deadline_test: Increase buffer to avoid overflow
-
-John Kacur (15):
-  rt-tests: Set affinity before applying numa
-  rt-tests: cyclictest.8: Remove invalid tracing options from the
-    manpage
-  rt-tests: cyclictest: Make tracemark work correctly again
-  rt-tests: cyclictest: Fix  warning: ‘cpu’ may be used uninitialized
-  rt-tests: cyclictest: Don't allow OPT_SYSTEM with OPT_POSIX_TIMERS
-  rt-tests: cyclictest: Assume libnuma version 2 by default
-  rt-tests: cyclictest: Just use LIBNUMA_API_VERSION 2
-  rt-tests: queuelat: Fix some warnings in determine_maximum_mpps.sh
-  rt-tests: ssdd: Add short and long functions as well as help
-  rt-tests: cyclictest: Get a snapshot of cyclictest without
-    interuppting it
-  cyclictest: Sync manpage with the help option
-  svsematest: Add -S, --smp option to manpage
-  rt-tests: Add SPDX tags V3
-  rt-tests: Add SPDX tag to hackbench.c
-  rt-tests: Makefile - update version
-
-Sultan Alsawaf (1):
-  rt-tests: backfire: Don't include asm/uaccess.h directly
-
-Uwe Kleine-König (3):
-  cyclictest: fix typos
-  Makefile: don't create empty directories in install target
-  queuelat: use ARM implementation of gettick also for all !x86 archs
-
- .gitignore                               |   1 +
- Makefile                                 |  10 +-
- src/backfire/backfire.c                  |  19 +-
- src/cyclictest/cyclictest.8              |  42 +---
- src/cyclictest/cyclictest.c              | 242 +++++++++++++++++++++--
- src/cyclictest/rt_numa.h                 |  99 +---------
- src/hackbench/hackbench.c                |   1 +
- src/hwlatdetect/hwlatdetect.py           |   8 +-
- src/include/bionic.h                     |   1 +
- src/include/error.h                      |   1 +
- src/include/pip_stress.h                 |   1 +
- src/include/rt-get_cpu.h                 |   1 +
- src/include/rt-sched.h                   |  24 +--
- src/include/rt-utils.h                   |   1 +
- src/lib/error.c                          |   1 +
- src/lib/rt-get_cpu.c                     |   1 +
- src/lib/rt-sched.c                       |  25 +--
- src/lib/rt-utils.c                       |   1 +
- src/pi_tests/classic_pi.c                |  22 +--
- src/pi_tests/pi_stress.c                 |  22 +--
- src/pi_tests/pip_stress.c                |  14 +-
- src/pi_tests/sigtest.c                   |  22 +--
- src/pi_tests/tst-mutexpi10.c             |  27 +--
- src/pmqtest/pmqtest.c                    |  20 +-
- src/ptsematest/ptsematest.c              |  17 +-
- src/queuelat/determine_maximum_mpps.sh   |  18 +-
- src/queuelat/get_cpuinfo_mhz.sh          |   3 +
- src/queuelat/queuelat.c                  |  10 +-
- src/queuelat/targeted-ipi/targeted-ipi.c |   7 +
- src/rt-migrate-test/rt-migrate-test.c    |  19 +-
- src/sched_deadline/cyclicdeadline.c      |   8 +
- src/sched_deadline/deadline_test.c       |  26 +--
- src/signaltest/signaltest.c              |   2 +
- src/sigwaittest/sigwaittest.c            |   4 +-
- src/ssdd/ssdd.8                          |  10 +-
- src/ssdd/ssdd.c                          |  57 ++++--
- src/svsematest/svsematest.8              |   3 +
- src/svsematest/svsematest.c              |  18 +-
- 38 files changed, 392 insertions(+), 416 deletions(-)
-
--- 
-2.20.1
-
+>  				 or "goodix,gt927"
+>  				 or "goodix,gt9271"
+>  				 or "goodix,gt928"
+> -- 
+> 2.23.0
+> 
