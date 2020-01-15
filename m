@@ -2,549 +2,99 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56201C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9777BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3750C24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6253724681
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eYIgdkwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAOCRB (ORCPT
+        id S1728901AbgAOCX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 21:17:01 -0500
-Received: from mx.socionext.com ([202.248.49.38]:22489 "EHLO mx.socionext.com"
+        Tue, 14 Jan 2020 21:23:28 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44275 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgAOCRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 21:17:01 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 15 Jan 2020 11:16:58 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 36DDB603AB;
-        Wed, 15 Jan 2020 11:16:58 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 15 Jan 2020 11:18:06 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id E59FD4034C;
-        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id A3A82120B64;
-        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
-Date:   Wed, 15 Jan 2020 11:16:57 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
-Cc:     "Masahiro Yamada" <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com> <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
-Message-Id: <20200115111657.FD32.4A936039@socionext.com>
+        id S1728877AbgAOCX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 21:23:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yB2P5KqDz9s29;
+        Wed, 15 Jan 2020 13:23:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579055006;
+        bh=stHvswn9sK7Zi+BgE8W1eVXr+Ed1WoFsrfYI/u2Q73Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eYIgdkwWbY0xEH+0gqwMcS/hsp0mQuKE/XD7P9JuodY/MnFxwIRoOCW3S3Y2pcgNk
+         DPr+pKVdoYzmhZaOf8rdxybNYHRzto88EZe05S6nQxxEdjM4191uV4daqWdVr35On1
+         KmrpiPIJuuDFJLEtXaRCCPuiWUcoOTJRD/FEDwm198QGG7ZCJAqm9vf5JrXeXBXpm6
+         0WfZUvfUN8koEqTqR10BvYdmEBDQmHgRtT5keAr4g8EpdL69sFdTWWZWWUpXhTYPXG
+         bXAmzLN5C9wbPeeFfUNJnJfeLqXxsYxtovZGdHFboE3xUZMq+vP0zRjczr41pWyECr
+         AESl0Az0EK1Gg==
+Date:   Wed, 15 Jan 2020 13:23:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jean Pihet <jean.pihet@newoldbits.com>
+Subject: linux-next: build warning after merge of the spi tree
+Message-ID: <20200115132325.3ac3ca0f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Type: multipart/signed; boundary="Sig_/vs=MdSqJ5uWEzn.LGFIjOm8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/vs=MdSqJ5uWEzn.LGFIjOm8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Gentle ping.
-Is there any comments about this?
+Hi all,
 
-Thank you,
+After merging the spi tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
-On Thu, 12 Dec 2019 11:02:18 +0900
-Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+drivers/spi/spi-ti-qspi.c: In function 'ti_qspi_start_transfer_one':
+drivers/spi/spi-ti-qspi.c:392:8: warning: 'rx_wlen' may be used uninitializ=
+ed in this function [-Wmaybe-uninitialized]
+  392 |     if (rx_wlen >=3D 32)
+      |        ^
+drivers/spi/spi-ti-qspi.c:318:12: note: 'rx_wlen' was declared here
+  318 |  u8 rxlen, rx_wlen;
+      |            ^~~~~~~
 
-> This introduces specific glue layer for UniPhier platform to support
-> PCIe controller that is based on the DesignWare PCIe core, and
-> this driver supports endpoint mode. This supports for Pro5 SoC only.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  MAINTAINERS                                   |   2 +-
->  drivers/pci/controller/dwc/Kconfig            |  13 +-
->  drivers/pci/controller/dwc/Makefile           |   1 +
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 399 ++++++++++++++++++++++++++
->  4 files changed, 412 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4b6ec28..9ed0572 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12695,7 +12695,7 @@ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
-> -F:	drivers/pci/controller/dwc/pcie-uniphier.c
-> +F:	drivers/pci/controller/dwc/pcie-uniphier*.c
->  
->  PCIE DRIVER FOR ST SPEAR13XX
->  M:	Pratyush Anand <pratyush.anand@gmail.com>
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 0ba988b..6bc661a 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -247,15 +247,24 @@ config PCIE_TEGRA194
->  	  controller found in NVIDIA Tegra194 SoC.
->  
->  config PCIE_UNIPHIER
-> -	bool "Socionext UniPhier PCIe controllers"
-> +	bool "Socionext UniPhier PCIe host controllers"
->  	depends on ARCH_UNIPHIER || COMPILE_TEST
->  	depends on OF && HAS_IOMEM
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
->  	help
-> -	  Say Y here if you want PCIe controller support on UniPhier SoCs.
-> +	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
->  	  This driver supports LD20 and PXs3 SoCs.
->  
-> +config PCIE_UNIPHIER_EP
-> +	bool "Socionext UniPhier PCIe endpoint controllers"
-> +	depends on ARCH_UNIPHIER || COMPILE_TEST
-> +	depends on OF && HAS_IOMEM
-> +	select PCIE_DW_EP
-> +	help
-> +	  Say Y here if you want PCIe endpoint controller support on
-> +	  UniPhier SoCs. This driver supports Pro5 SoC.
-> +
->  config PCIE_AL
->  	bool "Amazon Annapurna Labs PCIe controller"
->  	depends on OF && (ARM64 || COMPILE_TEST)
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 69faff3..ba458b6 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
->  obj-$(CONFIG_PCI_MESON) += pci-meson.o
->  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
-> +obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> new file mode 100644
-> index 00000000..7b5aa0f
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe endpoint controller driver for UniPhier SoCs
-> + * Copyright 2018 Socionext Inc.
-> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pci.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +/* Link Glue registers */
-> +#define PCL_RSTCTRL0			0x0010
-> +#define PCL_RSTCTRL_AXI_REG		BIT(3)
-> +#define PCL_RSTCTRL_AXI_SLAVE		BIT(2)
-> +#define PCL_RSTCTRL_AXI_MASTER		BIT(1)
-> +#define PCL_RSTCTRL_PIPE3		BIT(0)
-> +
-> +#define PCL_RSTCTRL1			0x0020
-> +#define PCL_RSTCTRL_PERST		BIT(0)
-> +
-> +#define PCL_RSTCTRL2			0x0024
-> +#define PCL_RSTCTRL_PHY_RESET		BIT(0)
-> +
-> +#define PCL_MODE			0x8000
-> +#define PCL_MODE_REGVAL			BIT(0)
-> +
-> +#define PCL_APP_CLK_CTRL		0x8004
-> +#define PCL_APP_CLK_REQ			BIT(0)
-> +
-> +#define PCL_APP_READY_CTRL		0x8008
-> +#define PCL_APP_LTSSM_ENABLE		BIT(0)
-> +
-> +#define PCL_APP_MSI0			0x8040
-> +#define PCL_APP_VEN_MSI_TC_MASK		GENMASK(10, 8)
-> +#define PCL_APP_VEN_MSI_VECTOR_MASK	GENMASK(4, 0)
-> +
-> +#define PCL_APP_MSI1			0x8044
-> +#define PCL_APP_MSI_REQ			BIT(0)
-> +
-> +#define PCL_APP_INTX			0x8074
-> +#define PCL_APP_INTX_SYS_INT		BIT(0)
-> +
-> +/* assertion time of intx in usec */
-> +#define PCL_INTX_WIDTH_USEC		30
-> +
-> +struct uniphier_pcie_ep_priv {
-> +	void __iomem *base;
-> +	struct dw_pcie pci;
-> +	struct clk *clk, *clk_gio;
-> +	struct reset_control *rst, *rst_gio;
-> +	struct phy *phy;
-> +	const struct uniphier_pcie_ep_soc_data *data;
-> +};
-> +
-> +struct uniphier_pcie_ep_soc_data {
-> +	bool is_legacy;
-> +	const struct pci_epc_features features;
-> +};
-> +
-> +#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-> +
-> +static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_ep_priv *priv,
-> +				       bool enable)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(priv->base + PCL_APP_READY_CTRL);
-> +	if (enable)
-> +		val |= PCL_APP_LTSSM_ENABLE;
-> +	else
-> +		val &= ~PCL_APP_LTSSM_ENABLE;
-> +	writel(val, priv->base + PCL_APP_READY_CTRL);
-> +}
-> +
-> +static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
-> +				    bool assert)
-> +{
-> +	u32 val;
-> +
-> +	val = readl(priv->base + PCL_RSTCTRL2);
-> +	if (assert)
-> +		val |= PCL_RSTCTRL_PHY_RESET;
-> +	else
-> +		val &= ~PCL_RSTCTRL_PHY_RESET;
-> +	writel(val, priv->base + PCL_RSTCTRL2);
-> +}
-> +
-> +static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	/* set EP mode */
-> +	val = readl(priv->base + PCL_MODE);
-> +	val |= PCL_MODE_REGVAL;
-> +	writel(val, priv->base + PCL_MODE);
-> +
-> +	/* clock request */
-> +	val = readl(priv->base + PCL_APP_CLK_CTRL);
-> +	val &= ~PCL_APP_CLK_REQ;
-> +	writel(val, priv->base + PCL_APP_CLK_CTRL);
-> +
-> +	/* deassert PIPE3 and AXI reset */
-> +	val = readl(priv->base + PCL_RSTCTRL0);
-> +	val |= PCL_RSTCTRL_AXI_REG | PCL_RSTCTRL_AXI_SLAVE
-> +		| PCL_RSTCTRL_AXI_MASTER | PCL_RSTCTRL_PIPE3;
-> +	writel(val, priv->base + PCL_RSTCTRL0);
-> +
-> +	uniphier_pcie_ltssm_enable(priv, false);
-> +}
-> +
-> +static int uniphier_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +
-> +	uniphier_pcie_ltssm_enable(priv, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static void uniphier_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +
-> +	uniphier_pcie_ltssm_enable(priv, false);
-> +}
-> +
-> +static void uniphier_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	enum pci_barno bar;
-> +
-> +	for (bar = BAR_0; bar <= BAR_5; bar++)
-> +		dw_pcie_ep_reset_bar(pci, bar);
-> +}
-> +
-> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +	u32 val;
-> +
-> +	/* assert INTx */
-> +	val = readl(priv->base + PCL_APP_INTX);
-> +	val |= PCL_APP_INTX_SYS_INT;
-> +	writel(val, priv->base + PCL_APP_INTX);
-> +
-> +	udelay(PCL_INTX_WIDTH_USEC);
-> +
-> +	/* deassert INTx */
-> +	val = readl(priv->base + PCL_APP_INTX);
-> +	val &= ~PCL_APP_INTX_SYS_INT;
-> +	writel(val, priv->base + PCL_APP_INTX);
-> +
-> +	return 0;
-> +}
-> +
-> +static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
-> +					  u8 func_no, u16 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +	u32 val;
-> +
-> +	val = FIELD_PREP(PCL_APP_VEN_MSI_TC_MASK, func_no)
-> +		| FIELD_PREP(PCL_APP_VEN_MSI_VECTOR_MASK, interrupt_num - 1);
-> +	writel(val, priv->base + PCL_APP_MSI0);
-> +
-> +	val = readl(priv->base + PCL_APP_MSI1);
-> +	val |= PCL_APP_MSI_REQ;
-> +	writel(val, priv->base + PCL_APP_MSI1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> +				      enum pci_epc_irq_type type,
-> +				      u16 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +
-> +	switch (type) {
-> +	case PCI_EPC_IRQ_LEGACY:
-> +		return uniphier_pcie_ep_raise_legacy_irq(ep);
-> +	case PCI_EPC_IRQ_MSI:
-> +		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
-> +						      interrupt_num);
-> +	default:
-> +		dev_err(pci->dev, "UNKNOWN IRQ type (%d)\n", type);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pci_epc_features*
-> +uniphier_pcie_get_features(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> +
-> +	return &priv->data->features;
-> +}
-> +
-> +static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
-> +	.ep_init = uniphier_pcie_ep_init,
-> +	.raise_irq = uniphier_pcie_ep_raise_irq,
-> +	.get_features = uniphier_pcie_get_features,
-> +};
-> +
-> +static int uniphier_add_pcie_ep(struct uniphier_pcie_ep_priv *priv,
-> +				struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = &priv->pci;
-> +	struct dw_pcie_ep *ep = &pci->ep;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	ep->ops = &uniphier_pcie_ep_ops;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base2))
-> +		return PTR_ERR(pci->dbi_base2);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	ep->phys_base = res->start;
-> +	ep->addr_size = resource_size(res);
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(priv->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(priv->clk_gio);
-> +	if (ret)
-> +		goto out_clk_disable;
-> +
-> +	ret = reset_control_deassert(priv->rst);
-> +	if (ret)
-> +		goto out_clk_gio_disable;
-> +
-> +	ret = reset_control_deassert(priv->rst_gio);
-> +	if (ret)
-> +		goto out_rst_assert;
-> +
-> +	uniphier_pcie_init_ep(priv);
-> +
-> +	if (priv->data->is_legacy)
-> +		uniphier_pcie_phy_reset(priv, true);
-> +
-> +	ret = phy_init(priv->phy);
-> +	if (ret)
-> +		goto out_rst_gio_assert;
-> +
-> +	if (priv->data->is_legacy)
-> +		uniphier_pcie_phy_reset(priv, false);
-> +
-> +	return 0;
-> +
-> +out_rst_gio_assert:
-> +	reset_control_assert(priv->rst_gio);
-> +out_rst_assert:
-> +	reset_control_assert(priv->rst);
-> +out_clk_gio_disable:
-> +	clk_disable_unprepare(priv->clk_gio);
-> +out_clk_disable:
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = uniphier_pcie_start_link,
-> +	.stop_link = uniphier_pcie_stop_link,
-> +};
-> +
-> +static int uniphier_pcie_ep_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct uniphier_pcie_ep_priv *priv;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->data = of_device_get_match_data(dev);
-> +	if (WARN_ON(!priv->data))
-> +		return -EINVAL;
-> +
-> +	priv->pci.dev = dev;
-> +	priv->pci.ops = &dw_pcie_ops;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-> +	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(priv->pci.dbi_base))
-> +		return PTR_ERR(priv->pci.dbi_base);
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
-> +	priv->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	if (priv->data->is_legacy) {
-> +		priv->clk_gio = devm_clk_get(dev, "gio");
-> +		if (IS_ERR(priv->clk))
-> +			return PTR_ERR(priv->clk);
-> +
-> +		priv->rst_gio =
-> +			devm_reset_control_get_shared(dev, "gio");
-> +		if (IS_ERR(priv->rst_gio))
-> +			return PTR_ERR(priv->rst_gio);
-> +
-> +		priv->clk = devm_clk_get(dev, "link");
-> +		if (IS_ERR(priv->clk))
-> +			return PTR_ERR(priv->clk);
-> +
-> +		priv->rst =
-> +			devm_reset_control_get_shared(dev, "link");
-> +		if (IS_ERR(priv->rst))
-> +			return PTR_ERR(priv->rst);
-> +	} else {
-> +		priv->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(priv->clk))
-> +			return PTR_ERR(priv->clk);
-> +
-> +		priv->rst = devm_reset_control_get_shared(dev, NULL);
-> +		if (IS_ERR(priv->rst))
-> +			return PTR_ERR(priv->rst);
-> +	}
-> +
-> +	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
-> +	if (IS_ERR(priv->phy))
-> +		return PTR_ERR(priv->phy);
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	ret = uniphier_pcie_ep_enable(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return uniphier_add_pcie_ep(priv, pdev);
-> +}
-> +
-> +static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
-> +	.is_legacy = true,
-> +	.features = {
-> +		.linkup_notifier = false,
-> +		.msi_capable = true,
-> +		.msix_capable = false,
-> +		.align = 1 << 16,
-> +		.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
-> +		.reserved_bar =  BIT(BAR_4),
-> +	},
-> +};
-> +
-> +static const struct of_device_id uniphier_pcie_ep_match[] = {
-> +	{
-> +		.compatible = "socionext,uniphier-pro5-pcie-ep",
-> +		.data = &uniphier_pro5_data,
-> +	},
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver uniphier_pcie_ep_driver = {
-> +	.probe  = uniphier_pcie_ep_probe,
-> +	.driver = {
-> +		.name = "uniphier-pcie-ep",
-> +		.of_match_table = uniphier_pcie_ep_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +};
-> +builtin_platform_driver(uniphier_pcie_ep_driver);
-> -- 
-> 2.7.4
+Introduced by commit
 
----
-Best Regards,
-Kunihiko Hayashi
+  e7cc5cfbea4c ("spi: spi-ti-qspi: optimize byte-transfers")
 
+Looks like it may be a false positive.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vs=MdSqJ5uWEzn.LGFIjOm8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4ed50ACgkQAVBC80lX
+0GxhLgf/cNbQRzGsh2af+SU3SfiIGUWJDE73bxIjIDVLMpVoMV1NhVzgRB5tP7vR
+dC60DtHGH3Ttl/seMa6f05326dQj3kkCAVlv0EpJmByokYspHCUiBeVQK7EtTgyd
+LLYH5MFQntULUU6cyKQce1J1EEvh0iiiOQFnSpRoGRsuubgRaNE6VuXjg45fk6gQ
+ZpzaN/tqWYm4cJBnif7YW8Hnp/4oPSsX43oTTw9r03laXfzyVLXdFKnWdlPgiu6x
+rYcOLPUmr+D5QbVkBlzHDRZHctnZwKiFKxS7A5p0OCZ4UheJLQrSPrYfVvWL/MYi
+cSC3fkZpg6bFVaTrKN0kDvU3G1GRxg==
+=eV2g
+-----END PGP SIGNATURE-----
+
+--Sig_/vs=MdSqJ5uWEzn.LGFIjOm8--
