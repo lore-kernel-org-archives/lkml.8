@@ -2,88 +2,208 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0040AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0B3C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92952465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1BA24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Tgc2rK2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgAOPQq convert rfc822-to-8bit (ORCPT
+        id S1728986AbgAOPQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:16:46 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:32820 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726132AbgAOPQp (ORCPT
+        Wed, 15 Jan 2020 10:16:50 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53445 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgAOPQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:16:45 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-195-rdpLZj8NNcWC7e3ovf19mw-1; Wed, 15 Jan 2020 15:16:41 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Jan 2020 15:16:41 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Jan 2020 15:16:41 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Waiman Long' <longman@redhat.com>, Christoph Hellwig <hch@lst.de>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Wed, 15 Jan 2020 10:16:48 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115151646euoutp02cd6335a97a67afb7868893358046fed9~qGFzmirNb0252202522euoutp02-
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:16:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115151646euoutp02cd6335a97a67afb7868893358046fed9~qGFzmirNb0252202522euoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579101406;
+        bh=N07jBECcaGqq4VB4q54/zMIlWBsa3RYsqTuCu9Rdyu4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Tgc2rK2P8dK5dTX0UKLooPDPdkXgjOiINboFzTl8ms9+mjmCaixvjTgxqzdp+8FS4
+         hYFFh0EwZSzEtsQ3PVY6SE7AqHgP9Wk+8g6215HR0INyJ4DHve3JJmyir6O4w3sTLl
+         POQsNvJ/nYBK5lvIPskM21fq7M3kf4pwPEoWbE9U=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200115151646eucas1p11734f25e7720fc56a7ec3c9e3776633f~qGFzEQ0XS2610926109eucas1p1i;
+        Wed, 15 Jan 2020 15:16:46 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 22.91.60698.DDC2F1E5; Wed, 15
+        Jan 2020 15:16:45 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115151645eucas1p2241fc1538cd4518051c56325fcad5901~qGFyuRK4l3174031740eucas1p2t;
+        Wed, 15 Jan 2020 15:16:45 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115151645eusmtrp2a0ebdaf8a88140c8f9893147b0fabeb6~qGFytaF8P2330623306eusmtrp2e;
+        Wed, 15 Jan 2020 15:16:45 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-2b-5e1f2cdde18d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 38.BD.07950.DDC2F1E5; Wed, 15
+        Jan 2020 15:16:45 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115151644eusmtip156aac6e446621275c61f447d2333550a~qGFxrL4fL1521915219eusmtip1R;
+        Wed, 15 Jan 2020 15:16:44 +0000 (GMT)
+Subject: Re: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for fb
+ on HyperV Gen 1 VMs.
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "info@metux.net" <info@metux.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] locking/rwsem: Fix kernel crash when spinning on
- RWSEM_OWNER_UNKNOWN
-Thread-Topic: [PATCH] locking/rwsem: Fix kernel crash when spinning on
- RWSEM_OWNER_UNKNOWN
-Thread-Index: AQHVy6/pULnrp2X9K02rMSrf0oH55Kfr1QMw
-Date:   Wed, 15 Jan 2020 15:16:41 +0000
-Message-ID: <45b976af3cf74555af7214993e7d614b@AcuMS.aculab.com>
-References: <20200114190303.5778-1-longman@redhat.com>
- <20200115065055.GA21219@lst.de>
- <021830af-fd89-50e5-ad26-6061e5abdce1@redhat.com>
-In-Reply-To: <021830af-fd89-50e5-ad26-6061e5abdce1@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <5a58696d-7f23-a577-c25e-ebe748b1aef0@samsung.com>
+Date:   Wed, 15 Jan 2020 16:16:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MC-Unique: rdpLZj8NNcWC7e3ovf19mw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGc2emM0O1MlYIxw21UaNGQYTEKypq4sM8qYlrXNAKE1AWSQuu
+        D+IKgiCgCFYQIwZKqWBqWWRVUMCojRubYkCDQUjaIigRCyLDQOTtO8t///MnlyWV8fQs9kh4
+        pKAJV4eqaDlVXDdoWfF5+Tz/lQ0ja3CMLYfBwyl1DK66aEL4wy87jS9kF9K4qYTHefnPCdx6
+        rpzAnflFDG5I7JXh1OReGr8vy6Bxz4WvNH7w7DOD7X1XCJzTaqGwfrAIYZOxicbW2qckdqQ5
+        bXThHX9SEH/HeIbPrugmeJPhCs1XZxoZvj2+nuDLW6NpPqnXSvOXSocZ/v7NRppPNBsQ329y
+        3zZ1r3xdoBB65Lig8fQ7JA9O0BVQEW0zT1qMibJoFO8ah5xY4Hwg4XmSTGQlp0fwtHJuHJKP
+        8k8ExnsOJBX9CArsf+gJhflDISENchE8eqOTSYUVgaPFMDph2RlcAAwP7BAFLtxCOP/zHSnu
+        kFw6A9defR97ieZ8ITnGgERWcH6Q1mgaY4pbBEMNGaTIrtwe6OuolUk70+HFrU5KfN+J2w/X
+        C1eLbZJzg4+dWYTE86DEmjHmBVwFC08cg5R09Wa4m/laJvEM6Kk3MxLPgZHHWYQkKEAwHPt9
+        XF2CIPf63/HMa6HNIuZnRy2WQmGZp9TeBG8H7pBiG7hp0GKdLh0xDVKK08bbCoi9rJS2F8PD
+        nIf0hG3c4zwyCal0k5LpJsXRTYqj++97F1EG5CZEacOCBK13uHDCQ6sO00aFB3kEHAszodEv
+        +vJv/a9SVDV0uAZxLFJNVQQPufsrZerj2lNhNQhYUuWieJE+11+pCFSfOi1ojh3URIUK2ho0
+        m6VUbgrve90HlFyQOlIIEYQIQTMxJVinWdFozqeunb67SLmmvfjLk9mNFpvX0ZDa1DJDaXAH
+        s6OsTu9Zrusfad6d4OHrtq/bq/d9p8397KHsvoWV968Nzi9a75Nl7bItNrt45utWbjVtXuUj
+        PxpnWbJl/fYF0c3pj5KVV6ectdhJ54vLnOtvmG3fUnuqvTekK2b+dtbfzvLrGjjxQ0Vpg9Ve
+        y0iNVv0Pu4MiUZ4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe8/Zzs7MxWkqvo3SOF0JnU5nexWTvnnoU5CQpKnDTi5yTnbm
+        rSIsNXPW8IKay7QypXS5HOYlo3TljSDBG3iPErTyssoCm0rOJfjtD8/v9zw88CdxcQVfQl5K
+        0rHaJGUiTbjwPqz3TPpO+njH+I91HEa5i7UCtFbULUBvsi0ADf1eIlBWtZlAIy0MelbfhaHR
+        G+0Ymql/KUC9BhsflRTaCDT4qoJA37I+E+j5+0kBWvqZh6Ha0Y889HTlJUAW0wiBFt514she
+        Jjzpztj/FgGm0nSVqX79FWMsdXkE8/aBScBM5/dgTPtoJsEU2BYIJqd1TcA8KR0mGENTHWB+
+        WbxOu56Thmo1KTp2v0rD6U7QUTIUIJUFI2mAPFgqC1ScDwkIov3CQi+wiZdSWa1fWJxUddfY
+        wEue2JP+0WTgZ4J8Dz0QkpCSw6YhM6YHLqSYqgFwvX8c6AG5MdgLe8ypTsYNro7oCSfzHcDC
+        HDvuYNyoeLj2J8LBuFMH4c3lAdyRccoogFOfaCffgMF+ayNwDAgqBBbm1m1mERUGy4Ytm5lH
+        HYKrvRWbsgcVCd+1Gv8zu2Ff+QzPcUtIRcNis8K5/whcrdy65QnHZqowZ/aGLQsVeAEQG7fZ
+        xm2KcZti3KY8BLw64M6mcOoENRcg5ZRqLiUpQRqvUVvARjOau1eaWoF+8YwVUCSgXUUd614x
+        Yr4ylctQWwEkcdpd1HdvX4xYdEGZcYXVamK1KYksZwVBG78V4hKPeM1Gz5J0sbIgmQIFyxSB
+        isDjiPYU3aY6o8VUglLHXmbZZFa75WGkUJIJrn+oSTvgo6jCJKzrc7GyeWIg3XcuZ5BdPNUy
+        ktdWLfQ7ZJ8qkw/NUXJT3OOJFz+O6kMeHd45tQM2z3qllXPHdtleC1W4YTqq61ZfUXZj4osv
+        EfJ0bDl8nCy4WDNmWwi334lEZ82a+x60/2xpQaebpOjavMQ0WVyiXSlfnW+jeZxKKTuGaznl
+        P9CockovAwAA
+X-CMS-MailID: 20200115151645eucas1p2241fc1538cd4518051c56325fcad5901
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200106223809eucas1p19d62a7481db309e28b64977639dc94c7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200106223809eucas1p19d62a7481db309e28b64977639dc94c7
+References: <20191209075749.3804-1-weh@microsoft.com>
+        <CY4PR21MB06293C21EC5338C98080F6AED7580@CY4PR21MB0629.namprd21.prod.outlook.com>
+        <CGME20200106223809eucas1p19d62a7481db309e28b64977639dc94c7@eucas1p1.samsung.com>
+        <HK0P153MB0148F18913BEA45144AF8443BF3C0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> On Behalf Of Waiman Long
-> Sent: 15 January 2020 14:27
-...
-> >>  		if ((wstate == WRITER_HANDOFF) &&
-> >> -		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
-> >> +		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
-> > Nit: the inner braces in the first half of the conditional aren't required
-> > either.
+
+On 1/6/20 11:37 PM, Dexuan Cui wrote:
+>> From: Michael Kelley <mikelley@microsoft.com>
+>> Sent: Monday, December 9, 2019 8:33 AM
+>> To: Wei Hu <weh@microsoft.com>; b.zolnierkie@samsung.com; KY
+>> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+>> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org;
+>> hch@lst.de; m.szyprowski@samsung.com; mchehab+samsung@kernel.org;
+>> sam@ravnborg.org; gregkh@linuxfoundation.org;
+>> alexandre.belloni@bootlin.com; info@metux.net; arnd@arndb.de;
+>> dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org;
+>> linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; Dexuan Cui
+>> <decui@microsoft.com>
+>> Cc: kbuild test robot <lkp@intel.com>
+>> Subject: RE: [PATCH v4] video: hyperv: hyperv_fb: Use physical memory for
+>> fb on HyperV Gen 1 VMs.
+>>
+>> From: Wei Hu <weh@microsoft.com> Sent: Sunday, December 8, 2019 11:58
+>> PM
+>>>
+>>> On Hyper-V, Generation 1 VMs can directly use VM's physical memory for
+>>> their framebuffers. This can improve the efficiency of framebuffer and
+>>> overall performance for VM. The physical memory assigned to framebuffer
+>>> must be contiguous. We use CMA allocator to get contiguous physicial
+>>> memory when the framebuffer size is greater than 4MB. For size under
+>>> 4MB, we use alloc_pages to achieve this.
+>>>
+>>> To enable framebuffer memory allocation from CMA, supply a kernel
+>>> parameter to give enough space to CMA allocator at boot time. For
+>>> example:
+>>>     cma=130m
+>>> This gives 130MB memory to CAM allocator that can be allocated to
+>>> framebuffer. If this fails, we fall back to the old way of using
+>>> mmio for framebuffer.
+>>>
+>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>> Signed-off-by: Wei Hu <weh@microsoft.com>
+>>> ---
+>>>     v2: Incorporated review comments form hch@lst.de, Michael Kelley
+>> and
+>>>     Dexuan Cui
+>>>     - Use dma_alloc_coherent to allocate large contiguous memory
+>>>     - Use phys_addr_t for physical addresses
+>>>     - Corrected a few spelling errors and minor cleanups
+>>>     - Also tested on 32 bit Ubuntu guest
+>>>     v3: Fixed a build issue reported by kbuild test robot and incorported
+>>>     some review comments from Michael Kelley
+>>>     - Add CMA check to avoid link failure
+>>>     - Fixed small memory leak introduced by alloc_apertures
+>>>     - Cleaned up so code
+>>>     v4: Removed request_pages variable as it is no longer needed
+>>>
+>>>  drivers/video/fbdev/Kconfig     |   1 +
+>>>  drivers/video/fbdev/hyperv_fb.c | 182
+>> +++++++++++++++++++++++++-------
+>>>  2 files changed, 144 insertions(+), 39 deletions(-)
+>>>
+>>
+>> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 > 
-> I typically over-parenthesize the code to make it easier to read as we
-> don't need to think too much about operator precedence to see if it is
-> doing the right thing.
+> Tested-by: Dexuan Cui <decui@microsoft.com>
+> 
+> For a Gen-1 VM running on recent Hyper-V hosts, this patch can greatly 
+> reduce the CPU utilization because it avoids the slow data copy from the 
+> shadow framebuffer to the MMIO framebuffer, and hence it resolves the
+> "blurred screen" issue when we output a lot of characters on the text-mode
+> ternimal (e.g. "dmesg").
 
-The problem is it actually makes it harder to read.
-It is difficult for the 'mark 1 eyeball' to follow lots of sets of brackets.
-Since == (etc) are the lowest priority operators (apart from ?:) they
-never need ().
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
