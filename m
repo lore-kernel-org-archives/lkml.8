@@ -2,133 +2,98 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C5AC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7095C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFB82073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579105599;
-	bh=Os96ml7Pmf21QOwrRKIYNtWFm3N+GGpLbQeFHckdnSo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGnC6hRyyLwHv14IdQN0dikBHpsyqwnYXlF9WcNZ7/sFeqIBnQgXbbQ0gLfj7CzFo
-	 BtmSHKHXUOkF1/eZDN5buR7u3gcqxFC2j23TnGFChskU1KxC7lZxarn7yK0vU21xSR
-	 Ct3nAh3VFu35cvTMzuRubl7Mz/oxtwaf8BUfzmRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8FC5724671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="N9MbVpGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgAOQ0i (ORCPT
+        id S1729151AbgAOQ0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:26:38 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58902 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAOQ0h (ORCPT
+        Wed, 15 Jan 2020 11:26:55 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42551 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgAOQ0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:26:37 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 00FGPX3D015075;
-        Thu, 16 Jan 2020 01:25:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00FGPX3D015075
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579105536;
-        bh=gZ1tQR0oF7mVTSCbFvPvL7tdZTj4E7ydMnWZsVBinlI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gl9akiXqlGKyRdP38V6y52S2PnAsNXth0HcyFKetp8G197JKZkXg1RABArt05XdKc
-         MgYrWxyR3QvlfzYFepw01VijZSsj9pwP+PY2cqSVC5eSxg217F6LDAS70urYXoLWj3
-         Zlk9Or/lzo+fvxbJkK5Hu4I67CwsHOKOvzUwQ4HTUZwYxt9SkbG8vaNR7TuPmSg7pg
-         /i3RUgD1kcOWVWDpfvGo+GhM3FkLY8C7lb9D0Hb13s1ZryiaWnNMMUxUEsBqhEt0lC
-         VEF8lodgb4eJfVN+oJZCNpsWghB/R1fO1SW0cpUs0bHHsUWQ/7ngWtkqAzV807THvY
-         UtbXFbGlbdXgA==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] builddeb: avoid invoking sub-shells where possible
-Date:   Thu, 16 Jan 2020 01:25:26 +0900
-Message-Id: <20200115162529.11089-4-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115162529.11089-1-masahiroy@kernel.org>
-References: <20200115162529.11089-1-masahiroy@kernel.org>
+        Wed, 15 Jan 2020 11:26:55 -0500
+Received: by mail-qt1-f194.google.com with SMTP id j5so16244969qtq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:26:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BGhoOyu5VQ9UNwECtfExQGuAJzqWLNe3068aiRd3j68=;
+        b=N9MbVpGjbi4k9kiTHfugxxCqckr+FEPgRaTd1X13kFFNn75b2OUvIFegFjnLjH4MET
+         vYHvGAv/cOaMEmtOO8gVpi25xQTiXiYNaLyRqrx7nJ22WyoLjGEe9PnBvg0thLlOi5tN
+         vLSwngsRsi6ngXhfvRJQMXOtScF1i499fQboIHbYUwdCcRHcrovwlqPNkoF8l5B8C6xk
+         zwDNP+6+/F2wp5Ak918pWlHJF76FP6OC+sswqBL8ciBYxn0R5C/pVF4Y9JQCRnOJSIEw
+         k+WkZdWPlT1Nlfh6HzUYA97cC9iZdhJFTeA66t2cEmmsVdLY6n3QrGD0L/KbrRmCllm/
+         ehuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BGhoOyu5VQ9UNwECtfExQGuAJzqWLNe3068aiRd3j68=;
+        b=Asw9vTmvC1XSm08FUnX+tvTd/NMQgFWmZhkmrvVlYaRa20Epcufh0lj57OtY0DOXxa
+         RjJ1Nad5BRt93eZDOZE/Ppp7Urby0wPuqYejUn5fh82a4ghDemCwULRrWmw+bRgWflhm
+         nEDqRgTQ9tAzUY2aA8aTW7kLhVF2RUy63BGgIbeN0ghqA2yhmthaPy3EfY+xD+xvwnP8
+         5+KPY8q/O8TFAbcvTn6szCrfTLXF/n5BBaeKDHfCh1EEAhrgbZu7PGSXR1OSMjxCHZYT
+         5jddID21rz3HzTtSJvRgUkkeUkSz3y+Abi6gOf4RSJ3RMnk0ou3XO8f50agnKiMcTUsl
+         gMKA==
+X-Gm-Message-State: APjAAAVcOM5uwkru6z9q7+fuH5m/WP26u2dJOFTFG5aN/73aA6B7g8SV
+        BJSUEHM9O8+b/dW9ulEMEohvbQ==
+X-Google-Smtp-Source: APXvYqxK3fXxJYK2OHY5fNbL0IWIdwQXnxlcW9LltTOQTnJ8odVy9pqrM8Tc37VCTRCWaseM/4cyKQ==
+X-Received: by 2002:ac8:4657:: with SMTP id f23mr4369118qto.378.1579105614247;
+        Wed, 15 Jan 2020 08:26:54 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id z141sm8675109qkb.63.2020.01.15.08.26.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 08:26:53 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1irlVN-0001qT-27; Wed, 15 Jan 2020 12:26:53 -0400
+Date:   Wed, 15 Jan 2020 12:26:53 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200115162653.GC25201@ziepe.ca>
+References: <20200114161225.309792-1-hch@lst.de>
+ <20200114192700.GC22037@ziepe.ca>
+ <20200115065614.GC21219@lst.de>
+ <20200115132428.GA25201@ziepe.ca>
+ <20200115153614.GA31296@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115153614.GA31296@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commands surrounded by ( ... ) is run in a sub-shell, but you do
-not have to spawn a sub-shell for every single line.
+On Wed, Jan 15, 2020 at 04:36:14PM +0100, Christoph Hellwig wrote:
 
-Use just one ( ... ) for creating debian/hdrsrcfiles.
+> synchronous and currently hack that up, so a version of the percpu_ref
+> that actually waits for the other references to away like we hacked
+> up various places seems to exactly suit your requirements.
 
-For tar, use -C option instead.
+Ah, yes, sounds like a similar goal, many cases I'm thinking about
+also hack up a kref to trigger a completion to make it
+synchronous.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
-Changes in v2:
- - fix misconversion pointed out by Ben
-
- scripts/package/builddeb | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
-
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 9b92745bf13a..7d7e0abe62b6 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -165,21 +165,34 @@ EOF
- done
- 
- # Build kernel header package
--(cd $srctree; find . arch/$SRCARCH -maxdepth 1 -name Makefile\*) > debian/hdrsrcfiles
--(cd $srctree; find include scripts -type f -o -type l) >> debian/hdrsrcfiles
--(cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> debian/hdrsrcfiles
--(cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> debian/hdrsrcfiles
--if is_enabled CONFIG_STACK_VALIDATION; then
--	echo tools/objtool/objtool >> debian/hdrobjfiles
--fi
--find arch/$SRCARCH/include Module.symvers include scripts -type f >> debian/hdrobjfiles
--if is_enabled CONFIG_GCC_PLUGINS; then
--	find scripts/gcc-plugins -name \*.so >> debian/hdrobjfiles
--fi
-+(
-+	cd $srctree
-+	find . arch/$SRCARCH -maxdepth 1 -name Makefile\*
-+	find include scripts -type f -o -type l
-+	find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform
-+	find arch/$SRCARCH/include -type f
-+
-+	if [ -d arch/$SRCARCH/scripts ]; then
-+		find arch/$SRCARCH/scripts -type f
-+	fi
-+) > debian/hdrsrcfiles
-+
-+{
-+	if is_enabled CONFIG_STACK_VALIDATION; then
-+		find tools/objtool -type f -executable
-+	fi
-+
-+	find arch/$SRCARCH/include Module.symvers include scripts -type f
-+
-+	if is_enabled CONFIG_GCC_PLUGINS; then
-+		find scripts/gcc-plugins -name \*.so
-+	fi
-+} > debian/hdrobjfiles
-+
- destdir=$kernel_headers_dir/usr/src/linux-headers-$version
- mkdir -p "$destdir"
--(cd $srctree; tar -c -f - -T -) < debian/hdrsrcfiles | (cd $destdir; tar -xf -)
--tar -c -f - -T - < debian/hdrobjfiles | (cd $destdir; tar -xf -)
-+tar -c -f - -C $srctree -T debian/hdrsrcfiles | tar -xf - -C $destdir
-+tar -c -f - -T debian/hdrobjfiles | tar -xf - -C $destdir
- cp $KCONFIG_CONFIG $destdir/.config # copy .config manually to be where it's expected to be
- ln -sf "/usr/src/linux-headers-$version" "$kernel_headers_dir/lib/modules/$version/build"
- rm -f debian/hdrsrcfiles debian/hdrobjfiles
--- 
-2.17.1
-
+Jason
