@@ -2,197 +2,89 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848B4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B22C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E8F24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9328F24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAOIOy (ORCPT
+        id S1728992AbgAOIPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:14:54 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35049 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgAOIOy (ORCPT
+        Wed, 15 Jan 2020 03:15:40 -0500
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:30187 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726310AbgAOIPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:14:54 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1irdp0-0001Tj-6d; Wed, 15 Jan 2020 09:14:38 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1irdoz-0000CT-5q; Wed, 15 Jan 2020 09:14:37 +0100
-Date:   Wed, 15 Jan 2020 09:14:37 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Han Xu <han.xu@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, esben@geanix.com,
-        boris.brezillon@collabora.com, festevam@gmail.com,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] dmaengine: mxs: switch from dma_coherent to dma_pool
-Message-ID: <20200115081437.gsrzwm5bkk2hg6vo@pengutronix.de>
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
- <1579038243-28550-5-git-send-email-han.xu@nxp.com>
+        Wed, 15 Jan 2020 03:15:40 -0500
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 15 Jan
+ 2020 16:00:30 +0800
+Received: from tony-HX002EA.zhaoxin.com (10.32.64.11) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 15 Jan
+ 2020 16:00:28 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
+        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
+Subject: [PATCH] x86/cpu: remove redundant cpu_detect_cache_sizes
+Date:   Wed, 15 Jan 2020 16:00:57 +0800
+Message-ID: <1579075257-6985-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579038243-28550-5-git-send-email-han.xu@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:03:40 up 191 days, 14:13, 86 users,  load average: 0.25, 0.42,
- 0.34
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.32.64.11]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:44:01AM +0800, Han Xu wrote:
-> create one dma_pool dedicate for mxs-dma to avoid the
-> "alloc_contig_range: [xxx, xxx) PFNs busy" warning message during
-> frequently alloc/free resource ops in runtime pm.
-> 
-> Signed-off-by: Han Xu <han.xu@nxp.com>
-> ---
->  drivers/dma/mxs-dma.c | 32 ++++++++++++++++++++++++--------
->  1 file changed, 24 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> index 251492c5ea58..dfee41ae1981 100644
-> --- a/drivers/dma/mxs-dma.c
-> +++ b/drivers/dma/mxs-dma.c
-> @@ -26,6 +26,7 @@
->  #include <linux/list.h>
->  #include <linux/dma/mxs-dma.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/dmapool.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -121,6 +122,7 @@ struct mxs_dma_chan {
->  	enum dma_status			status;
->  	unsigned int			flags;
->  	bool				reset;
-> +	struct dma_pool			*ccw_pool;
->  #define MXS_DMA_SG_LOOP			(1 << 0)
->  #define MXS_DMA_USE_SEMAPHORE		(1 << 1)
->  };
-> @@ -422,9 +424,10 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
->  	struct device *dev = &mxs_dma->pdev->dev;
->  	int ret;
->  
-> -	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
-> -					   CCW_BLOCK_SIZE,
-> -					   &mxs_chan->ccw_phys, GFP_KERNEL);
-> +	mxs_chan->ccw = dma_pool_zalloc(mxs_chan->ccw_pool,
-> +					GFP_ATOMIC,
-> +					&mxs_chan->ccw_phys);
+Before call cpu_detect_cache_sizes get l2size from CPUID.80000006,
+these CPUs have called init_intel_cacheinfo get l2size/l3size from
+CPUID.4.
 
-Why GFP_ATOMIC?
+So remove the redundant function to simplify the code.
 
-> +
->  	if (!mxs_chan->ccw) {
->  		ret = -ENOMEM;
->  		goto err_alloc;
-> @@ -454,8 +457,8 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
->  err_clk:
->  	free_irq(mxs_chan->chan_irq, mxs_dma);
->  err_irq:
-> -	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
-> -			mxs_chan->ccw, mxs_chan->ccw_phys);
-> +	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
-> +		      mxs_chan->ccw_phys);
->  err_alloc:
->  	return ret;
->  }
-> @@ -470,8 +473,8 @@ static void mxs_dma_free_chan_resources(struct dma_chan *chan)
->  
->  	free_irq(mxs_chan->chan_irq, mxs_dma);
->  
-> -	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
-> -			mxs_chan->ccw, mxs_chan->ccw_phys);
-> +	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
-> +		      mxs_chan->ccw_phys);
->  
->  	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
-> @@ -796,6 +799,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
->  	const struct mxs_dma_type *dma_type;
->  	struct mxs_dma_engine *mxs_dma;
->  	struct resource *iores;
-> +	struct dma_pool *ccw_pool;
->  	int ret, i;
->  
->  	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
-> @@ -843,7 +847,6 @@ static int mxs_dma_probe(struct platform_device *pdev)
->  		tasklet_init(&mxs_chan->tasklet, mxs_dma_tasklet,
->  			     (unsigned long) mxs_chan);
->  
-> -
->  		/* Add the channel to mxs_chan list */
->  		list_add_tail(&mxs_chan->chan.device_node,
->  			&mxs_dma->dma_device.channels);
-> @@ -858,6 +861,17 @@ static int mxs_dma_probe(struct platform_device *pdev)
->  
->  	mxs_dma->dma_device.dev = &pdev->dev;
->  
-> +	/* create the dma pool */
-> +	ccw_pool = dma_pool_create("ccw_pool",
-> +				   mxs_dma->dma_device.dev,
-> +				   CCW_BLOCK_SIZE, 32, 0);
-> +
-> +	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
-> +		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
-> +
-> +		mxs_chan->ccw_pool = ccw_pool;
-> +	}
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/cpu/centaur.c | 2 --
+ arch/x86/kernel/cpu/zhaoxin.c | 2 --
+ 2 files changed, 4 deletions(-)
 
-ccw_pool is the same for every channel, it should be a member of
-struct mxs_dma_engine and not of struct mcs_dma_chan.
-
-> +
->  	/* mxs_dma gets 65535 bytes maximum sg size */
->  	mxs_dma->dma_device.dev->dma_parms = &mxs_dma->dma_parms;
->  	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
-> @@ -899,11 +913,13 @@ static int mxs_dma_remove(struct platform_device *pdev)
->  	int i;
->  
->  	dma_async_device_unregister(&mxs_dma->dma_device);
-> +	dma_pool_destroy(mxs_dma->mxs_chans[0].ccw_pool);
-
-It doesn't seem to make a big difference, but I would do this after
-killing the tasklets, not before. Otherwise we would have to prove that
-no tasklet is still accessing the dma_pool.
-
->  
->  	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
->  		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
->  
->  		tasklet_kill(&mxs_chan->tasklet);
-> +		mxs_chan->ccw_pool = NULL;
-
-There's no point in resetting this to NULL, mxs_chan is never going to
-be touched again.
-
-Sascha
-
+diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+index 14433ff..b98529e 100644
+--- a/arch/x86/kernel/cpu/centaur.c
++++ b/arch/x86/kernel/cpu/centaur.c
+@@ -71,8 +71,6 @@ static void init_c3(struct cpuinfo_x86 *c)
+ 		c->x86_cache_alignment = c->x86_clflush_size * 2;
+ 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+ 	}
+-
+-	cpu_detect_cache_sizes(c);
+ }
+ 
+ enum {
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index 8e6f2f4..452fd0a 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -58,8 +58,6 @@ static void init_zhaoxin_cap(struct cpuinfo_x86 *c)
+ 
+ 	if (c->x86 >= 0x6)
+ 		set_cpu_cap(c, X86_FEATURE_REP_GOOD);
+-
+-	cpu_detect_cache_sizes(c);
+ }
+ 
+ static void early_init_zhaoxin(struct cpuinfo_x86 *c)
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
