@@ -2,182 +2,166 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215AAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A370C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0093424671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9872084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgAOVVN (ORCPT
+        id S1729691AbgAOVaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:21:13 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:44488 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgAOVVM (ORCPT
+        Wed, 15 Jan 2020 16:30:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33796 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729437AbgAOVaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:21:12 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 23F578050D;
-        Wed, 15 Jan 2020 22:21:08 +0100 (CET)
-Date:   Wed, 15 Jan 2020 22:21:06 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [PATCH v8 1/8] dt-bindings: display: panel: Add BOE tv101wum-n16
- panel bindings
-Message-ID: <20200115212106.GD28904@ravnborg.org>
-References: <20200115135958.126303-1-jitao.shi@mediatek.com>
- <20200115135958.126303-2-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115135958.126303-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
-        a=-W9t3f-s57Xz0V4m3JgA:9 a=d-McAGeJY93I7joI:21 a=s8DGCSS_m8B6YGa2:21
-        a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=AjGcO6oz07-iQ99wixmX:22
+        Wed, 15 Jan 2020 16:30:11 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FLRLWZ068812;
+        Wed, 15 Jan 2020 16:29:55 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw1np9w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 16:29:55 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FLORVY029332;
+        Wed, 15 Jan 2020 21:29:54 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 2xf75magwp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 21:29:54 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FLTroZ53084510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 21:29:53 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 303F16E04E;
+        Wed, 15 Jan 2020 21:29:53 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3DE576E04C;
+        Wed, 15 Jan 2020 21:29:52 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Jan 2020 21:29:52 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
+        andrew@aj.id.au, eajames@linux.ibm.com
+Subject: [PATCH v6 01/12] dt-bindings: interrupt-controller: Add Aspeed SCU interrupt controller
+Date:   Wed, 15 Jan 2020 15:29:39 -0600
+Message-Id: <1579123790-6894-2-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_03:2020-01-15,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=1 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=735 bulkscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001150161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+Document the Aspeed SCU interrupt controller and add an include file
+for the interrupts it provides.
 
-A few comments that I missed in last round.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt | 23 ++++++++++++++++++++++
+ MAINTAINERS                                        |  7 +++++++
+ .../interrupt-controller/aspeed-scu-ic.h           | 23 ++++++++++++++++++++++
+ 3 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
 
-Please consider to combine the three panels in one binding.
-I realise they are almost identical so no need for three binding files.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+new file mode 100644
+index 0000000..251ed44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+@@ -0,0 +1,23 @@
++Aspeed AST25XX and AST26XX SCU Interrupt Controller
++
++Required Properties:
++ - #interrupt-cells		: must be 1
++ - compatible			: must be "aspeed,ast2500-scu-ic",
++				  "aspeed,ast2600-scu-ic0" or
++				  "aspeed,ast2600-scu-ic1"
++ - interrupts			: interrupt from the parent controller
++ - interrupt-controller		: indicates that the controller receives and
++				  fires new interrupts for child busses
++
++Example:
++
++    syscon@1e6e2000 {
++        ranges = <0 0x1e6e2000 0x1a8>;
++
++        scu_ic: interrupt-controller@18 {
++            #interrupt-cells = <1>;
++            compatible = "aspeed,ast2500-scu-ic";
++            interrupts = <21>;
++            interrupt-controller;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 98cf0b0..ce269df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2728,6 +2728,13 @@ S:	Maintained
+ F:	drivers/pinctrl/aspeed/
+ F:	Documentation/devicetree/bindings/pinctrl/aspeed,*
+ 
++ASPEED SCU INTERRUPT CONTROLLER DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
++F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
++
+ ASPEED VIDEO ENGINE DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+new file mode 100644
+index 0000000..f315d5a
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++
++#define ASPEED_SCU_IC_VGA_CURSOR_CHANGE			0
++#define ASPEED_SCU_IC_VGA_SCRATCH_REG_CHANGE		1
++
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI	2
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_HI_TO_LO	3
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_LO_TO_HI	4
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_HI_TO_LO	5
++#define ASPEED_AST2500_SCU_IC_ISSUE_MSI			6
++
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI	2
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_HI_TO_LO	3
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_LO_TO_HI	4
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_HI_TO_LO	5
++
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_LO_TO_HI	0
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_HI_TO_LO	1
++
++#endif /* _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_ */
+-- 
+1.8.3.1
 
-On Wed, Jan 15, 2020 at 09:59:51PM +0800, Jitao Shi wrote:
-> Add documentation for boe tv101wum-n16 panel.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../display/panel/boe,tv101wum-nl6.yaml       | 74 +++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> new file mode 100644
-> index 000000000000..d38aee22d406
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Please use (GPL-2.0-only OR BSD-2-Clause) for all new bindings.
-(Sorry if this was not part of my previous feedback)
-
-	Sam
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/boe,tv101wum-nl6.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: BOE TV101WUM-Nl6 DSI Display Panel
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Sam Ravnborg <sam@ravnborg.org>
-
-> +  - Rob Herring <robh+dt@kernel.org>
-Rob is not a typical maintainer of panel bindings.
-The fallback it Thierry and me.
-
-But if you have agreed this with Rob then all is good.
-
-
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +        const: boe,tv101wum-nl6
-> +
-> +  reg:
-> +    description: the virtual channel number of a DSI peripheral
-> +
-> +  enable-gpios:
-> +    description: a GPIO spec for the enable pin
-> +
-> +  pp1800-supply:
-> +    description: core voltage supply
-> +
-> +  avdd-supply:
-> +    description: phandle of the regulator that provides positive voltage
-> +
-> +  avee-supply:
-> +    description: phandle of the regulator that provides negative voltage
-> +
-> +  backlight:
-> +    description: phandle of the backlight device attached to the panel
-> +
-> +  port: true
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - enable-gpios
-> + - pp1800-supply
-> + - avdd-supply
-> + - avee-supply
-
-> + - backlight
-I would be suprised if backlight is a required node.
-You could always tie the input to a fixed voltage and then no backlight
-node are required.
-Please remove from the required list unless you can convince me
-otherwise.
-
-	Sam
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dsi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        panel@0 {
-> +            compatible = "boe,tv101wum-nl6";
-> +            reg = <0>;
-> +            enable-gpios = <&pio 45 0>;
-> +            avdd-supply = <&ppvarn_lcd>;
-> +            avee-supply = <&ppvarp_lcd>;
-> +            pp1800-supply = <&pp1800_lcd>;
-> +            backlight = <&backlight_lcd0>;
-> +            status = "okay";
-> +            port {
-> +                panel_in: endpoint {
-> +                    remote-endpoint = <&dsi_out>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
