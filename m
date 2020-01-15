@@ -2,70 +2,175 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1E4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE22C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D932187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C602187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="o+vsV3oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAOF5T (ORCPT
+        id S1728885AbgAOF6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:57:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60820 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAOF5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:57:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3A15CAD45;
-        Wed, 15 Jan 2020 05:57:17 +0000 (UTC)
-Subject: Re: [patch 10/15] x86/vdso: Use generic VDSO clock mode storage
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-References: <20200114185237.273005683@linutronix.de>
- <20200114185947.608274960@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <1385d686-b127-47e3-8eb2-cb79ef8f8b52@suse.com>
-Date:   Wed, 15 Jan 2020 06:57:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 15 Jan 2020 00:58:15 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:41216 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAOF6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 00:58:14 -0500
+Received: by mail-ua1-f67.google.com with SMTP id f7so5795087uaa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 21:58:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e5xJRkqeZeVuqWjzuTjcTAvJI4fzZrcr+Isw3uqYLKg=;
+        b=o+vsV3oMBFRJ1mv7DjQiU8XPXWxqrhMJgML2HsKufa6V56I+MLrFTdPDjwZPSsgTGb
+         RPljyQh7++xAIXl+sjGHAcqYF7B8DzcB6Oo1DobaDz5W3DISZkeQpCFAmjS/FVTzaYfX
+         Lv4sSGxgPS+oxOZUR98FZokoBK0xXYuvPjAG/rV/Q+TOE5lOD9un0NuMfpcsCn3ySND0
+         AihW5IkU4QPEm66XCcNbaNWP82U5XaVpK/uGPVa4LI14xAFQVafishSL6JyPxtozxAgL
+         5lw5wlrwYUp0QXBNutVanw8TNPbMb5mYYPFGp1yOm9cZ2Inl7eOyR6eD7frdc9XswOGW
+         sY4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e5xJRkqeZeVuqWjzuTjcTAvJI4fzZrcr+Isw3uqYLKg=;
+        b=pxI3KGPP5RmrX1F3Tll/sMaZil4wbUvYPOW9zbUpfsFD7/kJXsvQQsVCxjx8vwEhK9
+         ZV2tNPLp2q5+5wi+6RwME2YK4PVkwOzMIyUMYV37HMkEdtkuirwDgawPVSog+ZJfT6Ey
+         jfc8HToUD8hMYxyregcvtAsG1z2WERsVXioFj3hj3GkvNqgkFe7IOfqYSYWCeywt61XO
+         WFWwvnkiaVR6vsgZP010RlF/lyeg5xeRPwdeo1QWGhvvbno2CG4J1RVRWFCqkpF6YwgX
+         dMeIhzVATOQ54gng9SsOvcFcYW/O33437mhuSpGRyxprPTbFNx7MiQ6pdNEef8CpV+ub
+         iqiw==
+X-Gm-Message-State: APjAAAVcvBLJy5CzQzYVrIKcFMyDzAD8j8/oUXIYdxEA3JTLntRXPsEx
+        5ldv3M9WHoBMJRpXpMhXj3yVSH86PD/hUQKGQiURBw==
+X-Google-Smtp-Source: APXvYqyHRDquLaL0bEm7oQ9JtTMteQmR4X4JG9yvX/H3A2qtA1O/wnBD9raOEACyIMcJLv3MZehD7pa6uUYuo68Tdw4=
+X-Received: by 2002:ab0:2252:: with SMTP id z18mr12952463uan.60.1579067893051;
+ Tue, 14 Jan 2020 21:58:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114185947.608274960@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200114190607.29339-1-f.fainelli@gmail.com> <20200114190607.29339-2-f.fainelli@gmail.com>
+In-Reply-To: <20200114190607.29339-2-f.fainelli@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 15 Jan 2020 11:28:02 +0530
+Message-ID: <CAHLCerO1OARY9OMDpGudSfBdmtRfeP_pYaE9=-Sn-10ZVjgXKA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] thermal: brcmstb_thermal: Do not use DT coefficients
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.01.20 19:52, Thomas Gleixner wrote:
-> Switch to the generic VDSO clock mode storage.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Wed, Jan 15, 2020 at 12:36 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> At the time the brcmstb_thermal driver and its binding were merged, the
+> DT binding did not make the coefficients properties a mandatory one,
+> therefore all users of the brcmstb_thermal driver out there have a non
+> functional implementation with zero coefficients. Even if these
+> properties were provided, the formula used for computation is incorrect.
+>
+> The coefficients are entirely process specific (right now, only 28nm is
+> supported) and not board or SoC specific, it is therefore appropriate to
+> hard code them in the driver given the compatibility string we are
+> probed with which has to be updated whenever a new process is
+> introduced.
+>
+> We remove the existing coefficients definition since subsequent patches
+> are going to add support for a new process and will introduce new
+> coefficients as well.
+>
+> Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Acked-by: Juergen Gross <jgross@suse.com> (Xen parts)
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-
-Juergen
-
+> ---
+>  drivers/thermal/broadcom/brcmstb_thermal.c | 31 +++++++---------------
+>  1 file changed, 9 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/thermal/broadcom/brcmstb_thermal.c b/drivers/thermal/broadcom/brcmstb_thermal.c
+> index 5825ac581f56..680f1a070606 100644
+> --- a/drivers/thermal/broadcom/brcmstb_thermal.c
+> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+> @@ -49,7 +49,7 @@
+>  #define AVS_TMON_TP_TEST_ENABLE                0x20
+>
+>  /* Default coefficients */
+> -#define AVS_TMON_TEMP_SLOPE            -487
+> +#define AVS_TMON_TEMP_SLOPE            487
+>  #define AVS_TMON_TEMP_OFFSET           410040
+>
+>  /* HW related temperature constants */
+> @@ -108,23 +108,12 @@ struct brcmstb_thermal_priv {
+>         struct thermal_zone_device *thermal;
+>  };
+>
+> -static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
+> -                               int *offset)
+> -{
+> -       *slope = thermal_zone_get_slope(tz);
+> -       *offset = thermal_zone_get_offset(tz);
+> -}
+> -
+>  /* Convert a HW code to a temperature reading (millidegree celsius) */
+>  static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+>                                         u32 code)
+>  {
+> -       const int val = code & AVS_TMON_TEMP_MASK;
+> -       int slope, offset;
+> -
+> -       avs_tmon_get_coeffs(tz, &slope, &offset);
+> -
+> -       return slope * val + offset;
+> +       return (AVS_TMON_TEMP_OFFSET -
+> +               (int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
+>  }
+>
+>  /*
+> @@ -136,20 +125,18 @@ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+>  static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
+>                                         int temp, bool low)
+>  {
+> -       int slope, offset;
+> -
+>         if (temp < AVS_TMON_TEMP_MIN)
+> -               return AVS_TMON_TEMP_MAX; /* Maximum code value */
+> -
+> -       avs_tmon_get_coeffs(tz, &slope, &offset);
+> +               return AVS_TMON_TEMP_MAX;       /* Maximum code value */
+>
+> -       if (temp >= offset)
+> +       if (temp >= AVS_TMON_TEMP_OFFSET)
+>                 return 0;       /* Minimum code value */
+>
+>         if (low)
+> -               return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
+> +               return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
+> +                                         AVS_TMON_TEMP_SLOPE));
+>         else
+> -               return (u32)((offset - temp) / abs(slope));
+> +               return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
+> +                             AVS_TMON_TEMP_SLOPE);
+>  }
+>
+>  static int brcmstb_get_temp(void *data, int *temp)
+> --
+> 2.17.1
+>
