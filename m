@@ -2,101 +2,163 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB31C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3198C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70868207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B732084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SzSDkVJO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgAORYx (ORCPT
+        id S1729021AbgAOR0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:24:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37170 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAORYx (ORCPT
+        Wed, 15 Jan 2020 12:26:37 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54399 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728913AbgAOR0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:24:53 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1irmPT-0007KX-7w; Wed, 15 Jan 2020 17:24:51 +0000
-Date:   Wed, 15 Jan 2020 18:24:50 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Serge Hallyn <shallyn@cisco.com>, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Eric Paris <eparis@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] ptrace: reintroduce usage of subjective credentials in
- ptrace_has_cap()
-Message-ID: <20200115172450.y73kkxiggfxrofrh@wittgenstein>
-References: <20200115171736.16994-1-christian.brauner@ubuntu.com>
+        Wed, 15 Jan 2020 12:26:37 -0500
+Received: by mail-pj1-f65.google.com with SMTP id kx11so220665pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:26:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yVipBSsh5+WhhTDox0hQWUQ5mqLsA3VpUlWy4/WLk9c=;
+        b=SzSDkVJOwGN5g11CJ0bvDk2k3o9XkbKQC9adW/cKkYW+Caa8MIMyMc90EM3KsGscep
+         nQJ6pR1CzLyFpvt7g0U8waOuNUa6H/CTufY2GYAc21QbdeqJvkwKk7Z88wCRVZVeGJbL
+         0MJ0AUrpzHmJ6VREswpGP4X5i/CwzQZX9hx5E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yVipBSsh5+WhhTDox0hQWUQ5mqLsA3VpUlWy4/WLk9c=;
+        b=Rh5mnkvbvTV11ckixYgfkNi16Ix+14OH0BO9wmdyrhHCJj+di65W7cWgBvmsgWamz9
+         t/HJS3kpY0W7VTV6Ko+mBXGXeBFcorS4TK4hS0Ya0+so6Ma8SAs4H0qRUt/oNXcHu+Kz
+         fllHoZdmWGm+m02/J/EA/Fng0vixTWiF4Y6HuitrZqZ62Vy1NUUV8V+b25uFPNvcn/OW
+         i3xaKxohlnfAANrXz6wj6CtwxNyKFzruiw+W/3R9ht1zYUAvpfYJVB2hbsVqVgtPEKUt
+         EoYJwdtuJjVcMDPRURbgyzw/mXHDLkVyQf9P9cVvO3KlGzj/4dPMVxuua3qAVEaHE00o
+         lqTA==
+X-Gm-Message-State: APjAAAW/41gJuD5cyvhEo1b1yfnRR0zo8510VVr4eQhw3eCJz/cl5piu
+        3MVIZNpbesa3NCstNF0RtUEABQ==
+X-Google-Smtp-Source: APXvYqy272HK6rPPL3Qfp/pmCyr1lY9GAJPRpsY3XC0oPfve5oiWbCfSwQWAHq4NCihBDd2WXpNsoQ==
+X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr1090472pjn.60.1579109196890;
+        Wed, 15 Jan 2020 09:26:36 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y128sm22005122pfg.17.2020.01.15.09.26.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 09:26:35 -0800 (PST)
+Date:   Wed, 15 Jan 2020 09:26:33 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        hemantg@codeaurora.org
+Subject: Re: [PATCH v4 1/3] Bluetooth: hci_qca: Add QCA Rome power off
+ support to the qca_power_shutdown()
+Message-ID: <20200115172633.GM89495@google.com>
+References: <20191225060317.5258-1-rjliao@codeaurora.org>
+ <20200115085552.11483-1-rjliao@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200115171736.16994-1-christian.brauner@ubuntu.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200115085552.11483-1-rjliao@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 06:17:36PM +0100, Christian Brauner wrote:
-> Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-> introduced the ability to opt out of audit messages for accesses to
-> various proc files since they are not violations of policy.
-> While doing so it somehow switched the check from ns_capable() to
-> has_ns_capability{_noaudit}(). That means it switched from checking the
-> subjective credentials of the task to using the objective credentials. I
-> couldn't find the original lkml thread and so I don't know why this switch
-> was done. But it seems wrong since ptrace_has_cap() is currently only used
-> in ptrace_may_access(). And it's used to check whether the calling task
-> (subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-> to operate on the target task (object). According to the cred.h comments
-> this would mean the subjective credentials of the calling task need to be
-> used.
-> This switches it to use security_capable() because we only call
-> ptrace_has_cap() in ptrace_may_access() and in there we already have a
-> stable reference to the calling tasks creds under cred_guard_mutex so
-> there's no need to go through another series of dereferences and rcu
-> locking done in ns_capable{_noaudit}().
+On Wed, Jan 15, 2020 at 04:55:50PM +0800, Rocky Liao wrote:
+> Current qca_power_shutdown() only supports wcn399x, this patch adds Rome
+> power off support to it. For Rome it just needs to pull down the bt_en
+> GPIO to power off it. This patch also replaces all the power off operation
+> in qca_close() with the unified qca_power_shutdown() call.
 > 
-> Cc: Serge Hallyn <shallyn@cisco.com>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Eric Paris <eparis@redhat.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 > ---
->  kernel/ptrace.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
 > 
-> diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-> index cb9ddcc08119..b2fe800cae9a 100644
-> --- a/kernel/ptrace.c
-> +++ b/kernel/ptrace.c
-> @@ -264,12 +264,14 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
->  	return ret;
->  }
->  
-> -static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-> +static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-> +			  unsigned int mode)
+> Changes in v2: None
+> Changes in v3: None
+> Changes in v4:
+>   -rebased the patch with latest code base
+>   -moved the change from qca_power_off() to qca_power_shutdown()
+>   -replaced all the power off operation in qca_close() with
+>    qca_power_shutdown()
+>   -updated commit message
+> 
+>  drivers/bluetooth/hci_qca.c | 28 ++++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 992622dc1263..ecb74965be10 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -663,7 +663,6 @@ static int qca_flush(struct hci_uart *hu)
+>  /* Close protocol */
+>  static int qca_close(struct hci_uart *hu)
 >  {
->  	if (mode & PTRACE_MODE_NOAUDIT)
-> -		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
-> +		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
->  	else
-> -		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-> +		return security_capable(cred, ns, CAP_SYS_PTRACE,
-> +					CAP_OPT_NOAUDIT);
+> -	struct qca_serdev *qcadev;
+>  	struct qca_data *qca = hu->priv;
+>  
+>  	BT_DBG("hu %p qca close", hu);
+> @@ -679,14 +678,7 @@ static int qca_close(struct hci_uart *hu)
+>  	destroy_workqueue(qca->workqueue);
+>  	qca->hu = NULL;
+>  
+> -	if (hu->serdev) {
+> -		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qca_is_wcn399x(qcadev->btsoc_type))
+> -			qca_power_shutdown(hu);
+> -		else
+> -			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+> -
+> -	}
+> +	qca_power_shutdown(hu);
+>  
+>  	kfree_skb(qca->rx_skb);
+>  
+> @@ -1685,6 +1677,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
+>  	struct qca_serdev *qcadev;
+>  	struct qca_data *qca = hu->priv;
+>  	unsigned long flags;
+> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>  
+>  	qcadev = serdev_device_get_drvdata(hu->serdev);
+>  
+> @@ -1697,11 +1690,22 @@ static void qca_power_shutdown(struct hci_uart *hu)
+>  	qca_flush(hu);
+>  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+>  
+> -	host_set_baudrate(hu, 2400);
+> -	qca_send_power_pulse(hu, false);
+> -	qca_regulator_disable(qcadev);
+>  	hu->hdev->hw_error = NULL;
+>  	hu->hdev->cmd_timeout = NULL;
 
-Accidently switched those two lines. I sent a fixed version now!
+This is now done before the power off and not after, I suppose it doesn't
+make a difference.
 
-Thanks!
-Christian
+> +
+> +	/* Non-serdev device usually is powered by external power
+> +	 * and don't need additional action in driver for power down
+> +	 */
+> +	if (!hu->serdev)
+> +		return;
+> +
+> +	if (qca_is_wcn399x(soc_type)) {
+> +		host_set_baudrate(hu, 2400);
+> +		qca_send_power_pulse(hu, false);
+> +		qca_regulator_disable(qcadev);
+> +	} else {
+> +		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+> +	}
+>  }
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
