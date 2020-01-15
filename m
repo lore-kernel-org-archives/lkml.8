@@ -2,94 +2,165 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DCCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B03C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5392467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FF2222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uMEXpdVO"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="ahJ0WMUa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wXzqhRwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgAODlI (ORCPT
+        id S1729159AbgAODlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:41:08 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51867 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbgAODlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:41:01 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yClt5xcVz9sRm;
-        Wed, 15 Jan 2020 14:40:58 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579059659;
-        bh=VAvZvVR15vPdcx+T1ys/TSqLDnhWyjaURUFwoNhttGs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uMEXpdVOW+s6yy7uQLy3dBFKOFpR9lXk5oNz7VEqA5T/6TGKsiPJLEavzMeth/ou8
-         Khdhq4ge7vdj1TExB85I9q83MVgwIEKcw6YEtu/QFew6MQYcVxuJ21LCZtKARy8cHx
-         aqRdSX/1IIJJkDh+WPMv4WgHAImxQBJs3XSJmdk3gJAuDtBGKufT34sjB/pfsR0tU9
-         a8M18txb8rF9qCm1qlX5APRZkjDKgK678drMlfrNj+Ok0ryv2TOpS8ohZGvWrK9CQP
-         Eaw9v1mjtAYFBim2NA9gbhJWVWZVzQB0ZLoNVvvnUbJRHV9LKYmbjsMCi2t3HjiliA
-         haALCePNMuRIw==
-Date:   Wed, 15 Jan 2020 14:40:57 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jayshri Pawar <jpawar@cadence.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: linux-next: manual merge of the usb-gadget tree with Linus'
- tree
-Message-ID: <20200115144057.7b72d7b9@canb.auug.org.au>
-In-Reply-To: <CAMuHMdVY2W1=9paE+WpJUHprocOdutRMcNUJenn+jz9A-iv90A@mail.gmail.com>
-References: <20200110153207.70c888cd@canb.auug.org.au>
-        <CAMuHMdVY2W1=9paE+WpJUHprocOdutRMcNUJenn+jz9A-iv90A@mail.gmail.com>
+        Tue, 14 Jan 2020 22:41:13 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56633 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729048AbgAODkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:40:51 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 957DD22131;
+        Tue, 14 Jan 2020 22:40:50 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 14 Jan 2020 22:40:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=xScHInzV3pGYC
+        GSlKPZMPOWxtY3Fnc4q0/FsYlG3OLs=; b=ahJ0WMUaBq5GJoBURKIBPxBWo+VkF
+        SsOOGKRlG2c+CR6dyZR7Eft4RVTDgPdLZu8zIHTgTZDn0a2ENIKuUNTLlBYkPbli
+        dfYpSiQ2m3RTHaeRer5YgoTmDfQIz3nJa3t2Yv2ugHqFUyD0+Ac+rZTFHUUMe1gb
+        YNyoKHmZ5T1y7uRJw0Fsn69dokf/wwYOWiAhAvWW6rwi1C42qUd7gFOTgYwGR9Sk
+        l65zfDLsCmDYDaPj7RURLF09kV8V/S8BCkbC7QeZjY24fLwHRw+eT1DKHZMQ6CvP
+        7OFqneqa2pf7AaR9yzvlEP7lKkBwTQC8mm4Ds6adjiTJ7y2OwdA2sW44g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=xScHInzV3pGYCGSlKPZMPOWxtY3Fnc4q0/FsYlG3OLs=; b=wXzqhRwu
+        k4x5z8PuP1ucVTKBjnwPRyG2sWniGCl1O7GFrUvRMvM6IPwQ9PnstkxGSXhJUtjA
+        KHH+An/Ie2dnRlN2DkUC5gSV8UVxVO2GwfU1jYm8gzdJpP3Q2NdaLXdvcZcSvTw0
+        2WdLGZs4NE8xz5X4TOG4pvB3Bm7MsfKYkYEky+73SVYWOfQuxoUPi2SX5jPz3y1y
+        gJW1xW2V5+quCyCeDp4Yt7FnNBroy8e4f9oq9VdtBpdXsUigdnYzwzrRwDHRBUAN
+        P7PLG5LLCdfgJStGYywGTPw8cBI2VZxUL4uYnFE1nvxJmQkKKR8csfqBcWXNilUU
+        xw1QD2TYAD42Vg==
+X-ME-Sender: <xms:wokeXvpoO37uIL5n04N2WI6qZm9i72SF2tVIKxuE4NYKl2r0w8QXvg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdeitdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
+    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
+    ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
+    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:wokeXhAUaetD-urlZghgWgtQe44fqbnYmjDAINQgs6uZQnbJdovmtg>
+    <xmx:wokeXoM483QPS5a2ii-TRFxxuU6j4i2LAh5403H-0JmAsIagKPFFIA>
+    <xmx:wokeXshWnvZbhRnjF4fUMjYe3XtYzUp3cm24lSE1HqptfUo2OKsipQ>
+    <xmx:wokeXlxEyVpqA8c6bwBMB7nSx9N1YpWNRXoHu1gGoi7HIjFcYhIAzg>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 259FB30607CD;
+        Tue, 14 Jan 2020 22:40:50 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Sebastian Reichel <sre@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v4 2/4] power: supply: axp20x_usb_power: Allow offlining
+Date:   Tue, 14 Jan 2020 21:40:46 -0600
+Message-Id: <20200115034048.24901-3-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200115034048.24901-1-samuel@sholland.org>
+References: <20200115034048.24901-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ZmWZVVMQHE/=k9OQRCnD3CJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ZmWZVVMQHE/=k9OQRCnD3CJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+AXP803/AXP813 have a flag that enables/disables the USB power supply
+input. Allow control of this flag via the ONLINE property on those
+variants.
 
-Hi Geert,
+It may be necessary to offline the USB power supply input when using
+the USB port in OTG mode, or to allow userspace to disable charging.
 
-On Tue, 14 Jan 2020 09:41:57 +0100 Geert Uytterhoeven <geert@linux-m68k.org=
-> wrote:
->
-> For today's renesas-drivers, I'm using the attached conflict resolution.
+When the USB VBUS input is disabled via the PATH_SEL bit, the VBUS_USED
+bit in PWR_INPUT_STATUS is cleared, so there is no change needed when
+getting the property.
 
-Thanks, I will use your resolution from now on.
---=20
-Cheers,
-Stephen Rothwell
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/power/supply/axp20x_usb_power.c | 30 +++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
---Sig_/ZmWZVVMQHE/=k9OQRCnD3CJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index cd7071057457..f14736041c41 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -29,6 +29,9 @@
+ 
+ #define AXP20X_USB_STATUS_VBUS_VALID	BIT(2)
+ 
++#define AXP20X_VBUS_PATH_SEL		BIT(7)
++#define AXP20X_VBUS_PATH_SEL_OFFSET	7
++
+ #define AXP20X_VBUS_VHOLD_uV(b)		(4000000 + (((b) >> 3) & 7) * 100000)
+ #define AXP20X_VBUS_VHOLD_MASK		GENMASK(5, 3)
+ #define AXP20X_VBUS_VHOLD_OFFSET	3
+@@ -263,6 +266,16 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 	return 0;
+ }
+ 
++static int axp813_usb_power_set_online(struct axp20x_usb_power *power,
++				       int intval)
++{
++	int val = !intval << AXP20X_VBUS_PATH_SEL_OFFSET;
++
++	return regmap_update_bits(power->regmap,
++				  AXP20X_VBUS_IPSOUT_MGMT,
++				  AXP20X_VBUS_PATH_SEL, val);
++}
++
+ static int axp20x_usb_power_set_voltage_min(struct axp20x_usb_power *power,
+ 					    int intval)
+ {
+@@ -344,6 +357,11 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
+ 	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
+ 
+ 	switch (psp) {
++	case POWER_SUPPLY_PROP_ONLINE:
++		if (power->axp20x_id != AXP813_ID)
++			return -EINVAL;
++		return axp813_usb_power_set_online(power, val->intval);
++
+ 	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
+ 		return axp20x_usb_power_set_voltage_min(power, val->intval);
+ 
+@@ -363,6 +381,18 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
+ static int axp20x_usb_power_prop_writeable(struct power_supply *psy,
+ 					   enum power_supply_property psp)
+ {
++	struct axp20x_usb_power *power = power_supply_get_drvdata(psy);
++
++	/*
++	 * The VBUS path select flag works differently on on AXP288 and newer:
++	 *  - On AXP20x and AXP22x, the flag enables VBUS (ignoring N_VBUSEN).
++	 *  - On AXP288 and AXP8xx, the flag disables VBUS (ignoring N_VBUSEN).
++	 * We only expose the control on variants where it can be used to force
++	 * the VBUS input offline.
++	 */
++	if (psp == POWER_SUPPLY_PROP_ONLINE)
++		return power->axp20x_id == AXP813_ID;
++
+ 	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
+ 	       psp == POWER_SUPPLY_PROP_CURRENT_MAX;
+ }
+-- 
+2.23.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4eickACgkQAVBC80lX
-0Gx3WQf+ISvunKWj6CeTwh6faiTYiSC7RBDTJ+iJ1SDnsWjFH5ZpMZgW2Hk4Qwtc
-ZpV1OnJUvdl1fRMXaq1kQKPzCECio47lnHqk/GGGGpVTwcKXfOzOtva1VPoD7ba7
-lnH5ZiGF968gynqTuPP6yostnLFcor9mlbRt/ADZKB6VOmx3Ly4GUgjlkeCKh/X9
-wOEKbZYStyYeqbtyMB2j7I1bNq+Y8jC53f3dw0Pr8FNWfDVw97cUGAMTeuwK2JM4
-BHDkKz9NO87va4cXeBhAnWIoR+jnU79xLpO+cU3YMd0LLMopt2+hBg2ZbRUkAjbh
-uijM7GaGV2uFJwlczg0xUGQwmaw3tA==
-=uYy6
------END PGP SIGNATURE-----
-
---Sig_/ZmWZVVMQHE/=k9OQRCnD3CJ--
