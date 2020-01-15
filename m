@@ -2,162 +2,140 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B67C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ABDC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8224224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="m3c5MLG4";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KdmrF0bz"
+	by mail.kernel.org (Postfix) with ESMTP id C3C2D2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgAOGXX (ORCPT
+        id S1728912AbgAOGZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:23:23 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10159 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgAOGXX (ORCPT
+        Wed, 15 Jan 2020 01:25:11 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:37697 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgAOGZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:23:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1579069403; x=1610605403;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=sBz5yEynQN18sd3/+XWiGtBHqrV9RWd5M+5NMRde7aQ=;
-  b=m3c5MLG4XOJfs1j7jHz1Brdzgw54YuoSA99w8/PCDQY2Ul0r6w/cfOyd
-   0ynBH7VLCe824Z/uw/g5Oj919t82H4qM7HgfNOntpXoA7CpN/YnWk5Ia+
-   tgvjdko25et9WpLqjabD5or5CJhThqw9NUdOV1nz+R/mZbKYWOaAW/qG+
-   XdDCZ/90OE+1x99nilthGGdPKlDQXSHEEJvgQrJdLhU1mUh/MsLfUzz6W
-   yhjjUrnnBVtq9I3MPcMrZqM5dcNYOMoEeq00rLwAjjRwRXQ5BdURfuvw5
-   BOBvd3pLivD838tzFuSSW/ZU3KccpIKfQQZ3llkS4zCDY1IepT8qWTafb
-   Q==;
-IronPort-SDR: DGmXEaYf4p71WlXzu8rl3JiLxVtqmrWsyTa35Vut3X37Ohodte4KpOydOIEkpq4cf6UjGE6xxm
- OW+JiT6KgVlsi/nJRlyQmp9OXxV8JP0jVbwywT1pSJ4KK5gRxhmCDDzFO6We7/0yjXk8ANhFpw
- z6Z4pVQfWH4KrDnhENrBfpPIBmfwW1ZJW4mjnhRpbfJgJg7z1kNU0G5WVO8+1KzE7ECUEjb7Pt
- hd2df+DyoV5/b2KKEW0GvP37O5gskaSvuoS6nkRyE4rVSZ1QteR5XFvTRsRhWCk7tNX34+B0S6
- glY=
-X-IronPort-AV: E=Sophos;i="5.70,321,1574092800"; 
-   d="scan'208";a="128189428"
-Received: from mail-mw2nam10lp2104.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.104])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Jan 2020 14:23:22 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T5dxsWU9IFeipfT5r8D4UWQYXxQNqTntD/IE1ZUUkd+2Qc2KJZXBb0ydAMT6qY1J19YF7w2WZkPep/GVyKRZwlHUo7LV4c4Bo5duV5JUCdKteLNlEQ+pG5gr8/c/DtvmJQthKd4rIuXyDrhMQ+UAO5oH1p9hDiEuIGtJNUTwpDyLRT4J5dcr3JFt8EKBA34rRQeHoia7+Bvv6lIW+IEOT9Fija7D3s5ZHphv5P2l5IG+3SfTju8gLGq7jxv7HxqiIjB0u6XqPL97wPhfRAM+MJqmKAaUqzbtXgWjz65CWqfD6yIq45FykvxUpqpdY6mXCxxCCbXeTPXaZO2E5ayTyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IWE/mkm7IsUVt0WVYaEldwnjKiX+h8hPPDaLiRrFU38=;
- b=fEWt9lx/ShjLMP671Y5LAfZ4u2AmO+Zvt2+rpSZ+lmoP+Alj4g2o0TX7gmmrNsB+RhM36faopx2ftUYRaUJEgCAoQmWz4Uzvzda6GLVSx3Hqx/AuSvkMUV3HXkspxXyda4nyc5WwiPagi1sukTMlMgR9sNxNN2ex8Zm8m4mGkTxR2LwfZqmE4s8kICK24G4NWFN5CBklwNtOhE8BWxw6EPTN2gQIlu2frd/xQQYTnqU+C6ZqiwnSwewpqxzdXtwJR32K3Q/cTlDFRUEXoSZHV6E9xyLXt2dEIv1Var6np+K/JYNveXAekEAXftUVc1YDHy3wYkRf1fH4Q3bYsgjOzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IWE/mkm7IsUVt0WVYaEldwnjKiX+h8hPPDaLiRrFU38=;
- b=KdmrF0bzG7/DIvt2Lngj1dK+Vrfp2Y4oFqPLOiqvB55h8czfTK+ZvitO2Qfcu5jgbMWJ1imrlgBgmXSnv2HG4IcFgodxgKb8HI2OdYev56MM/8V98bLhve0W7jU1mRSNqoS51Wr0ajvNo++UwiQGay5ZX+ARA/Dw/gyxsG9SOL8=
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
- BYAPR04MB4261.namprd04.prod.outlook.com (20.176.251.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 15 Jan 2020 06:23:21 +0000
-Received: from BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::cd8e:d1de:e661:a61]) by BYAPR04MB5816.namprd04.prod.outlook.com
- ([fe80::cd8e:d1de:e661:a61%5]) with mapi id 15.20.2644.015; Wed, 15 Jan 2020
- 06:23:21 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v6 2/2] zonefs: Add documentation
-Thread-Topic: [PATCH v6 2/2] zonefs: Add documentation
-Thread-Index: AQHVxf7Snqi2k881OEaR6BUy1rYblA==
-Date:   Wed, 15 Jan 2020 06:23:21 +0000
-Message-ID: <BYAPR04MB5816BB7B5946E4E8643F9DC3E7370@BYAPR04MB5816.namprd04.prod.outlook.com>
-References: <20200108083649.450834-1-damien.lemoal@wdc.com>
- <20200108083649.450834-3-damien.lemoal@wdc.com>
- <c9f37661-03a0-22e3-4b99-b97c47917b5d@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Damien.LeMoal@wdc.com; 
-x-originating-ip: [129.253.180.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b5750383-3455-400d-8d64-08d799836b22
-x-ms-traffictypediagnostic: BYAPR04MB4261:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR04MB4261246BAF8E83DF2DE0D2B9E7370@BYAPR04MB4261.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(189003)(199004)(64756008)(2906002)(54906003)(71200400001)(66476007)(76116006)(66556008)(110136005)(186003)(66946007)(66446008)(26005)(316002)(4326008)(91956017)(478600001)(9686003)(8676002)(33656002)(86362001)(81166006)(81156014)(4744005)(6506007)(8936002)(7696005)(53546011)(52536014)(55016002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4261;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DV6clk8ANvLBaYd2uOWu83DX5+SV1gq4hzDFLuf/AIoV8a6Vn4AcbALaVCuYtV9Su4Rf46i23I0UuEei2IPrLox2U6l2enav/EpiBwazbYpMD0X+z6y0TMLKvWqewqaSxpQSxF9ObNt5QGT5vhVQOLW1Xx6FAivQsxFtOwQUdNFHPzvSU72SDVEG7Q4GVwzps/gh3N4A10o2i/AgBO9fmINd8F4xnwPTZ5Uc0abqctVyFP4rDPdGbZTTDwLYCJGWULss0hwFfla1OMeI7/I29U2a4d0fKvPDgNxWO8FBlS6ty9TSYJ65J0cqRIb30/MPsA7S8PfbtIyJxZkRJBv5DNQ2NMGP8p/zsv3SPt4jN5Du8CWsGj0JVeALKvCgSYott7Mco96vYibab2q6fiOIJo6vuCyvAh19vlQThKA+ra26ndGsYbYNuhHM6aTsu/Jd
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Jan 2020 01:25:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id l13so12608309ilj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 22:25:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=eW4Xg4UoPEB3a/2AZhweqhOWkYfz9yjercWeCE8lc/U=;
+        b=EKgwjrT3YwxEITb2IJKrnSeXHlbBydHHfFnJizwuR1a1SYisZUkHga8HVY6IJjOtkk
+         RzYLN/m2qDhzdBnfbSCFChYvibl83mV8m4Idh/fgp5UtE8eVol/YmH9XciN9UjZQQh0E
+         +4IMwJgL4X6nx9Q491bp+NbezjeWxHwdlx8FGs+lqz3OIM/6aoiJRqh3lkXY7upqUFzj
+         s9LYrNFQ3Vj57t+ijR1N3ptFsBapb1rsg+x3Qf94tIcjUZlhhM7K5MCVzP8xGUhfeIWJ
+         jYiPIs+DdX/mLKM1veRDfwLN/r0fUZYhPxYGaL+M7YTtk4IUon8Jrm22kZ8do3/GNj7N
+         s8mA==
+X-Gm-Message-State: APjAAAXrMRUpz5oVHmBRjKfU+Bw7Q95KeeecvlOf0IeAZwcA8C/bDojn
+        wkOXeMeUtFieMbhJVZ5uqQ/KKdaq+6kwH1e5WtieJZILlnWZ
+X-Google-Smtp-Source: APXvYqxML7d3L5Iw4ZulrZXdY2U62wtdVprZnJIEN29JJJ44LTFXEhQ5v2TG6VzttbZ8fg8QmdfCS48D2VQcTt90ZkkHQRKWwgmW
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5750383-3455-400d-8d64-08d799836b22
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 06:23:21.1997
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O9HhkHjoBRXwaPm+ObpjtZxSBuuzCpRiNjotPvx5d/8h6Oe7UnVNO0Qu6058vlA7wteEOvipo8OCmNkfGp3Z4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4261
+X-Received: by 2002:a5e:a614:: with SMTP id q20mr19404414ioi.36.1579069509574;
+ Tue, 14 Jan 2020 22:25:09 -0800 (PST)
+Date:   Tue, 14 Jan 2020 22:25:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000031a8d7059c27c540@google.com>
+Subject: general protection fault in free_verifier_state (3)
+From:   syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy,=0A=
-=0A=
-On 2020/01/15 3:25, Randy Dunlap wrote:=0A=
-> Hi Damien,=0A=
-> =0A=
-> Here are a few editorial comments for you...=0A=
-=0A=
-Thanks ! All fixed.=0A=
-=0A=
-[...]=0A=
->> +For sequential write zone files, the file size changes as data is appen=
-ded at=0A=
->> +the end of the file, similarly to any regular file system.=0A=
->> +=0A=
->> +# dd if=3D/dev/zero of=3D/mnt/seq/0 bs=3D4096 count=3D1 conv=3Dnotrunc =
-oflag=3Ddirect=0A=
->> +1+0 records in=0A=
->> +1+0 records out=0A=
->> +4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s=0A=
-> =0A=
-> Still slow.  You don't want to change that?=0A=
-=0A=
-Good catch. I thought I had fixed that. Here is the updated dd run,=0A=
-after making sure that the disk has woken up from low power state before=0A=
-running:=0A=
-=0A=
-dd if=3D/dev/zero of=3D/mnt/seq/0 bs=3D4096 count=3D1 conv=3Dnotrunc oflag=
-=3Ddirect=0A=
-1+0 records in=0A=
-1+0 records out=0A=
-4096 bytes (4.1 kB, 4.0 KiB) copied, 0.00044121 s, 9.3 MB/s=0A=
-=0A=
-The HDD write cache is on and empty at the time of running this, which=0A=
-explains the much lower I/O time.=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    6dd42aa1 Merge branch 'runqslower'
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e61349e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
+dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 3213 Comm: syz-executor.2 Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
+Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8  
+e8 65 ae f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00  
+0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
+RSP: 0018:ffffc900017c7688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000d65b000
+RDX: 0000000000040000 RSI: ffffffff818251eb RDI: 0000000000000000
+RBP: ffffc900017c76d0 R08: ffff88806f496640 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007fdb4648e700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000010f6e80 CR3: 00000000690e9000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Call Trace:
+  do_check_common+0x2ec7/0x9650 kernel/bpf/verifier.c:9597
+  do_check_main kernel/bpf/verifier.c:9654 [inline]
+  bpf_check+0x84ed/0xbb07 kernel/bpf/verifier.c:10009
+  bpf_prog_load+0xeab/0x17f0 kernel/bpf/syscall.c:1859
+  __do_sys_bpf+0x1269/0x37a0 kernel/bpf/syscall.c:3096
+  __se_sys_bpf kernel/bpf/syscall.c:3055 [inline]
+  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3055
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45af49
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fdb4648dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
+RDX: 0000000000000024 RSI: 0000000020000200 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fdb4648e6d4
+R13: 00000000004c1697 R14: 00000000004d66a0 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace d725571ef2f4cce3 ]---
+RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
+Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8  
+e8 65 ae f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00  
+0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
+RSP: 0018:ffffc900017c7688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000d65b000
+RDX: 0000000000040000 RSI: ffffffff818251eb RDI: 0000000000000000
+RBP: ffffc900017c76d0 R08: ffff88806f496640 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
+FS:  00007fdb4648e700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000075c000 CR3: 00000000690e9000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
