@@ -2,99 +2,73 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8E7C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32412C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4892084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:08:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ny8mOJC2"
+	by mail.kernel.org (Postfix) with ESMTP id 0D4C52084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgAOVI6 (ORCPT
+        id S1729785AbgAOVKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:08:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46380 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729437AbgAOVI4 (ORCPT
+        Wed, 15 Jan 2020 16:10:19 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57708 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgAOVKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:08:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579122535;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N75/xtseFm0C8W8jITG046cI1TLgiVpisIBQsGTwX3Q=;
-        b=Ny8mOJC2/GdEqthNxvDyM4z2GUJh/aN0Qj5n4O2DEYb69NJ5kNJmw9kOUrB4sgePuFnreO
-        l1R95VG7ODq0sKbSNjrnZNabWbpHqy6QWSpynPODDvpObrtJthLOs1haX/ySU9kArXV4H+
-        gPjWiK2Z1UgUqI9iiuArWGCaTiTrxjk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-OgVfptpyPr2T97swFAWMag-1; Wed, 15 Jan 2020 16:08:52 -0500
-X-MC-Unique: OgVfptpyPr2T97swFAWMag-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B474B1005510;
-        Wed, 15 Jan 2020 21:08:50 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9DFAAA4B60;
-        Wed, 15 Jan 2020 21:08:44 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-References: <20200107180101.GC15920@redhat.com>
-        <CAPcyv4gmdoqpwwwy4dS3D2eZFjmJ_Zi39k=1a4wn-_ksm-UV4A@mail.gmail.com>
-        <20200107183307.GD15920@redhat.com>
-        <CAPcyv4ggoS4dWjq-1KbcuaDtroHKEi5Vu19ggJ-qgycs6w1eCA@mail.gmail.com>
-        <20200109112447.GG27035@quack2.suse.cz>
-        <CAPcyv4j5Mra8qeLO3=+BYZMeXNAxFXv7Ex7tL9gra1TbhOgiqg@mail.gmail.com>
-        <20200114203138.GA3145@redhat.com>
-        <CAPcyv4iXKFt207Pen+E1CnqCFtC1G85fxw5EXFVx+jtykGWMXA@mail.gmail.com>
-        <20200114212805.GB3145@redhat.com>
-        <CAPcyv4igrs40uWuCB163PPBLqyGVaVbaNfE=kCfHRPRuvZdxQA@mail.gmail.com>
-        <20200115195617.GA4133@redhat.com>
-        <CAPcyv4iEoN9SnBveG7-Mhvd+wQApi1XKVnuYpyYxDybrFv_YYw@mail.gmail.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Wed, 15 Jan 2020 16:08:43 -0500
-In-Reply-To: <CAPcyv4iEoN9SnBveG7-Mhvd+wQApi1XKVnuYpyYxDybrFv_YYw@mail.gmail.com>
-        (Dan Williams's message of "Wed, 15 Jan 2020 12:17:40 -0800")
-Message-ID: <x49wo9smnqc.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 15 Jan 2020 16:10:19 -0500
+Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00FLA4QN086498;
+        Thu, 16 Jan 2020 06:10:04 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp);
+ Thu, 16 Jan 2020 06:10:04 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav103.sakura.ne.jp)
+Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00FL9xV5086456
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 16 Jan 2020 06:10:03 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [patch] mm, oom: dump stack of victim when reaping failed
+To:     David Rientjes <rientjes@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <alpine.DEB.2.21.2001141519280.200484@chino.kir.corp.google.com>
+ <20200115084336.GW19428@dhcp22.suse.cz>
+ <9a7cbbf0-4283-f932-e422-84b4fb42a055@I-love.SAKURA.ne.jp>
+ <alpine.DEB.2.21.2001151223040.13588@chino.kir.corp.google.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <84fddb8e-a23b-e970-c8e9-74aa2fe2716d@i-love.sakura.ne.jp>
+Date:   Thu, 16 Jan 2020 06:09:57 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <alpine.DEB.2.21.2001151223040.13588@chino.kir.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dan,
+On 2020/01/16 5:27, David Rientjes wrote:
+> I'm 
+> currently tracking a stall in oom reaping where the victim doesn't always 
+> have a lock held so we don't know where it's at in the kernel; I'm hoping 
+> that a stack for the thread group leader will at least shed some light on 
+> it.
+> 
 
-Dan Williams <dan.j.williams@intel.com> writes:
+This change was already proposed at
+https://lore.kernel.org/linux-mm/20180320122818.GL23100@dhcp22.suse.cz/ .
 
-> I'm going to take a look at how hard it would be to develop a kpartx
-> fallback in udev. If that can live across the driver transition then
-> maybe this can be a non-event for end users that already have that
-> udev update deployed.
-
-I just wanted to remind you that label-less dimms still exist, and are
-still being shipped.  For those devices, the only way to subdivide the
-storage is via partitioning.
-
--Jeff
-
+And according to that proposal, it is likely i_mmap_lock_write() in dup_mmap()
+in copy_process(). We tried to make that lock killable but we gave it up
+because nobody knows whether it is safe to do make it killable.
