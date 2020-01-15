@@ -2,146 +2,100 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCC2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11623C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3188D2081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:10:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579065044;
-	bh=C4oxB1KuMssGA4cmBfkzV+QupCkEj6wf0SdPunP6KJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u6Vf2KC6kep1hlf55asn3VWDaAXFHWEXLn05YOGmVS7LO7NJcvekh1YxqhC6goqMU
-	 KT3h44Xt2QkBOR+Q+c9D01EfAwotOo7QGs936ngaCMEs16QgiX/JqRrRQtqPiBhJ6N
-	 TPg7HRT9w1tefV4suPXCozqpUHa9HNjRRF+rWymI=
+	by mail.kernel.org (Postfix) with ESMTP id DDC1F2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="JtHRU5AI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="r8QJ1Vci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAOFKn (ORCPT
+        id S1726553AbgAOFM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:10:43 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36709 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgAOFKn (ORCPT
+        Wed, 15 Jan 2020 00:12:57 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38517 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbgAOFM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:10:43 -0500
-Received: by mail-pj1-f65.google.com with SMTP id n59so7145490pjb.1;
-        Tue, 14 Jan 2020 21:10:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x0sMapq9swaZtL82FLYfnbMqZ10mvQ1x7edYmjwiQss=;
-        b=eBP6mwwAgcu+oMVKVIFyJ0jg/r8ZRafk50xCPKZmxbQNYx6TSiBIyYGjd9PvhbBp5t
-         wP8B2BJtguTYg30y8lqHgDnRu+RhtTQL55JozzxGlgWCkiaukyiOWNRtPQBRZeLPru1/
-         kuiYMyrpnAIOlQSbL+w/Z5aPc8QvVdfZJnGYxMzZABrFGoLoXpXbg80ACMBiHzmAZZkF
-         OIJI1xRwSUhB7VQleR2g3VA4un8XBPEcT3WJjtKfJGfoFM7J+GVD0aIcQxDAQMYaaynN
-         shv7MLLqMHjft3Czbl7BjVpF9l6i+ZO6l1b9/sMjTWbNZElEMLlPvH2Cr1tHx5rOwzjm
-         bszg==
-X-Gm-Message-State: APjAAAUPPsd0qbnPfsgXwvq9vDcCICyqzxBfjvpzqlZsCjqmHvU8G2Ig
-        XkWEVQZmpQ2IfxTpgvaESmx3OTSm
-X-Google-Smtp-Source: APXvYqxt1SeWNnk7qTNMgQIZA/pZ1v2rFLXYg0fUidOnZWCwgde1FjHIARePzC+AO0osv/JmHGQ+3g==
-X-Received: by 2002:a17:902:547:: with SMTP id 65mr28728166plf.50.1579065042411;
-        Tue, 14 Jan 2020 21:10:42 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
-        by smtp.gmail.com with ESMTPSA id c14sm18791959pjr.24.2020.01.14.21.10.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 21:10:41 -0800 (PST)
-Date:   Tue, 14 Jan 2020 21:10:40 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     mdf@kernel.org, Will Deacon <will@kernel.org>,
-        mark.rutland@arm.com, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org, gregkh@linuxfoundation.org, yilun.xu@intel.com
-Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
- drivers
-Message-ID: <20200115051040.GA1389@epycbox.lan>
-References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
- <20191125033412.GB890@hao-dev>
- <20191125080127.GC1809@willie-the-truck>
- <20191125080839.GA6227@hao-dev>
- <20191209024527.GA22625@hao-dev>
- <20191216010104.GA32154@yilunxu-OptiPlex-7050>
- <20200106023742.GA3980@hao-dev>
- <20200114055605.GA13574@hao-dev>
+        Wed, 15 Jan 2020 00:12:56 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 70BE222063;
+        Wed, 15 Jan 2020 00:12:55 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Wed, 15 Jan 2020 00:12:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=cCfNpcLfulKvvKIqmX9Urmpb5z
+        9P3CxW2vuUSkqMzMc=; b=JtHRU5AI3xckgQuUm+7i6AD9HKNy2BOoCNUDLrFTtC
+        2ztp7GvUUNdJMG3kl8Lk8s7wO3xcYd3keSN/0JOzvDdX9iDasKYNjm7gVG6lVaLu
+        Idpep/hOQ3pr00fFGY4VXR/dTbX+lFcY2h+yVk+zRQhb5s7Ni9OgZmJgW+oumG0+
+        dDq3IwWByP5Vzi8Jay/knfrFTx+W1CFz5M+WJHJ/vCkmlLG8mtBnKhPE4KCyMQPO
+        cDDJfOmhpnmEJO9rDkMLqZnlWPnZjeT1WgwASh7FklgvcpZfBKUS6hSyWU1Dtke1
+        //p/eLte8677ZHTSWZaGvOfwnToQN07gLCzMdzOK5Ebg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=cCfNpcLfulKvvKIqm
+        X9Urmpb5z9P3CxW2vuUSkqMzMc=; b=r8QJ1Vcics+fQayn22PFOtreHCDzn32Da
+        ubBpgJNu3o42EJ9NSwYRsZTY8X+6+YN4hB3/9iZONch8hi1d5aVhDwrGnhtFH7ZO
+        ZbL+tLPyQ8LKi2TICo+oT+nwble3q4NSF757+9jONIKEw+wG5UdbvOOv1Tvl5i2L
+        keQWF3sRmTtYem3JW41BCJxUYAjRFq2ZU7GyUHYBzrRCYvPvqQkTIxtNSqcQnXLE
+        xUb5C5edwZC8lBNhaY0F2XEmJf0eAY6Lhpfqrjk5eIKxIVi7GZ5FlcshsrSJSm+q
+        1dvMzjQvmzUTPdzlVHvCZetQwPI4Bunnlos2bHJ0JTPvLSj0W8lDA==
+X-ME-Sender: <xms:Vp8eXhuot-Eqv06n5ac9k2NpeMlSAmPbMK3ODFO9MaH1PZpzF2-bPA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdektdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
+    drudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghl
+    sehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Vp8eXtnXQlInpbgXOzevds2m35wwryV1akxb9agFcxvwhuxR0R73QQ>
+    <xmx:Vp8eXiNvr2IjbNdNqYd2KIF2YGr4F4K8QqvXxu7vFXL4mbEpWrGeOQ>
+    <xmx:Vp8eXsxC8n_JvR_O_O8kiARUhZPRnFR4bzJ40aa7p8i3Esfc__aUMA>
+    <xmx:V58eXiBMYHeiZtqu6FIpRwZMkT96zuRx8rt8rrGkpXknAGLZRuL_Gg>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D79018005C;
+        Wed, 15 Jan 2020 00:12:53 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v2 0/2] Input: axp20x-pek wakeup enablement
+Date:   Tue, 14 Jan 2020 23:12:51 -0600
+Message-Id: <20200115051253.32603-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114055605.GA13574@hao-dev>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+This series allows enabling or disabling wakeup via the power button on
+X-Powers PMICs, for all AXP2xx/AXP8xx variants. This v2 of the patch
+series keeps the existing behavior of the AXP288 variant used on x86
+platforms.
 
-On Tue, Jan 14, 2020 at 01:56:05PM +0800, Wu Hao wrote:
-> On Mon, Jan 06, 2020 at 10:37:42AM +0800, Wu Hao wrote:
-> > On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
-> > > On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
-> > > > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
-> > > > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
-> > > > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
-> > > > > > > Hi Will and Mark,
-> > > > > > > 
-> > > > > > > Could you please help us on review this patchset? as this patchset mainly 
-> > > > > > > introduced a new perf driver following the similar way as drivers/perf/*.
-> > > > > > 
-> > > > > > Why is it not under drivers/perf/, then?
-> > > > > 
-> > > > > Hi Will
-> > > > > 
-> > > > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
-> > > > > and we plan to put this sub feature together with others, including related
-> > > > > documentation. It only registers a standard perf pmu for its userspace
-> > > > > interfaces.
-> > > > > 
-> > > > > > 
-> > > > > > > This patchset has been submitted for a long time but didn't receive any
-> > > > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
-> > > > > > 
-> > > > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
-> > > > > 
-> > > > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
-> > > > 
-> > > > Hi Will
-> > > > 
-> > > > Did you get a chance to look into this patchset?
-> > > > 
-> > > > Thanks
-> > > > Hao
-> > > 
-> > > Hi Will
-> > > 
-> > > Did you have time to look into this patchset? We have done review work
-> > > for FPGA part. And as a perf driver, we appreciate your comments.
-> > > 
-> > > Thanks
-> > > Yilun
-> > 
-> > Hi Will
-> > 
-> > Did you get a chance to look into this patchset these days? 
-> > 
-> > Actually we didn't receive any comments for a long time, if you are busy and
-> > don't have enough time on this, do you know if someone else could help with
-> > review and ack from perf driver point of view, or any other things we can do
-> > to speed up this? Thanks in advance! 
-> 
-> Hi Moritz
-> 
-> Looks like still no response from Will. :(
-> 
-> Do you know someone else could help?
+Changes since v1:
+ - Drop patch 1
+ - Use __maybe_unused instead of "#ifdef CONFIG_PM_SLEEP" [patch 2]
+ - Add Reviewed-by [patch 3]
 
-Do you have some feedback? I'm a bit confused on what to do in such a
-situation, do I just take the patch if the maintainer doesn't respond
-for a while?
+Samuel Holland (2):
+  Input: axp20x-pek - Respect userspace wakeup configuration
+  Input: axp20x-pek - Enable wakeup for all AXP variants
 
-As always thanks for your help!
+ drivers/input/misc/axp20x-pek.c | 38 +++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-Cheers,
-Moritz
+-- 
+2.23.0
+
