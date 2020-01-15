@@ -2,149 +2,96 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA6FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCADC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A7324679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1122465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579101747;
-	bh=cvfRqz1ibhGwd9Bfq/ipsNjUM/YLm6PWajSturlDpO8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cRZ+88n33cgL+VUAn5SgQ9KL0/L9Eq9GmI3qbrHAyLrM+NM8TFWOSwKtEqCIm2Foh
-	 0X/j9JpTym2g2fmKzLgCRJojAZTRVA3OOaz8WFplj+M1bk6cuADWDZ8YQ5/8rKOWAk
-	 UN4BpIGoG/4I70Z7gWnA2y0aqydDz3Uu45zSTEBU=
+	s=default; t=1579101753;
+	bh=L0T3kAOx65uGJUSFAAlXXfZepYYjuYuqTe5WWvgyB3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gDlF85p2Y9NMCUFlCuMaqGT+YnQbWmrIM3VMNXAFHtpDggraVAOsgmytZqKR9g7o6
+	 jTmSD6fOIJxswoiJP6okAfpxXT+K3P7YVpzL9QYxyB3nVRhyysN6mGXKqGfK6t3vhM
+	 G3+Xy6X5cl9yIOW1Z9KWFv2nwME7vnc5A2OW0XkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgAOPW0 (ORCPT
+        id S1729134AbgAOPWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgAOPWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:22:25 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D267C222C3;
-        Wed, 15 Jan 2020 15:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579101745;
-        bh=cvfRqz1ibhGwd9Bfq/ipsNjUM/YLm6PWajSturlDpO8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xGMd7qdbDcW1VDnyBCw2hPfD+W9TQNoiAvP9y8xdKT11kvcJo8JgawblBxEbP2678
-         jFLFvUCAT2PfIKBVMQOHVku0RoTHaAK1vCbDTQQ3F/jPpwhlWKSPGb63cj6re2PGoz
-         uVom/N0+FPpx4gPipu8HWG6SeKiaMNfVOMZFefPk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1irkUx-00026g-4Y; Wed, 15 Jan 2020 15:22:23 +0000
+        Wed, 15 Jan 2020 10:22:31 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34666 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:22:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so15726142oig.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:22:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A7MJTIvyK8kzMyer64PozPs2FgL7mrURdQQ2XoMswP4=;
+        b=RW1pvE7+MWZ8MDYxAr570wxsXXSF/KqqFxt03EOh25WLjcYKPCl3aI30JcaP/6C39H
+         dIglYps+5ImcuFPNNbMOX2IHHIeL33vWl3gJ/lmLjYa61rB6rpgj0zgQIaE21geQJ6JN
+         SX+ZCOfWiGWWbweHtWooCEz3YFNvDEpvSc0nMtwy0A5zmzcG1GnIo7ZE7V+bdPFI4ynY
+         o+WKaOpYmJV5lPZuZOZB3DNQ4hNubOeZZe+zMYWWZvQX0QexMb5wrXwqQn4mzeXAq01G
+         jRYRpOx2aSG+Fyj/3tMg1+299JcNkQkHLD95kerYJIdFs3Bm1F8DEkW0nf6IeLKy4EuT
+         8k6g==
+X-Gm-Message-State: APjAAAXBWPQxHGK1CvodXkhXvrSXxJwU3AEu07DsXQeEMa7zkZAdfSO3
+        GESFtOUbvxRfhiJvI1alW4iYFHM=
+X-Google-Smtp-Source: APXvYqzzvsrN3HUb4HIwiRBapyOBtPXjpHgANdZlfPR9VAjVXsszqPdZOM5PK6DcUR0nJeALs7R31g==
+X-Received: by 2002:aca:f5c1:: with SMTP id t184mr222486oih.23.1579101749825;
+        Wed, 15 Jan 2020 07:22:29 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i6sm5723991oie.12.2020.01.15.07.22.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 07:22:29 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220379
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 15 Jan 2020 09:22:27 -0600
+Date:   Wed, 15 Jan 2020 09:22:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 1/5] dt-bindings: vendor-prefix: add Shenzhen Feixin
+  Photoelectics Co., Ltd
+Message-ID: <20200115152227.GA13106@bogus>
+References: <20200110155225.1051749-1-icenowy@aosc.io>
+ <20200110155225.1051749-2-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 15 Jan 2020 15:22:23 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
-        chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] irqchip: mips-cpu: Remove eoi operation
-In-Reply-To: <C7C70199-38CC-473E-B20D-C1782F08CA2E@flygoat.com>
-References: <20200113101251.37471-1-jiaxun.yang@flygoat.com>
- <20200114233025.y4azwvivqo7kg7i5@pburton-laptop>
- <9cd8df72fc3a7dfcdd88eb1fb56bbe35@kernel.org>
- <C7C70199-38CC-473E-B20D-C1782F08CA2E@flygoat.com>
-Message-ID: <f6ebc43da6de4e7e346ac4c807748ae8@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, paulburton@kernel.org, linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110155225.1051749-2-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-15 14:23, Jiaxun Yang wrote:
-> 于 2020年1月15日 GMT+08:00 下午9:40:31, Marc Zyngier <maz@kernel.org> 写到:
->> On 2020-01-14 23:30, Paul Burton wrote:
->>> Hi Jiaxun,
->>> 
->>> On Mon, Jan 13, 2020 at 06:12:51PM +0800, Jiaxun Yang wrote:
->>>> The eoi opreation in mips_cpu_irq_controller caused
->> chained_irq_enter
->>>> falsely consider CPU IP interrupt as a FastEOI type IRQ. So the
->>>> interrupt
->>>> won't be masked during in handler. Which might lead to spurious
->>>> interrupt.
->>>> 
->>>> Thus we simply remove eoi operation for mips_cpu_irq_controller,
->>>> 
->>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>>> ---
->>>>  drivers/irqchip/irq-mips-cpu.c | 1 -
->>>>  1 file changed, 1 deletion(-)
->>>> 
->>>> diff --git a/drivers/irqchip/irq-mips-cpu.c
->>>> b/drivers/irqchip/irq-mips-cpu.c
->>>> index 95d4fd8f7a96..0ad7f1f9a58b 100644
->>>> --- a/drivers/irqchip/irq-mips-cpu.c
->>>> +++ b/drivers/irqchip/irq-mips-cpu.c
->>>> @@ -55,7 +55,6 @@ static struct irq_chip mips_cpu_irq_controller = {
->>>>  	.irq_mask	= mask_mips_irq,
->>>>  	.irq_mask_ack	= mask_mips_irq,
->>>>  	.irq_unmask	= unmask_mips_irq,
->>>> -	.irq_eoi	= unmask_mips_irq,
->>>>  	.irq_disable	= mask_mips_irq,
->>>>  	.irq_enable	= unmask_mips_irq,
->>>>  };
->>> 
->>> This one scares me; something doesn't seem right. The irq_eoi (née
->> eoi)
->>> callback was first added way back in commit 1417836e81c0 ("[MIPS] use
->>> generic_handle_irq, handle_level_irq, handle_percpu_irq"). The commit
->>> message there states that the motivation was to allow use of
->>> handle_percpu_irq(), and indeed handle_percpu_irq() does:
->>> 
->>>     irq_ack() (ie. mask)
->>>     invoke the handler(s)
->>>     irq_eoi() (ie. unmask)
->>> 
->>> By removing the irq_eoi callback I don't see how we'd ever unmask the
->>> interrupt again..?
->> 
->> To be completely blunt, the fact that unmask and eoi are implemented
->> the
->> same way is a clear sign that this is a bit broken.
->> 
->> irq_eoi is used if the irqchip tracks the IRQ life-cycle in HW, and
->> it's
->> not obvious that this is the case. The fact that ack is also mapped to
->> mask
+On Fri, 10 Jan 2020 23:52:21 +0800, Icenowy Zheng wrote:
+> Shenzhen Feixin Photoelectics Co., Ltd is a company to provide LCD
+> modules.
 > 
-> It's just a kind of hack to workaround the fact that our current
-> percpu irq handler assumed
-> all percpu irqs are edge triggered or fasteoi type.
+> Add its vendor prefix.
 > 
-> However MIPS processor implemented it in level triggered way.
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> My solution would be add a check. If neither ack nor eoi exist for the 
-> chip,
-> than we assume it's level triggered and process precpu irq in 
-> mask/unmask way.
-> 
-> Could it be a possible option?
 
-Post the patch, and we'll discuss it.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Acked-by: Rob Herring <robh@kernel.org>
