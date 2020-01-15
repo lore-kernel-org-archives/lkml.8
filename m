@@ -2,88 +2,143 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E61C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AC7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338412077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEA9207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oN8OIJeX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgAOJ4V (ORCPT
+        id S1729623AbgAOJ5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:56:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:57443 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbgAOJ4V (ORCPT
+        Wed, 15 Jan 2020 04:57:49 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2563 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgAOJ5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:56:21 -0500
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MC0HF-1ixQ342HWv-00CRwE; Wed, 15 Jan 2020 10:56:19 +0100
-Received: by mail-qv1-f46.google.com with SMTP id y8so7071620qvk.6;
-        Wed, 15 Jan 2020 01:56:19 -0800 (PST)
-X-Gm-Message-State: APjAAAXpzGtW47WTGsCBCrUdEexzOZE5EZO3Knf58Yx2wt35mio/E9Oe
-        Dr5WGwzMavMite6+nTQhTMvcwpIkoL1PTDHk16A=
-X-Google-Smtp-Source: APXvYqwR/A2rmomxhmxWks30Xg5wVuEywHYP7SdzwD+g4m36c8guVmzB2RyLAR07jVZacI+LFPENXm2FvIcAxBfepZU=
-X-Received: by 2002:a0c:bd20:: with SMTP id m32mr21091474qvg.197.1579082178394;
- Wed, 15 Jan 2020 01:56:18 -0800 (PST)
+        Wed, 15 Jan 2020 04:57:49 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ee2080000>; Wed, 15 Jan 2020 01:57:28 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Jan 2020 01:57:48 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Jan 2020 01:57:48 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 09:57:45 +0000
+Subject: Re: [PATCH v4 09/14] dmaengine: tegra-apb: Clean up runtime PM
+ teardown
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-10-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9a5c4f82-5653-8d81-e304-76675aff5d8f@nvidia.com>
+Date:   Wed, 15 Jan 2020 09:57:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <CGME20200115082821epcas1p4d76d8668dfac70ae3e3889d4ccb6c3ee@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-6-namjae.jeon@samsung.com>
-In-Reply-To: <20200115082447.19520-6-namjae.jeon@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 10:56:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
-Message-ID: <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
-Subject: Re: [PATCH v10 05/14] exfat: add file operations
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
-        linkinjeon@gmail.com,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:xf7OWvxLyO5dkv9UTAUdswA1svDNZpiN9KtYlnOxJffY31aOJDG
- nEHQrs1pvYo9MuF5GZIOeAIuQ+OGhpZWH+KG799/uh1/hutFDZ22RETd3ZWyFjEaurxuIU5
- Qq2AnpzdTuCpzW4EoC7yflLYYxITzp55uvsXf2OQJq07QqG/FIButW8zCZtsdDe42NfdpFa
- 4QpOM5fr3OzlhLWEjomIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RbamRkxCeF0=:nyoJl9JmUQttD+Y1SGP/Wj
- mAZ+F+zqYYS5uRyPpQBGztLht3oT3PfsiLkreOM8PutdDmdoNWUyXXxtNK5hD7Fr+jDHLBkcP
- KFdCG7oLeqxf+AnMGKxYNZ0/6FAL0kB965nB6dLSbe0c2YAol8Vw9EYo/8dueGJB4cc0rxNP7
- xAYwsJoZduexyGhC98lz82u+AE5HNiLdxSGX1ItO5JFazKFh8zctKhPHsANLYgGT9jA7l27A3
- zbaQ4iKHgfhZnMVLq3YgRCwYTwTEjhGEL37RBcIQRzhSfKSgU9tfHhk14DpvQhu2SvQUmKCGY
- MgEWhwC4iItJO4b/tYD52EqvCht3tmRbY2KVqHhO4PWDF8jhlYSJrB4CC0ml1moTi0P+EE7cP
- 3Z2s4pVzZLkwhfzhUxnISzKx9CnVMUMTZ7Ucg8fZhI/iRNhixz7Fn8EeHWekMm676jbxC3S2p
- HdpLRTSh64y4NnQIeX1DZzms4D0GjK4Xh9uqAPROdwar0XRyTmJj4gsHRML7DYpvagHLo881D
- k0wVd8TQNKW7Z3Dn2oYFqMdOOQkwFl8X/S7vzustWJ8svIXEvrh/q8nowC7hFX5TxRtNKogHY
- zNsS64FgCq29EOPWJ9ZlTJS3E9yT7/u80jJILAXIJBL5nxXuVEGQIcyvZ6+YLkc08QO2Nmh0/
- qBmGqWg5ekB1KlCM68U7PMMXmY/drZClG06QsfIjYfuJcAjQM+hauqNDrU18OoofnQBKQkysv
- sa6bvVFJBj7mSQlg77DMgSeg8RH/Jj7CSNJSEfuo7k3xtbc36iPxPmDJwodCJJYkoUtSdgV89
- Ggzh3GXw3mKy2xiv390c4VUIKhQO6FhGsGC/SlGbFnJxmcDTDY4J/kL3a7Tc9npDjnJFIPRQ7
- wJXQq4ev3ILdJNfZkbng==
+In-Reply-To: <20200112173006.29863-10-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579082248; bh=zz/qU+cZAGvVsTNHrvVUkHRpZit86IKQXIet8SZGC3E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=oN8OIJeXfJI5R42dB3Zmv1fPVyPb10M6sVEVnOnjgOVvEQfBRVL6GxasBQhVLDcw4
+         7jtSnLOLYmcMWSqyEvuQzL2eLWFEOLX24elY27AuAupiST8VQtoDnjvF9rAvHkZ/TR
+         P/AONv/v6Mafe7roi7BuM31Fli0iGcflijwY1CxwilZnsm9fMx5IvXTBvS+7rpFibQ
+         FldMETisaWYj0sWfvJ9S3oyTBQ2gLtrqNLDYb1dXiURw5lRtpfmItGuRRJGoPOztfi
+         l9ZoJuEsQzW+Scg99TSw/5ch7JMN3xkB7ilaHu/PzCCA3UCcCvtRdqSSnS87hDfqJn
+         nyHX/WPXpYikg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 9:28 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
 
-> +
-> +               ktime_get_real_ts64(&ts);
-> +               exfat_set_entry_time(sbi, &ts,
-> +                               &ep->dentry.file.modify_time,
-> +                               &ep->dentry.file.modify_date,
-> +                               &ep->dentry.file.modify_tz);
+On 12/01/2020 17:30, Dmitry Osipenko wrote:
+> It's cleaner to teardown RPM by revering the enable sequence, which makes
+> code much easier to follow.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 7158bd3145c4..cc4a9ca20780 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -1429,13 +1429,15 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  	spin_lock_init(&tdma->global_lock);
+>  
+>  	pm_runtime_enable(&pdev->dev);
+> -	if (!pm_runtime_enabled(&pdev->dev))
+> +	if (!pm_runtime_enabled(&pdev->dev)) {
+>  		ret = tegra_dma_runtime_resume(&pdev->dev);
+> -	else
+> +		if (ret)
+> +			return ret;
+> +	} else {
+>  		ret = pm_runtime_get_sync(&pdev->dev);
+> -
+> -	if (ret < 0)
+> -		goto err_pm_disable;
+> +		if (ret < 0)
+> +			goto err_pm_disable;
+> +	}
+>  
+>  	/* Reset DMA controller */
+>  	reset_control_assert(tdma->rst);
+> @@ -1545,9 +1547,10 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  	dma_async_device_unregister(&tdma->dma_dev);
+>  
+>  err_pm_disable:
+> -	pm_runtime_disable(&pdev->dev);
+> -	if (!pm_runtime_status_suspended(&pdev->dev))
+> +	if (!pm_runtime_enabled(&pdev->dev))
+>  		tegra_dma_runtime_suspend(&pdev->dev);
+> +	else
+> +		pm_runtime_disable(&pdev->dev);
+>  
+>  	return ret;
+>  }
+> @@ -1558,9 +1561,10 @@ static int tegra_dma_remove(struct platform_device *pdev)
+>  
+>  	dma_async_device_unregister(&tdma->dma_dev);
+>  
+> -	pm_runtime_disable(&pdev->dev);
+> -	if (!pm_runtime_status_suspended(&pdev->dev))
+> +	if (!pm_runtime_enabled(&pdev->dev))
+>  		tegra_dma_runtime_suspend(&pdev->dev);
+> +	else
+> +		pm_runtime_disable(&pdev->dev);
 
-I think this part should use current_time() instead of ktime_get_real_ts64()
-so it gets truncated to the correct resolution and range.
+Looks like dma_async_device_unregister() will warn if a client still has
+a channel requested but does not prevent the unregister from completing.
+So it could be possible that we could be leaving the controller active now.
 
-Please also check if there are other callers of ktime_get_real_ts64() that
-may need the same change.
+Jon
 
-      Arnd
+-- 
+nvpublic
