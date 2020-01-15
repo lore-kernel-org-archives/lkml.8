@@ -2,117 +2,112 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E173C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70643C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F702084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B50D2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579114699;
-	bh=n9e63zzj12iJP4AsEA5L+UO7C13jvUSNHLs2DJxAHvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G5bh8b/tZw5QUH52Zpobn6vMkbDwnjP2faaGJidqlgOB9wkLePE7+Cz54ErFB9kju
-	 rf8YLH65URBxJJUxHDh9P31ei6PWxOGopdjls3N+njyeqWy/OjLgrHwV0Z7R+FLbJr
-	 HW/qXscMHxYww2dJxeKruBlEMw26gfZlzuY1NY4w=
+	s=default; t=1579114762;
+	bh=WZ9dDHWNeKPrcS9rLHM1YBNJBUru5u8YXrlP60CMQVE=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=b1Ls52HwxghG2mNw8DayPi3rxtItG+6COdK6NEmf+H/TP+Z0JhTR2GADfFIwoYaVw
+	 Eu64W0/rAPMxCfNrRvqtUjWxuqcc5zS/6Nu/fAMQ9ytIAzTT+O6weG3RRmyjG4OFFl
+	 jBv99CVYZ9HS3dKc1c3N8A+7M+vHS6Tnydby1Su0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgAOS6S (ORCPT
+        id S1729157AbgAOS7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:58:18 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40620 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbgAOS6R (ORCPT
+        Wed, 15 Jan 2020 13:59:21 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39833 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgAOS7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:58:17 -0500
-Received: by mail-pj1-f67.google.com with SMTP id bg7so335660pjb.5;
-        Wed, 15 Jan 2020 10:58:17 -0800 (PST)
+        Wed, 15 Jan 2020 13:59:21 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e11so339353pjt.4;
+        Wed, 15 Jan 2020 10:59:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=viW5lUxcta83gnrt+PjYRxoac+oGqhs+xUeSRvnZmTQ=;
-        b=CYSt8+RNsbNv8nhdw2VzG2Im59kpDOIKJlD44SJBT+dIJ/uHz2uOIajgLTzBtm/Ggg
-         zvujyncpq9VAS6w4YTBIwx+olglDb4XAhjs2BVUeYhmctnKl36tPa0UabFy0bCWw0JJM
-         1auljMvtqzovmb0KksdNMNmnEc2CZNzyz5zhGZFuMkCP6s2EqVZUDw7LPBTTO20t2Z1h
-         I4NTVxg35dGwetuVfQxaAZ9JFtgszPLse3P1H6Tyk/HXkeM4vTodCi696JWiSIAnNQA/
-         IZuhoyYwjCSrazHZfFhYdZT3xQbDD51wE3SLyfeJFAb/iDn3TfNswGAtkb0tyiy86G2r
-         7pdQ==
-X-Gm-Message-State: APjAAAX2hMUtwAkQHf8E8Xq13JT17VNqbH383OmOuh4tln77U7lO5/nK
-        IagunJIHGPTCAJHzqTqm/qI=
-X-Google-Smtp-Source: APXvYqyek9crS8Ai2SG0u0WO2iiBAHirV2VbSsqt3LTDaCmmNae9Bi3hRdfGWwno4Yvqe/UlPABj0g==
-X-Received: by 2002:a17:90a:26ab:: with SMTP id m40mr1624578pje.42.1579114696566;
-        Wed, 15 Jan 2020 10:58:16 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id v9sm504680pja.26.2020.01.15.10.58.12
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=1SLdAde/vZjeqxxnpKqcthZrj/PohN8IdFEkwjDaUug=;
+        b=kJ+xtP2rtOihK1qr2NRm5B92tj9k9BAUJppduOWS1pQJUqWUzobOsChk1kqWGn38dj
+         paZjPcrLdGpBOzIEZ/g7sHOvvhmAWDq4PPuiT8nLE7r1C+8j6ZZgtF4kEpkpuiSYpQFC
+         Bb0nXugdeuDyMtLQK3yWbTiOGUKKRRMgvy7c9dZ9A6fkjQtdhBCAdPYGgbLg7ZmOJu/1
+         bcp74AzXKLRLimeeWZdJIxZb0Pu7J5m98xKDhYtcl3WXFUuRg/rxD+Xapnpj6RwwW2tS
+         JfMiKy8A86jSKGdX7YSCZE33kfdEFpz9zyGjaVdNjRFQqN1AQa9IwkUj0S+ATs0uxW0h
+         +/iQ==
+X-Gm-Message-State: APjAAAVDIJKQKJBpjbAumVvsalJb9Vo/2RD1UhRq1uHuLuapilCk+ExA
+        nBIbEw5U9S3DNPf1rUNlqdA=
+X-Google-Smtp-Source: APXvYqxNfiIM/3c9cK63WOfpQCpjcgkqzvoGKHzmQe6lPV9XOL2x9uoLD1P3Z+lss4AuonnyJ3OMZg==
+X-Received: by 2002:a17:90a:21a7:: with SMTP id q36mr1544931pjc.140.1579114759985;
+        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id m3sm22395270pfh.116.2020.01.15.10.59.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 10:58:14 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7338E40244; Wed, 15 Jan 2020 18:58:12 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 18:58:12 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: Fix built-in early-load Intel microcode alignment
-Message-ID: <20200115185812.GH11244@42.do-not-panic.com>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <20200113154739.GB11244@42.do-not-panic.com>
- <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
- <20200115021545.GD11244@42.do-not-panic.com>
- <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
+Message-ID: <5e1f6107.1c69fb81.495b5.6c04@mx.google.com>
+Date:   Wed, 15 Jan 2020 10:59:18 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        ralf@linux-mips.org, rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/2] Add HWMON and WiFi support for CU1000-Neo.
+References:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 08:46:04PM +0200, Jari Ruusu wrote:
-> On 1/15/20, Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > On Mon, Jan 13, 2020 at 09:58:25PM +0200, Jari Ruusu wrote:
-> >> Before that 16-byte alignment patch was applied, my only one
-> >> microcode built-in BLOB was "accidentally" 16-byte aligned.
-> >
-> > How did it accidentially get 16-byte aligned?
+Hello,
+
+周琰杰 (Zhou Yanjie) wrote:
+> Add I2C0/I2C1/I2C2 nodes for X1000 and add I2C0, ADS7830,
+> MSC1, AP6212A, wlan_pwrseq nodes for CU1000-Neo. Refresh
+> CU1000-Neo's defconfig to support ADS7830 based HWMON
+> and AP6212A WiFi module.
 > 
-> Old code aligned it to 8-bytes.
-> There is 50/50-chance of it also being 16-byte aligned.
-
-But *how? Why is there a 50/50 chance of it being aligned to
-16 bytes if 8 bytes are currently specified?
-
-> So it ended up being both 8-byte and 16-byte aligned.
-
-What do you mean both? How can it be aligned to both?
-
-> > Also, how do you *know* something is broken right now?
+> 周琰杰 (Zhou Yanjie) (2):
+>   MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
+>   MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
 > 
-> I haven't spotted brokenness in Linux microcode loader other
-> than that small alignment issue.
+>  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 71 +++++++++++++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/x1000.dtsi     | 45 ++++++++++++++++++++
+>  arch/mips/configs/cu1000-neo_defconfig    |  8 +++-
+
+Series applied to mips-next.
+
+> MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
+>   commit 0ba96b344a7f
+>   https://git.kernel.org/mips/c/0ba96b344a7f
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 > 
-> However, I can confirm that there are 2 microcode updates newer
-> than what my laptop computer's latest BIOS includes. Both newer
-> ones (20191115 and 20191112) are unstable on my laptop computer
-> i5-7200U (fam 6 model 142 step 9 pf 0x80). Hard lockups with both
-> of them. Back to BIOS microcode for now.
+> MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
+>   commit 1f33d9bcb995
+>   https://git.kernel.org/mips/c/1f33d9bcb995
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
-I was more interested in how you are *certain*, other than manualcode
-inspection, and that a spec indicates we should use 16 bytes for Intel
-microcode -- that the 8 byte alignment *does* not allow users to
-currently update their Intel CPU microcode for built-in firmware.                                      
+Thanks,
+    Paul
 
-From what I gather so far we have no case yet reported where we know for
-sure it fails right now with the 8 byte alignment on 64-bit.
-										                                                                                
-This information would just be useful for the commit log.
-
-  Luis
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
