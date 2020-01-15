@@ -2,197 +2,103 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A52C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D9FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3652207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BTau1aLS"
+	by mail.kernel.org (Postfix) with ESMTP id 9F21D2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgAOXs6 (ORCPT
+        id S1731227AbgAOXwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:48:58 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39304 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730395AbgAOXs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:48:57 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q10so9273983pfs.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=L7QJ/f4bNLbu+zgtCVRouMzQLIb9HBj4OTPjr+5W3DQ=;
-        b=BTau1aLSM6XrFVbAH+llCS5d4H+w35zbbek1SIBSul6t2IoGnURs9KRucAaII9sIAA
-         vzmCi3yFZcXsVxej1C/1WF4hUzQ0+OBzSVqoRcT9RfWZPUDIvh8ymfzXODzSzFAagVn4
-         NFVg/I20YGMksvLl8JG/RCdxGgq4bvo05sqEPbBqkkAVzLqoQ6IiwZjKbOebTDdczIm6
-         OX9M0LTO+0F47835owNuEjvvkSwrEmsa42vn/rkPqrtrT1GuneEFjPEjknBte3l1lPK7
-         TEkMxBfV2v0/G45kv0htZmEEdRhbt8oIAQYJEv8gPLfkH3vIGV3KmO40OXcBO/E/nkHz
-         0fNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=L7QJ/f4bNLbu+zgtCVRouMzQLIb9HBj4OTPjr+5W3DQ=;
-        b=VrRNr9hJY7PpOIrvWxT2G7fvUDNFCQR0zzQiaQ8UqwHwbl6/u6jM0oDPmsBZNuBfD4
-         p5dzTRj3SrVZUZKrD2Ihkp4rtQwR0ceoF99MLuAby6YB427aHEccp8+e660R5Y1hiVkV
-         kxoJBf71DGQtOAiYw3NmC+ud5GdkjAxSFPfWz48aOCg8q4QsxuLVIvl/N1pQk/1B92vp
-         OikqI9NzSUqxwYNYCxbF3+2aMuoyIOb4d/E8tPLoBT5rgZpY0Bz3t7kRdk4lloQT6G9+
-         youjO3igFAOY9xoA7hrrpF1kTUKoXiXaWxfxe/NKzGX4ci4IDI15XC2c6tWuOsWB1Rv+
-         5JyA==
-X-Gm-Message-State: APjAAAUrkH3OXdqNDnmuyjOd+M1FDI7YPlLtqGQYeLnU6kXPoBSpp2rn
-        TlNj7sV2JO9c5HD9tahltP4n9n2EP4cVPg==
-X-Google-Smtp-Source: APXvYqzQezgaIHoyQ/jj/ag6xo34GmtpMCzDlxA+NN9cqOv5Lk+Ja1eNh7pAY5vJ4rACqZNsogl00g==
-X-Received: by 2002:a63:214e:: with SMTP id s14mr35566633pgm.428.1579132136730;
-        Wed, 15 Jan 2020 15:48:56 -0800 (PST)
-Received: from localhost ([2601:602:9200:a1a5:2952:4c53:16b9:8f97])
-        by smtp.gmail.com with ESMTPSA id j14sm21588497pgs.57.2020.01.15.15.48.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jan 2020 15:48:56 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH resend] mtd: maps: physmap: Add minimal Runtime PM support
-In-Reply-To: <20200115131323.6883-1-geert+renesas@glider.be>
-References: <20200115131323.6883-1-geert+renesas@glider.be>
-Date:   Wed, 15 Jan 2020 15:48:53 -0800
-Message-ID: <7hk15s9t7e.fsf@baylibre.com>
+        Wed, 15 Jan 2020 18:52:49 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54823 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730572AbgAOXws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:52:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:52:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="373102555"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga004.jf.intel.com with ESMTP; 15 Jan 2020 15:52:38 -0800
+Date:   Wed, 15 Jan 2020 15:52:37 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 08/12] fs/xfs: Add lock/unlock mode to xfs
+Message-ID: <20200115235237.GA24522@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-9-ira.weiny@intel.com>
+ <20200113221957.GN8247@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113221957.GN8247@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
+On Mon, Jan 13, 2020 at 02:19:57PM -0800, Darrick J. Wong wrote:
+> On Fri, Jan 10, 2020 at 11:29:38AM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
 
-> Add minimal runtime PM support (enable on probe, disable on remove), to
-> ensure proper operation with a parent device that uses runtime PM.
->
-> This is needed on systems where the FLASH is connected to a bus
-> controller that is contained in a PM domain and/or has a gateable
-> functional clock.  In such cases, before accessing any device connected
-> to the external bus, the PM domain must be powered up, and/or the
-> functional clock must be enabled, which is typically handled through
-> runtime PM by the bus controller driver.
->
-> An example of this is the Renesas APE6-EVM development board, which has
-> an Ethernet controller and a CFI FLASH connected to the Bus State
-> Controller (BSC) of an R-Mobile APE6 SoC.
-> As long as the Ethernet driver, which had Runtime PM support since
-> commit 3a611e26e958b037 ("net/smsc911x: Add minimal runtime PM
-> support"), keeps the BSC powered, accessing the FLASH works.
-> When the ethernet node in r8a73a4-ape6evm.dts is disabled, the BSC is
-> never powered up, and the kernel crashes when trying to access the
-> FLASH:
->
->     Unhandled fault: imprecise external abort (0x1406) at 0x00000000
->     pgd = (ptrval)
->     [00000000] *pgd=7fef2835
->     Internal error: : 1406 [#1] SMP ARM
->     CPU: 0 PID: 122 Comm: hd Tainted: G        W         5.5.0-rc1-ape6evm-00814-g38ca966db25b9dbd-dirty #136
->     Hardware name: Generic R8A73A4 (Flattened Device Tree)
->     PC is at chip_ready+0x12c/0x380
->     LR is at chip_ready+0x10c/0x380
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[snip]
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+> >  
+> > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > index 401da197f012..e8fd95b75e5b 100644
+> > --- a/fs/xfs/xfs_inode.c
+> > +++ b/fs/xfs/xfs_inode.c
+> > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
+> >   *
+> >   * Basic locking order:
+> >   *
+> > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > + * i_rwsem -> i_dax_sem -> i_mmap_lock -> page_lock -> i_ilock
+> 
+> Mmmmmm, more locks.  Can we skip the extra lock if CONFIG_FSDAX=n or if
+> the filesystem devices don't support DAX at all?
 
-> ---
-> Probably the device should be powered down after probing, and powered
-> up/down on-demand in the various {get,put}_chip() functions.  However,
-> that is an optimization which touches more intimidate details of the
-> internal MTD API, and can be done later.
+I've looked into this a bit more and I think skipping on CONFIG_FSDAX=n is ok
+but doing so on individual devices is not going to be possible because we don't
+have that information at the vfs layer.
 
-Agreed.  Without that, the BSC (in your example) will never get powered
-off as long as there's a flash device pobed.
+I'll continue to think about how to mitigate this more while I add CONFIG_FSDAX
+checks before rolling out a new patch set.
 
-Kevin
+> 
+> Also, I don't think we're actually following the i_rwsem -> i_daxsem
+> order in fallocate, and possibly elsewhere too?
+> 
+> Does the vfs have to take the i_dax_sem to do remapping things like
+> reflink?  (Pretend that reflink and dax are compatible for the moment)
+> 
 
-> ---
->  drivers/mtd/maps/physmap-core.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-> index a9f7964e2edb6668..8f7f966fa9a7ee8a 100644
-> --- a/drivers/mtd/maps/physmap-core.c
-> +++ b/drivers/mtd/maps/physmap-core.c
-> @@ -38,6 +38,7 @@
->  #include <linux/mtd/cfi_endian.h>
->  #include <linux/io.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/gpio/consumer.h>
->  
->  #include "physmap-gemini.h"
-> @@ -64,16 +65,16 @@ static int physmap_flash_remove(struct platform_device *dev)
->  {
->  	struct physmap_flash_info *info;
->  	struct physmap_flash_data *physmap_data;
-> -	int i, err;
-> +	int i, err = 0;
->  
->  	info = platform_get_drvdata(dev);
->  	if (!info)
-> -		return 0;
-> +		goto out;
->  
->  	if (info->cmtd) {
->  		err = mtd_device_unregister(info->cmtd);
->  		if (err)
-> -			return err;
-> +			goto out;
->  
->  		if (info->cmtd != info->mtds[0])
->  			mtd_concat_destroy(info->cmtd);
-> @@ -88,7 +89,10 @@ static int physmap_flash_remove(struct platform_device *dev)
->  	if (physmap_data && physmap_data->exit)
->  		physmap_data->exit(dev);
->  
-> -	return 0;
-> +out:
-> +	pm_runtime_put(&dev->dev);
-> +	pm_runtime_disable(&dev->dev);
-> +	return err;
->  }
->  
->  static void physmap_set_vpp(struct map_info *map, int state)
-> @@ -484,13 +488,19 @@ static int physmap_flash_probe(struct platform_device *dev)
->  		return -EINVAL;
->  	}
->  
-> +	pm_runtime_enable(&dev->dev);
-> +	pm_runtime_get_sync(&dev->dev);
-> +
->  	if (dev->dev.of_node)
->  		err = physmap_flash_of_init(dev);
->  	else
->  		err = physmap_flash_pdata_init(dev);
->  
-> -	if (err)
-> +	if (err) {
-> +		pm_runtime_put(&dev->dev);
-> +		pm_runtime_disable(&dev->dev);
->  		return err;
-> +	}
->  
->  	for (i = 0; i < info->nmaps; i++) {
->  		struct resource *res;
-> -- 
-> 2.17.1
+I spoke with Dan today about this and we believe the answer is going to be yes.
+However, not until the code is added to support DAX in reflink.  Because
+currently this is only required for places which use "IS_DAX()" to see the
+state of the inode.
+
+Currently the vfs layer does not have any IS_DAX() checks in the reflink path.
+But when they are added they will be required to take this sem.
+
+Ira
+
