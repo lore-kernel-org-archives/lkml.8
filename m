@@ -2,50 +2,48 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADF4C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5223C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFA624671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B87D24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAOD5G (ORCPT
+        id S1729147AbgAOD5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:57:06 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:43364 "EHLO ale.deltatee.com"
+        Tue, 14 Jan 2020 22:57:05 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:43370 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbgAOD5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:57:02 -0500
+        id S1728897AbgAOD5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:57:03 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1irZna-0001ip-35; Tue, 14 Jan 2020 20:57:00 -0700
+        id 1irZna-0001ik-3Q; Tue, 14 Jan 2020 20:57:00 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1irZnX-0000gk-Mm; Tue, 14 Jan 2020 20:56:51 -0700
+        id 1irZnW-0000gU-Tt; Tue, 14 Jan 2020 20:56:50 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Kelvin.Cao@microchip.com, Eric Pilmore <epilmore@gigaio.com>,
         Doug Meyer <dmeyer@gigaio.com>,
-        Kelvin Cao <kelvin.cao@microchip.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Tue, 14 Jan 2020 20:56:48 -0700
-Message-Id: <20200115035648.2578-8-logang@deltatee.com>
+Date:   Tue, 14 Jan 2020 20:56:43 -0700
+Message-Id: <20200115035648.2578-3-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200115035648.2578-1-logang@deltatee.com>
 References: <20200115035648.2578-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, epilmore@gigaio.com, dmeyer@gigaio.com, Kelvin.Cao@microchip.com, kelvin.cao@microchip.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, Kelvin.Cao@microchip.com, epilmore@gigaio.com, dmeyer@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 7/7] PCI/switchtec: Introduce gen4 variant IDS in the device ID table
+Subject: [PATCH v2 2/7] PCI/switchtec: Introduce Generation Variable
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,77 +51,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+Add a generation variable passed through the device id table and tests
+for GEN3 specific registers.
 
-Now that GEN4 is properly supported, advertise support in the module's
-device ID table and add the same IDs to the list of switchtec quirks.
+This will allow us to add generation 4 and other devices after they are
+functionally supported.
 
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
-[logang@deltatee.com: add commit message and quirk IDs]
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- drivers/pci/quirks.c           | 18 ++++++++++++++++++
- drivers/pci/switch/switchtec.c | 18 ++++++++++++++++++
- 2 files changed, 36 insertions(+)
+ drivers/pci/switch/switchtec.c | 90 ++++++++++++++++++++++------------
+ include/linux/switchtec.h      |  6 +++
+ 2 files changed, 64 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4937a088d7d8..d54692bc3af4 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5373,6 +5373,24 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
- SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-+SWITCHTEC_QUIRK(0x4000);  /* PFX 100XG4 */
-+SWITCHTEC_QUIRK(0x4084);  /* PFX 84XG4  */
-+SWITCHTEC_QUIRK(0x4068);  /* PFX 68XG4  */
-+SWITCHTEC_QUIRK(0x4052);  /* PFX 52XG4  */
-+SWITCHTEC_QUIRK(0x4036);  /* PFX 36XG4  */
-+SWITCHTEC_QUIRK(0x4028);  /* PFX 28XG4  */
-+SWITCHTEC_QUIRK(0x4100);  /* PSX 100XG4 */
-+SWITCHTEC_QUIRK(0x4184);  /* PSX 84XG4  */
-+SWITCHTEC_QUIRK(0x4168);  /* PSX 68XG4  */
-+SWITCHTEC_QUIRK(0x4152);  /* PSX 52XG4  */
-+SWITCHTEC_QUIRK(0x4136);  /* PSX 36XG4  */
-+SWITCHTEC_QUIRK(0x4128);  /* PSX 28XG4  */
-+SWITCHTEC_QUIRK(0x4200);  /* PAX 100XG4 */
-+SWITCHTEC_QUIRK(0x4284);  /* PAX 84XG4  */
-+SWITCHTEC_QUIRK(0x4268);  /* PAX 68XG4  */
-+SWITCHTEC_QUIRK(0x4252);  /* PAX 52XG4  */
-+SWITCHTEC_QUIRK(0x4236);  /* PAX 36XG4  */
-+SWITCHTEC_QUIRK(0x4228);  /* PAX 28XG4  */
- 
- /*
-  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
 diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 92b95e8067c0..a823b4b8ef8a 100644
+index c5c957ce8499..0abc8bc8b03e 100644
 --- a/drivers/pci/switch/switchtec.c
 +++ b/drivers/pci/switch/switchtec.c
-@@ -1696,6 +1696,24 @@ static const struct pci_device_id switchtec_pci_tbl[] = {
- 	SWITCHTEC_PCI_DEVICE(0x8574, SWITCHTEC_GEN3),  //PFXI 64XG3
- 	SWITCHTEC_PCI_DEVICE(0x8575, SWITCHTEC_GEN3),  //PFXI 80XG3
- 	SWITCHTEC_PCI_DEVICE(0x8576, SWITCHTEC_GEN3),  //PFXI 96XG3
-+	SWITCHTEC_PCI_DEVICE(0x4000, SWITCHTEC_GEN4),  //PFX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4084, SWITCHTEC_GEN4),  //PFX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4068, SWITCHTEC_GEN4),  //PFX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4052, SWITCHTEC_GEN4),  //PFX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4036, SWITCHTEC_GEN4),  //PFX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4028, SWITCHTEC_GEN4),  //PFX 28XG4
-+	SWITCHTEC_PCI_DEVICE(0x4100, SWITCHTEC_GEN4),  //PSX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4184, SWITCHTEC_GEN4),  //PSX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4168, SWITCHTEC_GEN4),  //PSX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4152, SWITCHTEC_GEN4),  //PSX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4136, SWITCHTEC_GEN4),  //PSX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4128, SWITCHTEC_GEN4),  //PSX 28XG4
-+	SWITCHTEC_PCI_DEVICE(0x4200, SWITCHTEC_GEN4),  //PAX 100XG4
-+	SWITCHTEC_PCI_DEVICE(0x4284, SWITCHTEC_GEN4),  //PAX 84XG4
-+	SWITCHTEC_PCI_DEVICE(0x4268, SWITCHTEC_GEN4),  //PAX 68XG4
-+	SWITCHTEC_PCI_DEVICE(0x4252, SWITCHTEC_GEN4),  //PAX 52XG4
-+	SWITCHTEC_PCI_DEVICE(0x4236, SWITCHTEC_GEN4),  //PAX 36XG4
-+	SWITCHTEC_PCI_DEVICE(0x4228, SWITCHTEC_GEN4),  //PAX 28XG4
+@@ -326,7 +326,21 @@ static DEVICE_ATTR_RO(field)
+ DEVICE_ATTR_SYS_INFO_STR(vendor_id);
+ DEVICE_ATTR_SYS_INFO_STR(product_id);
+ DEVICE_ATTR_SYS_INFO_STR(product_revision);
+-DEVICE_ATTR_SYS_INFO_STR(component_vendor);
++
++static ssize_t component_vendor_show(struct device *dev,
++				     struct device_attribute *attr, char *buf)
++{
++	struct switchtec_dev *stdev = to_stdev(dev);
++	struct sys_info_regs __iomem *si = stdev->mmio_sys_info;
++
++	/* component_vendor field not supported after gen3 */
++	if (stdev->gen != SWITCHTEC_GEN3)
++		return sprintf(buf, "none\n");
++
++	return io_string_show(buf, &si->component_vendor,
++			      sizeof(si->component_vendor));
++}
++static DEVICE_ATTR_RO(component_vendor);
+ 
+ static ssize_t component_id_show(struct device *dev,
+ 	struct device_attribute *attr, char *buf)
+@@ -334,6 +348,10 @@ static ssize_t component_id_show(struct device *dev,
+ 	struct switchtec_dev *stdev = to_stdev(dev);
+ 	int id = ioread16(&stdev->mmio_sys_info->component_id);
+ 
++	/* component_id field not supported after gen3 */
++	if (stdev->gen != SWITCHTEC_GEN3)
++		return sprintf(buf, "none\n");
++
+ 	return sprintf(buf, "PM%04X\n", id);
+ }
+ static DEVICE_ATTR_RO(component_id);
+@@ -344,6 +362,10 @@ static ssize_t component_revision_show(struct device *dev,
+ 	struct switchtec_dev *stdev = to_stdev(dev);
+ 	int rev = ioread8(&stdev->mmio_sys_info->component_revision);
+ 
++	/* component_revision field not supported after gen3 */
++	if (stdev->gen != SWITCHTEC_GEN3)
++		return sprintf(buf, "255\n");
++
+ 	return sprintf(buf, "%d\n", rev);
+ }
+ static DEVICE_ATTR_RO(component_revision);
+@@ -1426,6 +1448,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
+ 	if (IS_ERR(stdev))
+ 		return PTR_ERR(stdev);
+ 
++	stdev->gen = id->driver_data;
++
+ 	rc = switchtec_init_pci(stdev, pdev);
+ 	if (rc)
+ 		goto err_put;
+@@ -1473,7 +1497,7 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+ 	put_device(&stdev->dev);
+ }
+ 
+-#define SWITCHTEC_PCI_DEVICE(device_id) \
++#define SWITCHTEC_PCI_DEVICE(device_id, gen) \
+ 	{ \
+ 		.vendor     = PCI_VENDOR_ID_MICROSEMI, \
+ 		.device     = device_id, \
+@@ -1481,6 +1505,7 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+ 		.subdevice  = PCI_ANY_ID, \
+ 		.class      = (PCI_CLASS_MEMORY_OTHER << 8), \
+ 		.class_mask = 0xFFFFFFFF, \
++		.driver_data = gen, \
+ 	}, \
+ 	{ \
+ 		.vendor     = PCI_VENDOR_ID_MICROSEMI, \
+@@ -1489,39 +1514,40 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
+ 		.subdevice  = PCI_ANY_ID, \
+ 		.class      = (PCI_CLASS_BRIDGE_OTHER << 8), \
+ 		.class_mask = 0xFFFFFFFF, \
++		.driver_data = gen, \
+ 	}
+ 
+ static const struct pci_device_id switchtec_pci_tbl[] = {
+-	SWITCHTEC_PCI_DEVICE(0x8531),  //PFX 24xG3
+-	SWITCHTEC_PCI_DEVICE(0x8532),  //PFX 32xG3
+-	SWITCHTEC_PCI_DEVICE(0x8533),  //PFX 48xG3
+-	SWITCHTEC_PCI_DEVICE(0x8534),  //PFX 64xG3
+-	SWITCHTEC_PCI_DEVICE(0x8535),  //PFX 80xG3
+-	SWITCHTEC_PCI_DEVICE(0x8536),  //PFX 96xG3
+-	SWITCHTEC_PCI_DEVICE(0x8541),  //PSX 24xG3
+-	SWITCHTEC_PCI_DEVICE(0x8542),  //PSX 32xG3
+-	SWITCHTEC_PCI_DEVICE(0x8543),  //PSX 48xG3
+-	SWITCHTEC_PCI_DEVICE(0x8544),  //PSX 64xG3
+-	SWITCHTEC_PCI_DEVICE(0x8545),  //PSX 80xG3
+-	SWITCHTEC_PCI_DEVICE(0x8546),  //PSX 96xG3
+-	SWITCHTEC_PCI_DEVICE(0x8551),  //PAX 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8552),  //PAX 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8553),  //PAX 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8554),  //PAX 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8555),  //PAX 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8556),  //PAX 96XG3
+-	SWITCHTEC_PCI_DEVICE(0x8561),  //PFXL 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8562),  //PFXL 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8563),  //PFXL 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8564),  //PFXL 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8565),  //PFXL 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8566),  //PFXL 96XG3
+-	SWITCHTEC_PCI_DEVICE(0x8571),  //PFXI 24XG3
+-	SWITCHTEC_PCI_DEVICE(0x8572),  //PFXI 32XG3
+-	SWITCHTEC_PCI_DEVICE(0x8573),  //PFXI 48XG3
+-	SWITCHTEC_PCI_DEVICE(0x8574),  //PFXI 64XG3
+-	SWITCHTEC_PCI_DEVICE(0x8575),  //PFXI 80XG3
+-	SWITCHTEC_PCI_DEVICE(0x8576),  //PFXI 96XG3
++	SWITCHTEC_PCI_DEVICE(0x8531, SWITCHTEC_GEN3),  //PFX 24xG3
++	SWITCHTEC_PCI_DEVICE(0x8532, SWITCHTEC_GEN3),  //PFX 32xG3
++	SWITCHTEC_PCI_DEVICE(0x8533, SWITCHTEC_GEN3),  //PFX 48xG3
++	SWITCHTEC_PCI_DEVICE(0x8534, SWITCHTEC_GEN3),  //PFX 64xG3
++	SWITCHTEC_PCI_DEVICE(0x8535, SWITCHTEC_GEN3),  //PFX 80xG3
++	SWITCHTEC_PCI_DEVICE(0x8536, SWITCHTEC_GEN3),  //PFX 96xG3
++	SWITCHTEC_PCI_DEVICE(0x8541, SWITCHTEC_GEN3),  //PSX 24xG3
++	SWITCHTEC_PCI_DEVICE(0x8542, SWITCHTEC_GEN3),  //PSX 32xG3
++	SWITCHTEC_PCI_DEVICE(0x8543, SWITCHTEC_GEN3),  //PSX 48xG3
++	SWITCHTEC_PCI_DEVICE(0x8544, SWITCHTEC_GEN3),  //PSX 64xG3
++	SWITCHTEC_PCI_DEVICE(0x8545, SWITCHTEC_GEN3),  //PSX 80xG3
++	SWITCHTEC_PCI_DEVICE(0x8546, SWITCHTEC_GEN3),  //PSX 96xG3
++	SWITCHTEC_PCI_DEVICE(0x8551, SWITCHTEC_GEN3),  //PAX 24XG3
++	SWITCHTEC_PCI_DEVICE(0x8552, SWITCHTEC_GEN3),  //PAX 32XG3
++	SWITCHTEC_PCI_DEVICE(0x8553, SWITCHTEC_GEN3),  //PAX 48XG3
++	SWITCHTEC_PCI_DEVICE(0x8554, SWITCHTEC_GEN3),  //PAX 64XG3
++	SWITCHTEC_PCI_DEVICE(0x8555, SWITCHTEC_GEN3),  //PAX 80XG3
++	SWITCHTEC_PCI_DEVICE(0x8556, SWITCHTEC_GEN3),  //PAX 96XG3
++	SWITCHTEC_PCI_DEVICE(0x8561, SWITCHTEC_GEN3),  //PFXL 24XG3
++	SWITCHTEC_PCI_DEVICE(0x8562, SWITCHTEC_GEN3),  //PFXL 32XG3
++	SWITCHTEC_PCI_DEVICE(0x8563, SWITCHTEC_GEN3),  //PFXL 48XG3
++	SWITCHTEC_PCI_DEVICE(0x8564, SWITCHTEC_GEN3),  //PFXL 64XG3
++	SWITCHTEC_PCI_DEVICE(0x8565, SWITCHTEC_GEN3),  //PFXL 80XG3
++	SWITCHTEC_PCI_DEVICE(0x8566, SWITCHTEC_GEN3),  //PFXL 96XG3
++	SWITCHTEC_PCI_DEVICE(0x8571, SWITCHTEC_GEN3),  //PFXI 24XG3
++	SWITCHTEC_PCI_DEVICE(0x8572, SWITCHTEC_GEN3),  //PFXI 32XG3
++	SWITCHTEC_PCI_DEVICE(0x8573, SWITCHTEC_GEN3),  //PFXI 48XG3
++	SWITCHTEC_PCI_DEVICE(0x8574, SWITCHTEC_GEN3),  //PFXI 64XG3
++	SWITCHTEC_PCI_DEVICE(0x8575, SWITCHTEC_GEN3),  //PFXI 80XG3
++	SWITCHTEC_PCI_DEVICE(0x8576, SWITCHTEC_GEN3),  //PFXI 96XG3
  	{0}
  };
  MODULE_DEVICE_TABLE(pci, switchtec_pci_tbl);
+diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+index 07b0ddabd48b..5d985947bf82 100644
+--- a/include/linux/switchtec.h
++++ b/include/linux/switchtec.h
+@@ -37,6 +37,10 @@ enum {
+ 	SWITCHTEC_GAS_PFF_CSR_OFFSET    = 0x134000,
+ };
+ 
++enum switchtec_gen {
++	SWITCHTEC_GEN3,
++};
++
+ struct mrpc_regs {
+ 	u8 input_data[SWITCHTEC_MRPC_PAYLOAD_SIZE];
+ 	u8 output_data[SWITCHTEC_MRPC_PAYLOAD_SIZE];
+@@ -363,6 +367,8 @@ struct switchtec_dev {
+ 	struct device dev;
+ 	struct cdev cdev;
+ 
++	enum switchtec_gen gen;
++
+ 	int partition;
+ 	int partition_count;
+ 	int pff_csr_count;
 -- 
 2.20.1
 
