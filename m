@@ -2,110 +2,136 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D07C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AD3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34E924671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54552187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgAOK7W (ORCPT
+        id S1729993AbgAOLAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:59:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:34942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgAOK7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:59:21 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58AA51007;
-        Wed, 15 Jan 2020 02:59:21 -0800 (PST)
-Received: from e112479-lin.warwick.arm.com (e112479-lin.warwick.arm.com [10.32.36.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34A4C3F6C4;
-        Wed, 15 Jan 2020 02:59:18 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     nd@arm.com, James Clark <james.clark@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Al Grant <al.grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] Return EINVAL when precise_ip perf events are requested on Arm
-Date:   Wed, 15 Jan 2020 10:58:55 +0000
-Message-Id: <20200115105855.13395-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200115105855.13395-1-james.clark@arm.com>
-References: <20200115105855.13395-1-james.clark@arm.com>
+        Wed, 15 Jan 2020 06:00:02 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:41261 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbgAOLAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:00:01 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 8KGwPGZq2hRHIOv1uIGByeTzBsNRTh82LLtl60f/DnDw6Y7tiqu2EOqUK4J4uvaAJi0GHx5X/o
+ /v1gNnZ6WAuu52BMUN5lmLWWmMzYAfNkaNHQchr9Oqxg93m8EBLNQiSnwiNVSTCh36Rd8GD8jE
+ 7ECFchoYCdDCiPoISXvZxeiuv+y7cFmmStMBHd23pZhjgST+e6u1oAEwZ1xzR1cO1e5hYiyYg5
+ A9yLVrnD7CGRE+XT8d6UtDme5KpuyZu9STeJpgotP+iXdFAHyFl0gXWlhc2F6WxmC8MrkIP+Ef
+ JkQ=
+X-IronPort-AV: E=Sophos;i="5.70,322,1574146800"; 
+   d="scan'208";a="63325742"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jan 2020 04:00:00 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 15 Jan 2020 04:00:00 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 15 Jan 2020 03:59:56 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <a.zummo@towertech.it>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rtc@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v4 0/5] add device tree for SAM9X60 SoC and SAM9X60-EK board
+Date:   Wed, 15 Jan 2020 12:59:42 +0200
+Message-ID: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM PMU events can be delivered with arbitrary skid, and there's
-nothing the kernel can do to prevent this. Given that, the PMU
-cannot support precise_ip != 0.
+This series add device tree for SAM9X60 SoC and SAM9X60-EK board.
+Allong with these, there are patches that documents some compatibles
+for SAM9X60's IPs.
 
-Also update comment to state that attr.config field is used to
-set the event type rather than event_id which doesn't exist.
+Changes in v4:
+- remove patches:
+	- dt-bindings: atmel-tcb: remove wildcard
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+  since they were applied
+- address review comments
+- fix compatible list for dbug in sam9x60.dtsi
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-Cc: Al Grant <al.grant@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/perf/arm_pmu.c          | 3 +++
- include/uapi/linux/perf_event.h | 4 ++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Changes in v3:
+- remove applied patches from series
+- split patch "dt-bindings: atmel-tcb: add microchip,sam9x60-tcb" in two patches:
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+	- dt-bindings: atmel-tcb: remove wildcard
+- split patch "dt-bindings: atmel-usart: remove wildcard" in two patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+  and adapt them as per review comments
+- collect acked-by tags
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index df352b334ea7..4ddbdb93b3b6 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -102,6 +102,9 @@ armpmu_map_event(struct perf_event *event,
- 	u64 config = event->attr.config;
- 	int type = event->attr.type;
- 
-+	if (event->attr.precise)
-+		return -EINVAL;
-+
- 	if (type == event->pmu->type)
- 		return armpmu_map_raw_event(raw_event_mask, config);
- 
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 377d794d3105..3501b2eb168a 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -38,8 +38,8 @@ enum perf_type_id {
- };
- 
- /*
-- * Generalized performance event event_id types, used by the
-- * attr.event_id parameter of the sys_perf_event_open()
-+ * Generalized hardware performance event types, used by the
-+ * attr.config parameter of the sys_perf_event_open()
-  * syscall:
-  */
- enum perf_hw_id {
+Changes in v2:
+- replace patch "dt-bindings: at_xdmac: add entry for microchip compatibles"
+  by patches:
+	- dt-bindings: at_xdmac: add microchip,sam9x60-dma
+	- dt-bindings: at_xdmac: remove wildcard.
+- replace patch "dt-bindings: atmel-usart: add microchip,<chip>-usart"
+  by patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+- remove patch "dt-bindings: spi_atmel: add microchip,sam9x60-spi"
+  as it was accepted
+- collect reviewed-by tags
+
+Claudiu Beznea (4):
+  dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
+  dt-bindings: atmel-usart: remove wildcard
+  dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+  ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
+
+Sandeep Sheriker Mallikarjun (1):
+  ARM: dts: at91: sam9x60: add device tree for soc and board
+
+ .../devicetree/bindings/mfd/atmel-usart.txt        |  11 +-
+ .../bindings/rtc/atmel,at91rm9200-rtc.txt          |   3 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
+ arch/arm/configs/at91_dt_defconfig                 |   4 +
+ 6 files changed, 1353 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+ create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
+
 -- 
-2.24.0
+2.7.4
 
