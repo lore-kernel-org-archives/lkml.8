@@ -2,157 +2,182 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ED4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77324C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961EC214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:10:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E5jqhAlH"
+	by mail.kernel.org (Postfix) with ESMTP id 54C5C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgAOQKR (ORCPT
+        id S1729028AbgAOQKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:10:17 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40966 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgAOQKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:10:16 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115161014euoutp029308456ed8961d5c1020e98e611dfc12~qG0fiilFj0327603276euoutp029
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 16:10:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115161014euoutp029308456ed8961d5c1020e98e611dfc12~qG0fiilFj0327603276euoutp029
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579104614;
-        bh=SwsmES8/B7/gtwjkWBPVe1WG06nTczZJgPIYHkwKQt8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=E5jqhAlH1ka7RI76VWMRy7MmYHB4AQwX+ZhbpGpp8FKMKNhVGUddrvIFqnlLeTUQk
-         kUclcnnN+yDI/OVADpjQwfrwMjghu2IwW2QHXBJGYfL/UmeLovDRSME+U/+XTiLuod
-         /dKUz4E0S0u1sQA0d19N0Ibqb5Ta3lY/fNh8ALFQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200115161014eucas1p1e69903f7054ec92d134ad000e451e177~qG0fOYulW3134931349eucas1p12;
-        Wed, 15 Jan 2020 16:10:14 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B9.28.60698.6693F1E5; Wed, 15
-        Jan 2020 16:10:14 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115161014eucas1p12af23923229bcc615b0c24da8af3e01d~qG0e1hR_u2545225452eucas1p1J;
-        Wed, 15 Jan 2020 16:10:14 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115161014eusmtrp28b7f87c1655bb2ccb2176d7d59e8bf2c~qG0e1AcE-2526025260eusmtrp2J;
-        Wed, 15 Jan 2020 16:10:14 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-db-5e1f3966a853
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C5.D3.07950.6693F1E5; Wed, 15
-        Jan 2020 16:10:14 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115161013eusmtip1c65aed0da24d6b1aa658b8b69341a52e~qG0elKdGG1743117431eusmtip1H;
-        Wed, 15 Jan 2020 16:10:13 +0000 (GMT)
-Subject: Re: [PATCH 07/10] video: fbdev: use resource_size
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <b6cf85ce-895e-cfb0-fc59-c1814d276516@samsung.com>
-Date:   Wed, 15 Jan 2020 17:10:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 15 Jan 2020 11:10:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:39426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgAOQKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:10:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 421C0328;
+        Wed, 15 Jan 2020 08:10:42 -0800 (PST)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2641B3F718;
+        Wed, 15 Jan 2020 08:10:41 -0800 (PST)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     sudeep.holla@arm.com, prime.zeng@hisilicon.com,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        peterz@infradead.org, mingo@kernel.org
+Subject: [PATCH] sched/topology: Assert non-NUMA topology masks don't (partially) overlap
+Date:   Wed, 15 Jan 2020 16:09:15 +0000
+Message-Id: <20200115160915.22575-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <1577900990-8588-8-git-send-email-Julia.Lawall@inria.fr>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djP87pplvJxBs135C2ufH3PZtG0qp/Z
-        YustaYsTfR9YLS7vmsPmwOox6cUhFo/73ceZPD5vkgtgjuKySUnNySxLLdK3S+DK+PVpMVvB
-        Ua6KWYe7GRsYD3B0MXJySAiYSNy+O5uli5GLQ0hgBaPEnG0r2SGcL4wSZ5+tZINwPjNKvPox
-        lw2m5cXMbmaIxHJGiaNHVzCDJIQE3jJK/NjAA2ILC1hJbNuxmQXEFhHQkFi6cQXYDmaBRkaJ
-        WVv2gE1iAyqa2L6KEcTmFbCTeLPhMFicRUBVoqfhNlhcVCBC4tODw6wQNYISJ2c+ARvKKeAq
-        8WnyMTCbWUBc4taT+UwQtrzE9rdzwK6TEJjMLnHg9g2os10kHnXsY4GwhSVeHd/CDmHLSPzf
-        CdIM0rCOUeJvxwuo7u2MEssn/4Pqtpa4c+4XkM0BtEJTYv0ufYiwo8Tx6wcZQcISAnwSN94K
-        QhzBJzFp23RmiDCvREebEES1msSGZRvYYNZ27VzJPIFRaRaS12YheWcWkndmIexdwMiyilE8
-        tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzC5nP53/OsOxn1/kg4xCnAwKvHwZvyRixNiTSwr
-        rsw9xCjBwawkwntyhmycEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KL
-        YLJMHJxSDYxKmi9n8TIdemM4R/j77974um2rFoTZP7xfy8f8j9ckzWvtugN9++7J3lZjS1q5
-        OMVS7M3/XMPVyTIy2Ys2sG85smSN0/2YyXunrshnbN3Vmvpob/pFrv22uXLWCXYxz0qf3pXf
-        7StZNmOOfY/3wTtO/7XvsXEvPn8pbcnSiphls7k2nXM/NDVYiaU4I9FQi7moOBEA/dsFPyoD
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsVy+t/xu7pplvJxBl/XsFtc+fqezaJpVT+z
-        xdZb0hYn+j6wWlzeNYfNgdVj0otDLB73u48zeXzeJBfAHKVnU5RfWpKqkJFfXGKrFG1oYaRn
-        aGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8evTYraCo1wVsw53MzYwHuDoYuTkkBAw
-        kXgxs5u5i5GLQ0hgKaPE6ls7gBwOoISMxPH1ZRA1whJ/rnWxQdS8ZpSY+esFC0hCWMBKYtuO
-        zWC2iICGxNKNK1hAipgFGhkl+vdsZILouMwocWXCTFaQKjagjontqxhBbF4BO4k3Gw6zgdgs
-        AqoSPQ23weKiAhESh3fMgqoRlDg58wnYBk4BV4lPk4+B2cwC6hJ/5l1ihrDFJW49mc8EYctL
-        bH87h3kCo9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHRtO3Y
-        zy07GLveBR9iFOBgVOLhPfBPLk6INbGsuDL3EKMEB7OSCO/JGbJxQrwpiZVVqUX58UWlOanF
-        hxhNgZ6byCwlmpwPjPS8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TByc
-        Ug2MOv6dlXfV//hMW1780bT8icyM/Uax858IyVzVUxHsvFPyZ370onLmHUpOnrp551Pm5NaV
-        /RQQ+rTx4/ENm1bMW+arXffx4YuignKbNtsTCotULp0yNrZ9MvHKRdNTlfafY/vjV7zY6pZ7
-        51XIRMaUMwz585XyFZna2517TmXckPUQOtvh7DZZiaU4I9FQi7moOBEAQbOt4LwCAAA=
-X-CMS-MailID: 20200115161014eucas1p12af23923229bcc615b0c24da8af3e01d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200101182632eucas1p27d81f37ef59ae274ac54316823de212c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200101182632eucas1p27d81f37ef59ae274ac54316823de212c
-References: <1577900990-8588-1-git-send-email-Julia.Lawall@inria.fr>
-        <CGME20200101182632eucas1p27d81f37ef59ae274ac54316823de212c@eucas1p2.samsung.com>
-        <1577900990-8588-8-git-send-email-Julia.Lawall@inria.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+topology.c::get_group() relies on the assumption that non-NUMA domains do
+not partially overlap. Zeng Tao pointed out in [1] that such topology
+descriptions, while completely bogus, can end up being exposed to the
+scheduler.
 
-On 1/1/20 6:49 PM, Julia Lawall wrote:
-> Use resource_size rather than a verbose computation on
-> the end and start fields.
-> 
-> The semantic patch that makes this change is as follows:
-> (http://coccinelle.lip6.fr/)
-> 
-> <smpl>
-> @@ struct resource ptr; @@
-> - (ptr.end - ptr.start + 1)
-> + resource_size(&ptr)
-> </smpl>
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+In his example (8 CPUs, 2-node system), we end up with:
+  MC span for CPU3 == 3-7
+  MC span for CPU4 == 4-7
 
-Patch queued for v5.6 (with patch summary modified slightly to
-reflect that this a change for cg14fb fbdev driver), thanks.
+The first pass through get_group(3, sdd@MC) will result in the following
+sched_group list:
+
+  3 -> 4 -> 5 -> 6 -> 7
+  ^                  /
+   `----------------'
+
+And a later pass through get_group(4, sdd@MC) will "corrupt" that to:
+
+  3 -> 4 -> 5 -> 6 -> 7
+       ^             /
+	`-----------'
+
+which will completely break things like 'while (sg != sd->groups)' when
+using CPU3's base sched_domain.
+
+
+There already are some architecture-specific checks in place such as
+x86/kernel/smpboot.c::topology.sane(), but this is something we can detect
+in the core scheduler, so it seems worthwhile to do so.
+
+Warn and abort the construction of the sched domains if such a broken
+topology description is detected. Note that this is somewhat
+expensive (O(t.c²), 't' non-NUMA topology levels and 'c' CPUs) and could be
+gated under SCHED_DEBUG if deemed necessary.
+
+Testing
+=======
+
+Dietmar managed to reproduce this using the following qemu incantation:
+
+  $ qemu-system-aarch64 -kernel ./Image -hda ./qemu-image-aarch64.img \
+  -append 'root=/dev/vda console=ttyAMA0 loglevel=8 sched_debug' -smp \
+  cores=8 --nographic -m 512 -cpu cortex-a53 -machine virt -numa \
+  node,cpus=0-2,nodeid=0 -numa node,cpus=3-7,nodeid=1
+
+alongside the following drivers/base/arch_topology.c hack (AIUI wouldn't be
+needed if '-smp cores=X, sockets=Y' would work with qemu):
+
+8<---
+@@ -465,6 +465,9 @@ void update_siblings_masks(unsigned int cpuid)
+ 		if (cpuid_topo->package_id != cpu_topo->package_id)
+ 			continue;
+
++		if ((cpu < 4 && cpuid > 3) || (cpu > 3 && cpuid < 4))
++			continue;
++
+ 		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+ 		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
+
+8<---
+
+[1]: https://lkml.kernel.org/r/1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com
+
+Reported-by: Zeng Tao <prime.zeng@hisilicon.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+A "less intrusive" alternative is to assert the sd->groups list doesn't get
+re-written, which is a symptom of such bogus topologies. I've briefly
+tested this, you can have a look at it here:
+
+  http://www.linux-arm.org/git?p=linux-vs.git;a=commit;h=e0ead72137332cbd3d69c9055ab29e6ffae5b37b
+
+fetchable via:
+  git fetch git://linux-arm.org/linux-vs mainline/topology/non_numa_overlap_sg
+---
+ kernel/sched/topology.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 6ec1e595b1d4..dfb64c08a407 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1879,6 +1879,42 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
+ 	return sd;
+ }
  
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
++/*
++ * Ensure topology masks are sane, i.e. there are no conflicts (overlaps) for
++ * any two given CPUs at this (non-NUMA) topology level.
++ */
++static bool topology_span_sane(struct sched_domain_topology_level *tl,
++			      const struct cpumask *cpu_map, int cpu)
++{
++	int i;
++
++	/* NUMA levels are allowed to overlap */
++	if (tl->flags & SDTL_OVERLAP)
++		return true;
++
++	/*
++	 * Non-NUMA levels cannot partially overlap - they must be either
++	 * completely equal or completely disjoint. Otherwise we can end up
++	 * breaking the sched_group lists - i.e. a later get_group() pass
++	 * breaks the linking done for an earlier span.
++	 */
++	for_each_cpu(i, cpu_map) {
++		if (i == cpu)
++			continue;
++		/*
++		 * We should 'and' all those masks with 'cpu_map' to exactly
++		 * match the topology we're about to build, but that can only
++		 * remove CPUs, which only lessens our ability to detect
++		 * overlaps
++		 */
++		if (!cpumask_equal(tl->mask(cpu), tl->mask(i)) &&
++		    cpumask_intersects(tl->mask(cpu), tl->mask(i)))
++			return false;
++	}
++
++	return true;
++}
++
+ /*
+  * Find the sched_domain_topology_level where all CPU capacities are visible
+  * for all CPUs.
+@@ -1975,6 +2011,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 				has_asym = true;
+ 			}
+ 
++			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
++				goto error;
++
+ 			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
+ 
+ 			if (tl == sched_domain_topology)
+-- 
+2.24.0
 
-> ---
->  drivers/video/fbdev/cg14.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/cg14.c b/drivers/video/fbdev/cg14.c
-> index a620b51cf7d0..6a745eb46ca1 100644
-> --- a/drivers/video/fbdev/cg14.c
-> +++ b/drivers/video/fbdev/cg14.c
-> @@ -509,8 +509,7 @@ static int cg14_probe(struct platform_device *op)
->  	if (!par->regs || !par->clut || !par->cursor || !info->screen_base)
->  		goto out_unmap_regs;
->  
-> -	is_8mb = (((op->resource[1].end - op->resource[1].start) + 1) ==
-> -		  (8 * 1024 * 1024));
-> +	is_8mb = (resource_size(&op->resource[1]) == (8 * 1024 * 1024));
->  
->  	BUILD_BUG_ON(sizeof(par->mmap_map) != sizeof(__cg14_mmap_map));
->  		
-> 
-> 
