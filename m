@@ -2,72 +2,42 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB195C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7FDC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7772081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:40:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gmsbu6Vd"
+	by mail.kernel.org (Postfix) with ESMTP id 7611024684
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgAOWkK (ORCPT
+        id S1730688AbgAOWl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:40:10 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34837 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730731AbgAOWkJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:40:09 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so8883765pgk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 14:40:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7+991qKRW7+Cp2nAUlxdIP+8FrY+lRzQcWUE4ll7SL8=;
-        b=gmsbu6VdtO8WXYhDSl7m2DBkyM5HhoQ5h9q7SA8fwza11zM755bfT6hSX+FQp2e2qh
-         M18wFnaEP3Hp1RHMe1TTOR+fULRdd4YDglhfCNWrtpBiFlFGXu3n63vx1kijeaaCvMUd
-         DlDxkqae2jFUHlBmgNoqWDs+sJk1oEBnxUFhc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7+991qKRW7+Cp2nAUlxdIP+8FrY+lRzQcWUE4ll7SL8=;
-        b=W9qG7QAQfUSBvgQ3ShG0qJoMQ2CvpAK1xSudT1cgkWWHAI1VHOLmI/s/2IRydVZzkd
-         TleU6ft/TV8zk0pW9gVOO/TKcUms9wumhfI9TUmiw5r7ToGW81ZyKRZHEv/DNWZb9YnC
-         hCD0dsqsHEgOiz6VIbjT0XSyvEBxfGQlx8NExNE14YhS6hjlqSo/rbDTlb73Q2poPlgJ
-         pjuTG+6o7w/JbAgVdlbMZ2ZdPFRpgKGoiB/R9hgby97vdKlpHOIj3TjBqpgl5CE8cqTD
-         IU2yBg66yD6fw2mPaacvaeylo3x+a2utNx7YCd0E7I+MuC4nH7UUwmmKbJzjj59fCRiu
-         NUig==
-X-Gm-Message-State: APjAAAXb9Pn/7CiHWN1Hkd06ToV6iG8P15WnIXMgT1h+r7TVoIhAawa1
-        d6rhBoU9WLLBQrRQgahs4vPocleFej4=
-X-Google-Smtp-Source: APXvYqw4h1RqBVOxN7136Sg0fAX8qFQkFR3P4j+HhNfmt8PkQ7L447F+oJ5nY8Pyhtp0VWKgcJ3d2g==
-X-Received: by 2002:a63:4e0e:: with SMTP id c14mr35516627pgb.237.1579128007754;
-        Wed, 15 Jan 2020 14:40:07 -0800 (PST)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c18sm22625470pfr.40.2020.01.15.14.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 14:40:07 -0800 (PST)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, urezki@gmail.com
-Subject: [PATCH 2/2] rcuperf: Measure memory footprint during kfree_rcu() test (v4)
-Date:   Wed, 15 Jan 2020 17:40:01 -0500
-Message-Id: <20200115224001.244781-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-In-Reply-To: <20200115224001.244781-1-joel@joelfernandes.org>
-References: <20200115224001.244781-1-joel@joelfernandes.org>
+        Wed, 15 Jan 2020 17:41:28 -0500
+Received: from mga17.intel.com ([192.55.52.151]:21303 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729449AbgAOWl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:41:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 14:41:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="255196782"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2020 14:41:26 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id E2D9C17F; Thu, 16 Jan 2020 00:41:25 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/2] tty: baudrate: Synchronise baud_table[] and baud_bits[]
+Date:   Thu, 16 Jan 2020 00:41:23 +0200
+Message-Id: <20200115224124.74684-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,118 +45,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During changes to kfree_rcu() code, we often check the amount of free
-memory.  As an alternative to checking this manually, this commit adds a
-measurement in the test itself.  It measures four times during the test
-for available memory, digitally filters these measurements to produce a
-running average with a weight of 0.5, and compares this digitally
-filtered value with the amount of available memory at the beginning of
-the test.
+Synchronize baud rate tables baud_table and baud_bits with each other
+for better readability. This makes clear what is being used for SPARC.
+No functional change intended.
 
-We apply the digital filter only once we are more than 25% into the
-test. At the 25% mark, we just read available memory and don't apply any
-filtering. This prevents the first sample from skewing the results
-as we would not consider memory readings that were before memory was
-allocated.
-
-A sample run shows something like:
-
-Total time taken by all kfree'ers: 6369738407 ns, loops: 10000, batches: 764, memory footprint: 216MB
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v1->v2: Minor corrections
-v1->v3: Use long long to prevent 32-bit system's overflow
-	Handle case where some threads start later than others.
-	Start measuring only once 25% into the test. Slightly more accurate.
-v3->v4: Simplified test more. Using simple average.
+ drivers/tty/tty_baudrate.c | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
- kernel/rcu/rcuperf.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 1fd0cc72022e..c41f009acbbb 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -12,6 +12,7 @@
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/err.h>
-@@ -616,14 +617,17 @@ DEFINE_KFREE_OBJ(32); // goes on kmalloc-64 slab
- DEFINE_KFREE_OBJ(64); // goes on kmalloc-96 slab
- DEFINE_KFREE_OBJ(96); // goes on kmalloc-128 slab
+diff --git a/drivers/tty/tty_baudrate.c b/drivers/tty/tty_baudrate.c
+index f438eaa68246..eb6b07f079c8 100644
+--- a/drivers/tty/tty_baudrate.c
++++ b/drivers/tty/tty_baudrate.c
+@@ -17,8 +17,8 @@
+  * include/asm/termbits.h file.
+  */
+ static const speed_t baud_table[] = {
+-	0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400, 4800,
+-	9600, 19200, 38400, 57600, 115200, 230400, 460800,
++	0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400,
++	4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800,
+ #ifdef __sparc__
+ 	76800, 153600, 307200, 614400, 921600
+ #else
+@@ -27,22 +27,16 @@ static const speed_t baud_table[] = {
+ #endif
+ };
  
-+long long mem_begin;
-+
- static int
- kfree_perf_thread(void *arg)
- {
- 	int i, loop = 0;
- 	long me = (long)arg;
- 	void *alloc_ptr;
--
- 	u64 start_time, end_time;
-+	long mem_samples = 0;
-+	long long mem_during = 0;
+-#ifndef __sparc__
+ static const tcflag_t baud_bits[] = {
+-	B0, B50, B75, B110, B134, B150, B200, B300, B600,
+-	B1200, B1800, B2400, B4800, B9600, B19200, B38400,
+-	B57600, B115200, B230400, B460800, B500000, B576000,
+-	B921600, B1000000, B1152000, B1500000, B2000000, B2500000,
+-	B3000000, B3500000, B4000000
+-};
++	B0, B50, B75, B110, B134, B150, B200, B300, B600, B1200, B1800, B2400,
++	B4800, B9600, B19200, B38400, B57600, B115200, B230400, B460800,
++#ifdef __sparc__
++	B76800, B153600, B307200, B614400, B921600
+ #else
+-static const tcflag_t baud_bits[] = {
+-	B0, B50, B75, B110, B134, B150, B200, B300, B600,
+-	B1200, B1800, B2400, B4800, B9600, B19200, B38400,
+-	B57600, B115200, B230400, B460800, B76800, B153600,
+-	B307200, B614400, B921600
+-};
++	B500000, B576000, B921600, B1000000, B1152000, B1500000, B2000000,
++	B2500000, B3000000, B3500000, B4000000
+ #endif
++};
  
- 	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
- 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
-@@ -638,7 +642,17 @@ kfree_perf_thread(void *arg)
- 			b_rcu_gp_test_started = cur_ops->get_gp_seq();
- 	}
+ static int n_baud_table = ARRAY_SIZE(baud_table);
  
-+	// Prevent "% 0" error below.
-+	if (kfree_loops < 4)
-+		kfree_loops = 4;
-+
- 	do {
-+		// Start measuring only from when we are at least 25% into the test.
-+		if ((loop != 0) && (loop % (kfree_loops / 4) == 0)) {
-+			mem_during = mem_during + si_mem_available();
-+			mem_samples++;
-+		}
-+
- 		for (i = 0; i < kfree_alloc_num; i++) {
- 			int kfree_type = i % 4;
- 
-@@ -671,6 +685,8 @@ kfree_perf_thread(void *arg)
- 		cond_resched();
- 	} while (!torture_must_stop() && ++loop < kfree_loops);
- 
-+	mem_during = (mem_during / mem_samples);
-+
- 	if (atomic_inc_return(&n_kfree_perf_thread_ended) >= kfree_nrealthreads) {
- 		end_time = ktime_get_mono_fast_ns();
- 
-@@ -679,9 +695,13 @@ kfree_perf_thread(void *arg)
- 		else
- 			b_rcu_gp_test_finished = cur_ops->get_gp_seq();
- 
--		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld\n",
-+		// The "memory footprint" field represents how much in-flight
-+		// memory is allocated during the test and waiting to be freed.
-+		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld, memory footprint: %lldMB\n",
- 		       (unsigned long long)(end_time - start_time), kfree_loops,
--		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started));
-+		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started),
-+		       (mem_begin - mem_during) >> (20 - PAGE_SHIFT));
-+
- 		if (shutdown) {
- 			smp_mb(); /* Assign before wake. */
- 			wake_up(&shutdown_wq);
-@@ -753,6 +773,8 @@ kfree_perf_init(void)
- 		goto unwind;
- 	}
- 
-+	mem_begin = si_mem_available();
-+
- 	for (i = 0; i < kfree_nrealthreads; i++) {
- 		firsterr = torture_create_kthread(kfree_perf_thread, (void *)i,
- 						  kfree_reader_tasks[i]);
 -- 
-2.25.0.rc1.283.g88dfdc4193-goog
+2.24.1
+
