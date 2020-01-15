@@ -2,125 +2,67 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF701C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C36C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B4F214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B56214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgAORDq (ORCPT
+        id S1729014AbgAORHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:03:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40130 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgAORDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:03:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 42056AD88;
-        Wed, 15 Jan 2020 17:03:44 +0000 (UTC)
-Subject: Re: reiserfs broke between 4.9.205 and 4.9.208
-To:     Michael Brunnbauer <brunni@netestate.de>, Jan Kara <jack@suse.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org
-References: <20200108193634.GA17390@netestate.de>
- <481c595b-46c9-0b4d-c618-a998ab6247c6@infradead.org>
- <20200109121216.GC22232@quack2.suse.cz> <20200109123041.GA14075@netestate.de>
- <20200114202112.GA23020@netestate.de>
-From:   Jeff Mahoney <jeffm@suse.com>
-Organization: SUSE Labs Data & Performance
-Message-ID: <67c8665a-25a4-72d1-7632-d2b84eb362fe@suse.com>
-Date:   Wed, 15 Jan 2020 12:03:40 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Wed, 15 Jan 2020 12:07:13 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:38822 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728928AbgAORHM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:07:12 -0500
+X-Greylist: delayed 2606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 12:07:11 EST
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00FGN3te021572;
+        Wed, 15 Jan 2020 18:23:03 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id DB60D60328; Wed, 15 Jan 2020 18:23:02 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/4] spi: npcm-pspi: improve preformance modify reset and fix issue
+Date:   Wed, 15 Jan 2020 18:22:57 +0200
+Message-Id: <20200115162301.235926-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20200114202112.GA23020@netestate.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="TVCnj3kdLxRKQjDQIGSbf14fIjvdWEvCh"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TVCnj3kdLxRKQjDQIGSbf14fIjvdWEvCh
-Content-Type: multipart/mixed; boundary="SDcbxPRT9QOmZtzMvAyqygIKNOrkbOzms"
+This patch set modify Perphiral SPI NPCM driver as follow:
+	
+	- Improve transfer performance.
+	- Fix 16 bit send and receive support.
+	- Modify dt-binding documentation to support reset controller driver.
+	- Modify reset support to use reset controller driver
+	  NPCM reset driver: https://lkml.org/lkml/2019/11/7/429.
 
---SDcbxPRT9QOmZtzMvAyqygIKNOrkbOzms
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Tomer Maimon (4):
+  spi: npcm-pspi: fix 16 bit send and receive support
+  spi: npcm-pspi: improve spi transfer performance
+  dt-binding: spi: add NPCM PSPI reset binding
+  spi: npcm-pspi: modify reset support
 
-Hi Michael -
+ .../bindings/spi/nuvoton,npcm-pspi.txt        | 12 +---
+ drivers/spi/spi-npcm-pspi.c                   | 57 +++++++++----------
+ 2 files changed, 29 insertions(+), 40 deletions(-)
 
-It looks like something must've gone sideways with the backport since
-5.5-rc6 works as expected.  I'll dig into it a bit.
+-- 
+2.22.0
 
--Jeff
-
-On 1/14/20 3:21 PM, Michael Brunnbauer wrote:
->=20
-> hi all,
->=20
-> is this been looked into? Do you need more information?
->=20
-> Regards,
->=20
-> Michael Brunnbauer
->=20
-> On Thu, Jan 09, 2020 at 01:30:41PM +0100, Michael Brunnbauer wrote:
->>
->> Hello Jan,
->>
->> On Thu, Jan 09, 2020 at 01:12:16PM +0100, Jan Kara wrote:
->>> Also Michael, I'd like to clarify: Does 'cp -a' return any error or i=
-s it
->>> just that the kernel is spewing these annoying warnings?  Because fro=
-m the
->>> code reading I'd think that it is only the kernel spewing errors but
->>> userspace should be fine...
->>
->> Yes, 'cp -a' returns errors and files are owned by root instead of the=
- correct
->> user after copying as root.
->>
->> Regards,
->>
->> Michael Brunnbauer
-
-
---=20
-Jeff Mahoney
-Director, SUSE Labs Data & Performance
-
-
---SDcbxPRT9QOmZtzMvAyqygIKNOrkbOzms--
-
---TVCnj3kdLxRKQjDQIGSbf14fIjvdWEvCh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE8wzgbmZ74SnKPwtDHntLYyF55bIFAl4fRewACgkQHntLYyF5
-5bJ1ehAAsAURu9jCm+igaHx5Nz7b/mxRoA3LyZAieAoXBO/Hl1C6NgjR8OCXcNDD
-UfXqDAjSJAt63HBpxeu1BEYkNh9BP1Q2sW5eoRhUDC3N5LTSfJnpd5EDl5rtQ28g
-9HRv1zrTKsI6+MMheTBFstiZY2pZbqzQV00ZBoFUm00SoUt86F5NwbwAI6ru3mwT
-z7F4R/I9lwtpctxP6h8+dDHMmmufGDV4gdyyEUKafWsfpwqupCxMytbcyjN2RHxR
-YG+DOsGVpyuESdY9kfvqpWoDJRQE8ea/SnI3TRiasHv8yg1m+DQndAxJ2Y25JrR7
-0XlrgZf9FApmHdYmkGhiXZhYuFU57ppRoCwA62HPS/asFlvHxEzE0PCLhHFh5XcH
-yp1S8pTt/QJlCFL+99Z9ji8YOI5yPz2myVQAbMCF+4iC3EgAhf4UCI0vUa+FNF2C
-3qJ63UQLnZf9NpiCb+R02GP4EwGGUo8lOhIPNsNFE51qULOmyjFTOD/PpAiR4ShZ
-cwvi1kLw/cyc2mbfWfVlG6Z9DaRpbU/qfPzc1H+zVF4R1mdJqHyAZYZMwEcM+zLu
-Wn7is8p/tPCldnoBmqh4ssugB2AaibFu7Y4mRWkx75VSPaXoO+IbY0emQdhMTbJd
-1jBcDCBOQt12X11Z0KHg8BaPeUjNWfIgWU3Br4pBXoqtB8yAGi8=
-=vwMe
------END PGP SIGNATURE-----
-
---TVCnj3kdLxRKQjDQIGSbf14fIjvdWEvCh--
