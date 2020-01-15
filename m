@@ -2,131 +2,105 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBEBC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1C8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435842467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="ipGVRDct";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ytbNs62k"
+	by mail.kernel.org (Postfix) with ESMTP id 302F9214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAOEpM (ORCPT
+        id S1729012AbgAOEwf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 23:45:12 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41009 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728880AbgAOEpM (ORCPT
+        Tue, 14 Jan 2020 23:52:35 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:35443 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728890AbgAOEwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 23:45:12 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8054B2213D;
-        Tue, 14 Jan 2020 23:45:11 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 14 Jan 2020 23:45:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=z
-        /38VYvRZwGKy73EQYi7l9oGVAzE/Cqnj0myZCLtIL8=; b=ipGVRDctsb791mIM/
-        SIPvMN6ivQCuh0upYZ8v5voq3XGScxloGJz5xyEURlwkTCfvCY19mus35Od65pqz
-        kosDz64id9ShD3/88b6/skfjDCguomNPaHwele15EBHinl5r6wlHi5Cwaa73J+eW
-        2JhsYxD7MqYssFKpyH2wvP6nHlytsDeW5uNStGPXBiHz2wXLQ/kxiXG9mH/GJnzp
-        65mxj/RQI9zZF0aX5GFBy5vXJiXWp1zmLiKtuf7tfrJgx9OXr9Ffna5xK/dksN6X
-        RCNoj5dcsmlOgwALmna6ID7pOzr4Uj89h2rNeHcojQk5neT5ojBSnxDRMh5wJRoc
-        POugw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=z/38VYvRZwGKy73EQYi7l9oGVAzE/Cqnj0myZCLtI
-        L8=; b=ytbNs62kas1GkJtFVaKroMht2Mk/ZcE4ztbfiXXNeXbStj6U+BsWfZqqD
-        RAdcZ/9IGDyxJzVql4LOYIPfAGMaHS4Rhn0wv8ynyrTYG2pzZSSYL7LaGqYer2/0
-        6AxMlaBaVM4r7CcVqtE8B2zU8esUjyUootCVTKaHhFSke52UjGGuYSGEWxfBx5xJ
-        2O0SWpGza1rv6t4m7tg/udTqfsWZkPK67K0Wpe5b5ecyHa7kY5PtaxPGFq0xCgvh
-        qwQIqzgEzkZAzMXyknuAKZvd9G5SQ39foZMV8XO9LRVq4FV8ZoZ58kG+zEUIcIrq
-        ZqFRkEpn7HgKSE0/iqNl7qXNzQMVw==
-X-ME-Sender: <xms:15geXqun7_lr4Sd2qYOTAryyMnAPoGIB_9yF9uZ-JnWRm_4LXgYOSw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdejfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:15geXlFVLLc6X3TeGn0pLD3bzrNBGU7iHHSIRRKmhsEsAVhdLbCw7w>
-    <xmx:15geXk8MxRfCVpZo4aYvRtEtipIAxmdF-A6rN2iNHi0VSPmvhit-rQ>
-    <xmx:15geXjLEG-qPMqqW5FJe28f-EyWByMEw_hrT3wEiQxIcHdtpqgLKJQ>
-    <xmx:15geXj0z9iwZrmrduFkH-cr3ljwa8FPS0gidyvL82jFaL14tjieGdQ>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC5F08005A;
-        Tue, 14 Jan 2020 23:45:10 -0500 (EST)
-Subject: Re: [PATCH 3/3] Input: axp20x-pek - Enable wakeup for all AXP
- variants
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-References: <20200113032032.38709-1-samuel@sholland.org>
- <20200113032032.38709-3-samuel@sholland.org> <20200113212654.GA47797@dtor-ws>
- <df608e7c-a0bd-5077-c8e4-db661353e076@redhat.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <5fe8673b-99d7-c8ca-8457-503cb7f8adb3@sholland.org>
-Date:   Tue, 14 Jan 2020 22:45:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 23:52:35 -0500
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 00F4pebM077255
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 15 Jan 2020 12:51:40 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from lenovo (10.0.74.130) by BJMBX01.spreadtrum.com (10.0.64.7) with
+ Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 15 Jan 2020 12:52:03 +0800
+Date:   Wed, 15 Jan 2020 12:51:55 +0800
+From:   Orson Zhai <orson.zhai@spreadtrum.com>
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     Rob Herring <robh@kernel.org>, Orson Zhai <orson.zhai@unisoc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <baolin.wang@unisoc.com>, <kevin.tang@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        <liangcai.fan@unisoc.com>, <orsonzhai@gmail.com>
+Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon
+ reference
+Message-ID: <20200115045155.GE19966@lenovo>
+References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
+ <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
+ <20191213024935.GD9271@lenovo>
+ <20191213082336.GD3468@dell>
 MIME-Version: 1.0
-In-Reply-To: <df608e7c-a0bd-5077-c8e4-db661353e076@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191213082336.GD3468@dell>
+X-Originating-IP: [10.0.74.130]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL: SHSQR01.spreadtrum.com 00F4pebM077255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Lee,
 
-On 1/14/20 3:07 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 13-01-2020 22:26, Dmitry Torokhov wrote:
->> Hi Samuel,
->>
->> On Sun, Jan 12, 2020 at 09:20:32PM -0600, Samuel Holland wrote:
->>> There are many devices, including several mobile battery-powered
->>> devices, using other AXP variants as their PMIC. Enable them to use
->>> the power key as a wakeup source.
->>
->> Are these X86 or ARM devices? If anything, I'd prefer individual drivers
->> not declare themselves as wakeup sources unconditionally. With devic
->> etree we have standard "wakeup-source" property, but I am not quite sure
->> what's the latest on X86...
+Don't forget to apply this patch please :)
 
-Currently wakeup is unconditional. After patch 2, even though it's enabled by
-default, the wakeup source can be disabled by userspace:
+Feel free to ask me if any problem.
 
--		enable_irq_wake(axp20x_pek->irq_dbr);
-+		device_init_wakeup(&pdev->dev, true);
+Best,
+Orson
 
-This is a platform driver for an MFD cell. It does not have its own device tree
-node.
-
-(I see a lot of drivers in drivers/input/misc that generate KEY_POWER, and zero
-of them reference "wakeup-source". It's a driver for a power button. Being a
-wakeup source is half the purpose of its existence.)
-
-> The AXP288 variant is X86, the other PMIC models are for ARM
-> (to the best of my knowledge).
-
-That's also my understanding.
-
-> Regards,
-> 
-> Hans
-
-Regards,
-Samuel
+On Fri, Dec 13, 2019 at 08:23:36AM +0000, Lee Jones wrote:
+> On Fri, 13 Dec 2019, Orson Zhai wrote:
+>
+> > Hi Lee and Rob,
+> >
+> > On Wed, Dec 11, 2019 at 02:55:39PM +0100, Arnd Bergmann wrote:
+> > > On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wrote:
+> > > >
+> > > > There are a lot of similar global registers being used across multiple SoCs
+> > > > from Unisoc. But most of these registers are assigned with different offset
+> > > > for different SoCs. It is hard to handle all of them in an all-in-one
+> > > > kernel image.
+> > > >
+> > > > Add a helper function to get regmap with arguments where we could put some
+> > > > extra information such as the offset value.
+> > > >
+> > > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> > > > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+> > >
+> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Does this patch look good to be applied?
+> >
+> > Or if any comments please feel free to send to me.
+>
+> If it looks good to Arnd, it looks good to me.
+>
+> I have quite a number of reviews to get through first though, please
+> bear with me and resist the urge to nag.
+>
+> --
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
