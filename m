@@ -2,112 +2,140 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A46C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472A7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861402073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230CC2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgAOO3e (ORCPT
+        id S1729015AbgAOOal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:29:34 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:27186 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbgAOO3e (ORCPT
+        Wed, 15 Jan 2020 09:30:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65264 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726472AbgAOOal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:29:34 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47yV8B237XzQlFL;
-        Wed, 15 Jan 2020 15:29:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id o4BxKWcuHAkh; Wed, 15 Jan 2020 15:29:23 +0100 (CET)
-Date:   Thu, 16 Jan 2020 01:29:06 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200115142906.saagd2lse7i7njux@yavin>
-References: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200108031314.GE8904@ZenIV.linux.org.uk>
- <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
- <20200110210719.ktg3l2kwjrdutlh6@yavin>
- <20200114045733.GW8904@ZenIV.linux.org.uk>
- <20200114200150.ryld4npoblns2ybe@yavin>
- <20200115142517.GI8904@ZenIV.linux.org.uk>
+        Wed, 15 Jan 2020 09:30:41 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FER4Sx110917;
+        Wed, 15 Jan 2020 09:30:05 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhgs6npvt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 09:30:05 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FESoBW014686;
+        Wed, 15 Jan 2020 14:30:05 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04wdc.us.ibm.com with ESMTP id 2xf751x35c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 14:30:05 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FEU4uB43647418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 14:30:04 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECC0B7805F;
+        Wed, 15 Jan 2020 14:30:03 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3620378060;
+        Wed, 15 Jan 2020 14:30:03 +0000 (GMT)
+Received: from oc8380061452.ibm.com (unknown [9.80.230.130])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Jan 2020 14:30:02 +0000 (GMT)
+Subject: Re: [PATCH] Fix display of Maximum Memory
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Gustavo Walbon <gwalbon@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>
+References: <55f25626-20ca-0acb-3571-ff636ca4632c@linux.ibm.com>
+ <41380afd-05f5-f36f-c857-041243c73ee3@c-s.fr>
+From:   Michael Bringmann <mwb@linux.ibm.com>
+Openpgp: preference=signencrypt
+Organization: IBM Linux Technology Center
+Message-ID: <eb6c4171-09b3-b8f0-6219-38757da6fc3b@linux.ibm.com>
+Date:   Wed, 15 Jan 2020 08:30:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jicj4wr2fyynqqnx"
-Content-Disposition: inline
-In-Reply-To: <20200115142517.GI8904@ZenIV.linux.org.uk>
+In-Reply-To: <41380afd-05f5-f36f-c857-041243c73ee3@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 impostorscore=0 spamscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001150117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/14/20 11:41 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 14/01/2020 à 22:07, Michael Bringmann a écrit :
+>> Correct overflow problem in calculation+display of Maximum Memory
+>> value to syscfg where 32bits is insufficient.
+>>
+>> Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
+>> ---
+>>   arch/powerpc/platforms/pseries/lparcfg.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
+>> index 4ee2594..183aeb7 100644
+>> --- a/arch/powerpc/platforms/pseries/lparcfg.c
+>> +++ b/arch/powerpc/platforms/pseries/lparcfg.c
+>> @@ -435,12 +435,12 @@ static void parse_em_data(struct seq_file *m)
+>>
+>>   static void maxmem_data(struct seq_file *m)
+>>   {
+>> -       unsigned long maxmem = 0;
+>> +       unsigned long long maxmem = 0;
+> 
+> What about using u64 instead, for readability ?
 
---jicj4wr2fyynqqnx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay.
+> 
+>>
+>> -       maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
+>> -       maxmem += hugetlb_total_pages() * PAGE_SIZE;
+>> +       maxmem += (unsigned long long)drmem_info->n_lmbs * (unsigned long long)drmem_info->lmb_size;
+> 
+> This line is likely too long. You only need to cast one of the two operants to force a 64 bits multiply. And using u64 would shorten the line.
+> 
+> Can both multiplications overflow ?
 
-On 2020-01-15, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Wed, Jan 15, 2020 at 07:01:50AM +1100, Aleksa Sarai wrote:
->=20
-> > Yes, there were two patches I sent a while ago[1]. I can re-send them if
-> > you like. The second patch switches open_how->mode to a u64, but I'm
-> > still on the fence about whether that makes sense to do...
->=20
-> IMO plain __u64 is better than games with __aligned_u64 - all sizes are
-> fixed, so...
->=20
-> > [1]: https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.=
-com/
->=20
-> Do you want that series folded into "open: introduce openat2(2) syscall"
-> and "selftests: add openat2(2) selftests" or would you rather have them
-> appended at the end of the series.  Personally I'd go for "fold them in"
-> if it had been about my code, but it's really up to you.
+Yes.
 
-"fold them in" would probably be better to avoid making the mainline
-history confusing afterwards. Thanks.
+> 
+> Christophe
+> 
+>> +       maxmem += (unsigned long long)hugetlb_total_pages() * (unsigned long long)PAGE_SIZE;
+>>
+>> -       seq_printf(m, "MaxMem=%ld\n", maxmem);
+>> +       seq_printf(m, "MaxMem=%llu\n", maxmem);
+>>   }
+>>
+>>   static int pseries_lparcfg_data(struct seq_file *m, void *v)
+>>
+> 
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---jicj4wr2fyynqqnx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXh8hrwAKCRCdlLljIbnQ
-Eg7QAP91xggZVGKm7aFrAM05CS20D+mj/0AuHhgnu+nz3X+6qwD9FPEQyNWth7f6
-RpocX3ojVl40GZTohTHSOJag04kTbAQ=
-=WA+D
------END PGP SIGNATURE-----
-
---jicj4wr2fyynqqnx--
+Thanks.
+-- 
+Michael W. Bringmann
+Linux Technology Center
+IBM Corporation
+Tie-Line  363-5196
+External: (512) 286-5196
+Cell:       (512) 466-0650
+mwb@linux.ibm.com
