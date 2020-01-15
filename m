@@ -2,97 +2,106 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EB1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06C7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CED214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D7D2072B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+Pzcz1+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxntD6Xs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgAOPou (ORCPT
+        id S1728912AbgAOPr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:44:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36910 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOPou (ORCPT
+        Wed, 15 Jan 2020 10:47:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43836 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:44:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so19067136ljg.4;
-        Wed, 15 Jan 2020 07:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
-        b=n+Pzcz1+IOcutRo3c4azf501upOdSlYmce/1ymEaSU6taxHi624WfiWl9E/PkPeU+W
-         zmoCV4mhSe/ekbBTOH9rK0ZM6b9XJX3eVDFdg+Ib26+TKokfrxEk7nwKpqs1Vh/p9lV2
-         zkfUyZfCadMpObcqAzsGxLv5D6KHqplT+ajemtqeJm0NFLAKjAsOfBTna07EQGagbaks
-         7k7sN0jXSpeS6WXYZ+hSlGl4ZcnQ8+cJRknLwrE/fUyhbFZuNRTlfYkRlC26VFWGooM7
-         yO/2VPpkq7lN9T6KED6EN9smTRVKCdSFW9sGphDnN4R8oSFXQS5n7Ljxist1ok/Lzam7
-         kQ8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
-        b=XDKMSVbsXkUTudcl60Yvu7vj2rvHuHFlj4LZm9CQMk4dFAoOhBITzEFtnxRXBWc7iL
-         /MEZktUNQy2VoEECSFgEWzbZx8eqNMfhO8bilwktz8HFpK8tzJxseiieKYPgxgQ2UUdu
-         8yasJcQS4GEJmxFm2ZgYfLGSElRtdpfRW62hyoxExfVKLXTAMD9FMt62vknwIDCTRFFB
-         nu9fRRbDE1KI+5DkpG6/n8vC10hPY2IS6wPT3LukMiKfAnqLEn57hMMzhjnURSy+7xuq
-         GDWctsO6YOpDKBDv4PonGHmuK9961xuRidLremZoo+hQiePNeCY1mQGFQtGgeutc/INQ
-         CIPA==
-X-Gm-Message-State: APjAAAX8p9Ohonb3yHYwyoTOpzfsl2UbAAJk59jCxUibiOAewbVi92oC
-        cF8DFxVydfdqEB4ob11U/wYAPYK+Ospr022nVLQ=
-X-Google-Smtp-Source: APXvYqySLu2yqOOpQ0eFNaIf6kY20xHX68+A3EN+yMINPWehdz7Nm1bbK7aAWTU/lZY/OfC9pZD+rINYCV6EB0c4GDk=
-X-Received: by 2002:a2e:8197:: with SMTP id e23mr2177769ljg.250.1579103088404;
- Wed, 15 Jan 2020 07:44:48 -0800 (PST)
+        Wed, 15 Jan 2020 10:47:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579103275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=arRXQ/teKt7R05GOntW6gyZaqxy+Pia//dbokI8QBCI=;
+        b=BxntD6Xs8XLJn0U4CwxTvNI85jtgZ1k7tw+y0edrFKUWG+xFkAGFga8jAq/72kdyzHlQwM
+        5+aVq2e5VW1ysJQt8T31b69FXApJY0ypZ2rGiC7a5J5fuYV/keDgYn7ssmaC0+9qPKpKQX
+        nbfUru0LQxOXHup/W9VE1Qh8+YEA0Mk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-UM_qjk9iMqyjd3A6rIoaTQ-1; Wed, 15 Jan 2020 10:47:52 -0500
+X-MC-Unique: UM_qjk9iMqyjd3A6rIoaTQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46AFA113E72C;
+        Wed, 15 Jan 2020 15:47:51 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FBB11001B03;
+        Wed, 15 Jan 2020 15:47:50 +0000 (UTC)
+Subject: Re: [PATCH] locking/rwsem: Fix kernel crash when spinning on
+ RWSEM_OWNER_UNKNOWN
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20200114190303.5778-1-longman@redhat.com>
+ <20200115065055.GA21219@lst.de>
+ <021830af-fd89-50e5-ad26-6061e5abdce1@redhat.com>
+ <45b976af3cf74555af7214993e7d614b@AcuMS.aculab.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <4ac00b33-5397-3c69-6cba-cf3d9d375ea9@redhat.com>
+Date:   Wed, 15 Jan 2020 10:47:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 15 Jan 2020 12:44:35 -0300
-Message-ID: <CAOMZO5C7wKF8ojMBPuQZYtBK8W+vwXe8PaL5n-Mo74gF1HD6Tg@mail.gmail.com>
-Subject: Re: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        marcin.juszkiewicz@linaro.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <45b976af3cf74555af7214993e7d614b@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:43 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+On 1/15/20 10:16 AM, David Laight wrote:
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> On Behalf Of Waiman Long
+>> Sent: 15 January 2020 14:27
+> ...
+>>>>  		if ((wstate == WRITER_HANDOFF) &&
+>>>> -		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
+>>>> +		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
+>>> Nit: the inner braces in the first half of the conditional aren't required
+>>> either.
+>> I typically over-parenthesize the code to make it easier to read as we
+>> don't need to think too much about operator precedence to see if it is
+>> doing the right thing.
+> The problem is it actually makes it harder to read.
+> It is difficult for the 'mark 1 eyeball' to follow lots of sets of brackets.
+> Since == (etc) are the lowest priority operators (apart from ?:) they
+> never need ().
 >
-> Add the pinctrl driver support for i.MX8MP.
+> 	David
 >
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+>
+It depends. I find it hard to read an expression with "&" and "&&"
+without parentheses. Anyway, I will admit that the above code is
+inconsistent in term of how parentheses are used. So I will change that.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Cheers,
+Longman
+
