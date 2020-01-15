@@ -2,178 +2,191 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805DAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A449C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500E12467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="IieO7eXK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CnqsbRPU"
+	by mail.kernel.org (Postfix) with ESMTP id 067CE222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579059667;
+	bh=KAkmCS667bnbpRuzvQBfuZtFcFkzo9lAZUmxhvk7WiM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zkvQITUWlBTsyFWZmmQ0zE0VqRr+x3oUzNgavxAhUy/1SpGL8xVALrVKncB0tWlQa
+	 qq822n2XUZ4KlATrIFURuVs7DC5ydFivKwI6Ykc1QGn3huw1dPnwv8OO9QK/L2/wm6
+	 o9F2Pc2EjMLpGjZVP6fuCaOp46lJfNQ/L92Oq+OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgAODlB (ORCPT
+        id S1729142AbgAODlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:41:01 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38093 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728879AbgAODkw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:40:52 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 422AD22139;
-        Tue, 14 Jan 2020 22:40:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 14 Jan 2020 22:40:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=Zmlb3PnzNuoK+
-        2LPTUjNJAzFl9+II7eFSLO3XnnS27A=; b=IieO7eXKZqxx0fy3qymRj23Uteh7L
-        iDCLZQ8kHa9H0AQmVQTQ/gWT4Do7lZ4CUD6EBChy3hlvq93hpiNjymAGli1ce4GI
-        863oISQYFjCuPuhOrgClHsOrF8LI+faJPa+Y8H1nphH3WZ/BOeOZ5iCbXFOL1MQD
-        NAWJwBfaLRMwdqbK0SZdaFpu1nh3XfItqPi5J9BTZ5wYXUuG9Q5WLptZer3Cpape
-        +HaYz+/mRdosD844XSrzEZXeNy0HFZqNSDHzDTeM5TXvA8XCO69YmNrniw4WZqE2
-        /P8l/jTPLSlGB8KemIk7a0syfzMoT2yi0DfxQQSJZafWt1YBiJ4PnYGeA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=Zmlb3PnzNuoK+2LPTUjNJAzFl9+II7eFSLO3XnnS27A=; b=CnqsbRPU
-        mazQZmpw5MqgXc8McNp2AqNohxEDbY9AOy3AZIC+f0RmGygTUR/sb38lT8JHxClj
-        BVPk6CbXM8TlvDCSIq3lD98on4A2Ulfmk2RZ5I6GvvjY6BKUXyTosP+SxtUzvKHi
-        ejVohwqkPNvGqFrg0964OTs0PzEkdrMv3OUOUjckJmfgz6FwYwBCv0XGJ9E/rHa8
-        COAwJX8z6/LqOoEbi3L2CoGNH1AMpIWbce6WIns5DA+BWoSEloym0bmWLXtx2etC
-        OPGNaUIJGvBGmzCQgvrOAb+wJ1jBeJx7AeetDfKndZZWTRjaB+ZAQnQT4Y5IoB0E
-        /7qQImf/d74pnw==
-X-ME-Sender: <xms:w4keXkRxoafwSxP0KLNQbxr895fzcuxsulD7bKIjp0deDVXsW7MVBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdeitdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
-    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:w4keXgp5oNEsZvfI0_dYYqpizp8D-SYmdM9G62VpqQdlaiLGOoSfQg>
-    <xmx:w4keXiMRwZS8vk1iKI5RO-XUA6G8H08X4Yqp9ltsRcjexvIymGxSNQ>
-    <xmx:w4keXtDGIh0WBqdLAAXaapzovdoy-Q8oH_RFnWxPsvsdGpkZcl6WdQ>
-    <xmx:w4keXoERIz429ytckg4sUwSMe6cjSkeXfrKHSdIg4qPcP9KCGCemmA>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CA4C530607B0;
-        Tue, 14 Jan 2020 22:40:50 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Sebastian Reichel <sre@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v4 4/4] power: supply: axp20x_usb_power: Only poll while offline
-Date:   Tue, 14 Jan 2020 21:40:48 -0600
-Message-Id: <20200115034048.24901-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200115034048.24901-1-samuel@sholland.org>
-References: <20200115034048.24901-1-samuel@sholland.org>
+        Tue, 14 Jan 2020 22:41:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729125AbgAODlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:41:00 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44F8E222C3;
+        Wed, 15 Jan 2020 03:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579059660;
+        bh=KAkmCS667bnbpRuzvQBfuZtFcFkzo9lAZUmxhvk7WiM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jOgpA/UcdJE8WhRtBu0gzLdyVcHbawaWSjrpqqpX7vaUingxLfL5cf45UJo94R10W
+         UaEtunMesb6xqjou2SCSHUHVkNkE9iZG5kD8JbKERjSbUcGn6cfC6D9p0/WUpP5Khp
+         vtWLBLkvhETBvehPdm9DEb/lfv1/v96U4W3vD7OM=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH -tip V3 2/2] kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+Date:   Wed, 15 Jan 2020 12:40:56 +0900
+Message-Id: <157905965593.2268.2090246980704671820.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157905963533.2268.4672153983131918123.stgit@devnote2>
+References: <157905963533.2268.4672153983131918123.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Investigation on the AXP803 shows that VBUS_PLUGIN/VBUS_REMOVAL IRQs are
-triggered on the rising/falling edge of AXP20X_PWR_STATUS_VBUS_USED. The
-reason IRQs do not arrive while N_VBUSEN/DRIVEVBUS is high is because
-AXP20X_PWR_STATUS_VBUS_USED also never goes high.
+Current kprobes uses RCU traversal APIs on kprobe_tables
+even if it is safe because kprobe_mutex is locked.
 
-This also means that if VBUS is online, a VBUS_REMOVAL IRQ is received
-immediately on setting N_VBUSEN/DRIVEVBUS high (and VBUS_PLUGIN shortly
-after it is set back low). This was also verified to be the case when
-manually offlining VBUS through AXP20X_VBUS_PATH_SELECT.
+Make those traversals to non-RCU APIs where the kprobe_mutex
+is locked.
 
-As long as VBUS is online, a present->absent transition necessarily
-implies an online->offline transition. Since will cause an IRQ, there is
-no need to poll while VBUS is online.
-
-To ensure the driver's view of VBUS online status remains accurate,
-unconditionally poll once when receiving an IRQ and when resuming. If
-VBUS is still online at that time, polling will cease until the next
-VBUS_REMOVAL IRQ.
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- drivers/power/supply/axp20x_usb_power.c | 30 +++++++++++++++++--------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ kernel/kprobes.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 1732304bc96e..4fde24b5f35a 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -68,16 +68,32 @@ struct axp20x_usb_power {
- 	struct iio_channel *vbus_i;
- 	struct delayed_work vbus_detect;
- 	unsigned int old_status;
-+	unsigned int online;
- 	unsigned int num_irqs;
- 	unsigned int irqs[];
- };
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bd484392d789..38d9a5d7c8a4 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -46,6 +46,11 @@
  
-+static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
-+{
-+	/*
-+	 * Polling is only necessary while VBUS is offline. While online, a
-+	 * present->absent transition implies an online->offline transition
-+	 * and will triger the VBUS_REMOVAL IRQ.
-+	 */
-+	if (power->axp20x_id >= AXP221_ID && !power->online)
-+		return true;
-+
-+	return false;
-+}
-+
- static irqreturn_t axp20x_usb_power_irq(int irq, void *devid)
+ 
+ static int kprobes_initialized;
++/* kprobe_table can be accessed by
++ * - Normal hlist traversal and RCU add/del under kprobe_mutex is held.
++ * Or
++ * - RCU hlist traversal under disabling preempt (breakpoint handlers)
++ */
+ static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+ static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
+ 
+@@ -850,7 +855,7 @@ static void optimize_all_kprobes(void)
+ 	kprobes_allow_optimization = true;
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist)
++		hlist_for_each_entry(p, head, hlist)
+ 			if (!kprobe_disabled(p))
+ 				optimize_kprobe(p);
+ 	}
+@@ -877,7 +882,7 @@ static void unoptimize_all_kprobes(void)
+ 	kprobes_allow_optimization = false;
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!kprobe_disabled(p))
+ 				unoptimize_kprobe(p, false);
+ 		}
+@@ -1500,12 +1505,14 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
  {
- 	struct axp20x_usb_power *power = devid;
+ 	struct kprobe *ap, *list_p;
  
- 	power_supply_changed(power->supply);
- 
-+	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
++	lockdep_assert_held(&kprobe_mutex);
 +
- 	return IRQ_HANDLED;
- }
+ 	ap = get_kprobe(p->addr);
+ 	if (unlikely(!ap))
+ 		return NULL;
  
-@@ -97,17 +113,11 @@ static void axp20x_usb_power_poll_vbus(struct work_struct *work)
- 		power_supply_changed(power->supply);
+ 	if (p != ap) {
+-		list_for_each_entry_rcu(list_p, &ap->list, list)
++		list_for_each_entry(list_p, &ap->list, list)
+ 			if (list_p == p)
+ 			/* kprobe p is a valid probe */
+ 				goto valid;
+@@ -1670,7 +1677,9 @@ static int aggr_kprobe_disabled(struct kprobe *ap)
+ {
+ 	struct kprobe *kp;
  
- 	power->old_status = val;
-+	power->online = val & AXP20X_PWR_STATUS_VBUS_USED;
- 
- out:
--	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
--}
--
--static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
--{
--	if (power->axp20x_id >= AXP221_ID)
--		return true;
--
--	return false;
-+	if (axp20x_usb_vbus_needs_polling(power))
-+		mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
- }
- 
- static int axp20x_get_current_max(struct axp20x_usb_power *power, int *val)
-@@ -515,6 +525,8 @@ static int axp20x_usb_power_resume(struct device *dev)
- 	while (i < power->num_irqs)
- 		enable_irq(power->irqs[i++]);
- 
-+	mod_delayed_work(system_wq, &power->vbus_detect, DEBOUNCE_TIME);
+-	list_for_each_entry_rcu(kp, &ap->list, list)
++	lockdep_assert_held(&kprobe_mutex);
 +
- 	return 0;
- }
- #endif
--- 
-2.23.0
++	list_for_each_entry(kp, &ap->list, list)
+ 		if (!kprobe_disabled(kp))
+ 			/*
+ 			 * There is an active probe on the list.
+@@ -1749,7 +1758,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
+ 	else {
+ 		/* If disabling probe has special handlers, update aggrprobe */
+ 		if (p->post_handler && !kprobe_gone(p)) {
+-			list_for_each_entry_rcu(list_p, &ap->list, list) {
++			list_for_each_entry(list_p, &ap->list, list) {
+ 				if ((list_p != p) && (list_p->post_handler))
+ 					goto noclean;
+ 			}
+@@ -2063,13 +2072,15 @@ static void kill_kprobe(struct kprobe *p)
+ {
+ 	struct kprobe *kp;
+ 
++	lockdep_assert_held(&kprobe_mutex);
++
+ 	p->flags |= KPROBE_FLAG_GONE;
+ 	if (kprobe_aggrprobe(p)) {
+ 		/*
+ 		 * If this is an aggr_kprobe, we have to list all the
+ 		 * chained probes and mark them GONE.
+ 		 */
+-		list_for_each_entry_rcu(kp, &p->list, list)
++		list_for_each_entry(kp, &p->list, list)
+ 			kp->flags |= KPROBE_FLAG_GONE;
+ 		p->post_handler = NULL;
+ 		kill_optimized_kprobe(p);
+@@ -2238,7 +2249,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+ 	mutex_lock(&kprobe_mutex);
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+-		hlist_for_each_entry_rcu(p, head, hlist)
++		hlist_for_each_entry(p, head, hlist)
+ 			if (within_module_init((unsigned long)p->addr, mod) ||
+ 			    (checkcore &&
+ 			     within_module_core((unsigned long)p->addr, mod))) {
+@@ -2489,7 +2500,7 @@ static int arm_all_kprobes(void)
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+ 		/* Arm all kprobes on a best-effort basis */
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!kprobe_disabled(p)) {
+ 				err = arm_kprobe(p);
+ 				if (err)  {
+@@ -2532,7 +2543,7 @@ static int disarm_all_kprobes(void)
+ 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+ 		head = &kprobe_table[i];
+ 		/* Disarm all kprobes on a best-effort basis */
+-		hlist_for_each_entry_rcu(p, head, hlist) {
++		hlist_for_each_entry(p, head, hlist) {
+ 			if (!arch_trampoline_kprobe(p) && !kprobe_disabled(p)) {
+ 				err = disarm_kprobe(p, false);
+ 				if (err) {
 
