@@ -2,163 +2,90 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3198C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB87C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B732084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SzSDkVJO"
+	by mail.kernel.org (Postfix) with ESMTP id 769DE2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAOR0h (ORCPT
+        id S1729039AbgAOR1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:26:37 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54399 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728913AbgAOR0h (ORCPT
+        Wed, 15 Jan 2020 12:27:13 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:37916 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728904AbgAOR1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:26:37 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so220665pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:26:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yVipBSsh5+WhhTDox0hQWUQ5mqLsA3VpUlWy4/WLk9c=;
-        b=SzSDkVJOwGN5g11CJ0bvDk2k3o9XkbKQC9adW/cKkYW+Caa8MIMyMc90EM3KsGscep
-         nQJ6pR1CzLyFpvt7g0U8waOuNUa6H/CTufY2GYAc21QbdeqJvkwKk7Z88wCRVZVeGJbL
-         0MJ0AUrpzHmJ6VREswpGP4X5i/CwzQZX9hx5E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yVipBSsh5+WhhTDox0hQWUQ5mqLsA3VpUlWy4/WLk9c=;
-        b=Rh5mnkvbvTV11ckixYgfkNi16Ix+14OH0BO9wmdyrhHCJj+di65W7cWgBvmsgWamz9
-         t/HJS3kpY0W7VTV6Ko+mBXGXeBFcorS4TK4hS0Ya0+so6Ma8SAs4H0qRUt/oNXcHu+Kz
-         fllHoZdmWGm+m02/J/EA/Fng0vixTWiF4Y6HuitrZqZ62Vy1NUUV8V+b25uFPNvcn/OW
-         i3xaKxohlnfAANrXz6wj6CtwxNyKFzruiw+W/3R9ht1zYUAvpfYJVB2hbsVqVgtPEKUt
-         EoYJwdtuJjVcMDPRURbgyzw/mXHDLkVyQf9P9cVvO3KlGzj/4dPMVxuua3qAVEaHE00o
-         lqTA==
-X-Gm-Message-State: APjAAAW/41gJuD5cyvhEo1b1yfnRR0zo8510VVr4eQhw3eCJz/cl5piu
-        3MVIZNpbesa3NCstNF0RtUEABQ==
-X-Google-Smtp-Source: APXvYqy272HK6rPPL3Qfp/pmCyr1lY9GAJPRpsY3XC0oPfve5oiWbCfSwQWAHq4NCihBDd2WXpNsoQ==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr1090472pjn.60.1579109196890;
-        Wed, 15 Jan 2020 09:26:36 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id y128sm22005122pfg.17.2020.01.15.09.26.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 09:26:35 -0800 (PST)
-Date:   Wed, 15 Jan 2020 09:26:33 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        hemantg@codeaurora.org
-Subject: Re: [PATCH v4 1/3] Bluetooth: hci_qca: Add QCA Rome power off
- support to the qca_power_shutdown()
-Message-ID: <20200115172633.GM89495@google.com>
-References: <20191225060317.5258-1-rjliao@codeaurora.org>
- <20200115085552.11483-1-rjliao@codeaurora.org>
+        Wed, 15 Jan 2020 12:27:13 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TnpIWCU_1579109229;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TnpIWCU_1579109229)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Jan 2020 01:27:11 +0800
+Subject: Re: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in
+ queue_pages_test_walk()
+To:     Li Xinhai <lixinhai.lxh@gmail.com>,
+        akpm <akpm@linux-foundation.org>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
+ <2020011520081970082765@gmail.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <2a9ad6d6-af98-987a-0878-6058702db912@linux.alibaba.com>
+Date:   Wed, 15 Jan 2020 09:27:07 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200115085552.11483-1-rjliao@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2020011520081970082765@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 04:55:50PM +0800, Rocky Liao wrote:
-> Current qca_power_shutdown() only supports wcn399x, this patch adds Rome
-> power off support to it. For Rome it just needs to pull down the bt_en
-> GPIO to power off it. This patch also replaces all the power off operation
-> in qca_close() with the unified qca_power_shutdown() call.
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> 
-> Changes in v2: None
-> Changes in v3: None
-> Changes in v4:
->   -rebased the patch with latest code base
->   -moved the change from qca_power_off() to qca_power_shutdown()
->   -replaced all the power off operation in qca_close() with
->    qca_power_shutdown()
->   -updated commit message
-> 
->  drivers/bluetooth/hci_qca.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 992622dc1263..ecb74965be10 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -663,7 +663,6 @@ static int qca_flush(struct hci_uart *hu)
->  /* Close protocol */
->  static int qca_close(struct hci_uart *hu)
->  {
-> -	struct qca_serdev *qcadev;
->  	struct qca_data *qca = hu->priv;
->  
->  	BT_DBG("hu %p qca close", hu);
-> @@ -679,14 +678,7 @@ static int qca_close(struct hci_uart *hu)
->  	destroy_workqueue(qca->workqueue);
->  	qca->hu = NULL;
->  
-> -	if (hu->serdev) {
-> -		qcadev = serdev_device_get_drvdata(hu->serdev);
-> -		if (qca_is_wcn399x(qcadev->btsoc_type))
-> -			qca_power_shutdown(hu);
-> -		else
-> -			gpiod_set_value_cansleep(qcadev->bt_en, 0);
-> -
-> -	}
-> +	qca_power_shutdown(hu);
->  
->  	kfree_skb(qca->rx_skb);
->  
-> @@ -1685,6 +1677,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
->  	struct qca_serdev *qcadev;
->  	struct qca_data *qca = hu->priv;
->  	unsigned long flags;
-> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
->  
->  	qcadev = serdev_device_get_drvdata(hu->serdev);
->  
-> @@ -1697,11 +1690,22 @@ static void qca_power_shutdown(struct hci_uart *hu)
->  	qca_flush(hu);
->  	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
->  
-> -	host_set_baudrate(hu, 2400);
-> -	qca_send_power_pulse(hu, false);
-> -	qca_regulator_disable(qcadev);
->  	hu->hdev->hw_error = NULL;
->  	hu->hdev->cmd_timeout = NULL;
 
-This is now done before the power off and not after, I suppose it doesn't
-make a difference.
 
-> +
-> +	/* Non-serdev device usually is powered by external power
-> +	 * and don't need additional action in driver for power down
-> +	 */
-> +	if (!hu->serdev)
-> +		return;
-> +
-> +	if (qca_is_wcn399x(soc_type)) {
-> +		host_set_baudrate(hu, 2400);
-> +		qca_send_power_pulse(hu, false);
-> +		qca_regulator_disable(qcadev);
-> +	} else {
-> +		gpiod_set_value_cansleep(qcadev->bt_en, 0);
-> +	}
->  }
+On 1/15/20 4:08 AM, Li Xinhai wrote:
+> On 2020-01-15 at 14:09 Yang Shi wrote:
+>> The VM_BUG_ON() is already used by queue_pages_test_walk(), it sounds
+>> better to dump more debug information by using VM_BUG_ON_VMA() to help
+>> debugging.
+>>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> The .test_walk() is to be called from pagewalk with the rule that 'start'
+> and 'end' must within range of vma, in case the rule is broke, we detect
+> it. This is not quite relevant to a bug of particular vma.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+But when you run into VMA range check failure, isn't it helpful to dump 
+the VMA range information to ease debugging? And, VM_BUG_ON is already 
+used in the code, I'm supposed the users may prefer more debug 
+information dumped for debug kernel.
+
+>
+>> ---
+>> mm/mempolicy.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 067cf7d..801d45d 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -621,7 +621,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
+>> unsigned long flags = qp->flags;
+>>
+>> /* range check first */
+>> -	VM_BUG_ON((vma->vm_start > start) || (vma->vm_end < end));
+>> +	VM_BUG_ON_VMA((vma->vm_start > start) || (vma->vm_end < end), vma);
+>>
+>> if (!qp->first) {
+>> qp->first = vma;
+>> --
+>> 1.8.3.1
+>>
+> >
+
