@@ -2,242 +2,257 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C47FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0100C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E956F214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9868D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+14rIUn"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0Wo1EgMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgAOH4b (ORCPT
+        id S1729238AbgAOH4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:56:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33086 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726088AbgAOH4a (ORCPT
+        Wed, 15 Jan 2020 02:56:52 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:9290 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726088AbgAOH4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:56:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579074988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gdllriL4WWDFomXLLsIgDwSvICpThVOsYLzhpnyxYyo=;
-        b=E+14rIUnq4WvWypqKKU+dEfNJzRzzvvexKEc9wkmOvWAuyYUxvpM6ERaFlM11YaXJjENG/
-        F9xnV/W5+NJNYudEpwlH0By2umbQEGoi+qVpEZM66YAg+q+A6lyy0Wk7QJ7zdGh7Hx3Jdl
-        UrD/U3zYsDYcX/teOCoj6b6seabvbL8=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-Kw54VlOlOSiVDZy_ZZ6PYg-1; Wed, 15 Jan 2020 02:56:22 -0500
-X-MC-Unique: Kw54VlOlOSiVDZy_ZZ6PYg-1
-Received: by mail-io1-f70.google.com with SMTP id d10so9867050iod.19
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 23:56:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gdllriL4WWDFomXLLsIgDwSvICpThVOsYLzhpnyxYyo=;
-        b=YzPUAzgaD7vLXhKhJUlnZQFGHtnLsv3z/9Ctfbl7yQgtlMzu1Hc1UifhE9pyHhAgkm
-         8G4faxDnsug/qiekWchzKe4Xkg63dVNv8eoWAdEPBDIV7DckH/xY2z/WyCTIKXH/KAVC
-         mlhjvAjVsm78SwrJfOTiSZkdK9Izig4X/wulCrUhu1Qcsj1I1fjukdZXGJnrEN1ICkUa
-         MSscmZyjn7BM2JvoWRqb96fvMhxhYMJwM2Rwa+Q+1xCazyO0PyEKg4wllOvqs9mgr/j0
-         LAf3AmiUGOSBoKOkNfVNzItFg01mE2UYKZZ45CtlWdzqULI7Ee33oOMcV47MwCmYf6PO
-         ZV9w==
-X-Gm-Message-State: APjAAAUwf7Qe1ldY3ST/sacjMVUTJPd4K2dpbeUp60wz7R+C9JWPSNFj
-        sbV6k0P+FxHiSEd+jECIjREEdm4waAYfjldwnIaF/iBQw9p+7vzbsARUhdClwfGwQpdUhEjfvD6
-        Boz85f5ezsGkDofuU2FtoAb5t69YGIdNIHNOWWdxV
-X-Received: by 2002:a6b:6c0f:: with SMTP id a15mr21590170ioh.13.1579074981817;
-        Tue, 14 Jan 2020 23:56:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy198MdKmwc7tS5Kch4x8fvNx6UwEIXGLOEJwdMlSxXDqGkCuEWt5QtzcEk2BKG3fwW40gxmoyiYXZB33S09IY=
-X-Received: by 2002:a6b:6c0f:: with SMTP id a15mr21590148ioh.13.1579074981372;
- Tue, 14 Jan 2020 23:56:21 -0800 (PST)
+        Wed, 15 Jan 2020 02:56:52 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F7s3i2016770;
+        Wed, 15 Jan 2020 08:56:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=+FyPAJhyAahmD983zlanIo1zEgFOFkL6x75eCA0EJng=;
+ b=0Wo1EgMnic89ZQHRLDGCXbtR8D/XkSsw4bkxP9ptbz9xt1DIrf3NVkCCaytJBlBGUWYS
+ EkhnjCOQHer4r9EQWJjDrXyF18qmFSkJfRMi9CfrmlSJYQ+6P97Cu7N/e4W8tefGfDe/
+ 1j70LqQ5wCmDxN/SDraWWF0icMlxpzvXfxVeyiN4+BmLyKJGqu0Q7ZiJ9o2dCySRvwWh
+ nKe1rESm4LZoCYrt8kg8Xw5ESfzs9lA6mOOJDKEKV9StykP+fgZIjwyEfzwZZeM8IPEl
+ 7g2/Qtu8KhgsDWwI5I7T8HFZ2mjbDyoiUt8jQG4CKiPvGAi95JvemqH18Y440E8QMOTl Vg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78s9vvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 08:56:47 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF8AB10002A;
+        Wed, 15 Jan 2020 08:56:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 965FB210F85;
+        Wed, 15 Jan 2020 08:56:45 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 08:56:44 +0100
+Subject: Re: [PATCH v2] rpmsg: core: add API to get MTU
+To:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20191113172249.32412-1-arnaud.pouliquen@st.com>
+ <f0419672-f1a5-b909-2dff-c611f852919b@st.com>
+ <90bec284-6a99-e75f-1609-de763048a1e2@ti.com>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <92891482-3d8c-8c4c-9100-bb23d6ac628e@st.com>
+Date:   Wed, 15 Jan 2020 08:56:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
- <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
- <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com> <CABeXuvpWR9foBREPPc4T0G_Pf7D3=uaiKv1+_SkLti2+SrKb5Q@mail.gmail.com>
-In-Reply-To: <CABeXuvpWR9foBREPPc4T0G_Pf7D3=uaiKv1+_SkLti2+SrKb5Q@mail.gmail.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 15 Jan 2020 15:56:10 +0800
-Message-ID: <CACPcB9eZF2=wohTBCbF9ow8T+2-QdGr=Q41jPk5iA7+1MkLY8w@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Khalid Aziz <khalid@gonehiking.org>
-Cc:     Baoquan He <bhe@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <90bec284-6a99-e75f-1609-de763048a1e2@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_06:2020-01-14,2020-01-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 9:17 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->
-> On Mon, Jan 13, 2020 at 9:07 AM Kairui Song <kasong@redhat.com> wrote:
-> >
-> > On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> > >
-> > > > Hi, there are some previous works about this issue, reset PCI devices
-> > > > in kdump kernel to stop ongoing DMA:
-> > > >
-> > > > [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> > > > https://lore.kernel.org/patchwork/cover/343767/
-> > > >
-> > > > [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> > > > https://lore.kernel.org/patchwork/patch/379191/
-> > > >
-> > > > And didn't get merged, that patch are trying to fix some DMAR error
-> > > > problem, but resetting devices is a bit too destructive, and the
-> > > > problem is later fixed in IOMMU side. And in most case the DMA seems
-> > > > harmless, as they targets first kernel's memory and kdump kernel only
-> > > > live in crash memory.
-> > >
-> > > I was going to ask the same. If the kdump kernel had IOMMU on, would
-> > > that still be a problem?
-> >
-> > It will still fail, doing DMA is not a problem, it only go wrong when
-> > a device's upstream bridge is mistakenly shutdown before the device
-> > shutdown.
-> >
-> > >
-> > > > Also, by the time kdump kernel is able to scan and reset devices,
-> > > > there are already a very large time window where things could go
-> > > > wrong.
-> > > >
-> > > > The currently problem observed only happens upon kdump kernel
-> > > > shutdown, as the upper bridge is disabled before the device is
-> > > > disabledm so DMA will raise error. It's more like a problem of wrong
-> > > > device shutting down order.
-> > >
-> > > The way it was described earlier "During this time, the SUT sometimes
-> > > gets a PCI error that raises an NMI." suggests that it isn't really
-> > > restricted to kexec/kdump.
-> > > Any attached device without an active driver might attempt spurious or
-> > > malicious DMA and trigger the same during normal operation.
-> > > Do you have available some more reporting of what happens during the
-> > > PCIe error handling?
-> >
-> > Let me add more info about this:
-> >
-> > On the machine where I can reproduce this issue, the first kernel
-> > always runs fine, and kdump kernel works fine during dumping the
-> > vmcore, even if I keep the kdump kernel running for hours, nothing
-> > goes wrong. If there are DMA during normal operation that will cause
-> > problem, this should have exposed it.
-> >
-> > The problem only occur when kdump kernel try to reboot, no matter how
-> > long the kdump kernel have been running (few minutes or hours). The
-> > machine is dead after printing:
-> > [  101.438300] reboot: Restarting system^M
-> > [  101.455360] reboot: machine restart^M
-> >
-> > And I can find following logs happend just at that time, in the
-> > "Integrated Management Log" from the iLO web interface:
-> > 1254 OS 12/25/2019 09:08 12/25/2019 09:08 1 User Remotely Initiated NMI Switch
-> > 1253 System Error 12/25/2019 09:08 12/25/2019 09:08 1 An Unrecoverable
-> > System Error (NMI) has occurred (Service Information: 0x00000000,
-> > 0x00000000)
-> > 1252 PCI Bus 12/25/2019 09:07 12/25/2019 09:07 1 Uncorrectable PCI
-> > Express Error (Embedded device, Bus 0, Device 2, Function 2, Error
-> > status 0x00100000)
-> > 1251 System Error 12/25/2019 09:07 12/25/2019 09:07 1 Unrecoverable
-> > System Error (NMI) has occurred.  System Firmware will log additional
-> > details in a separate IML entry if possible
-> > 1250 PCI Bus 12/25/2019 09:07 12/25/2019 09:07 1 PCI Bus Error (Slot
-> > 0, Bus 0, Device 2, Function 2)
-> >
-> > And the topology is:
-> > [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-> >           +-01.0-[02]--
-> >           +-01.1-[05]--
-> >           +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           +-02.1-[0f]--
-> >           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array
-> > Gen9 Controllers
-> >
-> > It's a bridge reporting the error. It should be an unsupported request
-> > error, bacause downstream device is still alive and sending request,
-> > but the port have bus mastering off. If I manually shutdown the "Smart
-> > Array" (HPSA) device before kdump reboot, it will always reboot just
-> > fine.
-> >
-> > And as the patch descriptions said, the HPSA is used in first kernel,
-> > but didn't get reset in kdump kernel because driver is not loaded.
-> > When shutting down a bridge, kernel should shutdown downstream device
-> > first, and then shutdown and clear bus master bit of the bridge. But
-> > in kdump case, kernel skipped some device shutdown due to driver not
-> > loaded issue, and kernel don't know they are enabled.
-> >
-> > This problem is not limited to HPSA, the NIC listed in above topology
-> > maybe also make the bridge error out, if HPSA get loaded in kdump
-> > kernel and NIC get ignored.
->
-> It looks like the right answer is for the kernel to handle such cases
-> gracefully. From what I recall, we can only trust the bus mastering at
-> root ports. So, it is possible that the endpoint devices can always
-> try to DMA, but it can be blocked by the root port. So the right fix
-> seems to teach kernel how to handle these insted of hacking the
-> shutdown code.
-> -Deepa
->
+Hi Suman,
 
-Kexec have been disabling bus mastering on endpoints to prevent memory
-corruption since commit b566a22c2332 ("PCI: disable Bus Master on PCI
-device shutdown"), later improved by 4fc9bbf98fd6 ("PCI: Disable Bus
-Master only on kexec reboot") and 6e0eda3c3898 ("PCI: Don't try to
-disable Bus Master on disconnected PCI devices").
+On 1/15/20 12:40 AM, Suman Anna wrote:
+> Hi Arnaud,
+> 
+> On 1/13/20 7:19 AM, Arnaud POULIQUEN wrote:
+>> Hi Bjorn, Suman,
+>>
+>> Gentleman reminder :)
+> 
+> Thanks for the revised version, and very sorry about the delay.  Only
+> one minor nit that you missed from my comments the v6 rpmsg-tty series
+> [1], otherwise I am good with the changes. See below.
+> 
+> FWIW, I have already been using this patch on our downstream 2020 LTS
+> based kernel and eliminate the the need to expose the virtio_rpmsg's
+> rpmsg_hdr to rpmsg client drivers :).
+Right  without this API the client needs also to know the RPMSG buffer size to
+compute the MTU.
+> 
+>>
+>> Thank in advance,
+>>
+>> Arnaud
+>>
+>> On 11/13/19 6:22 PM, Arnaud Pouliquen wrote:
+>>> Return the rpmsg buffer MTU for sending message, so rpmsg users
+>>> can split a long message in several sub rpmsg buffers.
+>>>
+>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>>> ---
+>>>  V1 to V2
+>>>
+>>>   V1 patch:https://lore.kernel.org/patchwork/patch/1124684/
+>>>   - Change patch title,
+>>>   - as not solution today to support MTU on GLINK make ops optional,
+>>>     RPMsg client API returns -ENOTSUPP in this case,
+>>>   - suppress smd and glink patches.
+>>> ---
+>>>  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>>>  drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>>>  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>>>  include/linux/rpmsg.h            | 10 ++++++++++
+>>>  4 files changed, 43 insertions(+)
+>>>
+>>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>>> index e330ec4dfc33..a6ef54c4779a 100644
+>>> --- a/drivers/rpmsg/rpmsg_core.c
+>>> +++ b/drivers/rpmsg/rpmsg_core.c
+>>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>>  }
+>>>  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>>>  
+>>> +/**
+>>> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+>>> + * @ept: the rpmsg endpoint
+>>> + *
+>>> + * This function returns maximum buffer size available for a single message.
+>>> + *
+>>> + * Return: the maximum transmission size on success and an appropriate error
+>>> + * value on failure.
+>>> + */
+>>> +
+>>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +	if (WARN_ON(!ept))
+>>> +		return -EINVAL;
+>>> +	if (!ept->ops->get_mtu)
+>>> +		return -ENOTSUPP;
+>>> +
+>>> +	return ept->ops->get_mtu(ept);
+>>> +}
+>>> +EXPORT_SYMBOL(rpmsg_get_mtu);
+>>> +
+>>>  /*
+>>>   * match an rpmsg channel with a channel info struct.
+>>>   * this is used to make sure we're not creating rpmsg devices for channels
+>>> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+>>> index 3fc83cd50e98..0e56e046f5c6 100644
+>>> --- a/drivers/rpmsg/rpmsg_internal.h
+>>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>>> @@ -47,6 +47,7 @@ struct rpmsg_device_ops {
+>>>   * @trysendto:		see @rpmsg_trysendto(), optional
+>>>   * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+>>>   * @poll:		see @rpmsg_poll(), optional
+>>> + * @get_mtu:		see @get_mpu(), optional
+> 
+> In the description for the ops, 'mpu' is a typo. My earlier comment was
+> essentially,
+> %s/see @get_mpu()/see @rpmsg_get_mtu()/
+Sorry, completly missed it i sent a v3
 
-That's done before 2014, it worked for kexec reboot, so I think
-disable bus mastering on endpoints should work in most cases.
+Thanks,
+Arnaud
 
-It's true that on some machine disabling bus mastering doesn't work
-well, but I guess kexec/kdump will also not work well on such machine?
-And for kdump, the hardware is already in an unstable status, and
-kernel don't know how to shutdown/reset some device due to driver not
-loaded. And loading all drivers in kdump kernel is usually not
-practical. So I think disable bus mastering bit is the best effort
-kernel could do at that time (upon shutdown, at least ensure device
-shutdown is in right order)?
-
-And about the UR error and Bus Mastering bit, from the spec:
-"Endpoints:When this bit is Set, the PCI Express Function is allowed
-to issue Memory or I/O Requests. When this bit is Clear, the PCI
-Express Function is not allowed to issue any Memory or I/O Requests."
-"Root and Switch Ports: This bit controls forwarding of Memory or I/O
-Requests by a Switch or Root Port in the Upstream direction. When this
-bit is 0b, Memory and I/O Requests received at a Root Port or the
-Downstream side of a Switch Port must be handled as Unsupported
-Requests (UR), and for Non-Posted Requests a Completion with UR
-completion status must be returned."
-
-Hardware is supposed to report UR error, but this hanging problem is
-only observed on some HPE machines, the firmware will send NMI (and
-supposed to panic the kernel) when it happened. So maybe this could be
-fixed with the firmware or apply some workaround for HPE (eg in
-hpwdt)?
-
-
-
-
---
-Best Regards,
-Kairui Song
-
+> 
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/patch/11130209/
+> 
+>>>   *
+>>>   * Indirection table for the operations that a rpmsg backend should implement.
+>>>   * In addition to @destroy_ept, the backend must at least implement @send and
+>>> @@ -66,6 +67,7 @@ struct rpmsg_endpoint_ops {
+>>>  			     void *data, int len);
+>>>  	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+>>>  			     poll_table *wait);
+>>> +	ssize_t (*get_mtu)(struct rpmsg_endpoint *ept);
+>>>  };
+>>>  
+>>>  int rpmsg_register_device(struct rpmsg_device *rpdev);
+>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> index 376ebbf880d6..6e48fdf24555 100644
+>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> @@ -175,6 +175,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
+>>>  				  int len, u32 dst);
+>>>  static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>>  					   u32 dst, void *data, int len);
+>>> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>>>  
+>>>  static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>>  	.destroy_ept = virtio_rpmsg_destroy_ept,
+>>> @@ -184,6 +185,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>>  	.trysend = virtio_rpmsg_trysend,
+>>>  	.trysendto = virtio_rpmsg_trysendto,
+>>>  	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
+>>> +	.get_mtu = virtio_rpmsg_get_mtu,
+>>>  };
+>>>  
+>>>  /**
+>>> @@ -699,6 +701,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>>  	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
+>>>  }
+>>>  
+>>> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +	struct rpmsg_device *rpdev = ept->rpdev;
+>>> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+>>> +
+>>> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
+>>> +}
+>>> +
+>>>  static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
+>>>  			     struct rpmsg_hdr *msg, unsigned int len)
+>>>  {
+>>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+>>> index 9fe156d1c018..88d7892ca93d 100644
+>>> --- a/include/linux/rpmsg.h
+>>> +++ b/include/linux/rpmsg.h
+>>> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>>  __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+>>>  			poll_table *wait);
+>>>  
+>>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>>> +
+>>>  #else
+>>>  
+>>>  static inline int register_rpmsg_device(struct rpmsg_device *dev)
+>>> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static inline ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +	/* This shouldn't be possible */
+>>> +	WARN_ON(1);
+>>> +
+>>> +	return -ENXIO;
+>>> +}
+>>> +
+>>>  #endif /* IS_ENABLED(CONFIG_RPMSG) */
+>>>  
+>>>  /* use a macro to avoid include chaining to get THIS_MODULE */
+>>>
+> 
