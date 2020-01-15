@@ -2,194 +2,96 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5644BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF880C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2264F24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:47:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="v0ZdT0Jh"
+	by mail.kernel.org (Postfix) with ESMTP id CEC6B214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgAOOrN (ORCPT
+        id S1729081AbgAOOrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:47:13 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:59870 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgAOOrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:47:12 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47yVXY1sjBz9tylP;
-        Wed, 15 Jan 2020 15:47:09 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=v0ZdT0Jh; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1yEnk5s5C33f; Wed, 15 Jan 2020 15:47:09 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47yVXY0mmhz9tylH;
-        Wed, 15 Jan 2020 15:47:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579099629; bh=GvjzXQnIL+hCqDUkI7JAeG4AEubHEzQxfXAYFm1+LnE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=v0ZdT0JhTBUed9+RMH8/zgRWmVMtklpKF4OyD4fUhEXwH0bgTT7veCONXVm+nrzp0
-         OcRyq7vswits+6oi5xj+KxaIPN6CqvBJdySyxX2DpkqRfwvxMwmINAXHKUrtY9rDoF
-         Ov5rL9rqArrPIuAwM0/8yTdbKGn9JuCm+oKttX5s=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6E61F8B774;
-        Wed, 15 Jan 2020 15:47:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id BnOhqHOrMIva; Wed, 15 Jan 2020 15:47:10 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 15D4B8B805;
-        Wed, 15 Jan 2020 15:47:10 +0100 (CET)
-Subject: Re: [PATCH 1/2] kasan: stop tests being eliminated as dead code with
- FORTIFY_SOURCE
-To:     Dmitry Vyukov <dvyukov@google.com>, Daniel Axtens <dja@axtens.net>
-Cc:     linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200115063710.15796-1-dja@axtens.net>
- <20200115063710.15796-2-dja@axtens.net>
- <CACT4Y+bAuaeHOcTHqp-=ckOb58fRajpGYk4khNzpS7_OyBDQYQ@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <917cc571-a25c-3d3e-547c-c537149834d6@c-s.fr>
-Date:   Wed, 15 Jan 2020 15:47:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 15 Jan 2020 09:47:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbgAOOrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:47:32 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FEbs0q009806
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:47:32 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xhfeyae9q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:47:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Wed, 15 Jan 2020 14:47:29 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Jan 2020 14:47:27 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FElQ7s46858732
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 14:47:26 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D41D0A4051;
+        Wed, 15 Jan 2020 14:47:26 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DA8BA4053;
+        Wed, 15 Jan 2020 14:47:25 +0000 (GMT)
+Received: from [9.102.1.17] (unknown [9.102.1.17])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Jan 2020 14:47:25 +0000 (GMT)
+Subject: Re: [PATCH v3 0/9] Fixup page directory freeing
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     peterz@infradead.org, will@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20200114100145.365527-1-aneesh.kumar@linux.ibm.com>
+ <20200114162526.87863ebce00695cc979b5217@linux-foundation.org>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Wed, 15 Jan 2020 20:17:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+bAuaeHOcTHqp-=ckOb58fRajpGYk4khNzpS7_OyBDQYQ@mail.gmail.com>
+In-Reply-To: <20200114162526.87863ebce00695cc979b5217@linux-foundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011514-0012-0000-0000-0000037D9530
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011514-0013-0000-0000-000021B9C625
+Message-Id: <950b9610-30b9-a9ec-24e9-ca3fdec23199@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 mlxlogscore=863 clxscore=1015
+ suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001150119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 15/01/2020 à 15:43, Dmitry Vyukov a écrit :
-> On Wed, Jan 15, 2020 at 7:37 AM Daniel Axtens <dja@axtens.net> wrote:
->>
->> 3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE:
->> memchr, memcmp and strlen.
->>
->> When FORTIFY_SOURCE is on, a number of functions are replaced with
->> fortified versions, which attempt to check the sizes of the operands.
->> However, these functions often directly invoke __builtin_foo() once they
->> have performed the fortify check. The compiler can detect that the results
->> of these functions are not used, and knows that they have no other side
->> effects, and so can eliminate them as dead code.
->>
->> Why are only memchr, memcmp and strlen affected?
->> ================================================
->>
->> Of string and string-like functions, kasan_test tests:
->>
->>   * strchr  ->  not affected, no fortified version
->>   * strrchr ->  likewise
->>   * strcmp  ->  likewise
->>   * strncmp ->  likewise
->>
->>   * strnlen ->  not affected, the fortify source implementation calls the
->>                 underlying strnlen implementation which is instrumented, not
->>                 a builtin
->>
->>   * strlen  ->  affected, the fortify souce implementation calls a __builtin
->>                 version which the compiler can determine is dead.
->>
->>   * memchr  ->  likewise
->>   * memcmp  ->  likewise
->>
->>   * memset ->   not affected, the compiler knows that memset writes to its
->>                 first argument and therefore is not dead.
->>
->> Why does this not affect the functions normally?
->> ================================================
->>
->> In string.h, these functions are not marked as __pure, so the compiler
->> cannot know that they do not have side effects. If relevant functions are
->> marked as __pure in string.h, we see the following warnings and the
->> functions are elided:
->>
->> lib/test_kasan.c: In function ‘kasan_memchr’:
->> lib/test_kasan.c:606:2: warning: statement with no effect [-Wunused-value]
->>    memchr(ptr, '1', size + 1);
->>    ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> lib/test_kasan.c: In function ‘kasan_memcmp’:
->> lib/test_kasan.c:622:2: warning: statement with no effect [-Wunused-value]
->>    memcmp(ptr, arr, size+1);
->>    ^~~~~~~~~~~~~~~~~~~~~~~~
->> lib/test_kasan.c: In function ‘kasan_strings’:
->> lib/test_kasan.c:645:2: warning: statement with no effect [-Wunused-value]
->>    strchr(ptr, '1');
->>    ^~~~~~~~~~~~~~~~
->> ...
->>
->> This annotation would make sense to add and could be added at any point, so
->> the behaviour of test_kasan.c should change.
->>
->> The fix
->> =======
->>
->> Make all the functions that are pure write their results to a global,
->> which makes them live. The strlen and memchr tests now pass.
->>
->> The memcmp test still fails to trigger, which is addressed in the next
->> patch.
->>
->> Cc: Daniel Micay <danielmicay@gmail.com>
->> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
->> Cc: Alexander Potapenko <glider@google.com>
->> Cc: Dmitry Vyukov <dvyukov@google.com>
->> Fixes: 0c96350a2d2f ("lib/test_kasan.c: add tests for several string/memory API functions")
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
->> ---
->>   lib/test_kasan.c | 30 +++++++++++++++++++-----------
->>   1 file changed, 19 insertions(+), 11 deletions(-)
->>
->> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
->> index 328d33beae36..58a8cef0d7a2 100644
->> --- a/lib/test_kasan.c
->> +++ b/lib/test_kasan.c
->> @@ -23,6 +23,14 @@
->>
->>   #include <asm/page.h>
->>
->> +/*
->> + * We assign some test results to these globals to make sure the tests
->> + * are not eliminated as dead code.
->> + */
->> +
->> +int int_result;
->> +void *ptr_result;
+On 1/15/20 5:55 AM, Andrew Morton wrote:
+> On Tue, 14 Jan 2020 15:31:36 +0530 "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
 > 
-> These are globals, but are not static and don't have kasan_ prefix.
-> But I guess this does not matter for modules?
-> Otherwise:
+>> This is a repost of patch series from Peter with the arch specific changes except ppc64 dropped.
+>> ppc64 changes are added here because we are redoing the patch series on top of ppc64 changes. This makes it
+>> easy to backport these changes. Only the first 3 patches need to be backported to stable.
 > 
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> 
+> But none of these patches had a cc:stable in the changelog?
 
-I think if you make them static, GCC will see they aren't used and will 
-eliminate everything still ?
+Patch 2 mention
 
-Christophe
+Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
+
+-aneesh
+
