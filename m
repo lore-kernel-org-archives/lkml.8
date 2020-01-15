@@ -2,150 +2,549 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56201C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FBA2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579054549;
-	bh=baM9WXCWfTSkBjbVqCfHqGGpui+9VSdeMZuBpugmEFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O7uer9q9fpr+A+TjY26q3l4ABlZfqoWhuQMETVLIaE1DJ+/W5RMLfkgaLf14DXMGa
-	 DNlwL8425yCL59bFR27RNn0Yy3sm97MZdAL2mawHEAcLES2nHwFl5mWmn3fWqVPkK2
-	 97ceCTRHbC2Yfr/KoqU0HypB845rTOHQadAGqsF4=
+	by mail.kernel.org (Postfix) with ESMTP id 3750C24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgAOCPs (ORCPT
+        id S1728916AbgAOCRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 21:15:48 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41344 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgAOCPs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 21:15:48 -0500
-Received: by mail-pf1-f196.google.com with SMTP id w62so7653085pfw.8;
-        Tue, 14 Jan 2020 18:15:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J26ofUR3ODZFKYUwZwovSvNraObvIoktYNYuocxeBTc=;
-        b=HPJ5yfdeZd2nEm9VDPXdoiRwFsYnV1Jxhrd82+ethOxwNcxH3S+GLkFFV+6FMUD87U
-         0TTe+gQUfcsv/M/KR5YdpWlV7w7S5FjkckD0od/QIr4qHgceTDMubTJnhpRLHD0GBW7f
-         Mb30ZgDUmSJQBXO7Dk+Prq0Rds/39/sdN+UtZqWuycahDqIJhNd/GdwQgzkJGGsYrKvG
-         VM7Q9gbiQ51IaDu4mdYrEUYVj75mOvBZ6EgkpsSKTLsVN/50tW/nPSy++2y7Q48EY+1N
-         M+wXDjii4ir+y/pCqMoBDI2EI59d4kGCOL6hJXAPBqqaM+NA205okBpEoHQJ3Suve3XU
-         whBg==
-X-Gm-Message-State: APjAAAVRnBWXtHGp8EiNmRlZT6EF/ItI4/lo52dljt3Gd+RB3omF4EZp
-        FgmGU/11+PQyU8C/c/BwP4A=
-X-Google-Smtp-Source: APXvYqx+Y6MXk6p34YH4fcWpwtETUyP8vIwvAVxlDFSpQ1L1jzbu3gQ4eTFBhCslPosGq/RoLM06Gg==
-X-Received: by 2002:a62:7fcd:: with SMTP id a196mr28145031pfd.208.1579054547296;
-        Tue, 14 Jan 2020 18:15:47 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c19sm20646838pfc.144.2020.01.14.18.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 18:15:46 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 6B06A40244; Wed, 15 Jan 2020 02:15:45 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 02:15:45 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: Fix built-in early-load Intel microcode alignment
-Message-ID: <20200115021545.GD11244@42.do-not-panic.com>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <20200113154739.GB11244@42.do-not-panic.com>
- <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
+        Tue, 14 Jan 2020 21:17:01 -0500
+Received: from mx.socionext.com ([202.248.49.38]:22489 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728808AbgAOCRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 21:17:01 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 15 Jan 2020 11:16:58 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 36DDB603AB;
+        Wed, 15 Jan 2020 11:16:58 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 15 Jan 2020 11:18:06 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id E59FD4034C;
+        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id A3A82120B64;
+        Wed, 15 Jan 2020 11:16:57 +0900 (JST)
+Date:   Wed, 15 Jan 2020 11:16:57 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
+Cc:     "Masahiro Yamada" <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com> <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
+Message-Id: <20200115111657.FD32.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 09:58:25PM +0200, Jari Ruusu wrote:
-> On 1/13/20, Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > So what happens with you use the built-in firmware loader for
-> > the Intel microcode at this time? I am surprised this issue
-> > wasn't reported earlier, so thanks for picking it up, but to
-> > be complete such a change requires a bit more information.
-> >
-> > What exactly happens now?
+Hi,
+
+Gentle ping.
+Is there any comments about this?
+
+Thank you,
+
+On Thu, 12 Dec 2019 11:02:18 +0900
+Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+
+> This introduces specific glue layer for UniPhier platform to support
+> PCIe controller that is based on the DesignWare PCIe core, and
+> this driver supports endpoint mode. This supports for Pro5 SoC only.
 > 
-> Before that 16-byte alignment patch was applied, my only one
-> microcode built-in BLOB was "accidentally" 16-byte aligned.
-
-How did it accidentially get 16-byte aligned?
-
-Also, how do you *know* something is broken right now? I mean
-you issued a patch for stable. I thought you hit a panic or
-some issue while loading. If we are not sure this fixes a real
-issue as of yet, I can't see the merit for propagating a fix
-to stable.
-
-> After that patch was applied, new kernel System.map file was
-> exactly same. So, for me that patch did not change anything.
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  MAINTAINERS                                   |   2 +-
+>  drivers/pci/controller/dwc/Kconfig            |  13 +-
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 399 ++++++++++++++++++++++++++
+>  4 files changed, 412 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
 > 
-> Same 16-byte alignment before and after patch:
-> 
-> $  grep " _fw_.*_bin" System.map
-> ffffffff81f55e90 r _fw_intel_ucode_06_8e_09_bin
-> 
-> >> Fix this by forcing all built-in firmware BLOBs to 16-byte
-> >> alignment.
-> >
-> > That's a huge stretch, see below.
-> 
-> I understand and to some degree agree.
-> 
-> > So I'd like to determine first if we really need this.
-> 
-> We do need it. Violating Intel specs is not good. It may be that
-> some processor models require aligned and some accept less
-> aligned.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4b6ec28..9ed0572 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12695,7 +12695,7 @@ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
+> -F:	drivers/pci/controller/dwc/pcie-uniphier.c
+> +F:	drivers/pci/controller/dwc/pcie-uniphier*.c
+>  
+>  PCIE DRIVER FOR ST SPEAR13XX
+>  M:	Pratyush Anand <pratyush.anand@gmail.com>
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 0ba988b..6bc661a 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -247,15 +247,24 @@ config PCIE_TEGRA194
+>  	  controller found in NVIDIA Tegra194 SoC.
+>  
+>  config PCIE_UNIPHIER
+> -	bool "Socionext UniPhier PCIe controllers"
+> +	bool "Socionext UniPhier PCIe host controllers"
+>  	depends on ARCH_UNIPHIER || COMPILE_TEST
+>  	depends on OF && HAS_IOMEM
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_DW_HOST
+>  	help
+> -	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+> +	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_UNIPHIER_EP
+> +	bool "Socionext UniPhier PCIe endpoint controllers"
+> +	depends on ARCH_UNIPHIER || COMPILE_TEST
+> +	depends on OF && HAS_IOMEM
+> +	select PCIE_DW_EP
+> +	help
+> +	  Say Y here if you want PCIe endpoint controller support on
+> +	  UniPhier SoCs. This driver supports Pro5 SoC.
+> +
+>  config PCIE_AL
+>  	bool "Amazon Annapurna Labs PCIe controller"
+>  	depends on OF && (ARM64 || COMPILE_TEST)
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 69faff3..ba458b6 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) += pci-meson.o
+>  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+> +obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> new file mode 100644
+> index 00000000..7b5aa0f
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> @@ -0,0 +1,399 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe endpoint controller driver for UniPhier SoCs
+> + * Copyright 2018 Socionext Inc.
+> + * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +/* Link Glue registers */
+> +#define PCL_RSTCTRL0			0x0010
+> +#define PCL_RSTCTRL_AXI_REG		BIT(3)
+> +#define PCL_RSTCTRL_AXI_SLAVE		BIT(2)
+> +#define PCL_RSTCTRL_AXI_MASTER		BIT(1)
+> +#define PCL_RSTCTRL_PIPE3		BIT(0)
+> +
+> +#define PCL_RSTCTRL1			0x0020
+> +#define PCL_RSTCTRL_PERST		BIT(0)
+> +
+> +#define PCL_RSTCTRL2			0x0024
+> +#define PCL_RSTCTRL_PHY_RESET		BIT(0)
+> +
+> +#define PCL_MODE			0x8000
+> +#define PCL_MODE_REGVAL			BIT(0)
+> +
+> +#define PCL_APP_CLK_CTRL		0x8004
+> +#define PCL_APP_CLK_REQ			BIT(0)
+> +
+> +#define PCL_APP_READY_CTRL		0x8008
+> +#define PCL_APP_LTSSM_ENABLE		BIT(0)
+> +
+> +#define PCL_APP_MSI0			0x8040
+> +#define PCL_APP_VEN_MSI_TC_MASK		GENMASK(10, 8)
+> +#define PCL_APP_VEN_MSI_VECTOR_MASK	GENMASK(4, 0)
+> +
+> +#define PCL_APP_MSI1			0x8044
+> +#define PCL_APP_MSI_REQ			BIT(0)
+> +
+> +#define PCL_APP_INTX			0x8074
+> +#define PCL_APP_INTX_SYS_INT		BIT(0)
+> +
+> +/* assertion time of intx in usec */
+> +#define PCL_INTX_WIDTH_USEC		30
+> +
+> +struct uniphier_pcie_ep_priv {
+> +	void __iomem *base;
+> +	struct dw_pcie pci;
+> +	struct clk *clk, *clk_gio;
+> +	struct reset_control *rst, *rst_gio;
+> +	struct phy *phy;
+> +	const struct uniphier_pcie_ep_soc_data *data;
+> +};
+> +
+> +struct uniphier_pcie_ep_soc_data {
+> +	bool is_legacy;
+> +	const struct pci_epc_features features;
+> +};
+> +
+> +#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+> +
+> +static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_ep_priv *priv,
+> +				       bool enable)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_APP_READY_CTRL);
+> +	if (enable)
+> +		val |= PCL_APP_LTSSM_ENABLE;
+> +	else
+> +		val &= ~PCL_APP_LTSSM_ENABLE;
+> +	writel(val, priv->base + PCL_APP_READY_CTRL);
+> +}
+> +
+> +static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
+> +				    bool assert)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(priv->base + PCL_RSTCTRL2);
+> +	if (assert)
+> +		val |= PCL_RSTCTRL_PHY_RESET;
+> +	else
+> +		val &= ~PCL_RSTCTRL_PHY_RESET;
+> +	writel(val, priv->base + PCL_RSTCTRL2);
+> +}
+> +
+> +static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	/* set EP mode */
+> +	val = readl(priv->base + PCL_MODE);
+> +	val |= PCL_MODE_REGVAL;
+> +	writel(val, priv->base + PCL_MODE);
+> +
+> +	/* clock request */
+> +	val = readl(priv->base + PCL_APP_CLK_CTRL);
+> +	val &= ~PCL_APP_CLK_REQ;
+> +	writel(val, priv->base + PCL_APP_CLK_CTRL);
+> +
+> +	/* deassert PIPE3 and AXI reset */
+> +	val = readl(priv->base + PCL_RSTCTRL0);
+> +	val |= PCL_RSTCTRL_AXI_REG | PCL_RSTCTRL_AXI_SLAVE
+> +		| PCL_RSTCTRL_AXI_MASTER | PCL_RSTCTRL_PIPE3;
+> +	writel(val, priv->base + PCL_RSTCTRL0);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, false);
+> +}
+> +
+> +static int uniphier_pcie_start_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	uniphier_pcie_ltssm_enable(priv, false);
+> +}
+> +
+> +static void uniphier_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	/* assert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val |= PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	udelay(PCL_INTX_WIDTH_USEC);
+> +
+> +	/* deassert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val &= ~PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
+> +					  u8 func_no, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	val = FIELD_PREP(PCL_APP_VEN_MSI_TC_MASK, func_no)
+> +		| FIELD_PREP(PCL_APP_VEN_MSI_VECTOR_MASK, interrupt_num - 1);
+> +	writel(val, priv->base + PCL_APP_MSI0);
+> +
+> +	val = readl(priv->base + PCL_APP_MSI1);
+> +	val |= PCL_APP_MSI_REQ;
+> +	writel(val, priv->base + PCL_APP_MSI1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				      enum pci_epc_irq_type type,
+> +				      u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return uniphier_pcie_ep_raise_legacy_irq(ep);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
+> +						      interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type (%d)\n", type);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pci_epc_features*
+> +uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +
+> +	return &priv->data->features;
+> +}
+> +
+> +static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
+> +	.ep_init = uniphier_pcie_ep_init,
+> +	.raise_irq = uniphier_pcie_ep_raise_irq,
+> +	.get_features = uniphier_pcie_get_features,
+> +};
+> +
+> +static int uniphier_add_pcie_ep(struct uniphier_pcie_ep_priv *priv,
+> +				struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = &priv->pci;
+> +	struct dw_pcie_ep *ep = &pci->ep;
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep->ops = &uniphier_pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
+> +	pci->dbi_base2 = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(pci->dbi_base2))
+> +		return PTR_ERR(pci->dbi_base2);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(priv->clk_gio);
+> +	if (ret)
+> +		goto out_clk_disable;
+> +
+> +	ret = reset_control_deassert(priv->rst);
+> +	if (ret)
+> +		goto out_clk_gio_disable;
+> +
+> +	ret = reset_control_deassert(priv->rst_gio);
+> +	if (ret)
+> +		goto out_rst_assert;
+> +
+> +	uniphier_pcie_init_ep(priv);
+> +
+> +	if (priv->data->is_legacy)
+> +		uniphier_pcie_phy_reset(priv, true);
+> +
+> +	ret = phy_init(priv->phy);
+> +	if (ret)
+> +		goto out_rst_gio_assert;
+> +
+> +	if (priv->data->is_legacy)
+> +		uniphier_pcie_phy_reset(priv, false);
+> +
+> +	return 0;
+> +
+> +out_rst_gio_assert:
+> +	reset_control_assert(priv->rst_gio);
+> +out_rst_assert:
+> +	reset_control_assert(priv->rst);
+> +out_clk_gio_disable:
+> +	clk_disable_unprepare(priv->clk_gio);
+> +out_clk_disable:
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct dw_pcie_ops dw_pcie_ops = {
+> +	.start_link = uniphier_pcie_start_link,
+> +	.stop_link = uniphier_pcie_stop_link,
+> +};
+> +
+> +static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct uniphier_pcie_ep_priv *priv;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->data = of_device_get_match_data(dev);
+> +	if (WARN_ON(!priv->data))
+> +		return -EINVAL;
+> +
+> +	priv->pci.dev = dev;
+> +	priv->pci.ops = &dw_pcie_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(priv->pci.dbi_base))
+> +		return PTR_ERR(priv->pci.dbi_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+> +	priv->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	if (priv->data->is_legacy) {
+> +		priv->clk_gio = devm_clk_get(dev, "gio");
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst_gio =
+> +			devm_reset_control_get_shared(dev, "gio");
+> +		if (IS_ERR(priv->rst_gio))
+> +			return PTR_ERR(priv->rst_gio);
+> +
+> +		priv->clk = devm_clk_get(dev, "link");
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst =
+> +			devm_reset_control_get_shared(dev, "link");
+> +		if (IS_ERR(priv->rst))
+> +			return PTR_ERR(priv->rst);
+> +	} else {
+> +		priv->clk = devm_clk_get(dev, NULL);
+> +		if (IS_ERR(priv->clk))
+> +			return PTR_ERR(priv->clk);
+> +
+> +		priv->rst = devm_reset_control_get_shared(dev, NULL);
+> +		if (IS_ERR(priv->rst))
+> +			return PTR_ERR(priv->rst);
+> +	}
+> +
+> +	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+> +	if (IS_ERR(priv->phy))
+> +		return PTR_ERR(priv->phy);
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	ret = uniphier_pcie_ep_enable(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return uniphier_add_pcie_ep(priv, pdev);
+> +}
+> +
+> +static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
+> +	.is_legacy = true,
+> +	.features = {
+> +		.linkup_notifier = false,
+> +		.msi_capable = true,
+> +		.msix_capable = false,
+> +		.align = 1 << 16,
+> +		.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
+> +		.reserved_bar =  BIT(BAR_4),
+> +	},
+> +};
+> +
+> +static const struct of_device_id uniphier_pcie_ep_match[] = {
+> +	{
+> +		.compatible = "socionext,uniphier-pro5-pcie-ep",
+> +		.data = &uniphier_pro5_data,
+> +	},
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver uniphier_pcie_ep_driver = {
+> +	.probe  = uniphier_pcie_ep_probe,
+> +	.driver = {
+> +		.name = "uniphier-pcie-ep",
+> +		.of_match_table = uniphier_pcie_ep_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver(uniphier_pcie_ep_driver);
+> -- 
+> 2.7.4
 
-Fair point. A fix to follow the spec is however different than to say
-without it things don't work, and we need to propagate a fix to stable
-kernels.
+---
+Best Regards,
+Kunihiko Hayashi
 
-> > If set as a global new config option, we can use the same logic and
-> > allow an architecture override if the user / architecture kconfig
-> > configures it such:
-> >
-> > config ARCH_DEFAULT_FIRMWARE_ALIGNMENT
-> > 	string "Default architecture firmware aligmnent"
-> > 	"4" if 64BIT
-> > 	"3" if !64BIT
-> >
-> > config FIRMWARE_BUILTIN_ALIGN
-> > 	string "Built in firmware aligment requirement"
-> > 	default ARCH_DEFAULT_FIRMWARE_ALIGNMENT if !ARCH_CUSTOM_FIRMWARE_ALIGNMENT
-> > 	default ARCH_CUSTOM_FIRMWARE_ALIGNMENT_VAL if
-> > ARCH_CUSTOM_FIRMWARE_ALIGNMENT
-> > 	  Some good description goes here
-> >
-> > Or something like that.
-> 
-> It doesn't have to user visible config option, only default align
-> changed when selected set of options are enabled.
-
-Right, I didn't intend for it to be visible really. It was just an
-example of kconfig magic how perhaps how to define this if we needed
-something configurable per arch.
-
-> My patch was intentionally minimal, without #ifdef spaghetti.
-
-Thanks for it. We just need to dust it off a bit now.
-
-  Luis
