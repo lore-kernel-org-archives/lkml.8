@@ -2,154 +2,115 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97FDC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1871C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0F824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RREeAyxC"
+	by mail.kernel.org (Postfix) with ESMTP id 95D2B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgAOSYF (ORCPT
+        id S1729239AbgAOSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:24:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40104 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728928AbgAOSYE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:24:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579112643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ga36+mfvvpplKWf5woArU2Umny7JJ0McSe9ltiEw3rA=;
-        b=RREeAyxCCfIOi8ye85QOZLGfLFy6G7vJrYnTLfeqocxEwl91us2rbvvHOwcCXPDJ9D+tbT
-        jTNLyCKYwD6vjRMWY6aUSF2e3WfGKz2Yr7ekSNdV+fpHvSm/QvZJwDZvbRg6G0lGs2qWCd
-        k7tfuqniJm3j9YWdVb3G6IJSYExjGq0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-R0WdjJJLNHa8-klvf9gLMQ-1; Wed, 15 Jan 2020 13:24:02 -0500
-X-MC-Unique: R0WdjJJLNHa8-klvf9gLMQ-1
-Received: by mail-wr1-f71.google.com with SMTP id y7so8333445wrm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:24:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ga36+mfvvpplKWf5woArU2Umny7JJ0McSe9ltiEw3rA=;
-        b=GyzJLEr/EPq3W2fI37J5oCaD0L1nwWpAOGT/JBJpr3IxM15pZOkRE95gW0w2iIvmEG
-         hiQSvWllgv4eGw3Oh5TW0K/8HOIFP34V7DhSM+NHD89Ir4HzPiOJt30szPqFnnqJG34N
-         PndTBt4HB9uIyjlA3QPSxb98Iu+TrJ7J4YUXe9LH51Da2SyvXQA8R83d2nQO66mbUdFj
-         dBHbbIgleVr3lhzOsb/2J4fmlB9anzLsmzTS4+EIZrzTHSXC/A6jGyBIpPeyedyr4X6E
-         +FAZMl7HU06hgwC4gZGynlPkR1TRfJqHbMMXD1b3//ppO0YFGFsApmEmsb7k21+8Skiz
-         wbbw==
-X-Gm-Message-State: APjAAAWSd/V9Vze3T9LEiaXnp8CXOxtbIpBRFT58upVsHKWpB5pcMaQ3
-        JaM2ERr+92ROIEINFx8JiUOm7yPNVao9KLNAeYzqVKVJf4xqPWDuXUJ/O0Pu6TffzL++oqbEfID
-        kHOV7+0ZYkongjoCh6NLj3j65
-X-Received: by 2002:a5d:4392:: with SMTP id i18mr34239394wrq.199.1579112640876;
-        Wed, 15 Jan 2020 10:24:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxjPUqUhsSp42j9K7MsZ2fvU034CQ/7nWIncYPYJk9054LYvZYQt1gO7wGM3iLAo4H4spjLEw==
-X-Received: by 2002:a5d:4392:: with SMTP id i18mr34239383wrq.199.1579112640604;
-        Wed, 15 Jan 2020 10:24:00 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:436:e17d:1fd9:d92a? ([2001:b07:6468:f312:436:e17d:1fd9:d92a])
-        by smtp.gmail.com with ESMTPSA id h17sm26368396wrs.18.2020.01.15.10.23.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:24:00 -0800 (PST)
-Subject: Re: [PATCH v2] KVM: SVM: Fix potential memory leak in svm_cpu_init()
-To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        liran.alon@oracle.com
-References: <1578128209-12891-1-git-send-email-linmiaohe@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <54acb241-9837-ed9c-49a2-976fd6e0ea36@redhat.com>
-Date:   Wed, 15 Jan 2020 19:23:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 15 Jan 2020 13:24:48 -0500
+Received: from mga01.intel.com ([192.55.52.88]:40076 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729014AbgAOSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:24:47 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 10:24:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="248498688"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jan 2020 10:24:46 -0800
+Date:   Wed, 15 Jan 2020 10:24:46 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
+Message-ID: <20200115182446.GD23311@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-10-ira.weiny@intel.com>
+ <20200113222212.GO8247@magnolia>
+ <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
+ <20200114013004.GU8247@magnolia>
+ <20200114175353.GA7871@iweiny-DESK2.sc.intel.com>
+ <20200115113455.GA2595@quack2.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1578128209-12891-1-git-send-email-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115113455.GA2595@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/01/20 09:56, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On Wed, Jan 15, 2020 at 12:34:55PM +0100, Jan Kara wrote:
+> On Tue 14-01-20 09:53:54, Ira Weiny wrote:
+> > On Mon, Jan 13, 2020 at 05:30:04PM -0800, Darrick J. Wong wrote:
+> > > > > > +		error = -EBUSY;
+> > > > > > +		goto out_unlock;
+> > > > > > +	}
+> > > > > > +
+> > > > > >  	error = filemap_write_and_wait(inode->i_mapping);
+> > > > > >  	if (error)
+> > > > > >  		goto out_unlock;
+> > > > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > > > > index 631f11d6246e..6e7dc626b657 100644
+> > > > > > --- a/include/linux/fs.h
+> > > > > > +++ b/include/linux/fs.h
+> > > > > > @@ -740,6 +740,7 @@ struct inode {
+> > > > > >  #endif
+> > > > > >  
+> > > > > >  	void			*i_private; /* fs or device private pointer */
+> > > > > > +	atomic64_t               i_mapped;
+> > > > > 
+> > > > > I would have expected to find this in struct address_space since the
+> > > > > mapping count is a function of the address space, right?
+> > > > 
+> > > > I suppose but the only external call (above) would be passing an inode.  So to
+> > > > me it seemed better here.
+> > > 
+> > > But the number of memory mappings reflects the state of the address
+> > > space, not the inode.  Or maybe put another way, if I were an mm
+> > > developer I would not expect to look in struct inode for mm state.
+> > 
+> > This is a good point...
+> > 
+> > > 
+> > > static inline bool inode_has_mappings(struct inode *inode)
+> > > {
+> > > 	return atomic64_read(&inode->i_mapping->mapcount) > 0;
+> > > }
+> > > 
+> > > OTOH if there exist other mm developers who /do/ find that storing the
+> > > mmap count in struct inode is more logical, please let me know. :)
+> > 
+> > ...  My thinking was that the number of mappings does not matters to the mm
+> > system...  However, I'm starting to think you are correct...  ;-)
+> > 
+> > I've made a note of it and we will see what others think.
 > 
-> When kmalloc memory for sd->sev_vmcbs failed, we forget to free the page
-> held by sd->save_area. Also get rid of the var r as '-ENOMEM' is actually
-> the only possible outcome here.
-> 
-> Reviewed-by: Liran Alon <liran.alon@oracle.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
-> -v2:
-> 	drop var r as suggested by Vitaly
-> ---
->  arch/x86/kvm/svm.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 8f1b715dfde8..5f9d6547e0e7 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1003,33 +1003,32 @@ static void svm_cpu_uninit(int cpu)
->  static int svm_cpu_init(int cpu)
->  {
->  	struct svm_cpu_data *sd;
-> -	int r;
->  
->  	sd = kzalloc(sizeof(struct svm_cpu_data), GFP_KERNEL);
->  	if (!sd)
->  		return -ENOMEM;
->  	sd->cpu = cpu;
-> -	r = -ENOMEM;
->  	sd->save_area = alloc_page(GFP_KERNEL);
->  	if (!sd->save_area)
-> -		goto err_1;
-> +		goto free_cpu_data;
->  
->  	if (svm_sev_enabled()) {
-> -		r = -ENOMEM;
->  		sd->sev_vmcbs = kmalloc_array(max_sev_asid + 1,
->  					      sizeof(void *),
->  					      GFP_KERNEL);
->  		if (!sd->sev_vmcbs)
-> -			goto err_1;
-> +			goto free_save_area;
->  	}
->  
->  	per_cpu(svm_data, cpu) = sd;
->  
->  	return 0;
->  
-> -err_1:
-> +free_save_area:
-> +	__free_page(sd->save_area);
-> +free_cpu_data:
->  	kfree(sd);
-> -	return r;
-> +	return -ENOMEM;
->  
->  }
->  
-> 
+> Well, more importantly mapping != inode. There can be multiple inodes
+> pointing to the same mapping (struct address_space) as is the case for
+> example for block devices. So this counter definitely belongs into struct
+> address_space.
 
-Queued, thanks.
+Ah Yes, great point.  Done.
 
-Paolo
+Ira
 
