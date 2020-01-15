@@ -4,118 +4,284 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCEFC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9302C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C162124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC5124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gs/z4tk4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6X/nqdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgAOONf (ORCPT
+        id S1730481AbgAOONi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:13:35 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43491 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgAOON2 (ORCPT
+        Wed, 15 Jan 2020 09:13:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43640 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbgAOONc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:13:28 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so15893240wre.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:27 -0800 (PST)
+        Wed, 15 Jan 2020 09:13:32 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so8268875pga.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OAQIBEtAB539ew/tof0mNoTYE3sNhscOlsV6pfoQF5g=;
-        b=gs/z4tk4uFXXpj/yR4pB6Y9QVxyxwScRANH5ordeJtq8PSbgKFB4RS0FmPEndaNOby
-         idsxHHb+xh0XR7tA+nsp+f73HnB0SIKRMWzbLQIy1MPD1zYGnGc7Gi4on33Dqg3SxtSs
-         I2mFJf47QTsU0r37z588nkk1sKl//Rc6r0f2EX90EmZnJ0EWSkQbeaeYMYrUGiPtrFFF
-         EFQUQQIEXBhARL4asIi7vRhf4bjU67B4PLotwT6jfw8+IDgEu33xSFja/esqsDtDexMN
-         KEanjCsHPesyOLZrnA3QKbuklE1CMcHj4VRrrtH3qijobgMMNtwEf/Q/CRDyD6rdsKfo
-         i6QQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Src2nBsw9fEQNe6R1XRh63qOf6PvwHbP1eF/87qT/L8=;
+        b=o6X/nqdFlkZP5IwKgGBT/IcaPAebM8FGb0PVIqEcdL2L8VmRMZh0Xrtfqf8LzRhcOX
+         nHuQZj8X9SbuPZfeTRcBm1MScioFj409Xm3HqAUI9LYp5X2sB+nWaWN8Ivo8NfEc3vui
+         a7a8fqJGWG3n2dsXwgNOC4Slz2B9/SACrUabygcmHTK90Rr/l5txCtH7UQkDF1fcFtos
+         Zfy00UgZSMuR4p7IFOIqJhQD4j5idbWvdGAeagJC5TzNZvGizttwUhU9JQ+j+dM3TuFp
+         dlp46BYaGJb6ojmMzXo9qYcL29nmp6uEJwC9Latw9iDd5ATDzVPN9HvxHDv94CMIKXm0
+         ZjUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OAQIBEtAB539ew/tof0mNoTYE3sNhscOlsV6pfoQF5g=;
-        b=njKzhXs++UB2mZJz4xLPMoDRCQtWKtYbCzslF5o8kDoBoWbUWs3DZKNs2xH2oErr7v
-         bXi2c5lhwV7c1prSp3pbvS67ClSLDjB3sQ3I9sQqV/0pTKbThwqtN/meripdD1qEkk8F
-         4h9lUwgxE5vArZ/difpm9nYvB090Z83J6J+Av06elxo++TV08nE7Mm/PSc1WGHYrmBST
-         T/8iNXwdN5cWW2BuZu7/Jxpc3M0gmqALsfyIrf9PienQbuDMbZRGpXO7zOfdqkoHe0Ec
-         QTNpI3vKVja5Tm2F4elPsPSuhN+EF+Gfb7mdpCL9DD5ECANqMHvtcJa9cO1TONj+Xsow
-         Denw==
-X-Gm-Message-State: APjAAAU9PNcJmVBd+Uhzy9FO8TCyMP4oKv8NnSmlI0d3mEcLxDWgAHev
-        4GD+Cr6baXrtr/mRaoDTE5t6FQ==
-X-Google-Smtp-Source: APXvYqzBNIB6sLizgF8/elzXx2JKJwR3Qm2h8MtVZZ6TJ6hyaGw3jAbQWdFFHKTn2qlDFLT5G/I1vQ==
-X-Received: by 2002:a5d:4481:: with SMTP id j1mr32581677wrq.348.1579097607065;
-        Wed, 15 Jan 2020 06:13:27 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 06:13:26 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 16/19] arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
-Date:   Wed, 15 Jan 2020 14:13:30 +0000
-Message-Id: <20200115141333.1222676-17-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
-References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+         :references;
+        bh=Src2nBsw9fEQNe6R1XRh63qOf6PvwHbP1eF/87qT/L8=;
+        b=Sz1ajLARAAoGudkpdpMsUaz8CsACekgQGqKJZB09n70g8o4YwhtxMk1TOKMyOjRwP0
+         6wFGSmyufDzc+KupdrqQyMcRSZkAy5fpn45u2qekIoRe1+JggM5gNhRjyNFtHzCGxsiL
+         /Dg8CsgqbXECzQNaZEZhrY/yM8P4kdE0brdkWWgcnUjYYnvYb1NSYDzeM7o3UhBHQlzg
+         cHElEEqgvj6oYvk9EbSK1uOAZ0a/tPWpdBirleyHbBH7qU/rgXpp5IVBmCS6VQw9j7Qm
+         qrl/5/ROx+0iymWIaJ2565PJgFGGlppnMauOBqAl71TnhK3uHDtEoM1Vtx9LxLk0iLTa
+         C1/w==
+X-Gm-Message-State: APjAAAXKQpWH0Rb+us3kAp4u6Zcf3tLCkfE2oksD3sRYtEq6NoqC893/
+        TFf567x7fdeOfosPjUeykyaztQ==
+X-Google-Smtp-Source: APXvYqyQSCXVq+hDlAm/NQfAOYPsWzy5xtoOWdx9TnQPGj1dt1+mhL4Lz5B23bXss89DIAAzgOOxpw==
+X-Received: by 2002:aa7:9edd:: with SMTP id r29mr30849280pfq.14.1579097611989;
+        Wed, 15 Jan 2020 06:13:31 -0800 (PST)
+Received: from localhost.localdomain ([104.238.63.136])
+        by smtp.gmail.com with ESMTPSA id a15sm22591980pfh.169.2020.01.15.06.13.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 15 Jan 2020 06:13:31 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org
+Cc:     linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v12 1/4] uacce: Add documents for uacce
+Date:   Wed, 15 Jan 2020 22:12:45 +0800
+Message-Id: <1579097568-17542-2-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
+References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VBUS is supplied by an external regulator controlled by a GPIO pin. This
-patch models the regulator as regulator-usb3-vbus.
+From: Kenneth Lee <liguozhu@hisilicon.com>
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Uacce (Unified/User-space-access-intended Accelerator Framework) is
+a kernel module targets to provide Shared Virtual Addressing (SVA)
+between the accelerator and process.
+
+This patch add document to explain how it works.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/misc-devices/uacce.rst | 176 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 176 insertions(+)
+ create mode 100644 Documentation/misc-devices/uacce.rst
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index abfb2a9a37e9..01ef59e8e5b7 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -33,6 +33,18 @@ vdd_esmps3_3p3: vdd-esmps3-3p3-regulator {
- 		regulator-max-microvolt = <3300000>;
- 		regulator-always-on;
- 	};
+diff --git a/Documentation/misc-devices/uacce.rst b/Documentation/misc-devices/uacce.rst
+new file mode 100644
+index 0000000..1db412e
+--- /dev/null
++++ b/Documentation/misc-devices/uacce.rst
+@@ -0,0 +1,176 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	usb3_vbus_reg: regulator-usb3-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBUS_BOOST_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pms405_gpios 3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_vbus_boost_pin>;
-+		vin-supply = <&vph_pwr>;
-+		enable-active-high;
-+	};
- };
- 
- &blsp1_uart3 {
++Introduction of Uacce
++---------------------
++
++Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
++provide Shared Virtual Addressing (SVA) between accelerators and processes.
++So accelerator can access any data structure of the main cpu.
++This differs from the data sharing between cpu and io device, which share
++only data content rather than address.
++Because of the unified address, hardware and user space of process can
++share the same virtual address in the communication.
++Uacce takes the hardware accelerator as a heterogeneous processor, while
++IOMMU share the same CPU page tables and as a result the same translation
++from va to pa.
++
++::
++
++         __________________________       __________________________
++        |                          |     |                          |
++        |  User application (CPU)  |     |   Hardware Accelerator   |
++        |__________________________|     |__________________________|
++
++                     |                                 |
++                     | va                              | va
++                     V                                 V
++                 __________                        __________
++                |          |                      |          |
++                |   MMU    |                      |  IOMMU   |
++                |__________|                      |__________|
++                     |                                 |
++                     |                                 |
++                     V pa                              V pa
++                 _______________________________________
++                |                                       |
++                |              Memory                   |
++                |_______________________________________|
++
++
++
++Architecture
++------------
++
++Uacce is the kernel module, taking charge of iommu and address sharing.
++The user drivers and libraries are called WarpDrive.
++
++The uacce device, built around the IOMMU SVA API, can access multiple
++address spaces, including the one without PASID.
++
++A virtual concept, queue, is used for the communication. It provides a
++FIFO-like interface. And it maintains a unified address space between the
++application and all involved hardware.
++
++::
++
++                             ___________________                  ________________
++                            |                   |   user API     |                |
++                            | WarpDrive library | ------------>  |  user driver   |
++                            |___________________|                |________________|
++                                     |                                    |
++                                     |                                    |
++                                     | queue fd                           |
++                                     |                                    |
++                                     |                                    |
++                                     v                                    |
++     ___________________         _________                                |
++    |                   |       |         |                               | mmap memory
++    | Other framework   |       |  uacce  |                               | r/w interface
++    | crypto/nic/others |       |_________|                               |
++    |___________________|                                                 |
++             |                       |                                    |
++             | register              | register                           |
++             |                       |                                    |
++             |                       |                                    |
++             |                _________________       __________          |
++             |               |                 |     |          |         |
++              -------------  |  Device Driver  |     |  IOMMU   |         |
++                             |_________________|     |__________|         |
++                                     |                                    |
++                                     |                                    V
++                                     |                            ___________________
++                                     |                           |                   |
++                                     --------------------------  |  Device(Hardware) |
++                                                                 |___________________|
++
++
++How does it work
++----------------
++
++Uacce uses mmap and IOMMU to play the trick.
++
++Uacce creates a chrdev for every device registered to it. New queue is
++created when user application open the chrdev. The file descriptor is used
++as the user handle of the queue.
++The accelerator device present itself as an Uacce object, which exports as
++a chrdev to the user space. The user application communicates with the
++hardware by ioctl (as control path) or share memory (as data path).
++
++The control path to the hardware is via file operation, while data path is
++via mmap space of the queue fd.
++
++The queue file address space:
++
++::
++
++   /**
++   * enum uacce_qfrt: qfrt type
++   * @UACCE_QFRT_MMIO: device mmio region
++   * @UACCE_QFRT_DUS: device user share region
++   */
++  enum uacce_qfrt {
++          UACCE_QFRT_MMIO = 0,
++          UACCE_QFRT_DUS = 1,
++  };
++
++All regions are optional and differ from device type to type.
++Each region can be mmapped only once, otherwise -EEXIST returns.
++
++The device mmio region is mapped to the hardware mmio space. It is generally
++used for doorbell or other notification to the hardware. It is not fast enough
++as data channel.
++
++The device user share region is used for share data buffer between user process
++and device.
++
++
++The Uacce register API
++----------------------
++
++The register API is defined in uacce.h.
++
++::
++
++  struct uacce_interface {
++    char name[UACCE_MAX_NAME_SIZE];
++    unsigned int flags;
++    const struct uacce_ops *ops;
++  };
++
++According to the IOMMU capability, uacce_interface flags can be:
++
++::
++
++  /**
++   * UACCE Device flags:
++   * UACCE_DEV_SVA: Shared Virtual Addresses
++   *              Support PASID
++   *              Support device page faults (PCI PRI or SMMU Stall)
++   */
++  #define UACCE_DEV_SVA               BIT(0)
++
++  struct uacce_device *uacce_alloc(struct device *parent,
++                                   struct uacce_interface *interface);
++  int uacce_register(struct uacce_device *uacce);
++  void uacce_remove(struct uacce_device *uacce);
++
++uacce_register results can be:
++
++a. If uacce module is not compiled, ERR_PTR(-ENODEV)
++
++b. Succeed with the desired flags
++
++c. Succeed with the negotiated flags, for example
++
++  uacce_interface.flags = UACCE_DEV_SVA but uacce->flags = ~UACCE_DEV_SVA
++
++  So user driver need check return value as well as the negotiated uacce->flags.
++
++
++The user driver
++---------------
++
++The queue file mmap space will need a user driver to wrap the communication
++protocol. Uacce provides some attributes in sysfs for the user driver to
++match the right accelerator accordingly.
++More details in Documentation/ABI/testing/sysfs-driver-uacce.
 -- 
-2.24.0
+2.7.4
 
