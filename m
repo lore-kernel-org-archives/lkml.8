@@ -2,133 +2,127 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F29C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26772C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC78A2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042AE2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgAOLhS (ORCPT
+        id S1730092AbgAOLhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:37:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46866 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgAOLhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:37:18 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1irgyx-0002fw-Ud; Wed, 15 Jan 2020 12:37:08 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8546E1C086F;
-        Wed, 15 Jan 2020 12:37:07 +0100 (CET)
-Date:   Wed, 15 Jan 2020 11:37:07 -0000
-From:   "tip-bot2 for Chuansheng Liu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/urgent] x86/mce/therm_throt: Do not access uninitialized therm_work
-Cc:     Chuansheng Liu <chuansheng.liu@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200107004116.59353-1-chuansheng.liu@intel.com>
-References: <20200107004116.59353-1-chuansheng.liu@intel.com>
+        Wed, 15 Jan 2020 06:37:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39188 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729900AbgAOLhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:37:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay1.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 10DC6AEEE;
+        Wed, 15 Jan 2020 11:37:16 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 5B5171E0D08; Wed, 15 Jan 2020 12:37:15 +0100 (CET)
+Date:   Wed, 15 Jan 2020 12:37:15 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
+Message-ID: <20200115113715.GB2595@quack2.suse.cz>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-Message-ID: <157908822728.396.5161866899997303064.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110192942.25021-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the ras/urgent branch of tip:
+On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> In order for users to determine if a file is currently operating in DAX
+> mode (effective DAX).  Define a statx attribute value and set that
+> attribute if the effective DAX flag is set.
+> 
+> To go along with this we propose the following addition to the statx man
+> page:
+> 
+> STATX_ATTR_DAX
+> 
+> 	DAX (cpu direct access) is a file mode that attempts to minimize
+> 	software cache effects for both I/O and memory mappings of this
+> 	file.  It requires a capable device, a compatible filesystem
+> 	block size, and filesystem opt-in. It generally assumes all
+> 	accesses are via cpu load / store instructions which can
+> 	minimize overhead for small accesses, but adversely affect cpu
+> 	utilization for large transfers. File I/O is done directly
+> 	to/from user-space buffers. While the DAX property tends to
+> 	result in data being transferred synchronously it does not give
+> 	the guarantees of synchronous I/O that data and necessary
+> 	metadata are transferred. Memory mapped I/O may be performed
+> 	with direct mappings that bypass system memory buffering. Again
+> 	while memory-mapped I/O tends to result in data being
+> 	transferred synchronously it does not guarantee synchronous
+> 	metadata updates. A dax file may optionally support being mapped
+> 	with the MAP_SYNC flag which does allow cpu store operations to
+> 	be considered synchronous modulo cpu cache effects.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Commit-ID:     978370956d2046b19313659ce65ed12d5b996626
-Gitweb:        https://git.kernel.org/tip/978370956d2046b19313659ce65ed12d5b996626
-Author:        Chuansheng Liu <chuansheng.liu@intel.com>
-AuthorDate:    Tue, 07 Jan 2020 00:41:16 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 15 Jan 2020 11:31:33 +01:00
+This looks good to me. You can add:
 
-x86/mce/therm_throt: Do not access uninitialized therm_work
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-It is relatively easy to trigger the following boot splat on an Ice Lake
-client platform. The call stack is like:
+								Honza
 
-  kernel BUG at kernel/timer/timer.c:1152!
-
-  Call Trace:
-  __queue_delayed_work
-  queue_delayed_work_on
-  therm_throt_process
-  intel_thermal_interrupt
-  ...
-
-The reason is that a CPU's thermal interrupt is enabled prior to
-executing its hotplug onlining callback which will initialize the
-throttling workqueues.
-
-Such a race can lead to therm_throt_process() accessing an uninitialized
-therm_work, leading to the above BUG at a very early bootup stage.
-
-Therefore, unmask the thermal interrupt vector only after having setup
-the workqueues completely.
-
- [ bp: Heavily massage commit message and correct comment formatting. ]
-
-Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200107004116.59353-1-chuansheng.liu@intel.com
----
- arch/x86/kernel/cpu/mce/therm_throt.c |  9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index b38010b..6c3e1c9 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -467,6 +467,7 @@ static int thermal_throttle_online(unsigned int cpu)
- {
- 	struct thermal_state *state = &per_cpu(thermal_state, cpu);
- 	struct device *dev = get_cpu_device(cpu);
-+	u32 l;
- 
- 	state->package_throttle.level = PACKAGE_LEVEL;
- 	state->core_throttle.level = CORE_LEVEL;
-@@ -474,6 +475,10 @@ static int thermal_throttle_online(unsigned int cpu)
- 	INIT_DELAYED_WORK(&state->package_throttle.therm_work, throttle_active_work);
- 	INIT_DELAYED_WORK(&state->core_throttle.therm_work, throttle_active_work);
- 
-+	/* Unmask the thermal vector after the above workqueues are initialized. */
-+	l = apic_read(APIC_LVTTHMR);
-+	apic_write(APIC_LVTTHMR, l & ~APIC_LVT_MASKED);
-+
- 	return thermal_throttle_add_dev(dev, cpu);
- }
- 
-@@ -722,10 +727,6 @@ void intel_init_thermal(struct cpuinfo_x86 *c)
- 	rdmsr(MSR_IA32_MISC_ENABLE, l, h);
- 	wrmsr(MSR_IA32_MISC_ENABLE, l | MSR_IA32_MISC_ENABLE_TM1, h);
- 
--	/* Unmask the thermal vector: */
--	l = apic_read(APIC_LVTTHMR);
--	apic_write(APIC_LVTTHMR, l & ~APIC_LVT_MASKED);
--
- 	pr_info_once("CPU0: Thermal monitoring enabled (%s)\n",
- 		      tm2 ? "TM2" : "TM1");
- 
+> ---
+>  fs/stat.c                 | 3 +++
+>  include/uapi/linux/stat.h | 1 +
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/fs/stat.c b/fs/stat.c
+> index 030008796479..894699c74dde 100644
+> --- a/fs/stat.c
+> +++ b/fs/stat.c
+> @@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+>  	if (IS_AUTOMOUNT(inode))
+>  		stat->attributes |= STATX_ATTR_AUTOMOUNT;
+>  
+> +	if (IS_DAX(inode))
+> +		stat->attributes |= STATX_ATTR_DAX;
+> +
+>  	if (inode->i_op->getattr)
+>  		return inode->i_op->getattr(path, stat, request_mask,
+>  					    query_flags);
+> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+> index ad80a5c885d5..e5f9d5517f6b 100644
+> --- a/include/uapi/linux/stat.h
+> +++ b/include/uapi/linux/stat.h
+> @@ -169,6 +169,7 @@ struct statx {
+>  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+>  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+>  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
+> +#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
+>  
+>  
+>  #endif /* _UAPI_LINUX_STAT_H */
+> -- 
+> 2.21.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
