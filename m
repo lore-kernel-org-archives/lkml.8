@@ -2,102 +2,95 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DD3C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AC0C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69AF22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FAA222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vOS+qbOG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c53ZpcVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgAOU1L (ORCPT
+        id S1729162AbgAOUbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:27:11 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40629 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgAOU1L (ORCPT
+        Wed, 15 Jan 2020 15:31:48 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:39663 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAOUbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:27:11 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so8724825pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:27:11 -0800 (PST)
+        Wed, 15 Jan 2020 15:31:47 -0500
+Received: by mail-vs1-f68.google.com with SMTP id y125so11263500vsb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:31:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=kWBj9q//ngCI8CHduUy+zt1arDphaiPl0KmAyH3wXMI=;
-        b=vOS+qbOG6Ei+ejHHP7brSCEHiRP3WSxVUn0SJkywCLHbCTk2meRAnqcz6CCmeNpPuZ
-         x+5NcR43SKz4az/LB/QeA/hZePBit+amrkLl4DXNcz+tqWGr96jE5EqIpU8T7YKsGqF1
-         9/+2PhqYvcoJ6e396p1+9uZ+joECShT7FVNWbVXmG19YLYpMuMIoTAEKRoefdJIZL7q0
-         quXK7Tp7pAv7Zx/SiguSrQcdvFyaP4Xm+0OjB9SNoOUFbmQV3CbThGlSn56Emm8ISzP+
-         OcbASV6uLDKyly7yXihP0pYSN8g7A/NWps5zy8MVh8FC7W3g8ZJn5EoOtBBukrrfu2oV
-         iaUw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=APQ1UV/G1//faBWOjZt5MAENkmiTNmeLgnXeENgbs5M=;
+        b=c53ZpcVMAKouxu/O6ib/onjxdpwkmNfRURW42BxVckNoirhL9c5EZZLI/16CyFPG+y
+         5HlcmTV8VIrlqAA67j3vbJDJG8TvOPkzV00eIJ4Y420Vpc7q4v/9rhlC7jq+kL5xleiH
+         7wWcG84OpdKU3kzY6yX37K0XseJK1Yon2xp3w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=kWBj9q//ngCI8CHduUy+zt1arDphaiPl0KmAyH3wXMI=;
-        b=ojWzD5Bpq+sp1VkwgmQ4S5RF43/77QKUZGPDx+cfE5bw3DrniPZN1igprif6QnghWK
-         9jS6wBOnD4krs/Cvp7TTqfSJ0sM4H1YmQGtOD/CoUdbqBlsQjsI3a70vfJf4zMvwkmey
-         E+cC6CsU7dj45BqCfteDvugMHyBXDBJyhYuDIc5caVzSao83MQP11lp0DzzIjlZIO0UM
-         USVKHz8893y7fKGemGqths5htwUeZt6zG4l8gaF1nQMpb4LtstPvjsyM7bMzwxti0v2H
-         PVtvMVgqPML/0JMi9OA4c1C3GYzQv3yo9n6mwmxIOxwMKpS7VmXuFBlqw4e322XYcxJt
-         g6Xw==
-X-Gm-Message-State: APjAAAUtLh/6xb8POkWGS3ZZtwf+J1gBCoXHoF4gk5uCYflGKx+qQVUq
-        dSCvRl+fc6mS9Cgglp6jlFmGQKMvtWs=
-X-Google-Smtp-Source: APXvYqwx103ddpfCyu40eH6QZZUjHXOFMIgHWpdjtdTq4tzEQ/4Gz956qvLsexoZqa4bRG/YlnpQ+A==
-X-Received: by 2002:aa7:946a:: with SMTP id t10mr33616856pfq.165.1579120030646;
-        Wed, 15 Jan 2020 12:27:10 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id u11sm277705pjn.2.2020.01.15.12.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 12:27:10 -0800 (PST)
-Date:   Wed, 15 Jan 2020 12:27:09 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: dump stack of victim when reaping failed
-In-Reply-To: <9a7cbbf0-4283-f932-e422-84b4fb42a055@I-love.SAKURA.ne.jp>
-Message-ID: <alpine.DEB.2.21.2001151223040.13588@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.2001141519280.200484@chino.kir.corp.google.com> <20200115084336.GW19428@dhcp22.suse.cz> <9a7cbbf0-4283-f932-e422-84b4fb42a055@I-love.SAKURA.ne.jp>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=APQ1UV/G1//faBWOjZt5MAENkmiTNmeLgnXeENgbs5M=;
+        b=t8hEsmKve9QVejBEsbPXh/NDJkzzu8DBzq6AEZIrbsk8nGDmrG3mNqOB5Viys6g2JT
+         dSCM4M1/GtKHZ1as2FSszmg79p8/FFHVee98YlOc1f/rloSx+2vownEFsDiS+TSFAUNy
+         dloYldaQrb06TJRwd6Lq81d9HL0FVfK4Ac6eA+UcFIhyn5dK1M7EGPP02ck8czQ/yOMM
+         b0nhuIMsrQzBYl8ZhAbHjDXQowsNCUHw/LvYOL4wEt6Zrsdh26YKrvVoZB2KLcw/suNx
+         GhPAp+1XFbl9GX193AVZGNLO27hQuYyjmwg1vEHXR2bO53HhyOU5HXd61+THOdZpSoNd
+         iv3Q==
+X-Gm-Message-State: APjAAAX8SsBE7TRL80LTAsYU5czx9+O7vKz8cVB+IdIoD7+q3DQN011a
+        WXtoQIgDdlPLH7BUo8EG5BRqZ6IFkhI=
+X-Google-Smtp-Source: APXvYqw7H5F6kr0wknJLxPQp9eMWHKLduXnTuJGvP9ldGw8budqp1Bk9TSv9y0IeV8ou86qvQfiKXA==
+X-Received: by 2002:a67:cd0a:: with SMTP id u10mr5731976vsl.156.1579120306353;
+        Wed, 15 Jan 2020 12:31:46 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id v85sm5747185vkd.8.2020.01.15.12.31.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 12:31:45 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id 59so6781033uap.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:31:45 -0800 (PST)
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr17367655uak.22.1579120305258;
+ Wed, 15 Jan 2020 12:31:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200109155910.907-1-swboyd@chromium.org> <20200109155910.907-5-swboyd@chromium.org>
+In-Reply-To: <20200109155910.907-5-swboyd@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 15 Jan 2020 12:31:33 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WZpxDV8F-nZ_25XaPKvb0qCmpVUpi2Xzr=KR2PrdN6KA@mail.gmail.com>
+Message-ID: <CAD=FV=WZpxDV8F-nZ_25XaPKvb0qCmpVUpi2Xzr=KR2PrdN6KA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] alarmtimer: Always export alarmtimer_get_rtcdev() and
+ update docs
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020, Tetsuo Handa wrote:
+Hi,
 
-> >> When a process cannot be oom reaped, for whatever reason, currently the
-> >> list of locks that are held is currently dumped to the kernel log.
-> >>
-> >> Much more interesting is the stack trace of the victim that cannot be
-> >> reaped.  If the stack trace is dumped, we have the ability to find
-> >> related occurrences in the same kernel code and hopefully solve the
-> >> issue that is making it wedged.
-> >>
-> >> Dump the stack trace when a process fails to be oom reaped.
-> > 
-> > Yes, this is really helpful.
-> 
-> tsk would be a thread group leader, but the thread which got stuck is not
-> always a thread group leader. Maybe dump all threads in that thread group
-> without PF_EXITING (or something) ?
-> 
+On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> The export isn't there for the stubbed version of
+> alarmtimer_get_rtcdev(), so move the export outside of the ifdef. And
+> rtcdev isn't used outside of this ifdef so we don't need to redefine it
+> as NULL.
+>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  kernel/time/alarmtimer.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
-That's possible, yes.  I think it comes down to the classic problem of how 
-much info in the kernel log on oom kill is too much.  Stacks for all 
-threads that match the mm being reaped may be *very* verbose.  I'm 
-currently tracking a stall in oom reaping where the victim doesn't always 
-have a lock held so we don't know where it's at in the kernel; I'm hoping 
-that a stack for the thread group leader will at least shed some light on 
-it.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
