@@ -2,354 +2,1058 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD32C33CB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681E2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4682467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="T4GKWMHf"
+	by mail.kernel.org (Postfix) with ESMTP id 20AA12467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAOG3I (ORCPT
+        id S1729157AbgAOG3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:29:08 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10526 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbgAOG3F (ORCPT
+        Wed, 15 Jan 2020 01:29:34 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44673 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgAOG3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:29:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1579069746; x=1610605746;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qqy7MlVLyY+vVG+fdEPo9a3Q02PDz8S8DmTQcAwSshs=;
-  b=T4GKWMHfiaH91qZa7B3EFvPBhU12SJUsKHkwny/Ma5Zs8prcg61Y6G0Z
-   7nQ89skxtZrUwdF7y8uZl+fYasQ49FL+FSDPx7eD+KSaHvR4Gd3DP2cFk
-   lghmJakqoHawzeHexXlxXJtN+dsfTMuOjF8VhBwhdzJCY4ZLcC5FA4eo2
-   ypr5ESCny42ggkWKky16CN5qUe6mpgkHf5YmYuwJ4veWqPn8hz81XGihr
-   xp4BtXy0syPL9UeaX+IZ6J/CAapKE3c+qGmGQDqg3ojEtvS2Nyj+3QgvQ
-   ibpE0nxOhJLidHWpBagCsDDtfwCgRWKPYu/YUg+ZeLKGRGrT9KJOB5UNc
-   A==;
-IronPort-SDR: d6Nnve39+4EqvPNVtTBIdJOrd91qMVVqtOCXG3yDv9xZDqXINyDDfwgu4K8tzQimcP6KG3vRfJ
- Tkf7SMCYIfNVvTdphtCVvfWrtajflo8mr19Ndq/vsy0DAn4bUe02w4H4+qcjsi0/Mv3P9C5OT1
- AOhJnaTzgf+HXkjdaUwd7hVQHNyEESLpDrllOLf2Gzpdj763J41nxQ8NrQcvjMKJzhQDrbMRWX
- RtLYghvzM/PTJdDu/neqTfU5I/4Y46EhNbDjI4LVwKR7yu0k8GkbZcguBEs6H7aZcsF+H/FkjK
- lII=
-X-IronPort-AV: E=Sophos;i="5.70,321,1574092800"; 
-   d="scan'208";a="128190386"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Jan 2020 14:29:05 +0800
-IronPort-SDR: uHxfMz9Ia66Iq4WW28CVnc54rnpnoNZ2PaeNCzq/UPdRUykx/3vpZwyhewiNhvST2Mbbpn4JPe
- bSwHDARXkabGDyXbN9xQHoNdXY9uDxKOv5g+PS2v1Ki2R9YD4ng/26iKI6uVKiWpJ+7Xgnjtu0
- yT76P3AQo84/J10fMnM49I8PO/XkfIJcYzxmYyBhv+XJm3vbFgBZdna9PLzioE//OGLVJqT7KU
- XaJsvRwB0HEVXrPKbB64EAx2PbpwpiCbISFzYYJ+y1Hu79pOvh3nVVNRciDa5cv7i6JNWNta4H
- QzFzwx7CPVyU3OsYJN9S+a1B
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 22:22:41 -0800
-IronPort-SDR: R9PF5l9BkKTY24WdNreOUs/a9z2BWZ0TNNj8h25rM2nZ4a6hCC7njK9TfcghQxARju+fqMXf4w
- GSF1Th9m1ytjRBAONW4igYLayXU+bgJ+V9U5g+ZeEHchyjtqkY3cqj86abXqX78V4KNzKUgJxK
- Syv8E2UGkMdBqqp+6wbQ7YhEziTJwA6LxBzrl7i28kcesH3GkRAcOwBF85Qii9uLOk+gkidiKb
- 4XmhVV+Ac3ZEQum19Z/Vf06FV7wzqDtoPjwxLHdvPEv3pLomPaPAuleQ5xTFLtOHPL6i1VkSN6
- ht4=
-WDCIronportException: Internal
-Received: from washi.fujisawa.hgst.com ([10.149.53.254])
-  by uls-op-cesaip02.wdc.com with ESMTP; 14 Jan 2020 22:29:03 -0800
-From:   Damien Le Moal <damien.lemoal@wdc.com>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: [PATCH v7 2/2] zonefs: Add documentation
-Date:   Wed, 15 Jan 2020 15:28:59 +0900
-Message-Id: <20200115062859.1389827-3-damien.lemoal@wdc.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200115062859.1389827-1-damien.lemoal@wdc.com>
-References: <20200115062859.1389827-1-damien.lemoal@wdc.com>
+        Wed, 15 Jan 2020 01:29:34 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so11769924lfa.11;
+        Tue, 14 Jan 2020 22:29:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=APGGwsf7V7GTxUhN12ffMRGEf4IlmzupD8iJ5zz2MW8=;
+        b=UmA6NkNpGwo43YKHR4HJ7/4Haq3NbC0WpjemBjd0ioO008SY1PdRYuSSUcCfGkJd1t
+         c36AHfx0UXAbGCwJtQpwfcDDIzpCydw2NCbwEpUOQntoRrzNeNc9KuyNHQDw47djsmbB
+         VejL9+2/sJz/2WjCkmZwAXGSLxe9G6EovZtzMKBiiSyO/02T0um9Wz3ZrrVvfvS6hr8p
+         om+mURdoFRZ9QIqhQj2hcx9DWvp1N15p2M9LrUaBc0VERrmpxzN3WL2Hlffpjo5Tt4/0
+         RoqOiu05atekbxOVugIdmfWvZwqDDwDl4GKx3AA26qouoTktlF06DKAWxlzo2nayyH8c
+         o+cQ==
+X-Gm-Message-State: APjAAAXHbJLE+lTJD0E6dudXhEGUgp9ihuRjzQXYG8QRVqK8zMhL5Afc
+        E1aplyDl12sS4Bm3GnwY6dE=
+X-Google-Smtp-Source: APXvYqwKLDQ8LfEWJiMXFMoYlabjLVATUcXBUuygrsuX0zvB2zS7sT3eQEKq6t/XMaX37P1drEdggw==
+X-Received: by 2002:a19:888:: with SMTP id 130mr3938204lfi.167.1579069768497;
+        Tue, 14 Jan 2020 22:29:28 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id h24sm8581010ljl.80.2020.01.14.22.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 22:29:27 -0800 (PST)
+Date:   Wed, 15 Jan 2020 08:29:21 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20200115062921.GA9944@localhost.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new file Documentation/filesystems/zonefs.txt to document
-zonefs principles and user-space tool usage.
+Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+the binding document to two separate documents (own documents for BD71837
+and BD71847) as they have different amount of regulators. This way we can
+better enforce the node name check for regulators. ROHM is also providing
+BD71850 - which is almost identical to BD71847 - main difference is some
+initial regulator states. The BD71850 can be driven by same driver and it
+has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+introduce compatible for it.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/filesystems/zonefs.txt | 241 +++++++++++++++++++++++++++
- MAINTAINERS                          |   1 +
- 2 files changed, 242 insertions(+)
- create mode 100644 Documentation/filesystems/zonefs.txt
 
-diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
+Resending for Mark to check.
+
+changes since v1:
+- constrains to short and long presses.
+- reworded commit message to shorten a line exceeding 75 chars
+- added 'additionalProperties: false'
+- removed 'clock-names' from example node
+
+ .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+ .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
+ .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
+ .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+ .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+ .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
+ 6 files changed, 658 insertions(+), 252 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+deleted file mode 100644
+index f22d74c7a8db..000000000000
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
++++ /dev/null
+@@ -1,90 +0,0 @@
+-* ROHM BD71837 and BD71847 Power Management Integrated Circuit bindings
+-
+-BD71837MWV and BD71847MWV are programmable Power Management ICs for powering
+-single-core, dual-core, and quad-core SoCs such as NXP-i.MX 8M. They are
+-optimized for low BOM cost and compact solution footprint. BD71837MWV
+-integrates 8 Buck regulators and 7 LDOs. BD71847MWV contains 6 Buck regulators
+-and 6 LDOs.
+-
+-Datasheet for BD71837 is available at:
+-https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+-Datasheet for BD71847 is available at:
+-https://www.rohm.com/datasheet/BD71847AMWV/bd71847amwv-e
+-
+-Required properties:
+- - compatible		: Should be "rohm,bd71837" for bd71837
+-				    "rohm,bd71847" for bd71847.
+- - reg			: I2C slave address.
+- - interrupt-parent	: Phandle to the parent interrupt controller.
+- - interrupts		: The interrupt line the device is connected to.
+- - clocks		: The parent clock connected to PMIC. If this is missing
+-			  32768 KHz clock is assumed.
+- - #clock-cells		: Should be 0.
+- - regulators:		: List of child nodes that specify the regulators.
+-			  Please see ../regulator/rohm,bd71837-regulator.txt
+-
+-Optional properties:
+-- clock-output-names	: Should contain name for output clock.
+-- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
+-
+-The BD718x7 supports two different HW states as reset target states. States
+-are called as SNVS and READY. At READY state all the PMIC power outputs go
+-down and OTP is reload. At the SNVS state all other logic and external
+-devices apart from the SNVS power domain are shut off. Please refer to NXP
+-i.MX8 documentation for further information regarding SNVS state. When a
+-reset is done via SNVS state the PMIC OTP data is not reload. This causes
+-power outputs that have been under SW control to stay down when reset has
+-switched power state to SNVS. If reset is done via READY state the power
+-outputs will be returned to HW control by OTP loading. Thus the reset
+-target state is set to READY by default. If SNVS state is used the boot
+-crucial regulators must have the regulator-always-on and regulator-boot-on
+-properties set in regulator node.
+-
+-- rohm,short-press-ms	: Short press duration in milliseconds
+-- rohm,long-press-ms	: Long press duration in milliseconds
+-
+-Configure the "short press" and "long press" timers for the power button.
+-Values are rounded to what hardware supports (500ms multiple for short and
+-1000ms multiple for long). If these properties are not present the existing
+-configuration (from bootloader or OTP) is not touched.
+-
+-Example:
+-
+-	/* external oscillator node */
+-	osc: oscillator {
+-		compatible = "fixed-clock";
+-		#clock-cells = <1>;
+-		clock-frequency  = <32768>;
+-		clock-output-names = "osc";
+-	};
+-
+-	pmic: pmic@4b {
+-		compatible = "rohm,bd71837";
+-		reg = <0x4b>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <29 GPIO_ACTIVE_LOW>;
+-		interrupt-names = "irq";
+-		#clock-cells = <0>;
+-		clocks = <&osc 0>;
+-		clock-output-names = "bd71837-32k-out";
+-		rohm,reset-snvs-powered;
+-
+-		regulators {
+-			buck1: BUCK1 {
+-				regulator-name = "buck1";
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <1300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <1250>;
+-			};
+-			// [...]
+-		};
+-	};
+-
+-	/* Clock consumer node */
+-	rtc@0 {
+-		compatible = "company,my-rtc";
+-		clock-names = "my-clock";
+-		clocks = <&pmic>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
 new file mode 100644
-index 000000000000..a24688261dbf
+index 000000000000..aa922c560fcc
 --- /dev/null
-+++ b/Documentation/filesystems/zonefs.txt
-@@ -0,0 +1,241 @@
-+ZoneFS - Zone filesystem for Zoned block devices
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+@@ -0,0 +1,236 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd71837-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+Overview
-+========
++title: ROHM BD71837 Power Management Integrated Circuit bindings
 +
-+zonefs is a very simple file system exposing each zone of a zoned block device
-+as a file. Unlike a regular POSIX-compliant file system with native zoned block
-+device support (e.g. f2fs), zonefs does not hide the sequential write
-+constraint of zoned block devices to the user. Files representing sequential
-+write zones of the device must be written sequentially starting from the end
-+of the file (append only writes).
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 +
-+As such, zonefs is in essence closer to a raw block device access interface
-+than to a full-featured POSIX file system. The goal of zonefs is to simplify
-+the implementation of zoned block device support in applications by replacing
-+raw block device file accesses with a richer file API, avoiding relying on
-+direct block device file ioctls which may be more obscure to developers. One
-+example of this approach is the implementation of LSM (log-structured merge)
-+tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-+by allowing SSTables to be stored in a zone file similarly to a regular file
-+system rather than as a range of sectors of the entire disk. The introduction
-+of the higher level construct "one file is one zone" can help reducing the
-+amount of changes needed in the application as well as introducing support for
-+different application programming languages.
++description: |
++  BD71837MWV is programmable Power Management ICs for powering single-core,
++  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is optimized for low
++  BOM cost and compact solution footprint. BD71837MWV  integrates 8 Buck
++  regulators and 7 LDOs.
++  Datasheet for BD71837 is available at
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71837amwv-product
 +
-+Zoned block devices
-+-------------------
++properties:
++  compatible:
++    const: rohm,bd71837
 +
-+Zoned storage devices belong to a class of storage devices with an address
-+space that is divided into zones. A zone is a group of consecutive LBAs and all
-+zones are contiguous (there are no LBA gaps). Zones may have different types.
-+* Conventional zones: there are no access constraints to LBAs belonging to
-+  conventional zones. Any read or write access can be executed, similarly to a
-+  regular block device.
-+* Sequential zones: these zones accept random reads but must be written
-+  sequentially. Each sequential zone has a write pointer maintained by the
-+  device that keeps track of the mandatory start LBA position of the next write
-+  to the device. As a result of this write constraint, LBAs in a sequential zone
-+  cannot be overwritten. Sequential zones must first be erased using a special
-+  command (zone reset) before rewriting.
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
 +
-+Zoned storage devices can be implemented using various recording and media
-+technologies. The most common form of zoned storage today uses the SCSI Zoned
-+Block Commands (ZBC) and Zoned ATA Commands (ZAC) interfaces on Shingled
-+Magnetic Recording (SMR) HDDs.
++  interrupts:
++    maxItems: 1
 +
-+Solid State Disks (SSD) storage devices can also implement a zoned interface
-+to, for instance, reduce internal write amplification due to garbage collection.
-+The NVMe Zoned NameSpace (ZNS) is a technical proposal of the NVMe standard
-+committee aiming at adding a zoned storage interface to the NVMe protocol.
++  clocks:
++    maxItems: 1
 +
-+zonefs on-disk metadata
-+-----------------------
++  "#clock-cells":
++    const: 0
 +
-+zonefs on-disk metadata is reduced to an immutable super block which
-+persistently stores a magic number and optional feature flags and values. On
-+mount, zonefs uses blkdev_report_zones() to obtain the device zone configuration
-+and populates the mount point with a static file tree solely based on this
-+information. File sizes come from the device zone type and write pointer
-+position managed by the device itself.
++# The BD718x7 supports two different HW states as reset target states. States
++# are called as SNVS and READY. At READY state all the PMIC power outputs go
++# down and OTP is reload. At the SNVS state all other logic and external
++# devices apart from the SNVS power domain are shut off. Please refer to NXP
++# i.MX8 documentation for further information regarding SNVS state. When a
++# reset is done via SNVS state the PMIC OTP data is not reload. This causes
++# power outputs that have been under SW control to stay down when reset has
++# switched power state to SNVS. If reset is done via READY state the power
++# outputs will be returned to HW control by OTP loading. Thus the reset
++# target state is set to READY by default. If SNVS state is used the boot
++# crucial regulators must have the regulator-always-on and regulator-boot-on
++# properties set in regulator node.
 +
-+The super block is always written on disk at sector 0. The first zone of the
-+device storing the super block is never exposed as a zone file by zonefs. If
-+the zone containing the super block is a sequential zone, the mkzonefs format
-+tool always "finishes" the zone, that is, it transitions the zone to a full
-+state to make it read-only, preventing any data write.
++  rohm,reset-snvs-powered:
++    description: |
++      Transfer PMIC to SNVS state at reset
++    type: boolean
 +
-+Zone type sub-directories
-+-------------------------
++# Configure the "short press" and "long press" timers for the power button.
++# Values are rounded to what hardware supports
++# Short-press:
++#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
++# Long-press:
++#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
++# If these properties are not present the existing configuration (from
++# bootloader or OTP) is not touched.
 +
-+Files representing zones of the same type are grouped together under the same
-+sub-directory automatically created on mount.
++  rohm,short-press-ms:
++    description:
++      Short press duration in milliseconds
++    enum:
++      - 10
++      - 500
++      - 1000
++      - 1500
++      - 2000
++      - 2500
++      - 3000
++      - 3500
++      - 4000
++      - 4500
++      - 5000
++      - 5500
++      - 6000
++      - 6500
++      - 7000
 +
-+For conventional zones, the sub-directory "cnv" is used. This directory is
-+however created if and only if the device has usable conventional zones. If
-+the device only has a single conventional zone at sector 0, the zone will not
-+be exposed as a file as it will be used to store the zonefs super block. For
-+such devices, the "cnv" sub-directory will not be created.
++  rohm,long-press-ms:
++    description:
++      Long press duration in milliseconds
++    enum:
++      - 10
++      - 1000
++      - 2000
++      - 3000
++      - 4000
++      - 5000
++      - 6000
++      - 7000
++      - 8000
++      - 9000
++      - 10000
++      - 11000
++      - 12000
++      - 13000
++      - 14000
 +
-+For sequential write zones, the sub-directory "seq" is used.
++  regulators:
++    $ref: ../regulator/rohm,bd71837-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
 +
-+These two directories are the only directories that exist in zonefs. Users
-+cannot create other directories and cannot rename nor delete the "cnv" and
-+"seq" sub-directories.
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#clock-cells"
++  - regulators
 +
-+The size of the directories indicated by the st_size field of struct stat,
-+obtained with the stat() or fstat() system calls, indicates the number of files
-+existing under the directory.
++additionalProperties: false
 +
-+Zone files
-+----------
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
 +
-+Zone files are named using the number of the zone they represent within the set
-+of zones of a particular type. That is, both the "cnv" and "seq" directories
-+contain files named "0", "1", "2", ... The file numbers also represent
-+increasing zone start sector on the device.
++    i2c {
++      pmic: pmic@4b {
++            compatible = "rohm,bd71837";
++            reg = <0x4b>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++            #clock-cells = <0>;
++            clocks = <&osc 0>;
++            rohm,reset-snvs-powered;
++            rohm,short-press-ms = <10>;
++            rohm,long-press-ms = <2000>;
 +
-+All read and write operations to zone files are not allowed beyond the file
-+maximum size, that is, beyond the zone size. Any access exceeding the zone
-+size is failed with the -EFBIG error.
++            regulators {
++                buck1: BUCK1 {
++                    regulator-name = "buck1";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <900000>;
++                    rohm,dvs-idle-voltage = <850000>;
++                    rohm,dvs-suspend-voltage = <800000>;
++                };
++                buck2: BUCK2 {
++                    regulator-name = "buck2";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1000000>;
++                    rohm,dvs-idle-voltage = <900000>;
++                };
++                buck3: BUCK3 {
++                    regulator-name = "buck3";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    rohm,dvs-run-voltage = <1000000>;
++                };
++                buck4: BUCK4 {
++                    regulator-name = "buck4";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    rohm,dvs-run-voltage = <1000000>;
++                };
++                buck5: BUCK5 {
++                    regulator-name = "buck5";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1350000>;
++                    regulator-boot-on;
++                };
++                buck6: BUCK6 {
++                    regulator-name = "buck6";
++                    regulator-min-microvolt = <3000000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                buck7: BUCK7 {
++                    regulator-name = "buck7";
++                    regulator-min-microvolt = <1605000>;
++                    regulator-max-microvolt = <1995000>;
++                    regulator-boot-on;
++                };
++                buck8: BUCK8 {
++                    regulator-name = "buck8";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1400000>;
++                };
 +
-+Creating, deleting, renaming or modifying any attribute of files and
-+sub-directories is not allowed.
++                ldo1: LDO1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <3000000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                ldo2: LDO2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <900000>;
++                    regulator-boot-on;
++                };
++                ldo3: LDO3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo4: LDO4 {
++                    regulator-name = "ldo4";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo5: LDO5 {
++                    regulator-name = "ldo5";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo6: LDO6 {
++                    regulator-name = "ldo6";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo7_reg: LDO7 {
++                    regulator-name = "ldo7";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+new file mode 100644
+index 000000000000..402e40dfe0b8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -0,0 +1,222 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd71847-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+The number of blocks of a file as reported by stat() and fstat() indicates the
-+size of the file zone, or in other words, the maximum file size.
++title: ROHM BD71847 and BD71850 Power Management Integrated Circuit bindings
 +
-+Conventional zone files
-+-----------------------
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 +
-+The size of conventional zone files is fixed to the size of the zone they
-+represent. Conventional zone files cannot be truncated.
++description: |
++  BD71847AMWV and BD71850MWV are programmable Power Management ICs for powering
++  single-core,  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is
++  optimized for low BOM cost and compact solution footprint. BD71847MWV and
++  BD71850MWV integrate 6 Buck regulators and 6 LDOs.
++  Datasheets are available at
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71847amwv-product
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71850mwv-product
 +
-+These files can be randomly read and written, using any form of I/O operation:
-+buffered I/Os, direct I/Os, memory mapped I/Os (mmap), etc. There are no I/O
-+constraint for these files beyond the file size limit mentioned above.
++properties:
++  compatible:
++    enum:
++      - rohm,bd71847
++      - rohm,bd71850
 +
-+Sequential zone files
-+---------------------
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
 +
-+The size of sequential zone files present in the "seq" sub-directory represents
-+the file's zone write pointer position relative to the zone start sector.
++  interrupts:
++    maxItems: 1
 +
-+Sequential zone files can only be written sequentially, starting from the file
-+end, that is, write operations can only be append writes. Zonefs makes no
-+attempt at accepting random writes and will fail any write request that has a
-+start offset not corresponding to the end of the last issued write.
++  clocks:
++    maxItems: 1
 +
-+In order to give guarantees regarding write ordering, zonefs also prevents
-+buffered writes and mmap writes for sequential files. Only direct I/O writes are
-+accepted. There are no restrictions on read operations nor on the type of I/O
-+used to request reads (buffered I/Os, direct I/Os and mmap reads are all
-+accepted).
++  "#clock-cells":
++    const: 0
 +
-+Truncating sequential zone files is allowed only down to 0, in which case, the
-+zone is reset to rewind the file zone write pointer position to the start of
-+the zone, or up to the zone size, in which case the file's zone is transitioned
-+to the FULL state (finish zone operation).
++# The BD71847 abd BD71850 support two different HW states as reset target
++# states. States are called as SNVS and READY. At READY state all the PMIC
++# power outputs go down and OTP is reload. At the SNVS state all other logic
++# and external devices apart from the SNVS power domain are shut off. Please
++# refer to NXP i.MX8 documentation for further information regarding SNVS
++# state. When a reset is done via SNVS state the PMIC OTP data is not reload.
++# This causes power outputs that have been under SW control to stay down when
++# reset has switched power state to SNVS. If reset is done via READY state the
++# power outputs will be returned to HW control by OTP loading. Thus the reset
++# target state is set to READY by default. If SNVS state is used the boot
++# crucial regulators must have the regulator-always-on and regulator-boot-on
++# properties set in regulator node.
 +
-+zonefs format options
-+---------------------
++  rohm,reset-snvs-powered:
++    description:
++      Transfer PMIC to SNVS state at reset.
++    type: boolean
 +
-+Several optional features of zonefs can be enabled at format time.
-+* Conventional zone aggregation: ranges of contiguous conventional zones can be
-+  aggregated into a single larger file instead of the default one file per zone.
-+* File ownership: The owner UID and GID of zone files is by default 0 (root)
-+  but can be changed to any valid UID/GID.
-+* File access permissions: the default 640 access permissions can be changed.
++# Configure the "short press" and "long press" timers for the power button.
++# Values are rounded to what hardware supports
++# Short-press:
++#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
++# Long-press:
++#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
++# If these properties are not present the existing # configuration (from
++# bootloader or OTP) is not touched.
 +
-+User Space Tools
-+================
++  rohm,short-press-ms:
++    description:
++      Short press duration in milliseconds
++    enum:
++      - 10
++      - 500
++      - 1000
++      - 1500
++      - 2000
++      - 2500
++      - 3000
++      - 3500
++      - 4000
++      - 4500
++      - 5000
++      - 5500
++      - 6000
++      - 6500
++      - 7000
++      - 7500
 +
-+The mkzonefs tool is used to format zoned block devices for use with zonefs.
-+This tool is available on Github at:
++  rohm,long-press-ms:
++    description:
++      Long press duration in milliseconds
++    enum:
++      - 10
++      - 1000
++      - 2000
++      - 3000
++      - 4000
++      - 5000
++      - 6000
++      - 7000
++      - 8000
++      - 9000
++      - 10000
++      - 11000
++      - 12000
++      - 13000
++      - 14000
++      - 15000
 +
-+https://github.com/damien-lemoal/zonefs-tools
++  regulators:
++    $ref: ../regulator/rohm,bd71847-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
 +
-+zonefs-tools also includes a test suite which can be run against any zoned
-+block device, including null_blk block device created with zoned mode.
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#clock-cells"
++  - regulators
 +
-+Examples
-+--------
++additionalProperties: false
 +
-+The following formats a 15TB host-managed SMR HDD with 256 MB zones
-+with the conventional zones aggregation feature enabled.
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
 +
-+# mkzonefs -o aggr_cnv /dev/sdX
-+# mount -t zonefs /dev/sdX /mnt
-+# ls -l /mnt/
-+total 0
-+dr-xr-xr-x 2 root root     1 Nov 25 13:23 cnv
-+dr-xr-xr-x 2 root root 55356 Nov 25 13:23 seq
++    i2c {
++      pmic: pmic@4b {
++            compatible = "rohm,bd71847";
++            reg = <0x4b>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++            #clock-cells = <0>;
++            clocks = <&osc 0>;
++            rohm,reset-snvs-powered;
++            rohm,short-press-ms = <10>;
++            rohm,long-press-ms = <2000>;
 +
-+The size of the zone files sub-directories indicate the number of files
-+existing for each type of zones. In this example, there is only one
-+conventional zone file (all conventional zones are aggregated under a single
-+file).
++            regulators {
++                buck1: BUCK1 {
++                    regulator-name = "buck1";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <900000>;
++                    rohm,dvs-idle-voltage = <850000>;
++                    rohm,dvs-suspend-voltage = <800000>;
++                };
++                buck2: BUCK2 {
++                    regulator-name = "buck2";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1000000>;
++                    rohm,dvs-idle-voltage = <900000>;
++                };
++                buck3: BUCK3 {
++                    regulator-name = "buck3";
++                    regulator-min-microvolt = <550000>;
++                    regulator-max-microvolt = <1350000>;
++                    regulator-boot-on;
++                };
++                buck4: BUCK4 {
++                    regulator-name = "buck4";
++                    regulator-min-microvolt = <2600000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                buck5: BUCK5 {
++                    regulator-name = "buck5";
++                    regulator-min-microvolt = <1605000>;
++                    regulator-max-microvolt = <1995000>;
++                    regulator-boot-on;
++                };
++                buck8: BUCK6 {
++                    regulator-name = "buck6";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1400000>;
++                };
 +
-+# ls -l /mnt/cnv
-+total 137101312
-+-rw-r----- 1 root root 140391743488 Nov 25 13:23 0
++                ldo1: LDO1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <1600000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                ldo2: LDO2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <900000>;
++                    regulator-boot-on;
++                };
++                ldo3: LDO3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo4: LDO4 {
++                    regulator-name = "ldo4";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo5: LDO5 {
++                    regulator-name = "ldo5";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo6: LDO6 {
++                    regulator-name = "ldo6";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+deleted file mode 100644
+index cbce62c22b60..000000000000
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
++++ /dev/null
+@@ -1,162 +0,0 @@
+-ROHM BD71837 and BD71847 Power Management Integrated Circuit regulator bindings
+-
+-Required properties:
+- - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7" for
+-                   BD71837. For BD71847 names should be "buck1", ..., "buck6"
+-		   and "ldo1", ..., "ldo6"
+-
+-List of regulators provided by this controller. BD71837 regulators node
+-should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
+-Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+-Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
+-definition for each of these nodes is defined using the standard
+-binding for regulators at
+-Documentation/devicetree/bindings/regulator/regulator.txt.
+-Note that if BD71837 starts at RUN state you probably want to use
+-regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
+-disabled by driver at startup. LDO5 and LDO6 are supplied by those and
+-if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
+-cause PMIC to reset.
+-
+-The valid names for BD71837 regulator nodes are:
+-BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
+-LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
+-
+-The valid names for BD71847 regulator nodes are:
+-BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
+-LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+-
+-Optional properties:
+-- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
+-				  See below table for bucks which support this.
+-- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
+-				  See below table for bucks which support this.
+-- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in uV.
+-				  See below table for bucks which support this.
+-- Any optional property defined in bindings/regulator/regulator.txt
+-
+-Supported default DVS states:
+-
+-BD71837:
+-buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+------------------------------------------------------------------------------
+-1	| supported		| supported		| supported
+-----------------------------------------------------------------------------
+-2	| supported		| supported		| not supported
+-----------------------------------------------------------------------------
+-3	| supported		| not supported		| not supported
+-----------------------------------------------------------------------------
+-4	| supported		| not supported		| not supported
+-----------------------------------------------------------------------------
+-rest	| not supported		| not supported		| not supported
+-
+-BD71847:
+-buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+------------------------------------------------------------------------------
+-1	| supported		| supported		| supported
+-----------------------------------------------------------------------------
+-2	| supported		| supported		| not supported
+-----------------------------------------------------------------------------
+-rest	| not supported		| not supported		| not supported
+-
+-Example:
+-regulators {
+-	buck1: BUCK1 {
+-		regulator-name = "buck1";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-ramp-delay = <1250>;
+-		rohm,dvs-run-voltage = <900000>;
+-		rohm,dvs-idle-voltage = <850000>;
+-		rohm,dvs-suspend-voltage = <800000>;
+-	};
+-	buck2: BUCK2 {
+-		regulator-name = "buck2";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-ramp-delay = <1250>;
+-		rohm,dvs-run-voltage = <1000000>;
+-		rohm,dvs-idle-voltage = <900000>;
+-	};
+-	buck3: BUCK3 {
+-		regulator-name = "buck3";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		rohm,dvs-run-voltage = <1000000>;
+-	};
+-	buck4: BUCK4 {
+-		regulator-name = "buck4";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		rohm,dvs-run-voltage = <1000000>;
+-	};
+-	buck5: BUCK5 {
+-		regulator-name = "buck5";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1350000>;
+-		regulator-boot-on;
+-	};
+-	buck6: BUCK6 {
+-		regulator-name = "buck6";
+-		regulator-min-microvolt = <3000000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-	};
+-	buck7: BUCK7 {
+-		regulator-name = "buck7";
+-		regulator-min-microvolt = <1605000>;
+-		regulator-max-microvolt = <1995000>;
+-		regulator-boot-on;
+-	};
+-	buck8: BUCK8 {
+-		regulator-name = "buck8";
+-		regulator-min-microvolt = <800000>;
+-		regulator-max-microvolt = <1400000>;
+-	};
+-
+-	ldo1: LDO1 {
+-		regulator-name = "ldo1";
+-		regulator-min-microvolt = <3000000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-	};
+-	ldo2: LDO2 {
+-		regulator-name = "ldo2";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <900000>;
+-		regulator-boot-on;
+-	};
+-	ldo3: LDO3 {
+-		regulator-name = "ldo3";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-	ldo4: LDO4 {
+-		regulator-name = "ldo4";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-	ldo5: LDO5 {
+-		regulator-name = "ldo5";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-	ldo6: LDO6 {
+-		regulator-name = "ldo6";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-	ldo7_reg: LDO7 {
+-		regulator-name = "ldo7";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+-
+-
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+new file mode 100644
+index 000000000000..a323b1696eee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd71837-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+This aggregated conventional zone file can be used as a regular file.
++title: ROHM BD71837 Power Management Integrated Circuit regulators
 +
-+# mkfs.ext4 /mnt/cnv/0
-+# mount -o loop /mnt/cnv/0 /data
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 +
-+The "seq" sub-directory grouping files for sequential write zones has in this
-+example 55356 zones.
++description: |
++  List of regulators provided by this controller. BD71837 regulators node
++  should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
++  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
++  definition for each of these nodes is defined using the standard
++  binding for regulators at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++  Note that if BD71837 starts at RUN state you probably want to use
++  regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
++  disabled by driver at startup. LDO5 and LDO6 are supplied by those and
++  if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
++  cause PMIC to reset.
 +
-+# ls -lv /mnt/seq
-+total 14511243264
-+-rw-r----- 1 root root 0 Nov 25 13:23 0
-+-rw-r----- 1 root root 0 Nov 25 13:23 1
-+-rw-r----- 1 root root 0 Nov 25 13:23 2
-+...
-+-rw-r----- 1 root root 0 Nov 25 13:23 55354
-+-rw-r----- 1 root root 0 Nov 25 13:23 55355
++#The valid names for BD71837 regulator nodes are:
++#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
++#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
 +
-+For sequential write zone files, the file size changes as data is appended at
-+the end of the file, similarly to any regular file system.
++patternProperties:
++  "^LDO[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single LDO regulator.
 +
-+# dd if=/dev/zero of=/mnt/seq/0 bs=4096 count=1 conv=notrunc oflag=direct
-+1+0 records in
-+1+0 records out
-+4096 bytes (4.1 kB, 4.0 KiB) copied, 0.00044121 s, 9.3 MB/s
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-7]$"
++        description:
++          should be "ldo1", ..., "ldo7"
 +
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/seq/0
++  "^BUCK[1-8]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single BUCK regulator.
 +
-+The written file can be truncated to the zone size, preventing any further
-+write operation.
++    properties:
++      regulator-name:
++        pattern: "^buck[1-8]$"
++        description:
++          should be "buck1", ..., "buck8"
 +
-+# truncate -s 268435456 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 268435456 Nov 25 13:49 /mnt/seq/0
++      rohm,dvs-run-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
 +
-+Truncation to 0 size allows freeing the file zone storage space and restart
-+append-writes to the file.
++      rohm,dvs-idle-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
 +
-+# truncate -s 0 /mnt/seq/0
-+# ls -l /mnt/seq/0
-+-rw-r----- 1 root root 0 Nov 25 13:49 /mnt/seq/0
++      rohm,dvs-suspend-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
 +
-+Since files are statically mapped to zones on the disk, the number of blocks of
-+a file as reported by stat() and fstat() indicates the size of the file zone.
++        # Supported default DVS states:
++        #
++        # BD71837:
++        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
++        # ----------------------------------------------------------------
++        # 1    | supported       | supported        | supported
++        # ----------------------------------------------------------------
++        # 2    | supported       | supported        | not supported
++        # ----------------------------------------------------------------
++        # 3    | supported       | not supported    | not supported
++        # ----------------------------------------------------------------
++        # 4    | supported       | not supported    | not supported
++        # ----------------------------------------------------------------
++        # rest | not supported   | not supported    | not supported
 +
-+# stat /mnt/seq/0
-+  File: /mnt/seq/0
-+  Size: 0         	Blocks: 524288     IO Block: 4096   regular empty file
-+Device: 870h/2160d	Inode: 50431       Links: 1
-+Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)
-+Access: 2019-11-25 13:23:57.048971997 +0900
-+Modify: 2019-11-25 13:52:25.553805765 +0900
-+Change: 2019-11-25 13:52:25.553805765 +0900
-+ Birth: -
 +
-+The number of blocks of the file ("Blocks") in units of 512B blocks gives the
-+maximum file size of 524288 * 512 B = 256 MB, corresponding to the device zone
-+size in this example. Of note is that the "IO block" field always indicates the
-+minimum I/O size for writes and corresponds to the device physical sector size.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ffdeaa7191e..d658037e9843 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18312,6 +18312,7 @@ L:	linux-fsdevel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git
- S:	Maintained
- F:	fs/zonefs/
-+F:	Documentation/filesystems/zonefs.txt
- 
- ZPOOL COMPRESSED PAGE STORAGE API
- M:	Dan Streetman <ddstreet@ieee.org>
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+new file mode 100644
+index 000000000000..526fd00bcb16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd71847-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71847 and BD71850 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  List of regulators provided by this controller. BD71847 regulators node
++  should be sub node of the BD71847 MFD node. See BD71847 MFD bindings at
++  Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
++  definition for each of these nodes is defined using the standard
++  binding for regulators at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++  Note that if BD71847 starts at RUN state you probably want to use
++  regulator-boot-on at least for BUCK5. LDO6 is supplied by it and it must
++  not be disabled by driver at startup. If BUCK5 is disabled at startup the
++  voltage monitoring for LDO5/LDO6 can cause PMIC to reset.
++
++#The valid names for BD71847 regulator nodes are:
++#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
++#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
++
++patternProperties:
++  "^LDO[1-6]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single LDO regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-6]$"
++        description:
++          should be "ldo1", ..., "ldo6"
++
++  "^BUCK[1-6]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single BUCK regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-6]$"
++        description:
++          should be "buck1", ..., "buck6"
++
++      rohm,dvs-run-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-idle-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-suspend-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++        # Supported default DVS states:
++        #
++        # BD71847:
++        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
++        # ----------------------------------------------------------------
++        # 1    | supported       | supported        | supported
++        # ----------------------------------------------------------------
++        # 2    | supported       | supported        | not supported
++        # ----------------------------------------------------------------
++        # rest | not supported   | not supported    | not supported
++
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
 -- 
-2.24.1
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
