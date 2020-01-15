@@ -2,156 +2,116 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD251C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF4FC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A362081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="axDANLEv"
+	by mail.kernel.org (Postfix) with ESMTP id 6BC922081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgAOW4w (ORCPT
+        id S1730964AbgAOW50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:56:52 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52824 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgAOW4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:56:52 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so1780188wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 14:56:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WOruGbo3ihqEelkLm7kTR9rgnvVG+704WzoO70mY5DI=;
-        b=axDANLEvzn0+6KXIOulqklysHdcGJXxnHb8JFp+eDXmTC2DBKPTAF1YZQggw7kJy3M
-         r3ahq3WMS9unizcJC8lG9qFEUrpjG/5zsxS9aCzx1LiZKtWCtWETSeG0GN4eyg0L8QdN
-         ddsCQ4rCnL+pjf6u9qy5oC4pm9GDYhicASpg1IQw7r9VP9sdoXmslO1qJj9AvFJjUsaK
-         kRkB9xMqMtgWwl6Ca89Ztyw1N1z4bli+Zvq8sf00pSvQhZxEMmWch64m4oKN+WY31sCW
-         MPJnVQddMYd65MgLX6KIG6CSJ7n9j14+AWFxXlIiADGD6Ckb1rz6YD97zZobOQV2cDdB
-         m0Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WOruGbo3ihqEelkLm7kTR9rgnvVG+704WzoO70mY5DI=;
-        b=OHchzOmJ7z17i5uQvAWvqvlSFibFu6mkhw21f6eZG/CcfYuZ4/u8vU7EN2UnrqgCuQ
-         CI/Vf80Lud5Mpaw2bGcUGRHw6NwguaOvDOMDLuYg7bNiJfrlAxzM3mtjkshAzDculMaH
-         +CMLAEOiKsrTzSg9qeK4nB1kne7uHVEcH2iu4LqcG54qYzMU0v2syA/siEiU7cWEc7Zz
-         LnrSMk9zkJ6/tC0Tek7I2oZFyqrBt1ZPVcYUIKDgnmJ2dt/E0lF1D0AzHxDjcmjVEXtb
-         J8URU3XmDzP6QtgknJEYl6U8SScSSN6UETMWHHNF8zT04DEGMQn7Dd7iZ4iSDbJMzY0v
-         0TDg==
-X-Gm-Message-State: APjAAAVNfqHC1rc9anxWAPuH7erifgZzVI22OAJu2Fam1gdU2JDhN6G1
-        E86AKAaXamqdOWOk9/ROF5HMjC1A8QW3xBhBiI977Q==
-X-Google-Smtp-Source: APXvYqxj8YNDlGv+pawLENmpumCqEjab5rwVbWmYyrD3AYTvRqCIvB6NM4qMMYjWMz6W7FsZ+HEy0Kx2vl5LVgnpZu8=
-X-Received: by 2002:a1c:3d07:: with SMTP id k7mr2576689wma.79.1579129010626;
- Wed, 15 Jan 2020 14:56:50 -0800 (PST)
+        Wed, 15 Jan 2020 17:57:26 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17719 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730410AbgAOW5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:57:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 14:57:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="255241149"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2020 14:57:24 -0800
+Date:   Wed, 15 Jan 2020 14:57:24 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v11] x86/split_lock: Enable split lock detection by kernel
+Message-ID: <20200115225724.GA18268@linux.intel.com>
+References: <20191121171214.GD12042@gmail.com>
+ <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
+ <20191122105141.GY4114@hirez.programming.kicks-ass.net>
+ <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+ <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
+ <20191125161348.GA12178@linux.intel.com>
+ <20191212085948.GS2827@hirez.programming.kicks-ass.net>
+ <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
+ <20200114055521.GI14928@linux.intel.com>
+ <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com> <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
-In-Reply-To: <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Wed, 15 Jan 2020 14:56:39 -0800
-Message-ID: <CAKFsvU+sUdGC9TXK6vkg5ZM9=f7ePe7+rh29DO+kHDzFXacx2w@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 10:48 AM Johannes Berg
-<johannes@sipsolutions.net> wrote:
-> Couple questions, if you don't mind.
->
-> > +#ifdef CONFIG_X86_64
-> > +#define KASAN_SHADOW_SIZE 0x100000000000UL
-> > +#else
-> > +#error "KASAN_SHADOW_SIZE is not defined in this sub-architecture"
-> > +#endif
->
-> Is it even possible today to compile ARCH=um on anything but x86_64? If
-> yes, perhaps the above should be
->
->         select HAVE_ARCH_KASAN if X86_64
->
-> or so? I assume KASAN itself has some dependencies though, but perhaps
-> ARM 64-bit or POWERPC 64-bit could possibly run into this, if not X86
-> 32-bit.
->
+On Wed, Jan 15, 2020 at 02:27:54PM -0800, Luck, Tony wrote:
+> On Mon, Jan 13, 2020 at 09:55:21PM -0800, Sean Christopherson wrote:
+> > On Fri, Jan 10, 2020 at 11:24:09AM -0800, Luck, Tony wrote:
+> 
+> All comments accepted and code changed ... except for these three:
 
-This seems like a good idea. I'll keep the #ifdef around
-KASAN_SHADOW_SIZE, but add "select HAVE_ARCH_KASAN if X86_64" as well.
-This will make extending it later easier.
+Sounds like you're also writing code, in which case you should give
+yourself credit with your own Co-developed-by: tag.
 
-> > +++ b/arch/um/kernel/skas/Makefile
-> > @@ -5,6 +5,12 @@
-> >
-> >  obj-y := clone.o mmu.o process.o syscall.o uaccess.o
-> >
-> > +ifdef CONFIG_UML
-> > +# Do not instrument until after start_uml() because KASAN is not
-> > +# initialized yet
-> > +KASAN_SANITIZE       := n
-> > +endif
->
-> Not sure I understand this, can anything in this file even get compiled
-> without CONFIG_UML?
->
+> > > +#define TIF_SLD			18	/* split_lock_detect */
+> > 
+> > A more informative name comment would be helpful since the flag is set when
+> > SLD is disabled by the previous task.  Something like? 
+> > 
+> > #define TIF_NEED_SLD_RESTORE	18	/* Restore split lock detection on context switch */
+> 
+> That name is more informative ... but it is also really, really long. Are
+> you sure?
 
-You are correct; this #ifdef was unnecessary. I will remove it. Thanks!
+Not at all.  I picked a semi-arbitrary name that was similar to existing
+TIF names, I'll defer to anyone with an opinion.
 
-> > +++ b/kernel/Makefile
-> > @@ -32,6 +32,12 @@ KCOV_INSTRUMENT_kcov.o := n
-> >  KASAN_SANITIZE_kcov.o := n
-> >  CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-> >
-> > +ifdef CONFIG_UML
-> > +# Do not istrument kasan on panic because it can be called before KASAN
->
-> typo there - 'instrument'
->
+> > > +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+> > > +{
+> > > +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+> > > +		return false;
+> > 
+> > Maybe add "|| WARN_ON_ONCE(sld_state != sld_off)" to try to prevent the
+> > kernel from going fully into the weeds if a spurious #AC occurs.
+> 
+> Can a spurious #AC occur? I don't see how.
 
-Thanks for catching that!
+It's mostly paranoia, e.g. if sld_state==sld_off but the MSR bit was
+misconfigured.  No objection if you want to omit the check.
 
-> > +++ b/lib/Makefile
-> > @@ -17,6 +17,16 @@ KCOV_INSTRUMENT_list_debug.o := n
-> >  KCOV_INSTRUMENT_debugobjects.o := n
-> >  KCOV_INSTRUMENT_dynamic_debug.o := n
-> >
-> > +# Don't sanatize
->
-> typo
->
+> > > @@ -242,7 +243,6 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
+> > >  {
+> > >  	struct task_struct *tsk = current;
+> > >  
+> > > -
+> > 
+> > Whitespace.
+> > 
+> > >  	if (!do_trap_no_signal(tsk, trapnr, str, regs, error_code))
+> > >  		return;
+> 
+> I'm staring at the post patch code, and I can't see what whitespace
+> issue you see.
 
-Thanks for catching this, too!
-
-> Very cool, I look forward to trying this out! :-)
->
-> Thanks,
-> johannes
->
-
-Thank you so much for the comments!
-
-Best,
-Patricia
-
-
---
-
-Patricia Alfonso
-Software Engineer
-trishalfonso@google.com
+There's a random newline removal in do_trap().  It's a good change in the
+sense that it eliminates an extra newline, bad in the sense that it's
+unrelated to the rest of the patch.
