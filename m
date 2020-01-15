@@ -2,180 +2,173 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E9CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3685C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159DF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855962077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QnglwokV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frzTSkzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgAONa6 (ORCPT
+        id S1729019AbgAONbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:30:58 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37493 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728915AbgAONa6 (ORCPT
+        Wed, 15 Jan 2020 08:31:02 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38196 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgAONbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:30:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579095056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i32RwNIexlSTGjPdh8V9cz3m8rKQLmmbJ0m7mElrktI=;
-        b=QnglwokVDdB25S4gMu1ERA05DtfMWaxIPCHFYNIKg++ABuBPvJGNbn/t5R5gtLsMmadeea
-        2ZTihfzNhiK1Pr2npiyNL1Nmbc8Xirychd4fZ8MMvbyn9Ck2hBJROmve2sd82jL/wSSRd1
-        BXT9/Bc863kowMkm1XaxCCyJheW1JG0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-oeaLoyRRMv2Abshugu_WAw-1; Wed, 15 Jan 2020 08:30:51 -0500
-X-MC-Unique: oeaLoyRRMv2Abshugu_WAw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA4C4801E6C;
-        Wed, 15 Jan 2020 13:30:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7ECE10372F3;
-        Wed, 15 Jan 2020 13:30:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 01/14] uapi: General notification queue definitions [ver
- #3]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        dhowells@redhat.com, keyrings@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jan 2020 13:30:45 +0000
-Message-ID: <157909504508.20155.16673561263079184328.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-References: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 15 Jan 2020 08:31:00 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z9so13953732oth.5;
+        Wed, 15 Jan 2020 05:31:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=fAOeXDRIFaUFNONgtpOUkG+D4IroA4wgYRWzDTSRd0s=;
+        b=frzTSkzQQWX4VjczDNEDcuNHb5JEDqNX6M4BnBJ7CSNPqX/yg1oTMXKQx+C9las5hp
+         f+btcUWXU1Nc4eX6U+t4B1r5ZDEjryLNNTIZDPZAvpvKQ/K1jlqj9E0gZ1ZCuNLI+Mux
+         HiIB0ZidAiJSXBVX2os15BI7/Y72/yXWXHMS5KObVOO7unYX0ySxhFAC+vyDqWigiovh
+         cuQiVR9E7gQq+9kVBHO90s9HDYJus8cgguLuZhVe5hgWUULZH79+koFeJYDXyfeQ543R
+         IdDSsLsKEvIgCIB1jRxcSV+2FE3ynu1h/gzi6eYbNoLgn2Rgpt1KG95nSN2enGsm70S+
+         ghNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=fAOeXDRIFaUFNONgtpOUkG+D4IroA4wgYRWzDTSRd0s=;
+        b=NLiFeRpj10ouaDhgJcgo2p3tVsbRdVP+n3FmU5qzuo5I3pQRVhryA5HLEMlN47Eg7B
+         VjpcLMpj+A5wDIX4vIBjUP5aCvtaNiQ4k6Mjzu03fjYhPAu/LoTXxY3hixZ5pTGv7FuJ
+         RSKEaiHRVKJGh2HIObPMRtRwSU5lLw/lIMU70VZyPkuZsBgwLNB2HMW8h7ESLQ0mXT7k
+         2mvUdetatJoZLC1phfZUej0+vfCGU6No17N+4GBW5VDU0pVL7QNF3HpKPofXX3EcU/M5
+         dDGKr8TaDLp4n8OggvI3WfiygOjG2UmnzbOJLiarpBYW4NHFiCUCbued79rZWriOrEPy
+         d2xw==
+X-Gm-Message-State: APjAAAVo9fc+KD6SJoMbAOLiHCqGk6xAz6t0qY1k3odrL2BssCzdXlVq
+        YHHXDQQBiSa4cFVkzPm9itvLvGM4vEBTFftJIYf6Jg==
+X-Google-Smtp-Source: APXvYqysJw7pgv4PQLsZuez7XkX8FpXJWIj/tJczIZ3Z3NRp3N4+5pYeDIO45G/tlhAAMWGfEY3HfNSBTVmltZeNVl4=
+X-Received: by 2002:a9d:6196:: with SMTP id g22mr2804475otk.204.1579095059650;
+ Wed, 15 Jan 2020 05:30:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 05:30:59 -0800 (PST)
+In-Reply-To: <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
+References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
+ <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
+ <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Wed, 15 Jan 2020 22:30:59 +0900
+Message-ID: <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
+Subject: Re: [PATCH v10 09/14] exfat: add misc operations
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add UAPI definitions for the general notification queue, including the
-following pieces:
-
- (*) struct watch_notification.
-
-     This is the metadata header for notification messages.  It includes a
-     type and subtype that indicate the source of the message
-     (eg. WATCH_TYPE_MOUNT_NOTIFY) and the kind of the message
-     (eg. NOTIFY_MOUNT_NEW_MOUNT).
-
-     The header also contains an information field that conveys the
-     following information:
-
-	- WATCH_INFO_LENGTH.  The size of the entry (entries are variable
-          length).
-
-	- WATCH_INFO_ID.  The watch ID specified when the watchpoint was
-          set.
-
-	- WATCH_INFO_TYPE_INFO.  (Sub)type-specific information.
-
-	- WATCH_INFO_FLAG_*.  Flag bits overlain on the type-specific
-          information.  For use by the type.
-
-     All the information in the header can be used in filtering messages at
-     the point of writing into the buffer.
-
- (*) struct watch_notification_removal
-
-     This is an extended watch-removal notification record that includes an
-     'id' field that can indicate the identifier of the object being
-     removed if available (for instance, a keyring serial number).
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- include/uapi/linux/watch_queue.h |   55 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 include/uapi/linux/watch_queue.h
-
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
-new file mode 100644
-index 000000000000..5f3d21e8a34b
---- /dev/null
-+++ b/include/uapi/linux/watch_queue.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_LINUX_WATCH_QUEUE_H
-+#define _UAPI_LINUX_WATCH_QUEUE_H
-+
-+#include <linux/types.h>
-+
-+enum watch_notification_type {
-+	WATCH_TYPE_META		= 0,	/* Special record */
-+	WATCH_TYPE__NR		= 1
-+};
-+
-+enum watch_meta_notification_subtype {
-+	WATCH_META_REMOVAL_NOTIFICATION	= 0,	/* Watched object was removed */
-+	WATCH_META_LOSS_NOTIFICATION	= 1,	/* Data loss occurred */
-+};
-+
-+/*
-+ * Notification record header.  This is aligned to 64-bits so that subclasses
-+ * can contain __u64 fields.
-+ */
-+struct watch_notification {
-+	__u32			type:24;	/* enum watch_notification_type */
-+	__u32			subtype:8;	/* Type-specific subtype (filterable) */
-+	__u32			info;
-+#define WATCH_INFO_LENGTH	0x0000007f	/* Length of record */
-+#define WATCH_INFO_LENGTH__SHIFT 0
-+#define WATCH_INFO_ID		0x0000ff00	/* ID of watchpoint */
-+#define WATCH_INFO_ID__SHIFT	8
-+#define WATCH_INFO_TYPE_INFO	0xffff0000	/* Type-specific info */
-+#define WATCH_INFO_TYPE_INFO__SHIFT 16
-+#define WATCH_INFO_FLAG_0	0x00010000	/* Type-specific info, flag bit 0 */
-+#define WATCH_INFO_FLAG_1	0x00020000	/* ... */
-+#define WATCH_INFO_FLAG_2	0x00040000
-+#define WATCH_INFO_FLAG_3	0x00080000
-+#define WATCH_INFO_FLAG_4	0x00100000
-+#define WATCH_INFO_FLAG_5	0x00200000
-+#define WATCH_INFO_FLAG_6	0x00400000
-+#define WATCH_INFO_FLAG_7	0x00800000
-+};
-+
-+
-+/*
-+ * Extended watch removal notification.  This is used optionally if the type
-+ * wants to indicate an identifier for the object being watched, if there is
-+ * such.  This can be distinguished by the length.
-+ *
-+ * type -> WATCH_TYPE_META
-+ * subtype -> WATCH_META_REMOVAL_NOTIFICATION
-+ */
-+struct watch_notification_removal {
-+	struct watch_notification watch;
-+	__u64	id;		/* Type-dependent identifier */
-+};
-+
-+#endif /* _UAPI_LINUX_WATCH_QUEUE_H */
-
+2020-01-15 19:10 GMT+09:00, Arnd Bergmann <arnd@arndb.de>:
+> On Wed, Jan 15, 2020 at 9:28 AM Namjae Jeon <namjae.jeon@samsung.com>
+> wrote:
+>
+>> +#define SECS_PER_MIN    (60)
+>> +#define TIMEZONE_SEC(x)        ((x) * 15 * SECS_PER_MIN)
+>> +
+>> +static void exfat_adjust_tz(struct timespec64 *ts, u8 tz_off)
+>> +{
+>> +       if (tz_off <= 0x3F)
+>> +               ts->tv_sec -= TIMEZONE_SEC(tz_off);
+>> +       else /* 0x40 <= (tz_off & 0x7F) <=0x7F */
+>> +               ts->tv_sec += TIMEZONE_SEC(0x80 - tz_off);
+>> +}
+>> +
+>> +static inline int exfat_tz_offset(struct exfat_sb_info *sbi)
+>> +{
+>> +       if (sbi->options.time_offset)
+>> +               return sbi->options.time_offset;
+>> +       return sys_tz.tz_minuteswest;
+>> +}
+>> +
+>> +/* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70).
+>> */
+>> +void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64
+>> *ts,
+>> +               __le16 time, __le16 date, u8 tz)
+>> +{
+>> +       u16 t = le16_to_cpu(time);
+>> +       u16 d = le16_to_cpu(date);
+>> +
+>> +       ts->tv_sec = mktime64(1980 + (d >> 9), d >> 5 & 0x000F, d &
+>> 0x001F,
+>> +                             t >> 11, (t >> 5) & 0x003F, (t & 0x001F) <<
+>> 1);
+>> +       ts->tv_nsec = 0;
+>
+> This part looks good to me now.
+Thanks.
+>
+>> +       if (tz & EXFAT_TZ_VALID)
+>> +               /* Treat as UTC time, but need to adjust timezone to UTC0
+>> */
+>> +               exfat_adjust_tz(ts, tz & ~EXFAT_TZ_VALID);
+>> +       else
+>> +               /* Treat as local time */
+>> +               ts->tv_sec -= exfat_tz_offset(sbi) * SECS_PER_MIN;
+>> +}
+>
+> Whereas this seems rather complex, when it deals with three different
+> cases:
+>
+> - timezone stored in inode
+> - timezone offset passed as mount option
+> - local time from sys_tz.tz_minuteswest
+>
+> Does the exfat specification require to use some notion of 'local time'
+> here
+> as the fallback? The problem with sys_tz.tz_minuteswest is that it is
+> not too well-defined,
+It is not described in the specification. I don't know exactly what
+the problem is because sys_tz.tz_minuteswest seems to work fine to me.
+It can be random garbage value ?
+> so if there is a choice, falling back to UTC would
+> be nicer.
+Okay.
+>
+>> +/* Convert linear UNIX date to a EXFAT time/date pair. */
+>> +void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64
+>> *ts,
+>> +               __le16 *time, __le16 *date, u8 *tz)
+>> +{
+>> +       struct tm tm;
+>> +       u16 t, d;
+>> +
+>> +       /* clamp to the range valid in the exfat on-disk representation.
+>> */
+>> +       time64_to_tm(clamp_t(time64_t, ts->tv_sec,
+>> EXFAT_MIN_TIMESTAMP_SECS,
+>> +               EXFAT_MAX_TIMESTAMP_SECS), -exfat_tz_offset(sbi) *
+>> SECS_PER_MIN,
+>> +               &tm);
+>
+> I think you can drop the clamping here, as thes_time_min/s_time_max fields
+> should take care of that.
+Okay.
+>
+> For writing out timestamps, it may be best to always encode them as UTC
+> and set set timezone-valid bit for that. That way, the min/max values
+> are known at compile time regardless of which time zone the machine
+> thinks it is in.
+Okay, I will check it.
+Thanks for your review!
+>
+>       Arnd
+>
