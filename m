@@ -2,159 +2,62 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C89C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E56C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A052075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E5C24687
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgAOK2Z (ORCPT
+        id S1729822AbgAOK3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:28:25 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55103 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729693AbgAOK2Y (ORCPT
+        Wed, 15 Jan 2020 05:29:16 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38401 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729639AbgAOK3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:28:24 -0500
-Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id a19f27fe6dcc38b1; Wed, 15 Jan 2020 11:28:22 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: remove redundant call to cpufreq_update_util
-Date:   Wed, 15 Jan 2020 11:28:21 +0100
-Message-ID: <1877134.NLrey8JjuQ@kreacher>
-In-Reply-To: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
-References: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
+        Wed, 15 Jan 2020 05:29:16 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 30A0DC0016;
+        Wed, 15 Jan 2020 10:29:12 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 11:29:12 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        a.zummo@towertech.it, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] dt-bindings: atmel-tcb: remove wildcard
+Message-ID: <20200115102912.GB100374@piout.net>
+References: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578997397-23165-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578997397-23165-2-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, January 15, 2020 11:20:20 AM CET Vincent Guittot wrote:
-> With commit bef69dd87828 ("sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_util()")
-> update_load_avg() has become the central point for calling cpufreq (not
-> including the update of blocked load). This change helps to simplify
-> further the number of call to cpufreq_update_util() and to remove last
-
-s/call/calls/
-
-And the patch looks reasonable to me.
-
-> redundant ones. With update_load_avg(), we are now sure that
-> cpufreq_update_util() will be called after every task attachment to a
-> cfs_rq and especially after propagating this event down to the util_avg of
-> the root cfs_rq, which is the level that is used by cpufreq governors like
-> schedutil to set the frequency of a CPU.
+On 14/01/2020 12:23:11+0200, Claudiu Beznea wrote:
+> Remove wildcard and use the available compatibles.
 > 
-> The SCHED_CPUFREQ_MIGRATION flag forces an early call to cpufreq when the
-> migration happens in a cgroup whereas util_avg of root cfs_rq is not yet
-> updated and this call is duplicated with the one that happens immediately
-> after when the migration event reaches the root cfs_rq. The dedicated flag
-> SCHED_CPUFREQ_MIGRATION is now useless and can be removed. The interface of
-> attach_entity_load_avg() can also be simplified accordingly.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  include/linux/sched/cpufreq.h |  1 -
->  kernel/sched/fair.c           | 14 +++++++-------
->  2 files changed, 7 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/mfd/atmel-tcb.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/sched/cpufreq.h b/include/linux/sched/cpufreq.h
-> index cc6bcc1e96bc..3ed5aa18593f 100644
-> --- a/include/linux/sched/cpufreq.h
-> +++ b/include/linux/sched/cpufreq.h
-> @@ -9,7 +9,6 @@
->   */
->  
->  #define SCHED_CPUFREQ_IOWAIT	(1U << 0)
-> -#define SCHED_CPUFREQ_MIGRATION	(1U << 1)
->  
->  #ifdef CONFIG_CPU_FREQ
->  struct cpufreq_policy;
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2d170b5da0e3..023aa42aaac7 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -801,7 +801,7 @@ void post_init_entity_util_avg(struct task_struct *p)
->  		 * For !fair tasks do:
->  		 *
->  		update_cfs_rq_load_avg(now, cfs_rq);
-> -		attach_entity_load_avg(cfs_rq, se, 0);
-> +		attach_entity_load_avg(cfs_rq, se);
->  		switched_from_fair(rq, p);
->  		 *
->  		 * such that the next switched_to_fair() has the
-> @@ -3114,7 +3114,7 @@ static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
->  {
->  	struct rq *rq = rq_of(cfs_rq);
->  
-> -	if (&rq->cfs == cfs_rq || (flags & SCHED_CPUFREQ_MIGRATION)) {
-> +	if (&rq->cfs == cfs_rq) {
->  		/*
->  		 * There are a few boundary cases this might miss but it should
->  		 * get called often enough that that should (hopefully) not be
-> @@ -3520,7 +3520,7 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
->   * Must call update_cfs_rq_load_avg() before this, since we rely on
->   * cfs_rq->avg.last_update_time being current.
->   */
-> -static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
-> +static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  {
->  	u32 divider = LOAD_AVG_MAX - 1024 + cfs_rq->avg.period_contrib;
->  
-> @@ -3556,7 +3556,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  
->  	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
->  
-> -	cfs_rq_util_change(cfs_rq, flags);
-> +	cfs_rq_util_change(cfs_rq, 0);
->  
->  	trace_pelt_cfs_tp(cfs_rq);
->  }
-> @@ -3614,7 +3614,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  		 *
->  		 * IOW we're enqueueing a task on a new CPU.
->  		 */
-> -		attach_entity_load_avg(cfs_rq, se, SCHED_CPUFREQ_MIGRATION);
-> +		attach_entity_load_avg(cfs_rq, se);
->  		update_tg_load_avg(cfs_rq, 0);
->  
->  	} else if (decayed) {
-> @@ -3871,7 +3871,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  static inline void remove_entity_load_avg(struct sched_entity *se) {}
->  
->  static inline void
-> -attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags) {}
-> +attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
->  static inline void
->  detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se) {}
->  
-> @@ -10439,7 +10439,7 @@ static void attach_entity_cfs_rq(struct sched_entity *se)
->  
->  	/* Synchronize entity with its cfs_rq */
->  	update_load_avg(cfs_rq, se, sched_feat(ATTACH_AGE_LOAD) ? 0 : SKIP_AGE_LOAD);
-> -	attach_entity_load_avg(cfs_rq, se, 0);
-> +	attach_entity_load_avg(cfs_rq, se);
->  	update_tg_load_avg(cfs_rq, false);
->  	propagate_entity_cfs_rq(se);
->  }
-> 
+Applied, thanks.
 
-
-
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
