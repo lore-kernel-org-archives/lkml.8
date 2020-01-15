@@ -2,105 +2,138 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C976C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A54C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CB52465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A17020728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u6yLAPqV"
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="O3qUU/HH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O5yLqWdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgAOSng (ORCPT
+        id S1729530AbgAOSo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:43:36 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:40121 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbgAOSnc (ORCPT
+        Wed, 15 Jan 2020 13:44:27 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:48779 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729279AbgAOSo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:43:32 -0500
-Received: by mail-pj1-f73.google.com with SMTP id g12so460638pje.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:43:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bTzv6GNpgfrRZmeHOV0jVc+oFdZ9HuTWtPYHIUcg/W4=;
-        b=u6yLAPqVa3ro09ZQhcPDbZBH6GA5ByMOsoiAYioTquy1hYzT8AeaEuB4kL/6IqUBPx
-         0AqW1RIVD5mdOKoW9TemSg0AcKRhjLT3fUbCuIyhuy1yWsB7VlhrjwJkPRNshtCrszdb
-         F/1Pk3RRjKtgGFtVaKh/hwIV28EmWUB8esDtd+10tZGMRs2tIXL1Eh8Dl72vyVMDfkgn
-         Vl1LasdRigJ4pIrOOmCVj6GfgOZDFO2RQX1Gqxv2zrTraGVkFdNO+Iv+F+YDswQTy/dz
-         MtqEXUYbt2z18+QEjMLnKygiEOVfMNunMnm29fORAte0NRZSBRmHgylNnqlh76NQSB7G
-         GH9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bTzv6GNpgfrRZmeHOV0jVc+oFdZ9HuTWtPYHIUcg/W4=;
-        b=mRVoRWly6L0kIIylyoAr+i1kwpw0jUQ+B8HKdLXU+c2ZrYxhBDx6Vm2fdVOTFppHTB
-         3PGUH1rIITQGUzQ54kmclrLasNG1Bqi/MlCWWHlGJqHUrWHjwauclngtcm5CsW+pIXaU
-         pyNNjO+b+SJ3V++75hJ8cUCJwRl+FW90XtAKhDP5S1eyCw+R8GkfhG06weeB2RFDjQoO
-         30iSTXzRb6opMs++sx1Nj6jfzvK1KJqHlDDxjTXzDpGk6WabgQhUUvo+RNyS2fgScica
-         qH7toGt19DbHkFdOtgHtd9rvP4knNYTyWliSOC7KcCmiHIdLSt89HFubTDQlaSsSrdCs
-         731Q==
-X-Gm-Message-State: APjAAAVbm/pirm+bv0wmJiryJPwsLW1fandZpHIbACfFIu+tjhv2PC6x
-        KHvC7eQQnyDVBlhfDZo+MSeiUyqMK3x6
-X-Google-Smtp-Source: APXvYqxTfe7jLbFuDD+gZt1hs9KW/RLDoX7XAgEuKsCqDnYZQRqqvUy6B5pjHryPABA00K3D9D/UlRd4jAFC
-X-Received: by 2002:a65:578e:: with SMTP id b14mr34722927pgr.444.1579113811637;
- Wed, 15 Jan 2020 10:43:31 -0800 (PST)
-Date:   Wed, 15 Jan 2020 10:43:03 -0800
-In-Reply-To: <20200115184308.162644-1-brianvv@google.com>
-Message-Id: <20200115184308.162644-5-brianvv@google.com>
-Mime-Version: 1.0
-References: <20200115184308.162644-1-brianvv@google.com>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH v5 bpf-next 4/9] bpf: add lookup and update batch ops to arraymap
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Jan 2020 13:44:26 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6CE0B21F69;
+        Wed, 15 Jan 2020 13:44:25 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 15 Jan 2020 13:44:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=3KlDlXJYP55FN2KlL735TAQHph
+        ecdn0T19PaZ/sz2EU=; b=O3qUU/HHgvK3c+ZwrOSrkOkV3J3HowBFw2ezurVez2
+        P8BlsjXTKg1/SM4s4FLgaI8M1zZIUsOMRBzh7KiwLRdME9FxF5AmGvsUOxTjQth6
+        rLnQgpzhWv1vIOB51po0CAt+AhiOP7hzSulWXznXHt9yghnoKHp8ZGGhX49SW/Vv
+        oEXwAEZ1LySG7HJD1pUFifFYULgIQ8YHzj1trvJnmNYYDkKOVScRWr5tVTAy7jaq
+        +XHbEe5boyv/wFKonXlhN5y9675YVPy275yKUYvTe1qNBdxqfitHjou5XAsy8DyY
+        cxGyEjY/CKSy+Qc5P8UGykw1/Z1E59nXLFxXF49e7QVw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=3KlDlXJYP55FN2KlL
+        735TAQHphecdn0T19PaZ/sz2EU=; b=O5yLqWdKDUsbaAgoQdIT/vCuJogO+OSxU
+        pwvWeFOKYgL9g5LwJvc0hUXhYCA9S6229D9ud5gKUT/Aw5/mLnkAtjIR19l8evxU
+        ayFMTp070Sn5M2ePB+9qb1SCctpng00ewKAkIZjnb5FbF1Lgy52uGjFl5J9fOZlr
+        pbhwrQudQHyhSuaJWt9XD1YXwIIaCZruMGOT4kAgYu6lxSKiHCtkeDRXJrlBdohD
+        Kl0uFwqh8u6Xc6RYwIzhsMa+SsxjkyPeznD2B1E5fS3o0D+1ZvmlhBilfH+4YybW
+        my/FdnbCBaCV7H7cjJV3fE72uwEuiRqqLeKNdtPI+6yiHpFcDY/5g==
+X-ME-Sender: <xms:iF0fXngrJ6eBGGMJwsIT1N_BNGXy5bunTjNGd53wSM0zu340QSRxdw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdefgdduudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgvshcu
+    hfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepieejrd
+    duiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshes
+    rghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:iF0fXutXCF4QMqZj6RtX2jAD3QtOVVeiJqzpUW8SegJeDZC-GD-SVQ>
+    <xmx:iF0fXvxasAxVE3gOorzDDGZqjiTLt632KpbsQdsGIJv6O1iGo1xPew>
+    <xmx:iF0fXrbHGvviZpBbB_9O6kbdXBqjl4eOx8M6FWDwEm_EO3LCJTfGYQ>
+    <xmx:iV0fXoABTEroMU1B3inWaYEDHRzIRKa_VUrEi8wLF0fnIoPaFwYMJA>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AA11130602DE;
+        Wed, 15 Jan 2020 13:44:24 -0500 (EST)
+From:   Andres Freund <andres@anarazel.de>
+To:     Tushar Dave <tushar.n.dave@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andres Freund <andres@anarazel.de>
+Subject: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg PCH.
+Date:   Wed, 15 Jan 2020 10:44:15 -0800
+Message-Id: <20200115184415.1726953-1-andres@anarazel.de>
+X-Mailer: git-send-email 2.25.0.rc1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the generic batch ops functionality to bpf arraymap, note that
-since deletion is not a valid operation for arraymap, only batch and
-lookup are added.
+I noticed that I couldn't read the PCH temperature on my workstation
+(C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to go
+through IPMI. Looking at the data sheet, it looks to me like the
+existing intel PCH thermal driver should work without changes for
+Lewisburg.
 
-Signed-off-by: Brian Vazquez <brianvv@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
+I suspect there's some other PCI id's missing. But I hope somebody at
+Intel would have an easier time figuring that out than I...
+
+Signed-off-by: Andres Freund <andres@anarazel.de>
 ---
- kernel/bpf/arraymap.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
-index f0d19bbb9211e..95d77770353c9 100644
---- a/kernel/bpf/arraymap.c
-+++ b/kernel/bpf/arraymap.c
-@@ -503,6 +503,8 @@ const struct bpf_map_ops array_map_ops = {
- 	.map_mmap = array_map_mmap,
- 	.map_seq_show_elem = array_map_seq_show_elem,
- 	.map_check_btf = array_map_check_btf,
-+	.map_lookup_batch = generic_map_lookup_batch,
-+	.map_update_batch = generic_map_update_batch,
+diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
+index 4f0bb8f502e1..1f3ff0d489ef 100644
+--- a/drivers/thermal/intel/intel_pch_thermal.c
++++ b/drivers/thermal/intel/intel_pch_thermal.c
+@@ -23,6 +23,7 @@
+ #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100 series */
+ #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
+ #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
++#define PCH_THERMAL_DID_LWB	0xA1B1 /* Lewisburg PCH */
+ 
+ /* Wildcat Point-LP  PCH Thermal registers */
+ #define WPT_TEMP	0x0000	/* Temperature */
+@@ -272,6 +273,7 @@ enum board_ids {
+ 	board_wpt,
+ 	board_skl,
+ 	board_cnl,
++	board_lwb,
  };
  
- const struct bpf_map_ops percpu_array_map_ops = {
+ static const struct board_info {
+@@ -294,6 +296,10 @@ static const struct board_info {
+ 		.name = "pch_cannonlake",
+ 		.ops = &pch_dev_ops_wpt,
+ 	},
++	[board_lwb] = {
++		.name = "pch_lewisburg",
++		.ops = &pch_dev_ops_wpt,
++	},
+ };
+ 
+ static int intel_pch_thermal_probe(struct pci_dev *pdev,
+@@ -398,6 +404,8 @@ static const struct pci_device_id intel_pch_thermal_id[] = {
+ 		.driver_data = board_cnl, },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
+ 		.driver_data = board_cnl, },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_LWB),
++		.driver_data = board_lwb, },
+ 	{ 0, },
+ };
+ MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
 -- 
-2.25.0.rc1.283.g88dfdc4193-goog
+2.25.0.rc1
 
