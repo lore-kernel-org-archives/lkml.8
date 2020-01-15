@@ -2,87 +2,191 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A807C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54299C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF5C2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9C124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SBa2IZ4O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LCJ9rwZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbgAOOPq (ORCPT
+        id S1729470AbgAOONC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:15:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32109 "EHLO
+        Wed, 15 Jan 2020 09:13:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38607 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730614AbgAOOPo (ORCPT
+        with ESMTP id S1729396AbgAOONB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:15:44 -0500
+        Wed, 15 Jan 2020 09:13:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579097743;
+        s=mimecast20190719; t=1579097580;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OUWgGIVsJ8NZwOLyNUY7Hd2Km2oSlO39xhYqMQdHPRE=;
-        b=SBa2IZ4OujszdbTdvi6vrsZ8WupQHWa0QTj3+i1P7L91iJV9jGhD4dl+qCXsgW7+izJ+VA
-        8NcDvQevfqKQUlTeo8xvcEXbLsnsj8dDG8BxB2+nihCY5gzsQAfYDeRO6X852DVrkwHyAn
-        etKCTbACmZ205VmLFGDW+ysamgk6Kok=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-amsWRQ3cP4KKzpO788M-xQ-1; Wed, 15 Jan 2020 09:15:39 -0500
-X-MC-Unique: amsWRQ3cP4KKzpO788M-xQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A81BA801A05;
-        Wed, 15 Jan 2020 14:15:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 420885C545;
-        Wed, 15 Jan 2020 14:15:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200115083854.GB23039@lst.de>
-References: <20200115083854.GB23039@lst.de> <4467.1579020509@warthog.procyon.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, clm@fb.com, josef@toxicpanda.com,
-        dsterba@suse.com, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Problems with determining data presence by examining extents?
+        bh=L2f/3xqMCvPgjOWRi/4hBoG4txZFOAtpty8CahkBiCk=;
+        b=LCJ9rwZhZBhUQyyEowGvJOOpCRbfCJHqwYj1Vkwd8h9l1DmnAe0TpDb0GQbwldJj/Mmvpk
+        jOdqPSwENct28kra+Wn1mjRF3QQrj7t3LpdaRQo4LB3IRH8SsP3ZYCzNbs2Wm7xZmOfjLy
+        8PZLFPdIVlFIwf6n+z/UX3Uyuvxr5DE=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-9zG-7vKiPU2n9SXbPp96mA-1; Wed, 15 Jan 2020 09:12:59 -0500
+X-MC-Unique: 9zG-7vKiPU2n9SXbPp96mA-1
+Received: by mail-lj1-f200.google.com with SMTP id f15so4188917ljj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:12:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=L2f/3xqMCvPgjOWRi/4hBoG4txZFOAtpty8CahkBiCk=;
+        b=X7sEIisosRZ6fsaLg6qzW42QRZI5klbllOsE8M1mbtwXoyCZsmcQYbQUAJXGQPsOr1
+         +nVFi4RrO5OYHE7liRdMD3eCgbq7KkxEdQnU2QDT5zibJjKtJvQf3IvHOfOY43mIvgCZ
+         bs0NrV5IwW8WFiaiUXtZwL99yoL2t6rBCyIpybd8LUwM75bJIOxO6GCX4aF2X8cVVhhx
+         1zHq4vSh+0sJk9A4gWJGFhzD3fhwGJWU7Q8rNxxXa9dCdycuYj4HqUAI0Idv1xsaSvEa
+         +3C/cJfFkxpsIppd+AAHzMua0Vsg03K3BD/LCl/9q7Zyz8pUiY6r7DpargBtroRrfvTy
+         IU0g==
+X-Gm-Message-State: APjAAAURfZvManFTUegVNidwF86xcszQniHguDEKz035UPH9kiy+NVhE
+        TrmZwyMtnCVfezoJqegyeHApA5KtmewE7n0yxHp7VmhcC8J0R/fhMlRFxgQAAmxCthhNCLNn9G8
+        Xsl8TInnzysd1Wwj0SE8jF8if
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr1910165ljh.42.1579097577656;
+        Wed, 15 Jan 2020 06:12:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz/am/cdvueKyne+fGOGIHUIMVc0ISCYot7rVGpWw5I/QvHynTKT2v2M5koWXR3yS6NY44ANQ==
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr1910116ljh.42.1579097577147;
+        Wed, 15 Jan 2020 06:12:57 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id t9sm8960034lfl.51.2020.01.15.06.12.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:12:56 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 5F6421804D6; Wed, 15 Jan 2020 15:12:55 +0100 (CET)
+Subject: [PATCH bpf-next v2 06/10] perf: Use consistent include paths for
+ libbpf
+From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Wed, 15 Jan 2020 15:12:55 +0100
+Message-ID: <157909757530.1192265.16430056843174690136.stgit@toke.dk>
+In-Reply-To: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
+References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24479.1579097734.1@warthog.procyon.org.uk>
-Date:   Wed, 15 Jan 2020 14:15:34 +0000
-Message-ID: <24480.1579097734@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-> The whole idea of an out of band interface is going to be racy and suffer
-> from implementation loss.  I think what you want is something similar to
-> the NFSv4.2 READ_PLUS operation - give me that if there is any and
-> otherwise tell me that there is a hole.  I think this could be a new
-> RWF_NOHOLE or similar flag, just how to return the hole size would be
-> a little awkward.  Maybe return a specific negative error code (ENODATA?)
-> and advance the iov anyway.
+Fix perf to include libbpf header files with the bpf/ prefix, to
+be consistent with external users of the library.
 
-Just having call_iter_read() return a short read could be made to suffice...
-provided the filesystem doesn't return data I haven't written in (which could
-cause apparent corruption) and does return data I have written in (otherwise I
-have to go back to the server).
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+---
+ tools/perf/examples/bpf/5sec.c             |    2 +-
+ tools/perf/examples/bpf/empty.c            |    2 +-
+ tools/perf/examples/bpf/sys_enter_openat.c |    2 +-
+ tools/perf/include/bpf/pid_filter.h        |    2 +-
+ tools/perf/include/bpf/stdio.h             |    2 +-
+ tools/perf/include/bpf/unistd.h            |    2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-David
+diff --git a/tools/perf/examples/bpf/5sec.c b/tools/perf/examples/bpf/5sec.c
+index b9c203219691..49f4f84da485 100644
+--- a/tools/perf/examples/bpf/5sec.c
++++ b/tools/perf/examples/bpf/5sec.c
+@@ -39,7 +39,7 @@
+    Copyright (C) 2018 Red Hat, Inc., Arnaldo Carvalho de Melo <acme@redhat.com>
+ */
+ 
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ int probe(hrtimer_nanosleep, rqtp->tv_sec)(void *ctx, int err, long sec)
+ {
+diff --git a/tools/perf/examples/bpf/empty.c b/tools/perf/examples/bpf/empty.c
+index 3776d26db9e7..7d7fb0c9fe76 100644
+--- a/tools/perf/examples/bpf/empty.c
++++ b/tools/perf/examples/bpf/empty.c
+@@ -1,3 +1,3 @@
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ license(GPL);
+diff --git a/tools/perf/examples/bpf/sys_enter_openat.c b/tools/perf/examples/bpf/sys_enter_openat.c
+index 9cd124b09392..c4481c390d23 100644
+--- a/tools/perf/examples/bpf/sys_enter_openat.c
++++ b/tools/perf/examples/bpf/sys_enter_openat.c
+@@ -14,7 +14,7 @@
+  * the return value.
+  */
+ 
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ struct syscall_enter_openat_args {
+ 	unsigned long long unused;
+diff --git a/tools/perf/include/bpf/pid_filter.h b/tools/perf/include/bpf/pid_filter.h
+index 6e61c4bdf548..607189a315b2 100644
+--- a/tools/perf/include/bpf/pid_filter.h
++++ b/tools/perf/include/bpf/pid_filter.h
+@@ -3,7 +3,7 @@
+ #ifndef _PERF_BPF_PID_FILTER_
+ #define _PERF_BPF_PID_FILTER_
+ 
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ #define pid_filter(name) pid_map(name, bool)
+ 
+diff --git a/tools/perf/include/bpf/stdio.h b/tools/perf/include/bpf/stdio.h
+index 316af5b2ff35..7ca6fa5463ee 100644
+--- a/tools/perf/include/bpf/stdio.h
++++ b/tools/perf/include/bpf/stdio.h
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ struct bpf_map SEC("maps") __bpf_stdout__ = {
+        .type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+diff --git a/tools/perf/include/bpf/unistd.h b/tools/perf/include/bpf/unistd.h
+index ca7877f9a976..d1a35b6c649d 100644
+--- a/tools/perf/include/bpf/unistd.h
++++ b/tools/perf/include/bpf/unistd.h
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: LGPL-2.1
+ 
+-#include <bpf.h>
++#include <bpf/bpf.h>
+ 
+ static int (*bpf_get_current_pid_tgid)(void) = (void *)BPF_FUNC_get_current_pid_tgid;
+ 
 
