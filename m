@@ -2,93 +2,102 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AC8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E34C2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPc7ElSL"
+	by mail.kernel.org (Postfix) with ESMTP id 52A9A24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbgAOLDN (ORCPT
+        id S1729809AbgAOLJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:03:13 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25814 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727607AbgAOLDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:03:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579086191;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kIPIuogeyAYrg89WQev5yF8VWAACc+O4YaYZpb1gn0E=;
-        b=VPc7ElSLL4HcB9Pn29Pr3LJVX9zddwMexITMD8zR01jDLaPBXsOcREcmkXK4xQWDEz+kDC
-        /7YONRgBJAQ3oCK9AxoScmU8qur18ES+NDKLW4pS59TFz8OW6qovyXM0bOB8BZ8MHhVDsI
-        q8IXmv+nEOLUoRrSRbqT9Ba4Z6/9oo0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-ZgxqKH6bOs2G1of-EpJ_1g-1; Wed, 15 Jan 2020 06:03:10 -0500
-X-MC-Unique: ZgxqKH6bOs2G1of-EpJ_1g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42357107ACE3;
-        Wed, 15 Jan 2020 11:03:09 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1567811E0;
-        Wed, 15 Jan 2020 11:03:02 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 12:03:00 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
-        baolu.lu@linux.intel.com
-Subject: Re: [PATCH v4 05/12] vfio_pci: duplicate vfio_pci.c
-Message-ID: <20200115120300.24874a37.cohuck@redhat.com>
-In-Reply-To: <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
-Organization: Red Hat GmbH
+        Wed, 15 Jan 2020 06:09:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55544 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgAOLJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:09:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BAB13AC81;
+        Wed, 15 Jan 2020 11:09:51 +0000 (UTC)
+Subject: Re: [PATCH v1 1/4] kasan: introduce set_pmd_early_shadow()
+To:     Sergey Dyasli <sergey.dyasli@citrix.com>
+Cc:     xen-devel@lists.xen.org, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
+ <20200108152100.7630-2-sergey.dyasli@citrix.com>
+ <96c2414e-91fb-5a28-44bc-e30d2daabec5@citrix.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <6f643816-a7dc-f3bb-d521-b6ac104918d6@suse.com>
+Date:   Wed, 15 Jan 2020 12:09:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <96c2414e-91fb-5a28-44bc-e30d2daabec5@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 Jan 2020 20:01:42 +0800
-Liu Yi L <yi.l.liu@intel.com> wrote:
-
-> This patch has no code change, just a file copy. In following patches,
-> vfio_pci_common.c will be modified to only include the common functions
-> and related static functions in original vfio_pci.c. Meanwhile, vfio_pci.c
-> will be modified to only include vfio-pci module specific codes.
+On 15.01.20 11:54, Sergey Dyasli wrote:
+> Hi Juergen,
 > 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci_common.c | 1708 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 1708 insertions(+)
->  create mode 100644 drivers/vfio/pci/vfio_pci_common.c
+> On 08/01/2020 15:20, Sergey Dyasli wrote:
+>> It is incorrect to call pmd_populate_kernel() multiple times for the
+>> same page table. Xen notices it during kasan_populate_early_shadow():
+>>
+>>      (XEN) mm.c:3222:d155v0 mfn 3704b already pinned
+>>
+>> This happens for kasan_early_shadow_pte when USE_SPLIT_PTE_PTLOCKS is
+>> enabled. Fix this by introducing set_pmd_early_shadow() which calls
+>> pmd_populate_kernel() only once and uses set_pmd() afterwards.
+>>
+>> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+> 
+> Looks like the plan to use set_pmd() directly has failed: it's an
+> arch-specific function and can't be used in arch-independent code
+> (as kbuild test robot has proven).
+> 
+> Do you see any way out of this other than disabling SPLIT_PTE_PTLOCKS
+> for PV KASAN?
 
-This whole procedure of "let's copy the file and rip out unneeded stuff
-later" looks very ugly to me, especially if I'd come across it in the
-future, e.g. during a bisect. This patch only adds a file that is not
-compiled, and later changes will be "rip out unwanted stuff from
-vfio_pci_common.c" instead of the more positive "move common stuff to
-vfio_pci_common.c". I think refactoring/moving interfaces/code that it
-makes sense to share makes this more reviewable, both now and in the
-future.
+Change set_pmd_early_shadow() like the following:
 
+#ifdef CONFIG_XEN_PV
+static inline void set_pmd_early_shadow(pmd_t *pmd, pte_t *early_shadow)
+{
+	static bool pmd_populated = false;
+
+	if (likely(pmd_populated)) {
+		set_pmd(pmd, __pmd(__pa(early_shadow) | _PAGE_TABLE));
+	} else {
+		pmd_populate_kernel(&init_mm, pmd, early_shadow);
+		pmd_populated = true;
+	}
+}
+#else
+static inline void set_pmd_early_shadow(pmd_t *pmd, pte_t *early_shadow)
+{
+	pmd_populate_kernel(&init_mm, pmd, early_shadow);
+}
+#endif
+
+... and move it to include/xen/xen-ops.h and call it with
+lm_alias(kasan_early_shadow_pte) as the second parameter.
+
+
+Juergen
