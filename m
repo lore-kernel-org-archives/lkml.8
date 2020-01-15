@@ -2,74 +2,74 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FDDC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727EAC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1722084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4183020728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2dSAH5f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRg8LUg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgAOUem (ORCPT
+        id S1729251AbgAOUgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:34:42 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41717 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729203AbgAOUem (ORCPT
+        Wed, 15 Jan 2020 15:36:04 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39101 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729117AbgAOUgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:34:42 -0500
-Received: by mail-pg1-f195.google.com with SMTP id x8so8731287pgk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:34:41 -0800 (PST)
+        Wed, 15 Jan 2020 15:36:04 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so7316797plp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 12:36:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:subject:cc:from:to:in-reply-to:references:message-id
+        h=date:from:subject:cc:to:in-reply-to:references:message-id
          :mime-version:content-transfer-encoding;
-        bh=BAybeIS2/ajSEOLd+vnWUzlDR+akOGV8mHEBsCROnyU=;
-        b=e2dSAH5fPJyIZw22cC7PLbsbjrsWUxmd71pEWDIqEbRlFb0e7gxVMiUAj1mlmmxsl4
-         lLpVRcjiiNzs5/0oXso0mD4JwTDmuavlmq53dlVIvoBIyQVB/pHYH7KxhLR9ZTmfklJA
-         yVeyjK6Ute/lTVEIM7KnhIMxpeFeCXhG9QMzntgdkYpDPkniboIT0eVflnNm9blWr3wq
-         Bl3NQeuDsqfWCpj+PJxXUyzaqNgYfAzrsvDbP4muyebKDXyeA6Tz6yqFzou4BKRChDZn
-         P9m4lZncpvnpQtgDPGpm7zBByspgsDpYTPKnlnDeQXfT2+LdHPpTwo01pALH2ulHJg5L
-         1Wtg==
+        bh=1Kq7E7yB24oMF+8U5r1ALJcHmpKEZz9xaZhS6OI6Yd4=;
+        b=ZRg8LUg4vdi4RxUvpoJXMnuBXx2F26/54JF3ieqqhSeu7kjxGyhT3/oddQU+q8Z7s7
+         lPZa8OTSazVRRzSMR8O5oJUem5OpTjPZ8TBG8fqQlAxUi80tRp1f9DnexBuFtgR9j1Jp
+         +hjK5uojBbqE0LgCgcb3JBW37j3ksV4VrI1nWftapInUH+PU/aHhvgspg9Q9rMFpCDVD
+         g3+S9ykt3mK73wKLYpHXFBFszLEYgx+/tDIubNkMAhVmrkHyNo33UZs5HnaxiFNcDGMS
+         aj6mybsFjceeC42Co5zGOEz3owBKFRAiHwkJRGDKX6+uBP/spgAmYSGlcUZ7lGeJUpe0
+         Iyyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:in-reply-to:references
+        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
          :message-id:mime-version:content-transfer-encoding;
-        bh=BAybeIS2/ajSEOLd+vnWUzlDR+akOGV8mHEBsCROnyU=;
-        b=aDbCbefJm1P1JZCtBZEbk4bsL/iAlX/q7BTYG4kuIg5U6p924D463ODWvhSNlE/HdB
-         QCnOtOGB+prsdirgZoSXxyej79tCe/DGRdsJnHHZ1Hmt5aHwDD4Fp25FdicCOsFf3yFd
-         n2a/2pIWJlOvMW+N+wXkYoWQ/+zEDVsRrKViHSmkzD8+9l+Tmn8ZhiTInssHZKKUh5LJ
-         uiBan0SQhrsgZE+NBaHAHcQrodgYu2xzU+OY8ynmJEwmf/T16KWUtTxsZ3XxAComWQgv
-         c7p24JgA8IpJ4+II3EgbXh5jguQpizi1lPdLRTqmhhqmr7aW2gLGfwBFrYYjQXYNpTuz
-         0OyA==
-X-Gm-Message-State: APjAAAVqfkJJKUUGlcKwjrIpdwM5e9mfbnGMfhr0cGXbdWexzk6bQ2J0
-        wEWrfuT0OqINZv2AeK8190Sh8GUOkSg=
-X-Google-Smtp-Source: APXvYqw4eTMMTqAVYwrglsurdZ+SbpGibUuhOnh/i8gjfgB9VPKxJZ1z6e/lNpw/F7S5iWmOpuH4Gw==
-X-Received: by 2002:a63:a019:: with SMTP id r25mr33020793pge.400.1579120480702;
-        Wed, 15 Jan 2020 12:34:40 -0800 (PST)
+        bh=1Kq7E7yB24oMF+8U5r1ALJcHmpKEZz9xaZhS6OI6Yd4=;
+        b=GngD7uORvhAdPuS9UrsLSlVSQjaaAdNHti9ZgFv5fdjEx0XPTNx393wfsNC4OI6DqZ
+         FJuDXhN0ScLonUkjWRBFC+wlNjCrb3mAy1jHDoEHQBfUbpjzNcDRjviaC+3bnM+VNy6J
+         M+yHij5e5JwprZc27Wq3gmx4+wbB4gZR5D9SV+tzfLRfDyVwe7hq5druFeAVtsE29/UQ
+         b/tvn5QFUgKu+CTCwi5zaxWraOW6b82nl/B8RuUXmxyl0CErFovpdZTTKTlTE4LQxVgh
+         iL72JA+sZ+x0rh4pW4ix6lmJiS22wjnG88Cak3KUkwCBUCmTgTti/iq6JBcE/R5W1bXr
+         /cpg==
+X-Gm-Message-State: APjAAAXRVVEeERIHr5DW7xvuqtHPntGtxfV5MRaznIjOoW5P+/2/BLAL
+        DFPVDdhnno7jrddKL/6ooOqG/CLzTz8=
+X-Google-Smtp-Source: APXvYqxwjKrQRKb5VvbIT0wsat36G6HJjkLFrgS7bVZJZ0KZ6aWzfUG3AL9YY+kuQq+0Qh+1xnNlIQ==
+X-Received: by 2002:a17:902:9885:: with SMTP id s5mr28095711plp.217.1579120563073;
+        Wed, 15 Jan 2020 12:36:03 -0800 (PST)
 Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id x18sm23212328pfr.26.2020.01.15.12.34.39
+        by smtp.gmail.com with ESMTPSA id h11sm21070101pgv.38.2020.01.15.12.36.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 12:34:40 -0800 (PST)
-Date:   Wed, 15 Jan 2020 12:34:40 -0800 (PST)
-X-Google-Original-Date: Wed, 15 Jan 2020 12:34:29 PST (-0800)
-Subject:     Re: [PATCH v6 3/5] RISC-V: Add SBI v0.2 extension definitions
+        Wed, 15 Jan 2020 12:36:02 -0800 (PST)
+Date:   Wed, 15 Jan 2020 12:36:02 -0800 (PST)
+X-Google-Original-Date: Wed, 15 Jan 2020 12:35:41 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH v6 0/5] Add support for SBI v0.2 
 CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
         aou@eecs.berkeley.edu, anup@brainfault.org,
         linux-riscv@lists.infradead.org, rppt@linux.ibm.com,
         Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de,
         atishp@atishpatra.org
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
 To:     Atish Patra <Atish.Patra@wdc.com>
-In-Reply-To: <20191218213918.16676-4-atish.patra@wdc.com>
-References: <20191218213918.16676-4-atish.patra@wdc.com>
-  <20191218213918.16676-1-atish.patra@wdc.com>
-Message-ID: <mhng-5b413aea-2c8d-4bb9-ba38-ac523278c4f4@palmerdabbelt-glaptop>
+In-Reply-To: <20191218213918.16676-1-atish.patra@wdc.com>
+References: <20191218213918.16676-1-atish.patra@wdc.com>
+Message-ID: <mhng-9ed825c6-0972-46ac-aeac-89a57bf73cac@palmerdabbelt-glaptop>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -78,57 +78,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:39:16 PST (-0800), Atish Patra wrote:
-> Few v0.1 SBI calls are being replaced by new SBI calls that follows
-> v0.2 calling convention.
+On Wed, 18 Dec 2019 13:39:13 PST (-0800), Atish Patra wrote:
+> The Supervisor Binary Interface(SBI) specification[1] now defines a
+> base extension that provides extendability to add future extensions
+> while maintaining backward compatibility with previous versions.
+> The new version is defined as 0.2 and older version is marked as 0.1.
 >
-> This patch just defines these new extensions.
 >
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/include/asm/sbi.h | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> This series adds support v0.2 and a unified calling convention
+> implementation between 0.1 and 0.2. It also add other SBI v0.2
+> functionality defined in [2]. The base support for SBI v0.2 is already
+> available in OpenSBI v0.5. This series needs additional patches[3] in
+> OpenSBI.
 >
-> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-> index 1aeb4bb7baa8..9612133213ba 100644
-> --- a/arch/riscv/include/asm/sbi.h
-> +++ b/arch/riscv/include/asm/sbi.h
-> @@ -21,6 +21,9 @@ enum sbi_ext_id {
->  	SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID = 0x7,
->  	SBI_EXT_0_1_SHUTDOWN = 0x8,
->  	SBI_EXT_BASE = 0x10,
-> +	SBI_EXT_TIME = 0x54494D45,
-> +	SBI_EXT_IPI = 0x735049,
-> +	SBI_EXT_RFENCE = 0x52464E43,
->  };
+> Tested on both BBL, OpenSBI with/without the above patch series.
 >
->  enum sbi_ext_base_fid {
-> @@ -33,6 +36,24 @@ enum sbi_ext_base_fid {
->  	SBI_EXT_BASE_GET_MIMPID,
->  };
+> [1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+> [2] https://github.com/riscv/riscv-sbi-doc/pull/27
+> [3] http://lists.infradead.org/pipermail/opensbi/2019-November/000738.html
 >
-> +enum sbi_ext_time_fid {
-> +	SBI_EXT_TIME_SET_TIMER = 0,
-> +};
-> +
-> +enum sbi_ext_ipi_fid {
-> +	SBI_EXT_IPI_SEND_IPI = 0,
-> +};
-> +
-> +enum sbi_ext_rfence_fid {
-> +	SBI_EXT_RFENCE_REMOTE_FENCE_I = 0,
-> +	SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
-> +	SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
-> +	SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA,
-> +	SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID,
-> +	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA,
-> +	SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-> +};
-> +
->  #define SBI_SPEC_VERSION_DEFAULT	0x1
->  #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
->  #define SBI_SPEC_VERSION_MAJOR_MASK	0x7f
+> Changes from v5->v6
+> 1. Fixed few compilation issues around config.
+> 2. Fixed hart mask generation issues for RFENCE & IPI extensions.
+>
+> Changes from v4->v5
+> 1. Fixed few minor comments related to static & inline.
+> 2. Make sure that every patch is boot tested individually.
+>
+> Changes from v3->v4.
+> 1. Rebased on for-next.
+> 2. Fixed issuses with checkpatch --strict.
+> 3. Unfied all IPI/fence related functions.
+> 4. Added Hfence related SBI calls.
+>
+> Changes from v2->v3.
+> 1. Moved v0.1 extensions to a new config.
+> 2. Added support for relacement extensions of v0.1 extensions.
+>
+> Changes from v1->v2
+> 1. Removed the legacy calling convention.
+> 2. Moved all SBI related calls to sbi.c.
+> 3. Moved all SBI related macros to uapi.
+>
+> Atish Patra (5):
+> RISC-V: Mark existing SBI as 0.1 SBI.
+> RISC-V: Add basic support for SBI v0.2
+> RISC-V: Add SBI v0.2 extension definitions
+> RISC-V: Introduce a new config for SBI v0.1
+> RISC-V: Implement new SBI v0.2 extensions
+>
+> arch/riscv/Kconfig           |   6 +
+> arch/riscv/include/asm/sbi.h | 178 +++++++-----
+> arch/riscv/kernel/sbi.c      | 522 ++++++++++++++++++++++++++++++++++-
+> arch/riscv/kernel/setup.c    |   2 +
+> 4 files changed, 635 insertions(+), 73 deletions(-)
 
-With or without SBI_EXT_RFENCE_*, depending on what we do with the spec:
-
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Thanks.  I had a few comments on the spec, but this looks good given what's in
+the draft.
