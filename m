@@ -2,137 +2,104 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CFDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86360C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E29824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDC524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PWfe/8B1"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Iy8ExdmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgAOS1Y (ORCPT
+        id S1729293AbgAOS2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:27:24 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43525 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbgAOS1X (ORCPT
+        Wed, 15 Jan 2020 13:28:01 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40327 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729008AbgAOS2B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:27:23 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d18so16614236qtj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:27:23 -0800 (PST)
+        Wed, 15 Jan 2020 13:28:01 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v25so16629632qto.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:28:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nQJ4n7Imvc45CINTxiOSO7su9csn5NiNHGyhEXcXKpA=;
-        b=PWfe/8B1+aSqhrwQGQmtkMFUT5fR4OyKzUJlXMFoPW6bmaGMdbpBAwiMekAoGR486w
-         ERc4rKwrgN8NhKWCPBemLfh3viO7WUy/r/66W2AwS/aF++kvAk9aZPNapJZQHYxw5UYA
-         cZgjs4jOglZqmBlOdzNAWjL3jxc9OB7/kQ/RAQjEPACY9zWh+ZW5JW0LELCvHDOS8Zam
-         6Tg95meXrJ9LlxsISeKrzyC3tzO+8TBa7I5Xd4eMfyCKBWE3vVh4fP3PJbNftkqzyGGa
-         CaOKFDy3QlZ8YKYI57vmda7sHqIVjffIXbBjYqBTJIbwjxAViuNsjB8Q1v+L3jtTwCRi
-         njTw==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ud9sKkESHZCvlOGq+OII/g18ehi1Yr+QEsKY+qUAW/c=;
+        b=Iy8ExdmKNNKeOPRDcBp3UY9/M0kErvkEBHObzl6AB6V14bSPS8o1UyZ48UBsz75qZ+
+         PcjRe/WEMMJo+/zE/INIotPn2cJksHCM05RloFyznyM03VCSBVrHQTwoqA/VexVNE3HG
+         ervRpyujz/CLVCn7+1Poj2J2uxcbUPkzW/KmuNnvt1P8LAZq/OhezBdDqBk/f84X/5g9
+         PCeCewOASgCIGuuHOFVCtRYPJm7oIPJegdK/R7vKD9q6E4soIPbYNwDbnuhWRVS0su1R
+         3GglFHMz5aokGbceRwIUUsKh6tGw+52KJqD8HuD48PRlfrkmkZvWrgMmTVd/ZfaATFod
+         zpCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nQJ4n7Imvc45CINTxiOSO7su9csn5NiNHGyhEXcXKpA=;
-        b=rBg7xMmIdZcFpcnWLruG+4De0Dx8AfV6ldimBWiiqnCXLKVOloSC/gHU6CNZ5AkQco
-         mplGSRQKB+YWoHdz6DiqQsERxvzhqn8/LEzMpPH8FU15+tkIAIGwzjvhWs/mAxz/XfU7
-         jF5QlEMJPnX5BRn1bNaTdRHDxxcxfgGl531uV83NcO1TtA+qeFeCiiihKTpvcdthnAH5
-         YawHfA+IkPOmTRrHWObEjKM1PZsARospS52LHnuhRy73BadxXrUse6ocVfpC7d2hIICQ
-         gdylrJT33+m0FgDhw2/5mP7zeOHVdtKZyCPJTjUqhCdZHaaVWU+imoMDlZT/nm6WD0oO
-         yupw==
-X-Gm-Message-State: APjAAAUEZUuUIeDHSjrvNeRMabsmnLK9LilYdB8daAd/qo+YkB3+Ifak
-        PctR9vRYFd3L9HCTSgE5G9NvT3CNcpU=
-X-Google-Smtp-Source: APXvYqxrMZO9CYChw22Jq2odmveya/mceWiYXKXM3T17YYpGG0/8CHQp69lkNKDCSaawM8rHSVwKVw==
-X-Received: by 2002:ac8:7586:: with SMTP id s6mr4834838qtq.309.1579112842544;
-        Wed, 15 Jan 2020 10:27:22 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id b24sm9783378qto.71.2020.01.15.10.27.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jan 2020 10:27:22 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1irnNx-000721-Kr; Wed, 15 Jan 2020 14:27:21 -0400
-Date:   Wed, 15 Jan 2020 14:27:21 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rao Shoaib <rao.shoaib@oracle.com>
-Cc:     linux-rdma@vger.kernel.org, monis@mellanox.com,
-        dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] SGE buffer and max_inline data must have same size
-Message-ID: <20200115182721.GE25201@ziepe.ca>
-References: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
- <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ud9sKkESHZCvlOGq+OII/g18ehi1Yr+QEsKY+qUAW/c=;
+        b=MwrkQgOtX7SYAvHcI5FQUqA1oG3BWWiliyKk0B3gSLHlqJ6z8CYhExVoNBCPf/OdTA
+         GthPkZQRaTC2TMf4wCQclmb0xXodk2jJOxS1SkjDHNbsouiy+T5AkrHorMrKJn9kujsu
+         1vJIspCmSaQOCqltQMUX2ZWJaxybCzeHcxidpM/5DUYTEUVR2YHMLYosTCYuODgl2b2p
+         zXiKd2DHRdGYKoS4fiyo3jAhMoE1RZCOnwRdZJ01vaaMa5+JGqEzno2QYh627ui97B0o
+         nd38SsEd42sWTKcH544T/CViM+rzUsTvlG8K/0lfHFp+lWMGdjLsezbR55s6QeAFtlIw
+         aEUg==
+X-Gm-Message-State: APjAAAXbuZ8JHF6jSIQzpBnCzefuqD6wAo17t32C3XIjxpOaZygrkMsv
+        SByyJRcgL7LfXCgn23S5itcWaw==
+X-Google-Smtp-Source: APXvYqyFqyexR7OAogh9jzo/cgEw1VMYGtAqIm3elkgWOkibsmXAJwDgFqg1kLrybKlF4YY+tVD3lQ==
+X-Received: by 2002:aed:3c52:: with SMTP id u18mr4964380qte.382.1579112879921;
+        Wed, 15 Jan 2020 10:27:59 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id b24sm9784122qto.71.2020.01.15.10.27.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 10:27:59 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] mm/vmscan: remove prefetch_prev_lru_page
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200115082947.GA21018@infradead.org>
+Date:   Wed, 15 Jan 2020 13:27:57 -0500
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F5F5B735-2BEA-4B9D-8939-B24B9D9AA940@lca.pw>
+References: <1579006500-127143-1-git-send-email-alex.shi@linux.alibaba.com>
+ <FC618797-2F5E-4F73-A244-0DC19AA1CB74@lca.pw>
+ <20200115082947.GA21018@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 04:41:20PM -0800, rao Shoaib wrote:
-> From: Rao Shoaib <rao.shoaib@oracle.com>
-> 
-> SGE buffer size and max_inline data should be same. Maximum of the
-> two values requested is used.
-> 
-> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
->  drivers/infiniband/sw/rxe/rxe_qp.c | 23 +++++++++++------------
->  1 file changed, 11 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-> index aeea994..41c669c 100644
-> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-> @@ -235,18 +235,17 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->  		return err;
->  	qp->sk->sk->sk_user_data = qp;
->  
-> -	qp->sq.max_wr		= init->cap.max_send_wr;
-> -	qp->sq.max_sge		= init->cap.max_send_sge;
-> -	qp->sq.max_inline	= init->cap.max_inline_data;
-> -
-> -	wqe_size = max_t(int, sizeof(struct rxe_send_wqe) +
-> -			 qp->sq.max_sge * sizeof(struct ib_sge),
-> -			 sizeof(struct rxe_send_wqe) +
-> -			 qp->sq.max_inline);
-> -
-> -	qp->sq.queue = rxe_queue_init(rxe,
-> -				      &qp->sq.max_wr,
-> -				      wqe_size);
-> +	wqe_size = max_t(int, init->cap.max_send_sge * sizeof(struct ib_sge),
-> +			 init->cap.max_inline_data);
-> +	qp->sq.max_sge = wqe_size/sizeof(struct ib_sge);
-> +	qp->sq.max_inline = wqe_size;
-> +
-> +	wqe_size += sizeof(struct rxe_send_wqe);
 
-Where does this limit the user's request to RXE_MAX_WQE_SIZE ?
 
-I seem to recall the if the requested max can't be satisified then
-that is an EINVAL?
+> On Jan 15, 2020, at 3:29 AM, Christoph Hellwig <hch@infradead.org> =
+wrote:
+>=20
+> On Tue, Jan 14, 2020 at 08:46:21AM -0500, Qian Cai wrote:
+>>=20
+>>=20
+>>> On Jan 14, 2020, at 7:55 AM, Alex Shi <alex.shi@linux.alibaba.com> =
+wrote:
+>>>=20
+>>> This macro are never used in git history. So better to remove.
+>>=20
+>> When removing unused thingy, it is important to figure out which =
+commit introduced it in the first place and Cc the relevant people in =
+that commit.
+>=20
+> No, it isn't.  It is at best nice to have, but for a trivial macro
+> really doesn't matter.
 
-And the init->cap should be updated with the actual allocation.
-
-So more like:
-
-        if (init->cap.max_send_sge > RXE_MAX_SGE ||
-           init->cap.max_inline_data > RXE_MAX_INLINE)
-            return -EINVAL;
-
-	wqe_size = max_t(int, init->cap.max_sge * sizeof(struct ib_sge),
-			 init->cap.max_inline_data)
-                   sizeof(struct rxe_send_wqe);
-	qp->sq.max_sge = init->cap.max_send_sge = wqe_size/sizeof(struct ib_sge);
-	qp->sq.max_inline = init->cap.max_inline_data = wqe_size;
-	wqe_size += sizeof(struct rxe_send_wqe);
-
-Jason
+A more of personal taste what the trivial macro is. I=E2=80=99d rather =
+be on the caution side
+when removing code especially nowaday developers may not even compile
+test the patch properly given how many arches we have here which will =
+only waste
+time on other people when things goes wrong.=
