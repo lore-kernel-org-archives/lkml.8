@@ -2,112 +2,216 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF539C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB97C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4BD24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7eWKs0w"
+	by mail.kernel.org (Postfix) with ESMTP id 0DBCB24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579051879;
+	bh=LGvA/0W7ghitYc3943cy/zC8D1E+WnipXpNG9S0D+no=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZnjwJEdYzSJkkSmaPHzkgTfOGzzH1SGj4jXpxklHtODwlL9BMmT27HgTvypNltd0m
+	 urBRNbhqX1yrcrI9hLerpxUfzhQv/wfogJBJeSQXt6TNQqVfsh2G17678GRPcjC9M7
+	 n2s4PmM+9FKQGnTDt4ZV1Jtge0UY/i072TuPAiAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgAOBag (ORCPT
+        id S1728916AbgAOBbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:30:36 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35479 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728844AbgAOBag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:30:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579051835;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=cq04Ga1b8xTrH17T3rkjESGzzrFCqY7RRinYPFVL2u0=;
-        b=Q7eWKs0w9E1gn14AnUZJCdjk1u2cWMfRu1SefhIc4yLM8s7FcZXMEdlN4/L6KKzqHsZQXj
-        IBj7oPVJV1Kepe539MehgjLIpixYGfY/ZnFB50Dhn9+5IRICkY4fY6Gx4ZOYjD3gPSzLTy
-        KxIEXtJFbtt+Svgt0F9vA0qez0Vf4Hk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-59-MILkH8OSOieJ7asONUSy-w-1; Tue, 14 Jan 2020 20:30:31 -0500
-X-MC-Unique: MILkH8OSOieJ7asONUSy-w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Jan 2020 20:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728844AbgAOBbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 20:31:18 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A71C1800D78;
-        Wed, 15 Jan 2020 01:30:30 +0000 (UTC)
-Received: from plouf.redhat.com (ovpn-116-34.ams2.redhat.com [10.36.116.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B657A675AE;
-        Wed, 15 Jan 2020 01:30:26 +0000 (UTC)
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
-Date:   Wed, 15 Jan 2020 02:30:23 +0100
-Message-Id: <20200115013023.9710-1-benjamin.tissoires@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+        by mail.kernel.org (Postfix) with ESMTPSA id 2075424658;
+        Wed, 15 Jan 2020 01:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579051877;
+        bh=LGvA/0W7ghitYc3943cy/zC8D1E+WnipXpNG9S0D+no=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s/M3H3+AtHSmlBygHUk8Jk0yUuo2faG9IVJ2hGHUVCcx106Wy07L8Z9iEnKTRIAM6
+         do3kYGtZdWKgjX29MJI2DOgruRJg1z2qHIBDWp7UAV7ef0Er2NvwWxvxCTYOnuln77
+         MPETu/YLkDD9cbsYUSjDkr0yEASR+3DmyGktEj5k=
+Date:   Wed, 15 Jan 2020 10:31:12 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, paulmck@kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip V2 2/2] kprobes: Use non RCU traversal APIs on
+ kprobe_tables if possible
+Message-Id: <20200115103112.fe5dbff75d9e1e422cd60fd3@kernel.org>
+In-Reply-To: <20200114135621.GA103493@google.com>
+References: <157535316659.16485.11817291759382261088.stgit@devnote2>
+        <157535318870.16485.6366477974356032624.stgit@devnote2>
+        <20200114135621.GA103493@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
+On Tue, 14 Jan 2020 08:56:21 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Thus, there is no need to create a software top buttons row.
+> On Tue, Dec 03, 2019 at 03:06:28PM +0900, Masami Hiramatsu wrote:
+> > Current kprobes uses RCU traversal APIs on kprobe_tables
+> > even if it is safe because kprobe_mutex is locked.
+> > 
+> > Make those traversals to non-RCU APIs where the kprobe_mutex
+> > is locked.
+> 
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-However, it seems that the device works under SMBus, so keep it as part
-of the smbus_pnp_ids.
+Thanks Joel!
+> 
+> May be resend both patch with appropriate tags since it has been some time
+> since originally posted?
+
+OK, I'll update it on the latest -tip with your reviewed-by.
+
+Thank you,
+
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/kprobes.c |   29 ++++++++++++++++++++---------
+> >  1 file changed, 20 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index f9ecb6d532fb..4caab01ace30 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -46,6 +46,11 @@
+> >  
+> >  
+> >  static int kprobes_initialized;
+> > +/* kprobe_table can be accessed by
+> > + * - Normal hlist traversal and RCU add/del under kprobe_mutex is held.
+> > + * Or
+> > + * - RCU hlist traversal under disabling preempt (breakpoint handlers)
+> > + */
+> >  static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+> >  static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
+> >  
+> > @@ -829,7 +834,7 @@ static void optimize_all_kprobes(void)
+> >  	kprobes_allow_optimization = true;
+> >  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+> >  		head = &kprobe_table[i];
+> > -		hlist_for_each_entry_rcu(p, head, hlist)
+> > +		hlist_for_each_entry(p, head, hlist)
+> >  			if (!kprobe_disabled(p))
+> >  				optimize_kprobe(p);
+> >  	}
+> > @@ -856,7 +861,7 @@ static void unoptimize_all_kprobes(void)
+> >  	kprobes_allow_optimization = false;
+> >  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+> >  		head = &kprobe_table[i];
+> > -		hlist_for_each_entry_rcu(p, head, hlist) {
+> > +		hlist_for_each_entry(p, head, hlist) {
+> >  			if (!kprobe_disabled(p))
+> >  				unoptimize_kprobe(p, false);
+> >  		}
+> > @@ -1479,12 +1484,14 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
+> >  {
+> >  	struct kprobe *ap, *list_p;
+> >  
+> > +	lockdep_assert_held(&kprobe_mutex);
+> > +
+> >  	ap = get_kprobe(p->addr);
+> >  	if (unlikely(!ap))
+> >  		return NULL;
+> >  
+> >  	if (p != ap) {
+> > -		list_for_each_entry_rcu(list_p, &ap->list, list)
+> > +		list_for_each_entry(list_p, &ap->list, list)
+> >  			if (list_p == p)
+> >  			/* kprobe p is a valid probe */
+> >  				goto valid;
+> > @@ -1649,7 +1656,9 @@ static int aggr_kprobe_disabled(struct kprobe *ap)
+> >  {
+> >  	struct kprobe *kp;
+> >  
+> > -	list_for_each_entry_rcu(kp, &ap->list, list)
+> > +	lockdep_assert_held(&kprobe_mutex);
+> > +
+> > +	list_for_each_entry(kp, &ap->list, list)
+> >  		if (!kprobe_disabled(kp))
+> >  			/*
+> >  			 * There is an active probe on the list.
+> > @@ -1728,7 +1737,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
+> >  	else {
+> >  		/* If disabling probe has special handlers, update aggrprobe */
+> >  		if (p->post_handler && !kprobe_gone(p)) {
+> > -			list_for_each_entry_rcu(list_p, &ap->list, list) {
+> > +			list_for_each_entry(list_p, &ap->list, list) {
+> >  				if ((list_p != p) && (list_p->post_handler))
+> >  					goto noclean;
+> >  			}
+> > @@ -2042,13 +2051,15 @@ static void kill_kprobe(struct kprobe *p)
+> >  {
+> >  	struct kprobe *kp;
+> >  
+> > +	lockdep_assert_held(&kprobe_mutex);
+> > +
+> >  	p->flags |= KPROBE_FLAG_GONE;
+> >  	if (kprobe_aggrprobe(p)) {
+> >  		/*
+> >  		 * If this is an aggr_kprobe, we have to list all the
+> >  		 * chained probes and mark them GONE.
+> >  		 */
+> > -		list_for_each_entry_rcu(kp, &p->list, list)
+> > +		list_for_each_entry(kp, &p->list, list)
+> >  			kp->flags |= KPROBE_FLAG_GONE;
+> >  		p->post_handler = NULL;
+> >  		kill_optimized_kprobe(p);
+> > @@ -2217,7 +2228,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+> >  	mutex_lock(&kprobe_mutex);
+> >  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+> >  		head = &kprobe_table[i];
+> > -		hlist_for_each_entry_rcu(p, head, hlist)
+> > +		hlist_for_each_entry(p, head, hlist)
+> >  			if (within_module_init((unsigned long)p->addr, mod) ||
+> >  			    (checkcore &&
+> >  			     within_module_core((unsigned long)p->addr, mod))) {
+> > @@ -2468,7 +2479,7 @@ static int arm_all_kprobes(void)
+> >  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+> >  		head = &kprobe_table[i];
+> >  		/* Arm all kprobes on a best-effort basis */
+> > -		hlist_for_each_entry_rcu(p, head, hlist) {
+> > +		hlist_for_each_entry(p, head, hlist) {
+> >  			if (!kprobe_disabled(p)) {
+> >  				err = arm_kprobe(p);
+> >  				if (err)  {
+> > @@ -2511,7 +2522,7 @@ static int disarm_all_kprobes(void)
+> >  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+> >  		head = &kprobe_table[i];
+> >  		/* Disarm all kprobes on a best-effort basis */
+> > -		hlist_for_each_entry_rcu(p, head, hlist) {
+> > +		hlist_for_each_entry(p, head, hlist) {
+> >  			if (!arch_trampoline_kprobe(p) && !kprobe_disabled(p)) {
+> >  				err = disarm_kprobe(p, false);
+> >  				if (err) {
+> > 
 
 
-Link: https://gitlab.freedesktop.org/libinput/libinput/issues/414
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
---
-
-Hi Dmitry,
-
-Sending the patch to the list untested (sanity only), and I'll ask
-for the reporter to provide a little bit more testing.
-
-I will keep you updated when you can merge the patch.
-
-Cheers,
-Benjamin
----
- drivers/input/mouse/synaptics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synapt=
-ics.c
-index 1ae6f8bba9ae..7aa84f743c48 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -146,7 +146,6 @@ static const char * const topbuttonpad_pnp_ids[] =3D =
-{
- 	"LEN0042", /* Yoga */
- 	"LEN0045",
- 	"LEN0047",
--	"LEN0049",
- 	"LEN2000", /* S540 */
- 	"LEN2001", /* Edge E431 */
- 	"LEN2002", /* Edge E531 */
-@@ -166,6 +165,7 @@ static const char * const smbus_pnp_ids[] =3D {
- 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras *=
-/
- 	"LEN0048", /* X1 Carbon 3 */
- 	"LEN0046", /* X250 */
-+	"LEN0049", /* Yoga 11e */
- 	"LEN004a", /* W541 */
- 	"LEN005b", /* P50 */
- 	"LEN005e", /* T560 */
---=20
-2.24.1
-
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
