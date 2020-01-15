@@ -2,104 +2,98 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BF4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DD2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF37D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7FB2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IY9NEL11"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KTafuKCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgAOP2K (ORCPT
+        id S1729010AbgAOPam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:28:10 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22848 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728949AbgAOP2J (ORCPT
+        Wed, 15 Jan 2020 10:30:42 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50916 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgAOPal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:28:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579102088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2Qxjk+FWUcIFc8mBeai26DC01Hb/aY+95E+sd5g+NAo=;
-        b=IY9NEL11U+Qy3P2WQ3FtlOvcU2bPJ8WyiZa6DJ64SmdvpDGP14AWYXcBfgOR8wIim4ldjl
-        p6ZqLczCC+Lj1lmcc3KuepMdYXxVZg6wnTaf6Vc3I7iO0Rg1F1MtbvqLEP/QyAoGW61H8z
-        EHpUlCWskK5HX3YEG9saZFESHFp5Tag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-Ez7YFDxGPLmBrB0qBFl2qA-1; Wed, 15 Jan 2020 10:28:05 -0500
-X-MC-Unique: Ez7YFDxGPLmBrB0qBFl2qA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F6468F000B;
-        Wed, 15 Jan 2020 15:28:04 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 35DA91001B03;
-        Wed, 15 Jan 2020 15:28:03 +0000 (UTC)
-Subject: Re: [PATCH] locking/rwsem: Fix kernel crash when spinning on
- RWSEM_OWNER_UNKNOWN
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200114190303.5778-1-longman@redhat.com>
- <20200115065055.GA21219@lst.de>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <db64e331-fe31-c2d9-8b0c-aa99de34c56d@redhat.com>
-Date:   Wed, 15 Jan 2020 10:28:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 15 Jan 2020 10:30:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hlxbWHBq8lfTBkbbWblALE5WfMIrcmCMtir+afT5h7g=; b=KTafuKCnLEQxrDndx0KF1DZxC
+        rnKdoLI6sypMh61W+oBSzZckG9nErVqXpqRux90/jnJHBoNxCmDRhLN16rsx5kcLMMQTzpNlRHW3V
+        Kn+EfBOj9xXDn+MMy1P1Ce1dDs4zbgiDeuR8jQgZiUt61hA4+gx5SghScUnsRQG1ziTZYHV9R9Zgf
+        pJxhgaR5AeWS3+N32IQliDA3Jqotb5XQKegSIoZaLpNN+GhynXNs1L5cGpIhmQbJynCGULBXCRnjC
+        vAgzg7hshbf2g9UxNsiPKchC1nKbZKVYFzdAbYAS/fNwV5Y2i+QhIqJe1mPDizEBhtnZaTAQECgQV
+        KQqONFysg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irkce-0002dy-Qu; Wed, 15 Jan 2020 15:30:20 +0000
+Date:   Wed, 15 Jan 2020 07:30:20 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v12 11/22] mm/gup: introduce pin_user_pages*() and
+ FOLL_PIN
+Message-ID: <20200115153020.GF19546@infradead.org>
+References: <20200107224558.2362728-1-jhubbard@nvidia.com>
+ <20200107224558.2362728-12-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115065055.GA21219@lst.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107224558.2362728-12-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 1:50 AM, Christoph Hellwig wrote:
-> On Tue, Jan 14, 2020 at 02:03:03PM -0500, Waiman Long wrote:
->> The commit 91d2a812dfb9 ("locking/rwsem: Make handoff writer
->> optimistically spin on owner") will allow a recently woken up waiting
->> writer to spin on the owner. Unfortunately, if the owner happens to be
->> RWSEM_OWNER_UNKNOWN, the code will incorrectly spin on it leading to a
->> kernel crash. This is fixed by passing the proper non-spinnable bits
->> to rwsem_spin_on_owner() so that RWSEM_OWNER_UNKNOWN will be treated
->> as a non-spinnable target.
->>
->> Fixes: 91d2a812dfb9 ("locking/rwsem: Make handoff writer optimistically spin on owner")
->>
->> Reported-by: Christoph Hellwig <hch@lst.de>
->> Signed-off-by: Waiman Long <longman@redhat.com>
-> This survives all the tests that showed the problems with the original
-> code:
->
-> Tested-by: Christoph Hellwig <hch@lst.de>
->
-Thanks for the testing.
->>  		if ((wstate == WRITER_HANDOFF) &&
->> -		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
->> +		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
-> Nit: the inner braces in the first half of the conditional aren't required
-> either.
+On Tue, Jan 07, 2020 at 02:45:47PM -0800, John Hubbard wrote:
+> Introduce pin_user_pages*() variations of get_user_pages*() calls,
+> and also pin_longterm_pages*() variations.
+> 
+> For now, these are placeholder calls, until the various call sites
+> are converted to use the correct get_user_pages*() or
+> pin_user_pages*() API.
 
-Yes, it is inconsistent and so is not good. I will post a v2 patch to
-fix that.
-
-Cheers,
-Longman
-
+What do the pure placeholders buy us?  The API itself looks ok,
+but until it actually is properly implemented it doesn't help at
+all, and we've had all kinds of bad experiences with these sorts
+of stub APIs.
