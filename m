@@ -2,237 +2,629 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D823FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3567BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F0724671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BEA24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VFRDFhJc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jA6stuCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgAODyw (ORCPT
+        id S1729096AbgAODzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:54:52 -0500
-Received: from mout.gmx.net ([212.227.17.20]:49063 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728884AbgAODyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:54:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1579060470;
-        bh=oey+bGSDZcVc39amlD39i3yaZnQJybVfefztiUwy6VA=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VFRDFhJcuQoc8OrCcX1QvqTq65LqESpPeMaJFYnq2UwiyY7hnPN06Xhyzmj4qnqUQ
-         qLdlobMtryqxfd2aHWLNaCZ+FBvOkJu4OUzNWJDkXNhg0simH2efPxQkaeMe8WaeRS
-         xlBqIKCBu5IGqq6otjeDoxsoWM3X6Cea3pzGxAeI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MtfJX-1jeiba0coR-00v6Fp; Wed, 15
- Jan 2020 04:54:29 +0100
-Subject: Re: Problems with determining data presence by examining extents?
-To:     David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, hch@lst.de, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <4467.1579020509@warthog.procyon.org.uk>
-From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
- mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
- PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
- 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
- D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
- efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
- ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
- BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
- 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
- 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
- EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
- 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
- ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
- oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
- fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
- 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
- ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
- oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
-Message-ID: <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
-Date:   Wed, 15 Jan 2020 11:54:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 14 Jan 2020 22:55:24 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50462 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728884AbgAODzX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 22:55:23 -0500
+Received: by mail-pj1-f66.google.com with SMTP id r67so6826779pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:55:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y5NISFHF0HgNkns5FjEleQVJsu3+QkUvrpVK9YCpsK8=;
+        b=jA6stuCOaFn8GN2fQLRS+AljcjeiE9/LX2fqcgYGw5vWoqOKIyuttP1/QpQTLj/5dR
+         qUrqAP0aXZ3AhSN0acE/OS5/FWjOtu/lW5S6wN0k7ndmIWxZje1A5qhpyNLKkiKPum6n
+         Fqin4PweBcblfxZIoyEsFjW4pYswBRtS541L0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y5NISFHF0HgNkns5FjEleQVJsu3+QkUvrpVK9YCpsK8=;
+        b=t5FQHLlciJxJQH/yYVOmM5gLGIiGKKZRrl7mBL+Ev78zitsbMTE7UWPq9g/1r8xYee
+         BByi5bIRw/zqJKNeEEKGnCTOWT+jmx/98BIRJfqRoiUsBbM2TsD+VEKtNKo4Wb1B/pfu
+         mIDXJPosFygtVlrLtDlOa3qeAZ2sErvzc6uOeyavNwm1ZYnzOqf+qFk+BvsypKLmcTyc
+         qH1cr/OblUyxYYsya3C1qU45oP/gCfBU+So5/KMRWkbX8zX3kXOFjoJZ6qddJboHPETs
+         BAhDGdIa0hH+el2/SLP8xXD/VzTcyez6XETl6QtybFNstwbT89sl5U0X4USFhqonZ/Qn
+         o5VA==
+X-Gm-Message-State: APjAAAV/OBMyvX5c8DwzVppBvsgqiVqFKaRu+2IkPC0L3wJOE50U+oHa
+        QmmGRngvkPVnRXc8S3rSOOFMAA==
+X-Google-Smtp-Source: APXvYqwxO6xHulA0X6HjztkpLG8pHpqM4seIlo1qn868JQWom5430H6M/ei27Usrbt863qVByBK9CQ==
+X-Received: by 2002:a17:902:a986:: with SMTP id bh6mr7361439plb.340.1579060522691;
+        Tue, 14 Jan 2020 19:55:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x7sm20349195pfp.93.2020.01.14.19.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 19:55:21 -0800 (PST)
+Date:   Tue, 14 Jan 2020 19:55:20 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-crypto@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH v2] crypto, x86/sha: Eliminate casts on asm
+ implementations
+Message-ID: <202001141954.BABC753247@keescook>
+References: <202001141825.8CD52D0@keescook>
 MIME-Version: 1.0
-In-Reply-To: <4467.1579020509@warthog.procyon.org.uk>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="kyNX94pNiUDmTOWGi0FWq7UFShlh1konR"
-X-Provags-ID: V03:K1:YanSqm2m59hj7+6ra6X2fxbXpjUZaC3KWEnNHzka+qrSJSma/IU
- TQs3ptC0Vc9ePSm56fm7+8pn7S/hdc8UOOiOxNAXwk4DGJQUJpk0pRuuix7HnxNnup72wRU
- EgblHFYF7BDyZGtPoabwgmQDWxT3r6O/QS++2f/vLB2QGr83nIMEEYKF5ZCd37Dv7vSud/P
- rmC7giU3Qbr6haav5i3qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lApdwue0YmM=:EFi2hCpnRZJ2rpKSD/k3sO
- Lhydjj+Wroj/6Manswk++sZuQPEh4+erKeoV/t+UZpfma5EdP6opOuU8AOnzrQ99YR4jBgpfF
- iaVW87V7UakMs6DaFRykGC2A7Eat+fm/Lb9KhMN9s8ibQ8VQssx0615rYVI6GsqwpXLAZhZke
- mb8t+OFGtXDAgN1oX7WJtTvPgb15RibJCwGsSBfxr0jIEDm5rEaxp2fbEdwaNtWVBRpNBwyGH
- EZuz7/ExYkTmp2PJbuGG9UJoCpVSy6X3oZ+R9hfTZZSc658mKwDZWbOfMIbuMeWTJ9mu7uAmF
- dN2CgPrJhiGw9QC0+vHE+l2n4n12lHk57jV8t7zqHdi1t8TonF4JWCevZ34IBs/32YIc9y3uh
- SlF2LPNT6qBMxVP8+z9uV9Mgs7wf1ZbH+ViRN0MogNRgY/B79AegRwfDUodjOpyEiTRmKuO3E
- r18YUso/A2B0mi5g7WXYEojmeGjKn3CVTJBPYZfhO/7hxMBumRspzuRJ5g7zMk5lZRIRjxx03
- nk+tvY2ucFmXx9vfR+ntG/Z/FAzBFlJJaW6eGzMC2C6Lo07b0mVdxjrCqLJVvSwATK9mNnu84
- XeF/Vj5LToQVsHc1CBDvpdon41+b+7QgoLVXwiL8LaDErx+Wd/p/nSSAo9aYOJdxq5vkwYKK1
- JrqyfDyyX4spvZcLUB79wtIO662jotaE2Xgw0VFwbVT+ZvrmRFMCPa98PA75LCWzQdlifQ94A
- RNPmJGHrftCyBL+a5jZ3raSc9iCDR275WNyNb1+mAHOhOES5A4IvKPUz5dFaL6CgTenkKR5zu
- 2UcGgVIDYmxBzSPiKu9oHpp8atGBuOIftI6Mt9b1SN9TPZEGJdStpB3QyxS+iqPxTcrd1hi5a
- +bBvQG9h/H352okWhAkjR7f806+o7KkM2rae1SF/ELWQrw2aprJWFfUH5fRff00W0EKBZ8BYL
- n63NtvbDh7kw+MYCqaWs2HNCk5caqbTRqJ9PQrQzns6FagsoUtGiFdFsMYKKDN7x522A9mLmV
- pSoAOdyD2kDic/OS4CSccUkdUYQV7elBFd3/l1uwvPoRMv/XZwGHBrh7XNzqF/hJnKTHemivo
- BD/MggCw/KgZ/CpHs5f4RldoH40j6hLXe4sGEbicsFIT8WBS+agQ0/DfkTaRAppt2zX+o3R2r
- cfng8k5JlM+Xm9olkUrGfDWqoZg+5h4nbJDTmWZkPE0LgKdeU1n7qEJo1qblLn8IoWQCsolrA
- 6dceJcoMv1OMzEquRz9wmrgr1lstGIv/RpF4pNvVXdFXqKxIRNaqcwen9mvc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202001141825.8CD52D0@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---kyNX94pNiUDmTOWGi0FWq7UFShlh1konR
-Content-Type: multipart/mixed; boundary="gB6on3XvgIO0Qk510JqOC9SbshhQFMe5S"
+On Tue, Jan 14, 2020 at 06:28:48PM -0800, Kees Cook wrote:
+> In order to avoid CFI function prototype mismatches, this removes the
+> casts on assembly implementations of sha1/256/512 accelerators. The
+> safety checks from BUILD_BUG_ON() remain.
+> 
+> Additionally, this renames various arguments for clarity, as suggested
+> by Eric Biggers.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> I'm calling this v2 since it's now stand-alone. I think I caught
+> everything now...
+> v2: clean up more comments (ebiggers)
+> v1: https://lore.kernel.org/lkml/20191122030620.GD32523@sol.localdomain/
 
---gB6on3XvgIO0Qk510JqOC9SbshhQFMe5S
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Gah, I built the wrong tree before sending this. This patch has a
+mistake; I will send a v3 with corrections.
 
+-Kees
 
+> ---
+>  arch/x86/crypto/sha1_avx2_x86_64_asm.S |  6 +--
+>  arch/x86/crypto/sha1_ssse3_asm.S       | 14 ++++--
+>  arch/x86/crypto/sha1_ssse3_glue.c      | 68 +++++++++++---------------
+>  arch/x86/crypto/sha256-avx-asm.S       |  4 +-
+>  arch/x86/crypto/sha256-avx2-asm.S      |  4 +-
+>  arch/x86/crypto/sha256-ssse3-asm.S     |  6 ++-
+>  arch/x86/crypto/sha256_ssse3_glue.c    | 34 ++++++-------
+>  arch/x86/crypto/sha512-avx-asm.S       | 11 +++--
+>  arch/x86/crypto/sha512-avx2-asm.S      | 11 +++--
+>  arch/x86/crypto/sha512-ssse3-asm.S     | 13 +++--
+>  arch/x86/crypto/sha512_ssse3_glue.c    | 31 ++++++------
+>  11 files changed, 101 insertions(+), 101 deletions(-)
+> 
+> diff --git a/arch/x86/crypto/sha1_avx2_x86_64_asm.S b/arch/x86/crypto/sha1_avx2_x86_64_asm.S
+> index 6decc85ef7b7..1e594d60afa5 100644
+> --- a/arch/x86/crypto/sha1_avx2_x86_64_asm.S
+> +++ b/arch/x86/crypto/sha1_avx2_x86_64_asm.S
+> @@ -62,11 +62,11 @@
+>   *Visit http://software.intel.com/en-us/articles/
+>   *and refer to improving-the-performance-of-the-secure-hash-algorithm-1/
+>   *
+> - *Updates 20-byte SHA-1 record in 'hash' for even number of
+> - *'num_blocks' consecutive 64-byte blocks
+> + *Updates 20-byte SHA-1 record at start of 'state', from 'input', for
+> + *even number of 'blocks' consecutive 64-byte blocks.
+>   *
+>   *extern "C" void sha1_transform_avx2(
+> - *	int *hash, const char* input, size_t num_blocks );
+> + *	struct sha1_state *state, const u8* input, int blocks );
+>   */
+>  
+>  #include <linux/linkage.h>
+> diff --git a/arch/x86/crypto/sha1_ssse3_asm.S b/arch/x86/crypto/sha1_ssse3_asm.S
+> index 5d03c1173690..12e2d19d7402 100644
+> --- a/arch/x86/crypto/sha1_ssse3_asm.S
+> +++ b/arch/x86/crypto/sha1_ssse3_asm.S
+> @@ -457,9 +457,13 @@ W_PRECALC_SSSE3
+>  	movdqu	\a,\b
+>  .endm
+>  
+> -/* SSSE3 optimized implementation:
+> - *  extern "C" void sha1_transform_ssse3(u32 *digest, const char *data, u32 *ws,
+> - *                                       unsigned int rounds);
+> +/*
+> + * SSSE3 optimized implementation:
+> + *
+> + * extern "C" void sha1_transform_ssse3(struct sha1_state *state,
+> + *					const u8 *data, int blocks);
+> + *
+> + * Note that struct sha1_state is assumed to begin with u32 state[5].
+>   */
+>  SHA1_VECTOR_ASM     sha1_transform_ssse3
+>  
+> @@ -545,8 +549,8 @@ W_PRECALC_AVX
+>  
+>  
+>  /* AVX optimized implementation:
+> - *  extern "C" void sha1_transform_avx(u32 *digest, const char *data, u32 *ws,
+> - *                                     unsigned int rounds);
+> + *  extern "C" void sha1_transform_avx(struct sha1_state *state,
+> + *				       const u8 *data, int blocks);
+>   */
+>  SHA1_VECTOR_ASM     sha1_transform_avx
+>  
+> diff --git a/arch/x86/crypto/sha1_ssse3_glue.c b/arch/x86/crypto/sha1_ssse3_glue.c
+> index 639d4c2fd6a8..f7c8d043f6c1 100644
+> --- a/arch/x86/crypto/sha1_ssse3_glue.c
+> +++ b/arch/x86/crypto/sha1_ssse3_glue.c
+> @@ -27,11 +27,8 @@
+>  #include <crypto/sha1_base.h>
+>  #include <asm/simd.h>
+>  
+> -typedef void (sha1_transform_fn)(u32 *digest, const char *data,
+> -				unsigned int rounds);
+> -
+>  static int sha1_update(struct shash_desc *desc, const u8 *data,
+> -			     unsigned int len, sha1_transform_fn *sha1_xform)
+> +			     unsigned int len, sha1_block_fn *sha1_xform)
+>  {
+>  	struct sha1_state *sctx = shash_desc_ctx(desc);
+>  
+> @@ -39,48 +36,47 @@ static int sha1_update(struct shash_desc *desc, const u8 *data,
+>  	    (sctx->count % SHA1_BLOCK_SIZE) + len < SHA1_BLOCK_SIZE)
+>  		return crypto_sha1_update(desc, data, len);
+>  
+> -	/* make sure casting to sha1_block_fn() is safe */
+> +	/*
+> +	 * Make sure struct sha1_state begins directly with the SHA1
+> +	 * 160-bit internal state, as this is what the asm functions expect.
+> +	 */
+>  	BUILD_BUG_ON(offsetof(struct sha1_state, state) != 0);
+>  
+>  	kernel_fpu_begin();
+> -	sha1_base_do_update(desc, data, len,
+> -			    (sha1_block_fn *)sha1_xform);
+> +	sha1_base_do_update(desc, data, len, sha1_xform);
+>  	kernel_fpu_end();
+>  
+>  	return 0;
+>  }
+>  
+>  static int sha1_finup(struct shash_desc *desc, const u8 *data,
+> -		      unsigned int len, u8 *out, sha1_transform_fn *sha1_xform)
+> +		      unsigned int len, u8 *out, sha1_block_fn *sha1_xform)
+>  {
+>  	if (!crypto_simd_usable())
+>  		return crypto_sha1_finup(desc, data, len, out);
+>  
+>  	kernel_fpu_begin();
+>  	if (len)
+> -		sha1_base_do_update(desc, data, len,
+> -				    (sha1_block_fn *)sha1_xform);
+> -	sha1_base_do_finalize(desc, (sha1_block_fn *)sha1_xform);
+> +		sha1_base_do_update(desc, data, len, sha1_xform);
+> +	sha1_base_do_finalize(desc, sha1_xform);
+>  	kernel_fpu_end();
+>  
+>  	return sha1_base_finish(desc, out);
+>  }
+>  
+> -asmlinkage void sha1_transform_ssse3(u32 *digest, const char *data,
+> -				     unsigned int rounds);
+> +asmlinkage void sha1_transform_ssse3(struct sha1_state *state,
+> +				     const u8 *data, int blocks);
+>  
+>  static int sha1_ssse3_update(struct shash_desc *desc, const u8 *data,
+>  			     unsigned int len)
+>  {
+> -	return sha1_update(desc, data, len,
+> -			(sha1_transform_fn *) sha1_transform_ssse3);
+> +	return sha1_update(desc, data, len, sha1_transform_ssse3);
+>  }
+>  
+>  static int sha1_ssse3_finup(struct shash_desc *desc, const u8 *data,
+>  			      unsigned int len, u8 *out)
+>  {
+> -	return sha1_finup(desc, data, len, out,
+> -			(sha1_transform_fn *) sha1_transform_ssse3);
+> +	return sha1_finup(desc, data, len, out, sha1_transform_ssse3);
+>  }
+>  
+>  /* Add padding and return the message digest. */
+> @@ -119,21 +115,19 @@ static void unregister_sha1_ssse3(void)
+>  }
+>  
+>  #ifdef CONFIG_AS_AVX
+> -asmlinkage void sha1_transform_avx(u32 *digest, const char *data,
+> -				   unsigned int rounds);
+> +asmlinkage void sha1_transform_avx(struct sha1_state *state,
+> +				   const u8 *data, int blocks);
+>  
+>  static int sha1_avx_update(struct shash_desc *desc, const u8 *data,
+>  			     unsigned int len)
+>  {
+> -	return sha1_update(desc, data, len,
+> -			(sha1_transform_fn *) sha1_transform_avx);
+> +	return sha1_update(desc, data, len, sha1_transform_avx);
+>  }
+>  
+>  static int sha1_avx_finup(struct shash_desc *desc, const u8 *data,
+>  			      unsigned int len, u8 *out)
+>  {
+> -	return sha1_finup(desc, data, len, out,
+> -			(sha1_transform_fn *) sha1_transform_avx);
+> +	return sha1_finup(desc, data, len, out, sha1_transform_avx);
+>  }
+>  
+>  static int sha1_avx_final(struct shash_desc *desc, u8 *out)
+> @@ -190,8 +184,8 @@ static inline void unregister_sha1_avx(void) { }
+>  #if defined(CONFIG_AS_AVX2) && (CONFIG_AS_AVX)
+>  #define SHA1_AVX2_BLOCK_OPTSIZE	4	/* optimal 4*64 bytes of SHA1 blocks */
+>  
+> -asmlinkage void sha1_transform_avx2(u32 *digest, const char *data,
+> -				    unsigned int rounds);
+> +asmlinkage void sha1_transform_avx2(struct sha1_state *state,
+> +				    const u8 *data, int blocks);
+>  
+>  static bool avx2_usable(void)
+>  {
+> @@ -203,28 +197,26 @@ static bool avx2_usable(void)
+>  	return false;
+>  }
+>  
+> -static void sha1_apply_transform_avx2(u32 *digest, const char *data,
+> -				unsigned int rounds)
+> +static void sha1_apply_transform_avx2(struct sha1_state *state,
+> +				      const u8 *data, int blocks)
+>  {
+>  	/* Select the optimal transform based on data block size */
+>  	if (rounds >= SHA1_AVX2_BLOCK_OPTSIZE)
+> -		sha1_transform_avx2(digest, data, rounds);
+> +		sha1_transform_avx2(state, data, blocks);
+>  	else
+> -		sha1_transform_avx(digest, data, rounds);
+> +		sha1_transform_avx(state, data, blocks);
+>  }
+>  
+>  static int sha1_avx2_update(struct shash_desc *desc, const u8 *data,
+>  			     unsigned int len)
+>  {
+> -	return sha1_update(desc, data, len,
+> -		(sha1_transform_fn *) sha1_apply_transform_avx2);
+> +	return sha1_update(desc, data, len, sha1_apply_transform_avx2);
+>  }
+>  
+>  static int sha1_avx2_finup(struct shash_desc *desc, const u8 *data,
+>  			      unsigned int len, u8 *out)
+>  {
+> -	return sha1_finup(desc, data, len, out,
+> -		(sha1_transform_fn *) sha1_apply_transform_avx2);
+> +	return sha1_finup(desc, data, len, out, sha1_apply_transform_avx2);
+>  }
+>  
+>  static int sha1_avx2_final(struct shash_desc *desc, u8 *out)
+> @@ -267,21 +259,19 @@ static inline void unregister_sha1_avx2(void) { }
+>  #endif
+>  
+>  #ifdef CONFIG_AS_SHA1_NI
+> -asmlinkage void sha1_ni_transform(u32 *digest, const char *data,
+> -				   unsigned int rounds);
+> +asmlinkage void sha1_ni_transform(struct sha1_state *digest, const u8 *data,
+> +				  int rounds);
+>  
+>  static int sha1_ni_update(struct shash_desc *desc, const u8 *data,
+>  			     unsigned int len)
+>  {
+> -	return sha1_update(desc, data, len,
+> -		(sha1_transform_fn *) sha1_ni_transform);
+> +	return sha1_update(desc, data, len, sha1_ni_transform);
+>  }
+>  
+>  static int sha1_ni_finup(struct shash_desc *desc, const u8 *data,
+>  			      unsigned int len, u8 *out)
+>  {
+> -	return sha1_finup(desc, data, len, out,
+> -		(sha1_transform_fn *) sha1_ni_transform);
+> +	return sha1_finup(desc, data, len, out, sha1_ni_transform);
+>  }
+>  
+>  static int sha1_ni_final(struct shash_desc *desc, u8 *out)
+> diff --git a/arch/x86/crypto/sha256-avx-asm.S b/arch/x86/crypto/sha256-avx-asm.S
+> index 22e14c8dd2e4..fcbc30f58c38 100644
+> --- a/arch/x86/crypto/sha256-avx-asm.S
+> +++ b/arch/x86/crypto/sha256-avx-asm.S
+> @@ -341,8 +341,8 @@ a = TMP_
+>  .endm
+>  
+>  ########################################################################
+> -## void sha256_transform_avx(void *input_data, UINT32 digest[8], UINT64 num_blks)
+> -## arg 1 : pointer to digest
+> +## void sha256_transform_avx(state sha256_state *state, const u8 *data, int blocks)
+> +## arg 1 : pointer to state
+>  ## arg 2 : pointer to input data
+>  ## arg 3 : Num blocks
+>  ########################################################################
+> diff --git a/arch/x86/crypto/sha256-avx2-asm.S b/arch/x86/crypto/sha256-avx2-asm.S
+> index 519b551ad576..499d9ec129de 100644
+> --- a/arch/x86/crypto/sha256-avx2-asm.S
+> +++ b/arch/x86/crypto/sha256-avx2-asm.S
+> @@ -520,8 +520,8 @@ STACK_SIZE	= _RSP      + _RSP_SIZE
+>  .endm
+>  
+>  ########################################################################
+> -## void sha256_transform_rorx(void *input_data, UINT32 digest[8], UINT64 num_blks)
+> -## arg 1 : pointer to digest
+> +## void sha256_transform_rorx(struct sha256_state *state, const u8 *data, int blocks)
+> +## arg 1 : pointer to state
+>  ## arg 2 : pointer to input data
+>  ## arg 3 : Num blocks
+>  ########################################################################
+> diff --git a/arch/x86/crypto/sha256-ssse3-asm.S b/arch/x86/crypto/sha256-ssse3-asm.S
+> index 69cc2f91dc4c..ddfa863b4ee3 100644
+> --- a/arch/x86/crypto/sha256-ssse3-asm.S
+> +++ b/arch/x86/crypto/sha256-ssse3-asm.S
+> @@ -347,8 +347,10 @@ a = TMP_
+>  .endm
+>  
+>  ########################################################################
+> -## void sha256_transform_ssse3(void *input_data, UINT32 digest[8], UINT64 num_blks)
+> -## arg 1 : pointer to digest
+> +## void sha256_transform_ssse3(struct sha256_state *state, const u8 *data,
+> +##			       int blocks);
+> +## arg 1 : pointer to state
+> +##	   (struct sha256_state is assumed to begin with u32 state[8])
+>  ## arg 2 : pointer to input data
+>  ## arg 3 : Num blocks
+>  ########################################################################
+> diff --git a/arch/x86/crypto/sha256_ssse3_glue.c b/arch/x86/crypto/sha256_ssse3_glue.c
+> index f9aff31fe59e..03ad657c04bd 100644
+> --- a/arch/x86/crypto/sha256_ssse3_glue.c
+> +++ b/arch/x86/crypto/sha256_ssse3_glue.c
+> @@ -41,12 +41,11 @@
+>  #include <linux/string.h>
+>  #include <asm/simd.h>
+>  
+> -asmlinkage void sha256_transform_ssse3(u32 *digest, const char *data,
+> -				       u64 rounds);
+> -typedef void (sha256_transform_fn)(u32 *digest, const char *data, u64 rounds);
+> +asmlinkage void sha256_transform_ssse3(struct sha256_state *state,
+> +				       const u8 *data, int blocks);
+>  
+>  static int _sha256_update(struct shash_desc *desc, const u8 *data,
+> -			  unsigned int len, sha256_transform_fn *sha256_xform)
+> +			  unsigned int len, sha256_block_fn *sha256_xform)
+>  {
+>  	struct sha256_state *sctx = shash_desc_ctx(desc);
+>  
+> @@ -54,28 +53,29 @@ static int _sha256_update(struct shash_desc *desc, const u8 *data,
+>  	    (sctx->count % SHA256_BLOCK_SIZE) + len < SHA256_BLOCK_SIZE)
+>  		return crypto_sha256_update(desc, data, len);
+>  
+> -	/* make sure casting to sha256_block_fn() is safe */
+> +	/*
+> +	 * Make sure struct sha256_state begins directly with the SHA256
+> +	 * 256-bit internal state, as this is what the asm functions expect.
+> +	 */
+>  	BUILD_BUG_ON(offsetof(struct sha256_state, state) != 0);
+>  
+>  	kernel_fpu_begin();
+> -	sha256_base_do_update(desc, data, len,
+> -			      (sha256_block_fn *)sha256_xform);
+> +	sha256_base_do_update(desc, data, len, sha256_xform);
+>  	kernel_fpu_end();
+>  
+>  	return 0;
+>  }
+>  
+>  static int sha256_finup(struct shash_desc *desc, const u8 *data,
+> -	      unsigned int len, u8 *out, sha256_transform_fn *sha256_xform)
+> +	      unsigned int len, u8 *out, sha256_block_fn *sha256_xform)
+>  {
+>  	if (!crypto_simd_usable())
+>  		return crypto_sha256_finup(desc, data, len, out);
+>  
+>  	kernel_fpu_begin();
+>  	if (len)
+> -		sha256_base_do_update(desc, data, len,
+> -				      (sha256_block_fn *)sha256_xform);
+> -	sha256_base_do_finalize(desc, (sha256_block_fn *)sha256_xform);
+> +		sha256_base_do_update(desc, data, len, sha256_xform);
+> +	sha256_base_do_finalize(desc, sha256_xform);
+>  	kernel_fpu_end();
+>  
+>  	return sha256_base_finish(desc, out);
+> @@ -145,8 +145,8 @@ static void unregister_sha256_ssse3(void)
+>  }
+>  
+>  #ifdef CONFIG_AS_AVX
+> -asmlinkage void sha256_transform_avx(u32 *digest, const char *data,
+> -				     u64 rounds);
+> +asmlinkage void sha256_transform_avx(struct sha256_state *state,
+> +				     const u8 *data, int blocks);
+>  
+>  static int sha256_avx_update(struct shash_desc *desc, const u8 *data,
+>  			 unsigned int len)
+> @@ -227,8 +227,8 @@ static inline void unregister_sha256_avx(void) { }
+>  #endif
+>  
+>  #if defined(CONFIG_AS_AVX2) && defined(CONFIG_AS_AVX)
+> -asmlinkage void sha256_transform_rorx(u32 *digest, const char *data,
+> -				      u64 rounds);
+> +asmlinkage void sha256_transform_rorx(struct sha256_state *state,
+> +				      const u8 *data, int blocks);
+>  
+>  static int sha256_avx2_update(struct shash_desc *desc, const u8 *data,
+>  			 unsigned int len)
+> @@ -307,8 +307,8 @@ static inline void unregister_sha256_avx2(void) { }
+>  #endif
+>  
+>  #ifdef CONFIG_AS_SHA256_NI
+> -asmlinkage void sha256_ni_transform(u32 *digest, const char *data,
+> -				   u64 rounds); /*unsigned int rounds);*/
+> +asmlinkage void sha256_ni_transform(struct sha256_state *digest,
+> +				    const u8 *data, int rounds);
+>  
+>  static int sha256_ni_update(struct shash_desc *desc, const u8 *data,
+>  			 unsigned int len)
+> diff --git a/arch/x86/crypto/sha512-avx-asm.S b/arch/x86/crypto/sha512-avx-asm.S
+> index 3704ddd7e5d5..90ea945ba5e6 100644
+> --- a/arch/x86/crypto/sha512-avx-asm.S
+> +++ b/arch/x86/crypto/sha512-avx-asm.S
+> @@ -271,11 +271,12 @@ frame_size = frame_GPRSAVE + GPRSAVE_SIZE
+>  .endm
+>  
+>  ########################################################################
+> -# void sha512_transform_avx(void* D, const void* M, u64 L)
+> -# Purpose: Updates the SHA512 digest stored at D with the message stored in M.
+> -# The size of the message pointed to by M must be an integer multiple of SHA512
+> -# message blocks.
+> -# L is the message length in SHA512 blocks
+> +# void sha512_transform_avx(sha512_state *state, const u8 *data, int blocks)
+> +# Purpose: Updates the SHA512 digest stored at "state" with the message
+> +# stored in "data".
+> +# The size of the message pointed to by "data" must be an integer multiple
+> +# of SHA512 message blocks.
+> +# "blocks" is the message length in SHA512 blocks
+>  ########################################################################
+>  SYM_FUNC_START(sha512_transform_avx)
+>  	cmp $0, msglen
+> diff --git a/arch/x86/crypto/sha512-avx2-asm.S b/arch/x86/crypto/sha512-avx2-asm.S
+> index 80d830e7ee09..3dd886b14e7d 100644
+> --- a/arch/x86/crypto/sha512-avx2-asm.S
+> +++ b/arch/x86/crypto/sha512-avx2-asm.S
+> @@ -563,11 +563,12 @@ frame_size = frame_GPRSAVE + GPRSAVE_SIZE
+>  .endm
+>  
+>  ########################################################################
+> -# void sha512_transform_rorx(void* D, const void* M, uint64_t L)#
+> -# Purpose: Updates the SHA512 digest stored at D with the message stored in M.
+> -# The size of the message pointed to by M must be an integer multiple of SHA512
+> -#   message blocks.
+> -# L is the message length in SHA512 blocks
+> +# void sha512_transform_rorx(sha512_state *state, const u8 *data, int blocks)
+> +# Purpose: Updates the SHA512 digest stored at "state" with the message
+> +# stored in "data".
+> +# The size of the message pointed to by "data" must be an integer multiple
+> +# of SHA512 message blocks.
+> +# "blocks" is the message length in SHA512 blocks
+>  ########################################################################
+>  SYM_FUNC_START(sha512_transform_rorx)
+>  	# Allocate Stack Space
+> diff --git a/arch/x86/crypto/sha512-ssse3-asm.S b/arch/x86/crypto/sha512-ssse3-asm.S
+> index 838f984e95d9..7946a1bee85b 100644
+> --- a/arch/x86/crypto/sha512-ssse3-asm.S
+> +++ b/arch/x86/crypto/sha512-ssse3-asm.S
+> @@ -269,11 +269,14 @@ frame_size = frame_GPRSAVE + GPRSAVE_SIZE
+>  .endm
+>  
+>  ########################################################################
+> -# void sha512_transform_ssse3(void* D, const void* M, u64 L)#
+> -# Purpose: Updates the SHA512 digest stored at D with the message stored in M.
+> -# The size of the message pointed to by M must be an integer multiple of SHA512
+> -#   message blocks.
+> -# L is the message length in SHA512 blocks.
+> +## void sha512_transform_ssse3(struct sha512_state *state, const u8 *data,
+> +##			       int blocks);
+> +# (struct sha512_state is assumed to begin with u64 state[8])
+> +# Purpose: Updates the SHA512 digest stored at "state" with the message
+> +# stored in "data".
+> +# The size of the message pointed to by "data" must be an integer multiple
+> +# of SHA512 message blocks.
+> +# "blocks" is the message length in SHA512 blocks.
+>  ########################################################################
+>  SYM_FUNC_START(sha512_transform_ssse3)
+>  
+> diff --git a/arch/x86/crypto/sha512_ssse3_glue.c b/arch/x86/crypto/sha512_ssse3_glue.c
+> index 458356a3f124..1c444f41037c 100644
+> --- a/arch/x86/crypto/sha512_ssse3_glue.c
+> +++ b/arch/x86/crypto/sha512_ssse3_glue.c
+> @@ -39,13 +39,11 @@
+>  #include <crypto/sha512_base.h>
+>  #include <asm/simd.h>
+>  
+> -asmlinkage void sha512_transform_ssse3(u64 *digest, const char *data,
+> -				       u64 rounds);
+> -
+> -typedef void (sha512_transform_fn)(u64 *digest, const char *data, u64 rounds);
+> +asmlinkage void sha512_transform_ssse3(struct sha512_state *state,
+> +				       const u8 *data, int blocks);
+>  
+>  static int sha512_update(struct shash_desc *desc, const u8 *data,
+> -		       unsigned int len, sha512_transform_fn *sha512_xform)
+> +		       unsigned int len, sha512_block_fn *sha512_xform)
+>  {
+>  	struct sha512_state *sctx = shash_desc_ctx(desc);
+>  
+> @@ -53,28 +51,29 @@ static int sha512_update(struct shash_desc *desc, const u8 *data,
+>  	    (sctx->count[0] % SHA512_BLOCK_SIZE) + len < SHA512_BLOCK_SIZE)
+>  		return crypto_sha512_update(desc, data, len);
+>  
+> -	/* make sure casting to sha512_block_fn() is safe */
+> +	/*
+> +	 * Make sure struct sha512_state begins directly with the SHA512
+> +	 * 512-bit internal state, as this is what the asm functions expect.
+> +	 */
+>  	BUILD_BUG_ON(offsetof(struct sha512_state, state) != 0);
+>  
+>  	kernel_fpu_begin();
+> -	sha512_base_do_update(desc, data, len,
+> -			      (sha512_block_fn *)sha512_xform);
+> +	sha512_base_do_update(desc, data, len, sha512_xform);
+>  	kernel_fpu_end();
+>  
+>  	return 0;
+>  }
+>  
+>  static int sha512_finup(struct shash_desc *desc, const u8 *data,
+> -	      unsigned int len, u8 *out, sha512_transform_fn *sha512_xform)
+> +	      unsigned int len, u8 *out, sha512_block_fn *sha512_xform)
+>  {
+>  	if (!crypto_simd_usable())
+>  		return crypto_sha512_finup(desc, data, len, out);
+>  
+>  	kernel_fpu_begin();
+>  	if (len)
+> -		sha512_base_do_update(desc, data, len,
+> -				      (sha512_block_fn *)sha512_xform);
+> -	sha512_base_do_finalize(desc, (sha512_block_fn *)sha512_xform);
+> +		sha512_base_do_update(desc, data, len, sha512_xform);
+> +	sha512_base_do_finalize(desc, sha512_xform);
+>  	kernel_fpu_end();
+>  
+>  	return sha512_base_finish(desc, out);
+> @@ -144,8 +143,8 @@ static void unregister_sha512_ssse3(void)
+>  }
+>  
+>  #ifdef CONFIG_AS_AVX
+> -asmlinkage void sha512_transform_avx(u64 *digest, const char *data,
+> -				     u64 rounds);
+> +asmlinkage void sha512_transform_avx(struct sha512_state *state,
+> +				     const u8 *data, int blocks);
+>  static bool avx_usable(void)
+>  {
+>  	if (!cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL)) {
+> @@ -225,8 +224,8 @@ static inline void unregister_sha512_avx(void) { }
+>  #endif
+>  
+>  #if defined(CONFIG_AS_AVX2) && defined(CONFIG_AS_AVX)
+> -asmlinkage void sha512_transform_rorx(u64 *digest, const char *data,
+> -				      u64 rounds);
+> +asmlinkage void sha512_transform_rorx(struct sha512_state *state,
+> +				      const u8 *data, int blocks);
+>  
+>  static int sha512_avx2_update(struct shash_desc *desc, const u8 *data,
+>  		       unsigned int len)
+> -- 
+> 2.20.1
+> 
+> 
+> -- 
+> Kees Cook
 
-On 2020/1/15 =E4=B8=8A=E5=8D=8812:48, David Howells wrote:
-> Again with regard to my rewrite of fscache and cachefiles:
->=20
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/=
-log/?h=3Dfscache-iter
->=20
-> I've got rid of my use of bmap()!  Hooray!
->=20
-> However, I'm informed that I can't trust the extent map of a backing fi=
-le to
-> tell me accurately whether content exists in a file because:
->=20
->  (a) Not-quite-contiguous extents may be joined by insertion of blocks =
-of
->      zeros by the filesystem optimising itself.  This would give me a f=
-alse
->      positive when trying to detect the presence of data.
-
-At least for btrfs, only unaligned extents get padding zeros.
-
-But I guess other fs could do whatever they want to optimize themselves.
-
->=20
->  (b) Blocks of zeros that I write into the file may get punched out by
->      filesystem optimisation since a read back would be expected to rea=
-d zeros
->      there anyway, provided it's below the EOF.  This would give me a f=
-alse
->      negative.
-
-I know some qemu disk backend has such zero detection.
-But not btrfs. So this is another per-fs based behavior.
-
-And problem (c):
-
-(c): A multi-device fs (btrfs) can have their own logical address mapping=
-=2E
-Meaning the bytenr returned makes no sense to end user, unless used for
-that fs specific address space.
-
-This is even more trickier when considering single device btrfs.
-It still utilize the same logical address space, just like all multiple
-disks btrfs.
-
-And it completely possible for a single 1T btrfs has logical address
-mapped beyond 10T or even more. (Any aligned bytenr in the range [0,
-U64_MAX) is valid for btrfs logical address).
-
-
-You won't like this case either.
-(d): Compressed extents
-One compressed extent can represents more data than its on-disk size.
-
-Furthermore, current fiemap interface hasn't considered this case, thus
-there it only reports in-memory size (aka, file size), no way to
-represent on-disk size.
-
-
-And even more bad news:
-(e): write time dedupe
-Although no fs known has implemented it yet (btrfs used to try to
-support that, and I guess XFS could do it in theory too), you won't
-known when a fs could get such "awesome" feature.
-
-Where your write may be checked and never reach disk if it matches with
-existing extents.
-
-This is a little like the zero-detection-auto-punch.
-
->=20
-> Is there some setting I can use to prevent these scenarios on a file - =
-or can
-> one be added?
-
-I guess no.
-
->=20
-> Without being able to trust the filesystem to tell me accurately what I=
-'ve
-> written into it, I have to use some other mechanism.  Currently, I've s=
-witched
-> to storing a map in an xattr with 1 bit per 256k block, but that gets h=
-ard to
-> use if the file grows particularly large and also has integrity consequ=
-ences -
-> though those are hopefully limited as I'm now using DIO to store data i=
-nto the
-> cache.
-
-Would you like to explain why you want to know such fs internal info?
-
-Thanks,
-Qu
->=20
-> If it helps, I'm downloading data in aligned 256k blocks and storing da=
-ta in
-> those same aligned 256k blocks, so if that makes it easier...
->=20
-> David
->=20
-
-
---gB6on3XvgIO0Qk510JqOC9SbshhQFMe5S--
-
---kyNX94pNiUDmTOWGi0FWq7UFShlh1konR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl4ejOwACgkQwj2R86El
-/qgA9QgAoVjIxeQRumpojy6W5vF6GGlMm/M+IKi83tAOPWnYDP4OIVhiqL/7f1fG
-hxue8/hEQW737NImsOQlQvsqD1n8YNg0XEi/zQB6YN5tgtS2s14RzMTPFBlkFosC
-ky6DJbseDFAKDvHebodfUxZsL9ibE/YwiOUcrITp155mpVbnYTT+LF2C7a8Emmo2
-Sh+7IEWwRDy00TYQ+7lQKzTdD4zj74AvHutpuuMJ/8rstb0y2SS6pkB5EQAno1yS
-81owvjgp2EiaZdWJpunBHIhvROfF6nIzZP1czxOAr0T648PBYtE0EcZpOkKH+PHe
-Ni8Ucj5vI0r7m6Y3yqZJ5Y8dBTPTYg==
-=SBbx
------END PGP SIGNATURE-----
-
---kyNX94pNiUDmTOWGi0FWq7UFShlh1konR--
+-- 
+Kees Cook
