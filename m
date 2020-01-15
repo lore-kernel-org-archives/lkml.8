@@ -2,147 +2,128 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE8DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502DAC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121972465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4462467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aK0r0qzR"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EvfFiNYC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAOWFa (ORCPT
+        id S1729619AbgAOWFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:05:30 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18143 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgAOWF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:05:29 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1f8c710000>; Wed, 15 Jan 2020 14:04:33 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 Jan 2020 14:05:29 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 Jan 2020 14:05:29 -0800
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
- 2020 22:05:24 +0000
-Subject: Re: [PATCH v6 4/6] mm/mmu_notifier: add mmu_interval_notifier_find()
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
-References: <20200113224703.5917-1-rcampbell@nvidia.com>
- <20200113224703.5917-5-rcampbell@nvidia.com>
- <20200114124956.GN20978@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <528c1cff-608c-d342-1e72-90d780555204@nvidia.com>
-Date:   Wed, 15 Jan 2020 14:05:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 15 Jan 2020 17:05:35 -0500
+Received: from mail-mw2nam10on2042.outbound.protection.outlook.com ([40.107.94.42]:63041
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729103AbgAOWFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:05:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zw7Az5kc20rsrW/b6pTFDktMvy6FWJi3CtzE5ZgiDQujlljlVMH81dRpJ2Z0PGuTfB6FkYbBl6v+zc9/I98KtFwWyj1QHOzESLCir1cfGBbANcHvHSXfCbL1gZ1d/q66bsSF1C/czmBaQ0b81rAKnhfTAUL+Wrj3QoU6qRlxYbivg3S/vuc4Nsj7s5d73fro1496EFGHeGqCqSgXRM/5Kq5EPNRL8Zh8p+A6HprzEo6/Kc4yyhA4WqcDG5NIqzuF4Fy/dkOfZ8PagFxfSFeIdhFlftoqXKLj5EmJ0qwhFsDnt6ZLsdndRya1aUAttGdpmwe6ZpRGM2+iR2TC1r4uug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+ou289xCuQSX/A+seFHx60Iisn9UY5OjNAxwUOxibU=;
+ b=mcnfMNo/8KovLIIq2/1kEwgqA/+UST1jTJlwy8lTl/zBMuoKtvIej2hzRbx1oqwBSHDHjZfD5uOn9Gth3m6SySYG2GTyN7HXf0Db/eGHQr9d1yC/JSiJFgVpBNI0VlV7eXFByGP+9kMJY/eHVQS4Pvcyup35GbnH6g5wN4ZlMNiONxG8K/coYNCzMMEg8Cew1fSXaOCIXlyPfnSii3LYkDyRbObAtx/lEEz1b+EiSP3h37NG7ydN2ek5BNsHXfEXv5EfIJItw78RUT7oZh7ShlNYFTW7arEENtDUgMms2ANgHWc5ZzqrTg4vD9SJ/NYrHj9JM2MwVeXR81bQJmCX8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+ou289xCuQSX/A+seFHx60Iisn9UY5OjNAxwUOxibU=;
+ b=EvfFiNYC0tvWjNHzG2b8PgueiDIzU2X+HGqYWhB6SbptdwAVhRtmKkw4lzuBpjVPzcvdK1sYC03XcGid+lPkPAqESF36StatrbxwJ6H+AONzg8v//xuIpXHtJ/Te6Ob5NvmU/OpkRYGDKn5Y6Nu+ww6noHNjtJaEF7Tss/1Poyo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB3945.namprd12.prod.outlook.com (10.255.172.91) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Wed, 15 Jan 2020 22:05:29 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2623.017; Wed, 15 Jan 2020
+ 22:05:29 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>, stable@vger.kernel.org
+Subject: [PATCH] x86/CPU/AMD: Ensure clearing of SME/SEV features is maintained
+Date:   Wed, 15 Jan 2020 16:05:16 -0600
+Message-Id: <226de90a703c3c0be5a49565047905ac4e94e8f3.1579125915.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR2101CA0005.namprd21.prod.outlook.com
+ (2603:10b6:805:106::15) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-In-Reply-To: <20200114124956.GN20978@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579125873; bh=THfPEihvnXha/ZAsoeHLMyQALJLZvNsiB8lapA3uV7s=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aK0r0qzRe3LL4PZNNQF34X9swSBE5W0PHzaJ16joN7727655IDaVZCMY7EekgCaUu
-         1RFbSpx/YbAPzUYrwRhZIng2dmhPiu/9QTQAjShtmI96eN6fTIEMxqZX/c+XJMLHrL
-         kh+A0oXsJioOBNrZZN5C1D4GRmuVf4DsYTs7lGO+OvdEqbiMZdXyjSWf4ouXIwfy46
-         whLa+qWHzzwdEkWxOIm8KdlGeh1keYvkMXk1LUeHqZseIwAo19ZOveJVl0bIu0zGnY
-         psGlkKBjVp9U9sYpKqnKMB3qpI8EgEprrf1FYOxFEWiDVE/nUIe0g2m9UN8F4A5E/X
-         53r6K6Lc6ZTVA==
+Received: from tlendack-t1.amd.com (165.204.77.1) by SN6PR2101CA0005.namprd21.prod.outlook.com (2603:10b6:805:106::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.6 via Frontend Transport; Wed, 15 Jan 2020 22:05:28 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d334c43a-c0bd-465c-01a9-08d79a070817
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3945:|DM6PR12MB3945:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB39458FEAEBCF5CD1302C2427EC370@DM6PR12MB3945.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 02830F0362
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(199004)(189003)(86362001)(2906002)(316002)(2616005)(6486002)(956004)(81166006)(8676002)(4326008)(81156014)(54906003)(66556008)(186003)(7696005)(66476007)(16526019)(66946007)(52116002)(5660300002)(36756003)(8936002)(26005)(478600001)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3945;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 69tVneRwqbsSID6raxP5YhqJpi1bWim29wRo7OoNxvjRNLbzFJ+BQO/ge9ryb7lRoKJHPm2L28B7BD1wzz9fnuIejcaTTv2gvRTQblaLCd2DUrbH9LCBPkZUJXt6QAuq3VVCiWXAH/N5Ax19BZ63Cs44S6M+FfNDtPRDJysAjR8ZGZWdPQk4LedwZ3lXCGWrO1BUPxriJasnquqLBdt896LxM3dnsczRnvaRbM0bfA/kBNYLMn0QYz4idw/Dlni3XXP2ozh+3fLGAuiRjchQr2H7nlxrTbGc9PrVLO1mf1oooK8GHx+cGoV8j2Qh5AyXtCnV2++rlh/0lLP5/OkQY2wNcbPpRGU/DR1INN9Q43xdBkEYTP59dVjhFPuf/y0okblJ+SBCWtFQ5ZyhD3KXusc+CXXnTKXxYYwmv7ZxndgQDCPN5UOA8zxkDfMuYzQk
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d334c43a-c0bd-465c-01a9-08d79a070817
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2020 22:05:28.9677
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G26E0bXE/whmMmrFGwQYlkm6nolMqF2152UAVfAQFgU/3+z4e3kC1+MfKM63PIL5qdnd1CFTpN272EDYRxqCHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3945
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If the SME and SEV features are present via CPUID, but memory encryption
+support is not enabled (MSR 0xC001_0010[23]), the features are cleared
+using clear_cpu_cap(). However, if get_cpu_cap() is later called, these
+features will be reset back to present, which is not desired.
 
-On 1/14/20 4:49 AM, Jason Gunthorpe wrote:
-> On Mon, Jan 13, 2020 at 02:47:01PM -0800, Ralph Campbell wrote:
->> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
->> index 47ad9cc89aab..4efecc0f13cb 100644
->> +++ b/mm/mmu_notifier.c
->> @@ -1171,6 +1171,39 @@ void mmu_interval_notifier_update(struct mmu_interval_notifier *mni,
->>   }
->>   EXPORT_SYMBOL_GPL(mmu_interval_notifier_update);
->>   
->> +struct mmu_interval_notifier *mmu_interval_notifier_find(struct mm_struct *mm,
->> +				const struct mmu_interval_notifier_ops *ops,
->> +				unsigned long start, unsigned long last)
->> +{
->> +	struct mmu_notifier_mm *mmn_mm = mm->mmu_notifier_mm;
->> +	struct interval_tree_node *node;
->> +	struct mmu_interval_notifier *mni;
->> +	struct mmu_interval_notifier *res = NULL;
->> +
->> +	spin_lock(&mmn_mm->lock);
->> +	node = interval_tree_iter_first(&mmn_mm->itree, start, last);
->> +	if (node) {
->> +		mni = container_of(node, struct mmu_interval_notifier,
->> +				   interval_tree);
->> +		while (true) {
->> +			if (mni->ops == ops) {
->> +				res = mni;
->> +				break;
->> +			}
->> +			node = interval_tree_iter_next(&mni->interval_tree,
->> +						       start, last);
->> +			if (!node)
->> +				break;
->> +			mni = container_of(node, struct mmu_interval_notifier,
->> +					   interval_tree);
->> +		}
->> +	}
->> +	spin_unlock(&mmn_mm->lock);
-> 
-> This doesn't seem safe at all, here we are returning a pointer to
-> memory from the interval tree with out any kind of lifetime
-> protection.
+Change from using clear_cpu_cap() to setup_clear_cpu_cap() so that the
+clearing of the features is maintained.
 
-It is memory that the driver has allocated and has full control over
-the lifetime since the driver does all the insertions and removals.
-The driver does have to hold the HW page table lock so lookups are
-synchronized with interval insertions and removals and page table
-entry insertions and removals.
+Cc: <stable@vger.kernel.org> # 4.16.x-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/kernel/cpu/amd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> If the interval tree is read it must be left in the read lock state
-> until the caller is done with the pointer.
-> 
-> .. and this poses all sorts of questions about consistency with items
-> on the deferred list. Should find return an item undergoing deletion?
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 90f75e515876..62c30279be77 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -615,9 +615,9 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 		return;
+ 
+ clear_all:
+-		clear_cpu_cap(c, X86_FEATURE_SME);
++		setup_clear_cpu_cap(X86_FEATURE_SME);
+ clear_sev:
+-		clear_cpu_cap(c, X86_FEATURE_SEV);
++		setup_clear_cpu_cap(X86_FEATURE_SEV);
+ 	}
+ }
+ 
+-- 
+2.17.1
 
-I don't think so. The deferred operations are all complete when
-mmu_interval_read_begin() returns, and the sequence number check
-with mmu_interval_read_retry() guarantees there have been no changes
-while not holding the driver page table lock and calling hmm_range_fault().
-
-> Should find return items using the old interval tree values or their
-> new updated values?
-> 
-> Jason
-
-I think it should only look at the old interval tree and not the deferred
-insert/remove/updates as explained above.
