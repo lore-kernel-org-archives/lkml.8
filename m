@@ -2,97 +2,119 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DF1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BD720684
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12327222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RvMhHJRy"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="odMM3ACv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FmrFlWnH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAODkj (ORCPT
+        id S1729075AbgAODkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:40:39 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37128 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbgAODkj (ORCPT
+        Tue, 14 Jan 2020 22:40:51 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:39135 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728879AbgAODku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:40:39 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x18so9664813vsq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=drkpqV4r5dWLWeh/Ukq5CXTmFjT5tZtoP/NgpIicDAo=;
-        b=RvMhHJRy0BKcdpGOX6edsro+XuCjnHLwFr84j9/MKXcFQEi6iV9aSjUXhnyayQmDaZ
-         b/iU4wY6vWtpU1ib7BIS4Y8FTrzJc+n7neeL7qYjCl7yc6Uy3FiuHcIDupcU86VZx6GJ
-         jV8lOMJrNPdMpTUZ44ys37llBz28zb+hBWkhg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=drkpqV4r5dWLWeh/Ukq5CXTmFjT5tZtoP/NgpIicDAo=;
-        b=h3Mgcf7uOyXLVAjJPXcik1O/u8by0a5uDDAgNGNQ7iDXu8my58ARFjRcEZ/1dzWa4+
-         tbimNhGCha3znT6/v82TqkMohgEgx61qAX08MM2i6n2ejwx1AnXbFtdaJr026mPGQbyG
-         M7oZVrLMWU8GK2LAY43hj0w8+oFt67I/eWSKeuaF4K0Xm4BTCoEctfiGSwXJ4BneYPeG
-         QCKC4PgXZgugDvM0nCWFpuRZg94mTZcaEpwDb+YVZy4Jo9NptloPj8+PTmEgPNNeZGGk
-         IyRQrJlHmlWRcbGLDpcl539GzO5eViw/HfxLAaBIvJJ17lSdTQlacdqXmdHOkDoTsOsY
-         z9PQ==
-X-Gm-Message-State: APjAAAVtCDbbPhFLh6YujEYTy7m/cRdNWyrpWspNDWtGza60duhxylHB
-        9DWpT/hRj4gm3n2Rn++HSBlJI/Vw+M4=
-X-Google-Smtp-Source: APXvYqy34ijEtHqJLdTJNKENchlHNtPE5sMEsjw2p0GUUtf9ZPCutFLi3YQMAIIEmw6rBV0xjdkMSA==
-X-Received: by 2002:a67:f8c8:: with SMTP id c8mr3380962vsp.196.1579059638125;
-        Tue, 14 Jan 2020 19:40:38 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id n25sm5138875vkk.56.2020.01.14.19.40.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 19:40:37 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id a12so5745457uan.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:40:37 -0800 (PST)
-X-Received: by 2002:ab0:254e:: with SMTP id l14mr13216859uan.91.1579059637158;
- Tue, 14 Jan 2020 19:40:37 -0800 (PST)
+        Tue, 14 Jan 2020 22:40:50 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 35B3C2213D;
+        Tue, 14 Jan 2020 22:40:50 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 14 Jan 2020 22:40:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=RrgydXjzryvsT0baMy3pjy0e7s
+        fLWEp3zx91v4rk8Kc=; b=odMM3ACvUNQ3DfAJebxF4yBz2RyD9enltEfZnL7exp
+        6N6++Ti9G6+t6z0frrlEnSgR+g6zaEEzBSB+A9fhW2fd0B7OriLBST4ZlXZySWGX
+        AjTkSR2M7NSSS0Wg2pBxqUhxRtbnz5t0r51xhA0Hk7ynqNPxV9yENmK8ItMHLKIS
+        Cl9EQ4niTuqj77b3MsmveiesY5C95AxOcsVwqm9HfIDSaSFEZ5zi2SDSJgSpFAVz
+        3D6HLpBaRkVaE/mfBk8i68Gc7vYfFuspnMPL0Ohmmof2gZnYYBlhfhgZ1WA7FmZU
+        FIkIgAb0on6dzBwfMjMfCn34706l/tbiuCXIkzOqwthA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=RrgydXjzryvsT0baM
+        y3pjy0e7sfLWEp3zx91v4rk8Kc=; b=FmrFlWnHD/9gvAHbizIAHNlp6PuW68wWZ
+        v7TtXZCWhjf68zqGSA6dWcmT+GxHsj8kKM8zt4IlcAQkUYZ6+z4tOahAPk7MOniL
+        ShyGAjIMt/ougC3kFKmhtV9QjxYC/s0qTWvLoQROP59FWd5qylb2D1m2qLmk1i/3
+        ReuRY1vGVM8prrNGwEqS1B3wUNmLu6KUmg5f8PwzX/K51iXrDPbLUHtv9SYSb+Qq
+        ruyztiT0LXuOVluH3bq2USj0d1/X1/4OycriNnGZGsKNxDZDQ+ZmbXhipA2HmUXn
+        5zWJO5LnIaRYK6caLA+moaYAx7dQEzBDSh1v2ODZ9GqAGbhuQ24rw==
+X-ME-Sender: <xms:wYkeXkuQ5UYKGE5zQz7osvQcXUz_DlKGbialkBce6iJMWwMwnG1Hhw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtddvgdeitdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
+    drudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghl
+    sehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:wYkeXnwa7xE63m_2A0v9m3INthDutYBqVYOMrbA3WeLlBwIcGiXxfA>
+    <xmx:wYkeXlwkdlie93T90lFGzaQJ2kuW8T1EvOE-4HV2f8PmH9o-bQibnw>
+    <xmx:wYkeXkjExHoyfk9yGp5bodHvl-Sw6bHIThkWAfvJLLe6KKALmYf4Xw>
+    <xmx:wokeXkdV5GkVqne3CpotvjeXEIm0jwwNzYtGDE7ymHzgrW1rUZcodA>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 700DD30607B4;
+        Tue, 14 Jan 2020 22:40:49 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Sebastian Reichel <sre@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v4 0/4] X-Powers Power Supply Improvements
+Date:   Tue, 14 Jan 2020 21:40:44 -0600
+Message-Id: <20200115034048.24901-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20200109155910.907-1-swboyd@chromium.org> <20200109155910.907-2-swboyd@chromium.org>
-In-Reply-To: <20200109155910.907-2-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 14 Jan 2020 19:40:25 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XJZCebpa_Yas_riZhdKz+Gz+dL5CMeu+8+NmWxJ92dAA@mail.gmail.com>
-Message-ID: <CAD=FV=XJZCebpa_Yas_riZhdKz+Gz+dL5CMeu+8+NmWxJ92dAA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] alarmtimer: Unregister wakeup source when module get fails
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series adds some improvements to the axp20x_usb_power power supply
+driver to better support suspend/resume and use on mobile devices.
 
-On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> The alarmtimer_rtc_add_device() function creates a wakeup source and
-> then tries to grab a module reference. If that fails we return early
-> with a -1, but forget to remove the wakeup source. Cleanup this exit
-> path so we don't leave a dangling wakeup source allocated and named
-> 'alarmtimer' that will conflict with another RTC device that may be
-> registered.
->
-> Fixes: 51218298a25e ("alarmtimer: Ensure RTC module is not unloaded")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  kernel/time/alarmtimer.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+Patch 1 is preparation for changes in following patches.
+Patch 2 allows userspace to take the power supply offline.
+Patch 3 allows userspace to control the wakeup behavior.
+Patch 4 avoids polling USB VBUS presence when possible.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Changes since v3:
+ - Rebase on power-supply/for-next
+ - Add Reviewed-by (1-2)
+
+Changes since v2:
+ - Patch 1 was merged
+ - Only check ACIN_PATH_SEL when necessary (1)
+ - Update commit message (5)
+ - Avoided reordering lines until/unless necessary (5, 7)
+ - Update comment and add ID check in axp20x_usb_power_set_property
+   (it seemed more correct than adding another comment) (6)
+ - Add Reviewed-by where there were no comments (2-4, 7-8)
+
+Changes since v1:
+ - Add patches 1-2
+ - Shift value properly in calls to regmap_update_bits (3, 7)
+ - Use #ifdef instead of #if to avoid -Wundef warnings (4, 8)
+ - Poll once after an IRQ, instead of setting power->online in the IRQ (9)
+ - Poll once on resume, in case the state changed during suspend (9)
+
+Samuel Holland (4):
+  power: supply: axp20x_usb_power: Use a match structure
+  power: supply: axp20x_usb_power: Allow offlining
+  power: supply: axp20x_usb_power: Add wakeup control
+  power: supply: axp20x_usb_power: Only poll while offline
+
+ drivers/power/supply/axp20x_usb_power.c | 217 ++++++++++++++++++------
+ 1 file changed, 169 insertions(+), 48 deletions(-)
+
+-- 
+2.23.0
+
