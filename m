@@ -2,131 +2,93 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FC9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA17C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A5D24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UntR+ovd"
+	by mail.kernel.org (Postfix) with ESMTP id 6D1C924671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgAOGPu (ORCPT
+        id S1729008AbgAOGTZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:15:50 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35869 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAOGPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:15:49 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47yHBT0bNKz9v9Dm;
-        Wed, 15 Jan 2020 07:15:45 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UntR+ovd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uRhu0hEJc6dc; Wed, 15 Jan 2020 07:15:45 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47yHBS5m1Pz9v9Dk;
-        Wed, 15 Jan 2020 07:15:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579068944; bh=dLb+n74DT6jZUD4ec0gfhmKuZ7wdMUymXTZD+f3ESjs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UntR+ovdUgNuiOCdaG492qpGkB1inQlUzwXmUjovM/oqM/Vp3a/K3ppEYvczfO2ls
-         w8S4Mabi06ZQ75T5HTmKpob6aRUwzfUY5vsQRUL7Zw5MJvFZAX1RNry5Mv2FWFVr5b
-         rxL2XadbeDGNcEyFm+pdcDnM/FQoG26VHqpC1L64=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A0E88B77E;
-        Wed, 15 Jan 2020 07:15:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3sLM6Sb2GP2Q; Wed, 15 Jan 2020 07:15:45 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6976D8B774;
-        Wed, 15 Jan 2020 07:15:45 +0100 (CET)
-Subject: Re: [RFC PATCH v3 08/12] lib: vdso: allow arches to provide vdso data
- pointer
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-References: <cover.1578934751.git.christophe.leroy@c-s.fr>
- <381e547dbb3c48fd39d6cf208033bba38ad048fb.1578934751.git.christophe.leroy@c-s.fr>
- <87ftghbpuu.fsf@nanos.tec.linutronix.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d2de3211-9d7c-513e-fe0f-8bdce623fb65@c-s.fr>
-Date:   Wed, 15 Jan 2020 07:15:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 15 Jan 2020 01:19:25 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:59415 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgAOGTZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 01:19:25 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00F6J4nI010830, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00F6J4nI010830
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 15 Jan 2020 14:19:05 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Wed, 15 Jan 2020 14:19:04 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 15 Jan 2020 14:19:04 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 15 Jan 2020 14:19:04 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Prashant Malani <pmalani@chromium.org>,
+        Grant Grundler <grundler@chromium.org>,
+        "Mario Limonciello" <mario.limonciello@dell.com>,
+        David Chen <david.chen7@dell.com>,
+        "open list:USB NETWORKING DRIVERS" <linux-usb@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] r8152: Add MAC passthrough support to new device
+Thread-Topic: [PATCH] r8152: Add MAC passthrough support to new device
+Thread-Index: AQHVypTrvWsj1nE3Z02rCzrvB8fQNKfrP9uQ
+Date:   Wed, 15 Jan 2020 06:19:04 +0000
+Message-ID: <383516f7b54247bda694bf2a999e68f7@realtek.com>
+References: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <87ftghbpuu.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
+> Sent: Tuesday, January 14, 2020 12:41 PM
+[...]
+>  	if (le16_to_cpu(udev->descriptor.idVendor) == VENDOR_ID_LENOVO &&
+> -	    le16_to_cpu(udev->descriptor.idProduct) == 0x3082)
+> +	    (le16_to_cpu(udev->descriptor.idProduct) == 0x3082 ||
+> +	     le16_to_cpu(udev->descriptor.idProduct) == 0xa387))
 
+How about using
+switch (le16_to_cpu(udev->descriptor.idProduct)) {
+...
+}
 
-Le 15/01/2020 à 00:06, Thomas Gleixner a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>   
->>   static __maybe_unused int
->> +#ifdef VDSO_GETS_VD_PTR_FROM_ARCH
->> +__cvdso_clock_gettime_common(const struct vdso_data *vd, clockid_t clock,
->> +		      struct __kernel_timespec *ts)
->> +{
->> +#else
->>   __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
->>   {
->>   	const struct vdso_data *vd = __arch_get_vdso_data();
->> +#endif
->>   	u32 msk;
+>  		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
 > 
-> If we do that, then there is no point in propagating this to the inner
-> functions. It's perfectly fine to have this distinction at the outermost
-> level.
+>  	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
+> &&
+> --
+> 2.17.1
 
-In v2, I did it at the arch level (see 
-https://patchwork.ozlabs.org/patch/1214983/). Andy was concerned about 
-it being suboptimal for arches which (unlike powerpc) have PC related 
-data addressing mode.
 
-Wouldn't it be the same issue if doing it at the outermost level of 
-generic VDSO ?
+Best Regards,
+Hayes
 
-> 
-> As a related question, I noticed that you keep all that ASM voodoo in
-> the PPC specific code which provides the actual entry points. Is that
-> ASM code really still necessary? All current users of the generic VDSO
-> just do something like:
-> 
-> int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
-> {
->          return __cvdso_clock_gettime(clock, ts);
-> }
-> 
-> in the architecture code. Is there a reason why this can't work on PPC?
 
-The problem with powerpc is that VDSO functions have to (just like 
-system calls) set the SO bit in CR register in case of error, or clear 
-it if no error. There is no way to do that from the C function, because 
-there is no way to tell GCC to not play up with CR register on function 
-return.
-
-Refer discussion at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92769
-
-Christophe
