@@ -2,200 +2,156 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA27AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9349C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767BF24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E1124671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNt51iDc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MfKsFjnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbgAOWbu (ORCPT
+        id S1730602AbgAOWcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:31:50 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36467 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbgAOWbu (ORCPT
+        Wed, 15 Jan 2020 17:32:55 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:33488 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgAOWcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:31:50 -0500
-Received: by mail-qk1-f193.google.com with SMTP id a203so17355080qkc.3;
-        Wed, 15 Jan 2020 14:31:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m3ykeEiv2DWhC3YDv/3M+ztOkLKwpMGFjEqD6cnUt4s=;
-        b=cNt51iDcDZI6zelQEGvFbm8lPIlIGnZldM0f2rIq1AgcoCCdkQIbVvR19pY8xHwYlP
-         7R2OMxb5sfqI39LAluJjBuUlrFm8jXcFHwHzpQsVk9IHMN/xpCMK491szpikUKk8RT8X
-         m7307OpYrbxFQJI8OakwrfTa3HGJZ4eJBfI86Xby5q50ox6WVd4PzkYEVcAciFBIwS8u
-         f7mRKTLIgkBP65rlD0vn09o9FPFOgGm1EUGPVidZ+W/ZFmk+dDe2ZjwrZvCB++dEJ8sV
-         SkthSvzz+nTTMBTamfNnFkYTRMY01cXfsbE7dr+lHGbkVSn+2SSSqgQh18vnIuXka7P3
-         jZ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m3ykeEiv2DWhC3YDv/3M+ztOkLKwpMGFjEqD6cnUt4s=;
-        b=cK76LIAP5ynqr0Qta/8qtkniBiwY6z2LvYl36KzJhC160HWZAgWe7jrqSs6rdz51KO
-         jvOYzc5iDZ5jEMidCg5GTs6O4px3Y9vBjWG95814auLdEtPiisD6EOzE4jAM7pZ/if06
-         Y73rLUhWf5YehK9/0knabFTx+SmCHoRVm0XkuQh9SeHo7s/9OBXRisdV1InonIhgnHvY
-         kvxy66xTcUm0LeQKyHsjwPbDFOeJueNg0/TXS9c/A/cnPj84VMNww/UfbaRJatW8cJtH
-         Mte43cYFkUJjnqhSIxlzcsWwulykNHHh+yVSJd6j9xHx2a9ykwKoTYMCxPM9qh21vYh7
-         XOIg==
-X-Gm-Message-State: APjAAAVLiYLb8203H9f0aSWU+jQBOW6ieGh/6E8+TWrMNMJgtQICPqfV
-        ZOGrpVd0Z2SQwg49NYDkGtG7+lsqO9IdXO45MaU=
-X-Google-Smtp-Source: APXvYqzukFfHfNkIeKb+uK+DszszlveC2wPehwk6e8vAwphJhtnuhVoFPfjcvFFmRoCVVG49lShaKmldjnY1Y1hDegY=
-X-Received: by 2002:ae9:e809:: with SMTP id a9mr13631663qkg.92.1579127508368;
- Wed, 15 Jan 2020 14:31:48 -0800 (PST)
-MIME-Version: 1.0
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
- <157909757089.1192265.9038866294345740126.stgit@toke.dk> <CAEf4BzbqY8zivZy637Xy=iTECzBAYQ7vo=M7TvsLM2Yp12bJpg@mail.gmail.com>
- <87v9pctlvn.fsf@toke.dk>
-In-Reply-To: <87v9pctlvn.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 15 Jan 2020 14:31:37 -0800
-Message-ID: <CAEf4BzZpGe-1S5_iwS8GBw9iiyFJmDUkOaO+2qaftRn_iy5cNA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 02/10] tools/bpf/runqslower: Fix override
- option for VMLINUX_BTF
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Wed, 15 Jan 2020 17:32:55 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FMNTgE079402;
+        Wed, 15 Jan 2020 22:32:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=bDGmmKR62/rJKWPi34OdOSl+RPEPQlXQTRCeFzErCqM=;
+ b=MfKsFjnbwldOfD5DDxHQsHKZ6DKZnu+MD748kT200mUWlMIsHinIqSLG9IFdcGQPYMW+
+ gWz8F+ntGj08/KuMHKE2fqe18uCplprZSeDMEd0GwMr/KPuo4qC4kZrfN7XUCNOqNqcQ
+ IcAcYVNHMynsLY8lNK0XFDgnHUNLlAbNQLVx0EUKWaY2IJM9l4tKJ3LBzjwGasoBcIk6
+ 2UTMzJE6emrOgXrm1D+nQb1Qc7p4+/DxTSWpKRPuMIez1f5SOLbnQko6nkKEbdjzgwF/
+ BjaM23LV+mQMBwlQkcT1Xi1KvibdYGu1Xi2ZbHwmQJvXRinZepIOChJQ18RzpJq67NlX ag== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xf73ty2ru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 22:32:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FMNZgZ178613;
+        Wed, 15 Jan 2020 22:32:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xj61kh35t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 22:32:37 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FMWZ3d020744;
+        Wed, 15 Jan 2020 22:32:36 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 14:32:34 -0800
+Subject: Re: [Xen-devel] [PATCH v4] xen-pciback: optionally allow interrupt
+ enable flag writes
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
+        <marmarek@invisiblethingslab.com>
+Cc:     xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
         open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        Jan Beulich <jbeulich@suse.com>
+References: <20200115014643.12749-1-marmarek@invisiblethingslab.com>
+ <20200115164815.GO11756@Air-de-Roger>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <393ff73f-802c-9f1c-b739-4476388b6c98@oracle.com>
+Date:   Wed, 15 Jan 2020 17:32:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200115164815.GO11756@Air-de-Roger>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:06 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Wed, Jan 15, 2020 at 6:13 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@=
-redhat.com> wrote:
-> >>
-> >> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >>
-> >> The runqslower tool refuses to build without a file to read vmlinux BT=
-F
-> >> from. The build fails with an error message to override the location b=
-y
-> >> setting the VMLINUX_BTF variable if autodetection fails. However, the
-> >> Makefile doesn't actually work with that override - the error message =
-is
-> >> still emitted.
-> >
-> > Do you have example command with VMLINUX_BTF override that didn't work
-> > (and what error message was emitted)?
->
-> Before this patch:
->
-> $ cd ~/build/linux/tools/bpf/runqslower
-> $ make
-> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it =
-explicitly".  Stop.
->
-> $ make VMLINUX_BTF=3D~/build/linux/vmlinux
-> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it =
-explicitly".  Stop.
-
-Ok, so this is strange. Try make clean and run with V=3D1, it might help
-to debug this. This could happen if ~/build/linux/vmlinux doesn't
-exist, but I assume you double-checked that. It works for me just fine
-(Makefile won't do VMLINUX_BTF :=3D assignment, if it's defined through
-make invocation, so your change should be a no-op in that regard):
-
-$ make clean
-$ make VMLINUX_BTF=3D~/linux-build/default/vmlinux V=3D1
-...
-.output/sbin/bpftool btf dump file ~/linux-build/default/vmlinux
-format c > .output/vmlinux.h
-...
-
-Wonder what your output looks like?
-
->
-> >> Fix this by only doing auto-detection if no override is set. And while
-> >> we're at it, also look for a vmlinux file in the current kernel build =
-dir
-> >> if none if found on the running kernel.
-> >>
-> >> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
-> >> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >> ---
-> >>  tools/bpf/runqslower/Makefile |   16 ++++++++++------
-> >>  1 file changed, 10 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Make=
-file
-> >> index cff2fbcd29a8..fb93ce2bf2fe 100644
-> >> --- a/tools/bpf/runqslower/Makefile
-> >> +++ b/tools/bpf/runqslower/Makefile
-> >> @@ -10,12 +10,16 @@ CFLAGS :=3D -g -Wall
-> >>
-> >>  # Try to detect best kernel BTF source
-> >>  KERNEL_REL :=3D $(shell uname -r)
-> >> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
-> >> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
-> >> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
-> >> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
-> >> -else
-> >> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it expli=
-citly")
-> >> +ifeq ("$(VMLINUX_BTF)","")
-> >> +  ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
-> >> +  VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
-> >> +  else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
-> >> +  VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
-> >> +  else ifneq ("$(wildcard $(abspath ../../../vmlinux))","")
-> >> +  VMLINUX_BTF :=3D $(abspath ../../../vmlinux)
-> >
-> > I'm planning to mirror runqslower into libbpf Github repo and this
-> > ../../../vmlinux piece will be completely out of place in that
-> > context. Also it only will help when building kernel in-tree. So I'd
-> > rather not add this.
->
-> Well building the kernel in-tree is something people sometimes want to do=
- ;)
->
-> Specifically, the selftests depend on this, so we should at least fix
-> those; but I guess it could work to just pass in VMLINUX_BTF as part of
-> the make -C from the selftests dir? I'll try that...
-
-Yes, it can be handled through VMLINUX_BTF override for selftests. As
-I said, this will be a self-contained example in libbpf's Github repo,
-so this "in kernel tree" assumption doesn't stand there.
 
 
+On 1/15/20 11:48 AM, Roger Pau Monné wrote:
+> On Wed, Jan 15, 2020 at 02:46:29AM +0100, Marek Marczykowski-Górecki wrote:
+>> QEMU running in a stubdom needs to be able to set INTX_DISABLE, and the
+>> MSI(-X) enable flags in the PCI config space. This adds an attribute
+>> 'allow_interrupt_control' which when set for a PCI device allows writes
+>> to this flag(s). The toolstack will need to set this for stubdoms.
+>> When enabled, guest (stubdomain) will be allowed to set relevant enable
+>> flags, but only one at a time - i.e. it refuses to enable more than one
+>> of INTx, MSI, MSI-X at a time.
+>>
+>> This functionality is needed only for config space access done by device
+>> model (stubdomain) serving a HVM with the actual PCI device. It is not
+>> necessary and unsafe to enable direct access to those bits for PV domain
+>> with the device attached. For PV domains, there are separate protocol
+>> messages (XEN_PCI_OP_{enable,disable}_{msi,msix}) for this purpose.
+>> Those ops in addition to setting enable bits, also configure MSI(-X) in
+>> dom0 kernel - which is undesirable for PCI passthrough to HVM guests.
+>>
+>> This should not introduce any new security issues since a malicious
+>> guest (or stubdom) can already generate MSIs through other ways, see
+>> [1] page 8. Additionally, when qemu runs in dom0, it already have direct
+>> access to those bits.
+>>
+>> This is the second iteration of this feature. First was proposed as a
+>> direct Xen interface through a new hypercall, but ultimately it was
+>> rejected by the maintainer, because of mixing pciback and hypercalls for
+>> PCI config space access isn't a good design. Full discussion at [2].
+>>
+>> [1]: https://invisiblethingslab.com/resources/2011/Software%20Attacks%20on%20Intel%20VT-d.pdf
+>> [2]: https://xen.markmail.org/thread/smpgpws4umdzizze
+>>
+>> [part of the commit message and sysfs handling]
+>> Signed-off-by: Simon Gaiser <simon@invisiblethingslab.com>
+>> [the rest]
+>> Signed-off-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> Some minor nits below, but LGTM:
 >
-> -Toke
+> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
 >
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-driver-pciback b/Documentation/ABI/testing/sysfs-driver-pciback
+>> index 6a733bfa37e6..566a11f2c12f 100644
+>> --- a/Documentation/ABI/testing/sysfs-driver-pciback
+>> +++ b/Documentation/ABI/testing/sysfs-driver-pciback
+>> @@ -11,3 +11,16 @@ Description:
+>>                   #echo 00:19.0-E0:2:FF > /sys/bus/pci/drivers/pciback/quirks
+>>                   will allow the guest to read and write to the configuration
+>>                   register 0x0E.
+>> +
+>> +What:           /sys/bus/pci/drivers/pciback/allow_interrupt_control
+>> +Date:           Jan 2020
+>> +KernelVersion:  5.5
+
+5.6
+
+I can fix this and the things that Roger mentioned while committing if 
+Marek is OK with that.
+
+-boris
+
+
+
