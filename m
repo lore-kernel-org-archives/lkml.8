@@ -2,68 +2,73 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13927C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCB6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35CD207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79724222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAONmc (ORCPT
+        id S1728901AbgAONn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:42:32 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42620 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbgAONmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:42:31 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 250D2EF69D186BCA2C2A;
-        Wed, 15 Jan 2020 21:42:29 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 15 Jan 2020 21:42:18 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <jirislaby@gmail.com>, <mickflemm@gmail.com>, <mcgrof@kernel.org>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH] ath5k: remove unneeded conversion to bool
-Date:   Wed, 15 Jan 2020 21:37:45 +0800
-Message-ID: <20200115133745.58648-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Jan 2020 08:43:27 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47244 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbgAONn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:43:27 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irixB-0007Po-G9; Wed, 15 Jan 2020 14:43:25 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C547110122A; Wed, 15 Jan 2020 14:43:14 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     chengkaitao <pilgrimtao@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, smuchun@gmail.com,
+        Kaitao Cheng <pilgrimtao@gmail.com>
+Subject: Re: [RESEND v2] irq: Refactor irq_wait_for_interrupt info to simplify the code
+In-Reply-To: <20200106154430.3413-1-pilgrimtao@gmail.com>
+References: <20200106154430.3413-1-pilgrimtao@gmail.com>
+Date:   Wed, 15 Jan 2020 14:43:14 +0100
+Message-ID: <877e1sg7il.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion to bool is not needed, remove it.
+chengkaitao <pilgrimtao@gmail.com> writes:
+> From: Kaitao Cheng <pilgrimtao@gmail.com>
+>
+> Cleanup extra if(test_and_clear_bit), and put the other one in front.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/net/wireless/ath/ath5k/ani.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That simplifies the code but opens a race window:
 
-diff --git a/drivers/net/wireless/ath/ath5k/ani.c b/drivers/net/wireless/ath/ath5k/ani.c
-index 0624333..850c608 100644
---- a/drivers/net/wireless/ath/ath5k/ani.c
-+++ b/drivers/net/wireless/ath/ath5k/ani.c
-@@ -501,7 +501,7 @@ ath5k_ani_calibration(struct ath5k_hw *ah)
- 
- 	if (as->ofdm_errors > ofdm_high || as->cck_errors > cck_high) {
- 		/* too many PHY errors - we have to raise immunity */
--		bool ofdm_flag = as->ofdm_errors > ofdm_high ? true : false;
-+		bool ofdm_flag = as->ofdm_errors > ofdm_high;
- 		ath5k_ani_raise_immunity(ah, as, ofdm_flag);
- 		ath5k_ani_period_restart(as);
- 
--- 
-2.7.4
+ CPU 0                                CPU 1
+                                      irq_wait_for_interrupt()
+                                        has not yet reached schedule()
+ free_irq()
+   remove_action();
+   synchronize_irq();                   
 
+   #ifdef CONFIG_DEBUG_SHIRQ
+    action->handler()                   if (test_and_clear_bit())
+                            ---> bit is not set yet                                           
+      --> SET thread running
+   #endif                               
+
+   kthread_stop()                       if (kthread_stop())
+
+                   ---> Leave with bit set and thread active count != 0
+
+That's just the most obvious example...
+
+Thanks,
+
+        tglx
