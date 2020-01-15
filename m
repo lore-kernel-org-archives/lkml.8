@@ -2,134 +2,78 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C89DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4091EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D93C2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174AD24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgAOIDP (ORCPT
+        id S1726472AbgAOIK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:03:15 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56001 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgAOIDP (ORCPT
+        Wed, 15 Jan 2020 03:10:58 -0500
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:29677 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726100AbgAOIK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:03:15 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1irddj-0000Js-MF; Wed, 15 Jan 2020 09:02:59 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1irddh-0008IE-N7; Wed, 15 Jan 2020 09:02:57 +0100
-Date:   Wed, 15 Jan 2020 09:02:57 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Han Xu <han.xu@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, esben@geanix.com,
-        boris.brezillon@collabora.com, festevam@gmail.com,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] dmaengine: mxs: add the power management functions
-Message-ID: <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
- <1579038243-28550-4-git-send-email-han.xu@nxp.com>
+        Wed, 15 Jan 2020 03:10:58 -0500
+X-Greylist: delayed 623 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 03:10:58 EST
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 15 Jan
+ 2020 16:10:55 +0800
+Received: from tony-HX002EA.zhaoxin.com (10.32.64.11) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 15 Jan
+ 2020 16:10:53 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <luto@kernel.org>,
+        <peterz@infradead.org>, <pawan.kumar.gupta@linux.intel.com>,
+        <fenghua.yu@intel.com>, <vineela.tummalapalli@intel.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
+        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
+Subject: [PATCH] x86/cpu: Add Zhaoxin CPUs to the cpu vulnerability whitelist
+Date:   Wed, 15 Jan 2020 16:11:22 +0800
+Message-ID: <1579075882-7162-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579038243-28550-4-git-send-email-han.xu@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:51:32 up 191 days, 14:01, 85 users,  load average: 0.23, 0.25,
- 0.25
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.32.64.11]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:44:00AM +0800, Han Xu wrote:
-> add the power management functions and leverage the runtime pm for
-> system suspend/resume
-> 
-> Signed-off-by: Han Xu <han.xu@nxp.com>
-> ---
->  drivers/dma/mxs-dma.c | 97 +++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 90 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> index b458f06f9067..251492c5ea58 100644
-> --- a/drivers/dma/mxs-dma.c
-> +++ b/drivers/dma/mxs-dma.c
-> @@ -25,6 +25,7 @@
->  #include <linux/of_dma.h>
->  #include <linux/list.h>
->  #include <linux/dma/mxs-dma.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -39,6 +40,8 @@
->  #define dma_is_apbh(mxs_dma)	((mxs_dma)->type == MXS_DMA_APBH)
->  #define apbh_is_old(mxs_dma)	((mxs_dma)->dev_id == IMX23_DMA)
->  
-> +#define MXS_DMA_RPM_TIMEOUT 50 /* ms */
-> +
->  #define HW_APBHX_CTRL0				0x000
->  #define BM_APBH_CTRL0_APB_BURST8_EN		(1 << 29)
->  #define BM_APBH_CTRL0_APB_BURST_EN		(1 << 28)
-> @@ -416,6 +419,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
->  {
->  	struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
->  	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
-> +	struct device *dev = &mxs_dma->pdev->dev;
->  	int ret;
->  
->  	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
-> @@ -431,9 +435,11 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
->  	if (ret)
->  		goto err_irq;
->  
-> -	ret = clk_prepare_enable(mxs_dma->clk);
-> -	if (ret)
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable clock\n");
->  		goto err_clk;
+New Zhaoxin family 7 CPUs are not affected by SWAPGS, add these CPUs
+to the cpu vulnerability whitelist.
 
-From looking at other DMA drivers I know we are in good company here,
-but I think this is wrong. Doing pm_runtime_get_sync() in
-alloc_chan_resources() and going to autosuspend in free_chan_resources()
-effectively disables runtime_pm as clients normally acquire their
-channels during driver probe and release them only in driver remove.
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/cpu/common.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-In the next patch you release the DMA channels in the GPMI nand drivers
-runtime_suspend hook just to somehow trigger the runtime_suspend of the
-DMA driver.
-
-What you should do instead is to make sure the hook runtime_pm to the
-DMA drivers activity phases, like for example the pl330 driver does.
-Then you wouldn't have to care about manually putting the DMA driver into
-suspend from the GPMI NAND driver.
-
-Sascha
-
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 2e4d902..3488507 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1084,6 +1084,10 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
+ 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+ 	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+ 	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
++
++	/* Zhaoxin Family 7 */
++	VULNWL(CENTAUR, 7, X86_MODEL_ANY,       NO_SWAPGS),
++	VULNWL(ZHAOXIN, 7, X86_MODEL_ANY,       NO_SWAPGS),
+ 	{}
+ };
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.7.4
+
