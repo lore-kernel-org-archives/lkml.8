@@ -2,106 +2,115 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4164C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2762CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71EA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C742467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQ7Ovka4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZUijKwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbgAOPMe (ORCPT
+        id S1728904AbgAOPO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:12:34 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58935 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728901AbgAOPMd (ORCPT
+        Wed, 15 Jan 2020 10:14:56 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39457 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:12:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579101152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QY8+0O7c2VwRb5cv2HAAJnI3AuJd5YIMsYZK7EcA7eM=;
-        b=gQ7Ovka41D1ndqnlJNXMWFZW0O5gqgk6JVeuoPHa9CpXPHtZokbn4w9LOSm0zjODhpELR8
-        VyhAn6CyuDsUV/LYJEpD62fm6uIkLjSKqYYkwNgIFV4SAq6B8xY9b/237h8o6BiaxW0hiY
-        VZK6xtcOBQi3Hw2vbjlkP2agITzYIis=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-fEpNw1loObWxgDUPpaV5nQ-1; Wed, 15 Jan 2020 10:12:29 -0500
-X-MC-Unique: fEpNw1loObWxgDUPpaV5nQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 041D410052E2;
-        Wed, 15 Jan 2020 15:12:28 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB0EA84322;
-        Wed, 15 Jan 2020 15:12:24 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 08:12:24 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Liu Yi L <yi.l.liu@intel.com>, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
-        baolu.lu@linux.intel.com
-Subject: Re: [PATCH v4 05/12] vfio_pci: duplicate vfio_pci.c
-Message-ID: <20200115081224.215a994c@w520.home>
-In-Reply-To: <20200115120300.24874a37.cohuck@redhat.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
-        <20200115120300.24874a37.cohuck@redhat.com>
+        Wed, 15 Jan 2020 10:14:55 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c16so15934697qko.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:14:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LajS/tijvHJKVOveFc4JIx8xOUQsWStHiqkJwmAZBiI=;
+        b=EZUijKwluEKR/Fm/uagjKMtw+XZ6QjjlD1lpbbuVcxDC1y1Dl4OFFyqH9kjW3MldEC
+         frIFYj7k2O8zTf43JnlX+VqciIwWC8hPW2OHZcJ9pRNwT2DJKBcEWjkgyOi5wU89H/p9
+         dftMYLv8SymDEPWogq9Sk+Hb+BltTuGtCUJApRxm1RE8v5hZ0Yes9YNFXfnqTHAM86Pd
+         9WNgpEVdAB7a6tUHKPmafF6nVemMY8Lm8kKeIANRlnPsiHuIBoQOMs89fyXnCZeavPqG
+         3i8GEEdPmOvTMUqLFXt+pPs1LlZJZcQNshBGuhiww/TK9Y67PTw57B05ZV5FaJeWY6vJ
+         pQtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LajS/tijvHJKVOveFc4JIx8xOUQsWStHiqkJwmAZBiI=;
+        b=EzfIl4KMCjoAGIXuF14hInXOCleQva3IRVzEtZfcQXVcLKHdAMWUTe2u6VWDKyYfRZ
+         3+8aVX6+EMa33FNGf1we7S6DLTyfo0Gi+zRgkaUnC/EA35c7IsLXP1Nyr2pZ0LOPSSAU
+         LB+I+ptoTnTIcZTnPtD9advx7Twb3Oya20bMjm/qRFX8hBy9HpU2+w2+vSdLPZne06DC
+         zslPVmsHbACxQwm92dU3KlWtBXgm4uT3VqM8J+2J74h049gSRCxyDDdeCvV9YIUF42Hm
+         dDgYfFAh/IVV8EEsNugMAPVUl2SQzsTke8Q7QAi9TPddJarIgagW1rP/iCGJe/loUH/S
+         o8ig==
+X-Gm-Message-State: APjAAAUohC22b6NbTTDUtsrxPibq8ahtpIteP/waHtwmov3mxGat+AkH
+        qOz8KCks5W4kz7izTa4xguhmPxYUBHPALnjFoReauA==
+X-Google-Smtp-Source: APXvYqyubzmHMquoqpqvPa5HvJRuTFDjjNXYgEg2v1BLOaT8YzQxqQ7Z7nIUZQyBAHUahP47SeQV846dPfb8jGRj65E=
+X-Received: by 2002:ae9:e50c:: with SMTP id w12mr25439679qkf.407.1579101294597;
+ Wed, 15 Jan 2020 07:14:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
+ <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz> <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
+ <20200115150315.GH19428@dhcp22.suse.cz>
+In-Reply-To: <20200115150315.GH19428@dhcp22.suse.cz>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 15 Jan 2020 16:14:43 +0100
+Message-ID: <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in mpol_parse_str()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 12:03:00 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+On Wed, Jan 15, 2020 at 4:03 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 15-01-20 13:57:47, Dmitry Vyukov wrote:
+> > On Wed, Jan 15, 2020 at 1:54 PM Vlastimil Babka <vbabka@suse.cz> wrote:
+> > >
+> > > On 1/15/20 6:54 AM, Dan Carpenter wrote:
+> > > > What we are trying to do is change the '=' character to a NUL terminator
+> > > > and then at the end of the function we restore it back to an '='.  The
+> > > > problem is there are two error paths where we jump to the end of the
+> > > > function before we have replaced the '=' with NUL.  We end up putting
+> > > > the '=' in the wrong place (possibly one element before the start of
+> > > > the buffer).
+> > >
+> > > Bleh.
+> > >
+> > > > Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
+> > > > Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
+> > > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > >
+> > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > >
+> > > CC stable perhaps? Can this (tmpfs mount options parsing AFAICS?) become
+> > > part of unprivileged operation in some scenarios?
+> >
+> > Yes, tmpfs can be mounted by any user inside of a user namespace.
+>
+> Huh, is there any restriction though? It is certainly not nice to have
+> an arbitrary memory allocated without a way of reclaiming it and OOM
+> killer wouldn't help for shmem.
 
-> On Tue,  7 Jan 2020 20:01:42 +0800
-> Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
-> > This patch has no code change, just a file copy. In following patches,
-> > vfio_pci_common.c will be modified to only include the common functions
-> > and related static functions in original vfio_pci.c. Meanwhile, vfio_pci.c
-> > will be modified to only include vfio-pci module specific codes.
-> > 
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci_common.c | 1708 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 1708 insertions(+)
-> >  create mode 100644 drivers/vfio/pci/vfio_pci_common.c  
-> 
-> This whole procedure of "let's copy the file and rip out unneeded stuff
-> later" looks very ugly to me, especially if I'd come across it in the
-> future, e.g. during a bisect. This patch only adds a file that is not
-> compiled, and later changes will be "rip out unwanted stuff from
-> vfio_pci_common.c" instead of the more positive "move common stuff to
-> vfio_pci_common.c". I think refactoring/moving interfaces/code that it
-> makes sense to share makes this more reviewable, both now and in the
-> future.
-
-I think this comes largely at my request from previous reviews.  It's
-very easy to apply this patch and diff the files to see that nothing
-has changed, then review the subsequent patch to see that code is only
-added or removed to check that there are no actual code changes.  If we
-just selectively move code then I think it's left to our inspection to
-verify nothing has changed.  Maybe this is a dummy step in a bisect,
-but I don't see that you lose any granularity.  Thanks,
-
-Alex
-
+The last time I checked there were hundreds of ways to allocate
+arbitrary amounts of memory without any restrictions by any user. The
+example at hand was setting up GB-sized netfilter tables in netns
+under userns. It's not subject to ulimit/memcg. Most kmalloc/vmalloc's
+are not accounted and can be abused. Is tmpfs even worse than these?
