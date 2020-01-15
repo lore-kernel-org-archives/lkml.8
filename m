@@ -2,141 +2,79 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52A4C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED881C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6EAF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C00D62077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579110066;
+	bh=YA2XngAMCc1S4Rike4JB4vPmgu1Fghw9CeBg8ModRSI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t4xIiP6t73YbR0Q7aS8sml6WtBVZ2aEqkucEcLIYtjO/v6LH1inb+XOTSK9Ac9t9U
+	 foedL5qSpdCj8HXc0mCm4MTgQRdYkX4Pz65CMs5xDMiAd1Oa2gYlAnrcRJIKrdYG20
+	 SU5e7/m4l9rf8ApbR6eqLzCWhBZ75D1lGlKbP4Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgAORjh (ORCPT
+        id S1729014AbgAORlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:39:37 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55388 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbgAORjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:39:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 26E59ACA0;
-        Wed, 15 Jan 2020 17:39:34 +0000 (UTC)
-Subject: Re: reiserfs broke between 4.9.205 and 4.9.208
-From:   Jeff Mahoney <jeffm@suse.com>
-To:     Michael Brunnbauer <brunni@netestate.de>, Jan Kara <jack@suse.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org
-References: <20200108193634.GA17390@netestate.de>
- <481c595b-46c9-0b4d-c618-a998ab6247c6@infradead.org>
- <20200109121216.GC22232@quack2.suse.cz> <20200109123041.GA14075@netestate.de>
- <20200114202112.GA23020@netestate.de>
- <67c8665a-25a4-72d1-7632-d2b84eb362fe@suse.com>
-Organization: SUSE Labs Data & Performance
-Message-ID: <72d4425c-a3a3-4369-fe19-b5673d73a02a@suse.com>
-Date:   Wed, 15 Jan 2020 12:39:30 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Wed, 15 Jan 2020 12:41:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46422 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAORlF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:41:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so16559887wrl.13;
+        Wed, 15 Jan 2020 09:41:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/3QiPe/1GTUh4wvN6iqGkoCNxlqFn5o7CgcBx+S+Yxk=;
+        b=GJtdmt3vEfdhcaXDMtYuiGl4zqCoOsn5TSyZ8GuRgzJyfl/LRCfzBQ/DzO1aGt+K08
+         MdEX0EWZghG3xOPRlpo2kv9NEn9g2yjW7WZ477GpO3MU0yTVXD4pzzIV4qGZGOBQrH/p
+         knmMq8eSNdjf4HqRLUfr5c6gRIMLVVTYFK4iq5HK20r7usUlneIf1izMzZ7C3QrX+9M2
+         dvm4GP00cNivD117I26yL058vuZ38TfuvoXVMV+qaD9UiJPimwZxJRLkWl/FW1yzle1/
+         O6z1+qNtFg1hexDjR5nPpxuVvzTjUZZcrY/PZ8lMaubp9xGup5sW0dk08t3s1cC+XHq2
+         Obyw==
+X-Gm-Message-State: APjAAAVS/H1c6nrLChLwXutelHXOqiZtoKSfcN464L6TzgWJp6S12+Vo
+        wuLD9X+11fJYgpdJaUTGM+I=
+X-Google-Smtp-Source: APXvYqxTYlzZo5YP/kkwcJuy6q+2a5/NGOs+rhKjCJpOF46IvaQDw/+OQGyFX5tcR/JRocaQUcyDDQ==
+X-Received: by 2002:adf:f10a:: with SMTP id r10mr32438058wro.202.1579110063663;
+        Wed, 15 Jan 2020 09:41:03 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id i10sm25964672wru.16.2020.01.15.09.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 09:41:03 -0800 (PST)
+Date:   Wed, 15 Jan 2020 17:41:01 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     wei.liu@kernel.org, paul@xen.org, xen-devel@lists.xenproject.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paulmck@kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] net: xen-netback: hash.c: Use built-in RCU list checking
+Message-ID: <20200115174101.vqtsil6akmmyv3o4@debian>
+References: <20200115155553.13471-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <67c8665a-25a4-72d1-7632-d2b84eb362fe@suse.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="HDZfwMmaWRfhNZEXbiFL8lmynpNKzaeUC"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115155553.13471-1-madhuparnabhowmik04@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---HDZfwMmaWRfhNZEXbiFL8lmynpNKzaeUC
-Content-Type: multipart/mixed; boundary="efIo4QREthbvMAa5E6X6zf5OGh4fyow6u"
+On Wed, Jan 15, 2020 at 09:25:53PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> 
+> list_for_each_entry_rcu has built-in RCU and lock checking.
+> Pass cond argument to list_for_each_entry_rcu.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
 
---efIo4QREthbvMAa5E6X6zf5OGh4fyow6u
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Nevermind.  I just wasn't reproducing properly.  Jan's analysis is
-right.  The -EOPNOTSUPP change is required so that we get the right
-error when explicit xattr operations are performed on a file system
-without them.  Prior to this change, we'd get -EOPNOTSUPP by sb->s_xattr
-being NULL.
-
-reiserfs_for_each_xattr needs to handle this the same way we already
-handle -ENODATA.
-
--Jeff
-
-On 1/15/20 12:03 PM, Jeff Mahoney wrote:
-> Hi Michael -
->=20
-> It looks like something must've gone sideways with the backport since
-> 5.5-rc6 works as expected.  I'll dig into it a bit.
->=20
-> -Jeff
->=20
-> On 1/14/20 3:21 PM, Michael Brunnbauer wrote:
->>
->> hi all,
->>
->> is this been looked into? Do you need more information?
->>
->> Regards,
->>
->> Michael Brunnbauer
->>
->> On Thu, Jan 09, 2020 at 01:30:41PM +0100, Michael Brunnbauer wrote:
->>>
->>> Hello Jan,
->>>
->>> On Thu, Jan 09, 2020 at 01:12:16PM +0100, Jan Kara wrote:
->>>> Also Michael, I'd like to clarify: Does 'cp -a' return any error or =
-is it
->>>> just that the kernel is spewing these annoying warnings?  Because fr=
-om the
->>>> code reading I'd think that it is only the kernel spewing errors but=
-
->>>> userspace should be fine...
->>>
->>> Yes, 'cp -a' returns errors and files are owned by root instead of th=
-e correct
->>> user after copying as root.
->>>
->>> Regards,
->>>
->>> Michael Brunnbauer
->=20
->=20
-
-
---=20
-Jeff Mahoney
-Director, SUSE Labs Data & Performance
-
-
---efIo4QREthbvMAa5E6X6zf5OGh4fyow6u--
-
---HDZfwMmaWRfhNZEXbiFL8lmynpNKzaeUC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE8wzgbmZ74SnKPwtDHntLYyF55bIFAl4fTlMACgkQHntLYyF5
-5bIJIQ//TN3GAyI2ujEdkLF6zyknRga6kNbX6A0tBsszS3jDbo5x4M1oZk3Qv+4o
-0OQ2GX2D3nAswX1rybAKlk/TbhKJwYb2kZPpvIFtvkiknNFAfLGLyj/2ADid5TDi
-PprbYdLcZuxqJC4kX8RyEybuNFz7geKE8MESG5ZSVNlfxifNtpRM9KTtpaPrpwTQ
-5EGInHv76a/Xx4ehkRqgP+UZWRtxH8K+swkUptynnv5tL5vXsnS5DaOqSBlHgnEU
-YwSxZ7iNxxIbbkZBh5iT8QHAPvHM6v+9H2/KJm3SenUIsQ74h/67VrK2yNh9Tfgq
-rMFNLO6RnHM+dC0U2hqDMgzCRIC/zD4aDgKBtBZ2ey4JcMWpWqEN0mDSrVvENA58
-ivo4/jG1uJeQsc9jCKJlvHSFprYpO4L5YMY7HnuxkeiPbaX2Z9E7RVWX8R5pjzfZ
-x5oQ7FgCHXJH9MN3FeCZsE0qlo1lt1+8o87xVHddAq/yKMRYiiSXU2tEbY01vwng
-07rTIiCNsPGEDWVrh1EetfQAd5RJgoVNgno3vgJ+Fs/klt//TQHiw78cfrGdG6Is
-0Pqjb2Kg2WY8jWio/bXZwioNFjWRKoOk0lEnClcMUQn9dsr8NTDKhjeReO0ZR4gz
-GT1f7OKrB7MSIVu2eb2sCFwh55HbaVX9pcxVMz1oi50gwuhjuug=
-=jeXb
------END PGP SIGNATURE-----
-
---HDZfwMmaWRfhNZEXbiFL8lmynpNKzaeUC--
+Acked-by: Wei Liu <wei.liu@kernel.org>
