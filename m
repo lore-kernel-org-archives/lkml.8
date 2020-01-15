@@ -2,150 +2,150 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A327C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADA6214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AKqDlkDk"
+	by mail.kernel.org (Postfix) with ESMTP id D48B02187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgAOPvS (ORCPT
+        id S1728978AbgAOPwc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:51:18 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35601 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgAOPvR (ORCPT
+        Wed, 15 Jan 2020 10:52:32 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:57647 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgAOPwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:51:17 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115155115euoutp02f2d002169103927da7e15edfef3bd473~qGj6Lbqj92422924229euoutp02l
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:51:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115155115euoutp02f2d002169103927da7e15edfef3bd473~qGj6Lbqj92422924229euoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579103475;
-        bh=+44ruQrELZzOfxaxRN2GmBO3IiWVrUwlLHTkRFl5+to=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=AKqDlkDk2HuuNJM8EpsZqXxshA+EfieR4fZqoJYSXQS6YHF51zWpnuC3TQkTAdD3M
-         4QlUD5525LiauJHakxio/3AwQ4pTiBd4uSNnAygs/acgRN2qHo+0HjPZ/AfVkD83iS
-         F5jBlsxwSTogQOSheeCiXvv8Ykvbd9wfs6F/qwtI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200115155115eucas1p27a60e25c2d968b43a30d2780a72de44e~qGj6Ed99s1479514795eucas1p2b;
-        Wed, 15 Jan 2020 15:51:15 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id AE.72.60679.3F43F1E5; Wed, 15
-        Jan 2020 15:51:15 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115155114eucas1p198c7ce2fbffe03e764f82f61898186db~qGj5puXIr1202512025eucas1p1Y;
-        Wed, 15 Jan 2020 15:51:14 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115155114eusmtrp2794655590659509db9904f1d9212ed0b~qGj5pKZGV1277712777eusmtrp2s;
-        Wed, 15 Jan 2020 15:51:14 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-a3-5e1f34f34cdf
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B4.B1.08375.2F43F1E5; Wed, 15
-        Jan 2020 15:51:14 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115155114eusmtip132e904b80e9be5b7346d2b9713cbf679~qGj5NU8rN0471004710eusmtip1M;
-        Wed, 15 Jan 2020 15:51:14 +0000 (GMT)
-Subject: Re: [PATCH] pxa168fb: fix release function mismatch in probe
- failure
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <83ca49d1-ca86-1005-7799-cc9f95af28db@samsung.com>
-Date:   Wed, 15 Jan 2020 16:51:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 15 Jan 2020 10:52:31 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MHG4c-1iw6Xd3h6e-00DJTn; Wed, 15 Jan 2020 16:52:30 +0100
+Received: by mail-qk1-f172.google.com with SMTP id j9so16107856qkk.1;
+        Wed, 15 Jan 2020 07:52:29 -0800 (PST)
+X-Gm-Message-State: APjAAAVA1f2vTcfnXM0zsPyCU81xT4xBVoeAFP1pTfuRx4GmJcKTOral
+        AKY7fHyBbhf96+NdSHfd30KbELP72alDGqm5wVk=
+X-Google-Smtp-Source: APXvYqyGRd69VGhmXUx6e4teyjZqa0NYLVdbqN2FyC+i0ZdlSzOVavJ0u2B/XLAnvT0F0550ujfZyMpnj3oOoBBM23g=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr27099157qki.138.1579103548648;
+ Wed, 15 Jan 2020 07:52:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191205160613.32075-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djP87qfTeTjDA7NZbe48vU9m8XsQy+Z
-        LU70fWC1uLxrDpsDi8fOWXfZPe53H2fy+LxJLoA5issmJTUnsyy1SN8ugSvj1bn/jAXTuCr2
-        LNjN0sC4g6OLkZNDQsBEYv7J+0wgtpDACkaJTVOkuxi5gOwvjBJX/h5jg3A+M0pMnTqBDabj
-        Zf8EqMRyRolJjyczQThvGSUWzjzGDFIlLOAvMenuCnYQW0RAXeLzrp1gNrNAgsTpRfdYQGw2
-        ASuJie2rGEFsXgE7ifNLboP1sgioSiz4vQVsm6hAhMSnB4dZIWoEJU7OfALWywnU+3fhISaI
-        meISt57Mh7LlJba/ncMMcpCEQDe7xMr7TxkhznaRmHT1ODOELSzx6vgWdghbRuL/zvlMEA3r
-        GCX+dryA6t7OKLF88j+op60l7pz7BWRzAK3QlFi/Sx8i7CjxcOt9dpCwhACfxI23ghBH8ElM
-        2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9gVJqF5LVZSN6ZheSdWQh7FzCyrGIUTy0tzk1P
-        LTbKSy3XK07MLS7NS9dLzs/dxAhMKaf/Hf+yg3HXn6RDjAIcjEo8vBl/5OKEWBPLiitzDzFK
-        cDArifCenCEbJ8SbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwen
-        VAOjaEyzc7lfyXY1htYLdwIcXx0OeTJjwxrLz1lmQkrSfP5GsXVWa7IkZu3ny05y/aOs5Gks
-        +jSrOXipbPOuvzw7J6+bzS1z11buikK9gsH3e8/u1C9vunP8V0j6eufpKc1npd37piYc536w
-        MyN0zsyn2rILSyfptXBkCeZ+fSN1aG25xK/lExuUWIozEg21mIuKEwFFRS6yJQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xu7qfTOTjDI4eU7W48vU9m8XsQy+Z
-        LU70fWC1uLxrDpsDi8fOWXfZPe53H2fy+LxJLoA5Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLP
-        yMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/j1bn/jAXTuCr2LNjN0sC4g6OLkZNDQsBE4mX/
-        BLYuRi4OIYGljBKtH5ewdzFyACVkJI6vL4OoEZb4c60LquY1o8Sb5UeZQRLCAr4SZzo2sIPY
-        IgLqEp937QTrZRZIkHg2LwWivpdR4vn2lWA1bAJWEhPbVzGC2LwCdhLnl9wGm8MioCqx4PcW
-        NhBbVCBC4vCOWVA1ghInZz5hAbE5gXr/LjzEBGIzA+36M+8SM4QtLnHryXyouLzE9rdzmCcw
-        Cs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERhB24793LyD8dLG
-        4EOMAhyMSjy8GX/k4oRYE8uKK3MPMUpwMCuJ8J6cIRsnxJuSWFmVWpQfX1Sak1p8iNEU6LmJ
-        zFKiyfnA6M4riTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cCoy5Q6
-        10JLLK8oPHWeVG/00dmais3MfOZrbYXFqrI1fb5zPXaVy52deXX7zPTPNfkV6Tpx7bcs9ynu
-        f87Y82WqvSpPtMGVM4w8GaGzXk70Onf2a/Z7LT/HrDmzM7V/vOD9b76Ku3A/37vL/CGRLRt7
-        uraw3LOWfOpx8NLfpglK7Hz/6vfKaiuxFGckGmoxFxUnAgB9pX67tgIAAA==
-X-CMS-MailID: 20200115155114eucas1p198c7ce2fbffe03e764f82f61898186db
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191205160628epcas4p38c1843647699dcbd209c5381d65ab869
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191205160628epcas4p38c1843647699dcbd209c5381d65ab869
-References: <CGME20191205160628epcas4p38c1843647699dcbd209c5381d65ab869@epcas4p3.samsung.com>
-        <20191205160613.32075-1-hslester96@gmail.com>
+References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
+ <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
+ <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
+ <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
+ <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
+ <20200115142428.ugsp3binf2vuiarq@pali> <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
+ <20200115153943.qw35ya37ws6ftlnt@pali>
+In-Reply-To: <20200115153943.qw35ya37ws6ftlnt@pali>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jan 2020 16:52:12 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
+Message-ID: <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
+Subject: Re: [PATCH v10 09/14] exfat: add misc operations
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     Namjae Jeon <linkinjeon@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:S6ZEsT6whPDpodLWS5C/v6xe4qXptO7E7I36/HFhoLteqD60zXz
+ Pc6bW5a3OyyL8LyNe9jf2lQX3Ax0Ffmv5tftXg7y85jpOQLgAKz/zWoQQjPqOBs3y0gKQ/Z
+ eWgOu2BTN0WaOk3tHYoBDcGVBsMQ+zzlPd2DFjlQ8+v7/o/SCQAwsF2G0EEkqvYV5oS8w8f
+ 2LrjbvhzEodeuKJO6wM7g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XL8nm85kI74=:kDlDUKeQW/8k4eFOwF0MIt
+ unCk3LtmTlOuSt5JAdR4XQ81fSdKdPkD07RW+1n0d8z/YKNDLUoHhSSbv/9Dp5lR5D02i6u02
+ +tAPBeTSBzhZiMkhfcw3MwUCIJ/RLXK4laf0p4hAdXONQ513qdVST7p9r29NMsF1xRME+N6AW
+ ZKBbzH9ZZAajRhjnWnXHbIWDWCWzWozDVRYM30FEJoT/ZRBQDSyDorvEgOmd8Pgu96GsLemGE
+ aGeu5BNGg0s1CpIDoIJqqOx8Ll1mBva4fGwzSdfx5ude4dxGMQG+3tttjGH4V2GWPMA1UJfx4
+ SliHA1QRuP1DyAQklkA+ktCsThk8/uId6ggRtHoAMd2TruJHiiLYWkvY+B6E7xPwx1CC6gMBz
+ ptpK8J3Ze3ss64kNqonFLzg8E+/wXlI7RguIn/LZ9QCmzte3fn6YO9p3TGOg9pVMCQKbXT10m
+ uFkelFjs7rVM6ezAZJo4Oo935XmcX0UNKe6xX9CFv98F1hIXgY/izM1F7j+DGwtUAJaim6kyp
+ QGfLKuz5Pk1zm6nFB5fsYFEzgOKeJ68vDcv/6mc9zG3+EAgnJfg1xUOYvEJuATMa8G+Fb+eK7
+ Xxpy0tKqSQuJkTskHKgw78G4sT7BecjAoNB8zcReB6HZZLEGetAINrLoNZYgTXl5EpijPi5qx
+ X1aqIloNBmCL1mYkW9Qazl7Ve3tHWB68SSpH46VByJTk1eM2vVBk/xocw5VHrnyXwkNJkPClf
+ 7FgNdTHkiVc2J2mR4yqoxc0iDOVLbo8eWtgmQuEQHRORnT9dE+zkW2lebN1ePfQ/QQHyCMJ1Z
+ 996OJG8qeFtkS68Ja4bZ83bMLzY3m57y6USqp4w9HaMDUmxxUW9mZq3rlfTjl9yo46wcGVxpG
+ BcUa2ROG9acicwginVkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 15, 2020 at 4:39 PM Pali Rohár <pali.rohar@gmail.com> wrote:
+> On Wednesday 15 January 2020 16:03:12 Arnd Bergmann wrote:
+> > The vdso and kernel/time/ code are for maintaining the timezone through
+> > settimeofday()/gettimeofday(), and the drivers should probably all be changed
+> > to use UTC. The file systems (affs, fat, hfs, hpfs and udf) do this for
+> > compatibility with other operating systems that store the metadata in
+> > localtime.
+>
+> Ok. But situation for exFAT is quite different. exFAT timestamp
+> structure contains also timezone information. Other filesystems do not
+> store timezone into their metadata (IIRC udf is exception and also
+> stores timezone). So question is in which timezone we should store to
+> exFAT timestamps. This is not for compatibility with legacy systems, but
+> because of fact that filesystem supports feature which is not common for
+> other filesystems.
+>
+> Also, to make it more complicated exFAT supports storing timestamps also
+> in "unspecified" (local user) timezone, which matches other linux
+> filesystems.
+>
+> So for storing timestamp we have options:
+>
+> * Store them without timezone
+> * Store them in sys_tz timezone
+> * Store them in timezone specified in mount option
+> * Store them in UTC timezone
+>
+> And when reading timestamp from exFAT we need to handle both:
+>
+> * Timestamps without timezone
+> * Timestamps with timezone
 
-On 12/5/19 5:06 PM, Chuhong Yuan wrote:
-> The driver uses kfree() to release the resource allocated by
-> framebuffer_alloc(), which does not match.
-> Use framebuffer_release() instead to fix it.
+Right.
 
-For pxa168fb driver framebuffer_release() does only kfree() so
-there is no real breakage currently. Lets fix it anyway so it
-won't break in the future.
+> So what is the best way to handle timezone/timestamps?
+>
+> For me it looks sane:
+>
+> When storing use: mount option timezone. When not available then use
+> sys_tz. And when sys_tz is not set (it is possible?), do not specify
+> timezone at all. Maybe there should be a mount option which says that
+> timestamps on exfat are stored without timezone.
 
-> Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+I would argue we should always store files in UTC, which seems to be
+the most consistent with other file systems, and can be understood
+by any other implementation that understands the timezone information
+on disk  or that expects UTC.
 
-Patch queued for v5.6, thanks.
- 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+> When reading timestamp with timezone: Convert timestamp to timezone
+> specified in mount option (or fallback to sys_tz or fallback to UTC).
 
-> ---
->  drivers/video/fbdev/pxa168fb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
-> index 1410f476e135..b9435133b6f3 100644
-> --- a/drivers/video/fbdev/pxa168fb.c
-> +++ b/drivers/video/fbdev/pxa168fb.c
-> @@ -769,7 +769,7 @@ static int pxa168fb_probe(struct platform_device *pdev)
->  	dma_free_coherent(fbi->dev, info->fix.smem_len,
->  			info->screen_base, fbi->fb_start_dma);
->  failed_free_info:
-> -	kfree(info);
-> +	framebuffer_release(info);
->  
->  	dev_err(&pdev->dev, "frame buffer device init failed with %d\n", ret);
->  	return ret;
-> 
+Here I would just convert to UTC, which is what we store in the
+in-memory struct inode anyway.
+
+> And when reading timestamp without timezone: Pass it as is without
+> conversion, ignoring all timezone mount options and sys_tz.
+>
+> Arnd, what do you think about it?
+
+The last case (reading timestamp without timezone) is the only
+one that I think we have to decide on: when reading an inode from
+disk into memory, we have to convert it into UTC in some form.
+
+This is what I think the timezone mount option should be used
+for: if we don't know what the timezone was for the on-disk
+timestamp, use the one provided by the user. However, if none
+was specified, it should be either sys_tz or UTC (i.e. no
+conversion). I would prefer the use of UTC here given the
+problems with sys_tz, but sys_tz would be more consistent
+with how fs/fat works.
+
+    Arnd
