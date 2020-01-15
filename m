@@ -2,126 +2,111 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003C3C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB059C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9A7720728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A542620728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AwYY6Ltx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGjxu4xM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAOTWk (ORCPT
+        id S1729094AbgAOTZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:22:40 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:39293 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOTWj (ORCPT
+        Wed, 15 Jan 2020 14:25:33 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33992 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAOTZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:22:39 -0500
-Received: by mail-ua1-f65.google.com with SMTP id 73so6714402uac.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:22:39 -0800 (PST)
+        Wed, 15 Jan 2020 14:25:32 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so8974718pfc.1;
+        Wed, 15 Jan 2020 11:25:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=17v8/619D2AZoaUFrAar/CtDdWqpWMj60JN0gaBw0RA=;
-        b=AwYY6LtxDPRLomfOrjpw8+Gis6U739xC6dwXys/nC5Y/5L4XyuijhAg5OOpyC1XEyY
-         XjRdghULG/KMYKFomh8B335LGY+oh3wQsRKkVFfRpn/8V/3mEt6q4e9iTXQEBZ7AA3rx
-         KDiNMiyHiiAkKWnSh8h7qVhe/NMxr9vjOZYOQ=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Ov9Uf/cEYbZ4uqilqp6lDBn9/aIskYayGhgPiWt6D0=;
+        b=aGjxu4xM7wsOhmdVbow3prGI6Jlt/rpu2qQBxEHWXMRfYiKVEPFEmAmXm4QXNz4KVh
+         E4tWoOdMtJYEP8j+PQUnIOW3QYkvpOvl202I64RJk95BZiShYv5HkPR80vWKad8e9wZc
+         0RTn69LYOoOMUPPEhioxcDzMj+2nS+0cUKPfOkZywhkObDWerXGOEWnaZlQQt7uRWmgG
+         MUCRn5sIbTsqcp5omyiHZZau5Wsu2lffV+cxPNAP8QDmw8Jl9GE9xnxjUkD1rE7X1qNK
+         5n3LNTxL2e5UAnobkVGq5f1vojLntqEYVB6hXX5BxWQf18SnifStLKufHV+qSooAPdlZ
+         maBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=17v8/619D2AZoaUFrAar/CtDdWqpWMj60JN0gaBw0RA=;
-        b=cPYOSNMy74mEHXe2Oz+FprdLzYiZODxVbo/wFmZGdFE9Heqhp3KftK371awtwuwcdA
-         z2WCRbyh6wjSrYcCy/64Qq8vExQOBma3d4+xMCLRODnDqjU94BYm/f+unUNDYelRvId1
-         dAoq6zlfWWa79d/BKVphah+NEdmXIhHz8AkMZD4NvcCIO7JolI5vEQpo7miiFXQeip53
-         rr2K72QUm+UBW4uJdbWUzzLF40k+ltOHLxWEU8nT3/39ClbvHUeOGoHdEsY+FzZqNfUi
-         2lmfo0Ur9X4grgTi2orEdVLls6k3K9SehKnZvZBIs6qRscjD8YTzGDMgZI42ajK58zlb
-         YuRA==
-X-Gm-Message-State: APjAAAWBo1o2DBFslqEBRZtEI93epYzaZYpcfWtGT5dxk7BZYWDWcwvw
-        plXfWNGpZIGkLTKFTpV4P7Ovuw4OoXY=
-X-Google-Smtp-Source: APXvYqwyPA7ABvubiTwi4NioOv3ZPMvIMMMHV/wIzWJd7DmOCSMi8uUZNexh8fem+aO2n8cBsr70Qw==
-X-Received: by 2002:ab0:2bc1:: with SMTP id s1mr14479939uar.109.1579116158463;
-        Wed, 15 Jan 2020 11:22:38 -0800 (PST)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id j199sm4768058vsd.11.2020.01.15.11.22.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 11:22:37 -0800 (PST)
-Received: by mail-ua1-f44.google.com with SMTP id y23so6699629ual.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:22:37 -0800 (PST)
-X-Received: by 2002:ab0:30c2:: with SMTP id c2mr18534657uam.8.1579116157297;
- Wed, 15 Jan 2020 11:22:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Ov9Uf/cEYbZ4uqilqp6lDBn9/aIskYayGhgPiWt6D0=;
+        b=nNvQbmkg30ukv19Smbd0lehIfdfIlaGq2doPGXguUX2yg8huKdKyj6DLefPvHawsrX
+         ZZmjafo07UpPN8BoeOp4xVFFjxAYieBuu3ZXaClHeibcSEqiKSCUNjMFGj0ZKm4YDqMB
+         11vI6mUZenuQAochsMvDJ8XW5o5jv3M1dZ+rzwh4zJ9EXmndVz9PedUGZcIi8lhIivhh
+         aQc7tINdgyhK3ZYJyhqPyIHJ2BmyPgXFoao7GlWk06MBxsPSfV9wPC77C6ywDyeJ5Vya
+         wzTlttwnaf9SamAVwIdWDIqq8dXJ09zKpyjDHWzV3RkpZmQLfuCwrsojJwDmSy9Y40Qf
+         CuEA==
+X-Gm-Message-State: APjAAAUsOsGaVMsjrTZ4hxsAL601tdmJNMdfvzGRIu3OK5p2a6i+gqUm
+        ftUisi3wysaptuIQ9Z37vfbsKHHG
+X-Google-Smtp-Source: APXvYqwh4E360ZNUAsV0e5bP29q70BTJhnvA9UjIib4FFM6PlwrsH5Kg25qsi6unPahL/zixzz4qtg==
+X-Received: by 2002:a63:6c03:: with SMTP id h3mr32975375pgc.19.1579116332208;
+        Wed, 15 Jan 2020 11:25:32 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::3:e760])
+        by smtp.gmail.com with ESMTPSA id j8sm604063pjb.4.2020.01.15.11.25.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 11:25:31 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:25:30 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net
+Subject: Re: [BUGFIX PATCH] selftests: Fix pthread link option
+Message-ID: <20200115192528.kq44bg24ezsgo5hm@ast-mbp.dhcp.thefacebook.com>
+References: <157907976750.14189.12829891067375600434.stgit@devnote2>
 MIME-Version: 1.0
-References: <CAD=FV=W2xBFxOgdOM2=RJMB56wi24UUYqdR8WE63KKhxRRwsZQ@mail.gmail.com>
- <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 Jan 2020 11:22:26 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XDPyJJEzjQTd8=6Om0i0HYRfin1+X5Feqcdu5oM0Ro+g@mail.gmail.com>
-Message-ID: <CAD=FV=XDPyJJEzjQTd8=6Om0i0HYRfin1+X5Feqcdu5oM0Ro+g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] alarmtimer: Make alarmtimer platform device child of
- RTC device
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157907976750.14189.12829891067375600434.stgit@devnote2>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jan 15, 2020 at 06:16:07PM +0900, Masami Hiramatsu wrote:
+> To support pthread correctly, it is better to use -pthread
+> instead of -lpthread.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/testing/selftests/bpf/Makefile               |    2 +-
+>  tools/testing/selftests/membarrier/Makefile        |    2 +-
+>  tools/testing/selftests/mqueue/Makefile            |    2 +-
+>  tools/testing/selftests/net/Makefile               |    4 ++--
+>  .../testing/selftests/powerpc/benchmarks/Makefile  |    4 ++--
+>  tools/testing/selftests/powerpc/dscr/Makefile      |    2 +-
+>  tools/testing/selftests/powerpc/mm/Makefile        |    2 +-
+>  tools/testing/selftests/rseq/Makefile              |    2 +-
+>  tools/testing/selftests/rtc/Makefile               |    2 +-
+>  tools/testing/selftests/seccomp/Makefile           |    2 +-
+>  tools/testing/selftests/timers/Makefile            |    2 +-
+>  tools/testing/selftests/vm/Makefile                |    2 +-
+>  12 files changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> index e2fd6f8d579c..419f58c53d12 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -22,7 +22,7 @@ CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR)	\
+>  	  -I$(GENDIR) -I$(TOOLSDIR) -I$(CURDIR)				\
+>  	  -Dbpf_prog_load=bpf_prog_test_load				\
+>  	  -Dbpf_load_program=bpf_test_load_program
+> -LDLIBS += -lcap -lelf -lrt -lpthread
+> +LDLIBS += -lcap -lelf -lrt -pthread
 
-On Wed, Jan 15, 2020 at 2:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Doug Anderson <dianders@chromium.org> writes:
-> > On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> >> index 4b11f0309eee..ccb6aea4f1d4 100644
-> >> --- a/kernel/time/alarmtimer.c
-> >> +++ b/kernel/time/alarmtimer.c
-> >> @@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
-> >>         unsigned long flags;
-> >>         struct rtc_device *rtc = to_rtc_device(dev);
-> >>         struct wakeup_source *__ws;
-> >> +       struct platform_device *pdev;
-> >>         int ret = 0;
-> >>
-> >>         if (rtcdev)
-> >> @@ -99,6 +100,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
-> >>                 return -1;
-> >>
-> >>         __ws = wakeup_source_register(dev, "alarmtimer");
-> >> +       pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
-> >
-> > Don't you need to check for an error here?  If pdev is an error you'll
-> > continue on your merry way.  Before your patch if you got an error
-> > registering the device it would have caused probe to fail.
->
-> Yes, that return value should be checked
->
-> > I guess you'd only want it to be an error if "rtcdev" is NULL?
->
-> If rtcdev is not NULL then this code is not reached. See the begin of
-> this function :)
-
-Wow, not sure how I missed that.  I guess the one at the top of the
-function is an optimization, though?  It's being accessed without the
-spinlock which means that it's not necessarily reliable, right?  I
-guess once the rtcdev has been set then it is never unset, but it does
-seem like if two threads could call alarmtimer_rtc_add_device() at the
-same time then it's possible that we could end up calling
-wakeup_source_register() for both of them.  Did I understand that
-correctly?  If I did then maybe it deserves a comment?
-
--Doug
+Please split this bit into separate patch and send it to bpf@vger targeting
+bpf-next. selftests/bpf are going through a lot of changes and I'd like to
+avoid any chance of conflicts.
