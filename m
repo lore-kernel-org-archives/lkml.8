@@ -2,205 +2,138 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAADC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E112C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A875624656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31031214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NS60GhjO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jGRi57OM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgAORKe (ORCPT
+        id S1729127AbgAORMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:10:34 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55816 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728963AbgAORKY (ORCPT
+        Wed, 15 Jan 2020 12:12:09 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49220 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAORMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:10:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579108223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mPgwZ2FjiJ6HjtpTVTA+tuZ9QlXeQvuG1PK2sLPEBfc=;
-        b=NS60GhjOaBy/3TJznvsFgWh3gKyre6x0kyTTkPhyY9N113Hc04fd48X9MU6bo6QL6wSpe3
-        qdEjx3jl8Yh1QWnotYN1yfmGXs92kFnUU5MYOAkZ5KoqjwMhN9JG1FxULImcRuPjLqQAWj
-        +bWoEMGEcEuk/vONihnH6gMnoJb6PHY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-UkHHSHg6M_WFDyGjBTSMyQ-1; Wed, 15 Jan 2020 12:10:21 -0500
-X-MC-Unique: UkHHSHg6M_WFDyGjBTSMyQ-1
-Received: by mail-wr1-f72.google.com with SMTP id r2so8217848wrp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:10:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mPgwZ2FjiJ6HjtpTVTA+tuZ9QlXeQvuG1PK2sLPEBfc=;
-        b=rvM89aKv0PN9dMf0emp0QGuEzSiguLTq5AxkfkhY4q9DKGBKn0A5DQWys4QoFKtgMO
-         qbdjFwUoNB6bmoPbaxbL7pPTC016rvmWzs5E5uFZsfZD3g70sB8m7aeq5/fJVQa4gWC/
-         3I/YbYraAqtSDtTepWyuR5gekpYfoCHoKu21JdK+Bvl45nSYAu7m+2cpeO0BDEN7zNKa
-         /XJ7naC08enkw+ZK3joHFSCmhFcQnGjI7SE3IFSUOoJ5b98mZwcgwnT/j41phQYPfiwH
-         hQfHNLBdp2HbT60iMLB4ksBFnWCN4vDGWo7LSI4D48UflXoyjy89o1R1hZnwEB17BP74
-         djaA==
-X-Gm-Message-State: APjAAAXaltCeD/2ZQXKv7+UA93890/aUQf5EAGFiT79hUw8M+TwstZR5
-        4CR4BpFG3vZpenaPBzjv4MtLGZ6n9WYILMk1M1bL61XJV+Vky4vJM89VCOaks0aJUvnvjGuTOxC
-        lCxroVf+VbEAkkDRs8tXZv4kE
-X-Received: by 2002:a5d:6089:: with SMTP id w9mr31924017wrt.228.1579108220832;
-        Wed, 15 Jan 2020 09:10:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzT7NE1CAajyd81QPxS6ycq9X5t7RxfdMr8x+Cmi4zgK1Ws1nujDxnaGNIEn84dq9nX1odeBw==
-X-Received: by 2002:a5d:6089:: with SMTP id w9mr31923992wrt.228.1579108220555;
-        Wed, 15 Jan 2020 09:10:20 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y20sm525071wmi.25.2020.01.15.09.10.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 09:10:19 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Subject: [PATCH RFC 3/3] x86/kvm/hyper-v: don't allow to turn on unsupported VMX controls for nested guests
-Date:   Wed, 15 Jan 2020 18:10:14 +0100
-Message-Id: <20200115171014.56405-4-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200115171014.56405-1-vkuznets@redhat.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com>
+        Wed, 15 Jan 2020 12:12:09 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FH9YWk059762;
+        Wed, 15 Jan 2020 17:11:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=yodk3FXBxJ+C4bpH8jgyDdNJeLK8BCw4+p/mjjrGu6I=;
+ b=jGRi57OMh1x0TFj3rivWK8oMNmRGnEM26tBEOTsVXZ0KoEYnD+vD+kUfJC7N9Q9hKrY9
+ FyQSIcaoLmNanRUrwVSx2oCpicHju3dtqFcYg3frf2nv4KVRTXvQ/FD1BMqP4X+kOAk9
+ 73YoDwwSBCteTcyAYNDjU9jCtrJcmTyz2ycimS7vyFrFZ0ZgPzL03cuxP7VTI/bVwJEy
+ FU7LlGBPdez1oPasB/r2kFvgADnC1bUJzk8eMXP/Mx7PPLFr/w7+naEL+Q0YlIbPgGYl
+ 7dJyRU6jwabybhhkxT+Dl5umB4dU2h3iI3tAm15nW9CAU1KXQJdf2jVWJk8Dy8rjqGxq iA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xf74sdfnf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 17:11:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FH9Xdk073935;
+        Wed, 15 Jan 2020 17:11:01 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2xj1apxkdc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 17:11:00 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FHAopO016173;
+        Wed, 15 Jan 2020 17:10:50 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 09:10:50 -0800
+Date:   Wed, 15 Jan 2020 09:10:47 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, YueHaibing <yuehaibing@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH v4] fs: Fix page_mkwrite off-by-one errors
+Message-ID: <20200115171047.GA8247@magnolia>
+References: <20200108131528.4279-1-agruenba@redhat.com>
+ <20200108165710.GA18523@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108165710.GA18523@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sane L1 hypervisors are not supposed to turn any of the unsupported VMX
-controls on for its guests and nested_vmx_check_controls() checks for
-that. This is, however, not the case for the controls which are supported
-on the host but are missing in enlightened VMCS and when eVMCS is in use.
+On Wed, Jan 08, 2020 at 08:57:10AM -0800, Christoph Hellwig wrote:
+> I don't want to be the party pooper, but shouldn't this be a series
+> with one patch to add the helper, and then once for each fs / piece
+> of common code switched over?
 
-It would certainly be possible to add these missing checks to
-nested_check_vm_execution_controls()/_vm_exit_controls()/.. but it seems
-preferable to keep eVMCS-specific stuff in eVMCS and reduce the impact on
-non-eVMCS guests by doing less unrelated checks. Create a separate
-nested_evmcs_check_controls() for this purpose.
+The current patch in the iomap branch contains the chunks that add the
+helper function, fix iomap, and whatever chunks for other filesystems
+that don't cause /any/ merge complaints in for-next.  That means btrfs,
+ceph, ext4, and ubifs will get fixed this time around.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/evmcs.c  | 56 ++++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/evmcs.h  |  1 +
- arch/x86/kvm/vmx/nested.c |  3 +++
- 3 files changed, 59 insertions(+), 1 deletion(-)
+Seeing as it's been floating around in for-next for a week now I'd
+rather not rebase the branch just to rip out the four parts that haven't
+given me any headaches so that they can be applied separately. :)
 
-diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-index b5d6582ba589..88f462866396 100644
---- a/arch/x86/kvm/vmx/evmcs.c
-+++ b/arch/x86/kvm/vmx/evmcs.c
-@@ -4,9 +4,11 @@
- #include <linux/smp.h>
- 
- #include "../hyperv.h"
--#include "evmcs.h"
- #include "vmcs.h"
-+#include "vmcs12.h"
-+#include "evmcs.h"
- #include "vmx.h"
-+#include "trace.h"
- 
- DEFINE_STATIC_KEY_FALSE(enable_evmcs);
- 
-@@ -378,6 +380,58 @@ void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
- 	*pdata = ctl_low | ((u64)ctl_high << 32);
- }
- 
-+int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-+{
-+	int ret = 0;
-+	u32 unsupp_ctl;
-+
-+	unsupp_ctl = vmcs12->pin_based_vm_exec_control &
-+		EVMCS1_UNSUPPORTED_PINCTRL;
-+	if (unsupp_ctl) {
-+		trace_kvm_nested_vmenter_failed(
-+			"eVMCS: unsupported pin-based VM-execution controls",
-+			unsupp_ctl);
-+		ret = -EINVAL;
-+	}
-+
-+	unsupp_ctl = vmcs12->secondary_vm_exec_control &
-+		EVMCS1_UNSUPPORTED_2NDEXEC;
-+	if (unsupp_ctl) {
-+		trace_kvm_nested_vmenter_failed(
-+			"eVMCS: unsupported secondary VM-execution controls",
-+			unsupp_ctl);
-+		ret = -EINVAL;
-+	}
-+
-+	unsupp_ctl = vmcs12->vm_exit_controls &
-+		EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-+	if (unsupp_ctl) {
-+		trace_kvm_nested_vmenter_failed(
-+			"eVMCS: unsupported VM-exit controls",
-+			unsupp_ctl);
-+		ret = -EINVAL;
-+	}
-+
-+	unsupp_ctl = vmcs12->vm_entry_controls &
-+		EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-+	if (unsupp_ctl) {
-+		trace_kvm_nested_vmenter_failed(
-+			"eVMCS: unsupported VM-entry controls",
-+			unsupp_ctl);
-+		ret = -EINVAL;
-+	}
-+
-+	unsupp_ctl = vmcs12->vm_function_control & EVMCS1_UNSUPPORTED_VMFUNC;
-+	if (unsupp_ctl) {
-+		trace_kvm_nested_vmenter_failed(
-+			"eVMCS: unsupported VM-function controls",
-+			unsupp_ctl);
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- int nested_enable_evmcs(struct kvm_vcpu *vcpu,
- 			uint16_t *vmcs_version)
- {
-diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
-index b88d9807a796..cb7517a5a41c 100644
---- a/arch/x86/kvm/vmx/evmcs.h
-+++ b/arch/x86/kvm/vmx/evmcs.h
-@@ -202,5 +202,6 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu);
- int nested_enable_evmcs(struct kvm_vcpu *vcpu,
- 			uint16_t *vmcs_version);
- void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata);
-+int nested_evmcs_check_controls(struct vmcs12 *vmcs12);
- 
- #endif /* __KVM_X86_VMX_EVMCS_H */
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 4aea7d304beb..7c720b095663 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2767,6 +2767,9 @@ static int nested_vmx_check_controls(struct kvm_vcpu *vcpu,
- 	    nested_check_vm_entry_controls(vcpu, vmcs12))
- 		return -EINVAL;
- 
-+	if (to_vmx(vcpu)->nested.enlightened_vmcs_enabled)
-+		return nested_evmcs_check_controls(vmcs12);
-+
- 	return 0;
- }
- 
--- 
-2.24.1
+The acks from the other fs maintainers were very helpful, but at the
+same time, I don't want to become a shadow vfs maintainer.
 
+Therefore, whatever's in this v4 patch that isn't in [1] will have to be
+sent separately.
+
+[1] https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git/commit/?h=iomap-5.6-merge&id=62e298db3fc3ebf41d996f3c86b44cbbdd3286bc
+
+> On Wed, Jan 08, 2020 at 02:15:28PM +0100, Andreas Gruenbacher wrote:
+> > Hi Darrick,
+> > 
+> > here's an updated version with the latest feedback incorporated.  Hope
+> > you find that useful.
+> > 
+> > As far as the f2fs merge conflict goes, I've been told by Linus not to
+> > resolve those kinds of conflicts but to point them out when sending the
+> > merge request.  So this shouldn't be a big deal.
+> 
+> Also this isn't really the proper way to write a commit message.  This
+> text would go into the cover letter if it was a series..
+
+<urk> Yeah.
+
+--D
