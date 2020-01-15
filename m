@@ -2,158 +2,111 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5353FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E77C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B57522522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QJ/JIVZv"
+	by mail.kernel.org (Postfix) with ESMTP id 9FF6822522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579118583;
+	bh=Fjhdo6tlNS+TM3exEZ1PBARDjQL/dzKue6ba+z8ZYOo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=L0ITJChQvaH2Y4wb2sL37hu+RlB7p5pc836CkMp/HgmjvfEET6FZeaYux+HIJMV0M
+	 wJxM1uGo8wnfxxVAjPtRU+BUNXhk26ISSY8UN6HBNdwE3uNfGnzflJ9t45IHSuyTsj
+	 CP2sXB+m5OvUQp6bR7DiKh85EgQckWwMyMHn2kHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgAOT5V (ORCPT
+        id S1729650AbgAOUDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:57:21 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:42652 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAOT5V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:57:21 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJsV6a174162;
-        Wed, 15 Jan 2020 19:57:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=5ZDwyoI8+PLdwrash2W6XsD4UspgG+i2MlaqGgMjC4U=;
- b=QJ/JIVZvc28zM+OFKfi+yCenziwV0YsPWO9EoKy/5xXTUElQFXFjsbWQoI2NyUuylp26
- xTUhp/MjkZYKg10uugDmezyYyLoxaTPIW/1G/LFmePIcJ6xDDv9T4Va1aUYqwjtx7tBt
- I4OnOHuby3/eoIgKToM51xBJdjuqQ2RJ0q1b58JlVzx3xL/vZy/ldno2OxgkYQOXwaKK
- ZKir6VIQPpK2M21kItZIb8T6hxX0ZZjC8jt571fMqWevhy1EyypQh6b9LbNdAtSrY4QE
- 4a9a67droZEHA+COn4sRjOP7LaPLxdqhcvBK+PaHjHHKk/zk7t7+2+Jh64JxDx7L/0Wu ag== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xf73ypd47-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 19:57:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FJsaXx191225;
-        Wed, 15 Jan 2020 19:57:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2xhy2201yf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 19:57:12 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FJvABT004993;
-        Wed, 15 Jan 2020 19:57:10 GMT
-Received: from [10.159.151.219] (/10.159.151.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 11:57:10 -0800
-Subject: Re: [PATCH v3 2/2] SGE buffer and max_inline data must have same size
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, monis@mellanox.com,
-        dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-kernel@vger.kernel.org
-References: <1578962480-17814-1-git-send-email-rao.shoaib@oracle.com>
- <1578962480-17814-3-git-send-email-rao.shoaib@oracle.com>
- <20200115182721.GE25201@ziepe.ca>
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-Message-ID: <93b8e890-c4a9-6050-88b7-3667c023dd34@oracle.com>
-Date:   Wed, 15 Jan 2020 11:57:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 15:03:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgAOUDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:03:02 -0500
+Received: from localhost.localdomain (unknown [194.230.155.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CF7222C3;
+        Wed, 15 Jan 2020 20:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579118581;
+        bh=Fjhdo6tlNS+TM3exEZ1PBARDjQL/dzKue6ba+z8ZYOo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OFIW95j6vpOtPHUV4Da+AM9JfDfFmXyWSd8Qe0zAg1LJJ1e9I9p0o6FKptZng7Ttt
+         0z7cwdG3fmmy+KXQK7b2z59qzrmycXk0oS4ThcYm18a2z4TBN4kTeCmNreuOLYuo8A
+         3KVwtJg+jgMx3U7faNDRY/x3uX7pgOSRvjQJwDX4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 1/3] i2c: pmcmsp: Use proper printk format for resource_size_t
+Date:   Wed, 15 Jan 2020 21:02:48 +0100
+Message-Id: <20200115200250.10849-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200115182721.GE25201@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150153
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+resource_size_t should be printed with its own size-independent format
+to fix warnings when compiling on 64-bit platform (e.g. with
+COMPILE_TEST):
 
-On 1/15/20 10:27 AM, Jason Gunthorpe wrote:
-> On Mon, Jan 13, 2020 at 04:41:20PM -0800, rao Shoaib wrote:
->> From: Rao Shoaib <rao.shoaib@oracle.com>
->>
->> SGE buffer size and max_inline data should be same. Maximum of the
->> two values requested is used.
->>
->> Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
->>   drivers/infiniband/sw/rxe/rxe_qp.c | 23 +++++++++++------------
->>   1 file changed, 11 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
->> index aeea994..41c669c 100644
->> +++ b/drivers/infiniband/sw/rxe/rxe_qp.c
->> @@ -235,18 +235,17 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
->>   		return err;
->>   	qp->sk->sk->sk_user_data = qp;
->>   
->> -	qp->sq.max_wr		= init->cap.max_send_wr;
->> -	qp->sq.max_sge		= init->cap.max_send_sge;
->> -	qp->sq.max_inline	= init->cap.max_inline_data;
->> -
->> -	wqe_size = max_t(int, sizeof(struct rxe_send_wqe) +
->> -			 qp->sq.max_sge * sizeof(struct ib_sge),
->> -			 sizeof(struct rxe_send_wqe) +
->> -			 qp->sq.max_inline);
->> -
->> -	qp->sq.queue = rxe_queue_init(rxe,
->> -				      &qp->sq.max_wr,
->> -				      wqe_size);
->> +	wqe_size = max_t(int, init->cap.max_send_sge * sizeof(struct ib_sge),
->> +			 init->cap.max_inline_data);
->> +	qp->sq.max_sge = wqe_size/sizeof(struct ib_sge);
->> +	qp->sq.max_inline = wqe_size;
->> +
->> +	wqe_size += sizeof(struct rxe_send_wqe);
-> Where does this limit the user's request to RXE_MAX_WQE_SIZE ?
+    drivers/i2c/busses/i2c-pmcmsp.c: In function ‘pmcmsptwi_probe’:
+    drivers/i2c/busses/i2c-pmcmsp.c:276:25: warning:
+        format ‘%x’ expects argument of type ‘unsigned int’,
+        but argument 3 has type ‘resource_size_t {aka long long unsigned int}’ [-Wformat=]
 
-My understanding is that the user request can only specify sge's and/or 
-inline data. The check for those is made in rxe_qp_chk_cap. Since max 
-sge's and max inline data are constrained by RXE_MAX_WQE_SIZE the limit 
-is enforced.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
->
-> I seem to recall the if the requested max can't be satisified then
-> that is an EINVAL?
->
-> And the init->cap should be updated with the actual allocation.
+---
 
-Since the user request for both (sge's and inline data) has been 
-satisfied I decided not to update the values in case the return values 
-are being checked. If you prefer that I update the values I can do that.
+Changes since v2:
+1. Remove parentheses around res->start.
 
-Shoaib
+Changes since v1:
+1. Use %pap, not %pa[p].
+---
+ drivers/i2c/busses/i2c-pmcmsp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->
-> So more like:
->
->          if (init->cap.max_send_sge > RXE_MAX_SGE ||
->             init->cap.max_inline_data > RXE_MAX_INLINE)
->              return -EINVAL;
->
-> 	wqe_size = max_t(int, init->cap.max_sge * sizeof(struct ib_sge),
-> 			 init->cap.max_inline_data)
->                     sizeof(struct rxe_send_wqe);
-> 	qp->sq.max_sge = init->cap.max_send_sge = wqe_size/sizeof(struct ib_sge);
-> 	qp->sq.max_inline = init->cap.max_inline_data = wqe_size;
-> 	wqe_size += sizeof(struct rxe_send_wqe);
->
-> Jason
+diff --git a/drivers/i2c/busses/i2c-pmcmsp.c b/drivers/i2c/busses/i2c-pmcmsp.c
+index 4fde74eb34a7..5d89c7c1b3a8 100644
+--- a/drivers/i2c/busses/i2c-pmcmsp.c
++++ b/drivers/i2c/busses/i2c-pmcmsp.c
+@@ -274,8 +274,8 @@ static int pmcmsptwi_probe(struct platform_device *pldev)
+ 	if (!request_mem_region(res->start, resource_size(res),
+ 				pldev->name)) {
+ 		dev_err(&pldev->dev,
+-			"Unable to get memory/io address region 0x%08x\n",
+-			res->start);
++			"Unable to get memory/io address region %pap\n",
++			&res->start);
+ 		rc = -EBUSY;
+ 		goto ret_err;
+ 	}
+@@ -285,7 +285,7 @@ static int pmcmsptwi_probe(struct platform_device *pldev)
+ 						resource_size(res));
+ 	if (!pmcmsptwi_data.iobase) {
+ 		dev_err(&pldev->dev,
+-			"Unable to ioremap address 0x%08x\n", res->start);
++			"Unable to ioremap address %pap\n", &res->start);
+ 		rc = -EIO;
+ 		goto ret_unreserve;
+ 	}
+-- 
+2.17.1
+
