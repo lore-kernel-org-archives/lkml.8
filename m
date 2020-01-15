@@ -2,160 +2,104 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C3FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C417C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EF924671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6536124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579108058;
+	bh=bZgTE+sfDA4znuib9GfQPR/++LYJ+U/zkieRwUtQu7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v4E2SRXmxF9eopuzJg2qBtqx/p811634+P4+TlLUaXzxmGQvBNrbQi/FqCogipUwJ
+	 ljbMS1zSyGcpc6/6Qx0RV2dil01YTZaMjFHpdu/MAM44VMetunouIHGUU7ZRnqMcZF
+	 NoWnKks8QYT5+teg4DYnjTsRsmFawN4WiBtg2Zbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgAORHe convert rfc822-to-8bit (ORCPT
+        id S1729057AbgAORHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:07:34 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:26056 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728896AbgAORHe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:07:34 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-175-eVLAgkoGOnKRkGAs5C3fYw-1; Wed, 15 Jan 2020 17:07:30 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Jan 2020 17:07:29 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Jan 2020 17:07:29 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Topic: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Index: AdXK8cUFXa7JpPXmQNq7oQ32S9fYHAACik4AAADJLkAAAO3PAAAmXEggAAKDBAAAAvfesAABpyOAAABDBiA=
-Date:   Wed, 15 Jan 2020 17:07:29 +0000
-Message-ID: <ab54668ad13d48da8aa43f955631ef9e@AcuMS.aculab.com>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
-        <20200114115906.22f952ff@gandalf.local.home>
-        <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
-        <20200114124812.4d5355ae@gandalf.local.home>
-        <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
-        <20200115081830.036ade4e@gandalf.local.home>
-        <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
- <20200115103049.06600f6e@gandalf.local.home>
-In-Reply-To: <20200115103049.06600f6e@gandalf.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 15 Jan 2020 12:07:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729028AbgAORHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:07:35 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70661214AF;
+        Wed, 15 Jan 2020 17:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579108054;
+        bh=bZgTE+sfDA4znuib9GfQPR/++LYJ+U/zkieRwUtQu7M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=po0oY3j2BHNes4mv3TqdkItqh5I3k0r89eERz/erPgkt2FX5ETzJ0L0K7OSCK4y+8
+         //lAYPLI1jJnYZqoCprE7A5fzdog9uSvRK6O3f/kM30jRJGHfRyNASOGKFfeF/wE7t
+         OXePKWBstOdbWX+jrYfM6YjAKRGeBM/R1jmyZ3DA=
+Date:   Wed, 15 Jan 2020 18:07:31 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Stefan Mavrodiev <stefan@olimex.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/2] dmaengine: sun4i: Add support for cyclic requests
+ with dedicated DMA
+Message-ID: <20200115170731.vt6twfhvuwjrbbup@gilmour.lan>
+References: <20200110141140.28527-1-stefan@olimex.com>
+ <20200110141140.28527-2-stefan@olimex.com>
+ <20200115123137.GJ2818@vkoul-mobl>
 MIME-Version: 1.0
-X-MC-Unique: eVLAgkoGOnKRkGAs5C3fYw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2bp5iwjkf7edbvmy"
+Content-Disposition: inline
+In-Reply-To: <20200115123137.GJ2818@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From Steven Rostedt
-> Sent: 15 January 2020 15:31
-...
-> > For this case an idle cpu doing a unlocked check for a processes that has
-> > been waiting 'ages' to preempt the running process may not be too
-> > expensive.
-> 
-> How do you measure a process waiting for ages on another CPU? And then
-> by the time you get the information to pull it, there's always the race
-> that the process will get the chance to run. And if you think about it,
-> by looking for a process waiting for a long time, it is likely it will
-> start to run because "ages" means it's probably close to being released.
 
-Without a CBU (Crystal Ball Unit) you can always be unlucky.
-But once you get over the 'normal' delays for a system call you probably
-get an exponential (or is it logarithmic) distribution and the additional
-delay is likely to be at least some fraction of the time it has already waited.
+--2bp5iwjkf7edbvmy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-While not entirely the same, but something I still need to look at further.
-This is a histogram of time taken (in ns) to send on a raw IPv4 socket.
-0k: 1874462617
-96k: 260350
-160k: 30771
-224k: 14812
-288k: 770
-352k: 593
-416k: 489
-480k: 368
-544k: 185
-608k: 63
-672k: 27
-736k: 6
-800k: 1
-864k: 2
-928k: 3
-992k: 4
-1056k: 1
-1120k: 0
-1184k: 1
-1248k: 1
-1312k: 2
-1376k: 3
-1440k: 1
-1504k: 1
-1568k: 1
-1632k: 4
-1696k: 0 (5 times)
-2016k: 1
-2080k: 0
-2144k: 1
-total: 1874771078, average 32k
+On Wed, Jan 15, 2020 at 06:01:37PM +0530, Vinod Koul wrote:
+> On 10-01-20, 16:11, Stefan Mavrodiev wrote:
+> > Currently the cyclic transfers can be used only with normal DMAs. They
+> > can be used by pcm_dmaengine module, which is required for implementing
+> > sound with sun4i-hdmi encoder. This is so because the controller can
+> > accept audio only from a dedicated DMA.
+> >
+> > This patch enables them, following the existing style for the
+> > scatter/gather type transfers.
+>
+> I presume you want this to go with drm tree (if not let me know) so:
+>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 
-I've improved it no end by using per-thread sockets and setting
-the socket write queue size large.
-But there are still some places where it takes > 600us.
-The top end is rather more linear than one might expect.
+There's no need for it to go through DRM, it can go through your tree :)
 
-> > I presume the locks are in place for the migrate itself.
-> 
-> Note, by grabbing locks on another CPU will incur overhead on that
-> other CPU. I've seen huge latency caused by doing just this.
+Maxime
 
-I'd have thought this would only be significant if the cache line
-ends up being used by both cpus?
+--2bp5iwjkf7edbvmy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > The only downside is that the process's data is likely to be in the wrong cache,
-> > but unless the original cpu becomes available just after the migrate it is
-> > probably still a win.
-> 
-> If you are doing this with just tasks that are waiting for the CPU to
-> be preemptable, then it is most likely not a win at all.
+-----BEGIN PGP SIGNATURE-----
 
-You'd need a good guess that the wait would be long.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXh9G0wAKCRDj7w1vZxhR
+xcYaAP9Ias1ypfUPOfaG/F7N9WB9I/ldnmBh5I24ez8A9pQPlQD/XUfJTn9Wh8iY
+O3h8YeDStjv1z+kttwwWJ6ms4KlhIAU=
+=r61M
+-----END PGP SIGNATURE-----
 
-> Now, the RT tasks do have an aggressive push / pull logic, that keeps
-> track of which CPUs are running lower priority tasks and will work hard
-> to keep all RT tasks running (and aggressively migrate them). But this
-> logic still only takes place at preemption points (cond_resched(), etc).
-
-I guess this only 'gives away' extra RT processes.
-Rather than 'stealing' them - which is what I need.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+--2bp5iwjkf7edbvmy--
