@@ -2,98 +2,71 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781EBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1106CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7BF2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D933B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579097506;
+	bh=Lcn/3JXRT9leGkM+woSFiZsmGmI7WadMtQurMVoVrxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mFlr8/Xo+xCkOxcJtaohinaC4xKzAjlrG/v4JvlP3Tj5ehUkCugfUZSJm37N0JU95
+	 3uKO9xv+90rYh8+mQCnhQsCkfqz/KPCPlAmiXhYj/t0xE9chRczjHob7Gl2QVjNJsp
+	 DkzF4yzJfw5MDwM/lnBlR05JDfVC6QzHMDOJ3MYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAOOLB (ORCPT
+        id S1729010AbgAOOLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:11:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58498 "EHLO mga04.intel.com"
+        Wed, 15 Jan 2020 09:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgAOOLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:11:00 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 06:11:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="372945336"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 15 Jan 2020 06:10:58 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1irjNr-0006Ln-U9; Wed, 15 Jan 2020 16:10:59 +0200
-Date:   Wed, 15 Jan 2020 16:10:59 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v1] mfd: intel-lpss: Add Intel Jasper Lake PCI IDs
-Message-ID: <20200115141059.GB32742@smile.fi.intel.com>
-References: <20200113140230.56561-1-andriy.shevchenko@linux.intel.com>
+        id S1726071AbgAOOLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:11:45 -0500
+Received: from localhost (unknown [49.207.51.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 339B32084D;
+        Wed, 15 Jan 2020 14:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579097505;
+        bh=Lcn/3JXRT9leGkM+woSFiZsmGmI7WadMtQurMVoVrxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2CAg5h8CH5nMgIJfn59IYcPUAYKiioGtfJj/nb4onCgctlqK11w8V2RpfrEp2pMgr
+         dau1xZFWZoMnh8MWpB/FnDj6dyRdOU24sLnw4skLnZpyVDO6OS2lLD+4FwMP1dxzOI
+         PT9L1eKhsnTQgcCBxMyZ1z4RkD1EE7GC7OjghFpo=
+Date:   Wed, 15 Jan 2020 19:41:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jiasen Lin <linjiasen@hygon.cn>, Kit Chow <kchow@gigaio.com>
+Subject: Re: [PATCH v3 0/3]  PLX Switch DMA Engine Driver
+Message-ID: <20200115141124.GL2818@vkoul-mobl>
+References: <20200103212021.2881-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113140230.56561-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200103212021.2881-1-logang@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 04:02:30PM +0200, Andy Shevchenko wrote:
-> Intel Jasper Lake has the same LPSS than Intel Ice Lake.
-> Add the new IDs to the list of supported devices.
-
-Lee, I found that I sent this already [1]. I found no evidence it has been
-applied, though. I checked most recent Linux Next repository.
-
-[1]: https://lore.kernel.org/lkml/20191209141507.60298-1-andriy.shevchenko@linux.intel.com/T/#u
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+On 03-01-20, 14:20, Logan Gunthorpe wrote:
+> This is v3 of the patchset. The in-use unbind bits have been sent and
+> accepted as a separate patch set. This patchset just includes the new
+> driver which has been updated to use the common reference counting.
 > 
-> diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-> index b33030e3385c..c40a6c7d0cf8 100644
-> --- a/drivers/mfd/intel-lpss-pci.c
-> +++ b/drivers/mfd/intel-lpss-pci.c
-> @@ -240,6 +240,19 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
->  	{ PCI_VDEVICE(INTEL, 0x4b79), (kernel_ulong_t)&bxt_i2c_info },
->  	{ PCI_VDEVICE(INTEL, 0x4b7a), (kernel_ulong_t)&bxt_i2c_info },
->  	{ PCI_VDEVICE(INTEL, 0x4b7b), (kernel_ulong_t)&bxt_i2c_info },
-> +	/* JSL */
-> +	{ PCI_VDEVICE(INTEL, 0x4da8), (kernel_ulong_t)&spt_uart_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4da9), (kernel_ulong_t)&spt_uart_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4daa), (kernel_ulong_t)&spt_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4dab), (kernel_ulong_t)&spt_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4daf), (kernel_ulong_t)&spt_uart_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4dc5), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4dc6), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4de8), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4de9), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4dea), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4deb), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x4dfb), (kernel_ulong_t)&spt_info },
->  	/* APL */
->  	{ PCI_VDEVICE(INTEL, 0x5aac), (kernel_ulong_t)&apl_i2c_info },
->  	{ PCI_VDEVICE(INTEL, 0x5aae), (kernel_ulong_t)&apl_i2c_info },
-> -- 
-> 2.24.1
+> This patchset is based off of vkoul/slave-dma.git/next and a git branch is
+> available here:
 > 
+> https://github.com/sbates130272/linux-p2pmem/ plx-dma-v3
+
+Applied all, thanks, apologies for delay!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+~Vinod
