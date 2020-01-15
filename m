@@ -2,235 +2,111 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FA7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8B0C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0959324680
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26F72187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/0O19ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgAOK4K (ORCPT
+        id S1729787AbgAOK4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:56:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:59093 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgAOK4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:56:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 02:56:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="397850410"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jan 2020 02:56:05 -0800
-Subject: Re: [PATCH v4 02/11] mmc: sdhci: Factor out some operations set to
- their own functions
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, tony@atomide.com
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-3-faiz_abbas@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e5aaf19b-6f9d-c9f7-cc42-5948cafe1f2f@intel.com>
-Date:   Wed, 15 Jan 2020 12:55:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 05:56:20 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44890 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726045AbgAOK4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:56:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579085778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZyaR/7/9S+/6ABEGQloytJgYAXgFxNor2r6ruyS7t4A=;
+        b=W/0O19ia5aOmOLF76OKbvgoj29KRBc/VyNl9znnV8rz3D3WPo/yzFZyBl6J2rkmmutI1zo
+        6bMjLPPZzWFe9te6u6sREAJZMH6/t6qJGRMO14sCu4seZLFStQTgXj61/Uq7z6gpKh6VLP
+        ps3STBco3IZFW0yDTwJzXQZV51eUbTc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-fb4UWU8QN-CefzjtnH-Fcg-1; Wed, 15 Jan 2020 05:56:15 -0500
+X-MC-Unique: fb4UWU8QN-CefzjtnH-Fcg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3B27107ACC4;
+        Wed, 15 Jan 2020 10:56:13 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C51D160BE0;
+        Wed, 15 Jan 2020 10:56:07 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 11:56:05 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
+        baolu.lu@linux.intel.com
+Subject: Re: [PATCH v4 04/12] vfio_pci: make common functions be extern
+Message-ID: <20200115115605.2014c01f.cohuck@redhat.com>
+In-Reply-To: <1578398509-26453-5-git-send-email-yi.l.liu@intel.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-5-git-send-email-yi.l.liu@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200106110133.13791-3-faiz_abbas@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/01/20 1:01 pm, Faiz Abbas wrote:
-> In preparation for adding external dma support, factor out data initialization,
-> block info and mrq_done to their own functions.
+On Tue,  7 Jan 2020 20:01:41 +0800
+Liu Yi L <yi.l.liu@intel.com> wrote:
+
+> This patch makes the common functions (module agnostic functions) in
+> vfio_pci.c to be extern. So that such functions could be moved to a
+> common source file.
 > 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> *) vfio_pci_set_vga_decode
+> *) vfio_pci_probe_power_state
+> *) vfio_pci_set_power_state
+> *) vfio_pci_enable
+> *) vfio_pci_disable
+> *) vfio_pci_refresh_config
+> *) vfio_pci_register_dev_region
+> *) vfio_pci_ioctl
+> *) vfio_pci_read
+> *) vfio_pci_write
+> *) vfio_pci_mmap
+> *) vfio_pci_request
+> *) vfio_pci_err_handlers
+> *) vfio_pci_reflck_attach
+> *) vfio_pci_reflck_put
+> *) vfio_pci_fill_ids
 
-Minor changes below, otherwise:
+I find it a bit hard to understand what "module agnostic functions" are
+supposed to be. The functions you want to move seem to be some "basic"
+functions that can be shared between normal vfio-pci and
+vfio-mdev-pci... maybe talk about "functions that provide basic vfio
+functionality for pci devices" and also mention the mdev part?
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+[My rationale behind complaining about the commit messages is that if I
+look at this change in a year from now, I want to be able to know why
+and to what end that change was made.]
 
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 > ---
->  drivers/mmc/host/sdhci.c | 96 +++++++++++++++++++++++-----------------
->  1 file changed, 55 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1b1c26da3fe0..f6999054abcf 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1025,18 +1025,9 @@ static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->  	}
->  }
->  
-> -static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +static void sdhci_initialize_data(struct sdhci_host *host,
-> +				  struct mmc_data *data)
->  {
-> -	struct mmc_data *data = cmd->data;
-> -
-> -	host->data_timeout = 0;
-> -
-> -	if (sdhci_data_line_cmd(cmd))
-> -		sdhci_set_timeout(host, cmd);
-> -
-> -	if (!data)
-> -		return;
-> -
->  	WARN_ON(host->data);
->  
->  	/* Sanity checks */
-> @@ -1048,6 +1039,36 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->  	host->data_early = 0;
->  	host->data->bytes_xfered = 0;
->  
-
-Unnessary blank line
-
-> +}
-> +
-> +static inline void sdhci_set_block_info(struct sdhci_host *host,
-> +					struct mmc_data *data)
-> +{
-> +
-> +	/* Set the DMA boundary value and block size */
-> +	sdhci_writew(host,
-> +		     SDHCI_MAKE_BLKSZ(host->sdma_boundary, host->data->blksz),
-
-host->data -> data
-
-> +		     SDHCI_BLOCK_SIZE);
-> +	/*
-> +	 * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> +	 * can be supported, in that case 16-bit block count register must be 0.
-> +	 */
-> +	if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> +	    (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> +		if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> +			sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> +		sdhci_writew(host, host->data->blocks, SDHCI_32BIT_BLK_CNT);
-
-host->data -> data
-
-
-> +	} else {
-> +		sdhci_writew(host, host->data->blocks, SDHCI_BLOCK_COUNT);
-
-host->data -> data
-
-> +	}
-> +}
-> +
-> +static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +{
-> +	struct mmc_data *data = cmd->data;
-> +
-> +	sdhci_initialize_data(host, data);
-> +
->  	if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
->  		struct scatterlist *sg;
->  		unsigned int length_mask, offset_mask;
-> @@ -1133,22 +1154,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->  
->  	sdhci_set_transfer_irqs(host);
->  
-> -	/* Set the DMA boundary value and block size */
-> -	sdhci_writew(host, SDHCI_MAKE_BLKSZ(host->sdma_boundary, data->blksz),
-> -		     SDHCI_BLOCK_SIZE);
-> -
-> -	/*
-> -	 * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> -	 * can be supported, in that case 16-bit block count register must be 0.
-> -	 */
-> -	if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> -	    (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> -		if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> -			sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> -		sdhci_writew(host, data->blocks, SDHCI_32BIT_BLK_CNT);
-> -	} else {
-> -		sdhci_writew(host, data->blocks, SDHCI_BLOCK_COUNT);
-> -	}
-> +	sdhci_set_block_info(host, data);
->  }
->  
->  static inline bool sdhci_auto_cmd12(struct sdhci_host *host,
-> @@ -1245,22 +1251,10 @@ static bool sdhci_needs_reset(struct sdhci_host *host, struct mmc_request *mrq)
->  		 (host->quirks & SDHCI_QUIRK_RESET_AFTER_REQUEST)));
->  }
->  
-> -static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->  {
->  	int i;
->  
-> -	if (host->cmd && host->cmd->mrq == mrq)
-> -		host->cmd = NULL;
-> -
-> -	if (host->data_cmd && host->data_cmd->mrq == mrq)
-> -		host->data_cmd = NULL;
-> -
-> -	if (host->data && host->data->mrq == mrq)
-> -		host->data = NULL;
-> -
-> -	if (sdhci_needs_reset(host, mrq))
-> -		host->pending_reset = true;
-> -
->  	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->  		if (host->mrqs_done[i] == mrq) {
->  			WARN_ON(1);
-> @@ -1276,6 +1270,23 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->  	}
->  
->  	WARN_ON(i >= SDHCI_MAX_MRQS);
-> +}
-> +
-> +static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +{
-> +	if (host->cmd && host->cmd->mrq == mrq)
-> +		host->cmd = NULL;
-> +
-> +	if (host->data_cmd && host->data_cmd->mrq == mrq)
-> +		host->data_cmd = NULL;
-> +
-> +	if (host->data && host->data->mrq == mrq)
-> +		host->data = NULL;
-> +
-> +	if (sdhci_needs_reset(host, mrq))
-> +		host->pending_reset = true;
-> +
-> +	sdhci_set_mrq_done(host, mrq);
->  
->  	sdhci_del_timer(host, mrq);
->  
-> @@ -1390,12 +1401,15 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  	}
->  
->  	host->cmd = cmd;
-> +	host->data_timeout = 0;
->  	if (sdhci_data_line_cmd(cmd)) {
->  		WARN_ON(host->data_cmd);
->  		host->data_cmd = cmd;
-> +		sdhci_set_timeout(host, cmd);
->  	}
->  
-> -	sdhci_prepare_data(host, cmd);
-> +	if (cmd->data)
-> +		sdhci_prepare_data(host, cmd);
->  
->  	sdhci_writel(host, cmd->arg, SDHCI_ARGUMENT);
->  
-> 
+>  drivers/vfio/pci/vfio_pci.c         | 30 +++++++++++++-----------------
+>  drivers/vfio/pci/vfio_pci_private.h | 15 +++++++++++++++
+>  2 files changed, 28 insertions(+), 17 deletions(-)
 
