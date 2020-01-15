@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6BFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CD0C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04122187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DE622522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbgAOLyy (ORCPT
+        id S1730320AbgAOLy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:54:54 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:22077 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730202AbgAOLyq (ORCPT
+        Wed, 15 Jan 2020 06:54:56 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:17814 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730297AbgAOLyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:54:46 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+        Wed, 15 Jan 2020 06:54:54 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="Codrin.Ciubotariu@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 8ta0GVqnRosUh0dsqcKmr/VZ6X5NupaqcxIURil3G+SuFiLjv9sx1iSg2Kg7YD7SWIx0Y+UcgE
- 8UfqFN0tb0pDf5vxK6QMLdtJoEjckNEnAnfHh8ec+7ooGUoe/9M5MayZd+HSXm65vGYaQGJYbn
- jAZNQ7y606W5NRarrPapAJpubYCYxAgQNxOkWtNKfFFI8uClYmaaYxum3QwKL/i3NjDgAoYVqX
- mr98JTJ6kcqHCBNI1nYGDNrZANFA1GrZh8ZNFn4XOcMckjfbLZDfawSTcUpHI7W4VKJk3pRxIl
- yAw=
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: Fj0d/j4SK3yEwxLseF9SjrZHOfi8tRjvWmY7LDmslAxHhroq0i1kYHVBZ3Cs7qE3iFR7OpJbvz
+ cRiDVYEHsPapI1eD/Ny60p3KuKLd8T8TRvbX07H0P0vNCQiX36aaTBtwMnLGIDhyGWn2L1lljR
+ awZ/f80EJfHANYAjiqpYqTB/jDOxXUA54LaObeStunmBmDaKSQnjBk7fGvQhKfV52oSXhBsbK9
+ Zs8NDtHhQzZOWwT4tF3ry9W9U+BQMq0l5tjdwc0FnNqN89JGlbw2skLe/83pghCm5cnwGcHDQI
+ QUI=
 X-IronPort-AV: E=Sophos;i="5.70,322,1574146800"; 
-   d="scan'208";a="60862983"
+   d="scan'208";a="64802519"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jan 2020 04:54:45 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jan 2020 04:54:53 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 15 Jan 2020 04:54:43 -0700
+ 15.1.1713.5; Wed, 15 Jan 2020 04:54:53 -0700
 Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 15 Jan 2020 04:54:40 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 15 Jan 2020 04:54:50 -0700
 From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -64,9 +64,9 @@ CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
         <Ludovic.Desroches@microchip.com>, <robh@kernel.org>,
         <peda@axentia.se>, <linux@armlinux.org.uk>,
         Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v3 1/6] dt-bindings: i2c: at91: document optional bus recovery properties
-Date:   Wed, 15 Jan 2020 13:54:17 +0200
-Message-ID: <20200115115422.17097-2-codrin.ciubotariu@microchip.com>
+Subject: [PATCH v3 4/6] ARM: at91/dt: sama5d3: add i2c gpio pinctrl
+Date:   Wed, 15 Jan 2020 13:54:20 +0200
+Message-ID: <20200115115422.17097-5-codrin.ciubotariu@microchip.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
 References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
@@ -80,56 +80,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
-The at91 I2C controller can support bus recovery by re-assigning SCL
-and SDA to gpios. Add the optional pinctrl and gpio properties to do
-so.
+Add the i2c gpio pinctrls to support the i2c bus recovery
 
 Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-[codrin.ciubotariu@microchip.com: rebased]
+[codrin.ciubotariu@microchip.com: removed gpio pull-ups]
 Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Changes in v3:
- - rebased;
- - added Reviewed-by tag from Rob;
+ - removed gpio pull-ups;
 
 Changes in v2:
- - none;
+  - none;
 
- Documentation/devicetree/bindings/i2c/i2c-at91.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/sama5d3.dtsi | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-index d4bad86107b8..96c914e048f5 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
-@@ -28,8 +28,13 @@ Optional properties:
- 	"atmel,sama5d4-i2c",
- 	"atmel,sama5d2-i2c",
- 	"microchip,sam9x60-i2c".
-+- scl-gpios: specify the gpio related to SCL pin
-+- sda-gpios: specify the gpio related to SDA pin
-+- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2c
-+  bus recovery, call it "gpio" state
- - Child nodes conforming to i2c bus binding
- 
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index f770aace0efd..1cea2137decf 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -159,8 +159,11 @@
+ 				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(7)>,
+ 				       <&dma0 2 AT91_DMA_CFG_PER_ID(8)>;
+ 				dma-names = "tx", "rx";
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "gpio";
+ 				pinctrl-0 = <&pinctrl_i2c0>;
++				pinctrl-1 = <&pinctrl_i2c0_gpio>;
++				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
++				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi0_clk>;
+@@ -174,8 +177,11 @@
+ 				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(9)>,
+ 				       <&dma0 2 AT91_DMA_CFG_PER_ID(10)>;
+ 				dma-names = "tx", "rx";
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "gpio";
+ 				pinctrl-0 = <&pinctrl_i2c1>;
++				pinctrl-1 = <&pinctrl_i2c1_gpio>;
++				sda-gpios = <&pioC 26 GPIO_ACTIVE_HIGH>;
++				scl-gpios = <&pioC 27 GPIO_ACTIVE_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi1_clk>;
+@@ -357,8 +363,11 @@
+ 				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(11)>,
+ 				       <&dma1 2 AT91_DMA_CFG_PER_ID(12)>;
+ 				dma-names = "tx", "rx";
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "gpio";
+ 				pinctrl-0 = <&pinctrl_i2c2>;
++				pinctrl-1 = <&pinctrl_i2c2_gpio>;
++				sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
++				scl-gpios = <&pioA 19 GPIO_ACTIVE_HIGH>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi2_clk>;
+@@ -639,6 +648,12 @@
+ 							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA30 periph A TWD0 pin, conflicts with URXD1, ISI_VSYNC */
+ 							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA31 periph A TWCK0 pin, conflicts with UTXD1, ISI_HSYNC */
+ 					};
 +
- Examples :
++					pinctrl_i2c0_gpio: i2c0-gpio {
++						atmel,pins =
++							<AT91_PIOA 30 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
++							 AT91_PIOA 31 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
+ 				};
  
- i2c0: i2c@fff84000 {
-@@ -64,6 +69,11 @@ i2c0: i2c@f8034600 {
- 	clocks = <&flx0>;
- 	atmel,fifo-size = <16>;
- 	i2c-sda-hold-time-ns = <336>;
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c0>;
-+	pinctrl-1 = <&pinctrl_i2c0_gpio>;
-+	sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
+ 				i2c1 {
+@@ -647,6 +662,12 @@
+ 							<AT91_PIOC 26 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PC26 periph B TWD1 pin, conflicts with SPI1_NPCS1, ISI_D11 */
+ 							 AT91_PIOC 27 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PC27 periph B TWCK1 pin, conflicts with SPI1_NPCS2, ISI_D10 */
+ 					};
++
++					pinctrl_i2c1_gpio: i2c1-gpio {
++						atmel,pins =
++							<AT91_PIOC 26 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
++							 AT91_PIOC 27 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
+ 				};
  
- 	wm8731: wm8731@1a {
- 		compatible = "wm8731";
+ 				i2c2 {
+@@ -655,6 +676,12 @@
+ 							<AT91_PIOA 18 AT91_PERIPH_B AT91_PINCTRL_NONE	/* TWD2 pin, conflicts with LCDDAT18, ISI_D2 */
+ 							 AT91_PIOA 19 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* TWCK2 pin, conflicts with LCDDAT19, ISI_D3 */
+ 					};
++
++					pinctrl_i2c2_gpio: i2c2-gpio {
++						atmel,pins =
++							<AT91_PIOA 18 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
++							 AT91_PIOA 19 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
+ 				};
+ 
+ 				isi {
 -- 
 2.20.1
 
