@@ -2,212 +2,148 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C4BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71017C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E232187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4404F2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X10t+fax"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HadbDCCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgAOGt2 (ORCPT
+        id S1729106AbgAOGuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:49:28 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:38194 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOGt2 (ORCPT
+        Wed, 15 Jan 2020 01:50:19 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31548 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725962AbgAOGuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:49:28 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F6mYZl121915;
-        Wed, 15 Jan 2020 06:49:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=lYoGdj7qyQcXB7YUUM0rRrZCxgR0nkiytXKRZt+8U1M=;
- b=X10t+faxbd5eUFFh/jKYl0f7pM84EA809EuK/cUrdP53rVRRriP23hUvmlgeNMGbf52C
- 9fqFqGNQIlpnQ8gtyzK2BE4+fPzST6SbmsS42lkcrrNEelIKBrP/kFL0IlhIOoe2s+LY
- OzwKi9MSi3LPSA2o2/eiHn1+wMVfIv8ijpta1yWHeVD9/unsR8+oktwVauts/pvfrcbT
- Yt5b7hqaShJ3pT9KdDfjn39LHNEuJtZyOqrHubJvIvEax2ooxKZnEmFrb1boOqw37X0r
- tnSV6zcY73EMkwK4t8CFyvIvgNVlqTTumZ5tH8M8qL4ZlgNKijZZND1Pi+vsbvc4KwGC bw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xf73yjebw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 06:49:20 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F6nFCh166658;
-        Wed, 15 Jan 2020 06:49:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2xh8etehj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 06:49:18 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00F6n4Pn015863;
-        Wed, 15 Jan 2020 06:49:04 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 Jan 2020 22:49:03 -0800
-Date:   Wed, 15 Jan 2020 09:49:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+8c8dedc0ba9e03f6c79e@syzkaller.appspotmail.com>
-Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: stack-out-of-bounds Read in i801_isr
-Message-ID: <20200115064925.GG3719@kadam>
-References: <0000000000009d6d71059c27ecf1@google.com>
+        Wed, 15 Jan 2020 01:50:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579071018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uRmRVjt4VuQHcdX0Fq66G4p7865AfnsRCHZCOCF+SJY=;
+        b=HadbDCCIh/xm2B33pCJqT9jCINGL/c3hJMLlTGKbCYf2/8EgwF7dUh9dgnuVhkr6BdG4vm
+        /g78Kt0LR8gOZ+XhpWiz0CTF8lA6kt4R5f1Db0zh3UPLE02rFTnqjOPyBZn0+XxnRnY3Bu
+        UHUOMBwBMI/XE/pGZ77yC0Mv/wzUjL0=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-431-DqVDE-hvM0yhBZ86EvyVJg-1; Wed, 15 Jan 2020 01:50:17 -0500
+X-MC-Unique: DqVDE-hvM0yhBZ86EvyVJg-1
+Received: by mail-qt1-f199.google.com with SMTP id e37so10587264qtk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 22:50:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uRmRVjt4VuQHcdX0Fq66G4p7865AfnsRCHZCOCF+SJY=;
+        b=dLOk0djS9xgmbhTnLRV2aUjy6XFVgNs6dKRYGNvnOXNw/2cKhcSocLjDxajSeFw6Bw
+         1GiUCC7zLwZzexM5OQTPdqavoQT/TSUh02JWAmJWbx6oIWpH5guDJ7946vQz7dGptxBI
+         lDW5IwAlvdos9nKXgYpAYzZP8d11EFaRgccX830I5KhR/lLbvBDeCOavW3IxmYpwQh6O
+         SmnwaVtHy9Dl+/f7W9u0mBBzQphCMDEbsTTDN5L1pm4T3ct/pbsszHr3bknmsoWH4Mti
+         122Vdl5MJrvY2FTYcfLkdyRqPLZJnrKxGUMUPBNO4i7dWvlBvc9Wnbn/k+IZZVlbRdor
+         aZPQ==
+X-Gm-Message-State: APjAAAVNoz2BLKr42xa6IwVJ645VHEuacTsPT7mgvgFbrBhD8jxwOAs8
+        Hoe4RnY5UH/BoKZNQisQX875hdXJRtRq0qQD3wBglNSVk18gl9Ax0+pvPQ3Dk13qTArEi+3VKVr
+        P0uQXb66EmEq6JYyMO1zXM6aq
+X-Received: by 2002:aed:3c16:: with SMTP id t22mr2158041qte.92.1579071016653;
+        Tue, 14 Jan 2020 22:50:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw+JHaQyK4cROIu3XDgjevbDMk5RwHCZJqLOBkK59TwqdwSAfqibCf47Af1w0kbJriP3UtBqg==
+X-Received: by 2002:aed:3c16:: with SMTP id t22mr2158025qte.92.1579071016474;
+        Tue, 14 Jan 2020 22:50:16 -0800 (PST)
+Received: from redhat.com (bzq-79-183-34-164.red.bezeqint.net. [79.183.34.164])
+        by smtp.gmail.com with ESMTPSA id a36sm9168690qtk.29.2020.01.14.22.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 22:50:15 -0800 (PST)
+Date:   Wed, 15 Jan 2020 01:50:08 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>,
+        Andrew Jones <drjones@redhat.com>
+Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
+ tracking
+Message-ID: <20200115014735-mutt-send-email-mst@kernel.org>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-13-peterx@redhat.com>
+ <20200109110110-mutt-send-email-mst@kernel.org>
+ <20200109191514.GD36997@xz-x1>
+ <20200109141634-mutt-send-email-mst@kernel.org>
+ <20200114200134.GA233443@xz-x1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000009d6d71059c27ecf1@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150054
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150054
+In-Reply-To: <20200114200134.GA233443@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz dup: KASAN: vmalloc-out-of-bounds Write in i801_isr
+On Tue, Jan 14, 2020 at 03:01:34PM -0500, Peter Xu wrote:
+> On Thu, Jan 09, 2020 at 02:35:46PM -0500, Michael S. Tsirkin wrote:
+> >   ``void flush_dcache_page(struct page *page)``
+> > 
+> >         Any time the kernel writes to a page cache page, _OR_
+> >         the kernel is about to read from a page cache page and
+> >         user space shared/writable mappings of this page potentially
+> >         exist, this routine is called.
+> > 
+> > 
+> > > Also, I believe this is the similar question that Jason has asked in
+> > > V2.  Sorry I should mention this earlier, but I didn't address that in
+> > > this series because if we need to do so we probably need to do it
+> > > kvm-wise, rather than only in this series.
+> > 
+> > You need to document these things.
+> > 
+> > >  I feel like it's missing
+> > > probably only because all existing KVM supported archs do not have
+> > > virtual-tagged caches as you mentioned.
+> > 
+> > But is that a fact? ARM has such a variety of CPUs,
+> > I can't really tell. Did you research this to make sure?
+> > 
+> > > If so, I would prefer if you
+> > > can allow me to ignore that issue until KVM starts to support such an
+> > > arch.
+> > 
+> > Document limitations pls.  Don't ignore them.
+> 
+> Hi, Michael,
+> 
+> I failed to find a good place to document about flush_dcache_page()
+> for KVM.  Could you give me a suggestion?
 
-On Tue, Jan 14, 2020 at 10:36:10PM -0800, syzbot wrote:
-> Hello,
+Maybe where the field is introduced. I posted the suggestions to the
+relevant patch.
+
+> And I don't know about whether there's any ARM hosts that requires
+> flush_dcache_page().  I think not, because again I didn't see any
+> caller of flush_dcache_page() in KVM code yet.  Otherwise I think we
+> should at least call it before the kernel reading kvm_run or after
+> publishing data to kvm_run.
+
+But is kvm run ever accessed while VCPU is running on another CPU?
+I always assumed no but maybe I'm missing something?
+
+>  However I'm also CCing Drew for this.
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    452424cd Merge branch 'parisc-5.5-3' of git://git.kernel.o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17f7ac21e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8c8dedc0ba9e03f6c79e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+8c8dedc0ba9e03f6c79e@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: stack-out-of-bounds in i801_isr_byte_done
-> drivers/i2c/busses/i2c-i801.c:603 [inline]
-> BUG: KASAN: stack-out-of-bounds in i801_isr
-> drivers/i2c/busses/i2c-i801.c:663 [inline]
-> BUG: KASAN: stack-out-of-bounds in i801_isr+0xcb7/0xcf0
-> drivers/i2c/busses/i2c-i801.c:644
-> Read of size 1 at addr ffffc9000beb7d38 by task syz-executor.3/2994
-> 
-> CPU: 1 PID: 2994 Comm: syz-executor.3 Not tainted 5.5.0-rc6-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x197/0x210 lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
->  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:639
->  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
->  i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:603 [inline]
->  i801_isr drivers/i2c/busses/i2c-i801.c:663 [inline]
->  i801_isr+0xcb7/0xcf0 drivers/i2c/busses/i2c-i801.c:644
->  __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
->  handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
->  handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
->  handle_fasteoi_irq+0x281/0x670 kernel/irq/chip.c:725
->  generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
->  do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
->  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
-> RIP: 0010:ffs arch/x86/include/asm/bitops.h:297 [inline]
-> RIP: 0010:__do_softirq+0x227/0x98c kernel/softirq.c:280
-> Code: c7 c0 e8 34 93 89 48 c1 e8 03 42 80 3c 30 00 0f 85 b1 06 00 00 48 83
-> 3d ce 32 93 01 00 0f 84 d6 05 00 00 fb 66 0f 1f 44 00 00 <b8> ff ff ff ff 48
-> c7 45 c8 00 91 80 89 0f bc 45 d4 83 c0 01 89 45
-> RSP: 0018:ffffc900004e8f18 EFLAGS: 00000282 ORIG_RAX: ffffffffffffffdd
-> RAX: 1ffffffff132669d RBX: ffff88801eccdf00 RCX: 0000000000000002
-> RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88801ecce794
-> RBP: ffffc900004e8f98 R08: 1ffffffff165e7a6 R09: fffffbfff165e7a7
-> R10: fffffbfff165e7a6 R11: ffffffff8b2f3d37 R12: 0000000000000000
-> R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
->  invoke_softirq kernel/softirq.c:373 [inline]
->  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
->  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
->  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
->  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->  </IRQ>
-> RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752
-> [inline]
-> RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160
-> [inline]
-> RIP: 0010:_raw_spin_unlock_irqrestore+0x90/0xe0
-> kernel/locking/spinlock.c:191
-> Code: 48 c7 c0 d8 34 93 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c
-> 10 00 75 39 48 83 3d 7f e0 be 01 00 74 24 48 89 df 57 9d <0f> 1f 44 00 00 bf
-> 01 00 00 00 e8 11 36 7c f9 65 8b 05 12 ca 2d 78
-> RSP: 0018:ffffc9000c6e7b90 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-> RAX: 1ffffffff132669b RBX: 0000000000000282 RCX: 0000000000000006
-> RDX: dffffc0000000000 RSI: 0000000000000008 RDI: 0000000000000282
-> RBP: ffffc9000c6e7ba0 R08: 1ffffffff165e7a6 R09: fffffbfff165e7a7
-> R10: fffffbfff165e7a6 R11: ffffffff8b2f3d37 R12: ffff88802a79d158
-> R13: ffff88802a79d150 R14: 0000000000000282 R15: ffff88802a79d158
->  kthread_queue_work+0xa4/0x160 kernel/kthread.c:829
->  kthread_flush_worker+0xca/0x110 kernel/kthread.c:1165
->  loop_unprepare_queue drivers/block/loop.c:894 [inline]
->  __loop_clr_fd+0x5d9/0xd80 drivers/block/loop.c:1157
->  loop_clr_fd drivers/block/loop.c:1237 [inline]
->  lo_ioctl+0x2bd/0x1460 drivers/block/loop.c:1606
->  lo_compat_ioctl+0xb6/0x110 drivers/block/loop.c:1782
->  compat_blkdev_ioctl+0x274/0x1c30 block/compat_ioctl.c:422
->  __do_compat_sys_ioctl fs/compat_ioctl.c:214 [inline]
->  __se_compat_sys_ioctl fs/compat_ioctl.c:142 [inline]
->  __ia32_compat_sys_ioctl+0x233/0x610 fs/compat_ioctl.c:142
->  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
->  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
->  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-> RIP: 0023:0xf7fe2a39
-> Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c
-> 24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
-> 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-> RSP: 002b:00000000f5dddf08 EFLAGS: 00000292 ORIG_RAX: 0000000000000036
-> RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000004c01
-> RDX: 0000000000000000 RSI: 000000000812d000 RDI: 0000000000000000
-> RBP: 00000000f5dde158 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> 
-> 
-> Memory state around the buggy address:
->  ffffc9000beb7c00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->  ffffc9000beb7c80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> > ffffc9000beb7d00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->                                         ^
->  ffffc9000beb7d80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->  ffffc9000beb7e00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> ==================================================================
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Thanks,
 > 
 > -- 
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000009d6d71059c27ecf1%40google.com.
+> Peter Xu
+
