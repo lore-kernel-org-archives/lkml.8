@@ -2,98 +2,107 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F268C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549D9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C73224671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579101083;
-	bh=3gTNlszr+LAWpyQAE9KCG1f9A2EIwYniEezh0GNli7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tCDw0shQlGFdEndVbPya33w1oRggmGMhYf/FJC1yaHwtl5RRNI4G8/km5UOLsQo+V
-	 FIw6qmBgDVqMbGViWwZWyyokoFjx9AoyUyH3np9horyo45yaavd42wvKkmXI2S2v3k
-	 d9+qyq1yA6SxgMYrWt77Q6PwrNZ4GOm6l0QC2NhU=
+	by mail.kernel.org (Postfix) with ESMTP id 34D22222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAOPLW (ORCPT
+        id S1729142AbgAOPLg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgAOPLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:11:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD259222C3;
-        Wed, 15 Jan 2020 15:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579101081;
-        bh=3gTNlszr+LAWpyQAE9KCG1f9A2EIwYniEezh0GNli7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LSztWCtE7OCoSmM5XihhW6xXTTQSxnf9FmQw8flyMeiHK+7qSvtL8C42FQ8Z2sc4T
-         rVPD+6bdqi4RgQxeV3urPxq0U+0+XdIyUMGeJ27mCSIQyyPyWQUfjacDJpbPCIdNja
-         gEbc9AOg+rgwKSX7+wfvUmz1E5Pn58TmLlH1nlDA=
-Date:   Wed, 15 Jan 2020 16:11:18 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [stable] [PATCH 1/2] coresight: etb10: Do not call
- smp_processor_id from preemptible
-Message-ID: <20200115151118.GC3740793@kroah.com>
-References: <20200108110541.318672-1-suzuki.poulose@arm.com>
- <20200109143537.GE1706@sasha-vm>
- <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
+        Wed, 15 Jan 2020 10:11:36 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50333 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgAOPLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:11:36 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-52-G_3Dq-AqP0mznXXKffIX3Q-1; Wed, 15 Jan 2020 15:11:33 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 15 Jan 2020 15:11:32 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 15 Jan 2020 15:11:32 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Rostedt' <rostedt@goodmis.org>
+CC:     'Vincent Guittot' <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: sched/fair: scheduler not running high priority process on idle
+ cpu
+Thread-Topic: sched/fair: scheduler not running high priority process on idle
+ cpu
+Thread-Index: AdXK8cUFXa7JpPXmQNq7oQ32S9fYHAACik4AAADJLkAAAO3PAAAmXEggAAKDBAAAAvfesA==
+Date:   Wed, 15 Jan 2020 15:11:32 +0000
+Message-ID: <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
+References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
+        <20200114115906.22f952ff@gandalf.local.home>
+        <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
+        <20200114124812.4d5355ae@gandalf.local.home>
+        <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
+ <20200115081830.036ade4e@gandalf.local.home>
+In-Reply-To: <20200115081830.036ade4e@gandalf.local.home>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
+X-MC-Unique: G_3Dq-AqP0mznXXKffIX3Q-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:36:17PM +0000, Suzuki Kuruppassery Poulose wrote:
-> On 09/01/2020 14:35, Sasha Levin wrote:
-> > On Wed, Jan 08, 2020 at 11:05:40AM +0000, Suzuki K Poulose wrote:
-> > > [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
-> > > 
-> > > During a perf session we try to allocate buffers on the "node" associated
-> > > with the CPU the event is bound to. If it is not bound to a CPU, we
-> > > use the current CPU node, using smp_processor_id(). However this is
-> > > unsafe
-> > > in a pre-emptible context and could generate the splats as below :
-> > > 
-> > > BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
-> > > 
-> > > Use NUMA_NO_NODE hint instead of using the current node for events
-> > > not bound to CPUs.
-> > > 
-> > > Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
-> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
-> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
-> > > 
-> > 
-> > I've queued this for 4.9-4.19. There was a simple conflict on 4.9 which
-> > also had to be resolved.
-> > 
+From: Steven Rostedt
+> Sent: 15 January 2020 13:19
+> On Wed, 15 Jan 2020 12:44:19 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
 > 
+> > > Yes, even with CONFIG_PREEMPT, Linux has no guarantees of latency for
+> > > any task regardless of priority. If you have latency requirements, then
+> > > you need to apply the PREEMPT_RT patch (which may soon make it to
+> > > mainline this year!), which spin locks and bh wont stop a task from
+> > > scheduling (unless they need the same lock)
 > 
-> Thanks Sasha !
+> Every time you add something to allow higher priority processes to run
+> with less latency you add overhead. By just adding that spinlock check
+> or to migrate a process to a idle cpu will add a measurable overhead,
+> and as you state, distros won't like that.
+> 
+> It's a constant game of give and take.
 
-Note, these had to all be dropped as they broke the build :(
+I know exactly how much effect innocuous changes can have...
 
-So can you please send us patches that at least build?  :)
+Sorting out process migration on a 1024 cpu NUMA system must be a PITA.
 
-thanks,
+For this case an idle cpu doing a unlocked check for a processes that has
+been waiting 'ages' to preempt the running process may not be too
+expensive.
+I presume the locks are in place for the migrate itself.
+The only downside is that the process's data is likely to be in the wrong cache,
+but unless the original cpu becomes available just after the migrate it is
+probably still a win.
 
-greg k-h
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
