@@ -2,203 +2,745 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76018C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D3AC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476D5214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F87224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="q7UOGtNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgAORQM (ORCPT
+        id S1729061AbgAORQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:16:12 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:35842 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAORQM (ORCPT
+        Wed, 15 Jan 2020 12:16:24 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39230 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgAORQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:16:12 -0500
-Received: by mail-io1-f71.google.com with SMTP id 144so10873299iou.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:16:11 -0800 (PST)
+        Wed, 15 Jan 2020 12:16:23 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c16so16351742qko.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:16:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9ykQjr4H0gywq/0E0It7rn6yVNHPcNvVdM9w7udwaMk=;
+        b=q7UOGtNBZuPHONhq73klWP2/E9DTbEtE8jIU7rfDvv6w6N3ZpGCGEqVXVItKnSE6Lq
+         yrjQPmxU3DiWI+V7ssaLK1x4dlQKHoEn3Wi4pxcDHKSzhNcYweQkkFYceZ1fGzTFhfVQ
+         efldBAdi7MjWfqm8S/2ogAJu39WqyNOKZm0XG41SNnjv6rGQdwPASjywupA28lHmNHKG
+         Z4TiK5x51X+jCdsnTBNSxWFxMItVVhsbizd9QU1lPUCtFdBxOFkLXOwvHw0q/v/+lmEP
+         dUV9ufUq7mKdBxHEjDgjNWaNDMWdVIpIok4bQTcdbfT19/LubfwhpBy9FsCKtAFkW3s9
+         A5kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=O3YbhnbyZQorKGlqJaF7WScrngDyTF1HNDIoMCSO20A=;
-        b=YpQFkcA2unfwEyJw7zLAJmYGQ/jB2Ph2mSRu8//cxrHPVFBPyXEvkFEQ+QJ4980o0E
-         ygA5c+wQ9QyXhEDgQGEvCOt8XkgseaSdxroxT4WOxG/l7cPOXtNrZD9Dw/r/A9I1g1s6
-         m/H63v1wndkafeKfYm3FTGz+0+XBj+pJ2/B1aABZlOGgSiGVzk0uHC0TTK6bwDDfIQ17
-         9JDJRR3XYbynad5d2Epw8l2ee/QHUxgrA5ss26K2jgi0rDVdOpZPBlTYKn7nvcOuWew7
-         2vcctncg8iwq9zR2chiFHUUpQdsGguRjKQqTqGvQSqyfOPOSIMC/Gu7xSt+Bpj0yGby5
-         NBpA==
-X-Gm-Message-State: APjAAAVYp7sGX9Eqv2iE0DsqZ6zBZifNW9a+8mXXNIVsayImvTd6ipy9
-        pOXPPMg00lip8QKBa06xftm2J1GucL5KFpp05JJQWs1JNiXV
-X-Google-Smtp-Source: APXvYqwOsrIOXD4CEiMYP1hgJ3K2TIfgF7CXZJ/y1TnXfL6D5RtnB3/ct/weWXrmcmAmuvc5UhoxCKBFCHJfE0S+ReBYLhVTgGQH
-MIME-Version: 1.0
-X-Received: by 2002:a02:7f54:: with SMTP id r81mr25309079jac.121.1579108571189;
- Wed, 15 Jan 2020 09:16:11 -0800 (PST)
-Date:   Wed, 15 Jan 2020 09:16:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000729d74059c30ddff@google.com>
-Subject: KASAN: use-after-free Read in snd_timer_resolution
-From:   syzbot <syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9ykQjr4H0gywq/0E0It7rn6yVNHPcNvVdM9w7udwaMk=;
+        b=bYDxCvMWfeGWCHzMKI1G68/KnDyHAc0MDL1Mv4QRMTIABPQOKxWz33f+bVbqx2Z5i6
+         N+da0kVCu4GicTS0iFCbtuOF9t4sfto7+umnYlfAH7TxwJjO9im2eq8/PExZyQHYf2zR
+         wIMv9MKO9Rzl1eHd4Bm27EzGYCerHQgX/1NFCijZdhzjk0Nnl+CpTlnEVi+eB7KKAr9i
+         p3YxQI7Ebd5mJuQY57RXnToSDljIbDVabyeM21aN8+vqhX5bGwOYRUUEuc94uJxtNRVc
+         YyUfwZaXMK4IrxPseYjqD6bGzFZ+6lYU/5DOwK/cHKDBtquOUnFa3vwpHf9mwR8CGIfA
+         Qlpw==
+X-Gm-Message-State: APjAAAVHmoytBp2zVdYsbGFsoC19/fEHi9GdTLMbbM0aN6b7MK6gCrNY
+        IfNyWvwXGM4irQ++2oHXy5AvgQ==
+X-Google-Smtp-Source: APXvYqxmqBnqC5GnRN1dKMHZYx1QACFOF6a+ScwEiDu0v2QWVxitp00kvsrOisPz0e9JYpFBuSxp/Q==
+X-Received: by 2002:a37:5f43:: with SMTP id t64mr27858809qkb.68.1579108580147;
+        Wed, 15 Jan 2020 09:16:20 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k9sm9673439qtq.75.2020.01.15.09.16.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 09:16:19 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH -next] mm/hotplug: silence a lockdep splat with printk()
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200115170235.ph7lrojaktmfikm2@pathway.suse.cz>
+Date:   Wed, 15 Jan 2020 12:16:17 -0500
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        sergey.senozhatsky.work@gmail.com, rostedt@goodmis.org,
+        peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7CD27FC6-CFFF-4519-A57D-85179E9815FE@lca.pw>
+References: <20200115095253.36e5iqn77n4exj3s@pathway.suse.cz>
+ <D6F57A74-7608-43BE-B909-4350DE95B68C@lca.pw>
+ <20200115170235.ph7lrojaktmfikm2@pathway.suse.cz>
+To:     Petr Mladek <pmladek@suse.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
 
-HEAD commit:    e033e7d4 Merge branch 'dhowells' (patches from DavidH)
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f2bb25e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=2b2ef983f973e5c40943
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
+> On Jan 15, 2020, at 12:02 PM, Petr Mladek <pmladek@suse.com> wrote:
+>=20
+> On Wed 2020-01-15 06:49:03, Qian Cai wrote:
+>>=20
+>>=20
+>>> On Jan 15, 2020, at 4:52 AM, Petr Mladek <pmladek@suse.com> wrote:
+>>>=20
+>>> I could understand that Michal is against hack in -mm code that
+>>> would just hide a false positive warning.
+>>=20
+>> Well, I don=E2=80=99t have any confidence to say everything this =
+patch is
+>> trying to fix is false positives.
+>=20
+> You look at this from a wrong angle. AFAIK, all lockdep reports pasted
+> in the below mentioned thread were false positives. Now, this patch
+> complicates an already complicated -mm code to hide the warning
+> and fix theoretical problems.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+What makes you say all of those are false positives?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2b2ef983f973e5c40943@syzkaller.appspotmail.com
+[12471.671123] WARNING: possible circular locking dependency detected
+[12471.677995] 5.4.0-rc6-next-20191111+ #2 Tainted: G        W    L  =20
+[12471.684950] ------------------------------------------------------
+[12471.691819] read_all/70259 is trying to acquire lock:
+[12471.697559] ffff00977b407290 (&(&zone->lock)->rlock){..-.}, at: =
+rmqueue+0xf1c/0x2050
+[12471.706005]=20
+               but task is already holding lock:
+[12471.713219] 69ff00082000fd18 (&(&n->list_lock)->rlock){-.-.}, at: =
+list_locations+0x104/0x4b4
+[12471.722364]=20
+               which lock already depends on the new lock.
 
-==================================================================
-BUG: KASAN: use-after-free in snd_timer_resolution+0xf1/0x110  
-sound/core/timer.c:441
-Read of size 8 at addr ffff888094155800 by task syz-executor.0/18632
+[12471.732617]=20
+               the existing dependency chain (in reverse order) is:
+[12471.741480]=20
+               -> #4 (&(&n->list_lock)->rlock){-.-.}:
+[12471.749150]        lock_acquire+0x320/0x360
+[12471.754028]        _raw_spin_lock+0x64/0x80
+[12471.758903]        get_partial_node+0x48/0x208
+[12471.764037]        ___slab_alloc+0x1b8/0x640
+[12471.768997]        __kmalloc+0x3c4/0x490
+[12471.773623]        __tty_buffer_request_room+0x118/0x1f8
+[12471.779627]        tty_insert_flip_string_fixed_flag+0x6c/0x144
+[12471.786240]        pty_write+0x80/0xd0
+[12471.790680]        n_tty_write+0x450/0x60c
+[12471.795466]        tty_write+0x338/0x474
+[12471.800082]        __vfs_write+0x88/0x214
+[12471.804780]        vfs_write+0x12c/0x1a4
+[12471.809393]        redirected_tty_write+0x90/0xdc
+[12471.814790]        do_loop_readv_writev+0x140/0x180
+[12471.820357]        do_iter_write+0xe0/0x10c
+[12471.825230]        vfs_writev+0x134/0x1cc
+[12471.829929]        do_writev+0xbc/0x130
+[12471.834455]        __arm64_sys_writev+0x58/0x8c
+[12471.839688]        el0_svc_handler+0x170/0x240
+[12471.844829]        el0_sync_handler+0x150/0x250
+[12471.850049]        el0_sync+0x164/0x180
+[12471.854572]=20
+               -> #3 (&(&port->lock)->rlock){-.-.}:
+[12471.862057]        lock_acquire+0x320/0x360
+[12471.866930]        _raw_spin_lock_irqsave+0x7c/0x9c
+[12471.872498]        tty_port_tty_get+0x24/0x60
+[12471.877545]        tty_port_default_wakeup+0x1c/0x3c
+[12471.883199]        tty_port_tty_wakeup+0x34/0x40
+[12471.888510]        uart_write_wakeup+0x28/0x44
+[12471.893644]        pl011_tx_chars+0x1b8/0x270
+[12471.898696]        pl011_start_tx+0x24/0x70
+[12471.903570]        __uart_start+0x5c/0x68
+[12471.908269]        uart_write+0x164/0x1c8
+[12471.912969]        do_output_char+0x33c/0x348
+[12471.918016]        n_tty_write+0x4bc/0x60c
+[12471.922802]        tty_write+0x338/0x474
+[12471.927414]        redirected_tty_write+0xc0/0xdc
+[12471.932808]        do_loop_readv_writev+0x140/0x180
+[12471.938375]        do_iter_write+0xe0/0x10c
+[12471.943248]        vfs_writev+0x134/0x1cc
+[12471.947950]        do_writev+0xbc/0x130
+[12471.952478]        __arm64_sys_writev+0x58/0x8c
+[12471.957700]        el0_svc_handler+0x170/0x240
+[12471.962833]        el0_sync_handler+0x150/0x250
+[12471.968053]        el0_sync+0x164/0x180
+[12471.972576]=20
+               -> #2 (&port_lock_key){-.-.}:
+[12471.979453]        lock_acquire+0x320/0x360
+[12471.984326]        _raw_spin_lock+0x64/0x80
+[12471.989200]        pl011_console_write+0xec/0x2cc
+[12471.994595]        console_unlock+0x794/0x96c
+[12471.999641]        vprintk_emit+0x260/0x31c
+[12472.004513]        vprintk_default+0x54/0x7c
+[12472.009475]        vprintk_func+0x218/0x254
+[12472.014358]        printk+0x7c/0xa4
+[12472.018536]        register_console+0x734/0x7b0
+[12472.023757]        uart_add_one_port+0x734/0x834
+[12472.029065]        pl011_register_port+0x6c/0xac
+[12472.034372]        sbsa_uart_probe+0x234/0x2ec
+[12472.039508]        platform_drv_probe+0xd4/0x124
+[12472.044821]        really_probe+0x250/0x71c
+[12472.049694]        driver_probe_device+0xb4/0x200
+[12472.055090]        __device_attach_driver+0xd8/0x188
+[12472.060744]        bus_for_each_drv+0xbc/0x110
+[12472.065878]        __device_attach+0x120/0x220
+[12472.071012]        device_initial_probe+0x20/0x2c
+[12472.076405]        bus_probe_device+0x54/0x100
+[12472.081539]        device_add+0xae8/0xc2c
+[12472.086242]        platform_device_add+0x278/0x3b8
+[12472.091725]        platform_device_register_full+0x238/0x2ac
+[12472.098079]        acpi_create_platform_device+0x2dc/0x3a8
+[12472.104263]        acpi_bus_attach+0x390/0x3cc
+[12472.109397]        acpi_bus_attach+0x108/0x3cc
+[12472.114531]        acpi_bus_attach+0x108/0x3cc
+[12472.119664]        acpi_bus_attach+0x108/0x3cc
+[12472.124798]        acpi_bus_scan+0x7c/0xb0
+[12472.129588]        acpi_scan_init+0xe4/0x304
+[12472.134548]        acpi_init+0x100/0x114
+[12472.139160]        do_one_initcall+0x348/0x6a0
+[12472.144299]        do_initcall_level+0x190/0x1fc
+[12472.149606]        do_basic_setup+0x34/0x4c
+[12472.154479]        kernel_init_freeable+0x19c/0x260
+[12472.160051]        kernel_init+0x18/0x338
+[12472.164751]        ret_from_fork+0x10/0x18
+[12472.169534]=20
+               -> #1 (console_owner){-...}:
+[12472.176323]        lock_acquire+0x320/0x360
+[12472.181196]        console_lock_spinning_enable+0x6c/0x7c
+[12472.187284]        console_unlock+0x4f8/0x96c
+[12472.192330]        vprintk_emit+0x260/0x31c
+[12472.197202]        vprintk_default+0x54/0x7c
+[12472.202162]        vprintk_func+0x218/0x254
+[12472.207035]        printk+0x7c/0xa4
+[12472.211218]        get_random_u64+0x1c4/0x1dc
+[12472.216266]        shuffle_pick_tail+0x40/0xac
+[12472.221408]        __free_one_page+0x424/0x710
+[12472.226541]        free_one_page+0x70/0x120
+[12472.231415]        __free_pages_ok+0x61c/0xa94
+[12472.236550]        __free_pages_core+0x1bc/0x294
+[12472.241861]        memblock_free_pages+0x38/0x48
+[12472.247171]        __free_pages_memory+0xcc/0xfc
+[12472.252478]        __free_memory_core+0x70/0x78
+[12472.257699]        free_low_memory_core_early+0x148/0x18c
+[12472.263787]        memblock_free_all+0x18/0x54
+[12472.268921]        mem_init+0xb4/0x17c
+[12472.273360]        mm_init+0x14/0x38
+[12472.277625]        start_kernel+0x19c/0x530
+[12472.282495]=20
+               -> #0 (&(&zone->lock)->rlock){..-.}:
+[12472.289977]        validate_chain+0xf6c/0x2e2c
+[12472.295111]        __lock_acquire+0x868/0xc2c
+[12472.300159]        lock_acquire+0x320/0x360
+[12472.305032]        _raw_spin_lock_irqsave+0x7c/0x9c
+[12472.310599]        rmqueue+0xf1c/0x2050
+[12472.315128]        get_page_from_freelist+0x474/0x688
+[12472.320869]        __alloc_pages_nodemask+0x3b4/0x18dc
+[12472.326707]        alloc_pages_current+0xd0/0xe0
+[12472.332014]        __get_free_pages+0x24/0x6c
+[12472.337061]        alloc_loc_track+0x38/0x80
+[12472.342022]        process_slab+0x228/0x544
+[12472.346895]        list_locations+0x158/0x4b4
+[12472.351942]        alloc_calls_show+0x38/0x48
+[12472.356991]        slab_attr_show+0x38/0x54
+[12472.361876]        sysfs_kf_seq_show+0x198/0x2d4
+[12472.367184]        kernfs_seq_show+0xa4/0xcc
+[12472.372150]        seq_read+0x394/0x918
+[12472.376676]        kernfs_fop_read+0xa8/0x334
+[12472.381722]        __vfs_read+0x88/0x20c
+[12472.386334]        vfs_read+0xdc/0x110
+[12472.390773]        ksys_read+0xb0/0x120
+[12472.395298]        __arm64_sys_read+0x54/0x88
+[12472.400345]        el0_svc_handler+0x170/0x240
+[12472.405479]        el0_sync_handler+0x150/0x250
+[12472.410699]        el0_sync+0x164/0x180
+[12472.415223]=20
+               other info that might help us debug this:
 
-CPU: 1 PID: 18632 Comm: syz-executor.0 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
+[12472.425304] Chain exists of:
+                 &(&zone->lock)->rlock --> &(&port->lock)->rlock --> =
+&(&n->list_lock)->rlock
+
+[12472.439914]  Possible unsafe locking scenario:
+
+[12472.447216]        CPU0                    CPU1
+[12472.452434]        ----                    ----
+[12472.457650]   lock(&(&n->list_lock)->rlock);
+[12472.462610]                                =
+lock(&(&port->lock)->rlock);
+[12472.469914]                                =
+lock(&(&n->list_lock)->rlock);
+[12472.477390]   lock(&(&zone->lock)->rlock);
+[12472.482175]=20
+                *** DEADLOCK ***
+
+[12472.490172] 4 locks held by read_all/70259:
+[12472.495041]  #0: 33ff00947d9881e0 (&p->lock){+.+.}, at: =
+seq_read+0x50/0x918
+[12472.502701]  #1: f9ff0095cb6e2680 (&of->mutex){+.+.}, at: =
+kernfs_seq_start+0x34/0xf0
+[12472.511141]  #2: b8ff00083dc2dd08 (kn->count#48){++++}, at: =
+kernfs_seq_start+0x44/0xf0
+[12472.519756]  #3: 69ff00082000fd18 (&(&n->list_lock)->rlock){-.-.}, =
+at: list_locations+0x104/0x4b4
+[12472.529325]=20
+               stack backtrace:
+[12472.535069] CPU: 236 PID: 70259 Comm: read_all Tainted: G        W    =
+L    5.4.0-rc6-next-20191111+ #2
+[12472.545062] Hardware name: HPE Apollo 70             /C01_APACHE_MB   =
+      , BIOS L50_5.13_1.11 06/18/2019
+[12472.555489] Call trace:
+[12472.558626]  dump_backtrace+0x0/0x248
+[12472.562977]  show_stack+0x20/0x2c
+[12472.566992]  dump_stack+0xe8/0x150
+[12472.571084]  print_circular_bug+0x368/0x380
+[12472.575957]  check_noncircular+0x28c/0x294
+[12472.580742]  validate_chain+0xf6c/0x2e2c
+[12472.585355]  __lock_acquire+0x868/0xc2c
+[12472.589882]  lock_acquire+0x320/0x360
+[12472.594234]  _raw_spin_lock_irqsave+0x7c/0x9c
+[12472.599280]  rmqueue+0xf1c/0x2050
+[12472.603286]  get_page_from_freelist+0x474/0x688
+[12472.608506]  __alloc_pages_nodemask+0x3b4/0x18dc
+[12472.613813]  alloc_pages_current+0xd0/0xe0
+[12472.618600]  __get_free_pages+0x24/0x6c
+[12472.623126]  alloc_loc_track+0x38/0x80
+[12472.627565]  process_slab+0x228/0x544
+[12472.631917]  list_locations+0x158/0x4b4
+[12472.636444]  alloc_calls_show+0x38/0x48
+[12472.640969]  slab_attr_show+0x38/0x54
+[12472.645322]  sysfs_kf_seq_show+0x198/0x2d4
+[12472.650108]  kernfs_seq_show+0xa4/0xcc
+[12472.654547]  seq_read+0x394/0x918
+[12472.658552]  kernfs_fop_read+0xa8/0x334
+[12472.663078]  __vfs_read+0x88/0x20c
+[12472.667169]  vfs_read+0xdc/0x110
+[12472.671087]  ksys_read+0xb0/0x120
+[12472.675091]  __arm64_sys_read+0x54/0x88
+[12472.679618]  el0_svc_handler+0x170/0x240
+[12472.684231]  el0_sync_handler+0x150/0x250
+[12472.688929]  el0_sync+0x164/0x180
+
+
+the existing dependency chain (in reverse order) is:
+
+ -> #4 (&pool->lock/1){-.-.}:
+      lock_acquire+0x320/0x360
+      _raw_spin_lock+0x64/0x80
+      __queue_work+0x4b4/0xa10
+      queue_work_on+0xac/0x11c
+      tty_schedule_flip+0x84/0xbc
+      tty_flip_buffer_push+0x1c/0x28
+      pty_write+0x98/0xd0
+      n_tty_write+0x450/0x60c
+      tty_write+0x338/0x474
+      __vfs_write+0x88/0x214
+      vfs_write+0x12c/0x1a4
+      redirected_tty_write+0x90/0xdc
+      do_loop_readv_writev+0x140/0x180
+      do_iter_write+0xe0/0x10c
+      vfs_writev+0x134/0x1cc
+      do_writev+0xbc/0x130
+      __arm64_sys_writev+0x58/0x8c
+      el0_svc_handler+0x170/0x240
+      el0_sync_handler+0x150/0x250
+      el0_sync+0x164/0x180
+
+ -> #3 (&(&port->lock)->rlock){-.-.}:
+      lock_acquire+0x320/0x360
+      _raw_spin_lock_irqsave+0x7c/0x9c
+      tty_port_tty_get+0x24/0x60
+      tty_port_default_wakeup+0x1c/0x3c
+      tty_port_tty_wakeup+0x34/0x40
+      uart_write_wakeup+0x28/0x44
+      pl011_tx_chars+0x1b8/0x270
+      pl011_start_tx+0x24/0x70
+      __uart_start+0x5c/0x68
+      uart_write+0x164/0x1c8
+      do_output_char+0x33c/0x348
+      n_tty_write+0x4bc/0x60c
+      tty_write+0x338/0x474
+      redirected_tty_write+0xc0/0xdc
+      do_loop_readv_writev+0x140/0x180
+      do_iter_write+0xe0/0x10c
+      vfs_writev+0x134/0x1cc
+      do_writev+0xbc/0x130
+      __arm64_sys_writev+0x58/0x8c
+      el0_svc_handler+0x170/0x240
+      el0_sync_handler+0x150/0x250
+      el0_sync+0x164/0x180
+
+ -> #2 (&port_lock_key){-.-.}:
+      lock_acquire+0x320/0x360
+      _raw_spin_lock+0x64/0x80
+      pl011_console_write+0xec/0x2cc
+      console_unlock+0x794/0x96c
+      vprintk_emit+0x260/0x31c
+      vprintk_default+0x54/0x7c
+      vprintk_func+0x218/0x254
+      printk+0x7c/0xa4
+      register_console+0x734/0x7b0
+      uart_add_one_port+0x734/0x834
+      pl011_register_port+0x6c/0xac
+      sbsa_uart_probe+0x234/0x2ec
+      platform_drv_probe+0xd4/0x124
+      really_probe+0x250/0x71c
+      driver_probe_device+0xb4/0x200
+      __device_attach_driver+0xd8/0x188
+      bus_for_each_drv+0xbc/0x110
+      __device_attach+0x120/0x220
+      device_initial_probe+0x20/0x2c
+      bus_probe_device+0x54/0x100
+      device_add+0xae8/0xc2c
+      platform_device_add+0x278/0x3b8
+      platform_device_register_full+0x238/0x2ac
+      acpi_create_platform_device+0x2dc/0x3a8
+      acpi_bus_attach+0x390/0x3cc
+      acpi_bus_attach+0x108/0x3cc
+      acpi_bus_attach+0x108/0x3cc
+      acpi_bus_attach+0x108/0x3cc
+      acpi_bus_scan+0x7c/0xb0
+      acpi_scan_init+0xe4/0x304
+      acpi_init+0x100/0x114
+      do_one_initcall+0x348/0x6a0
+      do_initcall_level+0x190/0x1fc
+      do_basic_setup+0x34/0x4c
+      kernel_init_freeable+0x19c/0x260
+      kernel_init+0x18/0x338
+      ret_from_fork+0x10/0x18
+
+ -> #1 (console_owner){-...}:
+      lock_acquire+0x320/0x360
+      console_lock_spinning_enable+0x6c/0x7c
+      console_unlock+0x4f8/0x96c
+      vprintk_emit+0x260/0x31c
+      vprintk_default+0x54/0x7c
+      vprintk_func+0x218/0x254
+      printk+0x7c/0xa4
+      get_random_u64+0x1c4/0x1dc
+      shuffle_pick_tail+0x40/0xac
+      __free_one_page+0x424/0x710
+      free_one_page+0x70/0x120
+      __free_pages_ok+0x61c/0xa94
+      __free_pages_core+0x1bc/0x294
+      memblock_free_pages+0x38/0x48
+      __free_pages_memory+0xcc/0xfc
+      __free_memory_core+0x70/0x78
+      free_low_memory_core_early+0x148/0x18c
+      memblock_free_all+0x18/0x54
+      mem_init+0xb4/0x17c
+      mm_init+0x14/0x38
+      start_kernel+0x19c/0x530
+
+ -> #0 (&(&zone->lock)->rlock){..-.}:
+      validate_chain+0xf6c/0x2e2c
+      __lock_acquire+0x868/0xc2c
+      lock_acquire+0x320/0x360
+      _raw_spin_lock+0x64/0x80
+      rmqueue+0x138/0x2050
+      get_page_from_freelist+0x474/0x688
+      __alloc_pages_nodemask+0x3b4/0x18dc
+      alloc_pages_current+0xd0/0xe0
+      alloc_slab_page+0x2b4/0x5e0
+      new_slab+0xc8/0x6bc
+      ___slab_alloc+0x3b8/0x640
+      kmem_cache_alloc+0x4b4/0x588
+      __debug_object_init+0x778/0x8b4
+      debug_object_init_on_stack+0x40/0x50
+      start_flush_work+0x16c/0x3f0
+      __flush_work+0xb8/0x124
+      flush_work+0x20/0x30
+      xlog_cil_force_lsn+0x88/0x204 [xfs]
+      xfs_log_force_lsn+0x128/0x1b8 [xfs]
+      xfs_file_fsync+0x3c4/0x488 [xfs]
+      vfs_fsync_range+0xb0/0xd0
+      generic_write_sync+0x80/0xa0 [xfs]
+      xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+      xfs_file_write_iter+0x1a0/0x218 [xfs]
+      __vfs_write+0x1cc/0x214
+      vfs_write+0x12c/0x1a4
+      ksys_write+0xb0/0x120
+      __arm64_sys_write+0x54/0x88
+      el0_svc_handler+0x170/0x240
+      el0_sync_handler+0x150/0x250
+      el0_sync+0x164/0x180
+
+      other info that might help us debug this:
+
+Chain exists of:
+  &(&zone->lock)->rlock --> &(&port->lock)->rlock --> &pool->lock/1
+
+Possible unsafe locking scenario:
+
+      CPU0                    CPU1
+      ----                    ----
+ lock(&pool->lock/1);
+                              lock(&(&port->lock)->rlock);
+                              lock(&pool->lock/1);
+ lock(&(&zone->lock)->rlock);
+
+               *** DEADLOCK ***
+
+4 locks held by doio/49441:
+#0: a0ff00886fc27408 (sb_writers#8){.+.+}, at: vfs_write+0x118/0x1a4
+#1: 8fff00080810dfe0 (&xfs_nondir_ilock_class){++++}, at:
+xfs_ilock+0x2a8/0x300 [xfs]
+#2: ffff9000129f2390 (rcu_read_lock){....}, at:
+rcu_lock_acquire+0x8/0x38
+#3: 60ff000822352818 (&pool->lock/1){-.-.}, at:
+start_flush_work+0xd8/0x3f0
+
+              stack backtrace:
+CPU: 48 PID: 49441 Comm: doio Tainted: G        W
+Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
+L50_5.13_1.11 06/18/2019
+Call trace:
+dump_backtrace+0x0/0x248
+show_stack+0x20/0x2c
+dump_stack+0xe8/0x150
+print_circular_bug+0x368/0x380
+check_noncircular+0x28c/0x294
+validate_chain+0xf6c/0x2e2c
+__lock_acquire+0x868/0xc2c
+lock_acquire+0x320/0x360
+_raw_spin_lock+0x64/0x80
+rmqueue+0x138/0x2050
+get_page_from_freelist+0x474/0x688
+__alloc_pages_nodemask+0x3b4/0x18dc
+alloc_pages_current+0xd0/0xe0
+alloc_slab_page+0x2b4/0x5e0
+new_slab+0xc8/0x6bc
+___slab_alloc+0x3b8/0x640
+kmem_cache_alloc+0x4b4/0x588
+__debug_object_init+0x778/0x8b4
+debug_object_init_on_stack+0x40/0x50
+start_flush_work+0x16c/0x3f0
+__flush_work+0xb8/0x124
+flush_work+0x20/0x30
+xlog_cil_force_lsn+0x88/0x204 [xfs]
+xfs_log_force_lsn+0x128/0x1b8 [xfs]
+xfs_file_fsync+0x3c4/0x488 [xfs]
+vfs_fsync_range+0xb0/0xd0
+generic_write_sync+0x80/0xa0 [xfs]
+xfs_file_buffered_aio_write+0x66c/0x6e4 [xfs]
+xfs_file_write_iter+0x1a0/0x218 [xfs]
+__vfs_write+0x1cc/0x214
+vfs_write+0x12c/0x1a4
+ksys_write+0xb0/0x120
+__arm64_sys_write+0x54/0x88
+el0_svc_handler+0x170/0x240
+el0_sync_handler+0x150/0x250
+el0_sync+0x164/0x180
+
+WARNING: possible circular locking dependency detected
+5.3.0-next-20190917 #8 Not tainted
+------------------------------------------------------
+test.sh/8653 is trying to acquire lock:
+ffffffff865a4460 (console_owner){-.-.}, at:
+console_unlock+0x207/0x750
+
+but task is already holding lock:
+ffff88883fff3c58 (&(&zone->lock)->rlock){-.-.}, at:
+__offline_isolated_pages+0x179/0x3e0
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&(&zone->lock)->rlock){-.-.}:
+       __lock_acquire+0x5b3/0xb40
+       lock_acquire+0x126/0x280
+       _raw_spin_lock+0x2f/0x40
+       rmqueue_bulk.constprop.21+0xb6/0x1160
+       get_page_from_freelist+0x898/0x22c0
+       __alloc_pages_nodemask+0x2f3/0x1cd0
+       alloc_pages_current+0x9c/0x110
+       allocate_slab+0x4c6/0x19c0
+       new_slab+0x46/0x70
+       ___slab_alloc+0x58b/0x960
+       __slab_alloc+0x43/0x70
+       __kmalloc+0x3ad/0x4b0
+       __tty_buffer_request_room+0x100/0x250
+       tty_insert_flip_string_fixed_flag+0x67/0x110
+       pty_write+0xa2/0xf0
+       n_tty_write+0x36b/0x7b0
+       tty_write+0x284/0x4c0
+       __vfs_write+0x50/0xa0
+       vfs_write+0x105/0x290
+       redirected_tty_write+0x6a/0xc0
+       do_iter_write+0x248/0x2a0
+       vfs_writev+0x106/0x1e0
+       do_writev+0xd4/0x180
+       __x64_sys_writev+0x45/0x50
+       do_syscall_64+0xcc/0x76c
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #2 (&(&port->lock)->rlock){-.-.}:
+       __lock_acquire+0x5b3/0xb40
+       lock_acquire+0x126/0x280
+       _raw_spin_lock_irqsave+0x3a/0x50
+       tty_port_tty_get+0x20/0x60
+       tty_port_default_wakeup+0xf/0x30
+       tty_port_tty_wakeup+0x39/0x40
+       uart_write_wakeup+0x2a/0x40
+       serial8250_tx_chars+0x22e/0x440
+       serial8250_handle_irq.part.8+0x14a/0x170
+       serial8250_default_handle_irq+0x5c/0x90
+       serial8250_interrupt+0xa6/0x130
+       __handle_irq_event_percpu+0x78/0x4f0
+       handle_irq_event_percpu+0x70/0x100
+       handle_irq_event+0x5a/0x8b
+       handle_edge_irq+0x117/0x370
+       do_IRQ+0x9e/0x1e0
+       ret_from_intr+0x0/0x2a
+       cpuidle_enter_state+0x156/0x8e0
+       cpuidle_enter+0x41/0x70
+       call_cpuidle+0x5e/0x90
+       do_idle+0x333/0x370
+       cpu_startup_entry+0x1d/0x1f
+       start_secondary+0x290/0x330
+       secondary_startup_64+0xb6/0xc0
+
+-> #1 (&port_lock_key){-.-.}:
+       __lock_acquire+0x5b3/0xb40
+       lock_acquire+0x126/0x280
+       _raw_spin_lock_irqsave+0x3a/0x50
+       serial8250_console_write+0x3e4/0x450
+       univ8250_console_write+0x4b/0x60
+       console_unlock+0x501/0x750
+       vprintk_emit+0x10d/0x340
+       vprintk_default+0x1f/0x30
+       vprintk_func+0x44/0xd4
+       printk+0x9f/0xc5
+
+-> #0 (console_owner){-.-.}:
+       check_prev_add+0x107/0xea0
+       validate_chain+0x8fc/0x1200
+       __lock_acquire+0x5b3/0xb40
+       lock_acquire+0x126/0x280
+       console_unlock+0x269/0x750
+       vprintk_emit+0x10d/0x340
+       vprintk_default+0x1f/0x30
+       vprintk_func+0x44/0xd4
+       printk+0x9f/0xc5
+       __offline_isolated_pages.cold.52+0x2f/0x30a
+       offline_isolated_pages_cb+0x17/0x30
+       walk_system_ram_range+0xda/0x160
+       __offline_pages+0x79c/0xa10
+       offline_pages+0x11/0x20
+       memory_subsys_offline+0x7e/0xc0
+       device_offline+0xd5/0x110
+       state_store+0xc6/0xe0
+       dev_attr_store+0x3f/0x60
+       sysfs_kf_write+0x89/0xb0
+       kernfs_fop_write+0x188/0x240
+       __vfs_write+0x50/0xa0
+       vfs_write+0x105/0x290
+       ksys_write+0xc6/0x160
+       __x64_sys_write+0x43/0x50
+       do_syscall_64+0xcc/0x76c
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+  console_owner --> &(&port->lock)->rlock --> &(&zone->lock)-
+
+>rlock
+
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&(&zone->lock)->rlock);
+                               lock(&(&port->lock)->rlock);
+                               lock(&(&zone->lock)->rlock);
+  lock(console_owner);
+
+ *** DEADLOCK ***
+
+9 locks held by test.sh/8653:
+ #0: ffff88839ba7d408 (sb_writers#4){.+.+}, at:
+vfs_write+0x25f/0x290
+ #1: ffff888277618880 (&of->mutex){+.+.}, at:
+kernfs_fop_write+0x128/0x240
+ #2: ffff8898131fc218 (kn->count#115){.+.+}, at:
+kernfs_fop_write+0x138/0x240
+ #3: ffffffff86962a80 (device_hotplug_lock){+.+.}, at:
+lock_device_hotplug_sysfs+0x16/0x50
+ #4: ffff8884374f4990 (&dev->mutex){....}, at:
+device_offline+0x70/0x110
+ #5: ffffffff86515250 (cpu_hotplug_lock.rw_sem){++++}, at:
+__offline_pages+0xbf/0xa10
+ #6: ffffffff867405f0 (mem_hotplug_lock.rw_sem){++++}, at:
+percpu_down_write+0x87/0x2f0
+ #7: ffff88883fff3c58 (&(&zone->lock)->rlock){-.-.}, at:
+__offline_isolated_pages+0x179/0x3e0
+ #8: ffffffff865a4920 (console_lock){+.+.}, at:
+vprintk_emit+0x100/0x340
+
+stack backtrace:
+CPU: 1 PID: 8653 Comm: test.sh Not tainted 5.3.0-next-20190917 #8
+Hardware name: HPE ProLiant DL560 Gen10/ProLiant DL560 Gen10,
+BIOS U34 05/21/2019
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
-  snd_timer_resolution+0xf1/0x110 sound/core/timer.c:441
-  snd_seq_info_timer_read+0x95/0x2f1 sound/core/seq/seq_timer.c:480
-  snd_info_seq_show+0xcb/0x120 sound/core/info.c:363
-  seq_read+0x4ca/0x1170 fs/seq_file.c:229
-  proc_reg_read+0x1fc/0x2c0 fs/proc/inode.c:223
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_loop_readv_writev fs/read_write.c:701 [inline]
-  do_iter_read+0x4a4/0x660 fs/read_write.c:935
-  compat_readv+0x187/0x1f0 fs/read_write.c:1186
-  do_compat_preadv64+0x190/0x1c0 fs/read_write.c:1235
-  __do_compat_sys_preadv fs/read_write.c:1255 [inline]
-  __se_compat_sys_preadv fs/read_write.c:1249 [inline]
-  __ia32_compat_sys_preadv+0xc7/0x140 fs/read_write.c:1249
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f6da39
-Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
-24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f5d690cc EFLAGS: 00000296 ORIG_RAX: 000000000000014d
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000200017c0
-RDX: 00000000000003da RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 18631:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:670 [inline]
-  snd_timer_instance_new+0x4a/0x300 sound/core/timer.c:96
-  snd_seq_timer_open+0x1c0/0x590 sound/core/seq/seq_timer.c:275
-  queue_use+0xf1/0x270 sound/core/seq/seq_queue.c:489
-  snd_seq_queue_alloc+0x2c5/0x4d0 sound/core/seq/seq_queue.c:176
-  snd_seq_ioctl_create_queue+0xb0/0x330 sound/core/seq/seq_clientmgr.c:1548
-  snd_seq_kernel_client_ctl+0xf8/0x140 sound/core/seq/seq_clientmgr.c:2353
-  alloc_seq_queue.isra.0+0xdc/0x180 sound/core/seq/oss/seq_oss_init.c:357
-  snd_seq_oss_open+0x2ff/0x960 sound/core/seq/oss/seq_oss_init.c:215
-  odev_open+0x70/0x90 sound/core/seq/oss/seq_oss.c:125
-  soundcore_open+0x453/0x610 sound/sound_core.c:593
-  chrdev_open+0x245/0x6b0 fs/char_dev.c:414
-  do_dentry_open+0x4e6/0x1380 fs/open.c:797
-  vfs_open+0xa0/0xd0 fs/open.c:914
-  do_last fs/namei.c:3420 [inline]
-  path_openat+0x10df/0x4500 fs/namei.c:3537
-  do_filp_open+0x1a1/0x280 fs/namei.c:3567
-  do_sys_open+0x3fe/0x5d0 fs/open.c:1097
-  __do_compat_sys_openat fs/open.c:1143 [inline]
-  __se_compat_sys_openat fs/open.c:1141 [inline]
-  __ia32_compat_sys_openat+0x98/0xf0 fs/open.c:1141
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-Freed by task 18630:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  snd_timer_instance_free sound/core/timer.c:120 [inline]
-  snd_timer_instance_free+0x7c/0xa0 sound/core/timer.c:114
-  snd_seq_timer_close+0x99/0xe0 sound/core/seq/seq_timer.c:319
-  queue_delete+0x52/0xb0 sound/core/seq/seq_queue.c:134
-  snd_seq_queue_delete+0x4e/0x70 sound/core/seq/seq_queue.c:196
-  snd_seq_ioctl_delete_queue+0x6a/0x90 sound/core/seq/seq_clientmgr.c:1570
-  snd_seq_kernel_client_ctl+0xf8/0x140 sound/core/seq/seq_clientmgr.c:2353
-  delete_seq_queue.part.0+0xb6/0x120 sound/core/seq/oss/seq_oss_init.c:376
-  delete_seq_queue sound/core/seq/oss/seq_oss_init.c:372 [inline]
-  snd_seq_oss_release+0x116/0x150 sound/core/seq/oss/seq_oss_init.c:421
-  odev_release+0x54/0x80 sound/core/seq/oss/seq_oss.c:140
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_32_irqs_on arch/x86/entry/common.c:352 [inline]
-  do_fast_syscall_32+0xbbd/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-The buggy address belongs to the object at ffff888094155800
-  which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 0 bytes inside of
-  256-byte region [ffff888094155800, ffff888094155900)
-The buggy address belongs to the page:
-page:ffffea0002505540 refcount:1 mapcount:0 mapping:ffff8880aa4008c0  
-index:0x0
-raw: 00fffe0000000200 ffffea00024df348 ffffea00024af508 ffff8880aa4008c0
-raw: 0000000000000000 ffff888094155000 0000000100000008 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff888094155700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff888094155780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff888094155800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff888094155880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff888094155900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+ dump_stack+0x86/0xca
+ print_circular_bug.cold.31+0x243/0x26e
+ check_noncircular+0x29e/0x2e0
+ check_prev_add+0x107/0xea0
+ validate_chain+0x8fc/0x1200
+ __lock_acquire+0x5b3/0xb40
+ lock_acquire+0x126/0x280
+ console_unlock+0x269/0x750
+ vprintk_emit+0x10d/0x340
+ vprintk_default+0x1f/0x30
+ vprintk_func+0x44/0xd4
+ printk+0x9f/0xc5
+ __offline_isolated_pages.cold.52+0x2f/0x30a
+ offline_isolated_pages_cb+0x17/0x30
+ walk_system_ram_range+0xda/0x160
+ __offline_pages+0x79c/0xa10
+ offline_pages+0x11/0x20
+ memory_subsys_offline+0x7e/0xc0
+ device_offline+0xd5/0x110
+ state_store+0xc6/0xe0
+ dev_attr_store+0x3f/0x60
+ sysfs_kf_write+0x89/0xb0
+ kernfs_fop_write+0x188/0x240
+ __vfs_write+0x50/0xa0
+ vfs_write+0x105/0x290
+ ksys_write+0xc6/0x160
+ __x64_sys_write+0x43/0x50
+ do_syscall_64+0xcc/0x76c
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> I suggest to disable lockdep around the safe allocation in the console
+> initialization code. Then we will see if there are other locations
+> that trigger this lockdep warning. It is trivial and will not
+> complicate the code because of false positives.
+>=20
+>=20
+>> I have been spent the last a few months to research this, so
+>> I don=E2=80=99t feel like to do this again.
+>>=20
+>> https://lore.kernel.org/linux-mm/1570633715.5937.10.camel@lca.pw/
+>=20
+> Have you tried to disable lockdep around the problematic allocation?
+>=20
+> Have you seen other lockdep reports caused by exactly this printk()
+> in the allocator code?
+>=20
+> My big problem with this patch is that the commit message does not
+> contain any lockdep report. It will complicate removing the hack
+> when it is not longer needed. Nobody will know what was the exact
+> problem and if it is safe to get removed. I believe that printk()
+> will offload console handling rather sooner than later and this
+> extra logic will not be necessary.
+>=20
+> Best Regards,
+> Petr
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
