@@ -2,117 +2,100 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A903C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C666C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEFE207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C682467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579109061;
+	bh=b+aRmNZSG+rZiH8nNM8CW6uxu+f2JgSIa4gTfT3WMDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=enyV5eRFN9P/ncyLFELQSQwNaU0MQLORebguKCdjMfDv7ENXMonV/smsPXfEDgbmM
+	 ZQvtJRNcaqZGubttCaVp6Db00WSPSnOWE35uB6pAnbKCyoKhNH9n6lLtzw2HqPBLv7
+	 tnTGAbhK5YmEemIKh6+nrIavRH+eRLxaEzyLyUAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAORYG (ORCPT
+        id S1729083AbgAORYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:24:06 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37144 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAORYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:24:06 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1irmOg-0007GP-4Z; Wed, 15 Jan 2020 17:24:02 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     christian.brauner@ubuntu.com
-Cc:     eparis@redhat.com, jannh@google.com, linux-kernel@vger.kernel.org,
-        oleg@redhat.com, shallyn@cisco.com, stable@vger.kernel.org
-Subject: [PATCH v2] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
-Date:   Wed, 15 Jan 2020 18:23:55 +0100
-Message-Id: <20200115172355.19209-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200115171736.16994-1-christian.brauner@ubuntu.com>
-References: <20200115171736.16994-1-christian.brauner@ubuntu.com>
+        Wed, 15 Jan 2020 12:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgAORYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:24:20 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77CB207FF;
+        Wed, 15 Jan 2020 17:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579109059;
+        bh=b+aRmNZSG+rZiH8nNM8CW6uxu+f2JgSIa4gTfT3WMDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wicVpOCcLbMKoUychULSEd3NuKHeuWqbnKMMcxDVCvgzlbz3fTIH1nrV+7Kp+RJo8
+         qvIhW61lPlz6rFGByKDshXIpidYU7Uv5kfAMIlu2vy6e4r8gkAODwJd7HF1/a/4m/U
+         Aadtgd4vG0UgbcRavBsgdulm/ESRdgJ0qA4fMCb8=
+Date:   Wed, 15 Jan 2020 18:24:17 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v2 06/10] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200115172417.GC4127163@kroah.com>
+References: <20200115171333.28811-1-kpsingh@chromium.org>
+ <20200115171333.28811-7-kpsingh@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115171333.28811-7-kpsingh@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-introduced the ability to opt out of audit messages for accesses to
-various proc files since they are not violations of policy.
-While doing so it somehow switched the check from ns_capable() to
-has_ns_capability{_noaudit}(). That means it switched from checking the
-subjective credentials of the task to using the objective credentials. I
-couldn't find the original lkml thread and so I don't know why this switch
-was done. But it seems wrong since ptrace_has_cap() is currently only used
-in ptrace_may_access(). And it's used to check whether the calling task
-(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-to operate on the target task (object). According to the cred.h comments
-this would mean the subjective credentials of the calling task need to be
-used.
-This switches it to use security_capable() because we only call
-ptrace_has_cap() in ptrace_may_access() and in there we already have a
-stable reference to the calling tasks creds under cred_guard_mutex so
-there's no need to go through another series of dereferences and rcu
-locking done in ns_capable{_noaudit}().
+On Wed, Jan 15, 2020 at 06:13:29PM +0100, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> JITed BPF programs are used by the BPF LSM as dynamically allocated
+> security hooks. arch_bpf_prepare_trampoline handles the
+> arch_bpf_prepare_trampoline generates code to handle conversion of the
+> signature of the hook to the BPF context and allows the BPF program to
+> be called directly as a C function.
+> 
+> The following permissions are required to attach a program to a hook:
+> 
+> - CAP_SYS_ADMIN to load the program
+> - CAP_MAC_ADMIN to attach it (i.e. to update the security policy)
 
-Cc: Serge Hallyn <shallyn@cisco.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric Paris <eparis@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- kernel/ptrace.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+You forgot to list "GPL-compatible license" here :)
 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index cb9ddcc08119..d146133e97f1 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -264,12 +264,13 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
- 	return ret;
- }
- 
--static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-+static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-+			  unsigned int mode)
- {
- 	if (mode & PTRACE_MODE_NOAUDIT)
--		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
- 	else
--		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
- }
- 
- /* Returns 0 on success, -errno on denial. */
-@@ -321,7 +322,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	    gid_eq(caller_gid, tcred->sgid) &&
- 	    gid_eq(caller_gid, tcred->gid))
- 		goto ok;
--	if (ptrace_has_cap(tcred->user_ns, mode))
-+	if (ptrace_has_cap(cred, tcred->user_ns, mode))
- 		goto ok;
- 	rcu_read_unlock();
- 	return -EPERM;
-@@ -340,7 +341,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
--	     !ptrace_has_cap(mm->user_ns, mode)))
-+	     !ptrace_has_cap(cred, mm->user_ns, mode)))
- 	    return -EPERM;
- 
- 	return security_ptrace_access_check(task, mode);
+Anyway, looks good to me:
 
-base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
--- 
-2.25.0
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
