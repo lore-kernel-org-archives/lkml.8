@@ -2,100 +2,89 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC1DC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B24C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1CC20728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/z2KUJ/"
+	by mail.kernel.org (Postfix) with ESMTP id D7AD224679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgAOSqJ (ORCPT
+        id S1729306AbgAOSqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:46:09 -0500
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:41063 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgAOSqH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:46:07 -0500
-Received: by mail-ed1-f54.google.com with SMTP id c26so16452348eds.8;
-        Wed, 15 Jan 2020 10:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=a0rRgPi8qpuxt+ikgqB/GgY+ZCw2HyoB33EFPqTmGV4=;
-        b=X/z2KUJ/PVOccJqrqDgc8Ho50bVKHqCmWXiyKWMO0GB8bEVtnr57Rus0FXR0qp4skq
-         UVfAY7ua5eLk5nyP2gHgiy7HzXQeA2n8WBB+f4h7bGxYd10PhSv10EMMwORupjL6bTyM
-         32wRNV1rWftXKtBg9nM7fcqG72tBetWrR2YQVo/7OLOrhV3ul0nNG503lTuw1F1lk2Ty
-         91CmxxcbAfhKWOBY66XIhS6exFJovVg3rSJbszhr1NYVCNBBunWdApIkgIY/L8XtjX1U
-         Ggcdrjf1gYxQ0Uh8xy0JWjpg4YrAO9gOH4DVLjwBocof5Pxqvalb8oqVeUXIS2GRS+OZ
-         Hcgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=a0rRgPi8qpuxt+ikgqB/GgY+ZCw2HyoB33EFPqTmGV4=;
-        b=TTS5fDcgOGG9uRONQV1GptXQ/AqD8VUM/ha/NygYKK0DkJfGKGgAL8/rHaiUW7m2t2
-         YLRLuPaBwK1LT2W+lNBuog3fK6i3l1Q2FDfXEYxPcSCmcXsYz2Z8c+tbrzss4JVZCVlA
-         YfcX19kvtCwuXaAm80z6mQebgT80bVgrh+Mf4CveoVa0EZ16M+pBY2Nvvc3Mx92voeoE
-         JTKaU6qCPQ/tQ3rAladTr+8DYGLKbGL9NkaCH+y74xN2E3vYvoSNMLpl6X62leUMSnW/
-         Y6yji9q753HPMepi+2QnbeCcmppagGKVomam7QZsug9I2KePYRPdzgzr5zj3WcMz3ZML
-         4ZDA==
-X-Gm-Message-State: APjAAAVW434GXR3GPnolOFw/u2DTqzBuR7StBwKKowNgZfww0oDXkLTc
-        cbLUW2154FDeEERznSt6bscd83BeGhJTFkuu8mzg6xhr
-X-Google-Smtp-Source: APXvYqyTrgWJ1LIzmTrqXapfgFa2R1OYqAfeJV6bZihFAyHMRXUZ3QYJpptivIqDltyoLS2yqDeHHxJCHpHlURPmTuI=
-X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr29845299ejb.241.1579113965153;
- Wed, 15 Jan 2020 10:46:05 -0800 (PST)
+        Wed, 15 Jan 2020 13:46:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:41216 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729019AbgAOSqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:46:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04A51328;
+        Wed, 15 Jan 2020 10:46:12 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1AF53F6C4;
+        Wed, 15 Jan 2020 10:46:09 -0800 (PST)
+Subject: Re: [PATCH 0/2] Add EDAC support for Kryo CPU core caches
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, tsoni@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, psodagud@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org, baicar@os.amperecomputing.com
+References: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <0769b7cb-4e01-eb83-8ad4-b29b4fafafd4@arm.com>
+Date:   Wed, 15 Jan 2020 18:46:07 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Wed, 15 Jan 2020 10:46:04
- -0800 (PST)
-In-Reply-To: <20200115021545.GD11244@42.do-not-panic.com>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <20200113154739.GB11244@42.do-not-panic.com> <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
- <20200115021545.GD11244@42.do-not-panic.com>
-From:   Jari Ruusu <jari.ruusu@gmail.com>
-Date:   Wed, 15 Jan 2020 20:46:04 +0200
-Message-ID: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
-Subject: Re: Fix built-in early-load Intel microcode alignment
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20, Luis Chamberlain <mcgrof@kernel.org> wrote:
-> On Mon, Jan 13, 2020 at 09:58:25PM +0200, Jari Ruusu wrote:
->> Before that 16-byte alignment patch was applied, my only one
->> microcode built-in BLOB was "accidentally" 16-byte aligned.
->
-> How did it accidentially get 16-byte aligned?
+Hi Sai,
 
-Old code aligned it to 8-bytes.
-There is 50/50-chance of it also being 16-byte aligned.
-So it ended up being both 8-byte and 16-byte aligned.
+(CC: +Tyler)
 
-> Also, how do you *know* something is broken right now?
+On 05/12/2019 09:52, Sai Prakash Ranjan wrote:
+> This series implements EDAC support for error reporting on
+> Kryo{3,4}XX CPU caches L1,L2, L3-SCU. All the cores(big.LITTLE)
+> in Kryo{3,4}XX CPUs implement RAS extensions and use interrupt
+> based ECC mechanism to report errors.
+> 
+> This series has been tested on SC7180, SDM845, SM8150 SoCs with
+> Kryo{3,4}XX CPU cores based on ARM Cortex-A55, Cortex-A75 and
+> Cortex-A76.
+> 
+> This implementation is platform specific in contrast to the
+> patch posted last time for generic error reporting on arm cortex
+> implementations with RAS extensions by Kyle Yan.
+>  - https://patchwork.kernel.org/patch/10161955/
 
-I haven't spotted brokenness in Linux microcode loader other
-than that small alignment issue.
+I think that series was dropped because it was too soc-specific and overlaps with the v8.2
+kernel first support. That series was superseded by:
+lore.kernel.org/r/1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com
 
-However, I can confirm that there are 2 microcode updates newer
-than what my laptop computer's latest BIOS includes. Both newer
-ones (20191115 and 20191112) are unstable on my laptop computer
-i5-7200U (fam 6 model 142 step 9 pf 0x80). Hard lockups with both
-of them. Back to BIOS microcode for now.
+Can you work with Tyler on a combined series? The combined support may need to look quite
+different. (DT and big/little being the obvious differences).
 
--- 
-Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
+I'm afraid this is the tip of the kernel-first-RAS iceberg.
+
+
+Thanks,
+
+James
