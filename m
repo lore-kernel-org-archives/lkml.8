@@ -2,140 +2,246 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15803C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90D3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D306724671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53B722522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="hSm4uFUB"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z23W7ASG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAOMeZ (ORCPT
+        id S1729012AbgAOMe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:34:25 -0500
-Received: from mail-eopbgr40123.outbound.protection.outlook.com ([40.107.4.123]:20855
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbgAOMeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:34:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lwSw2GzXc3ybvGT4L30/dM990bjk89VBZyUnZ0gVAIiBb3it3VPqBJFaLAngE60KbchkskaiH1CSyOwyHsdt94ApXql9M1bE2ypijexYvvn3xdJnLpI7GdMCWuTybdFbVUwqeH6DE0AcDma34ZBEo5zHOY7XKW97gE88qI9Fp9NYEAb5dIWSU2zKeQ1j1dRbYA8pJqXnH2NFZSZRxfngjg+Ckc7CUVQAl6vjZJAasqbCGRKS++kyfbr5vU4VYeKHWoNfYozeWKxg1mbqVx/mdISv8bFzMkOZ7BzkQ0wEsfAubofPHwl4EAApPcEpsm2cJWS+sEo16LOkYRs8VHIEKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9M8wkwM8VH7vF+foXDJpeEMSeZOaQ5pZQMmK4tguDdU=;
- b=j4aciQCNI+2QDASdPoV1Cb//HFDn9zWOMPz0AnCGPy3uc4kJGVLh+sfgHrQgoSQld7/qisxM4piwHh8jKImU10dBLMqhAmqoZLxnTMfle/JePtlWFV2iP5S/t4F5Z4AyW3g7oCFhc1BOeyZfABTbfaoXV+YM+59i3o7BKNMSf1SObPIhWgNgLOs+VakymUgQ+CUuChoR3s/A55UMbEhxyBr4p1agHV9M9E2rGUOlSQ+jKiaBCTzWTtx/4+fWqCiszEC/rlryV14GhWhGgigwgWqmZb3NknSSoJzvp/RrxRzXgVe3pQLPL6GKMPUAt4ZY0q10zYdSkgvP++BmXjwzFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9M8wkwM8VH7vF+foXDJpeEMSeZOaQ5pZQMmK4tguDdU=;
- b=hSm4uFUBfg72IWe5g8QHlk3/4lSxqvudU92XbsAViY5aQzuGLouGkpo3KL09k7HTnV8StiGM34D8gXPWc5K3m6VKapQVJ6+jDQK5BJrmK4eey+t0DFUfzzebCBaR2cdJahYb396Har+/yKLKbIGRZz+fSkEj6CU6xTe+9tPqN1c=
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- AM6SPR01MB0060.eurprd05.prod.outlook.com (10.255.22.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Wed, 15 Jan 2020 12:34:19 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2623.018; Wed, 15 Jan 2020
- 12:34:19 +0000
-Received: from localhost (194.105.145.90) by PR0P264CA0039.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 12:34:19 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: [PATCH 2/3] drm/panel: pass video modes bus_flags
-Thread-Topic: [PATCH 2/3] drm/panel: pass video modes bus_flags
-Thread-Index: AQHVy6AbStXpDk/5LkG4OWGT5cIsUw==
-Date:   Wed, 15 Jan 2020 12:34:19 +0000
-Message-ID: <20200115123401.2264293-3-oleksandr.suvorov@toradex.com>
-References: <20200115123401.2264293-1-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20200115123401.2264293-1-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0039.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1::27) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.1
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0db77f6-6ac8-41bd-6b87-08d799b73ddf
-x-ms-traffictypediagnostic: AM6SPR01MB0060:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6SPR01MB006063733453419C03F9D662F9370@AM6SPR01MB0060.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 02830F0362
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(136003)(396003)(346002)(376002)(366004)(189003)(199004)(54906003)(52116002)(6496006)(6916009)(81156014)(316002)(66556008)(64756008)(8676002)(66446008)(66946007)(86362001)(71200400001)(44832011)(66476007)(4326008)(36756003)(16526019)(26005)(478600001)(2906002)(5660300002)(4744005)(81166006)(8936002)(186003)(1076003)(6486002)(956004)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6SPR01MB0060;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JQlaoe3xcYC7yJuVww+w4OOugBXnimIcen+Ntbt4Z73cp503z2EEhEXh20+mQJL1VuINPo2PG007cxGxDzpnJ7aQEQq/rm6PWz93xQx29jQxf316BnJaQaFryacyjMYSGRBJldBcaxavfydJ0JT8ty7dUJkxsH6tWCQdaUu9TnPujg5LiQxWbKuY2dNI/b23BSnqc0Qz2ywTPdWjHYO7vAK/vAqufmRfsCscQ4cyd05XZaX4mkxXTg1Uqil5Xq/iJ7u0FYjBbyi8Ca57Mbg0vINwHFxngm1aUX4VmULEewbUiXjLEY5wcu31Kvs/WO69SA7QygqABnh6Ix4QJWIsIfNlS8DNt0TKXUdoQAyvebwvc0+PAOIotXesWoF3Y+IKJXDJ1VmJp2mZVed/cqbnGhPEoaBrWcW/3XsCl06FTdipO8a0qkGcTJCmrs4GOZ1W
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 Jan 2020 07:34:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46000 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAOMe2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:34:28 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00FCYQxF082837;
+        Wed, 15 Jan 2020 06:34:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579091666;
+        bh=sMlhyiE8VEkpNFwxItSFOijYYslhkKkXrTwP/fEjClM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z23W7ASGR+0kPOQfFyW9AfXTN5QobP4jZQSQCuuK+4iULyyalGfNXQnrTquddFjxl
+         vDn2LQH8OubwIoF413MCd2fP4Z6LOtnGwtdKQBTmGcMH/chK+3HNWxJb35msD4vV8E
+         vQoGjyDqCXrB2vNtSvsW3Ph4JQk/fdwhijKj5RDk=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00FCYQVb013611
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jan 2020 06:34:26 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
+ Jan 2020 06:34:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 15 Jan 2020 06:34:25 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00FCYNLK112002;
+        Wed, 15 Jan 2020 06:34:24 -0600
+Subject: Re: [PATCHv4 07/14] remoteproc/omap: Add support for DRA7xx remote
+ processors
+To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200102131845.12992-1-t-kristo@ti.com>
+ <20200102131845.12992-8-t-kristo@ti.com>
+ <7ff029a9-20bd-2fec-9bcf-f97cd1bd5f85@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <065b32a7-f346-e262-2f03-9ad5e2a462c8@ti.com>
+Date:   Wed, 15 Jan 2020 14:34:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0db77f6-6ac8-41bd-6b87-08d799b73ddf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 12:34:19.3920
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cH1LEE6+vlaWGJJGuWGP3ZQ31KrDuLNNZWYAStcGtA1chnoE8sTPcFvHtUApEtsJKpBEUISQSNstYbO/EwOoO+QmkXmE8FcSZ1VLIwYXHcY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6SPR01MB0060
+In-Reply-To: <7ff029a9-20bd-2fec-9bcf-f97cd1bd5f85@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+On 08/01/2020 21:39, Suman Anna wrote:
+> Hi Tero,
+> 
+> On 1/2/20 7:18 AM, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> DRA7xx/AM57xx SoCs have two IPU and up to two DSP processor subsystems
+>> for offloading different computation algorithms. The IPU processor
+>> subsystem contains dual-core ARM Cortex-M4 processors, and is very
+>> similar to those on OMAP5. The DSP processor subsystem is based on
+>> the TI's standard TMS320C66x DSP CorePac core.
+>>
+>> Support has been added to the OMAP remoteproc driver through new
+>> DRA7xx specific compatibles for properly probing and booting all
+>> the different processor subsystem instances on DRA7xx/AM57xx
+>> SoCs - IPU1, IPU2, DSP1 & DSP2. A build dependency with SOC_DRA7XX
+>> is added to enable the driver to be built in DRA7xx-only configuration.
+>>
+>> The DSP boot address programming needed enhancement for DRA7xx as the
+>> boot register fields are different on DRA7 compared to OMAP4 and OMAP5
+>> SoCs. The register on DRA7xx contains additional fields within the
+>> register and the boot address bit-field is right-shifted by 10 bits.
+>> The internal memory parsing logic has also been updated to compute
+>> the device addresses for the L2 RAM for DSP devices using relative
+>> addressing logic, and to parse two additional RAMs at L1 level - L1P
+>> and L1D. This allows the remoteproc driver to support loading into
+>> these regions for a small subset of firmware images requiring as
+>> such. The most common usage would be to use the L1 programmable
+>> RAMs as L1 Caches.
+>>
+>> The firmware lookup logic also has to be adjusted for DRA7xx as
+>> there are (can be) more than one instance of both the IPU and DSP
+>> remote processors for the first time in OMAP4+ SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: moved address translation quirks to pdata]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>> v4:
+>>    - data format change due to device data changes to mem layout
+>>
+>>   drivers/remoteproc/Kconfig           |  2 +-
+>>   drivers/remoteproc/omap_remoteproc.c | 38 +++++++++++++++++++++++++++-
+>>   2 files changed, 38 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index 94afdde4bc9f..d6450d7fcf92 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -25,7 +25,7 @@ config IMX_REMOTEPROC
+>>   
+>>   config OMAP_REMOTEPROC
+>>   	tristate "OMAP remoteproc support"
+>> -	depends on ARCH_OMAP4 || SOC_OMAP5
+>> +	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+>>   	depends on OMAP_IOMMU
+>>   	select MAILBOX
+>>   	select OMAP2PLUS_MBOX
+>> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+>> index 8a6dd742a8b1..9140c528c416 100644
+>> --- a/drivers/remoteproc/omap_remoteproc.c
+>> +++ b/drivers/remoteproc/omap_remoteproc.c
+>> @@ -34,10 +34,13 @@
+>>    * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
+>>    * @syscon: regmap handle for the system control configuration module
+>>    * @boot_reg: boot register offset within the @syscon regmap
+>> + * @boot_reg_shift: bit-field shift required for the boot address value in
+>> + *		    @boot_reg
+>>    */
+>>   struct omap_rproc_boot_data {
+>>   	struct regmap *syscon;
+>>   	unsigned int boot_reg;
+>> +	unsigned int boot_reg_shift;
+>>   };
+>>   
+>>   /**
+>> @@ -159,6 +162,8 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>>   	struct omap_rproc *oproc = rproc->priv;
+>>   	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>>   	u32 offset = bdata->boot_reg;
+>> +	u32 value;
+>> +	u32 mask;
+>>   
+>>   	if (rproc->bootaddr & (SZ_1K - 1)) {
+>>   		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
+>> @@ -166,7 +171,10 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+>> +	value = rproc->bootaddr >> bdata->boot_reg_shift;
+>> +	mask = ~(SZ_1K - 1) >> bdata->boot_reg_shift;
+>> +
+>> +	regmap_update_bits(bdata->syscon, offset, mask, value);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -296,6 +304,13 @@ static const struct omap_rproc_mem_data ipu_mems[] = {
+>>   	{ },
+>>   };
+>>   
+>> +static const struct omap_rproc_mem_data dra7_dsp_mems[] = {
+>> +	{ .name = "l2ram", .dev_addr = 0x800000 },
+>> +	{ .name = "l1pram", .dev_addr = 0xe00000 },
+>> +	{ .name = "l1dram", .dev_addr = 0xf00000 },
+>> +	{ },
+>> +};
+>> +
+>>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>>   	.device_name	= "dsp",
+>>   };
+>> @@ -314,6 +329,16 @@ static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>>   	.mems		= ipu_mems,
+>>   };
+>>   
+>> +static const struct omap_rproc_dev_data dra7_dsp_dev_data = {
+>> +	.device_name	= "dsp",
+>> +	.mems		= dra7_dsp_mems,
+>> +};
+>> +
+>> +static const struct omap_rproc_dev_data dra7_ipu_dev_data = {
+>> +	.device_name	= "ipu",
+>> +	.mems		= ipu_mems,
+>> +};
+>> +
+>>   static const struct of_device_id omap_rproc_of_match[] = {
+>>   	{
+>>   		.compatible     = "ti,omap4-dsp",
+>> @@ -331,6 +356,14 @@ static const struct of_device_id omap_rproc_of_match[] = {
+>>   		.compatible     = "ti,omap5-ipu",
+>>   		.data           = &omap5_ipu_dev_data,
+>>   	},
+>> +	{
+>> +		.compatible     = "ti,dra7-dsp",
+>> +		.data           = &dra7_dsp_dev_data,
+>> +	},
+>> +	{
+>> +		.compatible     = "ti,dra7-ipu",
+>> +		.data           = &dra7_ipu_dev_data,
+>> +	},
+>>   	{
+>>   		/* end */
+>>   	},
+>> @@ -383,6 +416,9 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> +	of_property_read_u32(np, "ti,bootreg-shift",
+>> +			     &oproc->boot_data->boot_reg_shift);
+> 
+> Missing error checks, guess you will have to change this anyway when you
+> address Rob's comments.
 
-Make sure that the bus_flags parsed from the display timings are
-passed to the connector display info.
+This one is actually intentional. The only expected failure is missing 
+the ti,bootreg-shift, but even this is a valid situation; we will just 
+use bootreg shift value of zero (boot-data is zero initialized.)
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
----
+-Tero
 
- drivers/gpu/drm/panel/panel-lvds.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> regards
+> Suman
+> 
+>> +
+>>   	return 0;
+>>   }
+>>   
+>>
+> 
 
-diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/pan=
-el-lvds.c
-index 21a169aa3ae4..334a67c1a52f 100644
---- a/drivers/gpu/drm/panel/panel-lvds.c
-+++ b/drivers/gpu/drm/panel/panel-lvds.c
-@@ -101,7 +101,9 @@ static int panel_lvds_get_modes(struct drm_panel *panel=
-,
- 	connector->display_info.height_mm =3D lvds->height;
- 	drm_display_info_set_bus_formats(&connector->display_info,
- 					 &lvds->bus_format, 1);
--	connector->display_info.bus_flags =3D lvds->data_mirror
-+	drm_bus_flags_from_videomode(&lvds->video_mode,
-+				     &connector->display_info.bus_flags);
-+	connector->display_info.bus_flags |=3D lvds->data_mirror
- 					  ? DRM_BUS_FLAG_DATA_LSB_TO_MSB
- 					  : DRM_BUS_FLAG_DATA_MSB_TO_LSB;
-=20
---=20
-2.24.1
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
