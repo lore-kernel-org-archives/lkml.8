@@ -2,122 +2,97 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD79C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E1DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF4D2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634D12465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k1O5EC3m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbgAOTzT (ORCPT
+        id S1729568AbgAOT4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:55:19 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:36717 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729025AbgAOTzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:55:18 -0500
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MMGZS-1j7gwt0pQk-00JKd2; Wed, 15 Jan 2020 20:55:17 +0100
-Received: by mail-qk1-f174.google.com with SMTP id j9so16912917qkk.1;
-        Wed, 15 Jan 2020 11:55:16 -0800 (PST)
-X-Gm-Message-State: APjAAAWzTVwB+8LeCo1oUefiWbdXJ8vV7Y2R5UEOdPHA57TyfJhhhKIU
-        DUHxK09GMUxiBriMcP2og8zcI4aG6ttI+uB7oW0=
-X-Google-Smtp-Source: APXvYqwNXRuvxZtfyWD4Lv1+kexNUrgZsyRd8ZZkl5luzpZ9rX5jw6Lgbl//5M6HLTFI7FRTaqwXbcTtc0FbbBxmVyQ=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr28707027qkh.3.1579118115977;
- Wed, 15 Jan 2020 11:55:15 -0800 (PST)
+        Wed, 15 Jan 2020 14:56:13 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50597 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729025AbgAOT4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:56:13 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ydP55yHWz9sPW;
+        Thu, 16 Jan 2020 06:56:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579118170;
+        bh=VTfQ6EkdMl10C6Rosx3bqpTYw61hQ2UeI7wLuUE6c8A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=k1O5EC3mqbg88paDtd62zE8kYnQl5cN9o3b3K4N0D9rJi39Q1qT0uDvbgRQdXJNrd
+         fVGhwVvLqPQvXaHH0g0Q/s2Zxyr+EU8c/n6yZzGk0ymO5J03tpe40g/kgJ0A9qX4JI
+         Br8Oadmcykk4l9J4Eb+aw0EuEsGfEH7TP0WcNkJ2gW8S2VCfzpFGc3ixQYgthWTLBu
+         eSxBIDQjXi2hm8da2YQYCcTSpLfh7bhbKCmAoLfedJ5APi0RLab/88Sfs/+nF97uQo
+         GOkKZRur+VG2EMNjfakngSMOpalR98vANi8AapTt6M3w9f/nM+8pFSCgnmzaUK60y3
+         lTyYzOB822xUA==
+Date:   Thu, 16 Jan 2020 06:56:08 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen Wandun <chenwandun@huawei.com>
+Subject: linux-next: Fixes tag needs some work in the battery tree
+Message-ID: <20200116065608.704b7331@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
-In-Reply-To: <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 20:54:59 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
-Message-ID: <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:EIYVO01nH7dXMlyB7brsVXLeqn6IhJaCYfKy1Ln59kM8u/zX+UK
- dJ4Jb/bHKfByxszZMnBADsGxJRbCdC2w01imj/jme4hZ5IWtWATtFAm9K9yp/XPXclbKqzD
- BPgdDclRh9rNoHTMkC6jx4kA6HEb60IbIm7UhoHYY3Zo59DICObFWCpf5Kj1dipHZJZfwTT
- jaflKNUMlPX1NsSXRbHeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0wvOG99EVkQ=:Sn2dM/xvzKyl+7WeaJkLTn
- KrbZS7+ZWIOXihof8HHwRXZv5S89Lpu1GK9cCPyi4gPO7uRUWcOmFxNSRFA1UP24KYXLpMS1i
- 2xoHRIKmbQxjbFFaT/x4v5ug2XoIvzsO0ERFkBMDUGDXRgDpMA/ksceYpE5ZeHoOhzVNAelzG
- 0g4bOenER1FH+7GBhuOXzu+n0MaYmcustsZhEW9BF/jexMmzOYHEMLOg3dZ3riTL2Uua58593
- Ymvnblach8YU4N2r6VF5Yi/oRpAJxGc8EawhiX7Ho2gE7RYrWd50ypHMb/sS8tNoc/+jFwT0p
- SuEzWCnHbhY159ON70Kp6TQCwnMgAbKgr7OneZHkx6s2GoeA3v+hQojrqST7+fGwbVaLhY3h5
- epu3OIo48se86+rfHvHb+puTnGp78BbusduSk4YRntCjoouJHK5XqKN3FxAdV45fmdXat/AU1
- lDTUoJfdSFmaQDmBp3PeIsGDifZKXj462tXnRjOXnfk/VYKpTIY6KeR/ubYthwUPkNiMX95Eg
- m5dspPq4thd8+P1xiZqDwJJFoGK59YbF/WaCvjaIpRiA6pDuq2NqGUj3+7QPh4sEmGSA6ubRU
- GJPgqtohPhHGZ0y+XWqB5izk1pd7jBukuJNxxv5mS5uOF3SRA4bkNrw70QDtVwp9Hn/L0sZJ3
- Tg166NvLQEVh3D35CTho4AZVsPZgwJhO02IfGnjuDEg2TQpcTXTbuSULlY9VJV5gJ67eL99d+
- YlqgHItInGwDPoqWsUttaqEsVzvep6NAY25z7u1kxY/vGMcXqV2tKTJYWn+LoF+TFDyYxNnZj
- aHxAmx31zOzQNQI60F1YCipVUFplnfgqKB55IzpclgmNHzyZFGikyKAjPJOJ2le9V4PnS3tuT
- TFypN9j9G8XSyUTK4tHA==
+Content-Type: multipart/signed; boundary="Sig_/cASzhwhBhHBsccXdFsQiwDX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 8:51 PM Marco Elver <elver@google.com> wrote:
->
-> On Wed, 15 Jan 2020 at 20:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Wed, Jan 15, 2020 at 5:58 PM Marco Elver <elver@google.com> wrote:
-> > >   * set_bit - Atomically set a bit in memory
-> > > @@ -26,6 +27,7 @@
-> > >  static inline void set_bit(long nr, volatile unsigned long *addr)
-> > >  {
-> > >         kasan_check_write(addr + BIT_WORD(nr), sizeof(long));
-> > > +       kcsan_check_atomic_write(addr + BIT_WORD(nr), sizeof(long));
-> > >         arch_set_bit(nr, addr);
-> > >  }
-> >
-> > It looks like you add a kcsan_check_atomic_write or kcsan_check_write directly
-> > next to almost any instance of kasan_check_write().
-> >
-> > Are there any cases where we actually just need one of the two but not the
-> > other? If not, maybe it's better to rename the macro and have it do both things
-> > as needed?
->
-> Do you mean adding an inline helper at the top of each bitops header
-> here, similar to what we did for atomic-instrumented?  Happy to do
-> that if it improves readability.
+--Sig_/cASzhwhBhHBsccXdFsQiwDX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I was thinking of treewide wrappers, given that there are only a couple of files
-calling kasan_check_write():
+Hi all,
 
-$ git grep -wl kasan_check_write
-arch/arm64/include/asm/barrier.h
-arch/arm64/include/asm/uaccess.h
-arch/x86/include/asm/uaccess_64.h
-include/asm-generic/atomic-instrumented.h
-include/asm-generic/bitops/instrumented-atomic.h
-include/asm-generic/bitops/instrumented-lock.h
-include/asm-generic/bitops/instrumented-non-atomic.h
-include/linux/kasan-checks.h
-include/linux/uaccess.h
-lib/iov_iter.c
-lib/strncpy_from_user.c
-lib/usercopy.c
-scripts/atomic/gen-atomic-instrumented.sh
+In commit
 
-Are there any that really just want kasan_check_write() but not one
-of the kcsan checks?
+  89cfe2fc3ad4 ("power: suppy: ucs1002: Make the symbol 'ucs1002_regulator_=
+enable' static")
 
-      Arnd
+Fixes tag
+
+  Fixes: a3d70dacc727 ("power: suppy: ucs1002: disable power when maxcurren=
+t is 0")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cASzhwhBhHBsccXdFsQiwDX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fblgACgkQAVBC80lX
+0GwaRQf9EWbn6PZqkTqUi4RLz+TNST8ZDZdn3UE5yqn/qF1nknHMWaX34kr4C2nj
+WF1HL+bGk5qyF14pyLPZZx4iHRicTsiYY9r7VBsKL0PllmWwml3LWkHPM/p3rPSu
+QN36+OvW0p5tyuj5EWqBmqicgXWlm/TpqKYO+n24aqWavQxF/ZlHxCU5XK4+LIIV
+TSQYa6kdcqltxfABx2HQTfYY+qeuQwewqrxH2af3xpRtqXLMHikSMOwbfNvsXO9l
+cUFPvbnz1PBp8k7NuOjqd0lIAi6CklizXkvKvfg1Aw7Xt3GDJIrkgRkFF1Thd91K
+l8NC5BIw+SaPFZagene4U/X8GX+UkQ==
+=H0FF
+-----END PGP SIGNATURE-----
+
+--Sig_/cASzhwhBhHBsccXdFsQiwDX--
