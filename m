@@ -2,114 +2,119 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BD8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE25C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 056AB2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9401D24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgAOJg3 (ORCPT
+        id S1729496AbgAOJjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:36:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55628 "EHLO mx2.suse.de"
+        Wed, 15 Jan 2020 04:39:10 -0500
+Received: from relay.sw.ru ([185.231.240.75]:43588 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgAOJg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:36:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 73212AFE4;
-        Wed, 15 Jan 2020 09:36:26 +0000 (UTC)
-Subject: Re: [PATCH v7 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-References: <20200115062859.1389827-1-damien.lemoal@wdc.com>
- <20200115062859.1389827-3-damien.lemoal@wdc.com>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <689973eb-69a4-e622-a85e-8a2a64035f77@suse.de>
-Date:   Wed, 15 Jan 2020 10:36:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1729396AbgAOJjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:39:09 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1irf8N-0002JO-Tx; Wed, 15 Jan 2020 12:38:44 +0300
+Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+References: <20200110213433.94739-1-minchan@kernel.org>
+ <20200110213433.94739-3-minchan@kernel.org>
+ <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+ <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
+ <3eec2097-75a3-1e1d-06d9-44ee5eaf1312@virtuozzo.com>
+ <20200114191239.GB178589@google.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com>
+Date:   Wed, 15 Jan 2020 12:38:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200115062859.1389827-3-damien.lemoal@wdc.com>
+In-Reply-To: <20200114191239.GB178589@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 7:28 AM, Damien Le Moal wrote:
-> Add the new file Documentation/filesystems/zonefs.txt to document
-> zonefs principles and user-space tool usage.
+On 14.01.2020 22:12, Minchan Kim wrote:
+> On Tue, Jan 14, 2020 at 11:39:28AM +0300, Kirill Tkhai wrote:
+>> On 13.01.2020 22:18, Daniel Colascione wrote:
+>>> On Mon, Jan 13, 2020, 12:47 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>>> +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+>>>>> +             size_t, len_in, int, behavior, unsigned long, flags)
+>>>>
+>>>> I don't like the interface. The fact we have pidfd does not mean,
+>>>> we have to use it for new syscalls always. A user may want to set
+>>>> madvise for specific pid from console and pass pid as argument.
+>>>> pidfd would be an overkill in this case.
+>>>> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
+>>>> allow this?
+>>>
+>>> All new APIs should use pidfds: they're better than numeric PIDs
+>>
+>> Yes
+>>
+>>> in every way.
+>>
+>> No
+>>
+>>> If a program wants to allow users to specify processes by
+>>> numeric PID, it can parse that numeric PID, open the corresponding
+>>> pidfd, and then use that pidfd with whatever system call it wants.
+>>> It's not necessary to support numeric PIDs at the system call level to
+>>> allow a console program to identify a process by numeric PID.
+>>
+>> No. It is overkill. Ordinary pid interfaces also should be available.
+>> There are a lot of cases, when they are more comfortable. Say, a calling
+>> of process_madvise() from tracer, when a tracee is stopped. In this moment
+>> the tracer knows everything about tracee state, and pidfd brackets
+>> pidfd_open() and close() around actual action look just stupid, and this
+>> is cpu time wasting.
+>>
+>> Another example is a parent task, which manages parameters of its children.
+>> It knows everything about them, whether they are alive or not. Pidfd interface
+>> will just utilize additional cpu time here.
+>>
+>> So, no. Both interfaces should be available.
 > 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->  Documentation/filesystems/zonefs.txt | 241 +++++++++++++++++++++++++++
->  MAINTAINERS                          |   1 +
->  2 files changed, 242 insertions(+)
->  create mode 100644 Documentation/filesystems/zonefs.txt
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Sounds like that you want to support both options for every upcoming API
+> which deals with pid. I'm not sure how it's critical for process_madvise
+> API this case. In general, we sacrifice some performance for the nicer one
+> and later, once it's reported as hurdle for some workload, we could fix it
+> via introducing new flag. What I don't like at this moment is to make
+> syscall complicated with potential scenarios without real workload.
 
-Cheers,
+Yes, I suggest allowing both options for every new process api. This may be
+performance-critical for some workloads. Say, CRIU may exercise a lot of
+inter-process calls during container restore and additional system calls
+will slow down online migration. And there should be many another examples.
 
-Hannes
--- 
-Dr. Hannes Reinecke		      Teamlead Storage & Networking
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+At least you have to call the first argument in more generic way from the start.
+Not "int pidfd", but something like "idtype_t id" instead. This allows to extend
+it in the future.
+
+Kirill
