@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA45C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C3CC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2632187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B312187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579114767;
-	bh=aYO0ZgrdAi1+qdlrWTsV84hHXhKn1sfFjNTjB2xgAVw=;
+	s=default; t=1579114771;
+	bh=sI7qjuFwHkU+C/ugTPZ02yC7mmhnfBVUf/WexK9dq9E=;
 	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
 	 From;
-	b=oNyrUTQ7+ToY+xoa8a0/fFvLQQsuyKFU1/d/I3kstl2TzDuHniRgZiiEt8rQurSXH
-	 D0FXYn1e3/0IPyOEHtXMhlP9e/GGNvBffn+4pNaFLYver9Wpvt4RX6oP5Xd0HPK7LG
-	 Fhaw6swCDv8eGWAcfGWOUcBEfp9FjDLKVlMXRAus=
+	b=ydvstniiZPhLmhJibJuKvNdgfjQ4DL6T1pUK0DygBqsKQTiOBaoD8T8Ra5vCfkYiB
+	 PHF2Y4rk5kzLQ8AiyiVq5zQY6KYpyQvuFXeYlkeHsV2F30R5tvBkWcJ723ivarikh/
+	 1Sb/vGZr98G8srGzLBZC6Aou1QPEJR7D9JQGMq+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgAOS70 (ORCPT
+        id S1729281AbgAOS7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:59:26 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39840 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgAOS7Y (ORCPT
+        Wed, 15 Jan 2020 13:59:30 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39844 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbgAOS71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:59:24 -0500
-Received: by mail-pj1-f68.google.com with SMTP id e11so339425pjt.4;
-        Wed, 15 Jan 2020 10:59:24 -0800 (PST)
+        Wed, 15 Jan 2020 13:59:27 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e11so339466pjt.4;
+        Wed, 15 Jan 2020 10:59:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
          :references:in-reply-to;
-        bh=DyppBfshrye8qTHhZa2Kv3JsiH97KEI85KOqIZoNV6I=;
-        b=kNIp5rS1qkimUXpawUFfl0SquXnlt8vOXvwoIlSTUNef+z0iUbSjBC1hMtkx6TQJOE
-         unUnYopChX+xloDA6uDg16hQzQXYvnu1jZEAUQg/wRYYap9BcAz6z39sd50mNUU5XOS4
-         K9xZgCWV7fWk9v2XYJcNTzwJz0u0Q1aFXX70met2dOCA5cgEjVWRfGi1+8e8Jt46Ingf
-         QNBQCtX5geo5+9oI48uC5/Kno38QpkGSiUwoBJ3YUaqJPWOAxqxBGULdoJzEExURBML5
-         gvg+2S53LbCpODnKtp5d22bSy3DhjD4APPLHVpGrt0wutyZAvreZXsNFhfIaIBTsbCeY
-         BIzQ==
-X-Gm-Message-State: APjAAAXTYhpk9H/jGJxZ6lDMKQnCXzWqHPhPh8DKKR5CVN59IKsdYQti
-        mJGCVOLjWrVxJmP+0mAs0kA=
-X-Google-Smtp-Source: APXvYqxBxwGUQ8otfpFu/t6oEuJ1Ea6qKpXo9NB+OIJ0Vo/2mzZ5htzWt1g6fQ5G3FAUc60mMl1KbQ==
-X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr27438105pls.343.1579114763636;
-        Wed, 15 Jan 2020 10:59:23 -0800 (PST)
+        bh=6gSo4RAPlYJmWVLazwjXSnCzKLp8vlmWill3n2LyNiY=;
+        b=CqQxHJcRMAe99p+rrj734cCdyjG17g36cIw01iS09XoA3p4kCpor+bzEMxOQp9BH0G
+         fLsoP4z/uVL0zDLonN5tnGVHMqlohJGjLoQ48gw2P3k7y8Q9UmjpILHRUAL5fXPNoeEo
+         x1ZhOVxNvC5+OPN5ZDRu+iNbHuKWC8bhIQ82FlppH0l8QKr/ST3iZlWl9AnYD6MTuYQ4
+         qfKuzVfXodJ+fTaOEsL6/jshWgMXXFaFrBxMvdnXuRgvxaZTXkqlJYiRF+RlwhJWB/h5
+         hcgSpAl0KDVwi2p8wu/UqWxkxSDqZMbFU+tzmxHwKCgY/hEiZXCcQxZsyug7U7g65n1O
+         M1ug==
+X-Gm-Message-State: APjAAAXzyt13uRIxR0Q5ZIA3OavIUGQ+M7b+6i67muFgb2Xkk0SvC64z
+        6j7eD8rwy3IabkDvSYeEcYQ=
+X-Google-Smtp-Source: APXvYqyZnMD8FGLhGq+S+3gD+ymfeRgcx+0vuUYpc28gAwsoI79XSISNo0pC8UxBf37Tlmk2Zi00VQ==
+X-Received: by 2002:a17:90a:e990:: with SMTP id v16mr1545811pjy.67.1579114766333;
+        Wed, 15 Jan 2020 10:59:26 -0800 (PST)
 Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id i17sm21682761pfr.67.2020.01.15.10.59.22
+        by smtp.gmail.com with ESMTPSA id z130sm21618156pgz.6.2020.01.15.10.59.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 10:59:23 -0800 (PST)
-Message-ID: <5e1f610b.1c69fb81.f82c3.5b13@mx.google.com>
-Date:   Wed, 15 Jan 2020 10:59:22 -0800
+        Wed, 15 Jan 2020 10:59:25 -0800 (PST)
+Message-ID: <5e1f610d.1c69fb81.f807e.398f@mx.google.com>
+Date:   Wed, 15 Jan 2020 10:59:25 -0800
 From:   Paul Burton <paulburton@kernel.org>
-To:     Guoyun Sun <sunguoyun@loongson.cn>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guoyun Sun <sunguoyun@loongson.cn>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
 CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH V2] mips/vdso: Support mremap() for vDSO
-References:  <1579059300-6636-1-git-send-email-sunguoyun@loongson.cn>
-In-Reply-To:  <1579059300-6636-1-git-send-email-sunguoyun@loongson.cn>
+CC:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh@kernel.org>
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] dt-bindings: Document loongson vendor-prefix
+References:  <20200112081416.722218-2-jiaxun.yang@flygoat.com>
+In-Reply-To:  <20200112081416.722218-2-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -73,24 +72,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-Guoyun Sun wrote:
-> vDSO VMA address is saved in mm_context for the purpose of using
-> restorer from vDSO page to return to userspace after signal handling.
-> 
-> In Checkpoint Restore in Userspace (CRIU) project we place vDSO VMA
-> on restore back to the place where it was on the dump.
-> 
-> Make vDSO code track the VMA address by supplying .mremap() fops
-> the same way it's done for x86 and arm by:
-> commit b059a453b1cf ("x86/vdso: Add mremap hook to vm_special_mapping")
-> commit 739586951b8a ("arm64/vdso: Support mremap() for vDSO").
+Jiaxun Yang wrote:
+> Loongson is a MIPS-compatible processor vendor.
 
 Applied to mips-next.
 
-> commit ad1df95419cc
-> https://git.kernel.org/mips/c/ad1df95419cc
+> commit 1590b1eb9370
+> https://git.kernel.org/mips/c/1590b1eb9370
 > 
-> Signed-off-by: Guoyun Sun <sunguoyun@loongson.cn>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Paul Burton <paulburton@kernel.org>
 
 Thanks,
