@@ -2,134 +2,306 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA0FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805ADC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FFB2081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TotNqo5a"
+	by mail.kernel.org (Postfix) with ESMTP id 416832465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579116782;
+	bh=/l77QlgvN9CkrStgFUrgH2sX6Ndc20pFxhgfWC6ry2g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zPjOaoXZA6ehL0SLguQW/TZY2J10lmxSOrmOcUCQW3snLXpc7qIs0KJT3qXpdfUF4
+	 kmWeraVn86WQ6AVUNuGZKvakJuLLEcLvM6LRQaIm+TUCCZsDCvP5bS2x5azelTsUwX
+	 Fib4FatP6eAYJgyROMdK4EZDoMjI/wcoeWDJ2/SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgAOTcl (ORCPT
+        id S1729290AbgAOTdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:32:41 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35819 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOTcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:32:41 -0500
-Received: by mail-ua1-f67.google.com with SMTP id y23so6711763ual.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:32:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FhuM70Y9CQ3lHvXFb32kY421wqyl+dqm9WpsVvRyRYs=;
-        b=TotNqo5a9FLWny6MauM8BsAcIT3r9sGn4h1UhwGC59Oys0gmMpD4CNkkMmZtC+pRkz
-         8+ExAaxrY9c5PakRwP8rNPLmTH6ek35+H0EbzcnkzymSpStRqpf2uwRvDY0vo6fV52JG
-         +ib8y+95ADxHKkbmrelSYJM744wPduCIR8epM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FhuM70Y9CQ3lHvXFb32kY421wqyl+dqm9WpsVvRyRYs=;
-        b=U0AqVN6aR8lDvMo5FXJWdHG9mcFoyhW7DXmyZgA9Lvb/eT/fdMlAn2aJDzuclBJExd
-         bqy8zamIEvecn5TxOuW6fx4owyz+l5xSKBKudM5OCYHVE5BKe78fFOhUiVyaPh/Xakcl
-         L1q5hWEB9SvBlSOqiIB8JJCsvu3SMslz58t3Bug4X/usLLT3nRtGACQU4dT+wG0lp3/B
-         2PmhZizyHhH6vy6v/1GJKt5zgPVVZhQ0fl4DORuHv+R6KWzroJORZaYc0UaicsZ6FBSl
-         XaNh2Y64ldJe5TWcZqzGS3EkDvvqsoJS/+viIYV3m1FxRSeqBoLWJewqM/PNqxCtEsKK
-         pcBw==
-X-Gm-Message-State: APjAAAXWXYwlBHYUEDACB9M30AjPqCIAe7NCHTBYBD2pxmfaCZxb8f3Y
-        hZyc25zcHLPhUvr80JHBiU7/20sLFwU=
-X-Google-Smtp-Source: APXvYqyX+AlpQKjOOpucbVPcssqTWdTq161ow8oa25FMF1qHyAZmOTpRiFf31aREw1IZyyAWRKACPQ==
-X-Received: by 2002:ab0:728b:: with SMTP id w11mr15364821uao.1.1579116760197;
-        Wed, 15 Jan 2020 11:32:40 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id d25sm5776362vko.46.2020.01.15.11.32.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 11:32:39 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id 59so6707934uap.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:32:39 -0800 (PST)
-X-Received: by 2002:ab0:254e:: with SMTP id l14mr15622637uan.91.1579116759104;
- Wed, 15 Jan 2020 11:32:39 -0800 (PST)
+        Wed, 15 Jan 2020 14:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbgAOTdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:33:01 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A021F2081E;
+        Wed, 15 Jan 2020 19:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579116779;
+        bh=/l77QlgvN9CkrStgFUrgH2sX6Ndc20pFxhgfWC6ry2g=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=yFXEGQLycKSdAs/qJd51JyNSXpm7VByyOE4eAz9fK11JRJMjp/GClOTR70RDvLTCc
+         cvh7I1UAcVdRyykgHjRiE236ATY+hwX6aYi+Ccto3LtP0tp+DTMWikY9PXGju1cSdC
+         vThrO7OGJPM5d2AoUjo+1C3lW3kESkwClSjINzhM=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 60B58352274D; Wed, 15 Jan 2020 11:32:59 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:32:59 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: Re: [PATCH v2] drivers: char: ipmi: ipmi_msghandler: Pass lockdep
+ expression to RCU lists
+Message-ID: <20200115193259.GC2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200110164709.26741-1-frextrite@gmail.com>
+ <202001121358.YVbD4V9l%lkp@intel.com>
+ <20200114030030.GB2559@workstation-portable>
+ <20200114175828.GR2935@paulmck-ThinkPad-P72>
+ <20200115123653.GA20601@workstation-portable>
 MIME-Version: 1.0
-References: <87v9pdxcc2.fsf@nanos.tec.linutronix.de> <5e1f4235.1c69fb81.7041e.36a0@mx.google.com>
-In-Reply-To: <5e1f4235.1c69fb81.7041e.36a0@mx.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 Jan 2020 11:32:28 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XfZC_c_tKQ5pCWwCAdipqpxzfHO-cUDbXFBMt8gaB_1g@mail.gmail.com>
-Message-ID: <CAD=FV=XfZC_c_tKQ5pCWwCAdipqpxzfHO-cUDbXFBMt8gaB_1g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] alarmtimer: Make alarmtimer platform device child of
- RTC device
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115123653.GA20601@workstation-portable>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jan 15, 2020 at 06:06:53PM +0530, Amol Grover wrote:
+> On Tue, Jan 14, 2020 at 09:58:28AM -0800, Paul E. McKenney wrote:
+> > On Tue, Jan 14, 2020 at 08:30:30AM +0530, Amol Grover wrote:
+> > > On Sun, Jan 12, 2020 at 01:25:58PM +0800, kbuild test robot wrote:
+> > > > Hi Amol,
+> > > > 
+> > > > Thank you for the patch! Perhaps something to improve:
+> > > > 
+> > > > [auto build test WARNING on char-misc/char-misc-testing]
+> > > > [also build test WARNING on ipmi/for-next arm-soc/for-next v5.5-rc5]
+> > > > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > > > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > > > 
+> > > > url:    https://github.com/0day-ci/linux/commits/Amol-Grover/drivers-char-ipmi-ipmi_msghandler-Pass-lockdep-expression-to-RCU-lists/20200111-081002
+> > > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 16bb7abc4a6b9defffa294e4dc28383e62a1dbcf
+> > > > config: x86_64-randconfig-a003-20200109 (attached as .config)
+> > > > compiler: gcc-5 (Ubuntu 5.5.0-12ubuntu1) 5.5.0 20171010
+> > > > reproduce:
+> > > >         # save the attached .config to linux build tree
+> > > >         make ARCH=x86_64 
+> > > > 
+> > > > If you fix the issue, kindly add following tag
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > 
+> > > > All warnings (new ones prefixed by >>):
+> > > > 
+> > > >    In file included from include/linux/export.h:43:0,
+> > > >                     from include/linux/linkage.h:7,
+> > > >                     from include/linux/kernel.h:8,
+> > > >                     from include/linux/list.h:9,
+> > > >                     from include/linux/module.h:12,
+> > > >                     from drivers/char/ipmi/ipmi_msghandler.c:17:
+> > > >    drivers/char/ipmi/ipmi_msghandler.c: In function 'find_cmd_rcvr':
+> > > >    include/linux/rculist.h:53:25: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >                             ^
+> > > 
+> > > As mentioned above, RCU_LOCKDEP_WARN macro is called from
+> > > __list_check_rcu with 2 parameters
+> > > 
+> > > 1. !cond && !rcu_read_lock_any_held()
+> > > 2. The message to display incase there is a lockdep warning.
+> > > 
+> > > 
+> > > However, if I pass the lockdep checking condition as:
+> > > 
+> > > list_for_each_entry_rcu(ptr, list, head, lockdep_is_held(&some_lock) || rcu_read_lock_held())
+> > 
+> > Right, given the _rcu() suffix on the command, the rcu_read_lock_held()
+> > is implied.
+> > 
+> > > this trickles down to __list_check_rcu and then finally to
+> > > RCU_LOCKDEP_WARN as (here cond is `lockdep_is_held(&some_lock) || rcu_read_lock_held()`):
+> > > 
+> > > RCU_LOCKDEP_WARN(!lockdep_is_held(&some_lock) || rcu_read_lock_held() && !rcu_read_lock_any_held())
+> > > 
+> > > which according to operator precedence (I hopefully got them right)
+> > > would always evaluate to true if we are in an RCU read-side critical
+> > > section (without a lock), and hence, result in a false-positive lockdep
+> > > warning.
+> > 
+> > It looks that way to me.  But why not actually try it out?  After all,
+> > only the running system knows for sure.  And there might be some trick
+> > that we are both missing.
+> > 
+> 
+> I just tested this, here are the results:
+> 
+> Case 1: Using`lockdep_is_held() || rcu_read_lock_held()`
+> 
+> lock	RCU RSCS		Splat?	Actual
+> Y	Y			N	N
+> Y	N			N	N
+> N	Y			Y	N <=
+> N	N			Y	Y
+> 
+> Similar for
+> Case 2: Using `rcu_read_lock_held() || lockdep_is_held()`
+> 
+> Case 3: Consider 2 locks (outside rcu_read_lock())
+> `lockdep_is_held(lock1) || lockdep_is_held(lock2)`
+> 
+> lock1	lock2			Splat?	Actual
+> Y	Y			N*	N
+> Y	N			N	N
+> N	Y			Y	N <=
+> N	N			Y	Y
+> 
+> This too proves the hypothesis (I'd like to call that).
 
-On Wed, Jan 15, 2020 at 8:47 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Thomas Gleixner (2020-01-15 02:07:09)
-> > Doug Anderson <dianders@chromium.org> writes:
-> > > On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> > >> index 4b11f0309eee..ccb6aea4f1d4 100644
-> > >> --- a/kernel/time/alarmtimer.c
-> > >> +++ b/kernel/time/alarmtimer.c
-> > >> @@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
-> > >>         unsigned long flags;
-> > >>         struct rtc_device *rtc = to_rtc_device(dev);
-> > >>         struct wakeup_source *__ws;
-> > >> +       struct platform_device *pdev;
-> > >>         int ret = 0;
-> > >>
-> > >>         if (rtcdev)
-> > >> @@ -99,6 +100,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
-> > >>                 return -1;
-> > >>
-> > >>         __ws = wakeup_source_register(dev, "alarmtimer");
-> > >> +       pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
-> > >
-> > > Don't you need to check for an error here?  If pdev is an error you'll
-> > > continue on your merry way.  Before your patch if you got an error
-> > > registering the device it would have caused probe to fail.
-> >
-> > Yes, that return value should be checked
-> >
->
-> Ok. Should __ws also be checked for error? I'm currently thinking of this patch
-> and then simplifying it in patch 3 of this series by removing __ws. Or
-> the series can swap patch 2 and 3.
->
-> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> index ccb6aea4f1d4..3e1f4056e384 100644
-> --- a/kernel/time/alarmtimer.c
-> +++ b/kernel/time/alarmtimer.c
-> @@ -103,7 +103,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
->         pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
->
->         spin_lock_irqsave(&rtcdev_lock, flags);
-> -       if (!rtcdev) {
-> +       if (__ws && pdev && !rtcdev) {
+Very good!
 
-I believe instead of pdev you want !IS_ERR(pdev)
+> *However, this shows an interesting result. When both lock1 and lock2
+> are held, according to the hypothesis, a splat should've occured, since
+> the check condition (albeit faulty atm) would be:
+> 
+> `!lockdep_is_held(lock1) || lockdep_is_held(lock2) && !rcu_read_lock_any_held()`
+> => `!T || T && !F`
+> => `F || T && T`
+> => `F || T`
+> => `T`
+> However, there was no splat. Which led me to investigate further and I
+> found out:
+> 1. `rcu_read_lock_any_held()` always returns 1 even if it is outside RCU
+> read-side CS.
+> 2. `rcu_read_lock_held()` seems OK, returns 1 when inside and 0 when
+> outside
+> 
+> The kernel is compiled with
+> PROVE_RCU=y
+> PROVE_RCU_LIST=y
 
-...otherwise this seems sane.  I ran out of time last night to get to
-patch #3 and #4 but I'll look at them shortly.  I don't have tons of
-opinions for the ordering questions, so whatever seems cleanest?
+Were you within a preempt-disable region, for example, was some other
+spinlock held?  (A lockdep splat should give you a list of locks held.)
+Both of these act as generalized RCU read-side critical sections in
+recent kernels.
 
--Doug
+> Any thoughts on this? Is this intended? And should I send-in the patch
+> for the first problem?
+
+Separate patches for the initial problem and fixing the macro argument,
+please, if that is what you are asking.
+
+							Thanx, Paul
+
+> Thanks
+> Amol
+> 
+> > > This could be easily solved by putting `cond` inside brackets as it is
+> > > correctly done in RCU_LOCKDEP_WARN macro but not in __list_check_rcu
+> > > macro. Is that so, or did I miss something?
+> > 
+> > Again, that looks correct to me, but please check.
+> > 
+> > > Secondly, since there is already a condition that checks for RCU
+> > > read-side critical section, the extra `rcu_read_lock_held()` we supply
+> > > is sort of redundant and can be skipped right?
+> > 
+> > Yes, the general rule is that if the primitives ends with _rcu(), any
+> > lockdep condition will be in addition to rcu_read_lock_any_held().
+> > So you should not need to pass RCU read-side lockdep expressions to 
+> > primitives whose names end in _rcu..
+> > 
+> > 							Thanx, Paul
+> > 
+> > > Thanks
+> > > Amol
+> > > 
+> > > >    include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
+> > > >     #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+> > > >                                                        ^
+> > > > >> include/linux/rcupdate.h:263:3: note: in expansion of macro 'if'
+> > > >       if (debug_lockdep_rcu_enabled() && !__warned && (c)) { \
+> > > >       ^
+> > > > >> include/linux/rculist.h:53:2: note: in expansion of macro 'RCU_LOCKDEP_WARN'
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >      ^
+> > > >    include/linux/rculist.h:371:7: note: in expansion of macro '__list_check_rcu'
+> > > >      for (__list_check_rcu(dummy, ## cond, 0),   \
+> > > >           ^
+> > > >    drivers/char/ipmi/ipmi_msghandler.c:1607:2: note: in expansion of macro 'list_for_each_entry_rcu'
+> > > >      list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
+> > > >      ^
+> > > >    include/linux/rculist.h:53:25: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >                             ^
+> > > >    include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
+> > > >     #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+> > > >                                                                 ^
+> > > > >> include/linux/rcupdate.h:263:3: note: in expansion of macro 'if'
+> > > >       if (debug_lockdep_rcu_enabled() && !__warned && (c)) { \
+> > > >       ^
+> > > > >> include/linux/rculist.h:53:2: note: in expansion of macro 'RCU_LOCKDEP_WARN'
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >      ^
+> > > >    include/linux/rculist.h:371:7: note: in expansion of macro '__list_check_rcu'
+> > > >      for (__list_check_rcu(dummy, ## cond, 0),   \
+> > > >           ^
+> > > >    drivers/char/ipmi/ipmi_msghandler.c:1607:2: note: in expansion of macro 'list_for_each_entry_rcu'
+> > > >      list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
+> > > >      ^
+> > > >    include/linux/rculist.h:53:25: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >                             ^
+> > > >    include/linux/compiler.h:69:3: note: in definition of macro '__trace_if_value'
+> > > >      (cond) ?     \
+> > > >       ^
+> > > >    include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
+> > > >     #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+> > > >                                ^
+> > > > >> include/linux/rcupdate.h:263:3: note: in expansion of macro 'if'
+> > > >       if (debug_lockdep_rcu_enabled() && !__warned && (c)) { \
+> > > >       ^
+> > > > >> include/linux/rculist.h:53:2: note: in expansion of macro 'RCU_LOCKDEP_WARN'
+> > > >      RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),  \
+> > > >      ^
+> > > >    include/linux/rculist.h:371:7: note: in expansion of macro '__list_check_rcu'
+> > > >      for (__list_check_rcu(dummy, ## cond, 0),   \
+> > > >           ^
+> > > >    drivers/char/ipmi/ipmi_msghandler.c:1607:2: note: in expansion of macro 'list_for_each_entry_rcu'
+> > > >      list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
+> > > >      ^
+> > > > 
+> > > > vim +/if +263 include/linux/rcupdate.h
+> > > > 
+> > > > 632ee200130899 Paul E. McKenney 2010-02-22  254  
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  255  /**
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  256   * RCU_LOCKDEP_WARN - emit lockdep splat if specified condition is met
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  257   * @c: condition to check
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  258   * @s: informative message
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  259   */
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  260  #define RCU_LOCKDEP_WARN(c, s)						\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  261  	do {								\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  262  		static bool __section(.data.unlikely) __warned;		\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18 @263  		if (debug_lockdep_rcu_enabled() && !__warned && (c)) {	\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  264  			__warned = true;				\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  265  			lockdep_rcu_suspicious(__FILE__, __LINE__, s);	\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  266  		}							\
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  267  	} while (0)
+> > > > f78f5b90c4ffa5 Paul E. McKenney 2015-06-18  268  
+> > > > 
+> > > > :::::: The code at line 263 was first introduced by commit
+> > > > :::::: f78f5b90c4ffa559e400c3919a02236101f29f3f rcu: Rename rcu_lockdep_assert() to RCU_LOCKDEP_WARN()
+> > > > 
+> > > > :::::: TO: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> > > > :::::: CC: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> > > > 
+> > > > ---
+> > > > 0-DAY kernel test infrastructure                 Open Source Technology Center
+> > > > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> > > 
+> > > 
