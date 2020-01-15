@@ -2,105 +2,110 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA8BC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77163C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933D7222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34CF222522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JSk1F/Vc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJnkdnk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgAOVjA (ORCPT
+        id S1729798AbgAOVnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:39:00 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48844 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgAOVi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:38:58 -0500
-Received: from zn.tnic (p200300EC2F0C7700F109D32638BACFBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:f109:d326:38ba:cfbd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36EDB1EC01AD;
-        Wed, 15 Jan 2020 22:38:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579124337;
+        Wed, 15 Jan 2020 16:43:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39432 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729578AbgAOVne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:43:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579124613;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LBMtE/WMICvJacbss6a6c+JL3sMqakCf7ajkvPVSGoo=;
-        b=JSk1F/Vcfrva9TnlLBIVasySWnMIdW/M+wVf3lz4G4ILhs9oEKcj0SIZ+hCC5rKyENug+m
-        ViBqPkNwMGLa10+B0A5/XUJxrMcu/PoyEVuUSbvM284vucuDOru9eBDD7mtgubw5OV09UP
-        qo71qnAvNtpRVfXCaiCXtWV2V7DNV5Y=
-Date:   Wed, 15 Jan 2020 22:38:48 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shiping Ji <shiping.linux@gmail.com>, sashal@kernel.org
-Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        shji@microsoft.com, ruizhao@microsoft.com,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-Message-ID: <20200115213848.GO20975@zn.tnic>
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+         to:to:cc:cc; bh=jrV3VdKCu9ANMDzwxreqt5W8Oq8oCfIw3KZrSIxFIEU=;
+        b=dJnkdnk67aCOW7X7OokS7yRVUy5tPEbZq3Z0pPZzPaYuQo4thwHwoQwCfGo1rXq5pXn6+w
+        s5N7JRBffWgKO5kGuTg8oM2nr/9QSXaWyGPDHBpKR0ujIAWPwlaYQ9CPcK+xI5IHevgQOr
+        zkItCRkkqCd09U4R9icJKIgVZ28M7nQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-rfkX_FtKOz2eECYmiEdBlQ-1; Wed, 15 Jan 2020 16:43:32 -0500
+X-MC-Unique: rfkX_FtKOz2eECYmiEdBlQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F31B4100551A;
+        Wed, 15 Jan 2020 21:43:30 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 578A25C553;
+        Wed, 15 Jan 2020 21:43:26 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v3 0/8] locking/lockdep: Reuse zapped chain_hlocks entries
+Date:   Wed, 15 Jan 2020 16:43:05 -0500
+Message-Id: <20200115214313.13253-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
-> New driver supports error detection and correction on the devices with ARM
-> DMC-520 memory controller.
-> 
-> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
-> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-> Reviewed-by: James Morse <james.morse@arm.com>
+ v3:
+  - Move the bug fix patches to the beginning of the series.
+  - Include a number of changes as suggested by PeterZ.
+  - Increase MAX_CHAIN_BUCKETS from 8 to 10 to reduce the chance of using
+    the unsized list.
+  - Add patch 7 to add a lockdep_early_init() call.
+  - Add patch 8 to allocate chain hlocks by splitting large chain block
+    as a last resort.
 
-This mail still has your From: because I guess you pasted the patch in
-the mail.
+ v2:
+  - Revamp the chain_hlocks reuse patch to store the freed chain_hlocks
+    information in the chain_hlocks entries themselves avoiding the
+    need of a separate set of tracking structures. This, however,
+    requires a minimum allocation size of at least 2. Thanks to PeterZ
+    for his review and inspiring this change.
+  - Remove the leakage counter as it is no longer applicable.
+  - Add patch 6 to make the output of /proc/lockdep_chains more readable.
 
-But, if you look at what I wrote here:
+It was found that when running a workload that kept on adding lock
+classes and then zapping them repetitively, the system will eventually
+run out of chain_hlocks[] entries even though there were still plenty
+of other lockdep data buffers available.
 
-https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
+  [ 4318.443670] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+  [ 4318.444809] turning off the locking correctness validator.
 
-you'll see the
+In order to fix this problem, we have to make chain_hlocks[] entries
+reusable just like other lockdep arrays. Besides that, the patchset
+also adds some zapped class and chain_hlocks counters to be tracked by
+/proc/lockdep_stats. It also fixes leakage in the irq context counters
+and makes the output of /proc/lockdep_chains more readable.
 
-From: Lei Wang <leiwang_git@outlook.com>
+Waiman Long (8):
+  locking/lockdep: Decrement irq context counters when removing lock
+    chain
+  locking/lockdep: Display irq_context names in /proc/lockdep_chains
+  locking/lockdep: Track number of zapped classes
+  locking/lockdep: Throw away all lock chains with zapped class
+  locking/lockdep: Track number of zapped lock chains
+  locking/lockdep: Reuse freed chain_hlocks entries
+  locking/lockdep: Add lockdep_early_init() before any lock is taken
+  locking/lockdep: Enable chain block splitting as last resort
 
-which is the last From: in the mail and that is taken by git as the
-author of the patch.
-
-However, if I apply this mail of yours, it will make you the
-author. Because in git there can be only one author per patch
-and other authors can be additionally accredited with the
-Co-developed-by: tag from the same doc I was pointing at before:
-Documentation/process/submitting-patches.rst
-
-Looking at this driver, however, you have supplied three authors. And I
-think you guys need to discuss it amongst yourselves who is going to be
-the author of this driver in the git history.
-
-If there are more questions, I'm pretty sure Sasha would be glad to
-explain to you how the whole authorship thing works and what the
-implications are.
-
-Thx.
+ include/linux/lockdep.h            |   2 +
+ init/main.c                        |   1 +
+ kernel/locking/lockdep.c           | 373 ++++++++++++++++++++++++-----
+ kernel/locking/lockdep_internals.h |  15 +-
+ kernel/locking/lockdep_proc.c      |  25 +-
+ 5 files changed, 351 insertions(+), 65 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.18.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
