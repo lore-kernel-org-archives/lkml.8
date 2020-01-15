@@ -2,274 +2,115 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024AFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B17C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60972073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EFE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3MkQlYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAONAH (ORCPT
+        id S1728909AbgAONCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:00:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33086 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgAONAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:00:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 36DB7AFE1;
-        Wed, 15 Jan 2020 13:00:03 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH] Input: add IOC3 serio driver
-Date:   Wed, 15 Jan 2020 13:59:50 +0100
-Message-Id: <20200115125951.3677-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.24.1
+        Wed, 15 Jan 2020 08:02:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36255 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgAONCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:02:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so15673826wru.3;
+        Wed, 15 Jan 2020 05:02:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
+        b=p3MkQlYTQj+lULTBr6mWn5nKzLDUF5GJ9cat1feO+Q3nCwwmKt7aJRqL3jb8Xypk6t
+         5K3Zyc5pjjBItrPOQkjZpSi+P+SBB6aY9ZSoI7Dkwuczv7HnBk9NKnzWO91rxXupd4A1
+         ucnu3R3CAPXZQAGX0XU+Lt/U7EgARw1EwYbNZ8/cul9gYaEeW00ZQ5+lB3iIFdGO5wa8
+         zg+4xaiTNx+kSKfvHbOTyQhwokkdI1VaCx0nGVZcC6v/EJ3+8Q6YoTiur4K5TW8vWdV3
+         rHxz6NYn2z0u+1WamRmX0on1wJU/FN1ZzovgHY9f4qsArULVd2M/p6dKrDnfrgJFVjdD
+         OKyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
+        b=Qj+77oRXMMevL3Un4fornuls6pZkb7eTr3U47+jCbARTgnCziq7E01YplbXNs/1FrL
+         tkC5z/dbnqcdxBJ55WSmkwg0sWAep4lPcyCBcJ1LaOrE35jNzVSEEngmitK0oiq/nv6Y
+         QW8YVXxx8ixvlZVasPcwyBPpODqppdcKLHGCc0GWJpnTQ65tBeq4K24mI1QGRHZT6Fgy
+         KuuPir0tq849TMfZO3GT8oPjqFIJcFzPmDH5w850LlhKMwAvrb9NlbbPJOSIFevN7FE9
+         MVZmBchbEuPHZ5PgXa/3da9+Luf9Z1ZcCJDUxSjWELEs0ZbmB+z+OEygu2d/DpCG7FTb
+         QMew==
+X-Gm-Message-State: APjAAAU7npScLRJawNEYqU0Psjm2GMk2tFr9COrx62EmF2qTW2OZ4Ake
+        dzb6ocvOiTLSiljcmq+Y7VY=
+X-Google-Smtp-Source: APXvYqxcOwmlY+O6QGUZ/kxCeDj2gNn1kTWrnJRjeqw5YwD9D/edsH1lRUE34oPl6X1lmo7nvZDggA==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr30163062wrr.309.1579093342407;
+        Wed, 15 Jan 2020 05:02:22 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p26sm22390808wmc.24.2020.01.15.05.02.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 05:02:21 -0800 (PST)
+Subject: Re: [RFC PATCH v1 1/3] dt-bindings: mmc: combine common mmc and
+ dw-mshc properties
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+References: <20200114213809.27166-1-jbx6244@gmail.com>
+ <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <12bbbdbc-027e-90de-fd57-291013167b06@gmail.com>
+Date:   Wed, 15 Jan 2020 14:02:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a platform driver for supporting keyboard and mouse
-interface of SGI IOC3 chips.
+Hi,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/input/serio/Kconfig   |  10 ++
- drivers/input/serio/Makefile  |   1 +
- drivers/input/serio/ioc3kbd.c | 183 ++++++++++++++++++++++++++++++++++
- 3 files changed, 194 insertions(+)
- create mode 100644 drivers/input/serio/ioc3kbd.c
+Thank you for your explanation.
+I was not aware that was playing.
+So now we go from a 'simple' txt to yaml conversion to a complete
+'change your node name first' operation.
+Can you indicate if that common yaml file for dw-mshc and Rockchip
+is still a good idea?
 
-diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
-index f3e18f8ef9ca..373a1646019e 100644
---- a/drivers/input/serio/Kconfig
-+++ b/drivers/input/serio/Kconfig
-@@ -165,6 +165,16 @@ config SERIO_MACEPS2
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called maceps2.
- 
-+config SERIO_SGI_IOC3
-+	tristate "SGI IOC3 PS/2 controller"
-+	depends on SGI_MFD_IOC3
-+	help
-+	  Say Y here if you have an SGI Onyx2, SGI Octane or IOC3 PCI card
-+	  and you want to attach and use a keyboard, mouse, or both.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ioc3kbd.
-+
- config SERIO_LIBPS2
- 	tristate "PS/2 driver library"
- 	depends on SERIO_I8042 || SERIO_I8042=n
-diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
-index 67950a5ccb3f..6d97bad7b844 100644
---- a/drivers/input/serio/Makefile
-+++ b/drivers/input/serio/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_HIL_MLC)		+= hp_sdc_mlc.o hil_mlc.o
- obj-$(CONFIG_SERIO_PCIPS2)	+= pcips2.o
- obj-$(CONFIG_SERIO_PS2MULT)	+= ps2mult.o
- obj-$(CONFIG_SERIO_MACEPS2)	+= maceps2.o
-+obj-$(CONFIG_SERIO_SGI_IOC3)	+= ioc3kbd.o
- obj-$(CONFIG_SERIO_LIBPS2)	+= libps2.o
- obj-$(CONFIG_SERIO_RAW)		+= serio_raw.o
- obj-$(CONFIG_SERIO_AMS_DELTA)	+= ams_delta_serio.o
-diff --git a/drivers/input/serio/ioc3kbd.c b/drivers/input/serio/ioc3kbd.c
-new file mode 100644
-index 000000000000..814ca640732f
---- /dev/null
-+++ b/drivers/input/serio/ioc3kbd.c
-@@ -0,0 +1,183 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SGI IOC3 PS/2 controller driver for linux
-+ *
-+ * Copyright (C) 2019 Thomas Bogendoerfer <tbogendoerfer@suse.de>
-+ *
-+ * Based on code Copyright (C) 2005 Stanislaw Skowronek <skylark@unaligned.org>
-+ *               Copyright (C) 2009 Johannes Dickgreber <tanzy@gmx.de>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/serio.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/sn/ioc3.h>
-+
-+struct ioc3kbd_data {
-+	struct ioc3_serioregs __iomem *regs;
-+	struct serio *kbd, *aux;
-+	int irq;
-+};
-+
-+static int ioc3kbd_wait(struct ioc3_serioregs __iomem *regs, u32 mask)
-+{
-+	unsigned long timeout = 0;
-+
-+	while ((readl(&regs->km_csr) & mask) && (timeout < 250)) {
-+		udelay(50);
-+		timeout++;
-+	}
-+	return (timeout >= 250) ? -ETIMEDOUT : 0;
-+}
-+
-+static int ioc3kbd_write(struct serio *dev, u8 val)
-+{
-+	struct ioc3kbd_data *d = dev->port_data;
-+	int ret;
-+
-+	ret = ioc3kbd_wait(d->regs, KM_CSR_K_WRT_PEND);
-+	if (ret)
-+		return ret;
-+
-+	writel(val, &d->regs->k_wd);
-+
-+	return 0;
-+}
-+
-+static int ioc3aux_write(struct serio *dev, u8 val)
-+{
-+	struct ioc3kbd_data *d = dev->port_data;
-+	int ret;
-+
-+	ret = ioc3kbd_wait(d->regs, KM_CSR_M_WRT_PEND);
-+	if (ret)
-+		return ret;
-+
-+	writel(val, &d->regs->m_wd);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t ioc3kbd_intr(int itq, void *dev_id)
-+{
-+	struct ioc3kbd_data *d = dev_id;
-+	u32 data_k, data_m;
-+
-+	data_k = readl(&d->regs->k_rd);
-+	data_m = readl(&d->regs->m_rd);
-+
-+	if (data_k & KM_RD_VALID_0)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_0_SHIFT) & 0xff,
-+				0);
-+	if (data_k & KM_RD_VALID_1)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_1_SHIFT) & 0xff,
-+				0);
-+	if (data_k & KM_RD_VALID_2)
-+		serio_interrupt(d->kbd, (data_k >> KM_RD_DATA_2_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_0)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_0_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_1)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_1_SHIFT) & 0xff,
-+				0);
-+	if (data_m & KM_RD_VALID_2)
-+		serio_interrupt(d->aux, (data_m >> KM_RD_DATA_2_SHIFT) & 0xff,
-+				0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ioc3kbd_probe(struct platform_device *pdev)
-+{
-+	struct ioc3_serioregs __iomem *regs;
-+	struct device *dev = &pdev->dev;
-+	struct ioc3kbd_data *d;
-+	struct serio *sk, *sa;
-+	int irq, ret;
-+
-+	regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return -ENXIO;
-+
-+	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	sk = kzalloc(sizeof(*sk), GFP_KERNEL);
-+	if (!sk)
-+		return -ENOMEM;
-+
-+	sa = kzalloc(sizeof(*sa), GFP_KERNEL);
-+	if (!sa) {
-+		kfree(sk);
-+		return -ENOMEM;
-+	}
-+
-+	sk->id.type = SERIO_8042;
-+	sk->write = ioc3kbd_write;
-+	snprintf(sk->name, sizeof(sk->name), "IOC3 keyboard %d", pdev->id);
-+	snprintf(sk->phys, sizeof(sk->phys), "ioc3/serio%dkbd", pdev->id);
-+	sk->port_data = d;
-+	sk->dev.parent = dev;
-+
-+	sa->id.type = SERIO_8042;
-+	sa->write = ioc3aux_write;
-+	snprintf(sa->name, sizeof(sa->name), "IOC3 auxiliary %d", pdev->id);
-+	snprintf(sa->phys, sizeof(sa->phys), "ioc3/serio%daux", pdev->id);
-+	sa->port_data = d;
-+	sa->dev.parent = dev;
-+
-+	d->regs = regs;
-+	d->kbd = sk;
-+	d->aux = sa;
-+	d->irq = irq;
-+
-+	platform_set_drvdata(pdev, d);
-+	serio_register_port(d->kbd);
-+	serio_register_port(d->aux);
-+
-+	ret = request_irq(irq, ioc3kbd_intr, IRQF_SHARED, "ioc3-kbd", d);
-+	if (ret) {
-+		dev_err(dev, "could not request IRQ %d\n", irq);
-+		serio_unregister_port(d->kbd);
-+		serio_unregister_port(d->aux);
-+		return ret;
-+	}
-+
-+	/* enable ports */
-+	writel(KM_CSR_K_CLAMP_3 | KM_CSR_M_CLAMP_3, &regs->km_csr);
-+
-+	return 0;
-+}
-+
-+static int ioc3kbd_remove(struct platform_device *pdev)
-+{
-+	struct ioc3kbd_data *d = platform_get_drvdata(pdev);
-+
-+	free_irq(d->irq, d);
-+	serio_unregister_port(d->kbd);
-+	serio_unregister_port(d->aux);
-+	return 0;
-+}
-+
-+static struct platform_driver ioc3kbd_driver = {
-+	.probe          = ioc3kbd_probe,
-+	.remove         = ioc3kbd_remove,
-+	.driver = {
-+		.name = "ioc3-kbd",
-+	},
-+};
-+module_platform_driver(ioc3kbd_driver);
-+
-+MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-+MODULE_DESCRIPTION("SGI IOC3 serio driver");
-+MODULE_LICENSE("GPL");
--- 
-2.24.1
+Thanks
 
+
+On 1/14/20 11:06 PM, Rob Herring wrote:
+> On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>>
+>> Combine the common properties for mmc and dw-mshc in
+>> mmc-controller-common.yaml
+>
+> Commit messages should explain the why, not what.
+>
+> AFAICT, the only reason is to not have a node name of 'mmc'. That's
+> entirely the reason why it is defined. Fix your node names to use the
+> standard name.
+>
+>
+>
+> Rob
+>
