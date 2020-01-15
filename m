@@ -2,236 +2,289 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBC5C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66031C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E951A2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30ECC2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="ZV4lQu1b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgAOMqA (ORCPT
+        id S1729268AbgAOMqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:46:00 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:56498 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729144AbgAOMqA (ORCPT
+        Wed, 15 Jan 2020 07:46:19 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38758 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729153AbgAOMqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:46:00 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id qclq210065USYZQ01clqdB; Wed, 15 Jan 2020 13:45:57 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-0003z7-5D; Wed, 15 Jan 2020 13:45:50 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-00012h-3r; Wed, 15 Jan 2020 13:45:50 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/5] drm: tiny: st7735r: Prepare for adding support for more displays
-Date:   Wed, 15 Jan 2020 13:45:47 +0100
-Message-Id: <20200115124548.3951-5-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
+        Wed, 15 Jan 2020 07:46:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l35so7664015pje.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=gmoQ2haBcdZ66ZDAcejuAD/SWwNHe0hv7/dpuVRBEMA=;
+        b=ZV4lQu1bHo4asCHiL7ozMJpG/aEIGXOcgzjC/kEDUUZsdau0d9QRTdOQ30HzQuDYrV
+         b41qPBXQtb8i3tlzlIXPXVz83Q2mensnr7ehTLBKYfYzkxqGhU4Pya07R2XawdaDQ7CU
+         UM5VdJoDNVdjCuWnhyvmTm71oKafu/NPZlGMzsK7sq2ipah7itvwMWw4ZkpVn89065se
+         P4nisLUT7hFX2ENj1YAnbmC1dYoq0i73Pt94XA4ZXgsv2xSSa4g097q/zOGM+1fzhMQt
+         45Mi0/rP2wrjrYryo4Cah0ID66q7fFpqmDwHufPxEtnTeOteJV57X+d9YKXQob5UJd19
+         toLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=gmoQ2haBcdZ66ZDAcejuAD/SWwNHe0hv7/dpuVRBEMA=;
+        b=XnaGJyENWhTTt6Le4ak9NZpfuSBSmf/lmLHPB2sAqgGKtWusE/JoinaUs99aoFyG59
+         DonZi2jU7UPkUaPuK23Akb6sebeAHWrH65IxvXREh3d0Msty9XeYX97C6t7W5K2Jh39E
+         io4qDqS1c5/8Ru0Ysy9Oss4Gvb/zcTbkS+JEVyxVyGNzVHFVOTFVyaH1F1K1nJ/LTCCa
+         NduZ5BYfpSRBfMgXea7Rq4ofWxe9g9mLcvhpp4+173tHRByXI9KeBcVpW+MoRdbAh/ED
+         gjF7u0OZsVv7fA6LJuZj8dxovma6fYWWq8O1+7wecvM2r8ecGMKjEsZYV9is5polG7xO
+         GXzA==
+X-Gm-Message-State: APjAAAVsdoG+VDjFcHYiZB7GqyaWgOqhPovhuR38wbjYFqeeoGyXYIH1
+        C8wl69DK/rUFXpla3iNZM/V9Zw+xQFtIMA==
+X-Google-Smtp-Source: APXvYqzUxA7fFBZl1bJC5jmBI/c13+6jszL7qbSUfqyyg4cn3067Iuv26XRPqcfguDmjvZLqzdo6VQ==
+X-Received: by 2002:a17:90b:30c8:: with SMTP id hi8mr35620232pjb.73.1579092374824;
+        Wed, 15 Jan 2020 04:46:14 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id e19sm20348397pjr.10.2020.01.15.04.46.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 04:46:14 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_28ADC79E-8B49-4CCD-92BE-382545043A5C";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: Problems with determining data presence by examining extents?
+Date:   Wed, 15 Jan 2020 05:46:10 -0700
+In-Reply-To: <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+References: <4467.1579020509@warthog.procyon.org.uk>
+ <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the st7735r driver supports only a single display panel.
-Prepare for adding support for other display panels by factoring out the
-display-specific parameters in struct st7735r_cfg.
 
-For now, the following parameters can be configured:
-  - Display resolution,
-  - Horizontal/vertical display offsets,
-  - Read-write versus read-only controllers,
-  - RGB versus BGR color component ordering.
+--Apple-Mail=_28ADC79E-8B49-4CCD-92BE-382545043A5C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-Rename jd_t18003_t01_pipe_enable() and jd_t18003_t01_pipe_funcs() to
-st7735r_pipe_enable() resp. st7735r_pipe_funcs(), as they are not really
-specific to the Jianda JD-T18003-T01 display anymore.
+On Jan 14, 2020, at 8:54 PM, Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
+>=20
+> On 2020/1/15 =E4=B8=8A=E5=8D=8812:48, David Howells wrote:
+>> Again with regard to my rewrite of fscache and cachefiles:
+>>=20
+>> 	=
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/=
+?h=3Dfscache-iter
+>>=20
+>> I've got rid of my use of bmap()!  Hooray!
+>>=20
+>> However, I'm informed that I can't trust the extent map of a backing =
+file to
+>> tell me accurately whether content exists in a file because:
+>=20
+>>=20
+>> (b) Blocks of zeros that I write into the file may get punched out by
+>>     filesystem optimisation since a read back would be expected to =
+read zeros
+>>     there anyway, provided it's below the EOF.  This would give me a =
+false
+>>     negative.
+>=20
+> I know some qemu disk backend has such zero detection.
+> But not btrfs. So this is another per-fs based behavior.
+>=20
+> And problem (c):
+>=20
+> (c): A multi-device fs (btrfs) can have their own logical address =
+mapping.
+> Meaning the bytenr returned makes no sense to end user, unless used =
+for
+> that fs specific address space.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Split off from "drm: tiny: st7735r: Add support for Okaya
-    RH128128T",
-  - Replace st7735r_priv.rgb by a pointer to struct st7735r_cfg,
-  - Change prefix of jd_t18003_t01_pipe_enable() and
-    jd_t18003_t01_pipe_funcs().
----
- drivers/gpu/drm/tiny/st7735r.c | 67 +++++++++++++++++++++++++++-------
- 1 file changed, 53 insertions(+), 14 deletions(-)
+It would be useful to implement the multi-device extension for FIEMAP, =
+adding
+the fe_device field to indicate which device the extent is resident on:
 
-diff --git a/drivers/gpu/drm/tiny/st7735r.c b/drivers/gpu/drm/tiny/st7735r.c
-index 3f4487c716848cf8..a838f237c8d82e3d 100644
---- a/drivers/gpu/drm/tiny/st7735r.c
-+++ b/drivers/gpu/drm/tiny/st7735r.c
-@@ -3,6 +3,7 @@
-  * DRM driver for Sitronix ST7735R panels
-  *
-  * Copyright 2017 David Lechner <david@lechnology.com>
-+ * Copyright (C) 2019 Glider bvba
-  */
- 
- #include <linux/backlight.h>
-@@ -10,6 +11,7 @@
- #include <linux/dma-buf.h>
- #include <linux/gpio/consumer.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/property.h>
- #include <linux/spi/spi.h>
- #include <video/mipi_display.h>
-@@ -37,12 +39,28 @@
- #define ST7735R_MY	BIT(7)
- #define ST7735R_MX	BIT(6)
- #define ST7735R_MV	BIT(5)
-+#define ST7735R_RGB	BIT(3)
-+
-+struct st7735r_cfg {
-+	const struct drm_display_mode mode;
-+	unsigned int left_offset;
-+	unsigned int top_offset;
-+	unsigned int write_only:1;
-+	unsigned int rgb:1;		/* RGB (vs. BGR) */
-+};
-+
-+struct st7735r_priv {
-+	struct mipi_dbi_dev dbidev;	/* Must be first for .release() */
-+	const struct st7735r_cfg *cfg;
-+};
- 
--static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
--				      struct drm_crtc_state *crtc_state,
--				      struct drm_plane_state *plane_state)
-+static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
-+				struct drm_crtc_state *crtc_state,
-+				struct drm_plane_state *plane_state)
- {
- 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
-+	struct st7735r_priv *priv = container_of(dbidev, struct st7735r_priv,
-+						 dbidev);
- 	struct mipi_dbi *dbi = &dbidev->dbi;
- 	int ret, idx;
- 	u8 addr_mode;
-@@ -87,6 +105,10 @@ static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
- 		addr_mode = ST7735R_MY | ST7735R_MV;
- 		break;
- 	}
-+
-+	if (priv->cfg->rgb)
-+		addr_mode |= ST7735R_RGB;
-+
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT,
- 			 MIPI_DCS_PIXEL_FMT_16BIT);
-@@ -109,15 +131,19 @@ static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
- 	drm_dev_exit(idx);
- }
- 
--static const struct drm_simple_display_pipe_funcs jd_t18003_t01_pipe_funcs = {
--	.enable		= jd_t18003_t01_pipe_enable,
-+static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
-+	.enable		= st7735r_pipe_enable,
- 	.disable	= mipi_dbi_pipe_disable,
- 	.update		= mipi_dbi_pipe_update,
- 	.prepare_fb	= drm_gem_fb_simple_display_pipe_prepare_fb,
- };
- 
--static const struct drm_display_mode jd_t18003_t01_mode = {
--	DRM_SIMPLE_MODE(128, 160, 28, 35),
-+static const struct st7735r_cfg jd_t18003_t01_cfg = {
-+	.mode		= { DRM_SIMPLE_MODE(128, 160, 28, 35) },
-+	/* Cannot read from Adafruit 1.8" display via SPI */
-+	.write_only	= true,
-+};
-+
- };
- 
- DEFINE_DRM_GEM_CMA_FOPS(st7735r_fops);
-@@ -136,13 +162,13 @@ static struct drm_driver st7735r_driver = {
- };
- 
- static const struct of_device_id st7735r_of_match[] = {
--	{ .compatible = "jianda,jd-t18003-t01" },
-+	{ .compatible = "jianda,jd-t18003-t01", .data = &jd_t18003_t01_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, st7735r_of_match);
- 
- static const struct spi_device_id st7735r_id[] = {
--	{ "jd-t18003-t01", 0 },
-+	{ "jd-t18003-t01", (uintptr_t)&jd_t18003_t01_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(spi, st7735r_id);
-@@ -150,17 +176,26 @@ MODULE_DEVICE_TABLE(spi, st7735r_id);
- static int st7735r_probe(struct spi_device *spi)
- {
- 	struct device *dev = &spi->dev;
-+	const struct st7735r_cfg *cfg;
- 	struct mipi_dbi_dev *dbidev;
-+	struct st7735r_priv *priv;
- 	struct drm_device *drm;
- 	struct mipi_dbi *dbi;
- 	struct gpio_desc *dc;
- 	u32 rotation = 0;
- 	int ret;
- 
--	dbidev = kzalloc(sizeof(*dbidev), GFP_KERNEL);
--	if (!dbidev)
-+	cfg = of_device_get_match_data(&spi->dev);
-+	if (!cfg)
-+		cfg = (void *)spi_get_device_id(spi)->driver_data;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
- 		return -ENOMEM;
- 
-+	dbidev = &priv->dbidev;
-+	priv->cfg = cfg;
-+
- 	dbi = &dbidev->dbi;
- 	drm = &dbidev->drm;
- 	ret = devm_drm_dev_init(dev, drm, &st7735r_driver);
-@@ -193,10 +228,14 @@ static int st7735r_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	/* Cannot read from Adafruit 1.8" display via SPI */
--	dbi->read_commands = NULL;
-+	if (cfg->write_only)
-+		dbi->read_commands = NULL;
-+
-+	dbidev->left_offset = cfg->left_offset;
-+	dbidev->top_offset = cfg->top_offset;
- 
--	ret = mipi_dbi_dev_init(dbidev, &jd_t18003_t01_pipe_funcs, &jd_t18003_t01_mode, rotation);
-+	ret = mipi_dbi_dev_init(dbidev, &st7735r_pipe_funcs, &cfg->mode,
-+				rotation);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
++ #define FIEMAP_EXTENT_DEVICE		0x00008000 /* fe_device is =
+valid, non-
++						    * local with =
+EXTENT_NET */
++ #define FIEMAP_EXTENT_NET		0x80000000 /* Data stored =
+remotely. */
 
+ struct fiemap_extent {
+ 	__u64 fe_logical;  /* logical offset in bytes for the start of
+ 			    * the extent from the beginning of the file =
+*/
+ 	__u64 fe_physical; /* physical offset in bytes for the start
+ 			    * of the extent from the beginning of the =
+disk */
+ 	__u64 fe_length;   /* length in bytes for this extent */
+ 	__u64 fe_reserved64[2];
+ 	__u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
+-	__u32 fe_reserved[3];
++	__u32 fe_device;   /* device number (fs-specific if =
+FIEMAP_EXTENT_NET)*/
++	__u32 fe_reserved[2];
+ };
+
+That allows userspace to distinguish fe_physical addresses that may be
+on different devices.  This isn't in the kernel yet, since it is mostly
+useful only for Btrfs and nobody has implemented it there.  I can give
+you details if working on this for Btrfs is of interest to you.
+
+> This is even more trickier when considering single device btrfs.
+> It still utilize the same logical address space, just like all =
+multiple
+> disks btrfs.
+>=20
+> And it completely possible for a single 1T btrfs has logical address
+> mapped beyond 10T or even more. (Any aligned bytenr in the range [0,
+> U64_MAX) is valid for btrfs logical address).
+>=20
+>=20
+> You won't like this case either.
+> (d): Compressed extents
+> One compressed extent can represents more data than its on-disk size.
+>=20
+> Furthermore, current fiemap interface hasn't considered this case, =
+thus
+> there it only reports in-memory size (aka, file size), no way to
+> represent on-disk size.
+
+There was a prototype patch to add compressed extent support to FIEMAP
+for btrfs, but it was never landed:
+
+[PATCH 0/5 v4] fiemap: introduce EXTENT_DATA_COMPRESSED flag David =
+Sterba
+https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg35837.html
+
+This adds a separate "fe_phys_length" field for each extent:
+
++#define FIEMAP_EXTENT_DATA_COMPRESSED  0x00000040 /* Data is compressed =
+by fs.
++                                                   * Sets =
+EXTENT_ENCODED and
++                                                   * the compressed =
+size is
++                                                   * stored in =
+fe_phys_length */
+
+ struct fiemap_extent {
+ 	__u64 fe_physical;    /* physical offset in bytes for the start
+			       * of the extent from the beginning of the =
+disk */
+ 	__u64 fe_length;      /* length in bytes for this extent */
+-	__u64 fe_reserved64[2];
++	__u64 fe_phys_length; /* physical length in bytes, may be =
+different from
++			       * fe_length and sets additional extent =
+flags */
++	__u64 fe_reserved64;
+ 	__u32 fe_flags;	      /* FIEMAP_EXTENT_* flags for this extent =
+*/
+ 	__u32 fe_reserved[3];
+ };
+
+
+> And even more bad news:
+> (e): write time dedupe
+> Although no fs known has implemented it yet (btrfs used to try to
+> support that, and I guess XFS could do it in theory too), you won't
+> known when a fs could get such "awesome" feature.
+>=20
+> Where your write may be checked and never reach disk if it matches =
+with
+> existing extents.
+>=20
+> This is a little like the zero-detection-auto-punch.
+>=20
+>> Is there some setting I can use to prevent these scenarios on a file =
+- or can
+>> one be added?
+>=20
+> I guess no.
+>=20
+>> Without being able to trust the filesystem to tell me accurately what =
+I've
+>> written into it, I have to use some other mechanism.  Currently, I've =
+switched
+>> to storing a map in an xattr with 1 bit per 256k block, but that gets =
+hard to
+>> use if the file grows particularly large and also has integrity =
+consequences -
+>> though those are hopefully limited as I'm now using DIO to store data =
+into the
+>> cache.
+>=20
+> Would you like to explain why you want to know such fs internal info?
+
+I believe David wants it to store sparse files as an cache and use =
+FIEMAP to
+determine if the blocks are cached locally, or if they need to be =
+fetched from
+the server.  If the filesystem doesn't store the written blocks =
+accurately,
+there is no way for the local cache to know whether it is holding valid =
+data
+or not.
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_28ADC79E-8B49-4CCD-92BE-382545043A5C
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl4fCZIACgkQcqXauRfM
+H+B94hAAq/hGq+KM2EW4oM8Xq5qSFfrwDIPyyRLbCXbSfeZGLWbpHlWbaD9RXEIf
+p/FBpXupxq8ihBMQEjbtbary5fyEHgpRAircigQ5AHkRj0QZlzftiXgYrsN1u6UQ
+UZAsP8P7JuFBC3nwD9gPJOcwtLMuIsWFVk/1hCbYs5EkG75LNNzBM4uBCskzwB/e
+p1TKmAgjzkO2JiGUo4iwHoZUzoFOgnLLeTXvDC5qqDvbqmW0MaG+wFbkYpb3lln3
+W5JN63xrQ83epKfl1VrLu8YMqc6ZNldJst0CeNf3wF2PHtHiM1aIh8vv1E5AraDu
+5JL8hdsIi5/EnhHlExZkQDi54zKMDF9tr9SvjON9kxmH148m6WVOEivnv5aG69ui
+xso3+qjoRsi3WhNKnW8LgjnPTVaEGkAbDYDZd/nsB6IcPlTjRI+gExhRtqR76hIj
+UVLlL0adfBVM+cvNoXh+2sdMrI5BGA6sIhesQdYKlIOyRKBHHmlDghpXVIz+ePHK
+OsOD0rh28NGTbVhT2rnXOPdCyW1+Btp0gVUaq46oz2XCr6o0HYNUp4iCQtauNKvo
+Mr9gy7oRv+64PAsjOazbWUUs65eRVIwCYaLUzLuFkfFIHbAoFjyb+Zaagz8EbOrn
+KdgWCUCo0PDg76uzaIA2XSHKQpoPDeC5fDZmBlpcfIY5YHeWmrI=
+=pzA/
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_28ADC79E-8B49-4CCD-92BE-382545043A5C--
