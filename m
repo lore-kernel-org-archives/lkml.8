@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26313C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32061C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DD42465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0714A222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyLTJHp1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iLMsBOXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgAOVn6 (ORCPT
+        id S1730187AbgAOVno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:43:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41255 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730161AbgAOVnm (ORCPT
+        Wed, 15 Jan 2020 16:43:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38176 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729578AbgAOVni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:43:42 -0500
+        Wed, 15 Jan 2020 16:43:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579124622;
+        s=mimecast20190719; t=1579124616;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=LS8yaDLDS7kiFQ8atjsBYWiyzRekCHkh3HKwMVBL1vg=;
-        b=XyLTJHp1fWj9SVgkUgvEBiVf9N7aJg/PyFvi8qnvcq9nnBg6P2/xsUxhoXTdP4KiKmhe8f
-        r5JV1kN14p6iaQrNUFd9J+E5znKLHZRnVrZyVdIXpK9ZHB8s/RVE5nx4nwRc3/7/Ia+pNs
-        tCd+dzYe+6Dr0Md7FOWgygI5XzQlJyE=
+        bh=T3CsgfrAv4WTivmpXnq7yYNYahOb+o1C2eb0Mu/hi5w=;
+        b=iLMsBOXeLrQNVUVATlVzQ1FSUH5e80u0cbBeguLWMJSonhNVDmBUSwBMGwJTlxGuoXTWnE
+        bFp+spvhpZ1a+DdQddpFUvFjkqxTDW+xlyfYU0i3W2mUQHtc8t9x7yI3Hm7CfSO3w+rIYp
+        5FbpRyCD/JYS6hWHXjS3sRZBgsBmoNA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-110-IcV8ey5sORSAE5fMDRa6uw-1; Wed, 15 Jan 2020 16:43:38 -0500
-X-MC-Unique: IcV8ey5sORSAE5fMDRa6uw-1
+ us-mta-75-ckjoyjM5O-GpjN_T_pZ-vQ-1; Wed, 15 Jan 2020 16:43:35 -0500
+X-MC-Unique: ckjoyjM5O-GpjN_T_pZ-vQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A457D800EBF;
-        Wed, 15 Jan 2020 21:43:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52B8C477;
+        Wed, 15 Jan 2020 21:43:34 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE30E5C290;
-        Wed, 15 Jan 2020 21:43:36 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F9665C290;
+        Wed, 15 Jan 2020 21:43:33 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>
 Cc:     linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH v3 8/8] locking/lockdep: Enable chain block splitting as last resort
-Date:   Wed, 15 Jan 2020 16:43:13 -0500
-Message-Id: <20200115214313.13253-9-longman@redhat.com>
+Subject: [PATCH v3 4/8] locking/lockdep: Throw away all lock chains with zapped class
+Date:   Wed, 15 Jan 2020 16:43:09 -0500
+Message-Id: <20200115214313.13253-5-longman@redhat.com>
 In-Reply-To: <20200115214313.13253-1-longman@redhat.com>
 References: <20200115214313.13253-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -60,175 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the main chain_hlocks[] buffer is running out and a chain block of
-a matching size isn't available, it is possible that there are larger
-free chain blocks available that can accommodate an allocation request.
-So instead of disabling lockdep, we will try to find a larger chain
-block and split it.
+If a lock chain contains a class that is zapped, the whole lock chain is
+likely to be invalid. If the zapped class is at the end of the chain,
+the partial chain without the zapped class should have been stored
+already as the current code will store all its predecessor chains. If
+the zapped class is somewhere in the middle, there is no guarantee that
+the partial chain will actually happen. It may just clutter up the hash
+and make searching slower. I would rather prefer storing the chain only
+when it actually happens.
 
-Chain block splitting will be used as the last resort as doing too many
-splitting will generate a lot of small chain blocks that cannot satisfy
-larger size allocation requests and hence potentally wasting more space.
+So just dump the corresponding chain_hlocks entries for now. A latter
+patch will try to reuse the freed chain_hlocks entries.
 
-To test chain block splitting code, the call to
-alloc_chain_hlocks_by_splitting_block() was moved up before direct
-array allocation. A nfsd workload was run before and after the change.
-Before it, the lockdep_stats output was:
-
- zapped classes:                       1538
- zapped direct dependencies:           4612
- zapped lock chains:                  57409
- free chain hlocks:                       0
- large chain blocks:                      0
- split chain blocks:                      0
-
-After the change, the output became:
-
- zapped classes:                       1538
- zapped direct dependencies:           4612
- zapped lock chains:                  57002
- free chain hlocks:                     944
- large chain blocks:                      0
- split chain blocks:                    784
-
-Chain block merging is not being considered for now as it can be time
-consuming while holding the graph lock which is not good.
+This patch also changes the type of nr_chain_hlocks to unsigned integer
+to be consistent with the other counters.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/locking/lockdep.c           | 66 +++++++++++++++++++++++++++++-
- kernel/locking/lockdep_internals.h |  1 +
- kernel/locking/lockdep_proc.c      |  2 +
- 3 files changed, 68 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep.c           | 37 ++++--------------------------
+ kernel/locking/lockdep_internals.h |  4 ++--
+ kernel/locking/lockdep_proc.c      |  2 +-
+ 3 files changed, 7 insertions(+), 36 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 165e2361b25e..9a75f9582b6b 100644
+index 8bea42136da1..436fcaa4d5d5 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -2641,6 +2641,7 @@ unsigned long nr_zapped_lock_chains;
- unsigned int nr_chain_hlocks;
- unsigned int nr_free_chain_hlocks;	/* Free cfhain_hlocks in buckets */
- unsigned int nr_large_chain_blocks;	/* size > MAX_CHAIN_BUCKETS */
-+unsigned int nr_split_chain_blocks;	/* Chain block split count */
+@@ -2636,8 +2636,8 @@ check_prevs_add(struct task_struct *curr, struct held_lock *next)
  
- #ifdef CONFIG_PROVE_LOCKING
- /*
-@@ -2661,7 +2662,8 @@ unsigned int nr_large_chain_blocks;	/* size > MAX_CHAIN_BUCKETS */
-  * When an allocation request is made, alloc_chain_hlocks() will first
-  * look up the matching bucketed list to find a free chain block. If not
-  * found, allocation will be made directly from the chain_hlocks array
-- * from the current nr_chain_hlocks value.
-+ * from the current nr_chain_hlocks value. As a last resort, larger chain
-+ * block will be split, if available, to satisfy the request.
-  *
-  * Note that a chain_hlocks entry contain the class index which is
-  * crrently limited to 13 bits.
-@@ -2795,12 +2797,66 @@ static inline void free_chain_hlocks(int base, int size)
- 	chain_block_buckets[0] = base;
- 	nr_large_chain_blocks++;
- }
-+
-+/*
-+ * Allocate chain block by splitting larger block in buckets.
-+ * This is the last resort before disabling lockdep.
-+ */
-+static inline int alloc_chain_hlocks_by_splitting_block(int size)
-+{
-+	int newsize;
-+	int prev, curr, next;
-+
-+	if (!nr_free_chain_hlocks)
-+		return -1;
-+
-+	/*
-+	 * As the minimum block size is 2, we have to look for a larger
-+	 * block that is at least 2 greater than the desired size.
-+	 */
-+	for (newsize = size + 2; newsize <= MAX_CHAIN_BUCKETS; newsize++) {
-+		curr = chain_block_buckets[newsize - 1];
-+		if (curr < 0)
-+			continue;
-+		chain_block_buckets[newsize - 1] = next_chain_block(curr);
-+		nr_free_chain_hlocks -= newsize;
-+		goto found;
-+	}
-+
-+	/*
-+	 * Look for a block in chain_block_buckets[0] with a size of
-+	 * (size + 2) or larger.
-+	 */
-+	for_each_chain_block(0, prev, curr, next) {
-+		next = next_chain_block(curr);
-+		newsize = chain_block_size(curr);
-+		if (newsize >= size + 2) {
-+			set_chain_block(prev, 0, next);
-+			nr_free_chain_hlocks -= newsize;
-+			nr_large_chain_blocks--;
-+			goto found;
-+		}
-+	}
-+	return -1;
-+
-+found:
-+	/*
-+	 * Free the unneed chain_hlocks entries at the end of the block.
-+	 */
-+	free_chain_hlocks(curr + size, newsize - size);
-+	nr_split_chain_blocks++;
-+	return curr;
-+}
- #else
- static inline void init_chain_block_buckets(void)	{ }
- static inline int  alloc_chain_hlocks_from_buckets(int size)
+ struct lock_chain lock_chains[MAX_LOCKDEP_CHAINS];
+ static DECLARE_BITMAP(lock_chains_in_use, MAX_LOCKDEP_CHAINS);
+-int nr_chain_hlocks;
+ static u16 chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS];
++unsigned int nr_chain_hlocks;
+ 
+ struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i)
  {
- 	return -1;
- }
-+static inline int alloc_chain_hlocks_by_splitting_block(int size)
-+{
-+	return -1;
-+}
- #endif /* CONFIG_PROVE_LOCKING */
+@@ -4783,36 +4783,23 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
+ 					 struct lock_class *class)
+ {
+ #ifdef CONFIG_PROVE_LOCKING
+-	struct lock_chain *new_chain;
+-	u64 chain_key;
+ 	int i;
  
- /*
-@@ -2833,6 +2889,14 @@ static int alloc_chain_hlocks(int size)
- 		nr_chain_hlocks += size;
- 		return curr;
+ 	for (i = chain->base; i < chain->base + chain->depth; i++) {
+ 		if (chain_hlocks[i] != class - lock_classes)
+ 			continue;
+-		/* The code below leaks one chain_hlock[] entry. */
+-		if (--chain->depth > 0) {
+-			memmove(&chain_hlocks[i], &chain_hlocks[i + 1],
+-				(chain->base + chain->depth - i) *
+-				sizeof(chain_hlocks[0]));
+-		}
+ 		/*
+ 		 * Each lock class occurs at most once in a lock chain so once
+ 		 * we found a match we can break out of this loop.
+ 		 */
+-		goto recalc;
++		goto free_lock_chain;
  	}
-+
-+	/*
-+	 * Try to allocate it by splitting large chain block.
-+	 */
-+	curr = alloc_chain_hlocks_by_splitting_block(size);
-+	if (curr >= 0)
-+		return curr;
-+
- 	if (!debug_locks_off_graph_unlock())
- 		return -1;
+ 	/* Since the chain has not been modified, return. */
+ 	return;
+ 
+-recalc:
+-	chain_key = INITIAL_CHAIN_KEY;
+-	for (i = chain->base; i < chain->base + chain->depth; i++)
+-		chain_key = iterate_chain_key(chain_key, chain_hlocks[i]);
+-	if (chain->depth && chain->chain_key == chain_key)
+-		return;
++free_lock_chain:
+ 	/* Overwrite the chain key for concurrent RCU readers. */
+-	WRITE_ONCE(chain->chain_key, chain_key);
++	WRITE_ONCE(chain->chain_key, INITIAL_CHAIN_KEY);
+ 	dec_chains(chain->irq_context);
+ 
+ 	/*
+@@ -4821,22 +4808,6 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
+ 	 */
+ 	hlist_del_rcu(&chain->entry);
+ 	__set_bit(chain - lock_chains, pf->lock_chains_being_freed);
+-	if (chain->depth == 0)
+-		return;
+-	/*
+-	 * If the modified lock chain matches an existing lock chain, drop
+-	 * the modified lock chain.
+-	 */
+-	if (lookup_chain_cache(chain_key))
+-		return;
+-	new_chain = alloc_lock_chain();
+-	if (WARN_ON_ONCE(!new_chain)) {
+-		debug_locks_off();
+-		return;
+-	}
+-	*new_chain = *chain;
+-	hlist_add_head_rcu(&new_chain->entry, chainhashentry(chain_key));
+-	inc_chains(new_chain->irq_context);
+ #endif
+ }
  
 diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index 9425155b9053..7b6ec1e7168a 100644
+index fe794cbdf34c..42a1e55f49a7 100644
 --- a/kernel/locking/lockdep_internals.h
 +++ b/kernel/locking/lockdep_internals.h
-@@ -143,6 +143,7 @@ extern unsigned int nr_process_chains;
- extern unsigned int nr_chain_hlocks;
- extern unsigned int nr_free_chain_hlocks;
- extern unsigned int nr_large_chain_blocks;
-+extern unsigned int nr_split_chain_blocks;
+@@ -134,14 +134,14 @@ extern unsigned long nr_zapped_classes;
+ extern unsigned long nr_list_entries;
+ long lockdep_next_lockchain(long i);
+ unsigned long lock_chain_count(void);
+-extern int nr_chain_hlocks;
+ extern unsigned long nr_stack_trace_entries;
  
- extern unsigned int max_lockdep_depth;
+ extern unsigned int nr_hardirq_chains;
+ extern unsigned int nr_softirq_chains;
+ extern unsigned int nr_process_chains;
+-extern unsigned int max_lockdep_depth;
++extern unsigned int nr_chain_hlocks;
+ 
++extern unsigned int max_lockdep_depth;
  extern unsigned int max_bfs_queue_depth;
+ 
+ #ifdef CONFIG_PROVE_LOCKING
 diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 9b3d2976bd5a..97fc50facd98 100644
+index bd853848832b..2457bc97924c 100644
 --- a/kernel/locking/lockdep_proc.c
 +++ b/kernel/locking/lockdep_proc.c
-@@ -355,6 +355,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
- 			nr_free_chain_hlocks);
- 	seq_printf(m, " large chain blocks:            %11u\n",
- 			nr_large_chain_blocks);
-+	seq_printf(m, " split chain blocks:            %11u\n",
-+			nr_split_chain_blocks);
- 	return 0;
- }
+@@ -278,7 +278,7 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ #ifdef CONFIG_PROVE_LOCKING
+ 	seq_printf(m, " dependency chains:             %11lu [max: %lu]\n",
+ 			lock_chain_count(), MAX_LOCKDEP_CHAINS);
+-	seq_printf(m, " dependency chain hlocks:       %11d [max: %lu]\n",
++	seq_printf(m, " dependency chain hlocks:       %11u [max: %lu]\n",
+ 			nr_chain_hlocks, MAX_LOCKDEP_CHAIN_HLOCKS);
+ #endif
  
 -- 
 2.18.1
