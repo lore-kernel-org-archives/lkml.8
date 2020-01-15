@@ -2,149 +2,117 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4356BC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A903C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068DC207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:23:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLie+CkD"
+	by mail.kernel.org (Postfix) with ESMTP id 3EEFE207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgAORXh (ORCPT
+        id S1729047AbgAORYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:23:37 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34176 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAORXg (ORCPT
+        Wed, 15 Jan 2020 12:24:06 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:37144 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgAORYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:23:36 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l8so16234759edw.1;
-        Wed, 15 Jan 2020 09:23:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i4P+n6d7sxMFhKIDX+LexvGXhWliZJOtxfITYYKXF40=;
-        b=eLie+CkD2/TV1Uykp961ifXTf9cDB/p6zDX1gPWWfwuPnrr54xs2N6xoslFhPVhAef
-         nqZtvUyKiHWT5VmxTXR6KhcIZ5xO4NIIAc2sg2CZBHlMjbkxOBsFWxc03z3MeUQDdLCD
-         yEOgQ5/MEoUlGqAh/qtekBsr1zalHdxk6zcxjcvEObKjNlRcM0EnoPuiI6Xzb9fa0UXy
-         7uVpa3x6Hfwd1FTn990iRmq5tOkpJIMH2l5SlwoCcs+mfBwL3Iq5+fdhWi1K59VDgigB
-         CyTivECIllagX7x8NoPYUXg/oH3pKejT5pYBlS9fOM2TGfxksmNaXWWaHJzzzjJG7/du
-         jhkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=i4P+n6d7sxMFhKIDX+LexvGXhWliZJOtxfITYYKXF40=;
-        b=CaU+xk+7oR3av8cIq//zUVUx7hoyg7VSjr6NaugunIVbKIRrkACFPJf44dUvYGUe01
-         7H2CetYJRWd4daGyqe2lmpU7P1Yq2y0/bQ0Ier7t/gjIWzbqHyodXnNDDLPKx6sITARq
-         NnhqJsRlJ18/JVreS/P4HNAwoGacdhC6+is4rat66H1zlbyiQSDTyCMj73Dy9clSOAdz
-         rrEZg3EdQtHfoYy0oQUrxJs3FajljuAUIuYsHZcfU9o1ZQs8gvBx8Qr8HV187eS+se2t
-         FYXsgF9crj7yoEBJXW6YzErGkHMXvkfXrQpfu/hrGzcpLwCNE+G5ynJ99aIcKjwK+WX0
-         4rkA==
-X-Gm-Message-State: APjAAAV1E/c+gvr8CmLWOyomtg8uDyoKMXzlx0XS7Ay2Gy01O1mR8fYr
-        4elg93TCn/GV+TDHpve2CDZCZiFm
-X-Google-Smtp-Source: APXvYqyE//7IorNdNt9BYnIAInmLNk38rAGJtnXU5b54P0+hWW//dHtq3sEpQWxfkxKamUTM/qgcUQ==
-X-Received: by 2002:a50:e18b:: with SMTP id k11mr30456016edl.257.1579109013987;
-        Wed, 15 Jan 2020 09:23:33 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u29sm736475edb.22.2020.01.15.09.23.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 09:23:33 -0800 (PST)
-Subject: Re: [PATCH net] net: dsa: tag_qca: fix doubled Tx statistics
-To:     Alexander Lobakin <alobakin@dlink.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        John Crispin <john@phrozen.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200115085652.12586-1-alobakin@dlink.ru>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <69ba9cbe-f676-b496-f2c0-ff43050bd219@gmail.com>
-Date:   Wed, 15 Jan 2020 09:23:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 12:24:06 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1irmOg-0007GP-4Z; Wed, 15 Jan 2020 17:24:02 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     christian.brauner@ubuntu.com
+Cc:     eparis@redhat.com, jannh@google.com, linux-kernel@vger.kernel.org,
+        oleg@redhat.com, shallyn@cisco.com, stable@vger.kernel.org
+Subject: [PATCH v2] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+Date:   Wed, 15 Jan 2020 18:23:55 +0100
+Message-Id: <20200115172355.19209-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200115171736.16994-1-christian.brauner@ubuntu.com>
+References: <20200115171736.16994-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115085652.12586-1-alobakin@dlink.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 12:56 AM, Alexander Lobakin wrote:
-> DSA subsystem takes care of netdev statistics since commit 4ed70ce9f01c
-> ("net: dsa: Refactor transmit path to eliminate duplication"), so
-> any accounting inside tagger callbacks is redundant and can lead to
-> messing up the stats.
-> This bug is present in Qualcomm tagger since day 0.
-> 
-> Fixes: cafdc45c949b ("net-next: dsa: add Qualcomm tag RX/TX handler")
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+introduced the ability to opt out of audit messages for accesses to
+various proc files since they are not violations of policy.
+While doing so it somehow switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials of the task to using the objective credentials. I
+couldn't find the original lkml thread and so I don't know why this switch
+was done. But it seems wrong since ptrace_has_cap() is currently only used
+in ptrace_may_access(). And it's used to check whether the calling task
+(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
+to operate on the target task (object). According to the cred.h comments
+this would mean the subjective credentials of the calling task need to be
+used.
+This switches it to use security_capable() because we only call
+ptrace_has_cap() in ptrace_may_access() and in there we already have a
+stable reference to the calling tasks creds under cred_guard_mutex so
+there's no need to go through another series of dereferences and rcu
+locking done in ns_capable{_noaudit}().
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Serge Hallyn <shallyn@cisco.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric Paris <eparis@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ kernel/ptrace.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index cb9ddcc08119..d146133e97f1 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -264,12 +264,13 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
+ 	return ret;
+ }
+ 
+-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
++static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
++			  unsigned int mode)
+ {
+ 	if (mode & PTRACE_MODE_NOAUDIT)
+-		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
++		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
+ 	else
+-		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
++		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
+ }
+ 
+ /* Returns 0 on success, -errno on denial. */
+@@ -321,7 +322,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+ 	    gid_eq(caller_gid, tcred->sgid) &&
+ 	    gid_eq(caller_gid, tcred->gid))
+ 		goto ok;
+-	if (ptrace_has_cap(tcred->user_ns, mode))
++	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+ 		goto ok;
+ 	rcu_read_unlock();
+ 	return -EPERM;
+@@ -340,7 +341,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	     !ptrace_has_cap(mm->user_ns, mode)))
++	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+ 	    return -EPERM;
+ 
+ 	return security_ptrace_access_check(task, mode);
+
+base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
 -- 
-Florian
+2.25.0
+
