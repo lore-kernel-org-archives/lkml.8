@@ -2,497 +2,134 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24764C33CB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F117FC33CB2
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7FA24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:39:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="fpUaww58"
+	by mail.kernel.org (Postfix) with ESMTP id C555124679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgAOKjS (ORCPT
+        id S1729818AbgAOKjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 15 Jan 2020 05:39:18 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:32637 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729650AbgAOKjR (ORCPT
+Received: from mout.kundenserver.de ([212.227.126.130]:53007 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgAOKjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jan 2020 05:39:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579084751;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=9CFQDwauyjmyQLL459fcXAM43iBplj8PhESYglMZ9zk=;
-        b=fpUaww58LP3DM62/tQfpCizXHWFw/4MezJiYxpftysWWKpEvRxTV7xOTE09aGvXyJf
-        2gUPQAShbYb8S+ntyewZCVY3im/v9eVLmZzH9ZvGCoBVnJCBpsyovpqEl4zOoW8sZJUn
-        LnGmxEpVPSNH748m/2tBvrJRlY7H00LXX7NE5BucQYkOGGxUJG6lriaufkkdK5Z/mOaT
-        rZiLdgk33wAEtDiDy7QolQgtyFjrDMd7Kd5l3pS3OINfrxguAK8v/1y5biNGekRx2xNy
-        nOmYW9xWEeD1wrUO8LIVWXOrELKiFnhyxnAkoeJ6P6f3mlVpP+mpeQZcgK9rhS8zwJF3
-        XKcw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0FAc5W05
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 15 Jan 2020 11:38:05 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v28 07/12] LRNG - add kernel crypto API PRNG extension
-Date:   Wed, 15 Jan 2020 11:34:09 +0100
-Message-ID: <526421170.FD02tCEzJt@positron.chronox.de>
-In-Reply-To: <5951792.lmNsirYsPE@positron.chronox.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2641155.iNH938UiKq@positron.chronox.de> <5951792.lmNsirYsPE@positron.chronox.de>
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MfYHQ-1jK98e08lM-00fy1R for <linux-kernel@vger.kernel.org>; Wed, 15 Jan
+ 2020 11:39:16 +0100
+Received: by mail-qk1-f181.google.com with SMTP id z76so15167024qka.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:39:15 -0800 (PST)
+X-Gm-Message-State: APjAAAUJyMhBrQCb0ijJ8fpQNRTuEJo+3tAKmD1eXCmZhyRomtJGdmp/
+        LdIuISTlBIw3TxcxH/f5Hs+nBNFEaA/VXtuqkYQ=
+X-Google-Smtp-Source: APXvYqwwMK8lTh8Q4bOX1GS6jqFFejfcqk8Cm3i2mSsSO69MRnbg256iON7w//dldQ1y9+KiSSdX5+iPUyYpK3QLxNs=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr26649069qka.286.1579084754892;
+ Wed, 15 Jan 2020 02:39:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+References: <1578989048-10162-1-git-send-email-peng.fan@nxp.com>
+ <20200114081751.3wjbbnaem7lbnn3v@pengutronix.de> <AM0PR04MB4481A2FB7E2C56C2386297E888340@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CAK8P3a3x55A8y9kR34zy8YyRhto8uay7PZGbDAufupiNS3+ihA@mail.gmail.com> <AM0PR04MB44813A1D55659658E3FA203188370@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB44813A1D55659658E3FA203188370@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jan 2020 11:38:58 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a29=KWrhO8uu7mMS2gbeCGpkL7Q-xaaUVO2wcVD9MN93g@mail.gmail.com>
+Message-ID: <CAK8P3a29=KWrhO8uu7mMS2gbeCGpkL7Q-xaaUVO2wcVD9MN93g@mail.gmail.com>
+Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:M3WXBTgV7oMTr+ED3aDHzGcAQ7MNA0LQ1Ok0eXXCAQeJYZNjUcH
+ u6YYu43a5itPzEAYlsVDYi16F9M7J3DH6oroFFGlZEubH8Vt2ER2T9iYZ732VBhpAi2pEyh
+ Cn6eUyBFh9bkjnhom3Ptkvxnc70hgpY6OzswkrudMK9AEMumoHtpicOl8l9ONgioLDniBMH
+ GcUavoBL2+/o9cuGNq1Eg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g7rIzxU9364=:aiDvK4QEbUHTuBstitYR80
+ rJ4AFfMet/s6XKoSTLd5mT4qq8I/yjPADNQniWWN1dhogNAiQZG9Q5DY1NQ9RLhxVbrpE9goU
+ 7Vs5e7lEXzu2JyD3X9JAaHTGPE5MHeLsYbgtEHenZFcJiWlLW6QuGbpGf4MF9UY570+ElDOp+
+ J8DssLcBf8xdgpYJyliP7lGE0+vKKaCanyRXvf4JwVn842vdiTWNKLxsTPz8SmqUgVpdzaJRn
+ u1C7hH/+PYppfbuzANbCh3qa3KMbd0N7yPEKmFTBR757GwPlASluJlRKeQZoPiLBdNQgOmUuy
+ rW2H/v6/lzwDlZQPQxc+AOtiBRFpc0YF9EFOilR7m4BTBBzTvyAI1XzJ53SZJVh8V964VhaWN
+ Lv5rfJg3yhTzl0+kLiANPFeNQVTwakrEGKMAfaUpNDiW9mj2ShxUWybPv3l9RTmh7kNm4Qwdu
+ 16O3whp4c6eWKD9VT11WLz8UN0bHqkRVdi7HAx7645KbiFJtjxS3yK6zkqLg+eSvcwJYHRBoe
+ UdLVTjAMjmw2L1pcQbh9EixR0O0wrfV/4K1vcul1MLTX+Z/zYfXO2akCqlM3jKZiaSKbtIALd
+ 6TZVvF9IsUxkFoz8CUI1hoJyipR7Suo5DEYr9piH0ASMANdu1CwyS97WGmwtlEuUvQVksQ8bz
+ MyaNMcwhoeHKLYImPuaS3spBt/qx7YkxzPX64ygpNvVqR+VpeOYE14QIbiFqB6iE6pmUJ5asg
+ UXh06Yiv+MjmlaB0g7TyPIre5xMs4oJAYyBMt9R8WxBXGlu3veWM92dN1mL/hmOYPUSwTtSp6
+ h4+tAvIvUbiX1ziWP51ma6A1sVQ2AXAfC93JRTWS7tMo00M+CjuqcMLLNHT8cf6kd1dsGKavn
+ 613JtaWo7GNXZRYgR11g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add runtime-pluggable support for all PRNGs that are accessible via
-the kernel crypto API, including hardware PRNGs. The PRNG is selected
-with the module parameter drng_name where the name must be one that the
-kernel crypto API can resolve into an RNG.
+On Wed, Jan 15, 2020 at 3:38 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when CONFIG_ARM64
+> > On Tue, Jan 14, 2020 at 9:32 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > > > Subject: Re: [PATCH] soc: imx: Makefile: only build soc-imx8 when
+> > >
+> > > There is no SOC_IMX8 currently. Need to introduce one in
+> > > arch/arm64/Kconfig.platforms. But I not see other vendors introduce
+> > > options like SOC_XX. Is this the right direction to add one in
+> > > Kconfig.platforms?
+> >
+> > I think it would be more consistent with the other platforms to have a symbol
+> > in drivers/soc/imx/Kconfig to control whether we build that driver.
+>
+> Ok, I'll add Kconfig entry in drivers/soc/imx/Kconfig for various i.MX SoCs.
 
-This allows using of the kernel crypto API PRNG implementations that
-provide an interface to hardware PRNGs. Using this extension,
-the LRNG uses the hardware PRNGs to generate random numbers. An
-example is the S390 CPACF support providing such a PRNG.
+I was thinking of one entry for this driver.
 
-The hash is provided by a kernel crypto API SHASH whose digest size
-complies with the seedsize of the PRNG.
+> > For some SoCs, we also allow running 32-bit kernels, so it would not be wrong
+> > to allow enabling the symbol on 32-bit ARM as well, but this is probably
+> > something where you want to consider the bigger picture to see if you want
+> > to support that configuration or not.
+>
+> Does the current upstream kernel support 32bit kernels on ARM64 platforms
+> without vendor specific stuff. I recalled that several years ago, NXP people
+> tried to upstream 32bit kernel support, but rejected by you.
 
-CC: "Eric W. Biederman" <ebiederm@xmission.com>
-CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-CC: Willy Tarreau <w@1wt.eu>
-CC: Matthew Garrett <mjg59@srcf.ucam.org>
-CC: Vito Caputo <vcaputo@pengaru.com>
-CC: Andreas Dilger <adilger.kernel@dilger.ca>
-CC: Jan Kara <jack@suse.cz>
-CC: Ray Strode <rstrode@redhat.com>
-CC: William Jon McCann <mccann@jhu.edu>
-CC: zhangjs <zachary@baishancloud.com>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Florian Weimer <fweimer@redhat.com>
-CC: Lennart Poettering <mzxreary@0pointer.de>
-CC: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-Tested-by: Neil Horman <nhorman@redhat.com>
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
-=2D--
- drivers/char/lrng/Kconfig      |  10 +
- drivers/char/lrng/Makefile     |   1 +
- drivers/char/lrng/lrng_kcapi.c | 327 +++++++++++++++++++++++++++++++++
- 3 files changed, 338 insertions(+)
- create mode 100644 drivers/char/lrng/lrng_kcapi.c
+We have at least some Broadcom SoCs that are supported this way. As
+long as you can use the same dtb file on a regular multi_v7_defconfig
+I see no problem with doing this.
 
-diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-index 15fb623d9d1f..0d070a3897dd 100644
-=2D-- a/drivers/char/lrng/Kconfig
-+++ b/drivers/char/lrng/Kconfig
-@@ -80,6 +80,16 @@ config LRNG_DRBG
- 	  Enable the SP800-90A DRBG support for the LRNG. Once the
- 	  module is loaded, output from /dev/random, /dev/urandom,
- 	  getrandom(2), or get_random_bytes is provided by a DRBG.
-+
-+config LRNG_KCAPI
-+	tristate "Kernel Crypto API support for the LRNG"
-+	select CRYPTO_RNG
-+	help
-+	  Enable the support for generic pseudo-random number
-+	  generators offered by the kernel crypto API with the
-+	  LRNG. Once the module is loaded, output from /dev/random,
-+	  /dev/urandom, getrandom(2), or get_random_bytes is
-+	  provided by the selected kernel crypto API RNG.
- endif # LRNG_DRNG_SWITCH
-=20
- endif # LRNG
-diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index 0d320fcb7b9e..94b2dfb2dfdb 100644
-=2D-- a/drivers/char/lrng/Makefile
-+++ b/drivers/char/lrng/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
- obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
- obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
- obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
-+obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
-diff --git a/drivers/char/lrng/lrng_kcapi.c b/drivers/char/lrng/lrng_kcapi.c
-new file mode 100644
-index 000000000000..115af147bd5c
-=2D-- /dev/null
-+++ b/drivers/char/lrng/lrng_kcapi.c
-@@ -0,0 +1,327 @@
-+// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+/*
-+ * Backend for the LRNG providing the cryptographic primitives using the
-+ * kernel crypto API.
-+ *
-+ * Copyright (C) 2018 - 2020, Stephan Mueller <smueller@chronox.de>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <crypto/hash.h>
-+#include <crypto/rng.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/lrng.h>
-+
-+static char *drng_name =3D NULL;
-+module_param(drng_name, charp, 0444);
-+MODULE_PARM_DESC(drng_name, "Kernel crypto API name of DRNG");
-+
-+static char *pool_hash =3D "sha512";
-+module_param(pool_hash, charp, 0444);
-+MODULE_PARM_DESC(pool_hash,
-+		 "Kernel crypto API name of hash or keyed message digest to read the ent=
-ropy pool");
-+
-+static char *seed_hash =3D NULL;
-+module_param(seed_hash, charp, 0444);
-+MODULE_PARM_DESC(seed_hash,
-+		 "Kernel crypto API name of hash with output size equal to seedsize of D=
-RNG to bring seed string to the size required by the DRNG");
-+
-+struct lrng_hash_info {
-+	struct shash_desc shash;
-+	char ctx[];
-+};
-+
-+struct lrng_drng_info {
-+	struct crypto_rng *kcapi_rng;
-+	struct lrng_hash_info *lrng_hash;
-+};
-+
-+static struct lrng_hash_info *_lrng_kcapi_hash_alloc(const char *name)
-+{
-+	struct lrng_hash_info *lrng_hash;
-+	struct crypto_shash *tfm;
-+	int size;
-+
-+	if (!name) {
-+		pr_err("Hash name missing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	tfm =3D crypto_alloc_shash(name, 0, 0);
-+	if (IS_ERR(tfm)) {
-+		pr_err("could not allocate hash %s\n", name);
-+		return ERR_CAST(tfm);
-+	}
-+
-+	size =3D sizeof(struct lrng_hash_info) + crypto_shash_descsize(tfm);
-+	lrng_hash =3D kmalloc(size, GFP_KERNEL);
-+	if (!lrng_hash) {
-+		crypto_free_shash(tfm);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	lrng_hash->shash.tfm =3D tfm;
-+
-+	return lrng_hash;
-+}
-+
-+static inline u32 _lrng_kcapi_hash_digestsize(struct lrng_hash_info *lrng_=
-hash)
-+{
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+	struct crypto_shash *tfm =3D shash->tfm;
-+
-+	return crypto_shash_digestsize(tfm);
-+}
-+
-+static inline void _lrng_kcapi_hash_free(struct lrng_hash_info *lrng_hash)
-+{
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+	struct crypto_shash *tfm =3D shash->tfm;
-+
-+	crypto_free_shash(tfm);
-+	kfree(lrng_hash);
-+}
-+
-+static void *lrng_kcapi_hash_alloc(const u8 *key, u32 keylen)
-+{
-+	struct lrng_hash_info *lrng_hash;
-+	int ret;
-+
-+	lrng_hash =3D _lrng_kcapi_hash_alloc(pool_hash);
-+	if (IS_ERR(lrng_hash))
-+		return ERR_CAST(lrng_hash);
-+
-+	/* If the used hash is no MAC, ignore the ENOSYS return code */
-+	ret =3D crypto_shash_setkey(lrng_hash->shash.tfm, key, keylen);
-+	if (ret && ret !=3D -ENOSYS) {
-+		pr_err("could not set the key for MAC\n");
-+		_lrng_kcapi_hash_free(lrng_hash);
-+		return ERR_PTR(ret);
-+	}
-+
-+	pr_info("Hash %s allocated\n", pool_hash);
-+
-+	return lrng_hash;
-+}
-+
-+static void lrng_kcapi_hash_dealloc(void *hash)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+
-+	_lrng_kcapi_hash_free(lrng_hash);
-+	pr_info("Hash %s deallocated\n", pool_hash);
-+}
-+
-+static u32 lrng_kcapi_hash_digestsize(void *hash)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+
-+	return _lrng_kcapi_hash_digestsize(lrng_hash);
-+}
-+
-+static int lrng_kcapi_hash_buffer(void *hash, const u8 *inbuf, u32 inbufle=
-n,
-+				  u8 *digest)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+
-+	return crypto_shash_digest(shash, inbuf, inbuflen, digest);
-+}
-+
-+static int lrng_kcapi_drng_seed_helper(void *drng, const u8 *inbuf,
-+				       u32 inbuflen)
-+{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
-+
-+	if (lrng_hash) {
-+		struct shash_desc *shash =3D &lrng_hash->shash;
-+		u32 digestsize =3D _lrng_kcapi_hash_digestsize(lrng_hash);
-+		u8 digest[64] __aligned(8);
-+		int ret;
-+
-+		BUG_ON(digestsize > sizeof(digest));
-+
-+		ret =3D crypto_shash_digest(shash, inbuf, inbuflen, digest);
-+		if (ret)
-+			return ret;
-+
-+		ret =3D crypto_rng_reset(kcapi_rng, digest, digestsize);
-+		if (ret)
-+			return ret;
-+
-+		memzero_explicit(digest, digestsize);
-+
-+		return 0;
-+	} else {
-+		return crypto_rng_reset(kcapi_rng, inbuf, inbuflen);
-+	}
-+}
-+
-+static int lrng_kcapi_drng_generate_helper(void *drng, u8 *outbuf,
-+					   u32 outbuflen)
-+{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	int ret =3D crypto_rng_get_bytes(kcapi_rng, outbuf, outbuflen);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return outbuflen;
-+}
-+
-+static void *lrng_kcapi_drng_alloc(u32 sec_strength)
-+{
-+	struct lrng_drng_info *lrng_drng_info;
-+	struct crypto_rng *kcapi_rng;
-+	int seedsize;
-+	void *ret =3D  ERR_PTR(-ENOMEM);
-+
-+	if (!drng_name) {
-+		pr_err("DRNG name missing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!memcmp(drng_name, "drbg", 4)) {
-+		pr_err("SP800-90A DRBG cannot be allocated using lrng_kcapi "
-+		       "backend, use lrng_drbg backend instead\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!memcmp(drng_name, "stdrng", 6)) {
-+		pr_err("stdrng cannot be allocated using lrng_kcapi backend, "
-+		       "it is too unspecific and potentially may allocate the "
-+		       "DRBG\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	lrng_drng_info =3D kmalloc(sizeof(*lrng_drng_info), GFP_KERNEL);
-+	if (!lrng_drng_info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	kcapi_rng =3D crypto_alloc_rng(drng_name, 0, 0);
-+	if (IS_ERR(kcapi_rng)) {
-+		pr_err("DRNG %s cannot be allocated\n", drng_name);
-+		ret =3D ERR_CAST(kcapi_rng);
-+		goto free;
-+	}
-+	lrng_drng_info->kcapi_rng =3D kcapi_rng;
-+
-+	seedsize =3D  crypto_rng_seedsize(kcapi_rng);
-+
-+	if (sec_strength > seedsize)
-+		pr_info("Seedsize DRNG (%u bits) lower than "
-+			"security strength of LRNG noise source (%u bits)\n",
-+			crypto_rng_seedsize(kcapi_rng) * 8,
-+			sec_strength * 8);
-+
-+	if (seedsize) {
-+		struct lrng_hash_info *lrng_hash;
-+
-+		if (!seed_hash) {
-+			switch (seedsize) {
-+			case 32:
-+				seed_hash =3D "sha256";
-+				break;
-+			case 48:
-+				seed_hash =3D "sha384";
-+				break;
-+			case 64:
-+				seed_hash =3D "sha512";
-+				break;
-+			default:
-+				pr_err("Seed size %d cannot be processed\n",
-+				       seedsize);
-+				goto dealloc;
-+				break;
-+			}
-+		}
-+
-+		lrng_hash =3D _lrng_kcapi_hash_alloc(seed_hash);
-+		if (IS_ERR(lrng_hash)) {
-+			ret =3D ERR_CAST(lrng_hash);
-+			goto dealloc;
-+		}
-+
-+		if (seedsize !=3D _lrng_kcapi_hash_digestsize(lrng_hash)) {
-+			pr_err("Seed hash output size not equal to DRNG seed "
-+			       "size\n");
-+			_lrng_kcapi_hash_free(lrng_hash);
-+			ret =3D ERR_PTR(-EINVAL);
-+			goto dealloc;
-+		}
-+
-+		lrng_drng_info->lrng_hash =3D lrng_hash;
-+
-+		pr_info("Seed hash %s allocated\n", seed_hash);
-+	} else {
-+		lrng_drng_info->lrng_hash =3D NULL;
-+	}
-+
-+	pr_info("Kernel crypto API DRNG %s allocated\n", drng_name);
-+
-+	return lrng_drng_info;
-+
-+dealloc:
-+	crypto_free_rng(kcapi_rng);
-+free:
-+	kfree(lrng_drng_info);
-+	return ret;
-+}
-+
-+static void lrng_kcapi_drng_dealloc(void *drng)
-+{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
-+
-+	crypto_free_rng(kcapi_rng);
-+	if (lrng_hash) {
-+		_lrng_kcapi_hash_free(lrng_hash);
-+		pr_info("Seed hash %s deallocated\n", seed_hash);
-+	}
-+	kfree(lrng_drng_info);
-+	pr_info("DRNG %s deallocated\n", drng_name);
-+}
-+
-+static const char *lrng_kcapi_drng_name(void)
-+{
-+	return drng_name;
-+}
-+
-+static const char *lrng_kcapi_pool_hash(void)
-+{
-+	return pool_hash;
-+}
-+
-+const static struct lrng_crypto_cb lrng_kcapi_crypto_cb =3D {
-+	.lrng_drng_name			=3D lrng_kcapi_drng_name,
-+	.lrng_hash_name			=3D lrng_kcapi_pool_hash,
-+	.lrng_drng_alloc		=3D lrng_kcapi_drng_alloc,
-+	.lrng_drng_dealloc		=3D lrng_kcapi_drng_dealloc,
-+	.lrng_drng_seed_helper		=3D lrng_kcapi_drng_seed_helper,
-+	.lrng_drng_generate_helper	=3D lrng_kcapi_drng_generate_helper,
-+	.lrng_hash_alloc		=3D lrng_kcapi_hash_alloc,
-+	.lrng_hash_dealloc		=3D lrng_kcapi_hash_dealloc,
-+	.lrng_hash_digestsize		=3D lrng_kcapi_hash_digestsize,
-+	.lrng_hash_buffer		=3D lrng_kcapi_hash_buffer,
-+};
-+
-+static int __init lrng_kcapi_init(void)
-+{
-+	return lrng_set_drng_cb(&lrng_kcapi_crypto_cb);
-+}
-+static void __exit lrng_kcapi_exit(void)
-+{
-+	lrng_set_drng_cb(NULL);
-+}
-+
-+late_initcall(lrng_kcapi_init);
-+module_exit(lrng_kcapi_exit);
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
-+MODULE_DESCRIPTION("Linux Random Number Generator - kernel crypto API DRNG=
- backend");
-=2D-=20
-2.24.1
+What I would like to avoid though are ports that require extra code in
+arch/arm/mach-* that is not needed for the 64-bit target, or ports to
+64-bit hardware that only run in 32-bit mode.
 
+> So Is there any plan to support 32bit kernel on AARCH64 in upstream
+> kernel?
+> Or any suggestions?
 
+I don't think there should be 32-bit kernel running in aarch64-ilp32
+mode. This was discussed way back when the aarch64-ilp32 user
+space patches first appeared.
 
+Generally speaking you are usually better off running an aarch64
+kernel using aarch32 user space, but there may be reasons for
+running an ARMv8 aarch32 kernel on the same hardware and there
+is no technical reason why this shouldn't work for a clean port.
 
+We never really supported ARMv8-aarch32 in arch/arm/ as a
+separate target, but usually building an ARMv7 kernel is close
+enough to ARMv8-aarch32 that things just work. If you would
+like to help out making ARMv7VE and ARMv8-aarch64 proper
+targets for arch/arm/, let me know and we can discuss what parts
+are missing.
+
+     Arnd
