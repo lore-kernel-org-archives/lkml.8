@@ -2,140 +2,158 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ABDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78D7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C2D2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54062467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="M3gPje0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgAOGZL (ORCPT
+        id S1728905AbgAOG3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:25:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:37697 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOGZK (ORCPT
+        Wed, 15 Jan 2020 01:29:03 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:10526 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgAOG3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:25:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id l13so12608309ilj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 22:25:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=eW4Xg4UoPEB3a/2AZhweqhOWkYfz9yjercWeCE8lc/U=;
-        b=EKgwjrT3YwxEITb2IJKrnSeXHlbBydHHfFnJizwuR1a1SYisZUkHga8HVY6IJjOtkk
-         RzYLN/m2qDhzdBnfbSCFChYvibl83mV8m4Idh/fgp5UtE8eVol/YmH9XciN9UjZQQh0E
-         +4IMwJgL4X6nx9Q491bp+NbezjeWxHwdlx8FGs+lqz3OIM/6aoiJRqh3lkXY7upqUFzj
-         s9LYrNFQ3Vj57t+ijR1N3ptFsBapb1rsg+x3Qf94tIcjUZlhhM7K5MCVzP8xGUhfeIWJ
-         jYiPIs+DdX/mLKM1veRDfwLN/r0fUZYhPxYGaL+M7YTtk4IUon8Jrm22kZ8do3/GNj7N
-         s8mA==
-X-Gm-Message-State: APjAAAXrMRUpz5oVHmBRjKfU+Bw7Q95KeeecvlOf0IeAZwcA8C/bDojn
-        wkOXeMeUtFieMbhJVZ5uqQ/KKdaq+6kwH1e5WtieJZILlnWZ
-X-Google-Smtp-Source: APXvYqxML7d3L5Iw4ZulrZXdY2U62wtdVprZnJIEN29JJJ44LTFXEhQ5v2TG6VzttbZ8fg8QmdfCS48D2VQcTt90ZkkHQRKWwgmW
+        Wed, 15 Jan 2020 01:29:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1579069743; x=1610605743;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SCsTcYRzZqT1XjwZdj77fGQo772pNnre0Wi0mSnjoFI=;
+  b=M3gPje0UpgYrxz7TdZ29P4qVW/OxA1Vq3T6ASLJX3tZ1xcpwn5uE3gia
+   DoNFouVdVg9DjS3zUb3plNrup3gt3k84mitREVLMaFmDAyprkRqnA31uu
+   lXmv6h8nen2xueXi/5vp/ogkxoIxvUahQ1JNhmufiS1+KWnqXNkMpGEU2
+   aBnDl6X964cn3fUlvF9kI1DreLysWc3AfKuBvprlRBrqBxhCTxEtaFf8L
+   I0grFrpRJY4wV65TEQGeSvHiTXZZea1RjG5xHhO2/wXyXrLwgFGolQJdk
+   kEJ3lnYrW4BGthQxTEPwd63yIveJUxSwnty1qQ9FynltfQ5QU3QJY9Ajg
+   g==;
+IronPort-SDR: UeMichHTGOKgD2xukcc1A62+Mr9SCQtkDbzdQqKtPQF9KsaYxYaXfColzrafPITPRSMMSP+DKx
+ 8hwFUIg+ty1v9/2Qb9AH4IwZASFZMf8isYF/HVZ27Rs3F0MZhYsucZvgXAfwpPapX2WVuFwV23
+ XyqnN7/4Ea/F/o1/qXOIsoQvQUL8d8hPDUq9IzoikHX3DvVrscyjB+teaOqpBtDZ8yGFnoSj/0
+ eS2jMA+YXBHrLx61U03YOXZZ6nrBPV2YjXg6ze5ri3LHxlAhJ4S2Y6z1j8YiwTu6uEtxxRCuXi
+ DRE=
+X-IronPort-AV: E=Sophos;i="5.70,321,1574092800"; 
+   d="scan'208";a="128190374"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Jan 2020 14:29:02 +0800
+IronPort-SDR: givL/56iYs/HOTFjt0iwtB2ypPrM6PoAAC8pCpCbUOQUpWOvsuZnxfYaIb+GMKTXBr8vrkKQg+
+ 3zUhRoKOaz+CUvsasj/hGgCIMgshwHFOZKUXOuDwgZGqAaprp4EVOffgHv7vnkCGKHnEkq3aZM
+ LN+0ouQ0i4mFfoXCrPvXqmgKl1jnhddMiF4MN75muzf6U/YNh56XS9H/I8jSNNm0TqAJAEaghP
+ 8SVqY9C84qkTFez3p1f0dUn1yXyaklTonkNknDvTbL3zlGqNLGRgOdpMXsIllkRgwOWO1XACcb
+ nIu6YcjtuajHms8rqdKmkTAC
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 22:22:38 -0800
+IronPort-SDR: ebK4vff9IG1+U4hC0i3SfKYsOxq5FDoQuOFO5/NrWEcCyGIj3loJfyDrTcN1b9aUmdKHOfvIUJ
+ vDOmCuazfJ0hfgz4mPwc2s+JGMuRXPgrIvW72GvnC6zijgP2EGBH6N6NCGndHe761VRpoosFs7
+ Wfu1jGztqsvu1YqwRM1H7MklI9l23z/SCACLKFy6LYeckwOOhGJTQ1XCEExFRrKeopNM5j7U/W
+ sOn2HR8UFLvizs8InyuE/J7sjdDf5Jg5liH+t4UhjFLi9WwVZCGz0QeZnQujkTzsOhNj7ZidfC
+ A3w=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 14 Jan 2020 22:29:00 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v7 0/2] New zonefs file system
+Date:   Wed, 15 Jan 2020 15:28:57 +0900
+Message-Id: <20200115062859.1389827-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a614:: with SMTP id q20mr19404414ioi.36.1579069509574;
- Tue, 14 Jan 2020 22:25:09 -0800 (PST)
-Date:   Tue, 14 Jan 2020 22:25:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000031a8d7059c27c540@google.com>
-Subject: general protection fault in free_verifier_state (3)
-From:   syzbot <syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-syzbot found the following crash on:
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-HEAD commit:    6dd42aa1 Merge branch 'runqslower'
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e61349e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a736c99e9fe5a676
-dashboard link: https://syzkaller.appspot.com/bug?extid=b296579ba5015704d9fa
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+zonefs IO management implementation uses the new iomap generic code.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Changes from v6:
+* Fixed documentation as suggested by Randy.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b296579ba5015704d9fa@syzkaller.appspotmail.com
+Changes from v5:
+* Added simple description of zoned block devices to the documentation,
+  as suggested by Johannes.
+* Added a 64-char max label field to the super block to allow label
+  based identification of volumes using libblkid (checked with a patch
+  to libblkid).
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 3213 Comm: syz-executor.2 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
-Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8  
-e8 65 ae f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00  
-0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
-RSP: 0018:ffffc900017c7688 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000d65b000
-RDX: 0000000000040000 RSI: ffffffff818251eb RDI: 0000000000000000
-RBP: ffffc900017c76d0 R08: ffff88806f496640 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007fdb4648e700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000010f6e80 CR3: 00000000690e9000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-Call Trace:
-  do_check_common+0x2ec7/0x9650 kernel/bpf/verifier.c:9597
-  do_check_main kernel/bpf/verifier.c:9654 [inline]
-  bpf_check+0x84ed/0xbb07 kernel/bpf/verifier.c:10009
-  bpf_prog_load+0xeab/0x17f0 kernel/bpf/syscall.c:1859
-  __do_sys_bpf+0x1269/0x37a0 kernel/bpf/syscall.c:3096
-  __se_sys_bpf kernel/bpf/syscall.c:3055 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3055
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45af49
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fdb4648dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
-RDX: 0000000000000024 RSI: 0000000020000200 RDI: 0000000000000005
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fdb4648e6d4
-R13: 00000000004c1697 R14: 00000000004d66a0 R15: 00000000ffffffff
-Modules linked in:
----[ end trace d725571ef2f4cce3 ]---
-RIP: 0010:free_verifier_state+0x49/0x1d0 kernel/bpf/verifier.c:744
-Code: db 48 83 ec 20 48 89 45 b8 48 c1 e8 03 4c 01 f8 89 75 c4 48 89 45 c8  
-e8 65 ae f2 ff 4c 63 f3 4f 8d 2c f4 4c 89 e8 48 c1 e8 03 <42> 80 3c 38 00  
-0f 85 2b 01 00 00 4f 8d 34 f4 49 8b 3e 48 85 ff 48
-RSP: 0018:ffffc900017c7688 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000d65b000
-RDX: 0000000000040000 RSI: ffffffff818251eb RDI: 0000000000000000
-RBP: ffffc900017c76d0 R08: ffff88806f496640 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dffffc0000000000
-FS:  00007fdb4648e700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000075c000 CR3: 00000000690e9000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Changes from v4:
+* Use octal values for file and directory permissions
+* Set initial directory permissions to 0555 (no write permission)
+* Prevent setting write permissions for directories
 
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  241 ++++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1177 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  175 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1619 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.24.1
+
