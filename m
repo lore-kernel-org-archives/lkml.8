@@ -2,99 +2,207 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB46C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A702081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E372081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgGdXFID"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F2ewjwg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgAONHk (ORCPT
+        id S1726554AbgAONJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:07:40 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46051 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAONHj (ORCPT
+        Wed, 15 Jan 2020 08:09:40 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37582 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgAONJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:07:39 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n16so15258817oie.12;
-        Wed, 15 Jan 2020 05:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=Uc0xbXgTVUa2g+0VE0qpo9jTGqpit0XhHI4GsKKT/VM=;
-        b=HgGdXFIDSNlO1Wse+Ln8TzTGQlaJMQ4UTejLeKnr1VxiJ20xDmvuOWL3Go7oaPa/rc
-         kBjg84j4tiOoZrmdF+zV8w4A3qHpFZV9jrwWjIfFjzm/8WkpHlbi3rHGmYrgsBwCIZzo
-         S1fsUA1xKeZzAD1NecFw5GDYp/G+3ZVDriiqwSxnsuxmogmQ1+t8kv/KCjaywZkfkKbn
-         oCvHJSc/D6rY76WJlE78yWIchkHM7EYK4QMBxA0+5eYsnuk2IAtzB97yTW9fBjwrg8fl
-         lY9aB0QeyTcxLXPLEsF1MfAPuLzUJc4wQsTbYAu6aZPcNc7lyl7eCGvc/hEAf2v0xhdF
-         3faA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=Uc0xbXgTVUa2g+0VE0qpo9jTGqpit0XhHI4GsKKT/VM=;
-        b=AB7rUuckC/nKgpTO3reVllw02ZvXcC0fXCx5IBBDtUEnjzOAiMon3a4zgJ1lVewoyg
-         aInj2Yly59+Nbp36nzAzCmfdFkWr3oYODg44z/T9E59AHbO/YorIHtSEpYi6zIkeQOy2
-         4B0Ld7DQtVKaW5tMbnoXXMlv7QUcqTCqODOmIrG8NHQ3B65bedphizqOTHIfonh/rIT1
-         R0tL4gZe01/wHQnEvx3ExlzuEIpBu24hJHEMP+piMDyWMRq9C3VvAWkj5lASHlGclRU+
-         1YigiPLJtE/mT7WMwoaQprrsYPcJGNJuwfEvVgRP20XIkUWSTH0rKZplXgKUuSQ+EE7q
-         wwkA==
-X-Gm-Message-State: APjAAAXl6T+xomXb3jF8DBHVId7ufgDmYREINs4YUAVKLYJuIBxez8kr
-        j2rstWD+Zj6hyuLE7XOF9sXRVdOhCWO10onthLo=
-X-Google-Smtp-Source: APXvYqy8KPZfk8cDJsJNQSMol4iJR++qWDEKUw7L7ZKirqnVJrVVuMfxN+xO5EiWgDtNwQC/oS05WZZpoq7mkjTzN6g=
-X-Received: by 2002:aca:5490:: with SMTP id i138mr21103528oib.69.1579093658646;
- Wed, 15 Jan 2020 05:07:38 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 05:07:38 -0800 (PST)
-In-Reply-To: <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
-References: <CGME20200115082821epcas1p4d76d8668dfac70ae3e3889d4ccb6c3ee@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-6-namjae.jeon@samsung.com>
- <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Wed, 15 Jan 2020 22:07:38 +0900
-Message-ID: <CAKYAXd9pu=G2DxbcN-aE=ToKAZKgxsDHA2Z3F+gvQnOx5di2fg@mail.gmail.com>
-Subject: Re: [PATCH v10 05/14] exfat: add file operations
+        Wed, 15 Jan 2020 08:09:40 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115130938euoutp01dad866682990e65cc118dbda39c48c01~qEWzWHoWr1900919009euoutp01f
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:09:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115130938euoutp01dad866682990e65cc118dbda39c48c01~qEWzWHoWr1900919009euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579093778;
+        bh=ueSGlkXTpFk7VXNWLhrgWBJ0hToomm/X8o6QoUdinb8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=F2ewjwg9r/omc4RxFTFZ6/9ejp2YYMbOj2iI3m+gE4P1AEDxG8cqnETqo5AO5yVMK
+         bPVz+c397OJj0OLUMEju34BFESLBbMe86MHbL0xYrWdh4Qg3jfstwJTudVp2xlc3Gg
+         v3ctWe30hzg3E8B81666+xh/uI2TwZuBpf282Vvs=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115130938eucas1p209b4204b639c05afc3880b4aa4ed47f1~qEWzACZoT1216012160eucas1p2t;
+        Wed, 15 Jan 2020 13:09:38 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5B.5F.61286.11F0F1E5; Wed, 15
+        Jan 2020 13:09:38 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115130937eucas1p2674b7613bb50697556ab3068985b8776~qEWynydpI1216512165eucas1p2r;
+        Wed, 15 Jan 2020 13:09:37 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115130937eusmtrp261b214e7212697676c420e59c0951e30~qEWym_ss00896208962eusmtrp2B;
+        Wed, 15 Jan 2020 13:09:37 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-c9-5e1f0f112373
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.FB.08375.11F0F1E5; Wed, 15
+        Jan 2020 13:09:37 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115130936eusmtip13802b1dead4248941f960f209aad27df~qEWxmaNxD2707427074eusmtip15;
+        Wed, 15 Jan 2020 13:09:36 +0000 (GMT)
+Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Peter Rosin <peda@axentia.se>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        kernel-janitors@vger.kernel.org, security@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <6ed59903-afe7-d5b2-73eb-ca626616dd6f@samsung.com>
+Date:   Wed, 15 Jan 2020 14:09:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxNYRz2ds4993Tr1tu90m+F5o4mS7TMXqJly5zNbGqG2cSJs0L31u4t
+        ZLZC9LUlUbgZfVglSW7qiqXuzUpqEZI1H1nJ1+6SihVdOp2a/nn3/J7f8+z3PNvLUqoMxpM9
+        oIsX9Do+RsMo6NrmsY7lKlfviJUnQshETrOcfLNfpEnhh7cUeTk6yJC/tSlykv++jyYlvW2I
+        tGdqSU2PFxnoaaXI46zvMvLi/hWGFA7V0KTeeg2Rq03dDCkbq0GkayINhbhxv8dzEJfXmC/n
+        8pM7aa7+ZwHN1RnfyjlTeTrDXW0N4+rvHuTeZ7Y4cEMfe2hupPwVxV3P62K4wYeTz7BpIXfB
+        mkpvdd2lWLdfiDlwWNCvCN6riK5saURxv+YdHT/dJk9GJnUGcmQBr4Jbg9l0BlKwKlyGIHPM
+        KJOGEQSWkWwkDcMIat5lOcxYhm9kyUWswqUIJhr8JJENwWiFmREXarwJsopKkIjn4kWQ+3mA
+        EkUUviyDJ386ZeKCwWvhXGr5lEiJg6EpfWCSZ1kaLwHzp1CRdsc74Udvk0ySuEHr5X5axI44
+        DJoKTk0ForAH9PRfm8beYLZdmboF+BELud2jSEodCu1nC6exGr623JVLeD78rRPNoqFysk3a
+        52m3GUHpeTsjqYLgTcc4I6ajsC/cvr9CojdA8b1sSqQBu8Brm5sUwgVyai9O00pIO6OS1D5Q
+        VVLFzJzNqLtBZSONcVY146w6xll1jP/vFiC6HHkICQZtlGAI0AlH/A281pCgi/LfF6s1ockf
+        2mZv+XEPjT6PtCLMIo2zMvrPwgiVjD9sSNRaEbCUZq6y9dKCCJVyP594TNDH7tEnxAgGK/Ji
+        aY2HMrDoy24VjuLjhUOCECfoZ7YOrKNnMsoz1buvflW3LcnT/9cW35DApNpzFb1O/SfJ7h2D
+        pZrcbteA3NA+32fBPkETfavHXfRRZy3e25dWNK957fTzqV+4cyXv5EX3fhA2V0c6Hms4rq6K
+        fz4nbucieyBvu2NuuNkcyQnXu8YSFZ3hzhZbiu5FmaX643r7A0tBsTpyy+KNGzS0IZoPWEbp
+        Dfw/bb/g+J0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsVy+t/xu7qC/PJxBlN6FC3+TjrGbvH633QW
+        i4UP7zJbXPn6ns3i/7YWdovZ9x+zWCx7cJrR4kx3rsXWW9IWz26dZLY40feB1eLyrjlsFgs/
+        bmWx2HtoPqPFvMPX2SxW/NzKaHH1bwejg6DH71+TGD2mHZjN7jG74SKLx95vC1g8ds66y+6x
+        aVUnm8e8k4Eee7dkedzvPs7k8fHpLRaPL6uuMXssmXaVzeP9PiDxeZOcx5RD7SwB/FF6NkX5
+        pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GeuOH2As+C5W
+        8av1NHsD4ybhLkZODgkBE4nPK/vYuxi5OIQEljJKvPt1hKWLkQMoISNxfH0ZRI2wxJ9rXWwQ
+        Na8ZJe5+PcQGkhAWcJfoW7SMEcQWEVCUmPriGTNIEbPAbFaJplVrWSE6ljBJdP64CNbBJmAl
+        MbF9FVgHr4CdxOHOZ6wg21gEVCW2P3cBCYsKREgc3jELqkRQ4uTMJywgNqdAoMThBc1MIDaz
+        gLrEn3mXmCFscYlbT+ZDxeUltr+dwzyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYkO9
+        4sTc4tK8dL3k/NxNjMCkse3Yz807GC9tDD7EKMDBqMTDm/FHLk6INbGsuDL3EKMEB7OSCO/J
+        GbJxQrwpiZVVqUX58UWlOanFhxhNgX6byCwlmpwPTGh5JfGGpobmFpaG5sbmxmYWSuK8HQIH
+        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYVZLvPc9be8d2yT4O8aeMf6REc2xL6/ladU/UmJzdVb7+
+        gd2BAJW5tcnTw7mW/Ah+sSXCOH7+rfpvsz4XXL3m1zhzb3f1DxfDtSfiMi+fXusYWNf8Tv5b
+        3OcnOdbuwTEBC3sOL80Tvpz80ikk4gm/ka68cuwkvo2Na/2tbD6JV6/eOa/9HXO4EktxRqKh
+        FnNRcSIA0JCo2jADAAA=
+X-CMS-MailID: 20200115130937eucas1p2674b7613bb50697556ab3068985b8776
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
+References: <20191029182320.GA17569@mwanda>
+        <CGME20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e@epcas3p4.samsung.com>
+        <87zhhjjryk.fsf@x220.int.ebiederm.org>
+        <fd4e6f01-074b-def7-7ffb-9a9197930c31@samsung.com>
+        <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-15 18:56 GMT+09:00, Arnd Bergmann <arnd@arndb.de>:
-> On Wed, Jan 15, 2020 at 9:28 AM Namjae Jeon <namjae.jeon@samsung.com>
-> wrote:
->
->> +
->> +               ktime_get_real_ts64(&ts);
->> +               exfat_set_entry_time(sbi, &ts,
->> +                               &ep->dentry.file.modify_time,
->> +                               &ep->dentry.file.modify_date,
->> +                               &ep->dentry.file.modify_tz);
->
-> I think this part should use current_time() instead of
-> ktime_get_real_ts64()
-> so it gets truncated to the correct resolution and range.
->
-> Please also check if there are other callers of ktime_get_real_ts64() that
-> may need the same change.
-Okay, I will change them.
-Thanks!
->
->       Arnd
->
+
+On 1/13/20 1:49 PM, Arnd Bergmann wrote:
+> On Fri, Jan 3, 2020 at 2:09 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+>> On 10/29/19 8:02 PM, Eric W. Biederman wrote:
+>>>
+>>> The goal is to avoid memory that has values of the previous users of
+>>> that memory region from leaking to userspace.  Which depending on who
+>>> the previous user of that memory region is could tell userspace
+>>> information about what the kernel is doing that it should not be allowed
+>>> to find out.
+>>>
+>>> I tried to trace through where "info" and thus presumably "info->fix" is
+>>> coming from and only made it as far as  register_framebuffer.  Given
+>>
+>> "info" (and thus "info->fix") comes from framebuffer_alloc() (which is
+>> called by fbdev device drivers prior to registering "info" with
+>> register_framebuffer()). framebuffer_alloc() does kzalloc() on "info".
+>>
+>> Therefore shouldn't memcpy() (as suggested by Jeo Perches) be enough?
+> 
+> Is it guaranteed that all drivers call framebuffer_alloc() rather than
+> open-coding it somewhere?
+> 
+> Here is a list of all files that call register_framebuffer() without first
+> calling framebuffer_alloc:
+> 
+> $ git grep -wl register_framebuffer | xargs grep -L framebuffer_alloc
+> Documentation/fb/framebuffer.rst
+> drivers/media/pci/ivtv/ivtvfb.c
+> drivers/media/platform/vivid/vivid-osd.c
+> drivers/video/fbdev/68328fb.c
+> drivers/video/fbdev/acornfb.c
+> drivers/video/fbdev/amba-clcd.c
+> drivers/video/fbdev/atafb.c
+> drivers/video/fbdev/au1100fb.c
+> drivers/video/fbdev/controlfb.c
+> drivers/video/fbdev/core/fbmem.c
+> drivers/video/fbdev/cyber2000fb.c
+> drivers/video/fbdev/fsl-diu-fb.c
+> drivers/video/fbdev/g364fb.c
+> drivers/video/fbdev/goldfishfb.c
+> drivers/video/fbdev/hpfb.c
+> drivers/video/fbdev/macfb.c
+> drivers/video/fbdev/matrox/matroxfb_base.c
+> drivers/video/fbdev/matrox/matroxfb_crtc2.c
+> drivers/video/fbdev/maxinefb.c
+> drivers/video/fbdev/ocfb.c
+> drivers/video/fbdev/pxafb.c
+> drivers/video/fbdev/sa1100fb.c
+> drivers/video/fbdev/stifb.c
+> drivers/video/fbdev/valkyriefb.c
+> drivers/video/fbdev/vermilion/vermilion.c
+> drivers/video/fbdev/vt8500lcdfb.c
+> drivers/video/fbdev/wm8505fb.c
+> drivers/video/fbdev/xilinxfb.c
+> 
+> It's possible (even likely, the ones I looked at are fine) that they
+> all correctly
+> zero out the fb_info structure first, but it seems hard to guarantee, so
+> Eric's suggestion would possibly still be the safer choice.
+
+I've audited all above instances and they are all fine. They either
+use the fb_info structure embedded in a driver specific structure
+(which is zeroed out) or (in case of some m68k specific drivers) use
+a static fb_info instance.
+
+Since fbdev is closed for new drivers it should be now fine to use
+the simpler approach (just use memcpy()).
+ 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
