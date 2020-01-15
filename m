@@ -2,153 +2,197 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8900CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E43C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF302467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCB9222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NGkEro7E"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Uw26TWOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAOPJK (ORCPT
+        id S1729179AbgAOPJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:09:10 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:54175 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgAOPJK (ORCPT
+        Wed, 15 Jan 2020 10:09:39 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:30782 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726562AbgAOPJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:09:10 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115150908euoutp013440f42927bb65d310eb12d832c9e163~qF-JH8frj2496124961euoutp01C
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:09:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115150908euoutp013440f42927bb65d310eb12d832c9e163~qF-JH8frj2496124961euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579100948;
-        bh=pgc0KbIHRZtV95G/YdItWgVEQnJDvr037YYBXdbWFl8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=NGkEro7EDp2UhDipKS1U4C+qMuVCgMjDl7mzkBMYf5p36+EapQEYEyyU7hx7a0xHh
-         On+OaTOUZyfGfVg6Ap8Bg0/wiFjAvEnYPGyB3OiGeEXcxc8uCJGD6rI3hy+NcS6JpQ
-         RrnX/ujtCw6CKHyg6kDa8yGRf7QKoLpzXktw6W0E=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200115150908eucas1p283cbcbee603710bc567640c991d16d20~qF-I9hzn81992219922eucas1p2X;
-        Wed, 15 Jan 2020 15:09:08 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 0F.0D.60679.41B2F1E5; Wed, 15
-        Jan 2020 15:09:08 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115150907eucas1p2c04f054556f4751704eab807edc807e4~qF-IaDPiU1970519705eucas1p2d;
-        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200115150907eusmtrp1a93425a3f9c857758d4679fc42bb4876~qF-IZW_HC0299102991eusmtrp1I;
-        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-49-5e1f2b14df6f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id BA.DC.07950.31B2F1E5; Wed, 15
-        Jan 2020 15:09:07 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115150907eusmtip2493072d5318fb15fcb5d627b60128478~qF-IEsI8p0507205072eusmtip20;
-        Wed, 15 Jan 2020 15:09:07 +0000 (GMT)
-Subject: Re: [PATCH] video: fbdev: arcfb: add missed free_irq
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jaya Kumar <jayalk@intworks.biz>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <76ebce76-6f24-c4c4-f067-3989a2c41710@samsung.com>
-Date:   Wed, 15 Jan 2020 16:09:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 15 Jan 2020 10:09:38 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FEw6Cs015516;
+        Wed, 15 Jan 2020 16:09:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=oY/yYuph59ZqrkV+Eznpr3R9n6eoYf1RmuTALklKNYw=;
+ b=Uw26TWOQnY4Wgr1w38wQ//dX+AdZ0SGREbBKLtiOo1UrmQHp8m1cpJvf13KVNDegVbhG
+ oJpMi1I3hK3ZbwRhaRzdAggRYhlDRBZyDyVI2O8VjABKx0vtCmVG3j2X8nzlTW2AxyD/
+ gKkBStVz15PYnVlMUaC+Cyk7eqoenV7t+nvuhQ8J3fihVYyN6ICL16TJsNiyKaF1RInW
+ JBtVz5LoClXV7D/Ui2RjvoggUaxI3XGVCP59Sm3ROpAOawPq2ca0eLc8cP+nQg3xMK2+
+ oq5Pl7cjbiI1yUQVVIngyuenAXAWk96hRsp0ODXv4ihsrMhmqkmfsLKaUNzSSMB8u5eA IA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78sc0y4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 16:09:34 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7398B10002A;
+        Wed, 15 Jan 2020 16:09:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5B51F2BC7D2;
+        Wed, 15 Jan 2020 16:09:30 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 16:09:29 +0100
+Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
+To:     =?UTF-8?Q?Cl=c3=a9ment_Leger?= <cleger@kalray.eu>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200115102142.11229-1-cleger@kalray.eu>
+ <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com>
+ <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com>
+Date:   Wed, 15 Jan 2020 16:09:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191116154416.19390-1-hslester96@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djPc7oi2vJxBo2z5C2ufH3PZjH70Etm
-        i2nH/jFZnOj7wGpxedccNgdWj52z7rJ7bGvex+pxv/s4k8fnTXIBLFFcNimpOZllqUX6dglc
-        GYs3XWMueMZZcWbiD9YGxr/sXYycHBICJhKrb7xn62Lk4hASWMEoseDvASjnC6PEkv9TWSCc
-        z4wSr7Z9hGvpWbCJCSKxnFHi6pF97BDOW0aJu28mALVwcAgL2Eos2lgD0iAioC7xeddOsBpm
-        gSZGidP3exlBEmwCVhIT21eB2bwCdhJ/bsxlBrFZBFQlXj9pZAKxRQUiJD49OMwKUSMocXLm
-        ExYQmxOo9/T8i2AXMQuIS9x6Mp8JwpaX2P52DjPIMgmBRewSz67NYAQ5SELAReL0lViID4Ql
-        Xh3fAvWNjMTpyT0sEPXrGCX+dryAat7OKLF88j82iCpriTvnfrGBDGIW0JRYv0sfIuwo8fz6
-        W2aI+XwSN94KQtzAJzFp23SoMK9ER5sQRLWaxIZlG9hg1nbtXMk8gVFpFpLPZiH5ZhaSb2Yh
-        7F3AyLKKUTy1tDg3PbXYKC+1XK84Mbe4NC9dLzk/dxMjMM2c/nf8yw7GXX+SDjEKcDAq8fBm
-        /JGLE2JNLCuuzD3EKMHBrCTCe3KGbJwQb0piZVVqUX58UWlOavEhRmkOFiVxXuNFL2OFBNIT
-        S1KzU1MLUotgskwcnFINjJt9rjrpluU8EfRa/D9y0lFHdtEN2gJn/a9stfc7IWp1RqfgX8is
-        PR8nMX3j1Nts7+iSIp9YsPz+qb9RDCcn/5kq3vV9l81nm4SiR/P5U7n3lTX/akjMV1jHv3GK
-        1gq7wiz9gtKHr6eJzWWZ+2mLrOEXF6fnq76993mremT/6zuP9Tymh895b6jEUpyRaKjFXFSc
-        CAAxPzWZLwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xe7rC2vJxBhc/mFhc+fqezWL2oZfM
-        FtOO/WOyONH3gdXi8q45bA6sHjtn3WX32Na8j9XjfvdxJo/Pm+QCWKL0bIryS0tSFTLyi0ts
-        laINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0MhZvusZc8Iyz4szEH6wNjH/Z
-        uxg5OSQETCR6Fmxi6mLk4hASWMoo8btvCpDDAZSQkTi+vgyiRljiz7UuNoia14wSDatPsoDU
-        CAvYSizaWANSIyKgLvF51052kBpmgSZGiQuHFzFCNPQySszbvYEZpIpNwEpiYvsqRhCbV8BO
-        4s+NuWBxFgFViddPGplAbFGBCInDO2ZB1QhKnJz5hAXE5gTqPT3/ItjVzEDb/sy7xAxhi0vc
-        ejKfCcKWl9j+dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNz
-        NzEC42rbsZ9bdjB2vQs+xCjAwajEw3vgn1ycEGtiWXFl7iFGCQ5mJRHekzNk44R4UxIrq1KL
-        8uOLSnNSiw8xmgI9N5FZSjQ5HxjzeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
-        Uotg+pg4OKUaGOfur0hs0uN4vOvJrf684C/6vA/qFhk8Pb5hsqzJx428RrE/FlyYe6DEMVLq
-        wBa/IzWZlinzp5cxycjfWnYwLnrZy2OLOJpCpN++5Hziu+J7jDhTabPYrCXvt5kFnpH/GbHs
-        yte+hflfyjlVls8tN43ZIyR8+PjzP/9XnzTQiOfIDZ2bvPZ9zlUlluKMREMt5qLiRABX0wpP
-        wQIAAA==
-X-CMS-MailID: 20200115150907eucas1p2c04f054556f4751704eab807edc807e4
-X-Msg-Generator: CA
+In-Reply-To: <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu>
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c
-References: <CGME20191116154430eucas1p21c738a988e3bc0c3544a388c71f4a75c@eucas1p2.samsung.com>
-        <20191116154416.19390-1-hslester96@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 11/16/19 4:44 PM, Chuhong Yuan wrote:
-> The driver forgets to free irq in remove which is requested in
-> probe.
-> Add the missed call to fix it.
+
+On 1/15/20 3:28 PM, Clément Leger wrote:
+> Hi Arnaud,
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/video/fbdev/arcfb.c | 3 +++
->  1 file changed, 3 insertions(+)
+> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@st.com wrote:
 > 
-> diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
-> index a48741aab240..7aed01f001a4 100644
-> --- a/drivers/video/fbdev/arcfb.c
-> +++ b/drivers/video/fbdev/arcfb.c
-> @@ -590,8 +590,11 @@ static int arcfb_probe(struct platform_device *dev)
->  static int arcfb_remove(struct platform_device *dev)
->  {
->  	struct fb_info *info = platform_get_drvdata(dev);
-> +	struct arcfb_par *par = info->par;
->  
->  	if (info) {
-> +		if (irq)
-> +			free_irq(par->irq, info);
->  		unregister_framebuffer(info);
+>> Hi Clément,
+>>
+>> On 1/15/20 11:21 AM, Clement Leger wrote:
+>>> In order to support preallocated notify ids, if their value is
+>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
+>>> dynamically but try to allocate the requested one. This is useful when
+>>> using custom ids to bind them to custom vendor resources. For instance,
+>>> it allow to assign a group of queues to a specific interrupti in order
+>>> to dispatch notifications.
+>>>
+>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>>> ---
+>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++--------
+>>>  include/linux/remoteproc.h           |  1 +
+>>>  2 files changed, 20 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>> index 307df98347ba..b1485fcd0f11 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+>>>  	/*
+>>>  	 * Assign an rproc-wide unique index for this vring
+>>>  	 * TODO: assign a notifyid for rvdev updates as well
+>>> -	 * TODO: support predefined notifyids (via resource table)
+>>>  	 */
+>>> -	ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+>>> -	if (ret < 0) {
+>>> -		dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>> -		return ret;
+>>> +	if (rsc->vring[i].notifyid == FW_RSC_NOTIFY_ID_ANY) {
+>>> +		ret = idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+>>> +		if (ret < 0) {
+>>> +			dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>> +			return ret;
+>>> +		}
+>>> +		notifyid = ret;
+>>> +
+>>> +		/* Let the rproc know the notifyid of this vring.*/
+>>> +		rsc->vring[i].notifyid = notifyid;
+>>> +	} else {
+>>> +		/* Reserve requested notify_id */
+>>> +		notifyid = rsc->vring[i].notifyid;
+>>> +		ret = idr_alloc(&rproc->notifyids, rvring, notifyid,
+>>> +				notifyid + 1, GFP_KERNEL);
+>>> +		if (ret < 0) {
+>>> +			dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>> +			return ret;
+>>> +		}
+>>>  	}
+>>> -	notifyid = ret;
+>>>  
+>>>  	/* Potentially bump max_notifyid */
+>>>  	if (notifyid > rproc->max_notifyid)
+>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+>>>  
+>>>  	rvring->notifyid = notifyid;
+>>>  
+>>> -	/* Let the rproc know the notifyid of this vring.*/
+>>> -	rsc->vring[i].notifyid = notifyid;
+>>>  	return 0;
+>>>  }
+>> The rproc_free_vring function resets the notifyid to -1 on free.
+>> This could generate a side effect if the resource table is not reloaded.
+> 
+> Oh indeed, I did not thought of that. What would you recommend ?
+> If using -1 in free vring, notify ids will be reallocated at next
+> round.
+Regarding the code i'm not sure that it is useful to reset the notifyID to -1 on free.
+In current version, on alloc, the notifyID is overwriten without check.
+And as vdev status is updated, vring struct in resource table should be considered as invalid
+Except if i missed a usecase/race condition...
 
-We cannot free IRQ while framebuffer is registered (as we can
-deadlock in arcfb_ioctl()).
+> 
+> I was also worried that it would break some existing user applications
+> which uses "0" as a notify id in vring but expect the id to be
+> allocated dynamically. With my modification, it means it will try to 
+> use "0" as a predefined id, leading to allocation failure.
+> 
+Yes this could introduce regression for firmware that sets 0 as default value.
+Probably better to introduce this patch with a new version of the resource table :)
 
-Also it seems that ordering in the probe function is wrong
-(it should not request IRQ or initialize the hardware after
-registering framebuffer).
-
->  		vfree((void __force *)info->screen_base);
->  		framebuffer_release(info);
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Regards
+Arnaud
+>>
+>>>  
+>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>> index 16ad66683ad0..dcae3394243e 100644
+>>> --- a/include/linux/remoteproc.h
+>>> +++ b/include/linux/remoteproc.h
+>>> @@ -123,6 +123,7 @@ enum fw_resource_type {
+>>>  };
+>>>  
+>>>  #define FW_RSC_ADDR_ANY (-1)
+>>> +#define FW_RSC_NOTIFY_ID_ANY (-1)This define can also be used in
+>>> rproc_free_vring
+> 
+> Indeed.
+> 
+> Thanks for your review.
+> 
+> Regards,
+> 
+> Clément
+> 
+>>
+>> Regards,
+>> Arnaud
+>>>  
+>>>  /**
+>>>   * struct fw_rsc_carveout - physically contiguous memory request
