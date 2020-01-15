@@ -2,151 +2,393 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD64FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A555C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A57214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:36:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UHypfphM"
+	by mail.kernel.org (Postfix) with ESMTP id 6088C2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgAOQgw (ORCPT
+        id S1729009AbgAOQhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:36:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47917 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729271AbgAOQgu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:36:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579106210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6IIyl7nwLzkMIjP69KzWLUXNNYREWPo9znJtU/sIj/o=;
-        b=UHypfphM3f08erT95URNJEP7LxM4oOZ+O315KZEnJjc0imOEu7aTALChw7PG3NnTCICG/H
-        EAV3dmFJX05kWAkdMfN/C1+fWSaXk9YprZE0AZoCTu5u7uyHoNszR5K/8L45Uv6kxcls55
-        AD0+qj1t3/zeTzjRrBgUjjdAkXYML7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-TluyZrpAP2WR_tppIxPjkg-1; Wed, 15 Jan 2020 11:36:48 -0500
-X-MC-Unique: TluyZrpAP2WR_tppIxPjkg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B6BA800D48;
-        Wed, 15 Jan 2020 16:36:46 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-188.ams2.redhat.com [10.36.116.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 386A25DA76;
-        Wed, 15 Jan 2020 16:36:42 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH v12 10/10] platform/x86: touchscreen_dmi: Add info for the Chuwi Vi8 Plus tablet
-Date:   Wed, 15 Jan 2020 17:35:54 +0100
-Message-Id: <20200115163554.101315-11-hdegoede@redhat.com>
-In-Reply-To: <20200115163554.101315-1-hdegoede@redhat.com>
-References: <20200115163554.101315-1-hdegoede@redhat.com>
+        Wed, 15 Jan 2020 11:37:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:39732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgAOQhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:37:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D710328;
+        Wed, 15 Jan 2020 08:37:21 -0800 (PST)
+Received: from [10.1.199.115] (e120195-lin.cambridge.arm.com [10.1.199.115])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 610E43F718;
+        Wed, 15 Jan 2020 08:37:20 -0800 (PST)
+Subject: Re: [RFC v5 44/57] objtool: arm64: Implement functions to add switch
+ tables alternatives
+To:     Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will@kernel.org
+References: <20200109160300.26150-1-jthierry@redhat.com>
+ <20200109160300.26150-45-jthierry@redhat.com>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <370e38b3-3c0c-e552-16fa-36571dd8e66b@arm.com>
+Date:   Wed, 15 Jan 2020 16:37:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200109160300.26150-45-jthierry@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add touchscreen info for the Chuwi Vi8 Plus tablet. This tablet uses a
-Chipone ICN8505 touchscreen controller, with the firmware used by the
-touchscreen embedded in the EFI firmware.
+Hi Julien,
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v7:
-- Remove PROPERTY_ENTRY_BOOL("efi-embedded-firmware") properties entry,
-  as this is no longer necessary
+On 1/9/20 4:02 PM, Julien Thierry wrote:
+> This patch implements the functions required to identify and add as
+> alternatives all the possible destinations of the switch table.
+> This implementation relies on the new plugin introduced previously which
+> records information about the switch-table in a
+> .discard.switch_table_information section.
 
-Changes in v6:
-- Switch from crc sums to SHA256 hashes for the firmware hash
----
- drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+I think you forgot to update the name of the section with respect to 
+what was done in the previous patch (.discard.switch_table_info instead 
+of .discard.switch_table_information).
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
-6/touchscreen_dmi.c
-index 4449e4c0b26b..4a09b479cda5 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -132,6 +132,18 @@ static const struct ts_dmi_data chuwi_vi8_data =3D {
- 	.properties     =3D chuwi_vi8_props,
- };
-=20
-+static const struct ts_dmi_data chuwi_vi8_plus_data =3D {
-+	.embedded_fw =3D {
-+		.name	=3D "chipone/icn8505-HAMP0002.fw",
-+		.prefix =3D { 0xb0, 0x07, 0x00, 0x00, 0xe4, 0x07, 0x00, 0x00 },
-+		.length	=3D 35012,
-+		.sha256	=3D { 0x93, 0xe5, 0x49, 0xe0, 0xb6, 0xa2, 0xb4, 0xb3,
-+			    0x88, 0x96, 0x34, 0x97, 0x5e, 0xa8, 0x13, 0x78,
-+			    0x72, 0x98, 0xb8, 0x29, 0xeb, 0x5c, 0xa7, 0xf1,
-+			    0x25, 0x13, 0x43, 0xf4, 0x30, 0x7c, 0xfc, 0x7c },
-+	},
-+};
-+
- static const struct property_entry chuwi_vi10_props[] =3D {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
-@@ -743,6 +755,15 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
- {
- 			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
- 		},
- 	},
-+	{
-+		/* Chuwi Vi8 Plus (CWI519) */
-+		.driver_data =3D (void *)&chuwi_vi8_plus_data,
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "D2D3_Vi8A1"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+		},
-+	},
- 	{
- 		/* Chuwi Vi10 (CWI505) */
- 		.driver_data =3D (void *)&chuwi_vi10_data,
-@@ -1137,6 +1158,9 @@ static int __init ts_dmi_init(void)
- 		return 0; /* Not an error */
-=20
- 	ts_data =3D dmi_id->driver_data;
-+	/* Some dmi table entries only provide an efi_embedded_fw_desc */
-+	if (!ts_data->properties)
-+		return 0;
-=20
- 	error =3D bus_register_notifier(&i2c_bus_type, &ts_dmi_notifier);
- 	if (error)
---=20
-2.24.1
+> 
+> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> [J.T.: Update arch implementation to new prototypes,
+>         Update switch table information section name,
+>         Do some clean up,
+>         Use the offset sign information,
+>         Use the newly added rela to find the corresponding jump instruction]
+> Signed-off-by: Julien Thierry <jthierry@redhat.com>
+> ---
+>   tools/objtool/arch/arm64/arch_special.c       | 251 +++++++++++++++++-
+>   .../objtool/arch/arm64/include/arch_special.h |   2 +
+>   tools/objtool/check.c                         |   4 +-
+>   tools/objtool/check.h                         |   2 +
+>   4 files changed, 255 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/objtool/arch/arm64/arch_special.c b/tools/objtool/arch/arm64/arch_special.c
+> index 5239489c9c57..a15f6697dc74 100644
+> --- a/tools/objtool/arch/arm64/arch_special.c
+> +++ b/tools/objtool/arch/arm64/arch_special.c
+> @@ -1,15 +1,262 @@
+>   // SPDX-License-Identifier: GPL-2.0-or-later
+>   
+> +#include <stdlib.h>
+> +#include <string.h>
+> +
+>   #include "../../special.h"
+> +#include "../../warn.h"
+> +#include "arch_special.h"
+> +#include "bit_operations.h"
+> +#include "insn_decode.h"
+> +
+> +/*
+> + * The arm64_switch_table_detection_plugin generate an array of elements
+> + * described by the following structure.
+> + * Each jump table found in the compilation unit is associated with one of
+> + * entries of the array.
+> + */
+> +struct switch_table_info {
+> +	u64 switch_table_ref; // Relocation target referencing the beginning of the jump table
+> +	u64 dyn_jump_ref; // Relocation target referencing the set of instructions setting up the jump to the table
+> +	u64 nb_entries;
+> +	u64 offset_unsigned;
+> +} __attribute__((__packed__));
+> +
+> +static bool insn_is_adr_pcrel(struct instruction *insn)
+> +{
+> +	u32 opcode = *(u32 *)(insn->sec->data->d_buf + insn->offset);
+> +
+> +	return ((opcode >> 24) & 0x1f) == 0x10;
+> +}
+> +
+> +static s64 next_offset(void *table, u8 entry_size, bool is_signed)
+> +{
+> +	if (!is_signed) {
+> +		switch (entry_size) {
+> +		case 1:
+> +			return *(u8 *)(table);
+> +		case 2:
+> +			return *(u16 *)(table);
+> +		default:
+> +			return *(u32 *)(table);
+> +		}
+> +	} else {
+> +		switch (entry_size) {
+> +		case 1:
+> +			return *(s8 *)(table);
+> +		case 2:
+> +			return *(s16 *)(table);
+> +		default:
+> +			return *(s32 *)(table);
+> +		}
+> +	}
+> +}
+> +
+> +static u32 get_table_entry_size(u32 insn)
+> +{
+> +	unsigned char size = (insn >> 30) & ONES(2);
+> +
+> +	switch (size) {
+> +	case 0:
+> +		return 1;
+> +	case 1:
+> +		return 2;
+> +	default:
+> +		return 4;
+> +	}
+> +}
+> +
+> +static int add_possible_branch(struct objtool_file *file,
+> +			       struct instruction *insn,
+> +			       u32 base, s64 offset)
+> +{
+> +	struct instruction *dest_insn;
+> +	struct alternative *alt;
+> +
+> +	offset = base + 4 * offset;
+> +
+> +	dest_insn = find_insn(file, insn->sec, offset);
+> +	if (!dest_insn)
+> +		return 0;
+> +
+> +	alt = calloc(1, sizeof(*alt));
+> +	if (!alt) {
+> +		WARN("allocation failure, can't add jump alternative");
+> +		return -1;
+> +	}
+> +
+> +	alt->insn = dest_insn;
+> +	alt->skip_orig = true;
+> +	list_add_tail(&alt->list, &insn->alts);
+> +	return 0;
+> +}
+> +
+> +static struct switch_table_info *get_swt_info(struct section *swt_info_sec,
+> +					      struct instruction *insn)
+> +{
+> +	u64 *table_ref;
+> +
+> +	if (!insn->jump_table) {
+> +		WARN("no jump table available for %s+0x%lx",
+> +		     insn->sec->name, insn->offset);
+> +		return NULL;
+> +	}
+> +	table_ref = (void *)(swt_info_sec->data->d_buf +
+> +			     insn->jump_table->offset);
+> +	return container_of(table_ref, struct switch_table_info,
+> +			    switch_table_ref);
+> +}
+> +
+> +static int add_arm64_jump_table_dests(struct objtool_file *file,
+> +				      struct instruction *insn)
+> +{
+> +	struct switch_table_info *swt_info;
+> +	struct section *objtool_data;
+> +	struct section *rodata_sec;
+> +	struct section *branch_sec;
+> +	struct instruction *pre_jump_insn;
+> +	u8 *switch_table;
+> +	u32 entry_size;
+> +
+> +	objtool_data = find_section_by_name(file->elf,
+> +					    ".discard.switch_table_info");
+> +	if (!objtool_data)
+> +		return 0;
+> +
+> +	/*
+> +	 * 1. Identify entry for the switch table
+> +	 * 2. Retrieve branch instruction
+> +	 * 3. Retrieve base offset
+> +	 * 3. For all entries in switch table:
+> +	 *     3.1. Compute new offset
+> +	 *     3.2. Create alternative instruction
+> +	 *     3.3. Add alt_instr to insn->alts list
+> +	 */
+> +	swt_info = get_swt_info(objtool_data, insn);
+> +
+> +	/* retrieving pre jump instruction (ldr) */
+> +	branch_sec = insn->sec;
+> +	pre_jump_insn = find_insn(file, branch_sec,
+> +				  insn->offset - 3 * sizeof(u32));
+> +	entry_size = get_table_entry_size(*(u32 *)(branch_sec->data->d_buf +
+> +						   pre_jump_insn->offset));
+> +
+> +	/* retrieving switch table content */
+> +	rodata_sec = find_section_by_name(file->elf, ".rodata");
+> +	switch_table = (u8 *)(rodata_sec->data->d_buf +
+> +			      insn->jump_table->addend);
+> +
+> +	/*
+> +	 * iterating over the pre-jumps instruction in order to
+> +	 * retrieve switch base offset.
+> +	 */
+> +	while (pre_jump_insn && pre_jump_insn->offset <= insn->offset) {
+> +		if (insn_is_adr_pcrel(pre_jump_insn)) {
+> +			u64 base_offset;
+> +			int i;
+> +
+> +			base_offset = pre_jump_insn->offset +
+> +				      pre_jump_insn->immediate;
+> +
+> +			/*
+> +			 * Once we have the switch table entry size
+> +			 * we add every possible destination using
+> +			 * alternatives of the original branch
+> +			 * instruction
+> +			 */
+> +			for (i = 0; i < swt_info->nb_entries; i++) {
+> +				s64 table_offset = next_offset(switch_table,
+> +							       entry_size,
+> +							       !swt_info->offset_unsigned);
+> +
+> +				if (add_possible_branch(file, insn,
+> +							base_offset,
+> +							table_offset)) {
+> +					return -1;
+> +				}
+> +				switch_table += entry_size;
+> +			}
+> +			break;
+> +		}
+> +		pre_jump_insn = next_insn_same_sec(file, pre_jump_insn);
+> +	}
+> +
+> +	return 0;
+> +}
+>   
+>   int arch_add_jump_table_dests(struct objtool_file *file,
+>   			      struct instruction *insn)
+>   {
+> -	return 0;
+> +	return add_arm64_jump_table_dests(file, insn);
+>   }
+>   
+> +static struct rela *find_swt_info_jump_rela(struct section *swt_info_sec,
+> +					    u32 index)
+> +{
+> +	u32 rela_offset;
+> +
+> +	rela_offset = index * sizeof(struct switch_table_info) +
+> +		      offsetof(struct switch_table_info, dyn_jump_ref);
+> +	return find_rela_by_dest(swt_info_sec, rela_offset);
+> +}
+> +
+> +static struct rela *find_swt_info_table_rela(struct section *swt_info_sec,
+> +					     u32 index)
+> +{
+> +	u32 rela_offset;
+> +
+> +	rela_offset = index * sizeof(struct switch_table_info) +
+> +		      offsetof(struct switch_table_info, switch_table_ref);
+> +	return find_rela_by_dest(swt_info_sec, rela_offset);
+> +}
+> +
+> +/*
+> + * Aarch64 jump tables are just arrays of offsets (of varying size/signess)
+> + * representing the potential destination from a base address loaded by an adr
+> + * instruction.
+> + *
+> + * Aarch64 branches to jump tables are composed of multiple instructions:
+> + *
+> + *     ldr<?>  x_offset, [x_offsets_table, x_index, ...]
+> + *     adr     x_dest_base, <addr>
+> + *     add     x_dest, x_target_base, x_offset, ...
+> + *     br      x_dest
+> + *
+> + * The arm64_switch_table_detection_plugin will make the connection between
+> + * the instruction setting x_offsets_table (dyn_jump_ref) and the actual
+> + * table of offsets (switch_table_ref)
+> + */
+>   struct rela *arch_find_switch_table(struct objtool_file *file,
+>   				    struct instruction *insn)
+>   {
+> -	return NULL;
+> +	struct section *objtool_data;
+> +	struct rela *res = NULL;
+> +	u32 nb_swt_entries = 0;
+> +	u32 i;
+> +
+> +	objtool_data = find_section_by_name(file->elf,
+> +					    ".discard.switch_table_info");
+> +	if (objtool_data)
+> +		nb_swt_entries = objtool_data->sh.sh_size /
+> +				 sizeof(struct switch_table_info);
+> +
+> +	for (i = 0; i < nb_swt_entries; i++) {
+> +		struct rela *info_rela;
+> +
+> +		info_rela = find_swt_info_jump_rela(objtool_data, i);
+> +		if (info_rela && info_rela->sym->sec == insn->sec &&
+> +		    info_rela->addend == insn->offset) {
+> +			if (res) {
+> +				WARN_FUNC("duplicate objtool_data rela",
+> +					  info_rela->sec, info_rela->offset);
+> +				continue;
+> +			}
+> +			res = find_swt_info_table_rela(objtool_data, i);
+> +			if (!res)
+> +				WARN_FUNC("missing relocation in objtool data",
+> +					  info_rela->sec, info_rela->offset);
+> +		}
+> +	}
+> +
+> +	return res;
+>   }
+> diff --git a/tools/objtool/arch/arm64/include/arch_special.h b/tools/objtool/arch/arm64/include/arch_special.h
+> index a82a9b3e51df..b96bcee308cf 100644
+> --- a/tools/objtool/arch/arm64/include/arch_special.h
+> +++ b/tools/objtool/arch/arm64/include/arch_special.h
+> @@ -3,6 +3,8 @@
+>   #ifndef _ARM64_ARCH_SPECIAL_H
+>   #define _ARM64_ARCH_SPECIAL_H
+>   
+> +#include <linux/types.h>
+> +
+>   #define EX_ENTRY_SIZE		8
+>   #define EX_ORIG_OFFSET		0
+>   #define EX_NEW_OFFSET		4
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index e0c6bda261c8..80ea5bbd36ab 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -33,8 +33,8 @@ struct instruction *find_insn(struct objtool_file *file,
+>   	return NULL;
+>   }
+>   
+> -static struct instruction *next_insn_same_sec(struct objtool_file *file,
+> -					      struct instruction *insn)
+> +struct instruction *next_insn_same_sec(struct objtool_file *file,
+> +				       struct instruction *insn)
+>   {
+>   	struct instruction *next = list_next_entry(insn, list);
+>   
+> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+> index 91adec42782c..15165d04d9cb 100644
+> --- a/tools/objtool/check.h
+> +++ b/tools/objtool/check.h
+> @@ -66,6 +66,8 @@ int check(const char *objname, bool orc);
+>   
+>   struct instruction *find_insn(struct objtool_file *file,
+>   			      struct section *sec, unsigned long offset);
+> +struct instruction *next_insn_same_sec(struct objtool_file *file,
+> +				       struct instruction *insn);
+>   
+>   #define for_each_insn(file, insn)					\
+>   	list_for_each_entry(insn, &file->insn_list, list)
+> 
 
+Cheers,
+
+-- 
+Raphaël Gault
