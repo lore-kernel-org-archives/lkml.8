@@ -2,216 +2,155 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB6EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A9DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2392187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE1E22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579089737;
+	bh=TO5UFyVXqPIEmhn24jmBqJH1UNBUHjDoh+E/hSQY4uk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UhaKKiJ7MMwK3kIUidxt7amX9ONXoeNSNkBrG7NsT80WM3AoxYrQAiqml69Q4p5Yq
+	 6ld2HpfDnVbTWQDQOE8g+/4R16UjywM0OkS5fw1RyZrsmOTqy+AlwhhTJRsB1bZEEZ
+	 SiEKuT5/PvNVhFRm31whZFU5w0VtxRe7fGepHrCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgAOLzK (ORCPT
+        id S1730170AbgAOMCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:55:10 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:57165 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730150AbgAOLyw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:54:52 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 0QcJeO5zDlN+2V1IUzOvxjL/wX0mZhILFdtzPQPMiCSZIWKxT4efFgcRPjd6+NGtVTFNf58hW8
- 4RQA91we/RgAlf9Fpd8QZRk+lPNLEyBYiasSlTHGKobKy0NVdtusfawv/hwjXLubZA3mLGPSu1
- 2OZ/Nu87ebW75X9tX+NyQsDhqBWYp541/2pNyv5uLWwJVqDKKrpXHWMNbuLh/etXccBkWpS9Cc
- UA8G1Qqjdga1P0H6XcAaP8U1OIxs/WmB5KSvsby3JW33WOCPGnSnibjy/d9QNkd21ooo6eNtv0
- QZg=
-X-IronPort-AV: E=Sophos;i="5.70,322,1574146800"; 
-   d="scan'208";a="61148934"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jan 2020 04:54:50 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 15 Jan 2020 04:54:49 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 15 Jan 2020 04:54:46 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <robh@kernel.org>,
-        <peda@axentia.se>, <linux@armlinux.org.uk>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v3 3/6] i2c: at91: Send bus clear command if SDA is down
-Date:   Wed, 15 Jan 2020 13:54:19 +0200
-Message-ID: <20200115115422.17097-4-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
-References: <20200115115422.17097-1-codrin.ciubotariu@microchip.com>
+        Wed, 15 Jan 2020 07:02:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729892AbgAOMCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:02:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4DB2187F;
+        Wed, 15 Jan 2020 12:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579089735;
+        bh=TO5UFyVXqPIEmhn24jmBqJH1UNBUHjDoh+E/hSQY4uk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z53Oerl7n8zbUE6seRg1o8NOKvzxlsVNnV27zQwafcpsHlv52i1T84HDgX8ywjXou
+         P8VYoeiJS7tXH/X/kxVeLcZ2+rqp8q4/tjZJDA101qoJqQj4JHWiAUW5vpLvBJ5M0H
+         xAf64mzsRC1NtdzsjWQcUsBSCxup6Kp/s4KdX9oo=
+Date:   Wed, 15 Jan 2020 13:02:12 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v11 2/4] uacce: add uacce driver
+Message-ID: <20200115120212.GA3270387@kroah.com>
+References: <1578710919-12141-1-git-send-email-zhangfei.gao@linaro.org>
+ <1578710919-12141-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200111194006.GD435222@kroah.com>
+ <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
+ <20200114145934.GA1960403@kroah.com>
+ <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After a transfer timeout, some faulty I2C slave devices might hold down
-the SDA pin. We can generate a bus clear command, hoping that the slave
-might release the pins.
-If the CLEAR command is not supported, we will use gpio recovery, if
-available, to reset the bus.
+On Wed, Jan 15, 2020 at 07:18:34PM +0800, zhangfei wrote:
+> Hi, Greg
+> 
+> On 2020/1/14 下午10:59, Greg Kroah-Hartman wrote:
+> > On Mon, Jan 13, 2020 at 11:34:55AM +0800, zhangfei wrote:
+> > > Hi, Greg
+> > > 
+> > > Thanks for the review.
+> > > 
+> > > On 2020/1/12 上午3:40, Greg Kroah-Hartman wrote:
+> > > > On Sat, Jan 11, 2020 at 10:48:37AM +0800, Zhangfei Gao wrote:
+> > > > > +static int uacce_fops_open(struct inode *inode, struct file *filep)
+> > > > > +{
+> > > > > +	struct uacce_mm *uacce_mm = NULL;
+> > > > > +	struct uacce_device *uacce;
+> > > > > +	struct uacce_queue *q;
+> > > > > +	int ret = 0;
+> > > > > +
+> > > > > +	uacce = xa_load(&uacce_xa, iminor(inode));
+> > > > > +	if (!uacce)
+> > > > > +		return -ENODEV;
+> > > > > +
+> > > > > +	if (!try_module_get(uacce->parent->driver->owner))
+> > > > > +		return -ENODEV;
+> > > > Why are you trying to grab the module reference of the parent device?
+> > > > Why is that needed and what is that going to help with here?
+> > > > 
+> > > > This shouldn't be needed as the module reference of the owner of the
+> > > > fileops for this module is incremented, and the "parent" module depends
+> > > > on this module, so how could it be unloaded without this code being
+> > > > unloaded?
+> > > > 
+> > > > Yes, if you build this code into the kernel and the "parent" driver is a
+> > > > module, then you will not have a reference, but when you remove that
+> > > > parent driver the device will be removed as it has to be unregistered
+> > > > before that parent driver can be removed from the system, right?
+> > > > 
+> > > > Or what am I missing here?
+> > > The refcount here is preventing rmmod "parent" module after fd is opened,
+> > > since user driver has mmap kernel memory to user space, like mmio, which may
+> > > still in-use.
+> > > 
+> > > With the refcount protection, rmmod "parent" module will fail until
+> > > application free the fd.
+> > > log like: rmmod: ERROR: Module hisi_zip is in use
+> > But if the "parent" module is to be unloaded, it has to unregister the
+> > "child" device and that will call the destructor in here and then you
+> > will tear everything down and all should be good.
+> > 
+> > There's no need to "forbid" a module from being unloaded, even if it is
+> > being used.  Look at all networking drivers, they work that way, right?
+> Thanks Greg for the kind suggestion.
+> 
+> I still have one uncertainty.
+> Does uacce has to block process continue accessing the mmapped area when
+> remove "parent" module?
+> Uacce can block device access the physical memory when parent module call
+> uacce_remove.
+> But application is still running, and suppose it is not the kernel driver's
+> responsibility to call unmap.
+> 
+> I am looking for some examples in kernel,
+> looks vfio does not block process continue accessing when
+> vfio_unregister_iommu_driver either.
+> 
+> In my test, application will keep waiting after rmmod parent, until ctrl+c,
+> when unmap is called.
+> During the process, kernel does not report any error.
+> 
+> Do you have any advice?
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
+Is there no way for the kernel to invalidate the memory and tell the
+process to stop?  tty drivers do this for when they are removed from the
+system.
 
-Changes in v3:
- - rebased on top of i2c/for-next;
-  - remove unnecessary initializations with false;
- - replaced SCL with SDA in title and commit message;
- - updated commit message;
+Anyway, this is all very rare, no kernel module is ever unloaded on a
+real system, that is only for when developers are working on them, so
+it's probably not that big of an issue, right?
 
-Changes in v2:
- - use CLEAR command only if SDA is down; update patch subject to
-   reflect this;
- - CLEAR command is no longer used for sama5d2, only sam9x60;
+thanks,
 
- drivers/i2c/busses/i2c-at91-core.c   |  2 ++
- drivers/i2c/busses/i2c-at91-master.c | 32 +++++++++++++++++++++++-----
- drivers/i2c/busses/i2c-at91.h        |  7 +++++-
- 3 files changed, 35 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-index 3da1a8acecb5..e14edd236108 100644
---- a/drivers/i2c/busses/i2c-at91-core.c
-+++ b/drivers/i2c/busses/i2c-at91-core.c
-@@ -131,6 +131,7 @@ static struct at91_twi_pdata sama5d2_config = {
- 	.has_dig_filtr = true,
- 	.has_adv_dig_filtr = true,
- 	.has_ana_filtr = true,
-+	.has_clear_cmd = false,	/* due to errata, CLEAR cmd is not working */
- };
- 
- static struct at91_twi_pdata sam9x60_config = {
-@@ -142,6 +143,7 @@ static struct at91_twi_pdata sam9x60_config = {
- 	.has_dig_filtr = true,
- 	.has_adv_dig_filtr = true,
- 	.has_ana_filtr = true,
-+	.has_clear_cmd = true,
- };
- 
- static const struct of_device_id atmel_twi_dt_ids[] = {
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-index 0aba51a7df32..bcc05a8fe826 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -480,7 +480,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 	unsigned long time_left;
- 	bool has_unre_flag = dev->pdata->has_unre_flag;
- 	bool has_alt_cmd = dev->pdata->has_alt_cmd;
--	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-+	bool has_clear_cmd = dev->pdata->has_clear_cmd;
- 
- 	/*
- 	 * WARNING: the TXCOMP bit in the Status Register is NOT a clear on
-@@ -641,10 +641,32 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
- 			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
- 	}
- 
--	if (rinfo->get_sda && !(rinfo->get_sda(&dev->adapter))) {
--		dev_dbg(dev->dev,
--			"SDA is down; clear bus using gpio\n");
--		i2c_recover_bus(&dev->adapter);
-+	/*
-+	 * some faulty I2C slave devices might hold SDA down;
-+	 * we can send a bus clear command, hoping that the pins will be
-+	 * released
-+	 */
-+	if (has_clear_cmd) {
-+		if (!(dev->transfer_status & AT91_TWI_SDA)) {
-+			dev_dbg(dev->dev,
-+				"SDA is down; sending bus clear command\n");
-+			if (dev->use_alt_cmd) {
-+				unsigned int acr;
-+
-+				acr = at91_twi_read(dev, AT91_TWI_ACR);
-+				acr &= ~AT91_TWI_ACR_DATAL_MASK;
-+				at91_twi_write(dev, AT91_TWI_ACR, acr);
-+			}
-+			at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
-+		}
-+	} else {
-+		struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-+
-+		if (rinfo->get_sda && !(rinfo->get_sda(&dev->adapter))) {
-+			dev_dbg(dev->dev,
-+				"SDA is down; clear bus using gpio\n");
-+			i2c_recover_bus(&dev->adapter);
-+		}
- 	}
- 
- 	return ret;
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index f57a6cab96b4..7e7b4955ca7f 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -36,6 +36,7 @@
- #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
- #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
- #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
-+#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
- #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
- #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
- #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
-@@ -69,6 +70,8 @@
- #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
- #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
- #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
-+#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
-+#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
- 
- #define	AT91_TWI_INT_MASK \
- 	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
-@@ -81,7 +84,8 @@
- #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
- 
- #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
--#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
-+#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
-+#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
- #define	AT91_TWI_ACR_DIR	BIT(8)
- 
- #define AT91_TWI_FILTR		0x0044
-@@ -118,6 +122,7 @@ struct at91_twi_pdata {
- 	bool has_dig_filtr;
- 	bool has_adv_dig_filtr;
- 	bool has_ana_filtr;
-+	bool has_clear_cmd;
- 	struct at_dma_slave dma_slave;
- };
- 
--- 
-2.20.1
-
+greg k-h
