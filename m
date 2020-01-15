@@ -2,177 +2,116 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB4AC33CBA
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CA0214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579099788;
-	bh=60sOzP0xSDoq3RuFeWje/iUxHpy096wz+O8EnFB9oyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nT+eM1O8iQJjwt7bF5i/kW8bhdw4Kp6EFnefr6HRMfSebEVY2qZ6I6reZuA2ffTWc
-	 xzS0T+y6UnGMjeh9fxNqJKLtGBn73KQBQJCm+di+PIqIz0ZH+FbVBYuTnauWROenEK
-	 4/iQZMUeMEKabMRoX207uUBx6u0hhEdBBqZaj+As=
+	by mail.kernel.org (Postfix) with ESMTP id F016E2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lqMsQAnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAOOtq (ORCPT
+        id S1729188AbgAOOtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:49:46 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44527 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729072AbgAOOtq (ORCPT
+        Wed, 15 Jan 2020 09:49:52 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:45637 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729129AbgAOOtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:49:46 -0500
-Received: by mail-ot1-f66.google.com with SMTP id h9so16252613otj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:49:45 -0800 (PST)
+        Wed, 15 Jan 2020 09:49:50 -0500
+Received: by mail-qv1-f66.google.com with SMTP id l14so7446156qvu.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:49:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cm5cr0KkaFdqdflwJkN3g1ehM0Qx8fj0jos08WlEqzM=;
+        b=lqMsQAnXFU2Rt1775zA/Y9RpU+D9BdtIlQNRV5pcYeoMkgjr8kts7UivMPIOiL0e5n
+         f10UOZ9PUDQKAc4uo8oxCDRPATVBy+4x0jxET5bAEYC/jRQba05LCqA5mFdDPXZKT+lb
+         OBhCmsKyjTUS/lbEpqcO3YgoacGz12Msnp2wVNAfyc8QXres7PpHjPHKsi2ZXkAcjK24
+         L01d3NeJlem45mPJulNzAcL08AlMmZ5ok7aIP/9KMn5V/0cTFYAPgtVCpTokVMp8STJN
+         Oyz87SA3j4IaBLjvR+j0YWYGrVgSfqgGG1K43pIfxbDt8YK8NEtcqI1PpfT+bfXVdzrt
+         6cIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H1ze89BBE7QI+NzTkr8tdkM1RIqde14fHEiBxrkkmaI=;
-        b=g1Ah9ClvwY76F9EYj8pzFljSm3vEDuHPbUDF8RTPeVSTLeaBw8popUBwhUBZ1PVleR
-         tIN7ghz4BE7R7oxUXWskDE89CQOnMVXOPoRZPDV+voseOxc6eUxPffE9nwpjrtzpHAK+
-         besXcpMMsDyjqjFZR+vda0/+KBCZ0VnXzzZqialqXyTaY8wZkajZ1zxmBxiXh8FVNjso
-         Mbrwm4PGZ8zsdKoJeDKQiLB+MuqAJOtrpPVS8qE79e+yvCARxfvcJTwcSjk+H/U2bbA/
-         RdLFvNdoPGPMWdkWYaFq76lTqPN+61wCthd7wvKV+sxmk/lyJuXEqLB3Kl8l9PVAnQLw
-         XSeA==
-X-Gm-Message-State: APjAAAWIIuReEt2cOCUThgtc94Y4Kr8GLWDVtOuGF358NhZFmveROiU5
-        ieyC7mzML6jWxA6b4v1yeqCDHl0=
-X-Google-Smtp-Source: APXvYqyZKRzPysuzL74DARoQmUPIwM9Lg1B+yloZTfAV+hUECRhJ0ItjdbPvxseZ9GeRs+kF/Ahf+w==
-X-Received: by 2002:a9d:75c5:: with SMTP id c5mr2950856otl.172.1579099784619;
-        Wed, 15 Jan 2020 06:49:44 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm5788825oic.45.2020.01.15.06.49.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 06:49:43 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220379
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 15 Jan 2020 08:49:42 -0600
-Date:   Wed, 15 Jan 2020 08:49:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-Message-ID: <20200115144942.GA15075@bogus>
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org>
- <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
+        bh=cm5cr0KkaFdqdflwJkN3g1ehM0Qx8fj0jos08WlEqzM=;
+        b=CyLMa1THk+AgxVKpq9GmKkho4YeZqCxWYbzvPgHnaDl5nSzYu7IQ+74Y+MSs2V/E/9
+         KAXm+INQqr1XkpFqvlew+hi2RM2YN7j0bXKVUPF5nNFyM3qeqqCWupHXQm3CVkg3u6Xr
+         zkh4sS6pt1LoQnbdaUeacgl9QC/7SW8w6ZgB47bnpapD+oCYD0607cLjizO8B8Cg1LyB
+         dt1fkDmemp6n6Y1W2+sMn18NiYKzNSdE9hcA61KgPCDUMKF/Q2re+baBjXeAGuzXY62m
+         cpAe+dHdu98btuP19UtmuI3z1UJhgZAInjK8xHqV28E9C6l9YFGd/XNydQCJBH3TN9CV
+         26tQ==
+X-Gm-Message-State: APjAAAXQOfoQ2GD326hfiSfy/w7jTbgnCWHPSMPSx8kr5RDFGPK8sMWo
+        nm1h46QHrQV5GsQBWPDcgSltlQ==
+X-Google-Smtp-Source: APXvYqyFIeQqkTbqfmHkLFxl6XwrUnGz4rIsK+5vF2sMxHxXVPVwnMtL57gUSF9TASMuieCBEj6hKA==
+X-Received: by 2002:a05:6214:11a8:: with SMTP id u8mr26158641qvv.16.1579099789994;
+        Wed, 15 Jan 2020 06:49:49 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id n32sm9400465qtk.66.2020.01.15.06.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 06:49:49 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1irjzQ-0008QI-RY; Wed, 15 Jan 2020 10:49:48 -0400
+Date:   Wed, 15 Jan 2020 10:49:48 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200115144948.GB25201@ziepe.ca>
+References: <20200114161225.309792-1-hch@lst.de>
+ <20200114192700.GC22037@ziepe.ca>
+ <20200115065614.GC21219@lst.de>
+ <20200115132428.GA25201@ziepe.ca>
+ <20200115143347.GL2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200115143347.GL2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 08:33:01PM -0800, David Dai wrote:
-> Redefine the Network-on-Chip devices to more accurately describe
-> the interconnect topology on Qualcomm's SDM845 platform. Each
-> interconnect device can communicate with different instances of the
-> RPMh hardware which are described as RSCs(Resource State Coordinators).
+On Wed, Jan 15, 2020 at 03:33:47PM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 15, 2020 at 09:24:28AM -0400, Jason Gunthorpe wrote:
 > 
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> ---
->  .../bindings/interconnect/qcom,sdm845.yaml         | 49 ++++++++++++++++++----
->  1 file changed, 40 insertions(+), 9 deletions(-)
+> > I was interested because you are talking about allowing the read/write side
+> > of a rw sem to be held across a return to user space/etc, which is the
+> > same basic problem.
 > 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
-> index 61e0097..6741a12 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
-> @@ -13,21 +13,44 @@ description: |
->     SDM845 interconnect providers support system bandwidth requirements through
->     RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
->     able to communicate with the BCM through the Resource State Coordinator (RSC)
-> -   associated with each execution environment. Provider nodes must reside within
-> -   an RPMh device node pertaining to their RSC and each provider maps to a
-> -   single RPMh resource.
-> +   associated with each execution environment. Provider nodes must point to at
-> +   least one RPMh device child node pertaining to their RSC and each provider
-> +   can map to multiple RPMh resources.
->   
->  properties:
-> +  reg:
-> +    maxItems: 1
-> +
->    compatible:
->      enum:
-> -      - qcom,sdm845-rsc-hlos
-> +      - qcom,sdm845-aggre1-noc
-> +      - qcom,sdm845-aggre2-noc
-> +      - qcom,sdm845-config-noc
-> +      - qcom,sdm845-dc-noc
-> +      - qcom,sdm845-gladiator-noc
-> +      - qcom,sdm845-mem-noc
-> +      - qcom,sdm845-mmss-noc
-> +      - qcom,sdm845-system-noc
->  
->    '#interconnect-cells':
->      const: 1
->  
-> +  qcom,bcm-voter-names:
-> +    items:
-> +      - const: apps
-> +      - const: disp
+> No it is not; allowing the lock to be held across userspace doesn't
+> change the owner. This is a crucial difference, PI depends on there
+> being a distinct owner. That said, allowing the lock to be held across
+> userspace still breaks PI in that it completely wrecks the ability to
+> analyze the critical section.
 
-If these are always the names, why do you need them?
+I'm not sure what you are contrasting?
 
-> +
-> +  qcom,bcm-voters:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: |
-> +      List of phandles to qcom,bcm-voter nodes that are required by
-> +      this interconnect to send RPMh commands.
+I was remarking that I see many places open code a rwsem using an
+atomic and a completion specifically because they need to do the
+things Christoph identified:
 
-Is the max length 2?
+> (1) no unlocking by another process than the one that acquired it
+> (2) no return to userspace with locks held
 
-> +
->  required:
->    - compatible
-> +  - reg
->    - '#interconnect-cells'
-> +  - qcom,bcm-voters
->  
->  additionalProperties: false
->  
-> @@ -35,9 +58,17 @@ examples:
->    - |
->        #include <dt-bindings/interconnect/qcom,sdm845.h>
->  
-> -      apps_rsc: rsc {
-> -              rsc_hlos: interconnect {
-> -                      compatible = "qcom,sdm845-rsc-hlos";
-> -                      #interconnect-cells = <1>;
-> -              };
-> +      mem_noc: interconnect@1380000 {
-> +             compatible = "qcom,sdm845-mem-noc";
-> +             reg = <0 0x01380000 0 0x27200>;
-> +             #interconnect-cells = <1>;
-> +             qcom,bcm-voters = <&apps_bcm_voter>;
-> +      };
-> +
-> +      mmss_noc: interconnect@1740000 {
-> +             compatible = "qcom,sdm845-mmss-noc";
-> +             reg = <0 0x01740000 0 0x1c1000>;
-> +             #interconnect-cells = <1>;
-> +             qcom,bcm-voter-names = "apps", "disp";
-> +             qcom,bcm-voters = <&apps_bcm_voter>, <&disp_bcm_voter>;
->        };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+As an example flow: obtain the read side lock, schedual a work queue,
+return to user space, and unlock the read side from the work queue.
+
+If we can make some general primative that addresses this then maybe
+those open coded places can convert as well?
+
+Regards,
+Jason
