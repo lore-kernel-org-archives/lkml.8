@@ -2,127 +2,142 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218E7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D570C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19EF24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D843324671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="graPXtat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgAOOX2 (ORCPT
+        id S1729242AbgAOOXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:23:28 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62208 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726473AbgAOOX1 (ORCPT
+        Wed, 15 Jan 2020 09:23:55 -0500
+Received: from forward102p.mail.yandex.net ([77.88.28.102]:58122 "EHLO
+        forward102p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726472AbgAOOXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:23:27 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FENNu0139563
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:23:26 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xhbvgehq7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:23:22 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 15 Jan 2020 14:21:04 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 Jan 2020 14:21:01 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FEL0VD43909150
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 14:21:00 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75CA1A4060;
-        Wed, 15 Jan 2020 14:21:00 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D96C4A4064;
-        Wed, 15 Jan 2020 14:20:59 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.170])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 15 Jan 2020 14:20:59 +0000 (GMT)
-Date:   Wed, 15 Jan 2020 16:20:58 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        keescook@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] init/main.c: make some symbols static
-References: <20200115135458.71460-1-chenzhou10@huawei.com>
+        Wed, 15 Jan 2020 09:23:54 -0500
+Received: from mxback20o.mail.yandex.net (mxback20o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::71])
+        by forward102p.mail.yandex.net (Yandex) with ESMTP id 970DB1D40469;
+        Wed, 15 Jan 2020 17:23:51 +0300 (MSK)
+Received: from sas2-b157fac3b6f2.qloud-c.yandex.net (sas2-b157fac3b6f2.qloud-c.yandex.net [2a02:6b8:c08:b282:0:640:b157:fac3])
+        by mxback20o.mail.yandex.net (mxback/Yandex) with ESMTP id 0zS5Ncr5gy-NofWPAul;
+        Wed, 15 Jan 2020 17:23:51 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579098231;
+        bh=4q3GUyzYikcHKr0WzP0o2oa68vnJeRYttVlZp6EFh8c=;
+        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
+        b=graPXtatyA79ochr8IzVjTZkX5hXE7PDUT3xOdVErzRpvqceSF3y1aZYvZ9IgSfkj
+         YCELduUT01EOQ0JCPGr3hf4Fv0+WSlqZbQsUfT02gx4highPLNJjOKQm4U/pBRp70O
+         a9arh2YUW9XhexuBPIUw/XfKkBfUdIInHLaJw1JQ=
+Authentication-Results: mxback20o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by sas2-b157fac3b6f2.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ywluPV4xqO-NmWCG7hn;
+        Wed, 15 Jan 2020 17:23:49 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Date:   Wed, 15 Jan 2020 22:23:29 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9cd8df72fc3a7dfcdd88eb1fb56bbe35@kernel.org>
+References: <20200113101251.37471-1-jiaxun.yang@flygoat.com> <20200114233025.y4azwvivqo7kg7i5@pburton-laptop> <9cd8df72fc3a7dfcdd88eb1fb56bbe35@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115135458.71460-1-chenzhou10@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 20011514-0016-0000-0000-000002DD909C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011514-0017-0000-0000-00003340240E
-Message-Id: <20200115142057.GE19826@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 mlxlogscore=999 adultscore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001150116
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] irqchip: mips-cpu: Remove eoi operation
+To:     Marc Zyngier <maz@kernel.org>, Paul Burton <paulburton@kernel.org>
+CC:     linux-mips@vger.kernel.org, chenhc@lemote.com,
+        paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net,
+        linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C7C70199-38CC-473E-B20D-C1782F08CA2E@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(added Steven and Masami)
 
-On Wed, Jan 15, 2020 at 09:54:58PM +0800, Chen Zhou wrote:
-> Make variable xbc_namebuf and function boot_config_checksum static to
-> fix build warnings, warnings are as follows:
-> 
-> init/main.c:254:6:
-> 	warning: symbol 'xbc_namebuf' was not declared. Should it be static?
-> init/main.c:330:5:
-> 	warning: symbol 'boot_config_checksum' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  init/main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/init/main.c b/init/main.c
-> index a77114f..3a95591 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -251,7 +251,7 @@ early_param("loglevel", loglevel);
->  
->  #ifdef CONFIG_BOOT_CONFIG
->  
-> -char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
-> +static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
->  
->  #define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
->  
-> @@ -327,7 +327,7 @@ static char * __init xbc_make_cmdline(const char *key)
->  	return new_cmdline;
->  }
->  
-> -u32 boot_config_checksum(unsigned char *p, u32 size)
-> +static u32 boot_config_checksum(unsigned char *p, u32 size)
->  {
->  	u32 ret = 0;
->  
-> -- 
-> 2.7.4
-> 
 
--- 
-Sincerely yours,
-Mike.
+=E4=BA=8E 2020=E5=B9=B41=E6=9C=8815=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
+:40:31, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On 2020-01-14 23:30, Paul Burton wrote:
+>> Hi Jiaxun,
+>>=20
+>> On Mon, Jan 13, 2020 at 06:12:51PM +0800, Jiaxun Yang wrote:
+>>> The eoi opreation in mips_cpu_irq_controller caused
+>chained_irq_enter
+>>> falsely consider CPU IP interrupt as a FastEOI type IRQ=2E So the=20
+>>> interrupt
+>>> won't be masked during in handler=2E Which might lead to spurious=20
+>>> interrupt=2E
+>>>=20
+>>> Thus we simply remove eoi operation for mips_cpu_irq_controller,
+>>>=20
+>>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>>> ---
+>>>  drivers/irqchip/irq-mips-cpu=2Ec | 1 -
+>>>  1 file changed, 1 deletion(-)
+>>>=20
+>>> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec=20
+>>> b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> index 95d4fd8f7a96=2E=2E0ad7f1f9a58b 100644
+>>> --- a/drivers/irqchip/irq-mips-cpu=2Ec
+>>> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> @@ -55,7 +55,6 @@ static struct irq_chip mips_cpu_irq_controller =3D {
+>>>  	=2Eirq_mask	=3D mask_mips_irq,
+>>>  	=2Eirq_mask_ack	=3D mask_mips_irq,
+>>>  	=2Eirq_unmask	=3D unmask_mips_irq,
+>>> -	=2Eirq_eoi	=3D unmask_mips_irq,
+>>>  	=2Eirq_disable	=3D mask_mips_irq,
+>>>  	=2Eirq_enable	=3D unmask_mips_irq,
+>>>  };
+>>=20
+>> This one scares me; something doesn't seem right=2E The irq_eoi (n=C3=
+=A9e
+>eoi)
+>> callback was first added way back in commit 1417836e81c0 ("[MIPS] use
+>> generic_handle_irq, handle_level_irq, handle_percpu_irq")=2E The commit
+>> message there states that the motivation was to allow use of
+>> handle_percpu_irq(), and indeed handle_percpu_irq() does:
+>>=20
+>>     irq_ack() (ie=2E mask)
+>>     invoke the handler(s)
+>>     irq_eoi() (ie=2E unmask)
+>>=20
+>> By removing the irq_eoi callback I don't see how we'd ever unmask the
+>> interrupt again=2E=2E?
+>
+>To be completely blunt, the fact that unmask and eoi are implemented
+>the
+>same way is a clear sign that this is a bit broken=2E
+>
+>irq_eoi is used if the irqchip tracks the IRQ life-cycle in HW, and
+>it's
+>not obvious that this is the case=2E The fact that ack is also mapped to=
+=20
+>mask
 
+It's just a kind of hack to workaround the fact that our current percpu ir=
+q handler assumed
+all percpu irqs are edge triggered or fasteoi type=2E
+
+However MIPS processor implemented it in level triggered way=2E
+
+My solution would be add a check=2E If neither ack nor eoi exist for the c=
+hip,
+than we assume it's level triggered and process precpu irq in mask/unmask =
+way=2E
+
+Could it be a possible option?
+
+Thanks=2E
+
+>just adds to my feeling=2E=2E=2E
+>
+>         M=2E
+
+--=20
+Jiaxun Yang
