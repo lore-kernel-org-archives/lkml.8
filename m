@@ -2,80 +2,127 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F7CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218E7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA90D24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19EF24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgAOOXQ (ORCPT
+        id S1729241AbgAOOX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:23:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgAOOXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:23:15 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA0A24671;
-        Wed, 15 Jan 2020 14:23:14 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 09:23:12 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: sched/fair: scheduler not running high priority process on idle
- cpu
-Message-ID: <20200115092312.45159939@gandalf.local.home>
-In-Reply-To: <3960d46b3a4a4053a696a98ee6fd131d@AcuMS.aculab.com>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
-        <20200114115906.22f952ff@gandalf.local.home>
-        <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
-        <20200114124812.4d5355ae@gandalf.local.home>
-        <3960d46b3a4a4053a696a98ee6fd131d@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 Jan 2020 09:23:28 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726473AbgAOOX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:23:27 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FENNu0139563
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:23:26 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xhbvgehq7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 09:23:22 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 15 Jan 2020 14:21:04 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Jan 2020 14:21:01 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FEL0VD43909150
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 14:21:00 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75CA1A4060;
+        Wed, 15 Jan 2020 14:21:00 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D96C4A4064;
+        Wed, 15 Jan 2020 14:20:59 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.8.170])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 15 Jan 2020 14:20:59 +0000 (GMT)
+Date:   Wed, 15 Jan 2020 16:20:58 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        keescook@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] init/main.c: make some symbols static
+References: <20200115135458.71460-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115135458.71460-1-chenzhou10@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 20011514-0016-0000-0000-000002DD909C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011514-0017-0000-0000-00003340240E
+Message-Id: <20200115142057.GE19826@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_02:2020-01-15,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 mlxlogscore=999 adultscore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001150116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 12:57:10 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+(added Steven and Masami)
 
-> I'm surprised the 'normal case' for tracing function entry isn't done
-> in assembler without saving all the registers (etc).
+On Wed, Jan 15, 2020 at 09:54:58PM +0800, Chen Zhou wrote:
+> Make variable xbc_namebuf and function boot_config_checksum static to
+> fix build warnings, warnings are as follows:
+> 
+> init/main.c:254:6:
+> 	warning: symbol 'xbc_namebuf' was not declared. Should it be static?
+> init/main.c:330:5:
+> 	warning: symbol 'boot_config_checksum' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  init/main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/init/main.c b/init/main.c
+> index a77114f..3a95591 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -251,7 +251,7 @@ early_param("loglevel", loglevel);
+>  
+>  #ifdef CONFIG_BOOT_CONFIG
+>  
+> -char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+> +static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+>  
+>  #define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+>  
+> @@ -327,7 +327,7 @@ static char * __init xbc_make_cmdline(const char *key)
+>  	return new_cmdline;
+>  }
+>  
+> -u32 boot_config_checksum(unsigned char *p, u32 size)
+> +static u32 boot_config_checksum(unsigned char *p, u32 size)
+>  {
+>  	u32 ret = 0;
+>  
+> -- 
+> 2.7.4
+> 
 
-Well, it doesn't save all registers unless you ask it to. It only saves
-what the compiler mandates for "fentry" before calling C code.
-
-> For tsc stamps I think it should be possible saving just 3 registers
-> in under 32 instructions. Scaling to ns is a bit harder.
-> It's a shame the ns scaling isn't left to the reading code.
-
-Well, it could be done, as the ring buffer allows you to post process
-timestamps. You could switch to using just tsc:
-
- echo x86-tsc > /sys/kernel/tracing/trace_clock
-
-One reason that we do not post process the scaling to ns is that the
-scaling can change over time depending on the clock source, which means
-post processing will give you in accurate results. But the
-infrastructure is there to do it.
-
--- Steve
-
+-- 
+Sincerely yours,
+Mike.
 
