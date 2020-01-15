@@ -2,135 +2,178 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1AFC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1667CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC2122522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579121334;
-	bh=nwKS0zW1NjzVj+K/jTMff6/lN/RQqdLUaC940w/PiHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CVgqVSo31dvIRdamTxrwMEr5ojspnCQlH4p8jxrnRyJqgT/kYhgxgWYPbSJZDuvZ3
-	 amyZycjzxVDeOanWiGO++1GAo3049C7P65/sTQGK+Iu1fw5MLeRIkari5Mhc4Vk43n
-	 rKqqb0Tj5lnq8l0bmYpUyQ95aZYk5CPZMmybXosw=
+	by mail.kernel.org (Postfix) with ESMTP id D76102081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:50:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="frUuvqyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgAOUsx (ORCPT
+        id S1729469AbgAOUuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgAOUsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:48:53 -0500
-Received: from earth.universe (dyndsl-095-033-170-011.ewe-ip-backbone.de [95.33.170.11])
+        Wed, 15 Jan 2020 15:50:10 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:52635 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgAOUuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:50:09 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3001E2081E;
-        Wed, 15 Jan 2020 20:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579121332;
-        bh=nwKS0zW1NjzVj+K/jTMff6/lN/RQqdLUaC940w/PiHc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvLE67+tXTbGZAkxNOFcfvVDgYRMHBam2zj35egGoSJ/t7FE6jfYIlNZN0KJPUcI5
-         RmRaWoPN9ZlzSpwemZeH62eV12863YhMl2rxfwFpT77gLYAIZbgNVrAA9AQQsTTuEx
-         cWLhcn5iKhz3aeUccSabMjFYxWLlSehq9zR9YEpM=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 59E763C0C7C; Wed, 15 Jan 2020 21:48:50 +0100 (CET)
-Date:   Wed, 15 Jan 2020 21:48:50 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Oskari Lemmela <oskari@lemmela.net>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v4 0/4] X-Powers Power Supply Improvements
-Message-ID: <20200115204850.7innme3d4agbay2r@earth.universe>
-References: <20200115034048.24901-1-samuel@sholland.org>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A8981886BF;
+        Thu, 16 Jan 2020 09:50:05 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1579121405;
+        bh=dHE7kgWg+mXOsCfq2STIam2Qwtyxg6LEXAFFRxL3fxQ=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=frUuvqyDY0dbUAf9p4qfRiEZo2TRiCgzZvmM67JNmtRubBzLO8xjUxKFjFM9IiHys
+         Pin0pv5blh4wIx/wWG69W1VHOckbO1TPW2m3OFscMmBubEpdHLhpgLFSuIYIjEVVMQ
+         vfW6B0j9gXHb9UaQGgEr/3hlPAKWgXFOCj3aGaq0sKw7F/frhmjGasMVMy6drZkSKs
+         Bzz3ljYl3l2XFe7e491agSTSyHZAiYNgG2qTKjukxxslbLPZFfapdhTNAv0X8zUdwi
+         DlCF115ClldIo3wr4HKxdmiK6kiQQPIWD/IzUvPwvsIP2rMv4lYuk4hef+V8xi3eEG
+         jSLbZ1P2n33dw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e1f7afd0000>; Thu, 16 Jan 2020 09:50:05 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jan 2020 09:50:00 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1473.005; Thu, 16 Jan 2020 09:50:00 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "anthony.derosa@syscall7.com" <anthony.derosa@syscall7.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Document binding for generic SPI
+ multiplexer
+Thread-Topic: [PATCH 1/2] dt-bindings: spi: Document binding for generic SPI
+ multiplexer
+Thread-Index: AQHVyzPSC8iztSqm/U+939ZYv3kbhafrN7iAgAAinwA=
+Date:   Wed, 15 Jan 2020 20:49:59 +0000
+Message-ID: <ee0c179e6c41699e2ee70c8acd2b5c29712955a1.camel@alliedtelesis.co.nz>
+References: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz>
+         <20200114233857.25933-2-chris.packham@alliedtelesis.co.nz>
+         <CAL_Jsq+AOiFV4Kcu=r3-kz42ZqSVR_0ZuKtnz8ak_sksW0D0wQ@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+AOiFV4Kcu=r3-kz42ZqSVR_0ZuKtnz8ak_sksW0D0wQ@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B7F08148EF61BC438044039C31D7A680@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iquki6qdoejfp2er"
-Content-Disposition: inline
-In-Reply-To: <20200115034048.24901-1-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---iquki6qdoejfp2er
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Thanks, all queued to power-supply's for-next branch.
-
--- Sebastian
-
-On Tue, Jan 14, 2020 at 09:40:44PM -0600, Samuel Holland wrote:
-> This series adds some improvements to the axp20x_usb_power power supply
-> driver to better support suspend/resume and use on mobile devices.
->=20
-> Patch 1 is preparation for changes in following patches.
-> Patch 2 allows userspace to take the power supply offline.
-> Patch 3 allows userspace to control the wakeup behavior.
-> Patch 4 avoids polling USB VBUS presence when possible.
->=20
-> Changes since v3:
->  - Rebase on power-supply/for-next
->  - Add Reviewed-by (1-2)
->=20
-> Changes since v2:
->  - Patch 1 was merged
->  - Only check ACIN_PATH_SEL when necessary (1)
->  - Update commit message (5)
->  - Avoided reordering lines until/unless necessary (5, 7)
->  - Update comment and add ID check in axp20x_usb_power_set_property
->    (it seemed more correct than adding another comment) (6)
->  - Add Reviewed-by where there were no comments (2-4, 7-8)
->=20
-> Changes since v1:
->  - Add patches 1-2
->  - Shift value properly in calls to regmap_update_bits (3, 7)
->  - Use #ifdef instead of #if to avoid -Wundef warnings (4, 8)
->  - Poll once after an IRQ, instead of setting power->online in the IRQ (9)
->  - Poll once on resume, in case the state changed during suspend (9)
->=20
-> Samuel Holland (4):
->   power: supply: axp20x_usb_power: Use a match structure
->   power: supply: axp20x_usb_power: Allow offlining
->   power: supply: axp20x_usb_power: Add wakeup control
->   power: supply: axp20x_usb_power: Only poll while offline
->=20
->  drivers/power/supply/axp20x_usb_power.c | 217 ++++++++++++++++++------
->  1 file changed, 169 insertions(+), 48 deletions(-)
->=20
-> --=20
-> 2.23.0
->=20
-
---iquki6qdoejfp2er
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4feqkACgkQ2O7X88g7
-+pozAQ//f7qy+dV6jSnUkT7cC7r6FNKsMxHlcEYcsaWK2kJZRNthTFUbc57S2vlj
-WQs2lDGLIy4CuP6kdJg3HjfZlMoE8GFf0Ta2yWK57B9aGu5aO5jkbZBt7y1u22An
-h0DtToT+WzaQCVa14fXfYITJTJluTvzoCV8ejX4WM3yuiq7rRmWzyadthVbvb2h6
-1PfGO+JEZtcWH+q/wP6LD6hg2gmjuvM00R/sEL02i3N9OCm60t1Lg6sq9nHzf0o8
-Z09wZnK09V2X0q+Pp3IJ3A1NIDYRXJIGQ3bHHjAFq9xnAta3ED33yrlVvhx0DiOh
-6o13ouCV0gfQFj4//ckKAsX5lP21hZQWYhZTN6LtHj14LD1aULJpTZH4+v81eWw9
-emb6dVthMIpImp6GBtuM3SH0TGatk39y/MZocegWmSr43/Gx9rC337sBnXdV5pxS
-Yi5mmBavJe4899PSBoexvfrzcvKjLVMrY10xVrPrv3WM0m11UANpPGulUs6cO+jr
-CzZUPTVYpRW4gt/2Jnm2i+yeNldOwf2eUHu4wql9G4+D9a//QLX+5tkLmtkhsQFc
-rdyK9fr8UnUPGUVf8wv9oWgq+SCLsaKAPZPS2uDcHWNbxvHKDq92lwMRF8elkVUE
-StEy7hT2BImfyvwBzh5qrOQU1xGsVjKCXQ4hsYy/ENd7J+ytt9A=
-=7sqy
------END PGP SIGNATURE-----
-
---iquki6qdoejfp2er--
+SGkgUm9iLA0KDQpPbiBXZWQsIDIwMjAtMDEtMTUgYXQgMTI6NDUgLTA2MDAsIFJvYiBIZXJyaW5n
+IHdyb3RlOg0KPiBPbiBUdWUsIEphbiAxNCwgMjAyMCBhdCA1OjM5IFBNIENocmlzIFBhY2toYW0N
+Cj4gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5jby5uej4gd3JvdGU6DQo+ID4gDQo+ID4g
+QWRkIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIHNwaS1tdXggZHJpdmVyLiBUaGlzIGFs
+bG93cyBhDQo+ID4gZ2VuZXJpYw0KPiA+IG11bHRpcGxleGVyIHRvIGJlIHVzZWQgdG8gcHJvdmlk
+ZSBhY2Nlc3MgdG8gbXVsdGlwbGUgU1BJIGRldmljZXMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1i
+eTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+
+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLW11eC55YW1sICAgICAg
+fCA4Mg0KPiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDgyIGlu
+c2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9zcGkvc3BpLQ0KPiA+IG11eC55YW1sDQo+IA0KPiBCZSBzdXJlIHRvIHJ1
+biAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJy4NCj4gDQoNCldpbGwgZG8uDQoNCj4gPiANCj4gPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktbXV4
+LnlhbWwNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLW11
+eC55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAu
+LjEwMjZkMDNhNjljNw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgueWFtbA0KPiA+IEBAIC0wLDAgKzEsODIg
+QEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4gRHVhbCBs
+aWNlbnNlIG5ldyBiaW5kaW5ncyBwbGVhc2U6DQo+IA0KPiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0y
+LUNsYXVzZSkNCj4gDQoNCkRvbmUNCg0KPiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+ID4gKyRp
+ZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvc3BpL3NwaS1tdXgueWFtbCMNCj4gPiAr
+JHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+
+ID4gKw0KPiA+ICt0aXRsZTogR2VuZXJpYyBTUEkgTXVsdGlwbGV4ZXINCj4gPiArDQo+ID4gK2Rl
+c2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhpcyBiaW5kaW5nIGRlc2NyaWJlcyBhIFNQSSBidXMgbXVs
+dGlwbGV4ZXIgdG8gcm91dGUgdGhlIFNQSQ0KPiA+IGNoaXAgc2VsZWN0DQo+ID4gKyAgc2lnbmFs
+cy4gVGhpcyBjYW4gYmUgdXNlZCB3aGVuIHlvdSBuZWVkIG1vcmUgZGV2aWNlcyB0aGFuIHRoZQ0K
+PiA+IFNQSSBjb250cm9sbGVyDQo+ID4gKyAgaGFzIGNoaXAgc2VsZWN0cyBhdmFpbGFibGUuIEFu
+IGV4YW1wbGUgc2V0dXAgaXMgc2hvd24gaW4gQVNDSUkNCj4gPiBhcnQ7IHRoZSBhY3R1YWwNCj4g
+PiArICBzZXR0aW5nIG9mIHRoZSBtdWx0aXBsZXhlciB0byBhIGNoYW5uZWwgbmVlZHMgdG8gYmUg
+ZG9uZSBieSBhDQo+ID4gc3BlY2lmaWMgU1BJIG11eA0KPiA+ICsgIGRyaXZlci4NCj4gPiArDQo+
+ID4gKyAgICAgICAgTU9TSSAvLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0t
+LS0rLS0tLS0tLS0rLQ0KPiA+IC0tLS0tLS1cDQo+ID4gKyAgICAgICAgTUlTTyB8Ly0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSt8LS0tLS0tLSt8LS0tLS0tLSt8LQ0KPiA+IC0tLS0tLVx8
+DQo+ID4gKyAgICAgICAgIFNDTCB8fC8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tK3x8LS0t
+LS0tK3x8LS0tLS0tK3x8LQ0KPiA+IC0tLS0tXHx8DQo+ID4gKyAgICAgICAgICAgICB8fHwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfHx8ICAgICAgfHx8ICAgICAgfHx8IA0KPiA+ICAgICAg
+fHx8DQo+ID4gKyAgICAgICstLS0tLS0tLS0tDQo+ID4gLS0rICAgICAgICAgICAgICAgICAgICAg
+ICAgfHx8ICAgICAgfHx8ICAgICAgfHx8ICAgICAgfHx8DQo+ID4gKyAgICAgIHwgU29DICB8fHwg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICstKysrLSsgICstKysrLSsgICstKysrLQ0KPiA+ICsg
+ICstKysrLSsNCj4gPiArICAgICAgfCAgICAgIHx8fCAgIHwgICAgICAgICAgICAgICAgICAgICAg
+fCBkZXYgfCAgfCBkZXYgfCAgfCBkZXYNCj4gPiB8ICB8IGRldiB8DQo+ID4gKyAgICAgIHwgICAr
+LS0rKystKyB8IENTLVggICstLS0tLS0rXCAgICAgICstLSstLSsgICstLSstLSsgICstLSsNCj4g
+PiAtLSsgICstLSstLSsNCj4gPiArICAgICAgfCAgIHwgU1BJICArLXwtLS0tLS0tKyBNdXggIHxc
+XCAgIENTLTANCj4gPiB8ICAgICAgICB8ICAgICAgICB8ICAgICAgICB8DQo+ID4gKyAgICAgIHwg
+ICArLS0tLS0tKyB8ICAgICAgICstLSstLS0rXFxcLS0tLS0tLS8gICBDUy0xDQo+ID4gfCAgICAg
+ICAgfCAgICAgICAgfA0KPiA+ICsgICAgICB8ICAgICAgICAgICAgfCAgICAgICAgICB8ICAgIFxc
+XC0tLS0tLS0tLS0tLS0tLS0vICAgQ1MtMg0KPiA+IHwgICAgICAgIHwNCj4gPiArICAgICAgfCAg
+ICstLS0tLS0rIHwgICAgICAgICAgfCAgICAgXFwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+ID4gLyAgIENTLTMgfA0KPiA+ICsgICAgICB8ICAgfCA/ICAgICstfC0tLS0tLS0tLS0vICAgICAg
+XC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4gLS0tLS0tLS0vDQo+ID4gKyAgICAgIHwg
+ICArLS0tLS0tKyB8DQo+ID4gKyAgICAgICstLS0tLS0tLS0tLS0rDQo+ID4gKw0KPiA+ICthbGxP
+ZjoNCj4gPiArICAtICRyZWY6ICIvc2NoZW1hcy9zcGkvc3BpLWNvbnRyb2xsZXIueWFtbCMiDQo+
+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4gKyAgICBjb25z
+dDogc3BpLW11eA0KPiA+ICsNCj4gPiArICBtdXgtY29udHJvbDoNCj4gPiArICAgICRyZWY6ICIv
+c2NoZW1hcy9tdXgvbXV4LWNvbnRyb2xsZXIueWFtbCMiDQo+IA0KPiBUaGF0IGZpbGUgZG9lc24n
+dCBleGlzdC4gSWYgaXQgZGlkLCBpdCB3b3VsZCBzdGlsbCBiZSB3cm9uZyBhcyB0aGF0DQo+IHdv
+dWxkIGJlIHRoZSBwcm92aWRlciBzaWRlIGFuZCB0aGlzIGlzIHRoZSBjbGllbnQuDQo+IA0KPiBU
+aGUgY29ycmVjdCBuYW1lIGlzIGFsc28gJ211eC1jb250cm9scycuDQo+IA0KPiBZb3UgY2FuIGFz
+c3VtZSBpdCBoYXMgYSBzY2hlbWEgYWxyZWFkeSBhbmQgeW91IGp1c3QgbmVlZCB0byBkZWZpbmUN
+Cj4gaG93DQo+IG1hbnkgZW50cmllcyBpdCBoYXMgKG1heEl0ZW1zOiAxKS4NCg0KSSBtaWdodCBu
+ZWVkIGEgbGl0dGxlIGhhbmQgaG9sZGluZyBvbiB0aGlzLiBTaG91bGQgSSBhc3N1bWUgdGhhdCB0
+aGVyZQ0KaXMgYSBzZXBhcmF0ZSBzY2hlbWEgZm9yIHRoZSBjb25zdW1lcj8gT3IgbGVhdmUgb3V0
+IHRoZSAkcmVmIGVudGlyZWx5Pw0KDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAgLSBj
+b21wYXRpYmxlDQo+ID4gKyAgIC0gcmVnDQo+ID4gKyAgIC0gc3BpLW1heC1mcmVxdWVuY3kNCj4g
+PiArICAgLSBtdXgtY29udHJvbA0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgIC0gfA0K
+PiA+ICsgICAgIG11eDogbXV4LWNvbnRyb2xsZXIgew0KPiA+ICsgICAgICAgY29tcGF0aWJsZSA9
+ICJncGlvLW11eCI7DQo+ID4gKyAgICAgICAjbXV4LWNvbnRyb2wtY2VsbHMgPSA8MD47DQo+ID4g
+Kw0KPiA+ICsgICAgICAgbXV4LWdwaW9zID0gPCZncGlvMCAzIEdQSU9fQUNUSVZFX0hJR0g+Ow0K
+PiA+ICsgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgIHNwaSB7DQo+ID4gKyAgICAgICBzcGktbXV4
+IHsNCj4gDQo+IHNwaS1tdXhAMA0KPiANCg0KRG9uZS4NCg0KPiA+ICsgICAgICAgICBjb21wYXRp
+YmxlID0gInNwaS1tdXgiOw0KPiA+ICsgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4g
+PiArICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKyAgICAgICAgIHJlZyA9IDwwPjsN
+Cj4gPiArICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsNCj4gDQo+IEkg
+ZG9uJ3QgdGhpbmsgdGhpcyBtYWtlcyBzZW5zZSBoZXJlLiBUaGUgbXV4IGRvZXNuJ3QgcmVhbGx5
+IGhhdmUgYW55DQo+IGZyZXF1ZW5jeSBnaXZlbiB0aGUgY2xvY2sgYW5kIGRhdGEgbGluZXMgYXJl
+bid0IHJvdXRlZCB0aHJ1IHRoZSBtdXgNCj4gKHRob3VnaCBtYXliZSB0aGF0J3MgcG9zc2libGUg
+aWYgc29tZSBpc29sYXRpb24gaXMgbmVlZGVkKS4NCj4gDQoNCkl0J3MgbmVlZGVkIHRvIHNhdGlz
+Znkgb2Zfc3BpX3BhcnNlX2R0KCkuVG8gcmVtb3ZlIGl0IEknZCBuZWVkIHRvIGFkZA0KYW4gZXNj
+YXBlIGhhdGNoIHRvIGFsbG93IHRoaXMgcHJvcGVydHkgdG8gYmUgb21pdHRlZCBmb3Igc3BpLW11
+eGVzLiBPcg0KY2hhbmdlIGl0IHRvIGJlIGEgcGxhdGZvcm0gZGV2aWNlIGFuZCB0YWtlIHRoZSBw
+YXJlbnQgc3BpIGJ1cyBhcyBhDQpwaGFuZGxlLg0KDQo+ID4gKw0KPiA+ICsgICAgICAgICBtdXgt
+Y29udHJvbCA9IDwmbXV4Pg0KPiA+ICsgICAgICAgICBtdXgtY29udHJvbC1uYW1lcyA9ICJzcGki
+Ow0KPiANCj4gTm90IGRvY3VtZW50ZWQuIERyb3AgaXQgYXMgaXQncyBub3QgYWxsIHRoYXQgdXNl
+ZnVsIHdoZW4gdGhlcmUncyBvbmx5DQo+IDEgZW50cnkuDQoNCkRvbmUuIEFsc28gdXBkYXRlZCBt
+dXgtY29udHJvbCAtPiBtdXgtY29udHJvbHMNCg0KPiA+ICsNCj4gPiArICAgICAgICAgc3BpLWZs
+YXNoQDAgew0KPiA+ICsgICAgICAgICAgIGNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7DQo+
+ID4gKyAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgI3Np
+emUtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgcmVnID0gPDA+Ow0KPiA+ICsgICAgICAg
+ICAgIHNwaS1tYXgtZnJlcXVlbmN5ID0gPDQwMDAwMDAwPjsNCj4gPiArICAgICAgICAgfTsNCj4g
+PiArDQo+ID4gKyAgICAgICAgIHNwaS1kZXZpY2VAMSB7DQo+ID4gKyAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJzcGlkZXYiOw0KPiANCj4gTm90IGEgdmFsaWQgY29tcGF0aWJsZS4NCj4gDQoNClBp
+Y2tlZCBhIGRpZmZlcmVudCBvbmUuDQoNCj4gPiArICAgICAgICAgICByZWcgPSA8MT47DQo+ID4g
+KyAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMDA+Ow0KPiA+ICsgICAgICAg
+ICB9Ow0KPiA+ICsgICAgICAgfTsNCj4gPiArICAgICB9Ow0KPiA+IC0tDQo+ID4gMi4yNS4wDQo+
+ID4gDQo=
