@@ -2,85 +2,112 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1E8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F741C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85477207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71325207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="swXiWY6K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOxSa87j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgAONjt (ORCPT
+        id S1728961AbgAONj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:39:49 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35859 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgAONjs (ORCPT
+        Wed, 15 Jan 2020 08:39:57 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34926 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgAONj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:39:48 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so18613368ljg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 05:39:47 -0800 (PST)
+        Wed, 15 Jan 2020 08:39:57 -0500
+Received: by mail-oi1-f194.google.com with SMTP id k4so15401500oik.2;
+        Wed, 15 Jan 2020 05:39:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
          :cc;
-        bh=pnFqhhxBgQQrOJG9VMdTSVWlyDTWq02NzG7Ll7SsmRU=;
-        b=swXiWY6KtW6USAXgEF0BKmbRj8LNW2I0j8lCKzuFISPOymqu0FzmXNJs5VC4vllHNJ
-         5SS/9bDE/mXoEUeZVvqCUd2O3WPwH4GNxMuw+graItXIG3VM+lH03nQH81uZuOBgOBo1
-         /lX4qIrezmOEb4dOV2tWHyesD68BpcYKeA5lrGEalqR2YFsjMNAtXVpDz7jYy7mdeRK1
-         g4ocSnJvWJ13IUcdDr9dobxgGb1pG667VzZgrU13mTg2V+yYgxSupC3KOofzQ7RZNJhh
-         4EQ2/WlLxQttVJuIoTekn5pf4p5YpPHcc89VnzzV3x6284yplbJ40lJw2MVkVKqqxI8X
-         m3Wg==
+        bh=f6zc5HN4DUXE781/BcWszDvELlf43+ohtINNihx8v/k=;
+        b=BOxSa87jpc68noq8HKuBAAeZAGfCPqKsHzJXIh3SEGyU07BD2e+3wC2eYoT8oWBOMZ
+         yzQGVZcwxu0VbLwOh8Pt4MfnCmZngfZE8F0S7w4/nbkWlYboDvoDcSuagzktWvBLh4K3
+         SOE/sZpn8K2n6mUK/+S4PMyOygKFlG92b8OuLVTFOsCVl9oWs9pVyDjuwMbRZDvzbg6m
+         xWDogAPxfEofferYsRQynB03zra/p5ipj7LAM/Muww6QQ81IyjGEo/ADppCu6GUDODI+
+         c0Nv1iEbJY2L8xaPZzDwoshkiWWD+02ou5nFPGXbi08K7rq2g/7aFmtzADTngAPZx41d
+         iVFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
          :message-id:subject:to:cc;
-        bh=pnFqhhxBgQQrOJG9VMdTSVWlyDTWq02NzG7Ll7SsmRU=;
-        b=lOFbdgPMUf2KU0MIuC30FDfVhnDERtq7m9ID9ZrU4BAreRPITqlT3NKNlJc02zXAa/
-         5kOW4oSHY1DSZnfVgSL0oZkK4b6KBoUa6aXmHidFfrtsFtrC/d39UnpLLLVVqQvwTLqy
-         fIFPFIEQ0ZGsjPnkm24oLSaDiVCTNPBao7ubu7DGUYFPKxt/NTMNa/6XsztSYQG+2Z2+
-         rW8XQti1f/GT8FnLnQTC4f0LyTzkLx6is77siDENSU7qKVT2GUU7odzmVFCkUa31jciE
-         +RkyaWznz5Ah0vzI/oUu7dfxWgdciDt1vVa8dkB/2GhB6Zfhv68VOYzSyFSRhNkcdK/X
-         /Iew==
-X-Gm-Message-State: APjAAAV8rz2hSFkbEMyGsuAxLqyV5kcI2kKHu9IMY2ZQP0R/cAG0V6Ek
-        77i9pHFpr8pNoDNowTt1d/g4R+AyB01J7Azvz2C+Nw==
-X-Google-Smtp-Source: APXvYqz9duMnYhOhVoTHoDmR2ennOQ8ot3KTXdINAT2gaDQVsmk8rQh2KItxvjbbdVC7xLJ1Lvjbw6id0ZXwkJ2LKXI=
-X-Received: by 2002:a2e:9143:: with SMTP id q3mr1765334ljg.199.1579095586705;
- Wed, 15 Jan 2020 05:39:46 -0800 (PST)
+        bh=f6zc5HN4DUXE781/BcWszDvELlf43+ohtINNihx8v/k=;
+        b=HOFs5icTpePxgD0tiJoE/pOcrnw7FtUteY9CSQLfcJ4O0YKaLy+26SbWD3eZbHfo+f
+         BiqwBxODr7dMay4xa0+8NCfw+7+AbiLk13fyOhUi0GC3XHJd/Ms7nt1hXA8NKpbOqz1i
+         VtwOVWbAmPRvFbSeukp0eaq2pJCZvT/pcgUxxqKXHavvf1VcSH1Ifzys6ZxOiGYWqN5V
+         MMbS/Q4nKPf9BW8A3d4apdNXkpRl3Gdz6UuOxugFZLKIDiUJzgad0OsA9JLc4337eILg
+         OpYENjOM5eiKyHz1dXkqlJefchmNWDJtFIME167fcrchlaefJYloqf7D3wdajs+lRhhF
+         Vjhg==
+X-Gm-Message-State: APjAAAUVASsfVA2Ww2F7gRAFWvjaLZa+mzb94fkaWWfcWeRcKB7Ve2P3
+        j+7q4lm1KiXNBPHmHEuKuepsEn5NNhhi4UYwaKs=
+X-Google-Smtp-Source: APXvYqywQHg+aUBx4eoKOxeLk9t+5Vfp4wvLcqQcGdNAxiM7nHNwcHhBOl8zb5PYutwhtNQgEB3nkivmFuQnTFEZRyw=
+X-Received: by 2002:aca:1b08:: with SMTP id b8mr12831720oib.62.1579095596501;
+ Wed, 15 Jan 2020 05:39:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108121117.45060-1-yuehaibing@huawei.com>
-In-Reply-To: <20200108121117.45060-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 14:39:35 +0100
-Message-ID: <CACRpkdYzKmbx55h0G=fLRMat7CBOKgLScCdvH+T=heebx4asAw@mail.gmail.com>
-Subject: Re: [PATCH -next] gpiolib: remove set but not used variable 'config'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 05:39:56 -0800 (PST)
+In-Reply-To: <CAK8P3a3YOsFtuDDw9=d7_EY60Xvmx4Mc=NJmsy3f3Y9L87Ub=g@mail.gmail.com>
+References: <CGME20200115082820epcas1p34ebebebaf610fd61c4e9882fca8ddbd5@epcas1p3.samsung.com>
+ <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-4-namjae.jeon@samsung.com>
+ <CAK8P3a3YOsFtuDDw9=d7_EY60Xvmx4Mc=NJmsy3f3Y9L87Ub=g@mail.gmail.com>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Wed, 15 Jan 2020 22:39:56 +0900
+Message-ID: <CAKYAXd-CwLR3vLS_uPKOPzrEzB7v3rcdTCRR6BEhN-imeA_wPQ@mail.gmail.com>
+Subject: Re: [PATCH v10 03/14] exfat: add inode operations
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 1:11 PM YueHaibing <yuehaibing@huawei.com> wrote:
-
-> drivers/gpio/gpiolib.c: In function gpio_set_config:
-> drivers/gpio/gpiolib.c:3053:16: warning:
->  variable config set but not used [-Wunused-but-set-variable]
+2020-01-15 19:25 GMT+09:00, Arnd Bergmann <arnd@arndb.de>:
+> On Wed, Jan 15, 2020 at 9:28 AM Namjae Jeon <namjae.jeon@samsung.com>
+> wrote:
 >
-> commit d90f36851d65 ("gpiolib: have a single place
-> of calling set_config()") left behind this unused variable.
+>> +       /* set FILE_INFO structure using the acquired struct exfat_dentry
+>> */
+>> +       exfat_set_entry_time(sbi, &inode->i_ctime,
+>> +                       &ep->dentry.file.create_time,
+>> +                       &ep->dentry.file.create_date,
+>> +                       &ep->dentry.file.create_tz);
+>> +       exfat_set_entry_time(sbi, &inode->i_mtime,
+>> +                       &ep->dentry.file.modify_time,
+>> +                       &ep->dentry.file.modify_date,
+>> +                       &ep->dentry.file.modify_tz);
+>> +       exfat_set_entry_time(sbi, &inode->i_atime,
+>> +                       &ep->dentry.file.access_time,
+>> +                       &ep->dentry.file.access_date,
+>> +                       &ep->dentry.file.access_tz);
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> I wonder if i_ctime should be handled differently. With statx() we finally
+> have
+> a concept of "file creation time" in "stx_btime". so it would make sense to
+> store dentry.file.create_time in there rather than in i_ctime.
+Right.
+>
+> It seems that traditionally most file systems that cannot store ctime
+> separately
+> just set i_ctime and i_mtime both to what is is modify_time here, though
+> fat and hpfs use i_ctime to refer to creation time.
+I will check it.
 
-Patch applied with Bartosz' review tag.
-
-Yours,
-Linus Walleij
+Thanks for your review!
+>
+>       Arnd
+>
