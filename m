@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7576C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25174C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF7324656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF603206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579105578;
-	bh=fiQN7tX4lhgGkCMVarWJ5EYMl9/zE0hefm2D1qE3Af0=;
+	s=default; t=1579105594;
+	bh=sr3Nyf67+jKfP9CdzCV08hTcvjtDaKSP78rrc6yztCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzqdj7Mwo/ymonexqCMvhnenZlXnjedk9lZID+R+B+DGNP6DJjugKinE53sLyhAMv
-	 BqMXyn5yU1GCOOQEEHkVqFOGVc/SrGQf3m0WccMIU50pRGDz1hCI3Nc6i+nszoY8Gl
-	 xQztMylsiIIY6oKSrjUKRMfABnxJ5NE/IPG4ounE=
+	b=Wx2TMUjofSmc3LhHkxw16Rg9UY8NfDcU0kxMgGpo4khUfdQRTfAvJMmONJNAc6QrL
+	 DvhIqVLczUi88bcnBKM5vRn8IXz7ccEIUETe2YxVn4tCclzpGx2MRkAvmB/cBbdOv7
+	 CgBzM4FsVir5kBuDgDIrQrtl+va/UpDcKkPSSkv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgAOQ0R (ORCPT
+        id S1729091AbgAOQ0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:26:17 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:58519 "EHLO
+        Wed, 15 Jan 2020 11:26:33 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:58809 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOQ0Q (ORCPT
+        with ESMTP id S1726165AbgAOQ0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:26:16 -0500
+        Wed, 15 Jan 2020 11:26:32 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 00FGPX3C015075;
-        Thu, 16 Jan 2020 01:25:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00FGPX3C015075
+        by conuserg-07.nifty.com with ESMTP id 00FGPX3G015075;
+        Thu, 16 Jan 2020 01:25:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00FGPX3G015075
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579105535;
-        bh=gFAgJ6b5Jn67RGEgm344mvWSA0S1s/Vavy96BOU0mH8=;
+        s=dec2015msa; t=1579105538;
+        bh=J3kTsJCLUXlDsDdSDZ99wjZGkzlnfm+/v4cWcQiS+NE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYH+M0POPw02E+6JkkezXpT1uApI8FkcSricQC1Xp4gL/2Nr4MNpPE1QdXxuLKdaW
-         4XYtOP/e8peEG5I48W1+/eEvabkkzSf+yKlGYVdYMwXgenjJx+u/Fq9Jz/cNKua9yH
-         hmjZGz0d7x9ICJKdGQ+RceRlpPkdEh/a/VGYALjL5sCJ0t5UarILiFuhb4hAMnMpgL
-         a1gi/JGjzGS/DuvfgCLfTptHB2WDD8zCLeQxCmY6ZURFgD+z7BYsLuA+d68L2JlKkP
-         xv/Yds72o1z8qazNa2H+ltERz257abdJN5lSyAGactPK9Pl3+gL8eohoWN94r3R9hL
-         pkg/cj6ZCOlpA==
+        b=WuoxDDciqjiu4MKo5MqEY8TSQM4SThkmsANgntkKTxMCGwCnhE2bJUZIOJ0RqZfzP
+         tsaL/Qp2xiBMwoZp+G1xWijfjBLZzFscjuSa2BKbseciOiXwJn6EI+wdJKZT3wPVEL
+         +/pRIiFJVjRihtkSedaadBLNJOJo/Juej/uirLKu4JEi5ftuGXHSDoujktPCOS97Ce
+         +J99ar+XuUjugx2Mwb2P+1wHF4c1Bpa2fFQe68SCQZZjfP2H401OHa3VAsY+FqExUK
+         NVT9CjzyMoXayBH7NmUUmUIU8Xwn9zbKHIlTxqQkrL+kwhiTK7B9/BnT6ZR3Wi3RZ7
+         /zd3vt6Yq5EUg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,9 +50,9 @@ Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/7] builddeb: remove redundant $objtree/
-Date:   Thu, 16 Jan 2020 01:25:25 +0900
-Message-Id: <20200115162529.11089-3-masahiroy@kernel.org>
+Subject: [PATCH v2 7/7] builddeb: split libc headers deployment out into a function
+Date:   Thu, 16 Jan 2020 01:25:29 +0900
+Message-Id: <20200115162529.11089-7-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200115162529.11089-1-masahiroy@kernel.org>
 References: <20200115162529.11089-1-masahiroy@kernel.org>
@@ -61,81 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This script works only when it is invoked in the $objtree, that is,
-it is already relying on $objtree is '.'
+Deploy user-space headers (linux-libc-dev package) in a separate
+function for readability.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
 Changes in v2: None
 
- scripts/package/builddeb | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ scripts/package/builddeb | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
 diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 0a0a7c1447f4..9b92745bf13a 100755
+index d149452692da..f49f41fd4c95 100755
 --- a/scripts/package/builddeb
 +++ b/scripts/package/builddeb
-@@ -47,10 +47,10 @@ create_package() {
+@@ -88,12 +88,25 @@ deploy_kernel_headers () {
+ 	ln -s /usr/src/linux-headers-$version $pdir/lib/modules/$version/build
  }
  
++deploy_libc_headers () {
++	pdir=$1
++
++	rm -rf $pdir
++
++	$MAKE -f $srctree/Makefile headers
++	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH=$pdir/usr
++
++	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
++	# used by Debian-based distros (to support multi-arch)
++	host_arch=$(dpkg-architecture -a$(cat debian/arch) -qDEB_HOST_MULTIARCH)
++	mkdir $pdir/usr/include/$host_arch
++	mv $pdir/usr/include/asm $pdir/usr/include/$host_arch/
++}
++
  version=$KERNELRELEASE
--tmpdir="$objtree/debian/linux-image"
--kernel_headers_dir="$objtree/debian/linux-headers"
--libc_headers_dir="$objtree/debian/linux-libc-dev"
--dbg_dir="$objtree/debian/linux-image-dbg"
-+tmpdir=debian/linux-image
-+kernel_headers_dir=debian/linux-headers
-+libc_headers_dir=debian/linux-libc-dev
-+dbg_dir=debian/linux-image-dbg
+ tmpdir=debian/linux-image
+-libc_headers_dir=debian/linux-libc-dev
+ dbg_dir=debian/linux-image-dbg
  packagename=linux-image-$version
- kernel_headers_packagename=linux-headers-$version
- libc_headers_packagename=linux-libc-dev
-@@ -77,7 +77,7 @@ esac
+-libc_headers_packagename=linux-libc-dev
+ dbg_packagename=$packagename-dbg
+ 
+ if [ "$ARCH" = "um" ] ; then
+@@ -117,7 +130,7 @@ esac
  BUILD_DEBUG=$(if_enabled_echo CONFIG_DEBUG_INFO Yes)
  
  # Setup the directory structure
--rm -rf "$tmpdir" "$kernel_headers_dir" "$libc_headers_dir" "$dbg_dir" $objtree/debian/files
-+rm -rf "$tmpdir" "$kernel_headers_dir" "$libc_headers_dir" "$dbg_dir" debian/files
+-rm -rf "$tmpdir" "$libc_headers_dir" "$dbg_dir" debian/files
++rm -rf "$tmpdir" "$dbg_dir" debian/files
  mkdir -m 755 -p "$tmpdir/DEBIAN"
  mkdir -p "$tmpdir/lib" "$tmpdir/boot"
- mkdir -p "$kernel_headers_dir/lib/modules/$version/"
-@@ -165,24 +165,24 @@ EOF
- done
  
- # Build kernel header package
--(cd $srctree; find . arch/$SRCARCH -maxdepth 1 -name Makefile\*) > "$objtree/debian/hdrsrcfiles"
--(cd $srctree; find include scripts -type f -o -type l) >> "$objtree/debian/hdrsrcfiles"
--(cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
--(cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
-+(cd $srctree; find . arch/$SRCARCH -maxdepth 1 -name Makefile\*) > debian/hdrsrcfiles
-+(cd $srctree; find include scripts -type f -o -type l) >> debian/hdrsrcfiles
-+(cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> debian/hdrsrcfiles
-+(cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> debian/hdrsrcfiles
- if is_enabled CONFIG_STACK_VALIDATION; then
--	echo tools/objtool/objtool >> "$objtree/debian/hdrobjfiles"
-+	echo tools/objtool/objtool >> debian/hdrobjfiles
+@@ -167,16 +180,6 @@ if is_enabled CONFIG_MODULES; then
+ 	fi
  fi
--(cd $objtree; find arch/$SRCARCH/include Module.symvers include scripts -type f) >> "$objtree/debian/hdrobjfiles"
-+find arch/$SRCARCH/include Module.symvers include scripts -type f >> debian/hdrobjfiles
- if is_enabled CONFIG_GCC_PLUGINS; then
--	(cd $objtree; find scripts/gcc-plugins -name \*.so) >> "$objtree/debian/hdrobjfiles"
-+	find scripts/gcc-plugins -name \*.so >> debian/hdrobjfiles
- fi
- destdir=$kernel_headers_dir/usr/src/linux-headers-$version
- mkdir -p "$destdir"
--(cd $srctree; tar -c -f - -T -) < "$objtree/debian/hdrsrcfiles" | (cd $destdir; tar -xf -)
--(cd $objtree; tar -c -f - -T -) < "$objtree/debian/hdrobjfiles" | (cd $destdir; tar -xf -)
--(cd $objtree; cp $KCONFIG_CONFIG $destdir/.config) # copy .config manually to be where it's expected to be
-+(cd $srctree; tar -c -f - -T -) < debian/hdrsrcfiles | (cd $destdir; tar -xf -)
-+tar -c -f - -T - < debian/hdrobjfiles | (cd $destdir; tar -xf -)
-+cp $KCONFIG_CONFIG $destdir/.config # copy .config manually to be where it's expected to be
- ln -sf "/usr/src/linux-headers-$version" "$kernel_headers_dir/lib/modules/$version/build"
--rm -f "$objtree/debian/hdrsrcfiles" "$objtree/debian/hdrobjfiles"
-+rm -f debian/hdrsrcfiles debian/hdrobjfiles
  
- if [ "$ARCH" != "um" ]; then
- 	create_package "$kernel_headers_packagename" "$kernel_headers_dir"
+-if [ "$ARCH" != "um" ]; then
+-	$MAKE -f $srctree/Makefile headers
+-	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
+-	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
+-	# used by Debian-based distros (to support multi-arch)
+-	host_arch=$(dpkg-architecture -a$(cat debian/arch) -qDEB_HOST_MULTIARCH)
+-	mkdir $libc_headers_dir/usr/include/$host_arch
+-	mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$host_arch/
+-fi
+-
+ # Install the maintainer scripts
+ # Note: hook scripts under /etc/kernel are also executed by official Debian
+ # kernel packages, as well as kernel packages built using make-kpkg.
+@@ -206,7 +209,8 @@ if [ "$ARCH" != "um" ]; then
+ 	deploy_kernel_headers debian/linux-headers
+ 	create_package linux-headers-$version debian/linux-headers
+ 
+-	create_package "$libc_headers_packagename" "$libc_headers_dir"
++	deploy_libc_headers debian/linux-libc-dev
++	create_package linux-libc-dev debian/linux-libc-dev
+ fi
+ 
+ create_package "$packagename" "$tmpdir"
 -- 
 2.17.1
 
