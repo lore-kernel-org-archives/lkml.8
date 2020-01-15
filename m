@@ -2,125 +2,88 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA652C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E61C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979DB207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338412077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgAOJzK (ORCPT
+        id S1729605AbgAOJ4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:55:10 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55114 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729504AbgAOJzJ (ORCPT
+        Wed, 15 Jan 2020 04:56:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:57443 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729504AbgAOJ4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:55:09 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F9rAgZ040719;
-        Wed, 15 Jan 2020 04:54:57 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhbprykn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 04:54:56 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00F9pgxS030824;
-        Wed, 15 Jan 2020 09:54:56 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03wdc.us.ibm.com with ESMTP id 2xhmf9mpcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 09:54:56 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00F9ss7X38404384
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 09:54:54 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA9AAAC05B;
-        Wed, 15 Jan 2020 09:54:54 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58FDDAC059;
-        Wed, 15 Jan 2020 09:54:53 +0000 (GMT)
-Received: from [9.152.96.154] (unknown [9.152.96.154])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 15 Jan 2020 09:54:53 +0000 (GMT)
-Subject: Fwd: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
- compression
-References: <20200114161857.GD3929@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Forwarded-Message-Id: <20200114161857.GD3929@suse.cz>
-Message-ID: <e66fa494-e137-ed73-6db3-15fcbd232eb7@linux.ibm.com>
-Date:   Wed, 15 Jan 2020 10:54:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 04:56:21 -0500
+Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MC0HF-1ixQ342HWv-00CRwE; Wed, 15 Jan 2020 10:56:19 +0100
+Received: by mail-qv1-f46.google.com with SMTP id y8so7071620qvk.6;
+        Wed, 15 Jan 2020 01:56:19 -0800 (PST)
+X-Gm-Message-State: APjAAAXpzGtW47WTGsCBCrUdEexzOZE5EZO3Knf58Yx2wt35mio/E9Oe
+        Dr5WGwzMavMite6+nTQhTMvcwpIkoL1PTDHk16A=
+X-Google-Smtp-Source: APXvYqwR/A2rmomxhmxWks30Xg5wVuEywHYP7SdzwD+g4m36c8guVmzB2RyLAR07jVZacI+LFPENXm2FvIcAxBfepZU=
+X-Received: by 2002:a0c:bd20:: with SMTP id m32mr21091474qvg.197.1579082178394;
+ Wed, 15 Jan 2020 01:56:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114161857.GD3929@suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-15_01:2020-01-15,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- suspectscore=0 malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001150084
+References: <CGME20200115082821epcas1p4d76d8668dfac70ae3e3889d4ccb6c3ee@epcas1p4.samsung.com>
+ <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-6-namjae.jeon@samsung.com>
+In-Reply-To: <20200115082447.19520-6-namjae.jeon@samsung.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jan 2020 10:56:02 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
+Message-ID: <CAK8P3a0Hp4CiMQE8NrZt5vKrSn=-mYEbOXTC+Eqp35=pSocz+A@mail.gmail.com>
+Subject: Re: [PATCH v10 05/14] exfat: add file operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
+        linkinjeon@gmail.com,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xf7OWvxLyO5dkv9UTAUdswA1svDNZpiN9KtYlnOxJffY31aOJDG
+ nEHQrs1pvYo9MuF5GZIOeAIuQ+OGhpZWH+KG799/uh1/hutFDZ22RETd3ZWyFjEaurxuIU5
+ Qq2AnpzdTuCpzW4EoC7yflLYYxITzp55uvsXf2OQJq07QqG/FIButW8zCZtsdDe42NfdpFa
+ 4QpOM5fr3OzlhLWEjomIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RbamRkxCeF0=:nyoJl9JmUQttD+Y1SGP/Wj
+ mAZ+F+zqYYS5uRyPpQBGztLht3oT3PfsiLkreOM8PutdDmdoNWUyXXxtNK5hD7Fr+jDHLBkcP
+ KFdCG7oLeqxf+AnMGKxYNZ0/6FAL0kB965nB6dLSbe0c2YAol8Vw9EYo/8dueGJB4cc0rxNP7
+ xAYwsJoZduexyGhC98lz82u+AE5HNiLdxSGX1ItO5JFazKFh8zctKhPHsANLYgGT9jA7l27A3
+ zbaQ4iKHgfhZnMVLq3YgRCwYTwTEjhGEL37RBcIQRzhSfKSgU9tfHhk14DpvQhu2SvQUmKCGY
+ MgEWhwC4iItJO4b/tYD52EqvCht3tmRbY2KVqHhO4PWDF8jhlYSJrB4CC0ml1moTi0P+EE7cP
+ 3Z2s4pVzZLkwhfzhUxnISzKx9CnVMUMTZ7Ucg8fZhI/iRNhixz7Fn8EeHWekMm676jbxC3S2p
+ HdpLRTSh64y4NnQIeX1DZzms4D0GjK4Xh9uqAPROdwar0XRyTmJj4gsHRML7DYpvagHLo881D
+ k0wVd8TQNKW7Z3Dn2oYFqMdOOQkwFl8X/S7vzustWJ8svIXEvrh/q8nowC7hFX5TxRtNKogHY
+ zNsS64FgCq29EOPWJ9ZlTJS3E9yT7/u80jJILAXIJBL5nxXuVEGQIcyvZ6+YLkc08QO2Nmh0/
+ qBmGqWg5ekB1KlCM68U7PMMXmY/drZClG06QsfIjYfuJcAjQM+hauqNDrU18OoofnQBKQkysv
+ sa6bvVFJBj7mSQlg77DMgSeg8RH/Jj7CSNJSEfuo7k3xtbc36iPxPmDJwodCJJYkoUtSdgV89
+ Ggzh3GXw3mKy2xiv390c4VUIKhQO6FhGsGC/SlGbFnJxmcDTDY4J/kL3a7Tc9npDjnJFIPRQ7
+ wJXQq4ev3ILdJNfZkbng==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andrew,
+On Wed, Jan 15, 2020 at 9:28 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
 
-Could you please pick this V4 btrfs patch and the other five patches from V3 patch
-set (https://lkml.org/lkml/2020/1/3/568).
+> +
+> +               ktime_get_real_ts64(&ts);
+> +               exfat_set_entry_time(sbi, &ts,
+> +                               &ep->dentry.file.modify_time,
+> +                               &ep->dentry.file.modify_date,
+> +                               &ep->dentry.file.modify_tz);
 
-Older patches can be dropped from linux-next:
- * ac2aeaa0f4d3 btrfs: use larger zlib buffer for s390 hardware compression
- * ac19f15aea33 lib/zlib: add zlib_deflate_dfltcc_enabled() function
- * 3447c9a51196 s390/boot: add dfltcc= kernel command line parameter
- * 890060df4401 lib/zlib: add s390 hardware support for kernel zlib_inflate
- * 148f7d060405 s390/boot: rename HEAP_SIZE due to name collision
- * bfbef17740fd lib/zlib: add s390 hardware support for kernel zlib_deflate
+I think this part should use current_time() instead of ktime_get_real_ts64()
+so it gets truncated to the correct resolution and range.
 
-Thanks,
-Mikhail.
+Please also check if there are other callers of ktime_get_real_ts64() that
+may need the same change.
 
-
--------- Forwarded Message --------
-Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware compression
-Date: Tue, 14 Jan 2020 17:18:57 +0100
-From: David Sterba <dsterba@suse.cz>
-Reply-To: dsterba@suse.cz
-To: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-CC: Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>, Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eduard Shishkin <edward6@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-
-On Wed, Jan 08, 2020 at 11:51:03AM +0100, Mikhail Zaslonko wrote:
-> In order to benefit from s390 zlib hardware compression support,
-> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
-> s390 zlib hardware support is enabled on the machine). This brings up
-> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
-> buffer and much more compared to the software zlib processing in btrfs.
-> In case of memory pressure, fall back to a single page buffer during
-> workspace allocation.
-> The data compressed with larger input buffers will still conform to zlib
-> standard and thus can be decompressed also on a systems that uses only
-> PAGE_SIZE buffer for btrfs zlib.
-> 
-> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-
-Reviewed-by: David Sterba <dsterba@suse.com>
+      Arnd
