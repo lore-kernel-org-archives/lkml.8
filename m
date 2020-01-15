@@ -2,215 +2,94 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0057C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D0C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988F9222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C69222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579117914;
-	bh=t1JnoZZrMdB6dpZrnIPFBwIvNPCHtQXyso+T3PBvqbA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DqNK65ZBRRooA5js1w7iXOvuVZqLzjidHTAq6eJfnYBGypA41kBh3E7f2ubsT6MvB
-	 myUC9TR86qvaP0Betbo7xphQvOQlf57R12W1ERFn1ctBhkPAxLj4voXkUiEZgTlLcv
-	 AhD8woTtwkndcyYah3TQaOnIM5lFv69sd9dZLuWc=
+	s=default; t=1579117923;
+	bh=uRSGaQ1itz52/dktuz7xbZhU0dwlsdhmm69wo6JhzqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N7sufj+M1cxUl61kAMWNEqdhwH43JDggI+6adPmdWkw2frP13MtvNk2ALy1rdc8Ja
+	 a6si3dGcwRy0NyBSsjLsJevaLhGLyMc4wQdHTTXBz07XIT7RhgXc4fOxl3oM18E+Yb
+	 w2g/HTTQm0W1m2ZNLAtOuZbnpjWWrbbmgkrBtXr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgAOTvy (ORCPT
+        id S1729508AbgAOTwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgAOTvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:51:53 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D525224671;
-        Wed, 15 Jan 2020 19:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579117912;
-        bh=t1JnoZZrMdB6dpZrnIPFBwIvNPCHtQXyso+T3PBvqbA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sMUtP1YVqLLAuMwtuWkZBe1Xby7Drbt2MLQHUzEvQklQsBeDrWOCn8UW5MhkQ6xkD
-         SUde5Fv9yeP/ZyOKG3wYDyd0zLMdvHFUXqjfLrNA9wv90E2M+ISROLIMwIZzG9kfxK
-         5tReUEXYC2usl8mfI23kVtX+F441xos2igT/8OaE=
-Received: by mail-qk1-f177.google.com with SMTP id x1so16824836qkl.12;
-        Wed, 15 Jan 2020 11:51:51 -0800 (PST)
-X-Gm-Message-State: APjAAAXiDi8ThY1TKVP7fCwp4pRQx9h8q2uuUUFfTL7R6WFduSSIB/LN
-        D1GGxvCXmoiy8Q+QaDCBoHusJ4BxdY1mrFfHyA==
-X-Google-Smtp-Source: APXvYqwCKmmU8EBSjmHQt7piH3JvQrLULOrnWdxDuTYEHjP8bk1VpgkonsdNmkK30/2AtmyI260TpQJ5CJK2ex/nW6A=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr29934418qkd.223.1579117910889;
- Wed, 15 Jan 2020 11:51:50 -0800 (PST)
+        Wed, 15 Jan 2020 14:52:02 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39509 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbgAOTwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:52:01 -0500
+Received: by mail-ed1-f65.google.com with SMTP id t17so16680884eds.6;
+        Wed, 15 Jan 2020 11:52:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aHd50RCmkVU/ZS/HxtfzC0g4zmJOst7WpqvtTeB8dwQ=;
+        b=JRtQjebV1XuPND6/OQUpTB5OCOco5o6BMMxxe3cGAHp+9T8/xN+lkrePaMjP28O37/
+         AvEDzf0WD4i9yuiAcMuKCR0ac3LOQZ/q+ducBdFRmUN53Kr9Jj9438cb3bMBa/02g4VW
+         OI81Iw9sbr8BAfVfBwS8lRhl4Y2GB0D7OXLLOSJZDTNK0lOsdqaqEKgjzR7ppSTlAtHB
+         9Pq8U1A13i6CrvWZkogovC6PL2zA+rmgkxfpZeS96wt4F3GDk1fGgN+olXeBtgl6uBzM
+         zQeazAbACRU276mQqOW2S/OsNcrgFmUvHgtwNx+v6RMvBQ0Oi2wE9JkzMB3xCJjNkIXS
+         27ZQ==
+X-Gm-Message-State: APjAAAVYj019168MwilqmvoAvyJpPENg0XToPPfu5n2agLnleBEFGN33
+        jorpXIfkzq+ctSfaaP9Tm1Y=
+X-Google-Smtp-Source: APXvYqwe+/d6KcpGCa37Qjgf5sHzR3xo/URPMNvfsudTgB/tmaCyZ/Ctbk+unVAtHKq+h/sEPaRNag==
+X-Received: by 2002:a05:6402:298:: with SMTP id l24mr32222230edv.70.1579117919881;
+        Wed, 15 Jan 2020 11:51:59 -0800 (PST)
+Received: from kozik-lap ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id j63sm756813edd.81.2020.01.15.11.51.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 11:51:59 -0800 (PST)
+Date:   Wed, 15 Jan 2020 20:51:57 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/4] i2c: pmcmsp: Use proper printk format for
+ resource_size_t
+Message-ID: <20200115195157.GA8661@kozik-lap>
+References: <1578992765-1418-1-git-send-email-krzk@kernel.org>
+ <20200115174553.GI1239@ninjato>
 MIME-Version: 1.0
-References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
- <20200108141855.GA14868@bogus> <0e797d57-66a6-39ec-6388-5af47e9b0726@linux.intel.com>
- <CAL_JsqLaiiYxaWjWRr3S7Q8j5YCxB_v2Lt_m5fwHnZU1e27MdA@mail.gmail.com> <bee95b99-027e-45eb-d2f2-bfa5bbfda9cd@linux.intel.com>
-In-Reply-To: <bee95b99-027e-45eb-d2f2-bfa5bbfda9cd@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 15 Jan 2020 13:51:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK9_EKsrkd3anmwZ062+a0sEmVTwKa1EZRpeLjmfwi7zg@mail.gmail.com>
-Message-ID: <CAL_JsqK9_EKsrkd3anmwZ062+a0sEmVTwKa1EZRpeLjmfwi7zg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add YAML schemas for Intel Combo phy
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200115174553.GI1239@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 1:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->
->
-> On 1/14/2020 10:31 PM, Rob Herring wrote:
-> > On Tue, Jan 14, 2020 at 3:18 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-> >>
-> >> On 1/8/2020 10:18 PM, Rob Herring wrote:
-> >>> On Fri, Dec 20, 2019 at 03:28:27PM +0800, Dilip Kota wrote:
-> >>>> Combo phy subsystem provides PHY support to number of
-> >>>> controllers, viz. PCIe, SATA and EMAC.
-> >>>> Adding YAML schemas for the same.
-> >>>>
-> >>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> >>>> ---
-> >>>>    .../devicetree/bindings/phy/intel,combo-phy.yaml   | 147 +++++++++++++++++++++
-> >>>>    1 file changed, 147 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..fc9cbad9dd88
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-> >>>> @@ -0,0 +1,147 @@
-> >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Intel Combo phy Subsystem
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> >>>> +
-> >>>> +description: |
-> >>>> +  Intel combo phy subsystem supports PHYs for PCIe, EMAC and SATA
-> >>>> +  controllers. A single combo phy provides two PHY instances.
-> >>>> +
-> >>>> +properties:
-> >>>> +  $nodename:
-> >>>> +    pattern: "^combophy@[0-9]+$"
-> >>>> +
-> >>>> +  compatible:
-> >>>> +    items:
-> >>>> +      - const: intel,combo-phy
-> >>>> +      - const: simple-bus
-> >>> This will cause the schema to be applied to every 'simple-bus'. You need
-> >>> a custom 'select' to prevent that. There's several examples in the tree.
-> >> Ok, i will add as below:
-> >>
-> >> # We need a select here so we don't match all nodes with 'simple-bus'
-> >> select:
-> >>     properties:
-> >>       compatible:
-> >>         contains:
-> >>           const: intel,combo-phy
-> >>     required:
-> >>       - compatible
-> >>
-> >>> Though I'm not sure you need child nodes here.
-> >>>
-> >>>> +
-> >>>> +  cell-index:
-> >>>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +    description: Index of Combo phy hardware instance.
-> >>> Drop this. Not used for FDT.
-> >> Ok, I will remove this and use the 'aliases' to get the hardware instance.
-> >>>> +
-> >>>> +  resets:
-> >>>> +    maxItems: 2
-> >>>> +
-> >>>> +  reset-names:
-> >>>> +    items:
-> >>>> +      - const: phy
-> >>>> +      - const: core
-> >>>> +
-> >>>> +  intel,syscfg:
-> >>>> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >>>> +    description: Chip configuration registers handle
-> >>>> +
-> >>>> +  intel,hsio:
-> >>>> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >>>> +    description: HSIO registers handle
-> >>>> +
-> >>>> +  intel,bid:
-> >>>> +    description: Index of HSIO bus
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +      - minimum: 0
-> >>>> +      - maximum: 1
-> >>> If this is related to intel,hsio, just make it an args cell for
-> >>> intel,hsio.
-> >> No. Actually, this is specific to the combophy instance on the HSIO bus.
-> >> I see , this can be removed and value can be derived from the hardware
-> >> instance value mentioned through 'aliases'
-> > Generally, 'aliases' should be optional. Why do you need an index?
-> > What's the difference between the blocks?
-> >
-> > If it wasn't clear, I was suggesting doing:
-> >
-> > intel,hsio = <&hsio 1>;
-> On the SoC, total 4 combophy (0,1,2 and 3) instances are present ->
-> 'cell-index'
-> 2 instances (0,1) are present on the HSIOL NoC
-> Other 2 instances (2,3) are present on the HSIOR NoC
-> On the both HSIO NoCs, combophy instances are referred as 0 and 1 -> 'bid'
+On Wed, Jan 15, 2020 at 06:45:53PM +0100, Wolfram Sang wrote:
+> 
+> > +			"Unable to get memory/io address region %pap\n",
+> > +			&(res->start));
+> 
+> My first thought was "parens not needed"; not because I like being picky
+> but because it doesn't look more readable to me.
+> 
+> checkpatch agrees:
+> 
+> CHECK: Unnecessary parentheses around res->start
+> #30: FILE: drivers/i2c/busses/i2c-pmcmsp.c:278:
+> +			&(res->start));
 
-So you would have:
+Indeed... let me send v3.
 
-<&hsiol 0>
-<&hsiol 1>
-<&hsior 0>
-<&hsior 1>
+Best regards,
+Krzysztof
 
-However, if HSIO is a bus and the combo phys are not on any other bus,
-then perhaps you should be describing the buses in DT and then this
-property goes away as these would be child nodes of the bus and
-whatever addressing identifiers there are would go in 'reg'.
-
-> 'bid' is required while accessing the registers in hsio block, to
-> configure the COMBOPHY mode and clock
-> 'cell-index' is required while accessing sysconfig registers to enable
-> the pcie phy pad ref clock.
-
-Do the same thing for the sysconfig handle:
-
-<&sysconfig 0|1>
-
-This is the common pattern for these types of properties with misc
-extra register bits to go configure. Though more typically the cell
-value is a register offset and bit position.
-
-> <&hsio 1>
-> 'bid' is specific to the combophy, not all the DT nodes using &hsio has
-> a need.
-> I think it is better to pass the bid value as a entry of combophy DT node.
-
-intel,hsio is an entry in the combo phy. The meaning of any arg cells
-is defined by the combo phy binding (and driver).
-
-> I will add dt entry something like 'hw-instance-id' instead of
-> cell-index or aliases.
-
-As I said, we don't do h/w index properties.
-
-Rob
