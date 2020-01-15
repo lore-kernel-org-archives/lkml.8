@@ -2,92 +2,125 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F03CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D10C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185F8207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870412465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579095615;
-	bh=vq7dWZIt2uzMmU//MJnDRlhzag57tdT+vRJG617udFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JDC0YMzDKKXxUwcSfXLbmeV0eHa0RQRMuY90OSj2dGrOdOILarPNY5ar9TZVglBI6
-	 ySo6gYFQcu6otueSgq1dLoi1LB3g7vSMKBQEKy7PuA5o3yzVv3tlxdkHBWlTzeWwK/
-	 Duq85zu4tGZD/8CsBVwUb7NPof0/qGeyLCGTEjUY=
+	s=default; t=1579095635;
+	bh=yEvYDgP0hc8sIQw49jsuC8Li1BERDoQiLHX4I+8npEU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pOj1+uhWQyms3s3hGwc3hUmScoxK/4f25HJGxhkvPJaGCK029cyDQXknUXTOowGRK
+	 Io4CbbhmJRjSLoUkwVHAkT9aEd0JrbYGOG196OXApPtFvuaSaA8PLR7FbYaRV3s5NS
+	 U6PeWwY0aRdlIXq33gc3EJCmF5gLWK3DK/JGE4lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAONkO (ORCPT
+        id S1729022AbgAONke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
+        Wed, 15 Jan 2020 08:40:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgAONkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:40:13 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726474AbgAONke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:40:34 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF6B207FF;
-        Wed, 15 Jan 2020 13:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DB9D222C3;
+        Wed, 15 Jan 2020 13:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579095613;
-        bh=vq7dWZIt2uzMmU//MJnDRlhzag57tdT+vRJG617udFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pAuyIq2GysfG9S3GlghWZ6CQmBaqtmrJezPEwteygMOKNCDLyRE8eXRMflMeiWvza
-         ufxC+sjMlz+9DD3PZkDbc0BoAThgdsDIQNqRr1tk8EOCy/UIhVDW5o/9iA2wj0sGcO
-         xXVuV696c5E89sRBN9ayELZBHVGuO9qzKoEW1wI8=
-Date:   Wed, 15 Jan 2020 14:40:10 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?B?Suly9G1l?= Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 00/65] Simplify and improve the wfx driver
-Message-ID: <20200115134010.GA3555935@kroah.com>
-References: <20200115121041.10863-1-Jerome.Pouiller@silabs.com>
+        s=default; t=1579095633;
+        bh=yEvYDgP0hc8sIQw49jsuC8Li1BERDoQiLHX4I+8npEU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yUBid8+OSRibkxQojKsX7U3nIkQ7ueJEq+o1uKTakja28wR4D9oyApWN9B7jIKciZ
+         UOxa2zAJNDRE2yc5+w91idP+kk9v4zoYM5Q7Tz33MW0wHXmyI0h/aQf/EIxXp3jqHl
+         g2S/w8EfgByVvLY3hywPz6T2VPLlDqmXjYeTBUv8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iriuN-0008Ry-FJ; Wed, 15 Jan 2020 13:40:31 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115121041.10863-1-Jerome.Pouiller@silabs.com>
+Date:   Wed, 15 Jan 2020 13:40:31 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+        chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irqchip: mips-cpu: Remove eoi operation
+In-Reply-To: <20200114233025.y4azwvivqo7kg7i5@pburton-laptop>
+References: <20200113101251.37471-1-jiaxun.yang@flygoat.com>
+ <20200114233025.y4azwvivqo7kg7i5@pburton-laptop>
+Message-ID: <9cd8df72fc3a7dfcdd88eb1fb56bbe35@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: paulburton@kernel.org, jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 12:12:07PM +0000, Jérôme Pouiller wrote:
-> From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+On 2020-01-14 23:30, Paul Burton wrote:
+> Hi Jiaxun,
 > 
-> Hello all,
+> On Mon, Jan 13, 2020 at 06:12:51PM +0800, Jiaxun Yang wrote:
+>> The eoi opreation in mips_cpu_irq_controller caused chained_irq_enter
+>> falsely consider CPU IP interrupt as a FastEOI type IRQ. So the 
+>> interrupt
+>> won't be masked during in handler. Which might lead to spurious 
+>> interrupt.
+>> 
+>> Thus we simply remove eoi operation for mips_cpu_irq_controller,
+>> 
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>  drivers/irqchip/irq-mips-cpu.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-mips-cpu.c 
+>> b/drivers/irqchip/irq-mips-cpu.c
+>> index 95d4fd8f7a96..0ad7f1f9a58b 100644
+>> --- a/drivers/irqchip/irq-mips-cpu.c
+>> +++ b/drivers/irqchip/irq-mips-cpu.c
+>> @@ -55,7 +55,6 @@ static struct irq_chip mips_cpu_irq_controller = {
+>>  	.irq_mask	= mask_mips_irq,
+>>  	.irq_mask_ack	= mask_mips_irq,
+>>  	.irq_unmask	= unmask_mips_irq,
+>> -	.irq_eoi	= unmask_mips_irq,
+>>  	.irq_disable	= mask_mips_irq,
+>>  	.irq_enable	= unmask_mips_irq,
+>>  };
 > 
-> This pull request is finally bigger than I expected, sorry.
+> This one scares me; something doesn't seem right. The irq_eoi (née eoi)
+> callback was first added way back in commit 1417836e81c0 ("[MIPS] use
+> generic_handle_irq, handle_level_irq, handle_percpu_irq"). The commit
+> message there states that the motivation was to allow use of
+> handle_percpu_irq(), and indeed handle_percpu_irq() does:
+> 
+>     irq_ack() (ie. mask)
+>     invoke the handler(s)
+>     irq_eoi() (ie. unmask)
+> 
+> By removing the irq_eoi callback I don't see how we'd ever unmask the
+> interrupt again..?
 
-After applying this series, I get this build error:
+To be completely blunt, the fact that unmask and eoi are implemented the
+same way is a clear sign that this is a bit broken.
 
-drivers/staging/wfx/sta.c: In function ‘wfx_cqm_bssloss_sm’:
-drivers/staging/wfx/sta.c:91:28: error: expected ‘;’ before ‘struct’
-   91 |   struct ieee80211_hdr *hdr
-      |                            ^
-      |                            ;
-   92 |   struct ieee80211_tx_control control = { };
-      |   ~~~~~~
-drivers/staging/wfx/sta.c:99:3: error: ‘hdr’ undeclared (first use in this function); did you mean ‘idr’?
-   99 |   hdr = (struct ieee80211_hdr *)skb->data;
-      |   ^~~
-      |   idr
+irq_eoi is used if the irqchip tracks the IRQ life-cycle in HW, and it's
+not obvious that this is the case. The fact that ack is also mapped to 
+mask
+just adds to my feeling...
 
-Did you even test-build this?
-
-I could try to bisect and track down the offending commit, but that's
-too much work :)
-
-I'll wait for a v2 of this series, please fix up and resend.
-
-thanks,
-
-greg k-h
+         M.
+-- 
+Jazz is not dead. It just smells funny...
