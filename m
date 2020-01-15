@@ -2,181 +2,88 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53412C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5B4C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC882077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lydwo7gZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9484F206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgAORof (ORCPT
+        id S1729011AbgAORp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:44:35 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42857 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAORoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:44:34 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z14so16438752qkg.9;
-        Wed, 15 Jan 2020 09:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m6xoPR2neNY7jGKcJU1Zrb+VdDyMT3eChB1zKABN77U=;
-        b=Lydwo7gZw7DHX1UX8PkZjddlzWtbrHgVeBQKfmcbrQQ2zg8nr/TdBbQ0YxU/giO6aR
-         0TtxdBx4nVycooprexn/hDVNpFgiO3kl/AZtSSRBWfN8PJBDtoAaGV8NXDjphuCPPBxp
-         sZ3t/cssjIigtX52RPxYRbfFD/41u4kxFdKs3hbXB5G3TAUn1bWfkWEXLxEMmvxxZtHH
-         +hOLJto3HpzQxG8aOR1mIKwluA8te3ndO6L3iXF0XJAVtm/APh5WX5pLxsKq8VzJ9HmM
-         x43V4757USzVgJFMzq0KU3H6VMStTxObsDnscBV90st+SHjNON+mpEBnSv8/WF2CaojS
-         7vbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m6xoPR2neNY7jGKcJU1Zrb+VdDyMT3eChB1zKABN77U=;
-        b=o/xVT8Tj9vMo44AepvlwbW84JKFRXKlHle20cu1RGpjPqxwSSxmhTGIVDbBmmPAE8M
-         YqLnr50OQ8+15ahAVFyuesLbYDEgyGod7qDtKlXMx3FcPWOs3vr01pEhRtlHw97abq+2
-         3dWcRG5BM70GeIn/zEdwinSsQD4uc0a4pkkdpdSxIW3+Aiif5pK+0ySfeojeIBdkV6xg
-         +NbQxNKxYbvtFFX3nuXnhyHtIVlCAuxI0i8K6peI+9OSvHfdcLNRCEnJKC8X4WP01oXI
-         GUJakXeasojiyDHmv7+E9HLrW1vGAthEWpSOyix9vnZLfwLsc2CCBce18tqPmFQrGY6S
-         oqSA==
-X-Gm-Message-State: APjAAAVko4lL37oIC5cdyysbTEBK6RFFd1Ue3ij6jRvLC1baA/TtEc2d
-        L1dgd2u5l2LEDtGH8gRUrw1VSvgjtmDRqW08MDA=
-X-Google-Smtp-Source: APXvYqzVE7hG98oGxZ/GsYNMIScGI3tkchCjPm5Bw57HzNx39uCyOLh6ur5DFPK7G8zjO1kCh1N9vis1zB3NdNxq8Vw=
-X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr28882285qkj.36.1579110273560;
- Wed, 15 Jan 2020 09:44:33 -0800 (PST)
+        Wed, 15 Jan 2020 12:45:56 -0500
+Received: from sauhun.de ([88.99.104.3]:39068 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbgAORpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:45:55 -0500
+Received: from localhost (p54B33239.dip0.t-ipconnect.de [84.179.50.57])
+        by pokefinder.org (Postfix) with ESMTPSA id C51E02C0742;
+        Wed, 15 Jan 2020 18:45:53 +0100 (CET)
+Date:   Wed, 15 Jan 2020 18:45:53 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/4] i2c: pmcmsp: Use proper printk format for
+ resource_size_t
+Message-ID: <20200115174553.GI1239@ninjato>
+References: <1578992765-1418-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk> <157909757421.1192265.7677168164515639742.stgit@toke.dk>
-In-Reply-To: <157909757421.1192265.7677168164515639742.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 15 Jan 2020 09:44:22 -0800
-Message-ID: <CAEf4BzZO4yV61zwjiU5fhARCSBqDDtVx+GmLfRueXFS43BPAhw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 05/10] bpftool: Use consistent include paths
- for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="16qp2B0xu0fRvRD7"
+Content-Disposition: inline
+In-Reply-To: <1578992765-1418-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 6:14 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Fix bpftool to include libbpf header files with the bpf/ prefix, to be
-> consistent with external users of the library. Also ensure that all
-> includes of exported libbpf header files (those that are exported on 'mak=
-e
-> install' of the library) use bracketed includes instead of quoted.
->
-> To make sure no new files are introduced that doesn't include the bpf/
-> prefix in its include, remove tools/lib/bpf from the include path entirel=
-y,
-> and use tools/lib instead.
->
-> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
-rom selftests dir")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
->  tools/bpf/bpftool/Documentation/bpftool-gen.rst |    2 +-
->  tools/bpf/bpftool/Makefile                      |    2 +-
->  tools/bpf/bpftool/btf.c                         |    8 ++++----
->  tools/bpf/bpftool/btf_dumper.c                  |    2 +-
->  tools/bpf/bpftool/cgroup.c                      |    2 +-
->  tools/bpf/bpftool/common.c                      |    4 ++--
->  tools/bpf/bpftool/feature.c                     |    4 ++--
->  tools/bpf/bpftool/gen.c                         |   10 +++++-----
->  tools/bpf/bpftool/jit_disasm.c                  |    2 +-
->  tools/bpf/bpftool/main.c                        |    4 ++--
->  tools/bpf/bpftool/map.c                         |    4 ++--
->  tools/bpf/bpftool/map_perf_ring.c               |    4 ++--
->  tools/bpf/bpftool/net.c                         |    8 ++++----
->  tools/bpf/bpftool/netlink_dumper.c              |    4 ++--
->  tools/bpf/bpftool/perf.c                        |    2 +-
->  tools/bpf/bpftool/prog.c                        |    6 +++---
->  tools/bpf/bpftool/xlated_dumper.c               |    2 +-
->  17 files changed, 35 insertions(+), 35 deletions(-)
->
 
-[...]
+--16qp2B0xu0fRvRD7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
-> index 7ce09a9a6999..b0695aa543d2 100644
-> --- a/tools/bpf/bpftool/gen.c
-> +++ b/tools/bpf/bpftool/gen.c
-> @@ -12,15 +12,15 @@
->  #include <stdio.h>
->  #include <string.h>
->  #include <unistd.h>
-> -#include <bpf.h>
-> -#include <libbpf.h>
-> +#include <bpf/bpf.h>
-> +#include <bpf/libbpf.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <sys/mman.h>
->  #include <unistd.h>
-> +#include <bpf/btf.h>
->
-> -#include "btf.h"
-> -#include "libbpf_internal.h"
-> +#include "bpf/libbpf_internal.h"
->  #include "json_writer.h"
->  #include "main.h"
->
-> @@ -333,7 +333,7 @@ static int do_skeleton(int argc, char **argv)
->                 #define %2$s                                             =
-   \n\
->                                                                          =
-   \n\
->                 #include <stdlib.h>                                      =
-   \n\
-> -               #include <libbpf.h>                                      =
-   \n\
-> +               #include <bpf/libbpf.h>                             \n\
 
-please fix \n\ alignment
+> +			"Unable to get memory/io address region %pap\n",
+> +			&(res->start));
 
->                                                                          =
-   \n\
->                 struct %1$s {                                            =
-   \n\
->                         struct bpf_object_skeleton *skeleton;            =
-   \n\
+My first thought was "parens not needed"; not because I like being picky
+but because it doesn't look more readable to me.
 
-[...]
+checkpatch agrees:
+
+CHECK: Unnecessary parentheses around res->start
+#30: FILE: drivers/i2c/busses/i2c-pmcmsp.c:278:
++			&(res->start));
+
+
+--16qp2B0xu0fRvRD7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4fT9EACgkQFA3kzBSg
+Kbb91BAAjPtROcvdlQNblLFk8PxjameI1NyWeapD6DkN0jImw+pfJ5nJFMnOu+Wh
+F6XntHHABtG0TIZrWZcaapSG2HtJBxJq1+1H00YyQMtlUqKnBsqZCcJ0qavL1Of8
+4QoH/tLRxc263i7eSKo8Q/v7NJdrfzf6SXDGj0d2uyOgHXkiBcbiw7YOeIruvgF2
+nPCAe65wsLvlS2/oVyEGjSuguyiFvkhz5y75LikWQ6KPA7mOTYYlsDFldEI0Jr0n
+Cjcp26950LR3uH6dkPnKJncyvgo+bqTCXty2VQZriONaIM2BgsziesYD6lZchTvT
+0OyNUxrFbM6ajIuwtLD5HMiQ7GmvfHRABUscFjhWutXrjyBTmLKiWlDHMsVLnYwb
+z07XxGhjmufTlBSPI4rXIZtyMv81+aQGagjZXWDwefUnsKQjilb7DFo1f5fbnsxC
+sKO/C6Pi4scgwXvUCBgok0xczp1jVE2NhVLgATIvSiGqzTaTSt0xzlIZd06bStO+
+uUBiyilC5TPyGU9npLRLvcaDg2LROH9UrTrb+vZX4qz5EOs25uMKb55F9oLtC5cc
+STUdu4uesKZgQc6xQEZ5ZoiuWiXTr/HZ6W8sBeaIO74SLgo+g4/6mtyaRBkz53u3
+vibl9z27lUGZskp0ClfuU5AD1mH0GnRTizBlJmnZIBTmmzKM5bQ=
+=cFSU
+-----END PGP SIGNATURE-----
+
+--16qp2B0xu0fRvRD7--
