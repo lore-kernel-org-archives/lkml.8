@@ -2,88 +2,137 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C5FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D07C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F5324671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456BB24681
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579076046;
+	bh=M+HSADfZQKQz8tI8Ei7xqVcpyWZVrFeljkerXtx23vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e/K19g49SNzVpHqOYS/sGRl9F/xubU+OEoVi8SGCdYM4yGhAGZ6vzuf+qobKWRoE4
+	 wHumI1uoZfvnNm1+mljPdOmATlbIjaaMer5DMbkw1NK0V8tiOyxT0/VuFzdpzXKYwq
+	 5Pu/CagTeTtalTgQcnLu10cLLK7YMBoKlR10XAtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAOINf (ORCPT
+        id S1728977AbgAOIOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:13:35 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:44997 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgAOINf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:13:35 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00F8D6kv026743, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00F8D6kv026743
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 15 Jan 2020 16:13:06 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 15 Jan 2020 16:13:05 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 15 Jan 2020 16:13:05 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Wed, 15 Jan 2020 16:13:05 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
-Thread-Topic: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
-Thread-Index: AQHVwfu36TqhHnURlUOpX7OuLPDS7qfrcuCg
-Date:   Wed, 15 Jan 2020 08:13:05 +0000
-Message-ID: <51cf409ed1a44f038a5f1df133986063@realtek.com>
-References: <20200103060441.1109-1-afaerber@suse.de>
-In-Reply-To: <20200103060441.1109-1-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.154]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 Jan 2020 03:14:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbgAOIOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:14:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5806724671;
+        Wed, 15 Jan 2020 08:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579076043;
+        bh=M+HSADfZQKQz8tI8Ei7xqVcpyWZVrFeljkerXtx23vs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e5w2X2lmbpZJEt3FIoAYrfP3JCxKVU5luHEmk7pWaix7LJF+MLwiAHRnU/NPD+/UO
+         SKTNLbC1ZD5YUfk5vFr6XYfsozGKLD+QgEjgihzZiieEB29v1eDv4QiAc5YKTHUgJa
+         vTmnktFUhRAjNjuGPvrDxuZjvsDYBRQLH58H7eoE=
+Date:   Wed, 15 Jan 2020 09:14:00 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, mark.rutland@arm.com,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com
+Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
+ drivers
+Message-ID: <20200115081400.GA2978927@kroah.com>
+References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
+ <20191125033412.GB890@hao-dev>
+ <20191125080127.GC1809@willie-the-truck>
+ <20191125080839.GA6227@hao-dev>
+ <20191209024527.GA22625@hao-dev>
+ <20191216010104.GA32154@yilunxu-OptiPlex-7050>
+ <20200106023742.GA3980@hao-dev>
+ <20200114055605.GA13574@hao-dev>
+ <20200115051040.GA1389@epycbox.lan>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115051040.GA1389@epycbox.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBSZXNlcnZlIG1lbW9yeSByZWdpb25zIGZvciBSUEMgYW5kIFRFRS4NCj4gDQo+IEZpeGVzOiBl
-NWE5ZTIzNzYwOGQgKCJhcm02NDogZHRzOiByZWFsdGVrOiBBZGQgUlREMTYxOSBTb0MgYW5kIFJl
-YWx0ZWsNCj4gTWpvbG5pciBFVkIiKQ0KPiBDYzogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRl
-ay5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5k
-ZT4NCj4gLS0tDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpIHwg
-MTkgKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4
-eC5kdHNpDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2eHguZHRzaQ0KPiBp
-bmRleCAzYzcwYTBkYTMyOWUuLjRkYzZjOWYxM2M0MyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02
-NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2eHguZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IEBAIC0xNCw2ICsxNCwyNSBAQA0KPiAgCSNhZGRy
-ZXNzLWNlbGxzID0gPDE+Ow0KPiAgCSNzaXplLWNlbGxzID0gPDE+Ow0KPiANCj4gKwlyZXNlcnZl
-ZC1tZW1vcnkgew0KPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMg
-PSA8MT47DQo+ICsJCXJhbmdlczsNCj4gKw0KPiArCQlycGNfY29tbTogcnBjQDJmMDAwIHsNCj4g
-KwkJCXJlZyA9IDwweDJmMDAwIDB4MTAwMD47DQo+ICsJCX07DQo+ICsNCj4gKwkJcnBjX3Jpbmdi
-dWY6IHJwY0AxZmZlMDAwIHsNCj4gKwkJCXJlZyA9IDwweDFmZmUwMDAgMHg0MDAwPjsNCj4gKwkJ
-fTsNCj4gKw0KPiArCQl0ZWU6IHRlZUAxMDEwMDAwMCB7DQo+ICsJCQlyZWcgPSA8MHgxMDEwMDAw
-MCAweGYwMDAwMD47DQo+ICsJCQluby1tYXA7DQo+ICsJCX07DQo+ICsJfTsNCj4gKw0KPiAgCWNw
-dXMgew0KPiAgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gIAkJI3NpemUtY2VsbHMgPSA8MD47
-DQo+IC0tDQo+IDIuMTYuNA0KPiANCj4gDQpBY2tlZC1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlA
-cmVhbHRlay5jb20+DQo=
+On Tue, Jan 14, 2020 at 09:10:40PM -0800, Moritz Fischer wrote:
+> Hi Greg,
+> 
+> On Tue, Jan 14, 2020 at 01:56:05PM +0800, Wu Hao wrote:
+> > On Mon, Jan 06, 2020 at 10:37:42AM +0800, Wu Hao wrote:
+> > > On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
+> > > > On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
+> > > > > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
+> > > > > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
+> > > > > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
+> > > > > > > > Hi Will and Mark,
+> > > > > > > > 
+> > > > > > > > Could you please help us on review this patchset? as this patchset mainly 
+> > > > > > > > introduced a new perf driver following the similar way as drivers/perf/*.
+> > > > > > > 
+> > > > > > > Why is it not under drivers/perf/, then?
+> > > > > > 
+> > > > > > Hi Will
+> > > > > > 
+> > > > > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
+> > > > > > and we plan to put this sub feature together with others, including related
+> > > > > > documentation. It only registers a standard perf pmu for its userspace
+> > > > > > interfaces.
+> > > > > > 
+> > > > > > > 
+> > > > > > > > This patchset has been submitted for a long time but didn't receive any
+> > > > > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
+> > > > > > > 
+> > > > > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
+> > > > > > 
+> > > > > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
+> > > > > 
+> > > > > Hi Will
+> > > > > 
+> > > > > Did you get a chance to look into this patchset?
+> > > > > 
+> > > > > Thanks
+> > > > > Hao
+> > > > 
+> > > > Hi Will
+> > > > 
+> > > > Did you have time to look into this patchset? We have done review work
+> > > > for FPGA part. And as a perf driver, we appreciate your comments.
+> > > > 
+> > > > Thanks
+> > > > Yilun
+> > > 
+> > > Hi Will
+> > > 
+> > > Did you get a chance to look into this patchset these days? 
+> > > 
+> > > Actually we didn't receive any comments for a long time, if you are busy and
+> > > don't have enough time on this, do you know if someone else could help with
+> > > review and ack from perf driver point of view, or any other things we can do
+> > > to speed up this? Thanks in advance! 
+> > 
+> > Hi Moritz
+> > 
+> > Looks like still no response from Will. :(
+> > 
+> > Do you know someone else could help?
+> 
+> Do you have some feedback? I'm a bit confused on what to do in such a
+> situation, do I just take the patch if the maintainer doesn't respond
+> for a while?
+
+Resend it and say something like "please review" or the like.  With the
+holidays and catching up from the holidays, this time of year is usually
+very backlogged for lots of reviewers.
+
+greg k-h
