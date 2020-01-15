@@ -2,283 +2,247 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC249C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C30DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAAD2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554E424656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HpYKU1iD"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="WuomRfzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgAOFrO (ORCPT
+        id S1726474AbgAOFuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:47:14 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58901 "EHLO ozlabs.org"
+        Wed, 15 Jan 2020 00:50:46 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:31502 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgAOFrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:47:14 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yGYV2Y5cz9sNx;
-        Wed, 15 Jan 2020 16:47:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579067231;
-        bh=VCtIZxItOFqHZSiDDpXseytl6epnUFM5r+dAruhRX0g=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HpYKU1iDgm+/rLuG0KuEt7If5vP1J4/Lr56aMaCu6BLjaL2C9yaxVkv6XqcPWkdyi
-         YUdqGcdLg/Lo4fsPwcpTn6XuA3DUB84jHs9saeefDeg9YOYnXJCvCxJd3+afoX+K/g
-         v90SY3peCCjkujcJz2CZX73GHesudDb3sz18usCNt5RS7HdwJ5uOdkXUJHpHzfnVny
-         WcOSlSP8n5iRND2ewfuRWU4wYbACTczbiHXXMKjcWW47+YjutkdtWhfY9f/qOW1r1H
-         WGFq2SleuJkF3idMm7ePTsDmJ0MrW1tff7VSsJcEcMoQD8MSsDQrUaQbGhDDlIEEBL
-         mmYf7xUpbOxGQ==
-Date:   Wed, 15 Jan 2020 16:47:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: linux-next: manual merge of the akpm-current tree with the ftrace
- tree
-Message-ID: <20200115164708.6c51494c@canb.auug.org.au>
+        id S1725962AbgAOFuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 00:50:46 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47yGdY5Y7Pz9txw1;
+        Wed, 15 Jan 2020 06:50:41 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=WuomRfzE; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mfKxcG6g7OTA; Wed, 15 Jan 2020 06:50:41 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47yGdY4FZlz9txvv;
+        Wed, 15 Jan 2020 06:50:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579067441; bh=PONqyG5Kwmo6UAIvhChfBPV3SHZxCs6ee9uKMcSL3Yg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WuomRfzENnS/htWG636a1i0bPlff4pugt/mQvNuJeB6mdXOTXUO1NrZoXElV8krfN
+         8VwgMu7W4cZIFi16miIZflnhS+IHZfN0lR4gdSH4OxfJgyLv/A3wfWvWJphUTIOAUC
+         3Fd0Mr4tqVEvZpHTRCcHdOS4X8s5d9VSxqosFVvs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5D2F28B77E;
+        Wed, 15 Jan 2020 06:50:42 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5h25OqE_qAEg; Wed, 15 Jan 2020 06:50:42 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1149E8B774;
+        Wed, 15 Jan 2020 06:50:42 +0100 (CET)
+Subject: Re: [patch 09/15] clocksource: Add common vdso clock mode storage
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+References: <20200114185237.273005683@linutronix.de>
+ <20200114185947.500141436@linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <f6c5ce65-be49-add3-5959-85fa9cdc75a2@c-s.fr>
+Date:   Wed, 15 Jan 2020 06:50:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/B0VKlpmGXcxfGIj2SKUi5OZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200114185947.500141436@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/B0VKlpmGXcxfGIj2SKUi5OZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Le 14/01/2020 à 19:52, Thomas Gleixner a écrit :
+> All architectures which use the generic VDSO code have their own storage
+> for the VDSO clock mode. That's pointless and just requires duplicate code.
+> 
+> Provide generic storage for it. The new Kconfig symbol is intermediate and
+> will be removed once all architectures are converted over.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   include/linux/clocksource.h |   12 +++++++++++-
+>   kernel/time/clocksource.c   |    9 +++++++++
+>   kernel/time/vsyscall.c      |    7 +++++++
+>   lib/vdso/Kconfig            |    3 +++
+>   lib/vdso/gettimeofday.c     |   13 +++++++++++--
+>   5 files changed, 41 insertions(+), 3 deletions(-)
+> 
+> --- a/include/linux/clocksource.h
+> +++ b/include/linux/clocksource.h
+> @@ -23,10 +23,19 @@
+>   struct clocksource;
+>   struct module;
+>   
+> -#ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
+> +#if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
+> +    defined(CONFIG_GENERIC_VDSO_CLOCK_MODE)
+>   #include <asm/clocksource.h>
+>   #endif
+>   
+> +enum vdso_clock_mode {
+> +	VDSO_CLOCKMODE_NONE,
+> +#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+> +	VDSO_ARCH_CLOCKMODES,
+> +#endif
+> +	VDSO_CLOCKMODE_MAX,
+> +};
+> +
+>   /**
+>    * struct clocksource - hardware abstraction for a free running counter
+>    *	Provides mostly state-free accessors to the underlying hardware.
+> @@ -97,6 +106,7 @@ struct clocksource {
+>   	const char		*name;
+>   	struct list_head	list;
+>   	int			rating;
+> +	enum vdso_clock_mode	vdso_clock_mode;
+>   	unsigned long		flags;
+>   
+>   	int			(*enable)(struct clocksource *cs);
+> --- a/kernel/time/clocksource.c
+> +++ b/kernel/time/clocksource.c
+> @@ -921,6 +921,15 @@ int __clocksource_register_scale(struct
+>   
+>   	clocksource_arch_init(cs);
+>   
+> +#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+> +	if (cs->vdso_clock_mode < 0 ||
+> +	    cs->vdso_clock_mode >= VDSO_CLOCKMODE_MAX) {
+> +		pr_warn("clocksource %s registered with invalid VDSO mode %d. Disabling VDSO support.\n",
+> +			cs->name, cs->vdso_clock_mode);
+> +		cs->vdso_clock_mode = VDSO_CLOCKMODE_NONE;
+> +	}
+> +#endif
+> +
+>   	/* Initialize mult/shift and max_idle_ns */
+>   	__clocksource_update_freq_scale(cs, scale, freq);
+>   
+> --- a/kernel/time/vsyscall.c
+> +++ b/kernel/time/vsyscall.c
+> @@ -72,12 +72,19 @@ void update_vsyscall(struct timekeeper *
+>   	struct vdso_data *vdata = __arch_get_k_vdso_data();
+>   	struct vdso_timestamp *vdso_ts;
+>   	u64 nsec;
+> +	s32 mode;
 
-  init/main.c
+gcc will claim 'mode' is unused when CONFIG_GENERIC_VDSO_CLOCK_MODE is 
+not defined.
+>   
+>   	/* copy vsyscall data */
+>   	vdso_write_begin(vdata);
+>   
+> +#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+> +	mode = tk->tkr_mono.clock->vdso_clock_mode;
+> +	vdata[CS_HRES_COARSE].clock_mode	= mode;
+> +	vdata[CS_RAW].clock_mode		= mode;
+> +#else
+>   	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
+>   	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
+> +#endif
 
-between commit:
+Can we do :
 
-  0068c92a9270 ("init/main.c: Alloc initcall_command_line in do_initcall() =
-and free it")
+#ifdef CONFIG_GENERIC_VDSO_CLOCK_MODE
+	mode = tk->tkr_mono.clock->vdso_clock_mode;
+#else
+	mode = __arch_get_clock_mode(tk);
+#endif
+	vdata[CS_HRES_COARSE].clock_mode	= mode;
+	vdata[CS_RAW].clock_mode		= mode;
 
-from the ftrace tree and commit:
+Christophe
 
-  21cc5aef9811 ("init/main.c: remove unnecessary repair_env_string in do_in=
-itcall_level")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc init/main.c
-index 031723614b80,7dc422c6444a..000000000000
---- a/init/main.c
-+++ b/init/main.c
-@@@ -249,143 -245,8 +249,142 @@@ static int __init loglevel(char *str
- =20
-  early_param("loglevel", loglevel);
- =20
- +#ifdef CONFIG_BOOT_CONFIG
- +
- +char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
- +
- +#define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
- +
- +static int __init xbc_snprint_cmdline(char *buf, size_t size,
- +				      struct xbc_node *root)
- +{
- +	struct xbc_node *knode, *vnode;
- +	char *end =3D buf + size;
- +	char c =3D '\"';
- +	const char *val;
- +	int ret;
- +
- +	xbc_node_for_each_key_value(root, knode, val) {
- +		ret =3D xbc_node_compose_key_after(root, knode,
- +					xbc_namebuf, XBC_KEYLEN_MAX);
- +		if (ret < 0)
- +			return ret;
- +
- +		vnode =3D xbc_node_get_child(knode);
- +		ret =3D snprintf(buf, rest(buf, end), "%s%c", xbc_namebuf,
- +				vnode ? '=3D' : ' ');
- +		if (ret < 0)
- +			return ret;
- +		buf +=3D ret;
- +		if (!vnode)
- +			continue;
- +
- +		c =3D '\"';
- +		xbc_array_for_each_value(vnode, val) {
- +			ret =3D snprintf(buf, rest(buf, end), "%c%s", c, val);
- +			if (ret < 0)
- +				return ret;
- +			buf +=3D ret;
- +			c =3D ',';
- +		}
- +		if (rest(buf, end) > 2)
- +			strcpy(buf, "\" ");
- +		buf +=3D 2;
- +	}
- +
- +	return buf - (end - size);
- +}
- +#undef rest
- +
- +/* Make an extra command line under given key word */
- +static char * __init xbc_make_cmdline(const char *key)
- +{
- +	struct xbc_node *root;
- +	char *new_cmdline;
- +	int ret, len =3D 0;
- +
- +	root =3D xbc_find_node(key);
- +	if (!root)
- +		return NULL;
- +
- +	/* Count required buffer size */
- +	len =3D xbc_snprint_cmdline(NULL, 0, root);
- +	if (len <=3D 0)
- +		return NULL;
- +
- +	new_cmdline =3D memblock_alloc(len + 1, SMP_CACHE_BYTES);
- +	if (!new_cmdline) {
- +		pr_err("Failed to allocate memory for extra kernel cmdline.\n");
- +		return NULL;
- +	}
- +
- +	ret =3D xbc_snprint_cmdline(new_cmdline, len + 1, root);
- +	if (ret < 0 || ret > len) {
- +		pr_err("Failed to print extra kernel cmdline.\n");
- +		return NULL;
- +	}
- +
- +	return new_cmdline;
- +}
- +
- +u32 boot_config_checksum(unsigned char *p, u32 size)
- +{
- +	u32 ret =3D 0;
- +
- +	while (size--)
- +		ret +=3D *p++;
- +
- +	return ret;
- +}
- +
- +static void __init setup_boot_config(void)
- +{
- +	u32 size, csum;
- +	char *data, *copy;
- +	u32 *hdr;
- +
- +	if (!initrd_end)
- +		return;
- +
- +	hdr =3D (u32 *)(initrd_end - 8);
- +	size =3D hdr[0];
- +	csum =3D hdr[1];
- +
- +	if (size >=3D XBC_DATA_MAX)
- +		return;
- +
- +	data =3D ((void *)hdr) - size;
- +	if ((unsigned long)data < initrd_start)
- +		return;
- +
- +	if (boot_config_checksum((unsigned char *)data, size) !=3D csum)
- +		return;
- +
- +	copy =3D memblock_alloc(size + 1, SMP_CACHE_BYTES);
- +	if (!copy) {
- +		pr_err("Failed to allocate memory for boot config\n");
- +		return;
- +	}
- +
- +	memcpy(copy, data, size);
- +	copy[size] =3D '\0';
- +
- +	if (xbc_init(copy) < 0)
- +		pr_err("Failed to parse boot config\n");
- +	else {
- +		pr_info("Load boot config: %d bytes\n", size);
- +		/* keys starting with "kernel." are passed via cmdline */
- +		extra_command_line =3D xbc_make_cmdline("kernel");
- +		/* Also, "init." keys are init arguments */
- +		extra_init_args =3D xbc_make_cmdline("init");
- +	}
- +}
- +#else
- +#define setup_boot_config()	do { } while (0)
- +#endif
- +
-  /* Change NUL term back to "=3D", to make "param" the whole string. */
-- static int __init repair_env_string(char *param, char *val,
-- 				    const char *unused, void *arg)
-+ static void __init repair_env_string(char *param, char *val)
-  {
-  	if (val) {
-  		/* param=3Dval or param=3D"val"? */
-@@@ -1162,15 -990,22 +1161,21 @@@ static const char *initcall_level_names
-  	"late",
-  };
- =20
-+ static int __init ignore_unknown_bootoption(char *param, char *val,
-+ 			       const char *unused, void *arg)
-+ {
-+ 	return 0;
-+ }
-+=20
- -static void __init do_initcall_level(int level)
- +static void __init do_initcall_level(int level, char *command_line)
-  {
-  	initcall_entry_t *fn;
- =20
- -	strcpy(initcall_command_line, saved_command_line);
-  	parse_args(initcall_level_names[level],
- -		   initcall_command_line, __start___param,
- +		   command_line, __start___param,
-  		   __stop___param - __start___param,
-  		   level, level,
-- 		   NULL, &repair_env_string);
-+ 		   NULL, ignore_unknown_bootoption);
- =20
-  	trace_initcall_level(initcall_level_names[level]);
-  	for (fn =3D initcall_levels[level]; fn < initcall_levels[level+1]; fn++)
-
---Sig_/B0VKlpmGXcxfGIj2SKUi5OZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4ep1wACgkQAVBC80lX
-0GyunAgAgcqDoq4lE07NibfdXlua4R7B8kOAZs357QFR3I2xqgzLz5oCBQJzpz/r
-xi4WbsGzzADHGgFmBgeuAGcEeFfQpQgVBGw5EF3M761QLiM3O4sKC8hKhF+fCQ7V
-eMVWzXcd5Dp/rYEw3Bb9z3/XNBMYEljawLAGMg9T1Ub+leeA2sGFsF39IrUJ55v0
-PTh1EzqwDR35dbSKiXMEXAXvovmmoXQDpPreAmcuzp3JRtHZzoAjWjBRprprQhyA
-i/KVsNlMg1LlN/OCy3byGHuDNgRnAVXM0y//8nXkUHRxkQ3gL53V3iR4sa/wzIfL
-IAO/Rt2adtDSaDU9adXV1dvH9goAqw==
-=9mWW
------END PGP SIGNATURE-----
-
---Sig_/B0VKlpmGXcxfGIj2SKUi5OZ--
+>   
+>   	/* CLOCK_REALTIME also required for time() */
+>   	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+> --- a/lib/vdso/Kconfig
+> +++ b/lib/vdso/Kconfig
+> @@ -30,4 +30,7 @@ config GENERIC_VDSO_TIME_NS
+>   	  Selected by architectures which support time namespaces in the
+>   	  VDSO
+>   
+> +config GENERIC_VDSO_CLOCK_MODE
+> +	bool
+> +
+>   endif
+> --- a/lib/vdso/gettimeofday.c
+> +++ b/lib/vdso/gettimeofday.c
+> @@ -7,6 +7,7 @@
+>   #include <linux/time.h>
+>   #include <linux/kernel.h>
+>   #include <linux/hrtimer_defs.h>
+> +#include <linux/clocksource.h>
+>   #include <vdso/datapage.h>
+>   #include <vdso/helpers.h>
+>   
+> @@ -64,10 +65,14 @@ static int do_hres_timens(const struct v
+>   
+>   	do {
+>   		seq = vdso_read_begin(vd);
+> +		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+> +		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
+> +			return -1;
+>   		cycles = __arch_get_hw_counter(vd->clock_mode);
+>   		ns = vdso_ts->nsec;
+>   		last = vd->cycle_last;
+> -		if (unlikely((s64)cycles < 0))
+> +		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+> +		    unlikely((s64)cycles < 0))
+>   			return -1;
+>   
+>   		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+> @@ -132,10 +137,14 @@ static __always_inline int do_hres(const
+>   		}
+>   		smp_rmb();
+>   
+> +		if (IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+> +		    vd->clock_mode == VDSO_CLOCKMODE_NONE)
+> +			return -1;
+>   		cycles = __arch_get_hw_counter(vd->clock_mode);
+>   		ns = vdso_ts->nsec;
+>   		last = vd->cycle_last;
+> -		if (unlikely((s64)cycles < 0))
+> +		if (!IS_ENABLED(CONFIG_GENERIC_VDSO_CLOCK_MODE) &&
+> +		    unlikely((s64)cycles < 0))
+>   			return -1;
+>   
+>   		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+> 
