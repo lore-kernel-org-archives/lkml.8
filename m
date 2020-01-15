@@ -6,89 +6,80 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93427C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF7F2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512BA2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbgAOXFr (ORCPT
+        id S1730984AbgAOXIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:05:47 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49497 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAOXFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:05:47 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irrjG-0002zJ-VA; Thu, 16 Jan 2020 00:05:39 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 13D65100C1B; Thu, 16 Jan 2020 00:05:38 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>
-Subject: RE: Re: "oneshot" interrupt causes another interrupt to be fired erroneously in Haswell system
-In-Reply-To: <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
-References: <20191031230532.GA170712@google.com> <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de> <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
-Date:   Thu, 16 Jan 2020 00:05:38 +0100
-Message-ID: <87a76oxqv1.fsf@nanos.tec.linutronix.de>
+        Wed, 15 Jan 2020 18:08:46 -0500
+Received: from mga18.intel.com ([134.134.136.126]:13350 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729369AbgAOXIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:08:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:08:45 -0800
+X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
+   d="scan'208";a="218316397"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:08:45 -0800
+Message-ID: <cc71a016de155310f7593bfe3091eea094d400b4.camel@linux.intel.com>
+Subject: Re: [PATCH v16 0/9] mm / virtio: Provide support for free page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, osalvador@suse.de
+Date:   Wed, 15 Jan 2020 15:08:45 -0800
+In-Reply-To: <20200103210509.29237.18426.stgit@localhost.localdomain>
+References: <20200103210509.29237.18426.stgit@localhost.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kar Hin Ong <kar.hin.ong@ni.com> writes:
->> > > From Intel Xeon Processor E5/E7 v3 Product Family External Design
->> > > Specification (EDS), Volume One: Architecture, section 13.1 (Legacy
->> > > PCI Interrupt Handling), it mention: "If the I/OxAPIC entry is
->> > > masked (via the 'mask' bit in the corresponding Redirection Table
->> > > Entry), then the corresponding PCI Express interrupt(s) is forwarded
->> > > to the legacy PCH"
->> 
->> Oh well. Really useful behaviour - NOT!
+On Fri, 2020-01-03 at 13:16 -0800, Alexander Duyck wrote:
+> This series provides an asynchronous means of reporting free guest pages
+> to a hypervisor so that the memory associated with those pages can be
+> dropped and reused by other processes and/or guests on the host. Using
+> this it is possible to avoid unnecessary I/O to disk and greatly improve
+> performance in the case of memory overcommit on the host.
 
-Second thoughts on this. This behaviour is intentional to make PCI
-interrupts work even when the IOAPIC is not initialized at all.
+<snip>
 
-I don't have access to the document you mentioned, but I know that
-chipsets have a knob to control that behaviour. Just checked a few
-chipset docs and they contain the same sentence, but then in the next
-paragraph they say:
+> 
+> Changes from v15:
+> https://lore.kernel.org/lkml/20191205161928.19548.41654.stgit@localhost.localdomain/
+> Rebased on linux-next-20191219
+> Split out patches for budget and moving head to last page processed
+>   Updated budget code to reduce how much memory is reported per pass
+>   Added logic to also rotate the list if we exit due a page isolation failure
+> Added migratetype as argument in __putback_isolated_page
 
- "If the I/OxAPIC entry is masked (via the mask bit in the corresponding
-  Redirection Table Entry), then the corresponding PCI Express
-  interrupt(s) is forwarded to the legacy ICH, provided the Disable PCI
-  INTx Routing to ICH bit is clear, Section 19.10.2.27, QPIPINTRC: Intel
-  QuickPath Interconnect Protocol Interrupt Control."
+It's been about a week and a half since I posted the set and haven't
+really gotten much feedback other than a suggestion of a slight tweak to
+the titles for patches 7 & 8 to mention page_reporting. I'm mainly looking
+for input on patches 3, 4, 7 and 8 since those are the ones that contain
+most of the changes based on recent feedback.
 
-That control bit is 0 after reset, so the legacy forwarding works.
+I'm wondering if there is any remaining concerns or if these patches are
+in a state where they are ready to be pulled into the MM tree?
 
-Another way to avoid this is to use MSI interrupts instead of the legacy
-PCI ones, which is recommended for various reasons (including
-performance) anyway.
+Thanks.
 
-Can you please provide the exact CPU and PCH types and the output of
-'lspci -vvv'?
-
-Thanks,
-
-        tglx
-
-
-
+- Alex
 
