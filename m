@@ -2,118 +2,108 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEE1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FE3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACF024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C7124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sfBhmYet"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mZx32757"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgAOFlK (ORCPT
+        id S1726527AbgAOFmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:41:10 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:50218 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgAOFlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:41:10 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47yGQX1mqXz9vJ9w;
-        Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=sfBhmYet; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Rdx1R27WK1OZ; Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47yGQX0hprz9vJ9v;
-        Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579066868; bh=bRfKh/Cnz206aPF3lzBprN9c8zs4SrTAq3h16N+7SHw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=sfBhmYetSsi3Ss5SJ7e9KTZnHFjPXC9u/9eu80eR3zJl3thbTW15nJ05CUMBW0uVk
-         pIRVniOt4PsZXoKE66DQwekei9xTv9g5nPtQzUZ/+rKGbFbOWZ5En6M3LW7E8ukZE1
-         5Qf6V6TbteuqusiEM6OBNedAG9HkllYRJ9h6BETA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D655D8B77B;
-        Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ph2qjykawEAp; Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9E618B774;
-        Wed, 15 Jan 2020 06:41:08 +0100 (CET)
-Subject: Re: [PATCH] Fix display of Maximum Memory
-To:     Michael Bringmann <mwb@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Gustavo Walbon <gwalbon@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>
-References: <55f25626-20ca-0acb-3571-ff636ca4632c@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <41380afd-05f5-f36f-c857-041243c73ee3@c-s.fr>
-Date:   Wed, 15 Jan 2020 06:41:08 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 15 Jan 2020 00:42:49 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46799 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726018AbgAOFmt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 00:42:49 -0500
+X-UUID: 858ebded93e846c89ccb6878557b2402-20200115
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=NLlzXYOSoxhpcDeE66w7aM8ABD4fy1DrSnI0e/ewbHA=;
+        b=mZx327575G08m6SpzlyeH/Bv4sdBUbW85LbYc4XFk27FqGg7L9RRjQHV1oVymkzwSM4s0/8jY9TceCYGI6uT1kJIcYSUND8FA08i+f44HYEoWRoyDtxp5ijNJVmdfrjvqyTVQrqLu/pTjO3Y+go814Zn5oPLAy95H7sXgfFuR30=;
+X-UUID: 858ebded93e846c89ccb6878557b2402-20200115
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <jamesjj.liao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 347920774; Wed, 15 Jan 2020 13:42:40 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 15 Jan 2020 13:41:41 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 15 Jan 2020 13:42:46 +0800
+From:   James Liao <jamesjj.liao@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v3] arm64: dts: mt8183: Enable CPU idle-states
+Date:   Wed, 15 Jan 2020 13:42:35 +0800
+Message-ID: <1579066955-2214-1-git-send-email-jamesjj.liao@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <55f25626-20ca-0acb-3571-ff636ca4632c@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6A3DA06B2E6C1CE21AC270955416C9E877BDCD95EBBE1F384779E1801670C0A82000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+RW5hYmxlIG1jZGktY3B1IGFuZCBtY2RpLWNsdXN0ZXIgb24gTVQ4MTgzIENQVXMuDQoNClNpZ25l
+ZC1vZmYtYnk6IEphbWVzIExpYW8gPGphbWVzamoubGlhb0BtZWRpYXRlay5jb20+DQotLS0NClRo
+aXMgcGF0Y2ggYmFzZXMgb24gdjUuNS1yYzYsIGFkZHMgaWRsZS1zdGF0ZXMgZm9yIE1UODE4MyBD
+UFVzLg0KDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8IDMwICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRp
+b25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4
+My5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KaW5kZXgg
+MTBiMzI0Ny4uMTAwN2ExMyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
+ZWsvbXQ4MTgzLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgz
+LmR0c2kNCkBAIC03Myw2ICs3Myw3IEBADQogCQkJcmVnID0gPDB4MDAwPjsNCiAJCQllbmFibGUt
+bWV0aG9kID0gInBzY2kiOw0KIAkJCWNhcGFjaXR5LWRtaXBzLW1oeiA9IDw3NDE+Ow0KKwkJCWNw
+dS1pZGxlLXN0YXRlcyA9IDwmQ1BVX1NMRUVQICZDTFVTVEVSX1NMRUVQPjsNCiAJCX07DQogDQog
+CQljcHUxOiBjcHVAMSB7DQpAQCAtODEsNiArODIsNyBAQA0KIAkJCXJlZyA9IDwweDAwMT47DQog
+CQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCiAJCQljYXBhY2l0eS1kbWlwcy1taHogPSA8NzQx
+PjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9TTEVFUCAmQ0xVU1RFUl9TTEVFUD47DQog
+CQl9Ow0KIA0KIAkJY3B1MjogY3B1QDIgew0KQEAgLTg5LDYgKzkxLDcgQEANCiAJCQlyZWcgPSA8
+MHgwMDI+Ow0KIAkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQogCQkJY2FwYWNpdHktZG1pcHMt
+bWh6ID0gPDc0MT47DQorCQkJY3B1LWlkbGUtc3RhdGVzID0gPCZDUFVfU0xFRVAgJkNMVVNURVJf
+U0xFRVA+Ow0KIAkJfTsNCiANCiAJCWNwdTM6IGNwdUAzIHsNCkBAIC05Nyw2ICsxMDAsNyBAQA0K
+IAkJCXJlZyA9IDwweDAwMz47DQogCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCiAJCQljYXBh
+Y2l0eS1kbWlwcy1taHogPSA8NzQxPjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9TTEVF
+UCAmQ0xVU1RFUl9TTEVFUD47DQogCQl9Ow0KIA0KIAkJY3B1NDogY3B1QDEwMCB7DQpAQCAtMTA1
+LDYgKzEwOSw3IEBADQogCQkJcmVnID0gPDB4MTAwPjsNCiAJCQllbmFibGUtbWV0aG9kID0gInBz
+Y2kiOw0KIAkJCWNhcGFjaXR5LWRtaXBzLW1oeiA9IDwxMDI0PjsNCisJCQljcHUtaWRsZS1zdGF0
+ZXMgPSA8JkNQVV9TTEVFUCAmQ0xVU1RFUl9TTEVFUD47DQogCQl9Ow0KIA0KIAkJY3B1NTogY3B1
+QDEwMSB7DQpAQCAtMTEzLDYgKzExOCw3IEBADQogCQkJcmVnID0gPDB4MTAxPjsNCiAJCQllbmFi
+bGUtbWV0aG9kID0gInBzY2kiOw0KIAkJCWNhcGFjaXR5LWRtaXBzLW1oeiA9IDwxMDI0PjsNCisJ
+CQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9TTEVFUCAmQ0xVU1RFUl9TTEVFUD47DQogCQl9Ow0K
+IA0KIAkJY3B1NjogY3B1QDEwMiB7DQpAQCAtMTIxLDYgKzEyNyw3IEBADQogCQkJcmVnID0gPDB4
+MTAyPjsNCiAJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KIAkJCWNhcGFjaXR5LWRtaXBzLW1o
+eiA9IDwxMDI0PjsNCisJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQVV9TTEVFUCAmQ0xVU1RFUl9T
+TEVFUD47DQogCQl9Ow0KIA0KIAkJY3B1NzogY3B1QDEwMyB7DQpAQCAtMTI5LDYgKzEzNiwyOSBA
+QA0KIAkJCXJlZyA9IDwweDEwMz47DQogCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCiAJCQlj
+YXBhY2l0eS1kbWlwcy1taHogPSA8MTAyND47DQorCQkJY3B1LWlkbGUtc3RhdGVzID0gPCZDUFVf
+U0xFRVAgJkNMVVNURVJfU0xFRVA+Ow0KKwkJfTsNCisNCisJCWlkbGUtc3RhdGVzIHsNCisJCQll
+bnRyeS1tZXRob2QgPSAicHNjaSI7DQorDQorCQkJQ1BVX1NMRUVQOiBjcHUtc2xlZXAgew0KKwkJ
+CQljb21wYXRpYmxlID0gImFybSxpZGxlLXN0YXRlIjsNCisJCQkJbG9jYWwtdGltZXItc3RvcDsN
+CisJCQkJYXJtLHBzY2ktc3VzcGVuZC1wYXJhbSA9IDwweDAwMDEwMDAxPjsNCisJCQkJZW50cnkt
+bGF0ZW5jeS11cyA9IDwyMDA+Ow0KKwkJCQlleGl0LWxhdGVuY3ktdXMgPSA8MjAwPjsNCisJCQkJ
+bWluLXJlc2lkZW5jeS11cyA9IDw4MDA+Ow0KKwkJCX07DQorDQorCQkJQ0xVU1RFUl9TTEVFUDog
+Y2x1c3Rlci1zbGVlcCB7DQorCQkJCWNvbXBhdGlibGUgPSAiYXJtLGlkbGUtc3RhdGUiOw0KKwkJ
+CQlsb2NhbC10aW1lci1zdG9wOw0KKwkJCQlhcm0scHNjaS1zdXNwZW5kLXBhcmFtID0gPDB4MDEw
+MTAwMDE+Ow0KKwkJCQllbnRyeS1sYXRlbmN5LXVzID0gPDI1MD47DQorCQkJCWV4aXQtbGF0ZW5j
+eS11cyA9IDw0MDA+Ow0KKwkJCQltaW4tcmVzaWRlbmN5LXVzID0gPDEzMDA+Ow0KKwkJCX07DQog
+CQl9Ow0KIAl9Ow0KIA0KLS0gDQoxLjkuMQ0K
 
-
-Le 14/01/2020 à 22:07, Michael Bringmann a écrit :
-> Correct overflow problem in calculation+display of Maximum Memory
-> value to syscfg where 32bits is insufficient.
-> 
-> Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
-> ---
->   arch/powerpc/platforms/pseries/lparcfg.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
-> index 4ee2594..183aeb7 100644
-> --- a/arch/powerpc/platforms/pseries/lparcfg.c
-> +++ b/arch/powerpc/platforms/pseries/lparcfg.c
-> @@ -435,12 +435,12 @@ static void parse_em_data(struct seq_file *m)
-> 
->   static void maxmem_data(struct seq_file *m)
->   {
-> -       unsigned long maxmem = 0;
-> +       unsigned long long maxmem = 0;
-
-What about using u64 instead, for readability ?
-
-> 
-> -       maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
-> -       maxmem += hugetlb_total_pages() * PAGE_SIZE;
-> +       maxmem += (unsigned long long)drmem_info->n_lmbs * (unsigned long long)drmem_info->lmb_size;
-
-This line is likely too long. You only need to cast one of the two 
-operants to force a 64 bits multiply. And using u64 would shorten the line.
-
-Can both multiplications overflow ?
-
-Christophe
-
-> +       maxmem += (unsigned long long)hugetlb_total_pages() * (unsigned long long)PAGE_SIZE;
-> 
-> -       seq_printf(m, "MaxMem=%ld\n", maxmem);
-> +       seq_printf(m, "MaxMem=%llu\n", maxmem);
->   }
-> 
->   static int pseries_lparcfg_data(struct seq_file *m, void *v)
-> 
