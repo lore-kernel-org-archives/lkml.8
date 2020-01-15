@@ -2,136 +2,137 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02118C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AD5C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80852077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DCF2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:21:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXvNNSN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgAOUUw (ORCPT
+        id S1729142AbgAOUVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:20:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:42190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAOUUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:20:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC48328;
-        Wed, 15 Jan 2020 12:20:50 -0800 (PST)
-Received: from [192.168.0.17] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27B583F718;
-        Wed, 15 Jan 2020 12:20:49 -0800 (PST)
-Subject: Re: [PATCH] sched/fair: remove redundant call to cpufreq_update_util
-To:     Vincent Guittot <vincent.guittot@linaro.org>, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <dd966dc1-db11-dd64-6b88-13e0dcf45fd7@arm.com>
-Date:   Wed, 15 Jan 2020 21:20:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 15:21:05 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44524 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAOUVE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:21:04 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w8so2528452qts.11;
+        Wed, 15 Jan 2020 12:21:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gQDIp0O9QnAxX4WU+TXGscN8NS1YVLXeb9VJm6V5OoY=;
+        b=lXvNNSN9x27eKkpEf42K5E/i5sPyZRkW3eo3LqB4FkqRL2DhMZDY/WSoEBtIzsiIFO
+         6hTeNRtROe0iU6UQnNsb3TtKEAH1mMcRnHXMLyL97Jbd+QORixgkcbrPsQzGsw+E6G4a
+         9S2+ztvLWxDhaAW9qLhFHdkT10B8r0eqytUvsi1g0rAGTqXJK5NkmMnMcW+Jii3vrKhO
+         QQoRSyT9nKrjDX8A/nLJ9V6K5K3GaGSANPXsfn2cVCR+qxVOBPDq0ryBazMq/JbgFueH
+         mHF6bEYqdyfW5gSH385AJ//uXNwc192o4gekyY38rOcPNZRRpQy0XJOSxA3Vx0AdLWCD
+         1f2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gQDIp0O9QnAxX4WU+TXGscN8NS1YVLXeb9VJm6V5OoY=;
+        b=P3YuTSfG4YvtFJxf2O7zi3zcjvEk4rxY8GC/0vZsMfqMjAyJOtl3O+3NvkaKIfrk9n
+         kYJ+DtcfEs5cVQ0nxqpU7wgEO1r1g0qmXtxMs9jAoqtbpp70GWZp+ZKJwZUxkzWSWUny
+         JdBq4cAWbt+LbRoaKlFwRcJA1SaV8zpctT8f5hlabxQHk3auMiX0NPihSkRJBtUdvSNx
+         a2/22KlxdP9lXPv296Vjbe8mdCAa4sOcOjnusHe9o3bAAQBuLJfQLCBC6R20yfo67ZS/
+         3f4ryh+M4riAtXql7alZW1h8SJpXXm5UNh1Da/qVxWRW+oQnCNio9jY5k5S159frSimg
+         O4nA==
+X-Gm-Message-State: APjAAAWfEf/AJG6GHR42QR/sseAQl3suvh0KxO0JdFRaJT6usJUGFjgy
+        gubfTmEILb21nkX5EBgjKfsBeJZRWoFPD8tu3Mw=
+X-Google-Smtp-Source: APXvYqxUasebTmpN/r6CnD4d6Jf+zUxCLRbdtypRZ2A9uy6ktTsnq+Z2WBqBWo3XYSTfOFxSuYL1Ydf+yDse6G5xqBI=
+X-Received: by 2002:ac8:4050:: with SMTP id j16mr367798qtl.171.1579119663256;
+ Wed, 15 Jan 2020 12:21:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1579083620-24943-1-git-send-email-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200115184308.162644-1-brianvv@google.com> <20200115184308.162644-8-brianvv@google.com>
+In-Reply-To: <20200115184308.162644-8-brianvv@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 15 Jan 2020 12:20:52 -0800
+Message-ID: <CAEf4BzYR2cNC_O6c8Fu4HtAny-XJaGafpDCMGhuj4-ubQ14vRw@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 7/9] libbpf: add libbpf support to batch ops
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Yonghong Song <yhs@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 11:20, Vincent Guittot wrote:
-> With commit bef69dd87828 ("sched/cpufreq: Move the cfs_rq_util_change() call to cpufreq_update_util()")
-> update_load_avg() has become the central point for calling cpufreq (not
-> including the update of blocked load). This change helps to simplify
-> further the number of call to cpufreq_update_util() and to remove last
-> redundant ones. With update_load_avg(), we are now sure that
-> cpufreq_update_util() will be called after every task attachment to a
-> cfs_rq and especially after propagating this event down to the util_avg of
-> the root cfs_rq, which is the level that is used by cpufreq governors like
-> schedutil to set the frequency of a CPU.
-> 
-> The SCHED_CPUFREQ_MIGRATION flag forces an early call to cpufreq when the
-> migration happens in a cgroup whereas util_avg of root cfs_rq is not yet
-> updated and this call is duplicated with the one that happens immediately
-> after when the migration event reaches the root cfs_rq. The dedicated flag
-> SCHED_CPUFREQ_MIGRATION is now useless and can be removed. The interface of
-> attach_entity_load_avg() can also be simplified accordingly.
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+On Wed, Jan 15, 2020 at 10:43 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> From: Yonghong Song <yhs@fb.com>
+>
+> Added four libbpf API functions to support map batch operations:
+>   . int bpf_map_delete_batch( ... )
+>   . int bpf_map_lookup_batch( ... )
+>   . int bpf_map_lookup_and_delete_batch( ... )
+>   . int bpf_map_update_batch( ... )
+>
+> Signed-off-by: Yonghong Song <yhs@fb.com>
+> ---
+>  tools/lib/bpf/bpf.c      | 58 ++++++++++++++++++++++++++++++++++++++++
+>  tools/lib/bpf/bpf.h      | 22 +++++++++++++++
+>  tools/lib/bpf/libbpf.map |  4 +++
+>  3 files changed, 84 insertions(+)
+>
+> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+> index 500afe478e94a..317727d612149 100644
+> --- a/tools/lib/bpf/bpf.c
+> +++ b/tools/lib/bpf/bpf.c
+> @@ -452,6 +452,64 @@ int bpf_map_freeze(int fd)
+>         return sys_bpf(BPF_MAP_FREEZE, &attr, sizeof(attr));
+>  }
+>
+> +static int bpf_map_batch_common(int cmd, int fd, void  *in_batch,
+> +                               void *out_batch, void *keys, void *values,
+> +                               __u32 *count,
+> +                               const struct bpf_map_batch_opts *opts)
+> +{
+> +       union bpf_attr attr = {};
 
-LGTM. Doesn't this allow to get rid of the 'int flags' in
-cfs_rq_util_change() as well?
 
-8<---
+this is not a big issue and I don't want to delay landing your
+patches, so maybe you can follow up with another patch. But this '=
+{}' part is a complete waste because you do memset below.
 
- kernel/sched/fair.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> +       int ret;
+> +
+> +       if (!OPTS_VALID(opts, bpf_map_batch_opts))
+> +               return -EINVAL;
+> +
+> +       memset(&attr, 0, sizeof(attr));
+> +       attr.batch.map_fd = fd;
+> +       attr.batch.in_batch = ptr_to_u64(in_batch);
+> +       attr.batch.out_batch = ptr_to_u64(out_batch);
+> +       attr.batch.keys = ptr_to_u64(keys);
+> +       attr.batch.values = ptr_to_u64(values);
+> +       attr.batch.count = *count;
+> +       attr.batch.elem_flags  = OPTS_GET(opts, elem_flags, 0);
+> +       attr.batch.flags = OPTS_GET(opts, flags, 0);
+> +
+> +       ret = sys_bpf(cmd, &attr, sizeof(attr));
+> +       *count = attr.batch.count;
+> +
+> +       return ret;
+> +}
+> +
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 328d59e8afba..f82f4fde0cd3 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3110,7 +3110,7 @@ static inline void update_cfs_group(struct sched_entity *se)
- }
- #endif /* CONFIG_FAIR_GROUP_SCHED */
- 
--static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
-+static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq)
- {
- 	struct rq *rq = rq_of(cfs_rq);
- 
-@@ -3129,7 +3129,7 @@ static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
- 		 *
- 		 * See cpu_util().
- 		 */
--		cpufreq_update_util(rq, flags);
-+		cpufreq_update_util(rq, 0);
- 	}
- }
- 
-@@ -3556,7 +3556,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 
- 	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
- 
--	cfs_rq_util_change(cfs_rq, 0);
-+	cfs_rq_util_change(cfs_rq);
- 
- 	trace_pelt_cfs_tp(cfs_rq);
- }
-@@ -3577,7 +3577,7 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 
- 	add_tg_cfs_propagate(cfs_rq, -se->avg.load_sum);
- 
--	cfs_rq_util_change(cfs_rq, 0);
-+	cfs_rq_util_change(cfs_rq);
- 
- 	trace_pelt_cfs_tp(cfs_rq);
- }
-@@ -3618,7 +3618,7 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 		update_tg_load_avg(cfs_rq, 0);
- 
- 	} else if (decayed) {
--		cfs_rq_util_change(cfs_rq, 0);
-+		cfs_rq_util_change(cfs_rq);
- 
- 		if (flags & UPDATE_TG)
- 			update_tg_load_avg(cfs_rq, 0);
-@@ -3851,7 +3851,7 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- 
- static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int not_used1)
- {
--	cfs_rq_util_change(cfs_rq, 0);
-+	cfs_rq_util_change(cfs_rq);
- }
- 
- static inline void remove_entity_load_avg(struct sched_entity *se) {}
--- 
-2.17.1
+[...]
