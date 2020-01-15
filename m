@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B72C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0054AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E01B2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C322465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wCQz6rlV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h2avPzgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgAOONr (ORCPT
+        id S1730576AbgAOONw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:13:47 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39944 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730357AbgAOONb (ORCPT
+        Wed, 15 Jan 2020 09:13:52 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39944 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbgAOONa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:13:31 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so15890845wrn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:30 -0800 (PST)
+        Wed, 15 Jan 2020 09:13:30 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so15890767wrn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:13:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=77YZKi21/UFq8ab0fDgwp8wX61rx924yS+pIUFv8pqU=;
-        b=wCQz6rlV/caolVVopEqfe57+az1sdm5RSdCHSFdWGeF4WYqBkG9XXDkH4HF8pgsJ+5
-         llOyCpeZIWYHO2nKQS9WOgJQqccwJC/cSYFhDjjJ000GH6McGos4apLez8qtzikjBV6C
-         tfRNjGjtvoHSx/VoE/x8iFT8uLHY6BQSa8EX2AQ3LNwL1BUhgRNb4Yt7JWwDZ6H8hssB
-         hbDU8pQmBQA3R33RahIPV1mSqNuBdyRWqQGj1v8iNp+FSxKSMt68XHu8N6xC4PjoKhQ5
-         JJZ7Gv9vs9jg9glxHvRVP3AyGVpV08yMolIZ3X3mRrQBnHr9UrInllWHXos+IBij/jvY
-         85Nw==
+        bh=utrms9phUtFiuVDkbSHkMcIIB+hqEFiylLVtYFCLs98=;
+        b=h2avPzgtHS2x2OYDax1t4VNWKLqty6XA4E9ZjqJab0pKdQByRf1PEj7tqgfbT1rFOC
+         +tENLeDKBOT8PQfZQe4cJQdhBk5tDerzipgC46tWGHbhhRloQqY8NwK1VT/2R2mK4Kzn
+         HnmQjbZbdO0t1U07yQe5h3IcPXYY7KVs51OCDTYJ7FEJa/dKyH7I0jB53geercfQdC7X
+         NBdP4Gr+LnIaavxzM3YZP+XkJUNe5G7KuTt9eLSjyv7pVluSs06/y2ulrPilSIYBrFtl
+         asFezWef6PblRiEpOXxP1wUQcQHrUtHDJm5iDEE6KAyGtXOMq1YXk3HbGOAsY1DGaaTT
+         WNGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=77YZKi21/UFq8ab0fDgwp8wX61rx924yS+pIUFv8pqU=;
-        b=MPp10XxU72mPL0tNaSX2ONQYHWLh0+B3TUuK4JUMmbH7mUGlq8yetCrZEtMpiFCnd1
-         TWhLWqYxguR7Sdz6cML51L3CFRvVHSLbaQcjpqxdC4o04AiFLQaUSPV7ipdMYk6b45hN
-         QIdc+GSLfGEbYX/j85oyN6ikXGYd1Ig6MiZIpctltktKz848ZfC8kP+B24RR8g5beJwN
-         BBgGsS44wQ3TQ/l+aaomgpgf/gQtPEe+mkgmKnsVUdjolnb5Fbk+5De2ZNAZy2g3dNPF
-         fgMCzfQ/iJne/3Kk+2NCVVxtJg2lhRXV2ySDqq4v3EQlqX9/czUoB3WL838qasmtrvgD
-         AwNQ==
-X-Gm-Message-State: APjAAAXjW8zMY2KLixjqW2cVsCHbsk60ZD+cPw/XT5gdOY0H+/z16Rjm
-        zadZis9ZzYKETc8LO3TbMvrpvw==
-X-Google-Smtp-Source: APXvYqyrN4dg5SAaK8uSWRpjXcMLagOgensqOz0vk3mNJsx/Gh/cXJYEd3RmoRtdbliIPlXHsKJ3Mg==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr30586906wrn.124.1579097609430;
-        Wed, 15 Jan 2020 06:13:29 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=utrms9phUtFiuVDkbSHkMcIIB+hqEFiylLVtYFCLs98=;
+        b=jfeN9Xp94hST1raJdgO/3CPXOKOvLqEKgR6VpzllrcRVPXBtaqmje6dNIkYve86y8G
+         djZUKFGp96YicVVmVihJCybygRvueoeTioDcFasa/FyN5o7dtcQ+kDOFhFdyCKcTkXgC
+         cjvVSaFMBzyXp0DHVAimjOwJTLQtQUBCBCCS2njEyJYRQEYNRkwo2yWYgI5sm36BdAHL
+         +x9zWINK8RsijwM4UCzknIgC7s59JF+AeXapmdgU02lQWYNjFQ1iHfOIDdbSYKgcKy2Q
+         0chd9CWczasLlVqPvP7qK/ZiOrZ+ShrVkit3kq6uTXtmy8MqfU1hS/THwGe3GTvhmims
+         glBw==
+X-Gm-Message-State: APjAAAV8WGGNH9QZZhIjDMu4ckMmzXeJ0JRFbhI6y974rf7FKfEUtUd0
+        2xxvsb53jRCh/5YR67SAzmSk6w==
+X-Google-Smtp-Source: APXvYqyTuamJ9fHx0PYuc9zHO/uCqxLay9MiZeaYDixnvT9qgiT7T1DxVJet5UBmYWb5t8PaSKTN9A==
+X-Received: by 2002:a5d:6a8e:: with SMTP id s14mr32360617wru.150.1579097608303;
         Wed, 15 Jan 2020 06:13:28 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:13:27 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
@@ -65,9 +65,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 18/19] arm64: dts: qcom: qcs404-evb: Enable secondary USB controller
-Date:   Wed, 15 Jan 2020 14:13:32 +0000
-Message-Id: <20200115141333.1222676-19-bryan.odonoghue@linaro.org>
+Subject: [PATCH 17/19] arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
+Date:   Wed, 15 Jan 2020 14:13:31 +0000
+Message-Id: <20200115141333.1222676-18-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
 References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
@@ -78,11 +78,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables the second DWC3 controller which has one USB Hi-Speed
-PHY attached to it.
+Rather than set the minimum microvolt for this regulator in the USB SS PHY
+driver, set it in the DTS.
 
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-msm@vger.kernel.org
@@ -90,31 +90,22 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 0fff50f755ef..07d6d793a922 100644
+index 01ef59e8e5b7..0fff50f755ef 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -318,6 +318,17 @@ pinconf {
- 	};
- };
+@@ -199,7 +199,7 @@ vreg_l11_sdc2: l11 {
+ 		};
  
-+&usb2 {
-+	status = "okay";
-+};
-+
-+&usb2_phy_sec {
-+	vdd-supply = <&vreg_l4_1p2>;
-+	vdda1p8-supply = <&vreg_l5_1p8>;
-+	vdda3p3-supply = <&vreg_l12_3p3>;
-+	status = "okay";
-+};
-+
- &wifi {
- 	status = "okay";
- 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
+ 		vreg_l12_3p3: l12 {
+-			regulator-min-microvolt = <2968000>;
++			regulator-min-microvolt = <3050000>;
+ 			regulator-max-microvolt = <3300000>;
+ 		};
+ 
 -- 
 2.24.0
 
