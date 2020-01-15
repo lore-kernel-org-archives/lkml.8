@@ -2,151 +2,117 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D33C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80263C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5B4222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574842187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gN4ypSzR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kXymcBJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgAOI64 (ORCPT
+        id S1729205AbgAOJA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:58:56 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65318 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729219AbgAOI6q (ORCPT
+        Wed, 15 Jan 2020 04:00:57 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19295 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgAOJA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:58:46 -0500
-X-UUID: 86321818664b4ca997efca48b40f6ad0-20200115
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=OWebwlJmPjQUyZsgZT7yhsR6B658n0exctGVwv9Gnxc=;
-        b=gN4ypSzRTVM82MSiJzoHRf7Bd/scRhgcnlFA9wqrLN4OtylE+UA/D9RviL0WSXlAZtg4Af82oaUzqkJ96pFPybhBJvAWHDm4ozv5kbpRbmh6M26GFbN6x8BF16lSNREKsoLkwu6zO7rpkkXS7FLLJ8YnPpRuoklkD/RkDFEYoeA=;
-X-UUID: 86321818664b4ca997efca48b40f6ad0-20200115
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <yong.liang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1969688084; Wed, 15 Jan 2020 16:58:40 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 15 Jan 2020 16:58:03 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 15 Jan 2020 16:58:45 +0800
-From:   Yong Liang <yong.liang@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>,
-        <jiaxin.yu@mediatek.com>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
-Subject: [PATCH v12 3/4] watchdog: mtk_wdt: mt8183: Add reset controller
-Date:   Wed, 15 Jan 2020 16:58:27 +0800
-Message-ID: <20200115085828.27791-4-yong.liang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200115085828.27791-1-yong.liang@mediatek.com>
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
+        Wed, 15 Jan 2020 04:00:57 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ed4b30000>; Wed, 15 Jan 2020 01:00:36 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 Jan 2020 01:00:56 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 Jan 2020 01:00:56 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 09:00:53 +0000
+Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-2-digetx@gmail.com>
+ <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
+ <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
+Date:   Wed, 15 Jan 2020 09:00:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579078836; bh=paFyw96PHu2E+wS2cU56KHqIL7GZKeucrHRygiWtSb0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kXymcBJli9uYuViTVLVu7cY+j82mJiedus8XGrk1bQVmvcrGZ8DGbQTqW+ZWmt0wa
+         JXeaTQYJxfjXPFTzXNgLMuJtKTItJZj5yxCp5pzUDkezwWXUWZimIODQdcpEKBEi9c
+         nOp+gkiGZoSCoFwyElBmrWj0sjOyGGKCSv3loTuan7quNIUUQF+aM4ysEprwqsONN1
+         10N3MhQ2jyXK87Mdw6bBIPb86QiPu01EloyPU1sGbuKfyXXFvK+JZQLHw7qJfZmKqu
+         jTHFnsTQov/8beqHFx7RYVJY575dJj5AjNPGGM6UjMZw3MjM69Knp2q95VVNhPSwA5
+         A8q/N8YfsTY5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkIHJlc2V0
-IGNvbnRyb2xsZXIgQVBJIGluIHdhdGNoZG9nIGRyaXZlci4NCkJlc2lkZXMgd2F0Y2hkb2csIE1U
-SyB0b3ByZ3UgbW9kdWxlIGFsc2EgcHJvdmlkZSBzdWItc3lzdGVtIChlZywgYXVkaW8sDQpjYW1l
-cmEsIGNvZGVjIGFuZCBjb25uZWN0aXZpdHkpIHNvZnR3YXJlIHJlc2V0IGZ1bmN0aW9uYWxpdHku
-DQoNClNpZ25lZC1vZmYtYnk6IHlvbmcubGlhbmcgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0K
-U2lnbmVkLW9mZi1ieTogSmlheGluIFl1IDxqaWF4aW4ueXVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3
-ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2Vk
-LWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPg0KLS0tDQogZHJpdmVy
-cy93YXRjaGRvZy9tdGtfd2R0LmMgfCA5OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrLQ0KIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYyBiL2RyaXZlcnMvd2F0
-Y2hkb2cvbXRrX3dkdC5jDQppbmRleCA5YzNkMDAzMzI2MGQuLmU4OGFhY2IwNDA0ZCAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jDQorKysgYi9kcml2ZXJzL3dhdGNoZG9n
-L210a193ZHQuYw0KQEAgLTksNiArOSw4IEBADQogICogQmFzZWQgb24gc3VueGlfd2R0LmMNCiAg
-Ki8NCiANCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxODMtcmVz
-ZXRzLmg+DQorI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2Vyci5o
-Pg0KICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQpAQCAt
-MTYsMTAgKzE4LDExIEBADQogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KICNpbmNsdWRlIDxs
-aW51eC9tb2R1bGVwYXJhbS5oPg0KICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KKyNpbmNsdWRlIDxs
-aW51eC9vZl9kZXZpY2UuaD4NCiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQor
-I2luY2x1ZGUgPGxpbnV4L3Jlc2V0LWNvbnRyb2xsZXIuaD4NCiAjaW5jbHVkZSA8bGludXgvdHlw
-ZXMuaD4NCiAjaW5jbHVkZSA8bGludXgvd2F0Y2hkb2cuaD4NCi0jaW5jbHVkZSA8bGludXgvZGVs
-YXkuaD4NCiANCiAjZGVmaW5lIFdEVF9NQVhfVElNRU9VVAkJMzENCiAjZGVmaW5lIFdEVF9NSU5f
-VElNRU9VVAkJMQ0KQEAgLTQ0LDYgKzQ3LDkgQEANCiAjZGVmaW5lIFdEVF9TV1JTVAkJMHgxNA0K
-ICNkZWZpbmUgV0RUX1NXUlNUX0tFWQkJMHgxMjA5DQogDQorI2RlZmluZSBXRFRfU1dTWVNSU1QJ
-CTB4MThVDQorI2RlZmluZSBXRFRfU1dTWVNfUlNUX0tFWQkweDg4MDAwMDAwDQorDQogI2RlZmlu
-ZSBEUlZfTkFNRQkJIm10ay13ZHQiDQogI2RlZmluZSBEUlZfVkVSU0lPTgkJIjEuMCINCiANCkBA
-IC01Myw4ICs1OSw5MCBAQCBzdGF0aWMgdW5zaWduZWQgaW50IHRpbWVvdXQ7DQogc3RydWN0IG10
-a193ZHRfZGV2IHsNCiAJc3RydWN0IHdhdGNoZG9nX2RldmljZSB3ZHRfZGV2Ow0KIAl2b2lkIF9f
-aW9tZW0gKndkdF9iYXNlOw0KKwlzcGlubG9ja190IGxvY2s7IC8qIHByb3RlY3RzIFdEVF9TV1NZ
-U1JTVCByZWcgKi8NCisJc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2IHJjZGV2Ow0KK307DQor
-DQorc3RydWN0IG10a193ZHRfZGF0YSB7DQorCWludCB0b3ByZ3Vfc3dfcnN0X251bTsNCiB9Ow0K
-IA0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3dkdF9kYXRhIG10ODE4M19kYXRhID0gew0KKwku
-dG9wcmd1X3N3X3JzdF9udW0gPSBNVDgxODNfVE9QUkdVX1NXX1JTVF9OVU0sDQorfTsNCisNCitz
-dGF0aWMgaW50IHRvcHJndV9yZXNldF91cGRhdGUoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2
-ICpyY2RldiwNCisJCQkgICAgICAgdW5zaWduZWQgbG9uZyBpZCwgYm9vbCBhc3NlcnQpDQorew0K
-Kwl1bnNpZ25lZCBpbnQgdG1wOw0KKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KKwlzdHJ1Y3QgbXRr
-X3dkdF9kZXYgKmRhdGEgPQ0KKwkJIGNvbnRhaW5lcl9vZihyY2Rldiwgc3RydWN0IG10a193ZHRf
-ZGV2LCByY2Rldik7DQorDQorCXNwaW5fbG9ja19pcnFzYXZlKCZkYXRhLT5sb2NrLCBmbGFncyk7
-DQorDQorCXRtcCA9IHJlYWRsKGRhdGEtPndkdF9iYXNlICsgV0RUX1NXU1lTUlNUKTsNCisJaWYg
-KGFzc2VydCkNCisJCXRtcCB8PSBCSVQoaWQpOw0KKwllbHNlDQorCQl0bXAgJj0gfkJJVChpZCk7
-DQorCXRtcCB8PSBXRFRfU1dTWVNfUlNUX0tFWTsNCisJd3JpdGVsKHRtcCwgZGF0YS0+d2R0X2Jh
-c2UgKyBXRFRfU1dTWVNSU1QpOw0KKw0KKwlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkYXRhLT5s
-b2NrLCBmbGFncyk7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50IHRvcHJndV9y
-ZXNldF9hc3NlcnQoc3RydWN0IHJlc2V0X2NvbnRyb2xsZXJfZGV2ICpyY2RldiwNCisJCQkgICAg
-ICAgdW5zaWduZWQgbG9uZyBpZCkNCit7DQorCXJldHVybiB0b3ByZ3VfcmVzZXRfdXBkYXRlKHJj
-ZGV2LCBpZCwgdHJ1ZSk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgdG9wcmd1X3Jlc2V0X2RlYXNzZXJ0
-KHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQorCQkJCSB1bnNpZ25lZCBsb25n
-IGlkKQ0KK3sNCisJcmV0dXJuIHRvcHJndV9yZXNldF91cGRhdGUocmNkZXYsIGlkLCBmYWxzZSk7
-DQorfQ0KKw0KK3N0YXRpYyBpbnQgdG9wcmd1X3Jlc2V0KHN0cnVjdCByZXNldF9jb250cm9sbGVy
-X2RldiAqcmNkZXYsDQorCQkJdW5zaWduZWQgbG9uZyBpZCkNCit7DQorCWludCByZXQ7DQorDQor
-CXJldCA9IHRvcHJndV9yZXNldF9hc3NlcnQocmNkZXYsIGlkKTsNCisJaWYgKHJldCkNCisJCXJl
-dHVybiByZXQ7DQorDQorCXJldHVybiB0b3ByZ3VfcmVzZXRfZGVhc3NlcnQocmNkZXYsIGlkKTsN
-Cit9DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCByZXNldF9jb250cm9sX29wcyB0b3ByZ3VfcmVz
-ZXRfb3BzID0gew0KKwkuYXNzZXJ0ID0gdG9wcmd1X3Jlc2V0X2Fzc2VydCwNCisJLmRlYXNzZXJ0
-ID0gdG9wcmd1X3Jlc2V0X2RlYXNzZXJ0LA0KKwkucmVzZXQgPSB0b3ByZ3VfcmVzZXQsDQorfTsN
-CisNCitzdGF0aWMgaW50IHRvcHJndV9yZWdpc3Rlcl9yZXNldF9jb250cm9sbGVyKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQorCQkJCQkgICAgaW50IHJzdF9udW0pDQorew0KKwlpbnQg
-cmV0Ow0KKwlzdHJ1Y3QgbXRrX3dkdF9kZXYgKm10a193ZHQgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0
-YShwZGV2KTsNCisNCisJc3Bpbl9sb2NrX2luaXQoJm10a193ZHQtPmxvY2spOw0KKw0KKwltdGtf
-d2R0LT5yY2Rldi5vd25lciA9IFRISVNfTU9EVUxFOw0KKwltdGtfd2R0LT5yY2Rldi5ucl9yZXNl
-dHMgPSByc3RfbnVtOw0KKwltdGtfd2R0LT5yY2Rldi5vcHMgPSAmdG9wcmd1X3Jlc2V0X29wczsN
-CisJbXRrX3dkdC0+cmNkZXYub2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0KKwlyZXQgPSBk
-ZXZtX3Jlc2V0X2NvbnRyb2xsZXJfcmVnaXN0ZXIoJnBkZXYtPmRldiwgJm10a193ZHQtPnJjZGV2
-KTsNCisJaWYgKHJldCAhPSAwKQ0KKwkJZGV2X2VycigmcGRldi0+ZGV2LA0KKwkJCSJjb3VsZG4n
-dCByZWdpc3RlciB3ZHQgcmVzZXQgY29udHJvbGxlcjogJWRcbiIsIHJldCk7DQorCXJldHVybiBy
-ZXQ7DQorfQ0KKw0KIHN0YXRpYyBpbnQgbXRrX3dkdF9yZXN0YXJ0KHN0cnVjdCB3YXRjaGRvZ19k
-ZXZpY2UgKndkdF9kZXYsDQogCQkJICAgdW5zaWduZWQgbG9uZyBhY3Rpb24sIHZvaWQgKmRhdGEp
-DQogew0KQEAgLTE1NSw2ICsyNDMsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2
-LT5kZXY7DQogCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dkdDsNCisJY29uc3Qgc3RydWN0IG10
-a193ZHRfZGF0YSAqd2R0X2RhdGE7DQogCWludCBlcnI7DQogDQogCW10a193ZHQgPSBkZXZtX2t6
-YWxsb2MoZGV2LCBzaXplb2YoKm10a193ZHQpLCBHRlBfS0VSTkVMKTsNCkBAIC0xOTAsNiArMjc5
-LDEzIEBAIHN0YXRpYyBpbnQgbXRrX3dkdF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQ0KIAlkZXZfaW5mbyhkZXYsICJXYXRjaGRvZyBlbmFibGVkICh0aW1lb3V0PSVkIHNlYywg
-bm93YXlvdXQ9JWQpXG4iLA0KIAkJIG10a193ZHQtPndkdF9kZXYudGltZW91dCwgbm93YXlvdXQp
-Ow0KIA0KKwl3ZHRfZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KKwlpZiAo
-d2R0X2RhdGEpIHsNCisJCWVyciA9IHRvcHJndV9yZWdpc3Rlcl9yZXNldF9jb250cm9sbGVyKHBk
-ZXYsDQorCQkJCQkJICAgICAgIHdkdF9kYXRhLT50b3ByZ3Vfc3dfcnN0X251bSk7DQorCQlpZiAo
-ZXJyKQ0KKwkJCXJldHVybiBlcnI7DQorCX0NCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTIxOSw2
-ICszMTUsNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikN
-CiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfd2R0X2R0X2lkc1tdID0g
-ew0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjU4OS13ZHQiIH0sDQorCXsgLmNvbXBh
-dGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsIC5kYXRhID0gJm10ODE4M19kYXRhIH0sDQog
-CXsgLyogc2VudGluZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX3dk
-dF9kdF9pZHMpOw0KLS0gDQoyLjE4LjANCg==
 
+On 14/01/2020 20:33, Dmitry Osipenko wrote:
+> 14.01.2020 18:09, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
+>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
+>>> driver crashes sometime after I2C DMA transfer termination. The crash
+>>> happens because tegra_dma_terminate_all() bails out immediately if pend=
+ing
+>>> list is empty, thus it doesn't release the half-completed descriptors
+>>> which are getting re-used before ISR tasklet kicks-in.
+>>
+>> Can you elaborate a bit more on how these are getting re-used? What is
+>> the sequence of events which results in the panic? I believe that this
+>> was also reported in the past [0] and so I don't doubt there is an issue
+>> here, but would like to completely understand this.
+>>
+>> Thanks!
+>> Jon
+>>
+>> [0] https://lore.kernel.org/patchwork/patch/675349/
+>>
+>=20
+> In my case it happens in the touchscreen driver during of the
+> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
+> under load and there is other interrupts activity. So what happens here
+> is that the TS driver issues one I2C transfer, which fails with
+> (apparently bogus) timeout (because DMA descriptor is completed and
+> removed from the pending list, but tasklet not executed yet), and then
+> TS immediately issues another I2C transfer that re-uses the
+> yet-incompleted descriptor. That's my understanding.
+
+OK, but what is the exact sequence that it allowing it to re-use the
+incompleted descriptor?
+
+Thanks
+Jon
+
+--=20
+nvpublic
