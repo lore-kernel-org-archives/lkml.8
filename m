@@ -2,111 +2,134 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60727C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C89DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E832467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OSL13EnC"
+	by mail.kernel.org (Postfix) with ESMTP id 7D93C2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgAOIAo (ORCPT
+        id S1726554AbgAOIDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:00:44 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51241 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgAOIAn (ORCPT
+        Wed, 15 Jan 2020 03:03:15 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56001 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbgAOIDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:00:43 -0500
-Received: by mail-wm1-f65.google.com with SMTP id d73so16719381wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:00:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=GYF/DnlQgs0gWW5ovHy/i9c/eiB+rqjkrsxQJeg0VgE=;
-        b=OSL13EnCr58+/Jy2CAY7JUMNaer6GjpBYGtcO8Lm6VXlpX7/sjRVrcEpHJrWt3MXao
-         sOMFij5RVNC/vB2rBhf2PpSRyBxSMMrVXFj/ZuClHUlB4zeP1xvKnpBMJjZC896upMDx
-         pdMzyIjLqI6TXr0D0N+3qK7bLO6rmMZMg3o2Ovle3wcyv6xSRPfnKDapqr2oaN79UNuR
-         lo15fKsiOQxDn8My+q+RIDFTY9EPZKyvD/DS6s2dTp5oREvoBEelzwmPJMimNa345pSS
-         C4ytCDLYb5xpLNle2SWtZzbMuemq3sDt77k7Y2QN63t/r5djh4IpdruTiVp5w58ZOp82
-         GX+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=GYF/DnlQgs0gWW5ovHy/i9c/eiB+rqjkrsxQJeg0VgE=;
-        b=qmfHLB67l3eEVfun7zdOFGsQj4Jkq+NGzsiJjZmW8K/TWsKLIXSKIg17uhqmMpFXQF
-         ED+PDNmvAMjYWRy/nxqpzBiOccYgjzjHciAxX6CN5mDJTkIiG8WW3OXW2TnRQtbnasbk
-         MJPKWBE9gDWErQAUqOsHfCNnvnb0Y5I78+GmtHITJ/85XcV589bLuDeRhrXQoHu8B2cp
-         Mj1/xDWsG/HMdPQHfmJtl/bQAx+CQ0X0j9Jq0dxwzikthfB1mp3Ug89T5im0XtzpTXqU
-         qzn+puTJ+R1mjnp/b4cBWCWI5b1RQEBaOjSY8D90kijNz10l1NHtj+QTFYIqwJeGjqES
-         FSvA==
-X-Gm-Message-State: APjAAAWujVu1LsM37bk8WrIQg3eI2CTnZW0wxhio4nw0Yh/IGVeOfagm
-        93kQs4KvwKnFNhgwz78HqNW26w==
-X-Google-Smtp-Source: APXvYqxVBHePDZFSLFy/b/HLtH4cLhZKLLeFdGF56PzZlj4pOAw+avsLwlunjnJ0XyKdMeObyl6u5A==
-X-Received: by 2002:a1c:3dd5:: with SMTP id k204mr31244611wma.92.1579075241550;
-        Wed, 15 Jan 2020 00:00:41 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id w13sm23148601wru.38.2020.01.15.00.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 00:00:40 -0800 (PST)
-Date:   Wed, 15 Jan 2020 08:00:53 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        ludovic.desroches@microchip.com, vkoul@kernel.org,
-        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 10/17] dt-bindings: atmel-smc: add
- microchip,sam9x60-smc
-Message-ID: <20200115080053.GC325@dell>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-11-git-send-email-claudiu.beznea@microchip.com>
- <20200114095538.GJ3137@piout.net>
+        Wed, 15 Jan 2020 03:03:15 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1irddj-0000Js-MF; Wed, 15 Jan 2020 09:02:59 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1irddh-0008IE-N7; Wed, 15 Jan 2020 09:02:57 +0100
+Date:   Wed, 15 Jan 2020 09:02:57 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Han Xu <han.xu@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, esben@geanix.com,
+        boris.brezillon@collabora.com, festevam@gmail.com,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] dmaengine: mxs: add the power management functions
+Message-ID: <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
+ <1579038243-28550-4-git-send-email-han.xu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114095538.GJ3137@piout.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1579038243-28550-4-git-send-email-han.xu@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:51:32 up 191 days, 14:01, 85 users,  load average: 0.23, 0.25,
+ 0.25
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Alexandre Belloni wrote:
+On Wed, Jan 15, 2020 at 05:44:00AM +0800, Han Xu wrote:
+> add the power management functions and leverage the runtime pm for
+> system suspend/resume
+> 
+> Signed-off-by: Han Xu <han.xu@nxp.com>
+> ---
+>  drivers/dma/mxs-dma.c | 97 +++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 90 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> index b458f06f9067..251492c5ea58 100644
+> --- a/drivers/dma/mxs-dma.c
+> +++ b/drivers/dma/mxs-dma.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/of_dma.h>
+>  #include <linux/list.h>
+>  #include <linux/dma/mxs-dma.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #include <asm/irq.h>
+>  
+> @@ -39,6 +40,8 @@
+>  #define dma_is_apbh(mxs_dma)	((mxs_dma)->type == MXS_DMA_APBH)
+>  #define apbh_is_old(mxs_dma)	((mxs_dma)->dev_id == IMX23_DMA)
+>  
+> +#define MXS_DMA_RPM_TIMEOUT 50 /* ms */
+> +
+>  #define HW_APBHX_CTRL0				0x000
+>  #define BM_APBH_CTRL0_APB_BURST8_EN		(1 << 29)
+>  #define BM_APBH_CTRL0_APB_BURST_EN		(1 << 28)
+> @@ -416,6 +419,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+>  {
+>  	struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
+>  	struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
+> +	struct device *dev = &mxs_dma->pdev->dev;
+>  	int ret;
+>  
+>  	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
+> @@ -431,9 +435,11 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+>  	if (ret)
+>  		goto err_irq;
+>  
+> -	ret = clk_prepare_enable(mxs_dma->clk);
+> -	if (ret)
+> +	ret = pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to enable clock\n");
+>  		goto err_clk;
 
-> On 10/01/2020 18:18:02+0200, Claudiu Beznea wrote:
-> > Add microchip,sam9x60-smc to DT bindings documentation.
-> > 
-> > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> Applied, thanks.
+From looking at other DMA drivers I know we are in good company here,
+but I think this is wrong. Doing pm_runtime_get_sync() in
+alloc_chan_resources() and going to autosuspend in free_chan_resources()
+effectively disables runtime_pm as clients normally acquire their
+channels during driver probe and release them only in driver remove.
 
-Remind me why you are applying this patch please?
+In the next patch you release the DMA channels in the GPMI nand drivers
+runtime_suspend hook just to somehow trigger the runtime_suspend of the
+DMA driver.
+
+What you should do instead is to make sure the hook runtime_pm to the
+DMA drivers activity phases, like for example the pl330 driver does.
+Then you wouldn't have to care about manually putting the DMA driver into
+suspend from the GPMI NAND driver.
+
+Sascha
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
