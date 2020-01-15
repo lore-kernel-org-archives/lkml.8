@@ -2,34 +2,34 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD03FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBC5C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA4820728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E951A2467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgAOMqL (ORCPT
+        id S1729182AbgAOMqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:46:11 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:57756 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgAOMqB (ORCPT
+        Wed, 15 Jan 2020 07:46:00 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:56498 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729144AbgAOMqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:46:01 -0500
+        Wed, 15 Jan 2020 07:46:00 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id qclr2100Q5USYZQ01clrg9; Wed, 15 Jan 2020 13:45:58 +0100
+        by baptiste.telenet-ops.be with bizsmtp
+        id qclq210065USYZQ01clqdB; Wed, 15 Jan 2020 13:45:57 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-0003z0-3D; Wed, 15 Jan 2020 13:45:50 +0100
+        id 1iri3S-0003z7-5D; Wed, 15 Jan 2020 13:45:50 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-00012X-03; Wed, 15 Jan 2020 13:45:50 +0100
+        id 1iri3S-00012h-3r; Wed, 15 Jan 2020 13:45:50 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
         David Lechner <david@lechnology.com>,
@@ -45,80 +45,193 @@ Cc:     Sam Ravnborg <sam@ravnborg.org>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/5] drm: Add support for Okaya RH128128T
-Date:   Wed, 15 Jan 2020 13:45:43 +0100
-Message-Id: <20200115124548.3951-1-geert+renesas@glider.be>
+Subject: [PATCH v2 4/5] drm: tiny: st7735r: Prepare for adding support for more displays
+Date:   Wed, 15 Jan 2020 13:45:47 +0100
+Message-Id: <20200115124548.3951-5-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi all,
+Currently the st7735r driver supports only a single display panel.
+Prepare for adding support for other display panels by factoring out the
+display-specific parameters in struct st7735r_cfg.
 
-This patch series adds support for the Okaya RH128128T LCD to the
-existing ST7735R driver.  This is a 128x128 1.4" TFT display driven by a
-Sitronix ST7715R TFT Controller/Driver.  It is used on e.g. the Renesas
-YRSK-LCD-PMOD extension board, which is shipped with Renesas RSK+RZA1
-development boards[1], and with several other Renesas starter kits, for
-RX, Synergy, and RZ/T1 MCUs and SoCs.
+For now, the following parameters can be configured:
+  - Display resolution,
+  - Horizontal/vertical display offsets,
+  - Read-write versus read-only controllers,
+  - RGB versus BGR color component ordering.
 
-Changes compared to v1[2]:
-  - Convert DT bindings to DT schema,
-  - Add YRSK-LCD-PMOD reference and links,
-  - Add Reviewed-by,
-  - Split driver preparation and adding actual support in two separate
-    patches,
+Rename jd_t18003_t01_pipe_enable() and jd_t18003_t01_pipe_funcs() to
+st7735r_pipe_enable() resp. st7735r_pipe_funcs(), as they are not really
+specific to the Jianda JD-T18003-T01 display anymore.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Split off from "drm: tiny: st7735r: Add support for Okaya
+    RH128128T",
   - Replace st7735r_priv.rgb by a pointer to struct st7735r_cfg,
   - Change prefix of jd_t18003_t01_pipe_enable() and
-    jd_t18003_t01_pipe_funcs(),
-  - Update Kconfig help text,
-  - Improve file comment header.
+    jd_t18003_t01_pipe_funcs().
+---
+ drivers/gpu/drm/tiny/st7735r.c | 67 +++++++++++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 14 deletions(-)
 
-This has been tested using the r7s72100-rskrza1-pmod-spi.dtso and
-r7s72100-rskrza1-pmod2-lcd.dtso DT overlays[3].
-Note that for using this on RSK+RZA1, there is a dependency on RSPI
-cs-gpios support (now in linux-next).
-With DT overlays, this also depends on DT overlays[4] and gpio-hog
-overlay support[5].
-
-Thanks!
-
-[1] https://renesasrulz.com/the_vault/f/archive-forum/4981/upgrading-to-the-renesas-rz-a1h
-[1] https://lore.kernel.org/dri-devel/20200102141246.370-1-geert+renesas@glider.be/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/renesas-overlays
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=topic/overlays
-[5] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
-    https://lore.kernel.org/lkml/20191230133852.5890-1-geert+renesas@glider.be/
-
-Geert Uytterhoeven (5):
-  dt-bindings: display: sitronix,st7735r: Convert to DT schema
-  dt-bindings: display: sitronix,st7735r: Add Okaya RH128128T
-  drm/mipi_dbi: Add support for display offsets
-  drm: tiny: st7735r: Prepare for adding support for more displays
-  drm: tiny: st7735r: Add support for Okaya RH128128T
-
- .../bindings/display/sitronix,st7735r.txt     | 35 ---------
- .../bindings/display/sitronix,st7735r.yaml    | 71 +++++++++++++++++
- MAINTAINERS                                   |  2 +-
- drivers/gpu/drm/drm_mipi_dbi.c                | 30 +++++---
- drivers/gpu/drm/tiny/Kconfig                  |  8 +-
- drivers/gpu/drm/tiny/st7735r.c                | 76 +++++++++++++++----
- include/drm/drm_mipi_dbi.h                    | 12 +++
- 7 files changed, 170 insertions(+), 64 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
- create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-
+diff --git a/drivers/gpu/drm/tiny/st7735r.c b/drivers/gpu/drm/tiny/st7735r.c
+index 3f4487c716848cf8..a838f237c8d82e3d 100644
+--- a/drivers/gpu/drm/tiny/st7735r.c
++++ b/drivers/gpu/drm/tiny/st7735r.c
+@@ -3,6 +3,7 @@
+  * DRM driver for Sitronix ST7735R panels
+  *
+  * Copyright 2017 David Lechner <david@lechnology.com>
++ * Copyright (C) 2019 Glider bvba
+  */
+ 
+ #include <linux/backlight.h>
+@@ -10,6 +11,7 @@
+ #include <linux/dma-buf.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/property.h>
+ #include <linux/spi/spi.h>
+ #include <video/mipi_display.h>
+@@ -37,12 +39,28 @@
+ #define ST7735R_MY	BIT(7)
+ #define ST7735R_MX	BIT(6)
+ #define ST7735R_MV	BIT(5)
++#define ST7735R_RGB	BIT(3)
++
++struct st7735r_cfg {
++	const struct drm_display_mode mode;
++	unsigned int left_offset;
++	unsigned int top_offset;
++	unsigned int write_only:1;
++	unsigned int rgb:1;		/* RGB (vs. BGR) */
++};
++
++struct st7735r_priv {
++	struct mipi_dbi_dev dbidev;	/* Must be first for .release() */
++	const struct st7735r_cfg *cfg;
++};
+ 
+-static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
+-				      struct drm_crtc_state *crtc_state,
+-				      struct drm_plane_state *plane_state)
++static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
++				struct drm_crtc_state *crtc_state,
++				struct drm_plane_state *plane_state)
+ {
+ 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
++	struct st7735r_priv *priv = container_of(dbidev, struct st7735r_priv,
++						 dbidev);
+ 	struct mipi_dbi *dbi = &dbidev->dbi;
+ 	int ret, idx;
+ 	u8 addr_mode;
+@@ -87,6 +105,10 @@ static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 		addr_mode = ST7735R_MY | ST7735R_MV;
+ 		break;
+ 	}
++
++	if (priv->cfg->rgb)
++		addr_mode |= ST7735R_RGB;
++
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT,
+ 			 MIPI_DCS_PIXEL_FMT_16BIT);
+@@ -109,15 +131,19 @@ static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 	drm_dev_exit(idx);
+ }
+ 
+-static const struct drm_simple_display_pipe_funcs jd_t18003_t01_pipe_funcs = {
+-	.enable		= jd_t18003_t01_pipe_enable,
++static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
++	.enable		= st7735r_pipe_enable,
+ 	.disable	= mipi_dbi_pipe_disable,
+ 	.update		= mipi_dbi_pipe_update,
+ 	.prepare_fb	= drm_gem_fb_simple_display_pipe_prepare_fb,
+ };
+ 
+-static const struct drm_display_mode jd_t18003_t01_mode = {
+-	DRM_SIMPLE_MODE(128, 160, 28, 35),
++static const struct st7735r_cfg jd_t18003_t01_cfg = {
++	.mode		= { DRM_SIMPLE_MODE(128, 160, 28, 35) },
++	/* Cannot read from Adafruit 1.8" display via SPI */
++	.write_only	= true,
++};
++
+ };
+ 
+ DEFINE_DRM_GEM_CMA_FOPS(st7735r_fops);
+@@ -136,13 +162,13 @@ static struct drm_driver st7735r_driver = {
+ };
+ 
+ static const struct of_device_id st7735r_of_match[] = {
+-	{ .compatible = "jianda,jd-t18003-t01" },
++	{ .compatible = "jianda,jd-t18003-t01", .data = &jd_t18003_t01_cfg },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, st7735r_of_match);
+ 
+ static const struct spi_device_id st7735r_id[] = {
+-	{ "jd-t18003-t01", 0 },
++	{ "jd-t18003-t01", (uintptr_t)&jd_t18003_t01_cfg },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, st7735r_id);
+@@ -150,17 +176,26 @@ MODULE_DEVICE_TABLE(spi, st7735r_id);
+ static int st7735r_probe(struct spi_device *spi)
+ {
+ 	struct device *dev = &spi->dev;
++	const struct st7735r_cfg *cfg;
+ 	struct mipi_dbi_dev *dbidev;
++	struct st7735r_priv *priv;
+ 	struct drm_device *drm;
+ 	struct mipi_dbi *dbi;
+ 	struct gpio_desc *dc;
+ 	u32 rotation = 0;
+ 	int ret;
+ 
+-	dbidev = kzalloc(sizeof(*dbidev), GFP_KERNEL);
+-	if (!dbidev)
++	cfg = of_device_get_match_data(&spi->dev);
++	if (!cfg)
++		cfg = (void *)spi_get_device_id(spi)->driver_data;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
+ 		return -ENOMEM;
+ 
++	dbidev = &priv->dbidev;
++	priv->cfg = cfg;
++
+ 	dbi = &dbidev->dbi;
+ 	drm = &dbidev->drm;
+ 	ret = devm_drm_dev_init(dev, drm, &st7735r_driver);
+@@ -193,10 +228,14 @@ static int st7735r_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Cannot read from Adafruit 1.8" display via SPI */
+-	dbi->read_commands = NULL;
++	if (cfg->write_only)
++		dbi->read_commands = NULL;
++
++	dbidev->left_offset = cfg->left_offset;
++	dbidev->top_offset = cfg->top_offset;
+ 
+-	ret = mipi_dbi_dev_init(dbidev, &jd_t18003_t01_pipe_funcs, &jd_t18003_t01_mode, rotation);
++	ret = mipi_dbi_dev_init(dbidev, &st7735r_pipe_funcs, &cfg->mode,
++				rotation);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
