@@ -2,87 +2,110 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97249C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FC5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFDD2073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4A22073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgAOLlX (ORCPT
+        id S1730161AbgAOLmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:41:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:35530 "EHLO foss.arm.com"
+        Wed, 15 Jan 2020 06:42:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41998 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbgAOLlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:41:22 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1E1931B;
-        Wed, 15 Jan 2020 03:41:21 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ABE23F6C4;
-        Wed, 15 Jan 2020 03:41:18 -0800 (PST)
-Date:   Wed, 15 Jan 2020 11:41:12 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, Sudeep Holla <sudeep.holla@arm.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-Message-ID: <20200115114112.GA3663@bogus>
-References: <20200115063410.131692-1-hsinyi@chromium.org>
+        id S1729900AbgAOLmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:42:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 641C1AEEE;
+        Wed, 15 Jan 2020 11:42:08 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9817D1E0CBC; Wed, 15 Jan 2020 12:34:55 +0100 (CET)
+Date:   Wed, 15 Jan 2020 12:34:55 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
+Message-ID: <20200115113455.GA2595@quack2.suse.cz>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-10-ira.weiny@intel.com>
+ <20200113222212.GO8247@magnolia>
+ <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
+ <20200114013004.GU8247@magnolia>
+ <20200114175353.GA7871@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200114175353.GA7871@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:34:10PM +0800, Hsin-Yi Wang wrote:
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
->
-> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop. If architecture don't enable this
-> config, or some cpus somehow fails to offline, it would fallback to ipi
-> function.
->
+On Tue 14-01-20 09:53:54, Ira Weiny wrote:
+> On Mon, Jan 13, 2020 at 05:30:04PM -0800, Darrick J. Wong wrote:
+> > > > > +		error = -EBUSY;
+> > > > > +		goto out_unlock;
+> > > > > +	}
+> > > > > +
+> > > > >  	error = filemap_write_and_wait(inode->i_mapping);
+> > > > >  	if (error)
+> > > > >  		goto out_unlock;
+> > > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > > > index 631f11d6246e..6e7dc626b657 100644
+> > > > > --- a/include/linux/fs.h
+> > > > > +++ b/include/linux/fs.h
+> > > > > @@ -740,6 +740,7 @@ struct inode {
+> > > > >  #endif
+> > > > >  
+> > > > >  	void			*i_private; /* fs or device private pointer */
+> > > > > +	atomic64_t               i_mapped;
+> > > > 
+> > > > I would have expected to find this in struct address_space since the
+> > > > mapping count is a function of the address space, right?
+> > > 
+> > > I suppose but the only external call (above) would be passing an inode.  So to
+> > > me it seemed better here.
+> > 
+> > But the number of memory mappings reflects the state of the address
+> > space, not the inode.  Or maybe put another way, if I were an mm
+> > developer I would not expect to look in struct inode for mm state.
+> 
+> This is a good point...
+> 
+> > 
+> > static inline bool inode_has_mappings(struct inode *inode)
+> > {
+> > 	return atomic64_read(&inode->i_mapping->mapcount) > 0;
+> > }
+> > 
+> > OTOH if there exist other mm developers who /do/ find that storing the
+> > mmap count in struct inode is more logical, please let me know. :)
+> 
+> ...  My thinking was that the number of mappings does not matters to the mm
+> system...  However, I'm starting to think you are correct...  ;-)
+> 
+> I've made a note of it and we will see what others think.
 
-What's the timing impact on systems with large number of CPUs(say 256 or
-more) ? I remember we added some change to reduce the wait times for
-offlining CPUs in system suspend path on arm64, still not negligible.
+Well, more importantly mapping != inode. There can be multiple inodes
+pointing to the same mapping (struct address_space) as is the case for
+example for block devices. So this counter definitely belongs into struct
+address_space.
 
---
-Regards,
-Sudeep
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
