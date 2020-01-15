@@ -6,173 +6,80 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD49C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA2BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077472081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E60022522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgAOWiX (ORCPT
+        id S1730717AbgAOWiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:38:23 -0500
-Received: from mga01.intel.com ([192.55.52.88]:62536 "EHLO mga01.intel.com"
+        Wed, 15 Jan 2020 17:38:46 -0500
+Received: from mga07.intel.com ([134.134.136.100]:1576 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgAOWiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:38:22 -0500
+        id S1726310AbgAOWip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:38:45 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 14:38:21 -0800
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 14:38:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="423770541"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Jan 2020 14:38:21 -0800
-Date:   Wed, 15 Jan 2020 14:38:21 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-2-ira.weiny@intel.com>
- <20200115113715.GB2595@quack2.suse.cz>
- <20200115173834.GD8247@magnolia>
- <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
- <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
+   d="scan'208";a="398050726"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 15 Jan 2020 14:38:44 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1irrJF-0002Y8-I7; Thu, 16 Jan 2020 00:38:45 +0200
+Date:   Thu, 16 Jan 2020 00:38:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tty: baudrate: Synchronise baud_table[] and
+ baud_bits[]
+Message-ID: <20200115223845.GI32742@smile.fi.intel.com>
+References: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
+ <20200114172756.GA2052011@kroah.com>
+ <20200115163327.GF32742@smile.fi.intel.com>
+ <20200115172106.GA4127163@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200115172106.GA4127163@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 12:10:50PM -0800, Dan Williams wrote:
-> On Wed, Jan 15, 2020 at 11:45 AM Ira Weiny <ira.weiny@intel.com> wrote:
-> >
-> > On Wed, Jan 15, 2020 at 09:38:34AM -0800, Darrick J. Wong wrote:
-> > > On Wed, Jan 15, 2020 at 12:37:15PM +0100, Jan Kara wrote:
-> > > > On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > >
-
-[snip]
-
-> > Ok I changed a couple of things as well.  How does this sound?
-> >
-> >
-> > STATX_ATTR_DAX
-> >
-> >         DAX (cpu direct access) is a file mode that attempts to minimize
+On Wed, Jan 15, 2020 at 06:21:06PM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Jan 15, 2020 at 06:33:27PM +0200, Andy Shevchenko wrote:
+> > On Tue, Jan 14, 2020 at 06:27:56PM +0100, Greg Kroah-Hartman wrote:
+> > > On Tue, Jan 14, 2020 at 07:09:17PM +0200, Andy Shevchenko wrote:
+> > > > Synchronize baud rate tables for better readability.
+> > > 
+> > > "Synchronize"?  With what?
+> > 
+> > Between each other. This SPARC thingy makes it's harder to follow.
 > 
-> s/mode/state/?
-
-DOH!  yes state...  ;-)
-
+> Ok, be more specific please, a better changelog is key here.
 > 
-> >         software cache effects for both I/O and memory mappings of this
-> >         file.  It requires a block device and file system which have
-> >         been configured to support DAX.
+> > > Why?  I'm all for cleaning up code, but this
+> > > just seems totally gratuitous.
+> > 
+> > Btw, while doing it I found that SPARC actually supports more baud rates than
+> > defined in those arrays. Without this patch I would not (easily) notice that.
+> > Should I also attach another patch and resend?
 > 
-> It may not require a block device in the future.
+> Yes, that might justify this patch's acceptance :)
 
-Ok:
+Done in v2.
 
-"It requires a file system which has been configured to support DAX." ?
 
-I'm trying to separate the user of the individual STATX DAX flag from the Admin
-details of configuring the file system and/or devices which supports it.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Also, I just realized that we should follow the format of the other STATX_*
-attributes.  They all read something like "the file is..."
 
-So I'm adding that text as well.
-
-> 
-> >
-> >         DAX generally assumes all accesses are via cpu load / store
-> >         instructions which can minimize overhead for small accesses, but
-> >         may adversely affect cpu utilization for large transfers.
-> >
-> >         File I/O is done directly to/from user-space buffers and memory
-> >         mapped I/O may be performed with direct memory mappings that
-> >         bypass kernel page cache.
-> >
-> >         While the DAX property tends to result in data being transferred
-> >         synchronously, it does not give the same guarantees of
-> >         synchronous I/O where data and the necessary metadata are
-> 
-> Maybe use "O_SYNC I/O" explicitly to further differentiate the 2
-> meanings of "synchronous" in this sentence?
-
-Done.
-
-> 
-> >         transferred together.
-> >
-> >         A DAX file may support being mapped with the MAP_SYNC flag,
-> >         which enables a program to use CPU cache flush operations to
-> 
-> s/operations/instructions/
-
-Done.
-
-> 
-> >         persist CPU store operations without an explicit fsync(2).  See
-> >         mmap(2) for more information.
-> 
-> I think this also wants a reference to the Linux interpretation of
-> platform "persistence domains" we were discussing that here [1], but
-> maybe it should be part of a "pmem" manpage that can be referenced
-> from this man page.
-
-Sure, but for now I think referencing mmap for details on MAP_SYNC works.
-
-I suspect that we may have some word smithing once I get this series in and we
-submit a change to the statx man page itself.  Can I move forward with the
-following for this patch?
-
-<quote>
-STATX_ATTR_DAX
-
-        The file is in the DAX (cpu direct access) state.  DAX state
-        attempts to minimize software cache effects for both I/O and
-        memory mappings of this file.  It requires a file system which
-        has been configured to support DAX.
-
-        DAX generally assumes all accesses are via cpu load / store
-        instructions which can minimize overhead for small accesses, but
-        may adversely affect cpu utilization for large transfers.
-
-        File I/O is done directly to/from user-space buffers and memory
-        mapped I/O may be performed with direct memory mappings that
-        bypass kernel page cache.
-
-        While the DAX property tends to result in data being transferred
-        synchronously, it does not give the same guarantees of
-        synchronous I/O where data and the necessary metadata are
-        transferred together.
-
-        A DAX file may support being mapped with the MAP_SYNC flag,
-        which enables a program to use CPU cache flush instructions to
-        persist CPU store operations without an explicit fsync(2).  See
-        mmap(2) for more information.
-</quote>
-
-Ira
-
-> 
-> [1]: http://lore.kernel.org/r/20200108064905.170394-1-aneesh.kumar@linux.ibm.com
