@@ -2,439 +2,179 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03DDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B23C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9352467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C662187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BrpLFWVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgAOLCW (ORCPT
+        id S1730054AbgAOLDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:02:22 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9620 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726165AbgAOLCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:02:21 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0666611C78B2A629D1AC;
-        Wed, 15 Jan 2020 19:02:19 +0800 (CST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.202.226.55) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 15 Jan 2020 19:02:08 +0800
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <gregkh@linuxfoundation.org>,
-        <zhangliguang@linux.alibaba.com>, <tglx@linutronix.de>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
-        Shiju Jose <shiju.jose@huawei.com>
-Subject: [RFC PATCH 2/2] PCI:hip08:Add driver to handle HiSilicon hip08 PCIe controller's errors
-Date:   Wed, 15 Jan 2020 11:01:40 +0000
-Message-ID: <20200115110141.12300-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.19.2.windows.1
-In-Reply-To: <20200115110141.12300-1-shiju.jose@huawei.com>
-References: <Shiju Jose>
- <20200115110141.12300-1-shiju.jose@huawei.com>
+        Wed, 15 Jan 2020 06:03:05 -0500
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:44157 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbgAOLDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:03:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1579086184;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=dwOZ6NozqgN0X9krzN4lo00Io6+pnMrYZ/gU849OIiA=;
+  b=BrpLFWVi5k4n5dHMwqLkZ9i0zf1noFO5v1MZBFsb6O+sBF/4V0u++uCY
+   FNSWUcJ6gCBM2RrRI1SpTR9Y4LJdlvwjYF4HlFVByfJZIChZI+wzvcORq
+   EMpTCh7uz+zc1ubbarEDnEdW4TWe9EtRDlUen2JVWuDis2lXgmHBf4qze
+   A=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  sergey.dyasli@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  sergey.dyasli@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: +bTwz3rb6Pt3yrpWyywqXjEWMAEX4c/82keB2YSJFPUWl/kcbbp2jzBF6YJLhblAe5aQQSPmR7
+ rI7wZtHwQde4uW5qpPSinMb78Ic3EMYVWzAGZnfYTgDu3LiA35p7bGZtADGLRBNrvysnn5FLDj
+ qlpRsdr71du8mWbVbsQNBNWiWyWfmWeVK3ke5dyiGb2H/RqHwkPUnYG8gYIJBEwLByUfsCCTqz
+ IAV/sJbl6naA1Yddf4fs77C6vBgXR5tCfUWRdJ5i7m0JtnDKiPNqSaEicfs7YcOGgDUfeNGEr2
+ J10=
+X-SBRS: 2.7
+X-MesageID: 11527758
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,322,1574139600"; 
+   d="scan'208";a="11527758"
+Subject: Re: [PATCH v1 4/4] xen/netback: Fix grant copy across page boundary
+ with KASAN
+To:     Vlastimil Babka <vbabka@suse.cz>, <xen-devel@lists.xen.org>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Liu <wei.liu@kernel.org>, "Paul Durrant" <paul@xen.org>,
+        "sergey.dyasli@citrix.com >> Sergey Dyasli" 
+        <sergey.dyasli@citrix.com>
+References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
+ <20200108152100.7630-5-sergey.dyasli@citrix.com>
+ <26c43c43-b303-938c-2f26-8e0144159e29@suse.cz>
+From:   Sergey Dyasli <sergey.dyasli@citrix.com>
+Autocrypt: addr=sergey.dyasli@citrix.com; keydata=
+ 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
+Message-ID: <e0663153-35e0-32ef-87a5-39189c440a3d@citrix.com>
+Date:   Wed, 15 Jan 2020 11:02:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.202.226.55]
-X-CFilter-Loop: Reflected
+In-Reply-To: <26c43c43-b303-938c-2f26-8e0144159e29@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On 09/01/2020 10:33, Vlastimil Babka wrote:
+> On 1/8/20 4:21 PM, Sergey Dyasli wrote:
+>> From: Ross Lagerwall <ross.lagerwall@citrix.com>
+>>
+>> When KASAN (or SLUB_DEBUG) is turned on, the normal expectation that
+>> allocations are aligned to the next power of 2 of the size does not
+>> hold.
+>
+> Hmm, really? They should after 59bb47985c1d ("mm, sl[aou]b: guarantee
+> natural alignment for kmalloc(power-of-two)"), i.e. since 5.4.
+>
+> But actually the guarantee is only for precise power of two sizes given
+> to kmalloc(). Allocations of sizes that end up using the 96 or 192 bytes
+> kmalloc cache have no such guarantee. But those might then cross page
+> boundary also without SLUB_DEBUG.
 
-The hip08 error handle driver logs and reports PCIe controller's
-recoverable errors.
-Perform root port reset and restore link status for the recovery.
+That's interesting to know. It's certainly not the case for 4.19 kernel
+for which PV KASAN was initially developed. But I guess this means that
+only patch description needs updating.
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+>
+>> Therefore, handle grant copies that cross page boundaries.
+>>
+>> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+>> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
 
-RFC: The appropriate location for this driver may be discussed.
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/pci/controller/Kconfig                 |   8 +
- drivers/pci/controller/Makefile                |   1 +
- drivers/pci/controller/pcie-hisi-hip08-error.c | 323 +++++++++++++++++++++++++
- 3 files changed, 332 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-hisi-hip08-error.c
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index c77069c..0ee99b8 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -260,6 +260,14 @@ config PCI_HYPERV_INTERFACE
- 	  The Hyper-V PCI Interface is a helper driver allows other drivers to
- 	  have a common interface with the Hyper-V PCI frontend driver.
- 
-+config PCIE_HISI_HIP08_ERR_HANDLER
-+	depends on ARM64 || COMPILE_TEST
-+	depends on (ACPI && PCI_QUIRKS)
-+	bool "HiSilicon hip08 Soc PCIe local error handling driver"
-+	help
-+	  Say Y here if you want PCIe error handling support
-+	  for the PCIe local(controller) errors on HiSilicon hip08 SoC
-+
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/cadence/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 3d4f597..ac9852f 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-+obj-$(CONFIG_PCIE_HISI_HIP08_ERR_HANDLER) += pcie-hisi-hip08-error.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- 
-diff --git a/drivers/pci/controller/pcie-hisi-hip08-error.c b/drivers/pci/controller/pcie-hisi-hip08-error.c
-new file mode 100644
-index 0000000..6f5d002
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-hip08-error.c
-@@ -0,0 +1,323 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe driver for handling PCIe local errors occurred on
-+ * HiSilicon hip08 PCIe controller.
-+ *
-+ * Copyright (c) 2018-2019 Hisilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/list.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+#include "../pci.h"
-+
-+#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
-+#define	HISI_PCIE_ERR_INFO_SIZE	1024
-+
-+/* HISI PCIe Local error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_SUB_MODULE_ID_AP	0
-+#define HISI_PCIE_SUB_MODULE_ID_TL	1
-+#define HISI_PCIE_SUB_MODULE_ID_MAC	2
-+#define HISI_PCIE_SUB_MODULE_ID_DL	3
-+#define HISI_PCIE_SUB_MODULE_ID_SDI	4
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+#define HISI_ERR_SEV_RECOVERABLE	0
-+#define HISI_ERR_SEV_FATAL		1
-+#define HISI_ERR_SEV_CORRECTED		2
-+#define HISI_ERR_SEV_NONE		3
-+
-+guid_t hip08_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D, 0xA8, 0x67,
-+				       0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_PORT_ID(core, v)       ((v >> 1) + (core << 3))
-+#define HISI_PCIE_CORE_PORT_ID(v)        ((v % 8) << 1)
-+#define HISI_PCIE_ROOT_BUSNR(v)          ((v) ? 0x80 : 0)
-+
-+struct hisi_pcie_local_err_data {
-+	uint64_t   val_bits;
-+	uint8_t    version;
-+	uint8_t    soc_id;
-+	uint8_t    socket_id;
-+	uint8_t    nimbus_id;
-+	uint8_t    sub_module_id;
-+	uint8_t    core_id;
-+	uint8_t    port_id;
-+	uint8_t    err_severity;
-+	uint16_t   err_type;
-+	uint8_t    reserv[2];
-+	uint32_t   err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct pcie_err_info {
-+	struct hisi_pcie_local_err_data err_data;
-+	struct platform_device *pdev;
-+};
-+
-+static char *pcie_local_sub_module_name(uint8_t id)
-+{
-+	switch (id) {
-+	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static char *err_severity(uint8_t err_sev)
-+{
-+	switch (err_sev) {
-+	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
-+	case HISI_ERR_SEV_FATAL: return "fatal";
-+	case HISI_ERR_SEV_CORRECTED: return "corrected";
-+	case HISI_ERR_SEV_NONE: return "none";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static struct pci_dev *hisi_hip08_pcie_get_rp(u32 chip_id, u32 port_id)
-+{
-+	u32 devfn = PCI_DEVFN(port_id, 0);
-+	u32 busnr = HISI_PCIE_ROOT_BUSNR(chip_id);
-+
-+	return pci_get_domain_bus_and_slot(0, busnr, devfn);
-+}
-+
-+static int hisi_hip08_pcie_port_acpi_reset(struct platform_device *pdev,
-+					u32 chip_id, u32 port_id)
-+{
-+	struct device *dev = &(pdev->dev);
-+	struct acpi_object_list arg_list;
-+	union acpi_object arg[3];
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+	/* Call the ACPI handle to reset root port  */
-+	if (ACPI_HANDLE(dev)) {
-+		unsigned long long data = 0;
-+		acpi_status s;
-+
-+		s = acpi_evaluate_integer(ACPI_HANDLE(dev),
-+				"RST", &arg_list, &data);
-+
-+		if (ACPI_FAILURE(s)) {
-+			dev_err(dev, "No Reset method\n");
-+			return -EIO;
-+		}
-+
-+		if (data) {
-+			dev_err(dev, "Failed to Reset\n");
-+			return -EIO;
-+		}
-+
-+	} else {
-+		dev_err(dev, "No Reset method\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_hip08_pcie_port_reset(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	struct pci_dev *pdev;
-+	struct pci_bus *root_bus;
-+
-+	pdev = hisi_hip08_pcie_get_rp(chip_id, port_id);
-+	if (!pdev) {
-+		dev_info(&(dev->dev), "Fail to get root port device\n");
-+		return -ENODEV;
-+	}
-+	root_bus = pdev->bus;
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+
-+	if (hisi_hip08_pcie_port_acpi_reset(dev, chip_id, port_id))
-+		return -EIO;
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+}
-+
-+static void pcie_local_error_handle(const struct hisi_pcie_local_err_data *err,
-+				    struct platform_device *pdev)
-+{
-+	char buf[HISI_PCIE_ERR_INFO_SIZE];
-+	char *p = buf, *end = buf + sizeof(buf);
-+	struct device *dev = &(pdev->dev);
-+	uint32_t i;
-+	int rc;
-+
-+	if (err->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	/* Logging */
-+	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		p += snprintf(p, end - p, "sub module=%s ",
-+			      pcie_local_sub_module_name(err->sub_module_id));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		p += snprintf(p, end - p, "error severity=%s ",
-+			      err_severity(err->err_severity));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
-+
-+	p += snprintf(p, end - p, "]\n");
-+	dev_info(dev, "\nHISI HIP08: PCIe local error\n");
-+	dev_info(dev, "%s\n", buf);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-+		if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-+			dev_info(dev,
-+				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
-+	}
-+
-+	/* Recovery for the PCIe local errors */
-+	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
-+		/* try reset PCI port for the error recovery */
-+		rc = hisi_hip08_pcie_port_reset(pdev, err->socket_id,
-+				HISI_PCIE_PORT_ID(err->core_id, err->port_id));
-+		if (rc) {
-+			dev_info(dev, "fail to do hip08 pcie port reset\n");
-+			return;
-+		}
-+	}
-+}
-+
-+static DEFINE_KFIFO(pcie_err_recover_ring, struct pcie_err_info,
-+		    HISI_PCIE_ERR_RECOVER_RING_SIZE);
-+static DEFINE_SPINLOCK(pcie_err_recover_ring_lock);
-+
-+static void pcie_local_err_recover_work_func(struct work_struct *work)
-+{
-+	struct pcie_err_info pcie_err_entry;
-+
-+	while (kfifo_get(&pcie_err_recover_ring, &pcie_err_entry)) {
-+		pcie_local_error_handle(&pcie_err_entry.err_data,
-+					pcie_err_entry.pdev);
-+	}
-+}
-+
-+static DECLARE_WORK(pcie_err_recover_work, pcie_local_err_recover_work_func);
-+
-+
-+static void hip08_pcie_local_error_handle(struct acpi_hest_generic_data *gdata,
-+					  int sev, void *data)
-+{
-+	const struct hisi_pcie_local_err_data *err_data =
-+					acpi_hest_get_payload(gdata);
-+	struct pcie_err_info err_info;
-+	struct platform_device *pdev = data;
-+	struct device *dev = &(pdev->dev);
-+
-+	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
-+	err_info.pdev = pdev;
-+
-+	if (kfifo_in_spinlocked(&pcie_err_recover_ring, &err_info, 1,
-+				&pcie_err_recover_ring_lock))
-+		schedule_work(&pcie_err_recover_work);
-+	else
-+		dev_warn(dev, "Buffer overflow when recovering PCIe local error\n");
-+}
-+
-+static int hisi_hip08_pcie_err_handler_probe(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+
-+	if (ghes_register_event_handler(hip08_pcie_sec_type,
-+					hip08_pcie_local_error_handle,
-+					pdev)) {
-+		dev_err(&(pdev->dev), "%s : ghes_register_event_handler fail\n",
-+			__func__);
-+		return ret;
-+}
-+
-+	return 0;
-+}
-+
-+static int hisi_hip08_pcie_err_handler_remove(struct platform_device *pdev)
-+{
-+	ghes_unregister_event_handler(hip08_pcie_sec_type);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hip08_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_hip08_pcie_err_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-hip08-pcie-err-handler",
-+		.acpi_match_table = hip08_pcie_acpi_match,
-+	},
-+	.probe		= hisi_hip08_pcie_err_handler_probe,
-+	.remove		= hisi_hip08_pcie_err_handler_remove,
-+};
-+module_platform_driver(hisi_hip08_pcie_err_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon HIP08 PCIe controller error handling driver");
-+MODULE_LICENSE("GPL v2");
-+
--- 
-1.9.1
-
-
+--
+Thanks,
+Sergey
