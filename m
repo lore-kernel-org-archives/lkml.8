@@ -2,90 +2,123 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB87C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B196FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769DE2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965562084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgAOR1N (ORCPT
+        id S1729066AbgAOR2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:27:13 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:37916 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728904AbgAOR1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:27:13 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TnpIWCU_1579109229;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TnpIWCU_1579109229)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jan 2020 01:27:11 +0800
-Subject: Re: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in
- queue_pages_test_walk()
-To:     Li Xinhai <lixinhai.lxh@gmail.com>,
-        akpm <akpm@linux-foundation.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
- <2020011520081970082765@gmail.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <2a9ad6d6-af98-987a-0878-6058702db912@linux.alibaba.com>
-Date:   Wed, 15 Jan 2020 09:27:07 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 15 Jan 2020 12:28:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:40436 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728921AbgAOR2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:28:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0203B328;
+        Wed, 15 Jan 2020 09:28:21 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 362133F6C4;
+        Wed, 15 Jan 2020 09:28:20 -0800 (PST)
+Subject: Re: [stable] [PATCH 1/2] coresight: etb10: Do not call
+ smp_processor_id from preemptible
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20200108110541.318672-1-suzuki.poulose@arm.com>
+ <20200109143537.GE1706@sasha-vm>
+ <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
+ <20200115151118.GC3740793@kroah.com>
+ <d3cd59e0-8fa2-9e69-534f-15f13cb14897@arm.com>
+ <20200115172126.GB4127163@kroah.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <b8c38ac4-4b47-59b3-e0d4-22be3f6aca42@arm.com>
+Date:   Wed, 15 Jan 2020 17:28:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <2020011520081970082765@gmail.com>
+In-Reply-To: <20200115172126.GB4127163@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 15/01/2020 17:21, Greg KH wrote:
+> On Wed, Jan 15, 2020 at 04:44:29PM +0000, Suzuki Kuruppassery Poulose wrote:
+>>
+>> Hi Greg,
+>>
+>> On 15/01/2020 15:11, Greg KH wrote:
+>>> On Thu, Jan 09, 2020 at 02:36:17PM +0000, Suzuki Kuruppassery Poulose wrote:
+>>>> On 09/01/2020 14:35, Sasha Levin wrote:
+>>>>> On Wed, Jan 08, 2020 at 11:05:40AM +0000, Suzuki K Poulose wrote:
+>>>>>> [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
+>>>>>>
+>>>>>> During a perf session we try to allocate buffers on the "node" associated
+>>>>>> with the CPU the event is bound to. If it is not bound to a CPU, we
+>>>>>> use the current CPU node, using smp_processor_id(). However this is
+>>>>>> unsafe
+>>>>>> in a pre-emptible context and could generate the splats as below :
+>>>>>>
+>>>>>> BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
+>>>>>>
+>>>>>> Use NUMA_NO_NODE hint instead of using the current node for events
+>>>>>> not bound to CPUs.
+>>>>>>
+>>>>>> Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+>>>>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>>> Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
+>>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>>> Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
+>>>>>>
+>>>>>
+>>>>> I've queued this for 4.9-4.19. There was a simple conflict on 4.9 which
+>>>>> also had to be resolved.
+>>>>>
+>>>>
+>>>>
+>>>> Thanks Sasha !
+>>>
+>>> Note, these had to all be dropped as they broke the build :(
+>>>
+>>> So can you please send us patches that at least build?  :)
+>>>
+>>
+>> Do you have a build failure log ? I did build test it before sending it
+>> over. I tried it again on 4.9, 4.14 and 4.19. I don't hit any build
+>> failures here.
+>>
+>> Please could you share the log if you have it handy ?
+> 
+> It was in the stable -rc review emails, I don't have it handy, sorry.
+> 
+
+I think there is a bit of confusion here. If you're referring to
+
+https://lkml.org/lkml/2020/1/11/634
+
+as the build failure report, this is precisely my series fixes.
+I sent this series to address the build break reported by Nathan.
+The original patches were picked up from the "Fixes" tag automatically
+which broke the build due to missing "event" parameter. This series
+fixes those build issues and for sure builds fine for the affected
+versions. Trust me ;-)
+
+Cheers
+Suzuki
 
 
-On 1/15/20 4:08 AM, Li Xinhai wrote:
-> On 2020-01-15 at 14:09 Yang Shi wrote:
->> The VM_BUG_ON() is already used by queue_pages_test_walk(), it sounds
->> better to dump more debug information by using VM_BUG_ON_VMA() to help
->> debugging.
->>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> The .test_walk() is to be called from pagewalk with the rule that 'start'
-> and 'end' must within range of vma, in case the rule is broke, we detect
-> it. This is not quite relevant to a bug of particular vma.
 
-But when you run into VMA range check failure, isn't it helpful to dump 
-the VMA range information to ease debugging? And, VM_BUG_ON is already 
-used in the code, I'm supposed the users may prefer more debug 
-information dumped for debug kernel.
-
->
->> ---
->> mm/mempolicy.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->> index 067cf7d..801d45d 100644
->> --- a/mm/mempolicy.c
->> +++ b/mm/mempolicy.c
->> @@ -621,7 +621,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
->> unsigned long flags = qp->flags;
->>
->> /* range check first */
->> -	VM_BUG_ON((vma->vm_start > start) || (vma->vm_end < end));
->> +	VM_BUG_ON_VMA((vma->vm_start > start) || (vma->vm_end < end), vma);
->>
->> if (!qp->first) {
->> qp->first = vma;
->> --
->> 1.8.3.1
->>
-> >
+> greg k-h
+> 
 
