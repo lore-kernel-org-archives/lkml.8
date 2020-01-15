@@ -2,109 +2,120 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC39C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFC4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15CA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1180A24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:39:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mTG9KaL0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="B5o0Q+Qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbgAOXa4 (ORCPT
+        id S1730573AbgAOXji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:30:56 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:58846 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAOXa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:30:56 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FNSxPR142024;
-        Wed, 15 Jan 2020 23:30:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=PYwgNWG/JVTv6hmJUC/N6gPnI4GX4CRWHrwsun68Q2I=;
- b=mTG9KaL0kOJazjC9C5x4jHEmktdtn7fF2C9GEKP4Z719NTVtDTvzgK7Mp+Gk0KC5z34D
- tgsZxVi4rocGQ8bldDh8jF+OCC0O41Cnnnmw9p7aAsSzJUg/hVEw8j9B1LYmYt/gEIXW
- 0EsoRtM+opRbbH82KhD1Aex8xSjdR18l+wjFTMJ2IIF9l5OcrEg7ieCIqMrSUwCRSoN+
- +Juv4NJ23zw4vafkAAEQGM7B2ntWzsqRTU+X0oq6C++Cw4IUQZocUszOIAiZ9NT/KUZS
- 3P+jiVhZvceyKX8oOLxrYttDT89Pzg2u9MvMXB5oy6IhwqCa2jvA5MVSDTkgBOmAPi9e bQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73yqbct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 23:30:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FNSqIW183544;
-        Wed, 15 Jan 2020 23:30:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2xj1arpua3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 23:30:49 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00FNUlF9011630;
-        Wed, 15 Jan 2020 23:30:48 GMT
-Received: from [192.168.14.112] (/109.66.225.253)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 15:30:47 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH RFC 2/3] x86/kvm/hyper-v: move VMX controls sanitization
- out of nested_enable_evmcs()
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20200115232738.GB18268@linux.intel.com>
-Date:   Thu, 16 Jan 2020 01:30:43 +0200
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Roman Kagan <rkagan@virtuozzo.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C6C4003E-0ADD-42A5-A580-09E06806E160@oracle.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com>
- <20200115171014.56405-3-vkuznets@redhat.com>
- <20200115232738.GB18268@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=823
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=875 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150177
+        Wed, 15 Jan 2020 18:39:38 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51827 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbgAOXjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:39:37 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ykLs4sxMz9sR1;
+        Thu, 16 Jan 2020 10:39:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579131575;
+        bh=bM+tz2kFdbTfR+m35IrApP9n+YHuTQq0hXIrBD1g6p0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B5o0Q+Qbz+Fh9nE6jGV8mxlgxUvMrP7QnMN7U8rJQtga5PK4LN11cKBT/wLOLs4YP
+         XuuAQ+Bsk3h7dQ/zO7fab/eJr7Cxr4uhtJBmsVRPA+PgjEJ/yxN53hXroCdOuOKYOI
+         G7bcHeM5X2XLDhiLYdnIe0Axc0SBLxrU0i7U4WOHBcmlZY0kXD0cH0eJ+Lv/Y2HtlN
+         qnJ8Vu/9spGH3FAwSo+F+6zs/eA2zf+UOzdgE8mt36GSlxCcpJs1KMdLt98Flz6JRN
+         soQ0lm8kiGof8G9XlKjoX8QxuJzgqqnC47fhhJTpIaLHyzovjA8fUUdGyoLkFITU1E
+         nE9c9dUXrF6Hw==
+Date:   Thu, 16 Jan 2020 10:39:32 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-next@vger.kernel.org, Zong Li <zong.li@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: Re: [PATCH] powerpc: Do not consider weak unresolved symbol
+ relocations as bad
+Message-ID: <20200116103932.2e603cf9@canb.auug.org.au>
+In-Reply-To: <20200115204648.7179-1-alex@ghiti.fr>
+References: <20200115204648.7179-1-alex@ghiti.fr>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/X0ES/Pzabz50rIWcgod6J4G";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/X0ES/Pzabz50rIWcgod6J4G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Alexandre,
 
-> On 16 Jan 2020, at 1:27, Sean Christopherson =
-<sean.j.christopherson@intel.com> wrote:
->=20
-> On Wed, Jan 15, 2020 at 06:10:13PM +0100, Vitaly Kuznetsov wrote:
->> With fine grained VMX feature enablement QEMU>=3D4.2 tries to do =
-KVM_SET_MSRS
->> with default (matching CPU model) values and in case eVMCS is also =
-enabled,
->> fails.
->=20
-> As in, Qemu is blindly throwing values at KVM and complains on =
-failure?
-> That seems like a Qemu bug, especially since Qemu needs to explicitly =
-do
-> KVM_CAP_HYPERV_ENLIGHTENED_VMCS to enable eVMCS.
+Thanks for sorting this out.  Just a few comments below.
 
-See: https://patchwork.kernel.org/patch/11316021/
-For more context.
+On Wed, 15 Jan 2020 15:46:48 -0500 Alexandre Ghiti <alex@ghiti.fr> wrote:
+>
 
--Liran=
+> =20
+>  # Have Kbuild supply the path to objdump so we handle cross compilation.
+                                            ^
+"and nm"
+
+> +# Remove from the bad relocations those that match an undefined weak sym=
+bol
+> +# which will result in an absolute relocation to 0.
+> +# Weak unresolved symbols are of that form in nm output:
+> +# "                  w _binary__btf_vmlinux_bin_end"
+> +undef_weak_symbols=3D$($nm "$vmlinux" | awk -e '$1 ~ /w/ { print $2 }')
+> +
+> +while IFS=3D read -r weak_symbol; do
+> +	bad_relocs=3D"$(echo -n "$bad_relocs" | sed "/$weak_symbol/d")"
+> +done <<< "$undef_weak_symbols"
+
+This is not a bash script, and the above is a bashism :-(
+Also, my version of awk (mawk) doesn't have a -e option.
+
+How about something like :
+
+undef_weak_symbols=3D$($nm "$vmlinux" | awk '$1 ~ /w/ { print $2 }')
+if [ "$undef_weak_symbols" ]; then
+	bad_relocs=3D"$(echo "$bad_relocs" | grep -F -w -v "$undef_weak_symbols")"
+fi
+
+Or do this near the top and add the grep to the others.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/X0ES/Pzabz50rIWcgod6J4G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4forQACgkQAVBC80lX
+0GyunwgAkZoBTpQAhgoODm6QrksXXQEyfUW4a4mYnW8Q62gQraQoNVv0H9M1Irnu
+1W7s/FfgvSNAom/ST78bdY0mPdADH0TZmyyRJbv2EIYvnwUdXva5UwAboMLCacnW
+PZKeC8ox9F57/Td+tDK7okuk/uO17KKp+Uo70DeDeS2i8KUZyUJxD+mO7y173pUj
+hNt25ESQEqrC4Lvu9I16kyLjxvjzMRv4unaQIy3htYQCbxF7/X1Lu33FEhvAJ9vx
+4BY7VWCaE2KNUMEaupSvJiXKfKWWGw6uMNZysIM17C5CfdHZvhaeMNYjNq03A6tX
+jalLi/Ycc9raelW8W8CmcuHx5CzvDA==
+=q+Te
+-----END PGP SIGNATURE-----
+
+--Sig_/X0ES/Pzabz50rIWcgod6J4G--
