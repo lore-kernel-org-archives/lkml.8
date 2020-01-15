@@ -2,99 +2,107 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E0AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7503C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B207E2081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:07:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="si2r3OOO"
+	by mail.kernel.org (Postfix) with ESMTP id 8A7562465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgAOUHa (ORCPT
+        id S1729762AbgAOUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:07:30 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46793 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgAOUH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:07:29 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        Wed, 15 Jan 2020 15:09:54 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:46128 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729449AbgAOUJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:09:53 -0500
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 3231D182108DA1;
+        Wed, 15 Jan 2020 20:09:51 +0000 (UTC)
+Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ydf71xWPz9sR1;
-        Thu, 16 Jan 2020 07:07:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579118847;
-        bh=Z04FIIRqPjnEL8JK7PfsFjab5s7X/unpLZ6oNxJXT8o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=si2r3OOOssVGqMHbTG1QOKSWrqgCZNZDGT1mt8O4JPWHu3PaZGtZzB/yitADrt/nG
-         FzsROuh5XMLMtzewRNkGv1MXB6UvWtiCHMP724iEk5nq2EcGCJFbHXUbucrR6ywbmi
-         dZs0e9HVapz6K1ipjlUeCHYnn/HrxilxosdZue+x6sQJt9QFOPDbFXlVkK/0Sv3/x9
-         1l63o229MD57wsQLNV6XvDcQhD5TpyvtyhkUR6QGzyNaJDi4e38I/ywEpxpDAFbXPh
-         sJRltNtpHKKoz0U8dfS24CpcsTv6vwRUsvzN5Qlw3Oo4u5etnkGPlVh69Q+5nCL+Io
-         8V8KxJPM4bPug==
-Date:   Thu, 16 Jan 2020 07:07:26 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: linux-next: Fixes tag needs some work in the usb-gadget tree
-Message-ID: <20200116070726.7e2ef8cc@canb.auug.org.au>
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Wed, 15 Jan 2020 20:09:50 +0000 (UTC)
+From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+Subject: [PATCH v4] HID: logitech-dj: add full support for the Powerplay mat/receiver
+Date:   Wed, 15 Jan 2020 20:08:18 +0000
+Message-Id: <20200115200818.3198848-1-lains@archlinux.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.p77+Mi=IAde7eX3zdIM0o/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.p77+Mi=IAde7eX3zdIM0o/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The Logitech G Powerplay has a lightspeed receiver with a static HID++
+device with ID 7 attached to it to. It is used to configure the led on
+the mat. For this reason I increased the max number of devices.
 
-Hi all,
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
+---
 
-In commit
+v4
 
-  6a6ae4e8e926 ("usb: gadget: f_ncm: Use atomic_t to track in-flight reques=
-t")
+- Don't define the powerplay receiver (I forgot that we already did that
+  in a previous patch)
 
-Fixes tag
+---
+ drivers/hid/hid-logitech-dj.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-  Fixes: 40d133d7f5426 ("usb: gadget: f_ncm: convert to new function interf=
-ace
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more than one line.  Also, please keep
-all the commit message tags together at the end of the commit message.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.p77+Mi=IAde7eX3zdIM0o/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fcP4ACgkQAVBC80lX
-0GwhbQf/YI72X9THb9ltJjkXFPj8Or/DZikqYtkv7pmFNR14rdnLDPcEnbs0BvPY
-nTtcXuCEipIOaxZgrwpUB00elkAl1ESEJVlm/nGQhMntrgodP4cX/9KNuDW1oISf
-ZPSmC/AyxQFEHvayxccWOeqIbWPTrsqFhBzbiXqye9wCmC5FAFg18Z7Dv265mx5O
-Qz07vvEKJ/4YwLofq4jpjfyhk4w54oxHpb26iiAZJ81g0JvBLchGjDmYmwe8wEca
-C1ii1MXWTwFODv3sbPpnTHrQu6OM+mvTCeCnFIuQ/jKAw7qievibecl1ySjjJWD8
-MO6Hb+C+q3oyUogUtYT/CeFHxQZqVw==
-=SHvD
------END PGP SIGNATURE-----
-
---Sig_/.p77+Mi=IAde7eX3zdIM0o/--
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+index bb50d6e7745b..1009f741a11d 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -16,11 +16,11 @@
+ #include <asm/unaligned.h>
+ #include "hid-ids.h"
+ 
+-#define DJ_MAX_PAIRED_DEVICES			6
++#define DJ_MAX_PAIRED_DEVICES			7
+ #define DJ_MAX_NUMBER_NOTIFS			8
+ #define DJ_RECEIVER_INDEX			0
+ #define DJ_DEVICE_INDEX_MIN			1
+-#define DJ_DEVICE_INDEX_MAX			6
++#define DJ_DEVICE_INDEX_MAX			7
+ 
+ #define DJREPORT_SHORT_LENGTH			15
+ #define DJREPORT_LONG_LENGTH			32
+@@ -980,6 +980,11 @@ static void logi_hidpp_recv_queue_notif(struct hid_device *hdev,
+ 		break;
+ 	}
+ 
++	/* custom receiver device (eg. powerplay) */
++	if (hidpp_report->device_index == 7) {
++		workitem.reports_supported |= HIDPP;
++	}
++
+ 	if (workitem.type == WORKITEM_TYPE_EMPTY) {
+ 		hid_warn(hdev,
+ 			 "unusable device of type %s (0x%02x) connected on slot %d",
+@@ -1850,6 +1855,10 @@ static const struct hid_device_id logi_dj_receivers[] = {
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+ 		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1),
+ 	 .driver_data = recvr_type_gaming_hidpp},
++	{ /* Logitech powerplay mat/receiver (0xc539) */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
++		0xc53a),
++	 .driver_data = recvr_type_gaming_hidpp},
+ 	{ /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_MX3000_RECEIVER),
+ 	 .driver_data = recvr_type_27mhz},
+-- 
+2.24.1
