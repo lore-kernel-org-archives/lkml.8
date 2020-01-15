@@ -2,241 +2,107 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3828C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5711C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A812D206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAF7206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rF8UEv4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgAOKMT (ORCPT
+        id S1729740AbgAOKMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:12:19 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49484 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729539AbgAOKMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:12:18 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 253B280157DB9357ED58;
-        Wed, 15 Jan 2020 18:12:16 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 Jan
- 2020 18:12:14 +0800
-Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
- <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
- <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
- <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
- <20200110235214.GA25700@jaegeuk-macbookpro.roam.corp.google.com>
- <3776cb0b-4b18-ae0d-16a7-a591bec77a5e@huawei.com>
- <20200111180200.GA36424@jaegeuk-macbookpro.roam.corp.google.com>
- <72418aa5-7d2a-de26-f0b5-9c839f0c3404@huawei.com>
- <20200113161120.GA49290@jaegeuk-macbookpro.roam.corp.google.com>
- <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
- <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d68d27d3-2501-2641-d929-6293dfe683b0@huawei.com>
-Date:   Wed, 15 Jan 2020 18:12:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Wed, 15 Jan 2020 05:12:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38244 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729539AbgAOKMr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:12:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so15149203wrh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:12:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=TphKRKgrx6UOwY938/z3zkU7XoFubfFhJvJRyw+ELVA=;
+        b=rF8UEv4+aHXN5U+ib7xcboRlT+K7H1VEqquEq+m7pEpwSQMFWwyN7guzslCrJoBYLW
+         b10OFL9WAPXXzizMArolKJSTLMvixZKpY52I7fDJeykkuO8Dbgki9oDi/vmP6GCjUZtB
+         xAXe20p9DG1M0X6Oo+c9IuhxHXQbgTq8Don5pILBFCXzx4gViqvNJ4XjJIzU39GpcF5N
+         QKksBAP5PAhksnj6Lx65spoPDoEBaph9dLDVYRbkwhGUqkkYVjP6+TnMhf/bNHby0aJA
+         9cO0GNII3uAE/jeHtsQoUeDtSVto0vEbEXh0MTbtkTHHPbRRCw/A9llmThD+IyBlYfOd
+         dfDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TphKRKgrx6UOwY938/z3zkU7XoFubfFhJvJRyw+ELVA=;
+        b=R5SEoLQgiAxI0CIzCETThKgnGIZmqxrmKhEBgGBfhbNwwxW0TqNgincQqWZX2dvdFJ
+         W9+KdKlH+XPX8US6wY/Df9qkx+jne43aBT1yDkbp9b8aksmBKZBVOOPxEuIw6y6n5wrZ
+         0uGtjpKICSjT3qmtp0vOyhmc0/jNATOzjng4EJZFA3wt89ylS6fh1oflKZRkHZ7NQzZo
+         xTV4q3hr8Ow9l5vIHcXcCqXOegyoBNwDKs0fi2SOUsGcuv16a73HRwf1KXJQgw/Wdv+I
+         XOfamApnmJfBSpQr5zCNs/FGaboebLAlDA/3Ksiw96D7Ev9/1V34JDgA4RIaLwho3YH7
+         zZ9g==
+X-Gm-Message-State: APjAAAWhlPQUvQLhUWheP1IPnH6hbhJwx3G/SGsF1gzncjFOrMXw2K4S
+        Cr+bsn7MOEFUchnf2SKEwz0jBg==
+X-Google-Smtp-Source: APXvYqyiJAvF67CsgbnfTuZzZ394kjvs04rbDKyhZy7BpSwsCoiFjVC73kNMLzdKqGiznx/yeOH5YA==
+X-Received: by 2002:adf:ed83:: with SMTP id c3mr29669763wro.51.1579083165363;
+        Wed, 15 Jan 2020 02:12:45 -0800 (PST)
+Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g7sm23828223wrq.21.2020.01.15.02.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 02:12:44 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Cc:     johan@kernel.org, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, khilman@baylibre.com
+Subject: [PATCH v7 0/2] add support of interrupt for host wakeup from devicetree in BCM HCI driver
+Date:   Wed, 15 Jan 2020 11:12:41 +0100
+Message-Id: <20200115101243.17094-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/15 6:48, Jaegeuk Kim wrote:
-> On 01/14, Chao Yu wrote:
->> On 2020/1/14 0:11, Jaegeuk Kim wrote:
->>> On 01/13, Chao Yu wrote:
->>>> On 2020/1/12 2:02, Jaegeuk Kim wrote:
->>>>> On 01/11, Chao Yu wrote:
->>>>>> On 2020/1/11 7:52, Jaegeuk Kim wrote:
->>>>>>> On 01/06, Jaegeuk Kim wrote:
->>>>>>>> On 01/06, Chao Yu wrote:
->>>>>>>>> On 2020/1/3 14:50, Chao Yu wrote:
->>>>>>>>>> This works to me. Could you run fsstress tests on compressed root directory?
->>>>>>>>>> It seems still there are some bugs.
->>>>>>>>>
->>>>>>>>> Jaegeuk,
->>>>>>>>>
->>>>>>>>> Did you mean running por_fsstress testcase?
->>>>>>>>>
->>>>>>>>> Now, at least I didn't hit any problem for normal fsstress case.
->>>>>>>>
->>>>>>>> Yup. por_fsstress
->>>>>>>
->>>>>>> Please check https://github.com/jaegeuk/f2fs/commits/g-dev-test.
->>>>>>> I've fixed
->>>>>>> - truncation offset
->>>>>>> - i_compressed_blocks and its lock coverage
->>>>>>> - error handling
->>>>>>> - etc
->>>>>>
->>>>>> I changed as below, and por_fsstress stops panic the system.
->>>>>>
->>>>>> Could you merge all these fixes into original patch?
->>>>>
->>>>> Yup, let m roll up some early patches first once test results become good.
->>>>
->>>> I didn't encounter issue any more, how about por_fsstress test result in your
->>>> enviornment? If there is, please share the call stack with me.
->>>
->>> Sure, will do, once I hit an issue. BTW, I'm hitting another unreacheable nat
->>> entry issue during por_stress without compression. :(
->>
->> Did you enable any features during por_fsstress test?
->>
->> I only hit below warning during por_fsstress test on image w/o compression.
->>
->> ------------[ cut here ]------------
->> WARNING: CPU: 10 PID: 33483 at fs/fs-writeback.c:1448 __writeback_single_inode+0x28c/0x340
->> Call Trace:
->>  writeback_single_inode+0xad/0x120
->>  sync_inode_metadata+0x3d/0x60
->>  f2fs_sync_inode_meta+0x90/0xe0 [f2fs]
->>  block_operations+0x17c/0x360 [f2fs]
->>  f2fs_write_checkpoint+0x101/0xff0 [f2fs]
->>  f2fs_sync_fs+0xa8/0x130 [f2fs]
->>  f2fs_do_sync_file+0x19c/0x880 [f2fs]
->>  do_fsync+0x38/0x60
->>  __x64_sys_fsync+0x10/0x20
->>  do_syscall_64+0x5f/0x220
->>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Does gc_mutex patch fix this?
+add interrupts and interrupt-names properties to set host wakeup IRQ.
+actually driver find this IRQ from host-wakeup-gpios propety
+but some platforms are not supported gpiod_to_irq function.
+so to have possibility to use interrupt mode we need to add interrupts
+field in devicetree and support it in driver.
 
-No, gc_mutex patch fixes another problem.
+change sinve v6:
+- depracate host-wakeup-gpios 
 
-BTW, it looks like a bug of VFS.
+change sinve v5:
+- add tags
 
-Thanks,
+change sinve v4 [1]:
+- add patch to update Documentation
+- use of_irq_get_byname to be more clear and move call in bcm_of_probe
+- update commit message
 
-> 
->>
->> Thanks,
->>
->>>
->>> Thanks,
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> >From bb17d7d77fe0b8a3e3632a7026550800ab9609e9 Mon Sep 17 00:00:00 2001
->>>>>> From: Chao Yu <yuchao0@huawei.com>
->>>>>> Date: Sat, 11 Jan 2020 16:58:20 +0800
->>>>>> Subject: [PATCH] f2fs: compress: fix f2fs_put_rpages_mapping()
->>>>>>
->>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>>> ---
->>>>>>  fs/f2fs/compress.c | 30 +++++++++++++++---------------
->>>>>>  1 file changed, 15 insertions(+), 15 deletions(-)
->>>>>>
->>>>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
->>>>>> index 502cd0ddc2a7..5c6a31d84ce4 100644
->>>>>> --- a/fs/f2fs/compress.c
->>>>>> +++ b/fs/f2fs/compress.c
->>>>>> @@ -74,18 +74,10 @@ static void f2fs_put_compressed_page(struct page *page)
->>>>>>  }
->>>>>>
->>>>>>  static void f2fs_drop_rpages(struct compress_ctx *cc,
->>>>>> -		struct address_space *mapping, int len, bool unlock)
->>>>>> +					int len, bool unlock)
->>>>>>  {
->>>>>>  	unsigned int i;
->>>>>>  	for (i = 0; i < len; i++) {
->>>>>> -		if (mapping) {
->>>>>> -			pgoff_t start = start_idx_of_cluster(cc);
->>>>>> -			struct page *page = find_get_page(mapping, start + i);
->>>>>> -
->>>>>> -			put_page(page);
->>>>>> -			put_page(page);
->>>>>> -			cc->rpages[i] = NULL;
->>>>>> -		}
->>>>>>  		if (!cc->rpages[i])
->>>>>>  			continue;
->>>>>>  		if (unlock)
->>>>>> @@ -97,18 +89,25 @@ static void f2fs_drop_rpages(struct compress_ctx *cc,
->>>>>>
->>>>>>  static void f2fs_put_rpages(struct compress_ctx *cc)
->>>>>>  {
->>>>>> -	f2fs_drop_rpages(cc, NULL, cc->cluster_size, false);
->>>>>> +	f2fs_drop_rpages(cc, cc->cluster_size, false);
->>>>>>  }
->>>>>>
->>>>>>  static void f2fs_unlock_rpages(struct compress_ctx *cc, int len)
->>>>>>  {
->>>>>> -	f2fs_drop_rpages(cc, NULL, len, true);
->>>>>> +	f2fs_drop_rpages(cc, len, true);
->>>>>>  }
->>>>>>
->>>>>>  static void f2fs_put_rpages_mapping(struct compress_ctx *cc,
->>>>>> -				struct address_space *mapping, int len)
->>>>>> +				struct address_space *mapping,
->>>>>> +				pgoff_t start, int len)
->>>>>>  {
->>>>>> -	f2fs_drop_rpages(cc, mapping, len, false);
->>>>>> +	int i;
->>>>>> +	for (i = 0; i < len; i++) {
->>>>>> +		struct page *page = find_get_page(mapping, start + i);
->>>>>> +
->>>>>> +		put_page(page);
->>>>>> +		put_page(page);
->>>>>> +	}
->>>>>>  }
->>>>>>
->>>>>>  static void f2fs_put_rpages_wbc(struct compress_ctx *cc,
->>>>>> @@ -680,7 +679,8 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
->>>>>>
->>>>>>  		if (!PageUptodate(page)) {
->>>>>>  			f2fs_unlock_rpages(cc, i + 1);
->>>>>> -			f2fs_put_rpages_mapping(cc, mapping, cc->cluster_size);
->>>>>> +			f2fs_put_rpages_mapping(cc, mapping, start_idx,
->>>>>> +					cc->cluster_size);
->>>>>>  			f2fs_destroy_compress_ctx(cc);
->>>>>>  			goto retry;
->>>>>>  		}
->>>>>> @@ -714,7 +714,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
->>>>>>  unlock_pages:
->>>>>>  	f2fs_unlock_rpages(cc, i);
->>>>>>  release_pages:
->>>>>> -	f2fs_put_rpages_mapping(cc, mapping, i);
->>>>>> +	f2fs_put_rpages_mapping(cc, mapping, start_idx, i);
->>>>>>  	f2fs_destroy_compress_ctx(cc);
->>>>>>  	return ret;
->>>>>>  }
->>>>>> -- 
->>>>>> 2.18.0.rc1
->>>>>>
->>>>>>
->>>>>>
->>>>>>>
->>>>>>> One another fix in f2fs-tools as well.
->>>>>>> https://github.com/jaegeuk/f2fs-tools
->>>>>>>
->>>>>>>>
->>>>>>>>>
->>>>>>>>> Thanks,
->>>>>>> .
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
-> 
+change since v3:
+- move on of_irq instead of platform_get_irq
+
+change since v2:
+- fix commit message
+
+change since v1:
+- rebase patch
+
+[1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
+
+Guillaume La Roque (2):
+  dt-bindings: net: bluetooth: add interrupts properties
+  bluetooth: hci_bcm: enable IRQ capability from devicetree
+
+ .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
+ drivers/bluetooth/hci_bcm.c                                | 3 +++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
