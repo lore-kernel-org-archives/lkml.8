@@ -2,157 +2,158 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA59C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40DCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50660222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F410222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgAOMpY (ORCPT
+        id S1729072AbgAOMp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:45:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52120 "EHLO mx2.suse.de"
+        Wed, 15 Jan 2020 07:45:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52176 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAOMpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:45:23 -0500
+        id S1725999AbgAOMp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:45:27 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E1AC1AD41;
-        Wed, 15 Jan 2020 12:45:20 +0000 (UTC)
-Subject: Re: [patch] mm, thp: fix defrag setting if newline is not used
-To:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <887178bd-1590-673d-eb30-4c257a2b060e@suse.cz>
-Date:   Wed, 15 Jan 2020 13:45:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by mx2.suse.de (Postfix) with ESMTP id BCDC4ADE7;
+        Wed, 15 Jan 2020 12:45:25 +0000 (UTC)
+Message-ID: <330ca207dcbcb41b9d094fb2606c45e4173fa8f6.camel@suse.de>
+Subject: Re: [PATCH v5 0/6] Raspberry Pi 4 PCIe support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com, maz@kernel.org,
+        phil@raspberrypi.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, mbrugger@suse.com,
+        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
+        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
+        andrew.murray@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Wed, 15 Jan 2020 13:45:23 +0100
+In-Reply-To: <20200115120238.GA7233@e121166-lin.cambridge.arm.com>
+References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+         <20200115120238.GA7233@e121166-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-F2otfZC9sOf6KTpP904O"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 2:58 AM, David Rientjes wrote:
-> If thp defrag setting "defer" is used and a newline is *not* used when
-> writing to the sysfs file, this is interpreted as the "defer+madvise"
-> option.
-> 
-> This is because we do prefix matching and if five characters are written
-> without a newline, the current code ends up comparing to the first five
-> bytes of the "defer+madvise" option and using that instead.
-> 
-> Find the length of what the user is writing and use that to guide our
-> decision on which string comparison to do.
-> 
-> Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
-> Signed-off-by: David Rientjes <rientjes@google.com>
-> ---
->  This can be done in *many* different ways including extracting logic to
->  a helper function.  If someone would like this to be implemented
->  differently, please suggest it.
 
-I've come up with this:
+--=-F2otfZC9sOf6KTpP904O
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git mm/huge_memory.c mm/huge_memory.c
-index 41a0fbddc96b..f36b93334874 100644
---- mm/huge_memory.c
-+++ mm/huge_memory.c
-@@ -256,7 +256,7 @@ static ssize_t defrag_store(struct kobject *kobj,
-                clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
-                clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
-                set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
--       } else if (!memcmp("defer+madvise", buf,
-+       } else if (count > sizeof("defer")-1 && !memcmp("defer+madvise", buf,
-                    min(sizeof("defer+madvise")-1, count))) {
-                clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
-                clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+On Wed, 2020-01-15 at 12:02 +0000, Lorenzo Pieralisi wrote:
+> On Mon, Dec 16, 2019 at 12:01:06PM +0100, Nicolas Saenz Julienne wrote:
+> > This series aims at providing support for Raspberry Pi 4's PCIe
+> > controller, which is also shared with the Broadcom STB family of
+> > devices.
+> >=20
+> > There was a previous attempt to upstream this some years ago[1] but was
+> > blocked as most STB PCIe integrations have a sparse DMA mapping[2] whic=
+h
+> > is something currently not supported by the kernel.  Luckily this is no=
+t
+> > the case for the Raspberry Pi 4.
+> >=20
+> > Note the series is based on top of linux next, as the DTS patch depends
+> > on it.
+> >=20
+> > [1] https://patchwork.kernel.org/cover/10605933/
+> > [2] https://patchwork.kernel.org/patch/10605957/
+> >=20
+> > ---
+> >=20
+> > Changes since v4:
+> >   - Rebase DTS patch
+> >   - Respin log2.h code into it's own series as it's still contentious
+> >     yet mostly unrelated to the PCIe part
+> >=20
+> > Changes since v3:
+> >   - Moved all the log2.h related changes at the end of the series, as I
+> >     presume they will be contentious and I don't want the PCIe patches
+> >     to depend on them. Ultimately I think I'll respin them on their own
+> >     series but wanted to keep them in for this submission just for the
+> >     sake of continuity.
+> >   - Addressed small nits here and there.
+> >=20
+> > Changes since v2:
+> >   - Redo register access in driver avoiding indirection while keeping
+> >     the naming intact
+> >   - Add patch editing ARM64's config
+> >   - Last MSI cleanups, notably removing MSIX flag
+> >   - Got rid of all _RB writes
+> >   - Got rid of all of_data
+> >   - Overall churn removal
+> >   - Address the rest of Andrew's comments
+> >=20
+> > Changes since v1:
+> >   - add generic rounddown/roundup_pow_two64() patch
+> >   - Add MAINTAINERS patch
+> >   - Fix Kconfig
+> >   - Cleanup probe, use up to date APIs, exit on MSI failure
+> >   - Get rid of linux,pci-domain and other unused constructs
+> >   - Use edge triggered setup for MSI
+> >   - Cleanup MSI implementation
+> >   - Fix multiple cosmetic issues
+> >   - Remove supend/resume code
+> >=20
+> > Jim Quinlan (3):
+> >   dt-bindings: PCI: Add bindings for brcmstb's PCIe device
+> >   PCI: brcmstb: Add Broadcom STB PCIe host controller driver
+> >   PCI: brcmstb: Add MSI support
+> >=20
+> > Nicolas Saenz Julienne (3):
+> >   ARM: dts: bcm2711: Enable PCIe controller
+> >   MAINTAINERS: Add brcmstb PCIe controller
+> >   arm64: defconfig: Enable Broadcom's STB PCIe controller
+> >=20
+> >  .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
+> >  MAINTAINERS                                   |    4 +
+> >  arch/arm/boot/dts/bcm2711.dtsi                |   31 +-
+> >  arch/arm64/configs/defconfig                  |    1 +
+> >  drivers/pci/controller/Kconfig                |    9 +
+> >  drivers/pci/controller/Makefile               |    1 +
+> >  drivers/pci/controller/pcie-brcmstb.c         | 1007 +++++++++++++++++
+> >  7 files changed, 1149 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
+.yaml
+> >  create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+>=20
+> Applied patches [1,3,4] to pci/brcmstb, please have a look to check
+> everything is in order after the minor update I included.
 
-It's smaller, but more hacky. But it doesn't add new restrictions.
-E.g. this still works:
+Looks good to me.
 
-# echo -n 'alw' > /sys/kernel/mm/transparent_hugepage/defrag
-# cat /sys/kernel/mm/transparent_hugepage/defrag
-[always] defer defer+madvise madvise never
+Thanks,
+Nicolas
 
-But whether anyone does that, I don't know (it doesn't work without -n).
-Also this still works:
 
-# echo -n  'defer   ' > /sys/kernel/mm/transparent_hugepage/defrag
-# cat /sys/kernel/mm/transparent_hugepage/defrag
-always [defer] defer+madvise madvise never
+--=-F2otfZC9sOf6KTpP904O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Ideally we would have had strict matching as you propose (no matching of prefixes)
-since the beginning and use e.g. strstrip() to remove all whitespace from buffer
-first. But it's 'const char *' and I'm not sure if it's null-terminated.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4fCWMACgkQlfZmHno8
+x/7eNAf9E5M7dM+K4pFouDMsP1SzO9yIUBi8WCbONKVbOsyQ6p7LQBY4Kzj3sLoL
+NB1VQMbdAD9+0ZxluUkMeuOxdiJU2CPHdEh8efJuyGzr3qMr4w8raGvUsOnAOzy9
+zBgwz3k6phZZwcVHV+N/tNGQYbhHud7N09NHLLDZKN1GLYd3ezgoE72apUFKYvHi
+7D7nByGSTSI6mhnQoRR243ct0usUQG4HHsB7ddDTno5sCNd9ViLPPtFna2bA9x6w
+B/7ahcSzHd1z3MamuEyNYNgZ173kYI4pZmovxkWX/Nm+qAbJioQK/hmaCwsBl+jQ
+8fAZVXVrBG8TYkR/zbChpgjg/RM3Tw==
+=lFyM
+-----END PGP SIGNATURE-----
+
+--=-F2otfZC9sOf6KTpP904O--
+
