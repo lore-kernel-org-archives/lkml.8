@@ -2,93 +2,97 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC12C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EB1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1907A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CED214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N8WSuKE1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+Pzcz1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgAOPoH (ORCPT
+        id S1729025AbgAOPou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:44:07 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32597 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726165AbgAOPoH (ORCPT
+        Wed, 15 Jan 2020 10:44:50 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36910 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:44:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579103045;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=LQyuBEEPUt70o2BZvhKw3aWFie6bEYpzPUeONtcG+Vk=;
-        b=N8WSuKE1nOviofBhPsLUzRiihRU3xpMdsgOmt3K3WQL+6GdRUzBwUh9kh+bniATPSdhvib
-        wYLKjsDerTuAtYUds/Z2c6ZkknqgR4q2NZ05L23z0Z4fVG8eGberfcKbKQOJlgYORSLO6j
-        TAU2DqXFh6O6v8yCBeBD8QSa67CflgA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-O1Fb-8HuMO6jNb_7UiX61Q-1; Wed, 15 Jan 2020 10:44:02 -0500
-X-MC-Unique: O1Fb-8HuMO6jNb_7UiX61Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E5F9101603C;
-        Wed, 15 Jan 2020 15:44:01 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3189B675AE;
-        Wed, 15 Jan 2020 15:43:58 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: [PATCH v2] locking/rwsem: Fix kernel crash when spinning on RWSEM_OWNER_UNKNOWN
-Date:   Wed, 15 Jan 2020 10:43:36 -0500
-Message-Id: <20200115154336.8679-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Wed, 15 Jan 2020 10:44:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id o13so19067136ljg.4;
+        Wed, 15 Jan 2020 07:44:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
+        b=n+Pzcz1+IOcutRo3c4azf501upOdSlYmce/1ymEaSU6taxHi624WfiWl9E/PkPeU+W
+         zmoCV4mhSe/ekbBTOH9rK0ZM6b9XJX3eVDFdg+Ib26+TKokfrxEk7nwKpqs1Vh/p9lV2
+         zkfUyZfCadMpObcqAzsGxLv5D6KHqplT+ajemtqeJm0NFLAKjAsOfBTna07EQGagbaks
+         7k7sN0jXSpeS6WXYZ+hSlGl4ZcnQ8+cJRknLwrE/fUyhbFZuNRTlfYkRlC26VFWGooM7
+         yO/2VPpkq7lN9T6KED6EN9smTRVKCdSFW9sGphDnN4R8oSFXQS5n7Ljxist1ok/Lzam7
+         kQ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
+        b=XDKMSVbsXkUTudcl60Yvu7vj2rvHuHFlj4LZm9CQMk4dFAoOhBITzEFtnxRXBWc7iL
+         /MEZktUNQy2VoEECSFgEWzbZx8eqNMfhO8bilwktz8HFpK8tzJxseiieKYPgxgQ2UUdu
+         8yasJcQS4GEJmxFm2ZgYfLGSElRtdpfRW62hyoxExfVKLXTAMD9FMt62vknwIDCTRFFB
+         nu9fRRbDE1KI+5DkpG6/n8vC10hPY2IS6wPT3LukMiKfAnqLEn57hMMzhjnURSy+7xuq
+         GDWctsO6YOpDKBDv4PonGHmuK9961xuRidLremZoo+hQiePNeCY1mQGFQtGgeutc/INQ
+         CIPA==
+X-Gm-Message-State: APjAAAX8p9Ohonb3yHYwyoTOpzfsl2UbAAJk59jCxUibiOAewbVi92oC
+        cF8DFxVydfdqEB4ob11U/wYAPYK+Ospr022nVLQ=
+X-Google-Smtp-Source: APXvYqySLu2yqOOpQ0eFNaIf6kY20xHX68+A3EN+yMINPWehdz7Nm1bbK7aAWTU/lZY/OfC9pZD+rINYCV6EB0c4GDk=
+X-Received: by 2002:a2e:8197:: with SMTP id e23mr2177769ljg.250.1579103088404;
+ Wed, 15 Jan 2020 07:44:48 -0800 (PST)
+MIME-Version: 1.0
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 15 Jan 2020 12:44:35 -0300
+Message-ID: <CAOMZO5C7wKF8ojMBPuQZYtBK8W+vwXe8PaL5n-Mo74gF1HD6Tg@mail.gmail.com>
+Subject: Re: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        marcin.juszkiewicz@linaro.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 91d2a812dfb9 ("locking/rwsem: Make handoff writer
-optimistically spin on owner") will allow a recently woken up waiting
-writer to spin on the owner. Unfortunately, if the owner happens to be
-RWSEM_OWNER_UNKNOWN, the code will incorrectly spin on it leading to a
-kernel crash. This is fixed by passing the proper non-spinnable bits
-to rwsem_spin_on_owner() so that RWSEM_OWNER_UNKNOWN will be treated
-as a non-spinnable target.
+On Tue, Jan 14, 2020 at 10:43 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> Add the pinctrl driver support for i.MX8MP.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Fixes: 91d2a812dfb9 ("locking/rwsem: Make handoff writer optimistically spin on owner")
-
-Reported-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/locking/rwsem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 44e68761f432..0d9b6be9ecc8 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -1226,8 +1226,8 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- 		 * In this case, we attempt to acquire the lock again
- 		 * without sleeping.
- 		 */
--		if ((wstate == WRITER_HANDOFF) &&
--		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
-+		if (wstate == WRITER_HANDOFF &&
-+		    rwsem_spin_on_owner(sem, RWSEM_NONSPINNABLE) == OWNER_NULL)
- 			goto trylock_again;
- 
- 		/* Block until there are no active lockers. */
--- 
-2.18.1
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
