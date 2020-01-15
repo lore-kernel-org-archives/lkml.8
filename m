@@ -2,184 +2,99 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FEEC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E0AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B967122522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B207E2081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BR3QDKZ4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="si2r3OOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbgAOUG4 (ORCPT
+        id S1729827AbgAOUHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:06:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42819 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729794AbgAOUGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:06:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579118814;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ouETeL4IvzIbfGB9Fv8qtP6i/4HZznlTaT1Dbkur2g8=;
-        b=BR3QDKZ4vGb0G79avssm4n9uzKTcjp0FqB6mICd+27iKD0N31PpfifbpbYzGuHOlrX3Z7k
-        CUJVr72vt0pcSmFY0VRg5ui6i3QRkY14FT1PHTJcw3d08MRm3Am48HCk66hKzb+iyJ2xIN
-        oUaGyN5osk6YqMLMdjrUbROnVZk54qw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-Y5nQ-SI0N2iGLdeInMhekQ-1; Wed, 15 Jan 2020 15:06:53 -0500
-X-MC-Unique: Y5nQ-SI0N2iGLdeInMhekQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 15 Jan 2020 15:07:30 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:46793 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729532AbgAOUH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 15:07:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FAD01005510;
-        Wed, 15 Jan 2020 20:06:52 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BD99675AF;
-        Wed, 15 Jan 2020 20:06:51 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 13:06:51 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     zhenyuw@linux.intel.com, intel-gvt-dev@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com
-Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest
- with vfio_dma_rw
-Message-ID: <20200115130651.29d7e9e0@w520.home>
-In-Reply-To: <20200115035455.12417-1-yan.y.zhao@intel.com>
-References: <20200115034132.2753-1-yan.y.zhao@intel.com>
-        <20200115035455.12417-1-yan.y.zhao@intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ydf71xWPz9sR1;
+        Thu, 16 Jan 2020 07:07:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579118847;
+        bh=Z04FIIRqPjnEL8JK7PfsFjab5s7X/unpLZ6oNxJXT8o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=si2r3OOOssVGqMHbTG1QOKSWrqgCZNZDGT1mt8O4JPWHu3PaZGtZzB/yitADrt/nG
+         FzsROuh5XMLMtzewRNkGv1MXB6UvWtiCHMP724iEk5nq2EcGCJFbHXUbucrR6ywbmi
+         dZs0e9HVapz6K1ipjlUeCHYnn/HrxilxosdZue+x6sQJt9QFOPDbFXlVkK/0Sv3/x9
+         1l63o229MD57wsQLNV6XvDcQhD5TpyvtyhkUR6QGzyNaJDi4e38I/ywEpxpDAFbXPh
+         sJRltNtpHKKoz0U8dfS24CpcsTv6vwRUsvzN5Qlw3Oo4u5etnkGPlVh69Q+5nCL+Io
+         8V8KxJPM4bPug==
+Date:   Thu, 16 Jan 2020 07:07:26 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: linux-next: Fixes tag needs some work in the usb-gadget tree
+Message-ID: <20200116070726.7e2ef8cc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; boundary="Sig_/.p77+Mi=IAde7eX3zdIM0o/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 22:54:55 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+--Sig_/.p77+Mi=IAde7eX3zdIM0o/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> As a device model, it is better to read/write guest memory using vfio
-> interface, so that vfio is able to maintain dirty info of device IOVAs.
-> 
-> Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
-> cycles more overhead on average.
-> 
-> -------------------------------------
-> |    interface     | avg cpu cycles |
-> |-----------------------------------|
-> | kvm_write_guest  |     1554       |
-> | ----------------------------------|
-> | kvm_read_guest   |     707        |
-> |-----------------------------------|
-> | vfio_dma_rw(w)   |     2274       |
-> |-----------------------------------|
-> | vfio_dma_rw(r)   |     1378       |
-> -------------------------------------
+Hi all,
 
-In v1 you had:
+In commit
 
--------------------------------------
-|    interface     | avg cpu cycles |
-|-----------------------------------|
-| kvm_write_guest  |     1546       |
-| ----------------------------------|
-| kvm_read_guest   |     686        |
-|-----------------------------------|
-| vfio_iova_rw(w)  |     2233       |
-|-----------------------------------|
-| vfio_iova_rw(r)  |     1262       |
--------------------------------------
+  6a6ae4e8e926 ("usb: gadget: f_ncm: Use atomic_t to track in-flight reques=
+t")
 
-So the kvm numbers remained within +0.5-3% while the vfio numbers are
-now +1.8-9.2%.  I would have expected the algorithm change to at least
-not be worse for small accesses and be better for accesses crossing
-page boundaries.  Do you know what happened?
- 
-> Comparison of benchmarks scores are as blow:
-> ------------------------------------------------------
-> |  avg score  | kvm_read/write_guest  | vfio_dma_rw  |
-> |----------------------------------------------------|
-> |   Glmark2   |         1284          |    1296      |
-> |----------------------------------------------------|
-> |  Lightsmark |         61.24         |    61.27     |
-> |----------------------------------------------------|
-> |  OpenArena  |         140.9         |    137.4     |
-> |----------------------------------------------------|
-> |   Heaven    |          671          |     670      |
-> ------------------------------------------------------
-> No obvious performance downgrade found.
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  drivers/gpu/drm/i915/gvt/kvmgt.c | 26 +++++++-------------------
->  1 file changed, 7 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index bd79a9718cc7..17edc9a7ff05 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -1966,31 +1966,19 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
->  			void *buf, unsigned long len, bool write)
->  {
->  	struct kvmgt_guest_info *info;
-> -	struct kvm *kvm;
-> -	int idx, ret;
-> -	bool kthread = current->mm == NULL;
-> +	int ret;
-> +	struct intel_vgpu *vgpu;
-> +	struct device *dev;
->  
->  	if (!handle_valid(handle))
->  		return -ESRCH;
->  
->  	info = (struct kvmgt_guest_info *)handle;
-> -	kvm = info->kvm;
-> -
-> -	if (kthread) {
-> -		if (!mmget_not_zero(kvm->mm))
-> -			return -EFAULT;
-> -		use_mm(kvm->mm);
-> -	}
-> -
-> -	idx = srcu_read_lock(&kvm->srcu);
-> -	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
-> -		      kvm_read_guest(kvm, gpa, buf, len);
-> -	srcu_read_unlock(&kvm->srcu, idx);
-> +	vgpu = info->vgpu;
-> +	dev = mdev_dev(vgpu->vdev.mdev);
->  
-> -	if (kthread) {
-> -		unuse_mm(kvm->mm);
-> -		mmput(kvm->mm);
-> -	}
-> +	ret = write ? vfio_dma_rw(dev, gpa, buf, len, true) :
-> +			vfio_dma_rw(dev, gpa, buf, len, false);
+Fixes tag
 
-As Paolo suggested previously, this can be simplified:
+  Fixes: 40d133d7f5426 ("usb: gadget: f_ncm: convert to new function interf=
+ace
 
-ret = vfio_dma_rw(dev, gpa, buf, len, write);
+has these problem(s):
 
->  
->  	return ret;
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
 
-Or even more simple, remove the ret variable:
+Please do not split Fixes tags over more than one line.  Also, please keep
+all the commit message tags together at the end of the commit message.
 
-return vfio_dma_rw(dev, gpa, buf, len, write);
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Alex
+--Sig_/.p77+Mi=IAde7eX3zdIM0o/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
->  }
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fcP4ACgkQAVBC80lX
+0GwhbQf/YI72X9THb9ltJjkXFPj8Or/DZikqYtkv7pmFNR14rdnLDPcEnbs0BvPY
+nTtcXuCEipIOaxZgrwpUB00elkAl1ESEJVlm/nGQhMntrgodP4cX/9KNuDW1oISf
+ZPSmC/AyxQFEHvayxccWOeqIbWPTrsqFhBzbiXqye9wCmC5FAFg18Z7Dv265mx5O
+Qz07vvEKJ/4YwLofq4jpjfyhk4w54oxHpb26iiAZJ81g0JvBLchGjDmYmwe8wEca
+C1ii1MXWTwFODv3sbPpnTHrQu6OM+mvTCeCnFIuQ/jKAw7qievibecl1ySjjJWD8
+MO6Hb+C+q3oyUogUtYT/CeFHxQZqVw==
+=SHvD
+-----END PGP SIGNATURE-----
+
+--Sig_/.p77+Mi=IAde7eX3zdIM0o/--
