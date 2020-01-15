@@ -2,105 +2,79 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9ECC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A541C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C02E2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579100751;
-	bh=+7szTkMvhj9HG2GjojM7AMu0Ak8Qqv3YS1IEooiI5Hw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=se77eZmQKSxyNjhfM38KVSmhCjp8r8OrIMueEkLVoDdPrKYP22/jMdDBJx8DhTmcP
-	 L2/y+K0Xmk7s1cq1FhBpdKeq9qlESVSqrq9hpXmHc66h60TJnbpxLnmON6hoGN/dxY
-	 fTxMTdodLN77hs3vytEpV9IRbR/hGJR6gPE4QjwU=
+	by mail.kernel.org (Postfix) with ESMTP id 3C01A2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgAOPFu (ORCPT
+        id S1729014AbgAOPIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:05:50 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53652 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgAOPFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:05:50 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so212763wmc.3;
-        Wed, 15 Jan 2020 07:05:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l+nye/BYJZe7Bw5ayLtgP5rQcdwwOtxIDTaqQZhLPlA=;
-        b=fxPwCbf7o6eRSxDsdLOZOY2y1q4AzpyRri/fv5lTTVSF+o/dMqz8jWR9BRrEOfH1eu
-         DO+zVbUv0FXYN0GuzqZmKGt3jgHKEqs7Pown8WpH07MATd3YDUiqe02Y755WyFmsz1gD
-         SJc3nPEE33yYSf1JGN/jn/WARmyRwW5au9E2Dr3eTBXspQnsumpFY3WaCuYs1YAxmwOw
-         956D3IxoBt28Prux3NFBnhStwQxcqXdsUQaO4Jdl9WClw3r++aSwaiGl9XvZYa+/j1OP
-         8HHPucwk8h50qNM6UNGlGQ0r8BvKTDQW/Z5zeoBliGb1qR4KDCmMX1XTzKjZ+kTpRJcG
-         wMMg==
-X-Gm-Message-State: APjAAAVpp5a3QpLbo46knyJvDTUQFTKV/oOLuU31jbB1sti7GYIAW5DF
-        hRexBjJRezOxiLcvP1zo4AI=
-X-Google-Smtp-Source: APXvYqztGYFP1LUF57lEbPErN/f7VP1qI9rU2yAcdmhylE8alEK9YH4yvGaqdMcNcSqYuH4XY8iHQg==
-X-Received: by 2002:a1c:dc08:: with SMTP id t8mr173641wmg.139.1579100748472;
-        Wed, 15 Jan 2020 07:05:48 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id r62sm148422wma.32.2020.01.15.07.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:05:47 -0800 (PST)
-Date:   Wed, 15 Jan 2020 15:05:45 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     wei.liu@kernel.org, paul@xen.org, xen-devel@lists.xenproject.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paulmck@kernel.org, joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net: xen-netback: hash.c: Use built-in RCU list checking
-Message-ID: <20200115150545.j5gu7lm3l3ouv7l4@debian>
-References: <20200115141840.10553-1-madhuparnabhowmik04@gmail.com>
+        Wed, 15 Jan 2020 10:08:18 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:44770 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726132AbgAOPIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:08:18 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1irkHH-0000I4-3S; Wed, 15 Jan 2020 23:08:15 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1irkHE-0005d1-JT; Wed, 15 Jan 2020 23:08:12 +0800
+Date:   Wed, 15 Jan 2020 23:08:12 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 5.5
+Message-ID: <20200115150812.mo2eycc53lbsgvue@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+ <20190923050515.GA6980@gondor.apana.org.au>
+ <20191202062017.ge4rz72ki3vczhgb@gondor.apana.org.au>
+ <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115141840.10553-1-madhuparnabhowmik04@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191214084749.jt5ekav5o5pd2dcp@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 07:48:40PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> 
-> list_for_each_entry_rcu has built-in RCU and lock checking.
-> Pass cond argument to list_for_each_entry_rcu.
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Hi Linus:
 
-You seem to have dropped the second hunk which modified
-xenvif_flush_hash, is that a mistake?
+This push fixes a build problem for the hisilicon driver.
 
-Wei.
+The following changes since commit 84faa307249b341f6ad8de3e1869d77a65e26669:
 
-> ---
->  drivers/net/xen-netback/hash.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
-> index 10d580c3dea3..3f9783f70a75 100644
-> --- a/drivers/net/xen-netback/hash.c
-> +++ b/drivers/net/xen-netback/hash.c
-> @@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
->  
->  	found = false;
->  	oldest = NULL;
-> -	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
-> +	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
-> +				lockdep_is_held(&vif->hash.cache.lock)) {
->  		/* Make sure we don't add duplicate entries */
->  		if (entry->len == len &&
->  		    memcmp(entry->tag, tag, len) == 0)
-> -- 
-> 2.17.1
-> 
+  crypto: arm/curve25519 - add arch-specific key generation function (2019-12-12 14:07:14 +0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
+
+for you to fetch changes up to cb1eeb75cf3dd84ced81333967200583993dfd73:
+
+  crypto: hisilicon/sec2 - Use atomics instead of __sync (2020-01-09 11:28:08 +0800)
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      crypto: hisilicon/sec2 - Use atomics instead of __sync
+
+ drivers/crypto/hisilicon/sec2/sec.h        |  6 +++---
+ drivers/crypto/hisilicon/sec2/sec_crypto.c | 12 ++++++------
+ drivers/crypto/hisilicon/sec2/sec_main.c   | 14 ++++++++++++--
+ 3 files changed, 21 insertions(+), 11 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
