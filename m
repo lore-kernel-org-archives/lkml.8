@@ -2,129 +2,105 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F34C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B6AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62AA2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CC62467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PcYxKLFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgAOI6o (ORCPT
+        id S1729288AbgAOI6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:58:44 -0500
-Received: from mga11.intel.com ([192.55.52.93]:26344 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbgAOI6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:58:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 00:58:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="252589836"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 15 Jan 2020 00:58:36 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 15 Jan 2020 10:58:36 +0200
-Date:   Wed, 15 Jan 2020 10:58:36 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 26/36] mfd: intel_soc_pmic: Add SCU IPC member to
- struct intel_soc_pmic
-Message-ID: <20200115085836.GZ2838@lahna.fi.intel.com>
-References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
- <20200113135623.56286-27-mika.westerberg@linux.intel.com>
- <20200115084410.GG325@dell>
+        Wed, 15 Jan 2020 03:58:46 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17729 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729143AbgAOI6n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:58:43 -0500
+X-UUID: 862fdf080fa54b0b87180e3b16218436-20200115
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=NY1THKQZPmMzBG2Y7OvUGXadUajPTI3HDuB+P5+oLaI=;
+        b=PcYxKLFpIiQoZQ7FOYJCHr8pWLmnTMwZS+rZbDioITCbiHARot6+uPeZOQQsfebnLBzUP/ySZqvgiPA5fO98DoUOhFypnVIJByWzKVaKtlDnD1opYpD6vP983ufuabRfCxcVsM55RUmCtsZnzpJganLNqztmnfexasYuaaRWXsk=;
+X-UUID: 862fdf080fa54b0b87180e3b16218436-20200115
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 217106368; Wed, 15 Jan 2020 16:58:39 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 15 Jan 2020 16:58:10 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 15 Jan 2020 16:58:44 +0800
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>,
+        <jiaxin.yu@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
+Subject: [PATCH v12 2/4] dt-bindings: mediatek: mt2712: Add #reset-cells
+Date:   Wed, 15 Jan 2020 16:58:26 +0800
+Message-ID: <20200115085828.27791-3-yong.liang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200115085828.27791-1-yong.liang@mediatek.com>
+References: <20200115085828.27791-1-yong.liang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115084410.GG325@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 08:44:10AM +0000, Lee Jones wrote:
-> On Mon, 13 Jan 2020, Mika Westerberg wrote:
-> 
-> > Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
-> > be using this field going forward to access the SCU IPC instance.
-> > 
-> > While there add kernel-doc for the intel_soc_pmic structure.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
-> > index bfecd6bd4990..bda22d750be6 100644
-> > --- a/include/linux/mfd/intel_soc_pmic.h
-> > +++ b/include/linux/mfd/intel_soc_pmic.h
-> > @@ -13,6 +13,20 @@
-> >  
-> >  #include <linux/regmap.h>
-> >  
-> > +/**
-> > + * struct intel_soc_pmic - Intel SoC PMIC data
-> > + * @irq: Interrupt number
-> 
-> Whose IRQ is this?  I guess the parent's/PMIC's?
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkICNyZXNl
+dC1jZWxscyBhbmQgdXBkYXRlIG10ay13ZHQudHh0DQoNClNpZ25lZC1vZmYtYnk6IHlvbmcubGlh
+bmcgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTogSmlheGluIFl1IDxq
+aWF4aW4ueXVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWluZ2pv
+ZS5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBQaGlsaXBwIFphYmVsIDxwLnphYmVs
+QHBlbmd1dHJvbml4LmRlPg0KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
+cmc+DQpSZXZpZXdlZC1ieTogR3VlbnRlciBSb2VjayA8Z3JvZWNrN0BnbWFpbC5jb20+DQotLS0N
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAgfCAgMSArDQog
+Li4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oICAgICAgICAgIHwgMjIgKysrKysr
+KysrKysrKysrKysrKw0KIDIgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEy
+LXJlc2V0cy5oDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCmluZGV4IGVjYjlmZjc4NDgzMi4uNGRkMzZiZDNmMWFk
+IDEwMDY0NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9n
+L210ay13ZHQudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0
+Y2hkb2cvbXRrLXdkdC50eHQNCkBAIC00LDYgKzQsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+IA0KIC0gY29tcGF0aWJsZSBzaG91bGQgY29udGFpbjoNCiAJIm1lZGlhdGVrLG10MjcwMS13ZHQi
+LCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDI3MDENCisJIm1lZGlhdGVrLG10MjcxMi13
+ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDI3MTINCiAJIm1lZGlhdGVrLG10NjU4
+OS13ZHQiOiBmb3IgTVQ2NTg5DQogCSJtZWRpYXRlayxtdDY3OTctd2R0IiwgIm1lZGlhdGVrLG10
+NjU4OS13ZHQiOiBmb3IgTVQ2Nzk3DQogCSJtZWRpYXRlayxtdDc2MjItd2R0IiwgIm1lZGlhdGVr
+LG10NjU4OS13ZHQiOiBmb3IgTVQ3NjIyDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+cmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
+bmRleCAwMDAwMDAwMDAwMDAuLjllN2VlNzYyZjA3Ng0KLS0tIC9kZXYvbnVsbA0KKysrIGIvaW5j
+bHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KQEAgLTAs
+MCArMSwyMiBAQA0KKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQorLyoN
+CisgKiBDb3B5cmlnaHQgKGMpIDIwMTkgTWVkaWFUZWsgSW5jLg0KKyAqIEF1dGhvcjogWW9uZyBM
+aWFuZyA8eW9uZy5saWFuZ0BtZWRpYXRlay5jb20+DQorICovDQorDQorI2lmbmRlZiBfRFRfQklO
+RElOR1NfUkVTRVRfQ09OVFJPTExFUl9NVDI3MTINCisjZGVmaW5lIF9EVF9CSU5ESU5HU19SRVNF
+VF9DT05UUk9MTEVSX01UMjcxMg0KKw0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTkZSQV9TV19S
+U1QJCQkJMA0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NTV9TV19SU1QJCQkJCTENCisjZGVmaW5l
+IE1UMjcxMl9UT1BSR1VfTUZHX1NXX1JTVAkJCQkyDQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX1ZF
+TkNfU1dfUlNUCQkJCTMNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVkRFQ19TV19SU1QJCQkJNA0K
+KyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTUdfU1dfUlNUCQkJCTUNCisjZGVmaW5lIE1UMjcxMl9U
+T1BSR1VfSU5GUkFfQU9fU1dfUlNUCQkJCTgNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVVNCX1NX
+X1JTVAkJCQk5DQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX0FQTUlYRURfU1dfUlNUCQkJCTEwDQor
+DQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX1NXX1JTVF9OVU0JCQkJMTENCisNCisjZW5kaWYgIC8q
+IF9EVF9CSU5ESU5HU19SRVNFVF9DT05UUk9MTEVSX01UMjcxMiAqLw0KLS0gDQoyLjE4LjANCg==
 
-Yes, I'll fix it up.
-
-> > + * @regmap: Pointer to the regmap structure
-> 
-> Whose Regmap is this?  I guess the parent's/PMIC's?
-
-Ditto
-
-> > + * @irq_chip_data: IRQ chip data for the PMIC itself
-> > + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
-> > + * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
-> > + * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
-> > + * @irq_chip_data_adc: Chained IRQ chip data for the ADC
-> > + * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
-> > + * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
-> 
-> Documentation is an ideal place to expand out these abbreviations.
-
-OK, I'll try to expand them (not familiar with all of them).
-
-> > + * @dev: Pointer to the PMIC device
-> > + * @scu: SCU IPC pointer used for IPC operations
-> 
-> By this description I would have expected to find a struct of ops
-> (operations [call-backs]), but instead I found this:
-> 
->  struct intel_scu_ipc_dev {
->          struct device *dev;
->          void __iomem *ipc_base;
->          void __iomem *i2c_base;
->          struct completion cmd_complete;
->          u8 irq_mode;
->  };
-> 
-> Probably better to describe it as a "pointer to SCU (whatever that
-> means) IPC (slightly more common, but still better to expand I think)
-> device data structure".
-
-Sure.
