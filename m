@@ -2,162 +2,81 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15610C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F4C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFFB214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1239B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579108872;
+	bh=dUOS7Sbd/0yMtiwpyUyOXAg054W2R7jVPYgksxRkGAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xr5LCT+jH47xNJjLR8J7nxL/aGzieHFSW9kXr529K9EduKR72kkXsqOrcWQCqPokP
+	 QLSnkyToDd6rECQMf3V5c//k7ZDU2m87Lt0FBsDqg/a8hnjjTpCU5i7lNtP+H6EAfD
+	 sli+domoAEahtINXQaBle/tYjm0BFDUHcXI8zQPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAORUz (ORCPT
+        id S1729019AbgAORVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:20:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:9254 "EHLO mga11.intel.com"
+        Wed, 15 Jan 2020 12:21:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgAORUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 12:20:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 09:20:54 -0800
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="226188020"
-Received: from efgreve-mobl2.amr.corp.intel.com ([10.254.8.33])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 09:20:51 -0800
-Message-ID: <df95e688271b4cc0e2313daeeae85507c566fc04.camel@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] iio: accel: kxcjk1013: Support orientation matrix
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Robert Yang <decatf@gmail.com>,
-        =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jan 2020 09:20:05 -0800
-In-Reply-To: <20200112203301.30235-1-digetx@gmail.com>
-References: <20200112203301.30235-1-digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        id S1727016AbgAORVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:21:10 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8840C207FF;
+        Wed, 15 Jan 2020 17:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579108870;
+        bh=dUOS7Sbd/0yMtiwpyUyOXAg054W2R7jVPYgksxRkGAc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EC8bKknXcmw+4ysBdgdqSuUlqY6Man3IhZCLgHBbZUT/MfA28EPsoq1XUDymjZNDB
+         0MzUg3fNBDTHYrbJAlV4XfzQVgShuujpjJ8ETKhkso4zKT4X3XHgA6jmF9B91xGzdZ
+         PknufLsPoKRSmRd6VblqBsy8cFg3c6pDCHfK6iFE=
+Date:   Wed, 15 Jan 2020 18:21:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tty: baudrate: Synchronise baud_table[] and
+ baud_bits[]
+Message-ID: <20200115172106.GA4127163@kroah.com>
+References: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
+ <20200114172756.GA2052011@kroah.com>
+ <20200115163327.GF32742@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115163327.GF32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-01-12 at 23:33 +0300, Dmitry Osipenko wrote:
-> Hardware could be physically mounted in any possible direction and
-> userpspace needs to be aware of the mounting orientation in order to
-> process sensor's data correctly. In particular this helps iio-sensor-
-> proxy
-> to report display's orientation properly on a phone/tablet devices.
+On Wed, Jan 15, 2020 at 06:33:27PM +0200, Andy Shevchenko wrote:
+> On Tue, Jan 14, 2020 at 06:27:56PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Jan 14, 2020 at 07:09:17PM +0200, Andy Shevchenko wrote:
+> > > Synchronize baud rate tables for better readability.
+> > 
+> > "Synchronize"?  With what?
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Between each other. This SPARC thingy makes it's harder to follow.
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Ok, be more specific please, a better changelog is key here.
 
-> ---
->  drivers/iio/accel/kxcjk-1013.c       | 27 +++++++++++++++++++++++++-
-> -
->  include/linux/iio/accel/kxcjk_1013.h |  3 +++
->  2 files changed, 28 insertions(+), 2 deletions(-)
+> > Why?  I'm all for cleaning up code, but this
+> > just seems totally gratuitous.
 > 
-> diff --git a/drivers/iio/accel/kxcjk-1013.c
-> b/drivers/iio/accel/kxcjk-1013.c
-> index fee535d6e45b..c9924a65c32a 100644
-> --- a/drivers/iio/accel/kxcjk-1013.c
-> +++ b/drivers/iio/accel/kxcjk-1013.c
-> @@ -130,6 +130,7 @@ struct kxcjk1013_data {
->  	struct i2c_client *client;
->  	struct iio_trigger *dready_trig;
->  	struct iio_trigger *motion_trig;
-> +	struct iio_mount_matrix orientation;
->  	struct mutex mutex;
->  	s16 buffer[8];
->  	u8 odr_bits;
-> @@ -983,6 +984,20 @@ static const struct iio_event_spec
-> kxcjk1013_event = {
->  				 BIT(IIO_EV_INFO_PERIOD)
->  };
->  
-> +static const struct iio_mount_matrix *
-> +kxcjk1013_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			   const struct iio_chan_spec *chan)
-> +{
-> +	struct kxcjk1013_data *data = iio_priv(indio_dev);
-> +
-> +	return &data->orientation;
-> +}
-> +
-> +static const struct iio_chan_spec_ext_info kxcjk1013_ext_info[] = {
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_TYPE,
-> kxcjk1013_get_mount_matrix),
-> +	{ }
-> +};
-> +
->  #define KXCJK1013_CHANNEL(_axis) {					
-> \
->  	.type = IIO_ACCEL,						
-> \
->  	.modified = 1,							
-> \
-> @@ -999,6 +1014,7 @@ static const struct iio_event_spec
-> kxcjk1013_event = {
->  		.endianness = IIO_LE,					
-> \
->  	},								
-> \
->  	.event_spec = &kxcjk1013_event,				\
-> +	.ext_info = kxcjk1013_ext_info,					
-> \
->  	.num_event_specs = 1						
-> \
->  }
->  
-> @@ -1267,11 +1283,18 @@ static int kxcjk1013_probe(struct i2c_client
-> *client,
->  	data->client = client;
->  
->  	pdata = dev_get_platdata(&client->dev);
-> -	if (pdata)
-> +	if (pdata) {
->  		data->active_high_intr = pdata->active_high_intr;
-> -	else
-> +		data->orientation = pdata->orientation;
-> +	} else {
->  		data->active_high_intr = true; /* default polarity */
->  
-> +		ret = iio_read_mount_matrix(&client->dev, "mount-
-> matrix",
-> +					    &data->orientation);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	if (id) {
->  		data->chipset = (enum kx_chipset)(id->driver_data);
->  		name = id->name;
-> diff --git a/include/linux/iio/accel/kxcjk_1013.h
-> b/include/linux/iio/accel/kxcjk_1013.h
-> index 8c3c78bc9f91..ea0ecb774371 100644
-> --- a/include/linux/iio/accel/kxcjk_1013.h
-> +++ b/include/linux/iio/accel/kxcjk_1013.h
-> @@ -7,8 +7,11 @@
->  #ifndef __IIO_KXCJK_1013_H__
->  #define __IIO_KXCJK_1013_H__
->  
-> +#include <linux/iio/iio.h>
-> +
->  struct kxcjk_1013_platform_data {
->  	bool active_high_intr;
-> +	struct iio_mount_matrix orientation;
->  };
->  
->  #endif
+> Btw, while doing it I found that SPARC actually supports more baud rates than
+> defined in those arrays. Without this patch I would not (easily) notice that.
+> Should I also attach another patch and resend?
 
+Yes, that might justify this patch's acceptance :)
+
+thanks,
+
+greg k-h
