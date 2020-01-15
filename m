@@ -2,139 +2,137 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4489BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F0FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195C12467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jOc6OuBv"
+	by mail.kernel.org (Postfix) with ESMTP id 39D61222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbgAOOue (ORCPT
+        id S1729148AbgAOOvJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:50:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25335 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729196AbgAOOud (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:50:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579099832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Rf0cEa0njBpHKWLGMJpGbHzTU22PMR2115XgkwcWqQ=;
-        b=jOc6OuBvmqst6B9qgzTwUPn2S+h+3RyPVaSGzXtHbgOvkg0k2yVPIQ453EY1suu/j9/6+0
-        vlZ/y81HdNINz6DCGN+s50P+NbEQoHPQ1n/T/Rl7qYdBxAPvlE/gX2D4Wo4aFgSzS/s9T7
-        FNEGgVSg6hGoZedfwb9wlYDd5lkKNZk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-vzBayW3DM1KeNyA2oRU0Gg-1; Wed, 15 Jan 2020 09:50:29 -0500
-X-MC-Unique: vzBayW3DM1KeNyA2oRU0Gg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB0948A243E;
-        Wed, 15 Jan 2020 14:50:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FD2984332;
-        Wed, 15 Jan 2020 14:50:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <6330a53c-781b-83d7-8293-405787979736@gmx.com>
-References: <6330a53c-781b-83d7-8293-405787979736@gmx.com> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <4467.1579020509@warthog.procyon.org.uk> <23358.1579097103@warthog.procyon.org.uk>
-To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, hch@lst.de, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Problems with determining data presence by examining extents?
-MIME-Version: 1.0
+        Wed, 15 Jan 2020 09:51:09 -0500
+Received: from mail-oln040092255024.outbound.protection.outlook.com ([40.92.255.24]:16571
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726474AbgAOOvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:51:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JKAIt0ZSeSueBIVz7Vjg4H0e4QYjl3bKSV58YVMP3vyn4g8+Jz5fAE1o25lFeRnd37K3blhBHAjaubzpF762XhesGEutBSATxaXA2oasnw9a7KP+wL/JmmrtYh0O/o/2xPMtdRAVhyj9Z56YRGjXFBV3PPjLGLMZ4XCA6/C+ltbx0Sn3BURBsSA7pbzBLjyEC3MlAUOfDH+wBtrv3bygcshpLGxw/PibzqJzyTVUR1Eoisqld3uySo1WqO+JL4ib5VNoMQREf9SVVKQSKJOOWuEPs5UPnhanxcpHAGAWkROfF3KOILfzYt5EJGQ8FSm7F7YJh+n4Img8kKsoCRNPEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7U3JgbyhJmKs2VAh9AUmBQLr/JRS1/rQ5w4j1g3lO7w=;
+ b=F12+2JQr8wDLHfPtWuTE8sQ9eXBQGDTvnkHaewPmGvNyhu6PO2CXSMv2DCjL8PUf2v8GfhDJNACtYBCxUOPOguko1TiS9IAV81BrRx6mL7iJZlAqS2iJ/NclsK1nIkrgsdBWSS5zHRPltcNKWm3nSkoOLecmi7cx/5Cbc0E4jTaAwZ/OZSx/pzG8zaXk3+0fC57NIUNXqJvmW8a6QtXebcbhIezsLWUzVmbzF4T1ppocAYOceDXIghSfjX4yoKZAUixz07M1ThR/PKKsppxuu7qAf5YzCuYN7dqAJbD+EBTCzK411jjUtrTADUeedIrEd0RzBjNQwYNR2osDuOhFyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT048.eop-APC01.prod.protection.outlook.com
+ (10.152.250.54) by SG2APC01HT190.eop-APC01.prod.protection.outlook.com
+ (10.152.251.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.11; Wed, 15 Jan
+ 2020 14:51:03 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.55) by
+ SG2APC01FT048.mail.protection.outlook.com (10.152.251.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 14:51:03 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2623.018; Wed, 15 Jan
+ 2020 14:51:03 +0000
+Received: from nicholas-dell-linux (49.196.159.155) by ME1PR01CA0108.ausprd01.prod.outlook.com (2603:10c6:200:19::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 14:50:58 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Thread-Topic: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink
+ resource if necessary
+Thread-Index: AQHVxKivCsNYvp642Ua95PoPKOxpR6ffqm2AgABUMwCACNMsAIADCz8A
+Date:   Wed, 15 Jan 2020 14:51:02 +0000
+Message-ID: <PSXP216MB043899E598E11CF7D4D9214380370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB0438D3E2CFE64EBAA32AF691803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200107203435.GA137091@google.com>
+ <PSXP216MB043869924730BFD3AA97B0A0803E0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200113162150.GO2838@lahna.fi.intel.com>
+In-Reply-To: <20200113162150.GO2838@lahna.fi.intel.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME1PR01CA0108.ausprd01.prod.outlook.com
+ (2603:10c6:200:19::17) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:10E15FB990E296BF02DCB8E985BAD5363E705FBFF03E2FCB8B35058AACD15F89;UpperCasedChecksum:E8ACB8B7071B22F7309E9487C72B436D797051C4A6D264A41C4DB5683A6D6FD8;SizeAsReceived:8085;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [WjfncAQJ+n//ztLo/bqDQmSi37lvpBxV]
+x-microsoft-original-message-id: <20200115145052.GA5860@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 4b77a2a8-1631-41f6-1934-08d799ca567c
+x-ms-traffictypediagnostic: SG2APC01HT190:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PV4d0OW/+UGepj/9CT5lmahBp62PspgesMlOHru3YFDmA7euTy20Z+2LsGqa6KG1pjAr7hspp4YkJC2ZEdKuaGRlDI2xzRwTgvOeuR2XxNQj4a+ku45Z9H3GEnGn6svyMay/2hZd7xoSYBgO8CoY5ie8U3UmsFSxbnv4PTvSa+LsmGAARtR6SIQJIMD/nAUM
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27262.1579099822.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 15 Jan 2020 14:50:22 +0000
-Message-ID: <27263.1579099822@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-ID: <BF16E7B3235D4E40A3545DFAADADA607@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b77a2a8-1631-41f6-1934-08d799ca567c
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 14:51:02.8303
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
+On Mon, Jan 13, 2020 at 06:21:50PM +0200, Mika Westerberg wrote:
+> On Wed, Jan 08, 2020 at 01:36:04AM +0000, Nicholas Johnson wrote:
+> > > Where's the patch that changes the caller so "new_size" may be smaller
+> > > than "size"?  I guess it must be "[3/3] PCI: Consider alignment of
+> > > hot-added bridges ..." because that's the only one that makes a
+> > > non-trivial change, right?
+> > 
+> > As above, there was always a possibility of the new_size being smaller. 
+> > For some reason, 1M is assigned to bridges, even if nothing is below 
+> > them (for example, unused non hotplug bridges in a Thunderbolt dock). It 
+> > may be an edge case if we are low on space, but theoretically it can 
+> > happen.
+> > 
+> > Also, when writing this, Mika was not interested in using hpmemsize, 
+> > which, when used, will cause new_size to be smaller than the current 
+> > size (actual size and add_size combined).
+> 
+> Just a small correction here about my motivation. So I'm testing on a
+> hardware where the BIOS assigns initial resources to the root/downstream
+> ports which is the majority of Thunderbolt capable PC systems nowadays.
+> Therefore the user does not need to pass any additional command line
+> parameters to get the ports working properly.
+> 
+> However, I'm of course interested in getting Linux PCI resource
+> management as good as possible regardless whether the firmware/BIOS
+> assigns them or not ;-)
+Sorry, I was not meant to say you were not interested in getting it as 
+good as possible. At the time, you had a goal to achieve (which you did) 
+and at that point in time, it would not have been feasible to use 
+pci=hpmemsize or similar before my patches were applied:
 
-> "Unaligned" means "unaligned to fs sector size". In btrfs it's page
-> size, thus it shouldn't be a problem for your 256K block size.
+  c13704f5685d ("PCI: Avoid double hpmemsize MMIO window assignment")
+  d7b8a217521c ("PCI: Add "pci=hpmmiosize" and "pci=hpmmioprefsize" parameters")
 
-Cool.
-
-> > Same answer as above.  Btw, since I'm using DIO reads and writes, woul=
-d these
-> > get compressed?
-> =
-
-> Yes. DIO will also be compressed unless you set the inode to nocompressi=
-on.
-> =
-
-> And you may not like this btrfs internal design:
-> Compressed extent can only be as large as 128K (uncompressed size).
-> =
-
-> So 256K block write will be split into 2 extents anyway.
-> And since compressed extent will cause non-continuous physical offset,
-> it will always be two extents to fiemap, even you're always writing in
-> 256K block size.
-> =
-
-> Not sure if this matters though.
-
-Not a problem, provided I can read them with a single DIO read.  I just ne=
-ed
-to know whether the data is present.  I don't need to know where it is or =
-what
-hoops the filesystem goes through to get it.
-
-> > I'm not sure this isn't the same answer as above either, except if thi=
-s
-> > results in parts of the file being "filled in" with blocks of zeros th=
-at I
-> > haven't supplied.
-> =
-
-> The example would be, you have written 256K data, all filled with 0xaa.
-> And it committed to disk.
-> Then the next time you write another 256K data, all filled with 0xaa.
-> Then instead of writing this data onto disk, the fs chooses to reuse
-> your previous written data, doing a reflink to it.
-
-That's fine as long as the filesystem says it's there when I ask for it.
-Having it shared isn't a problem.
-
-But that brings me back to the original issue and that's the potential pro=
-blem
-of the filesystem optimising storage by adding or removing blocks of zero
-bytes.  If either of those can happen, I cannot rely on the filesystem
-metadata.
-
-> So fiemap would report your latter 256K has the same bytenr of your
-> previous 256K write (since it's reflinked), and with SHARED flag.
-
-It might be better for me to use SEEK_HOLE than fiemap - barring the sligh=
-t
-issues that SEEK_HOLE has no upper bound and that writes may be taking pla=
-ce
-at the same time.
-
-David
-
+What I was trying to say was not that you were not interested, but more 
+that it was not a primary motivation for you at the time. Does this 
+sound more accurate? Poor wording on my behalf.
