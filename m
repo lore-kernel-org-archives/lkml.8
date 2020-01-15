@@ -2,98 +2,92 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A7BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C35C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3B1214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579104472;
-	bh=SRRwhINGP3TAXxFCQ1dhjVUowtJ0/dnqTFwQI/Yma5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q4RJNKD1V+lFlp018mYwVninzAIyhbr8n8D+kVVfDzUh2jW8hM53BS597hHkMYHoc
-	 11W5gl6vhEzoLLl7JGktyGMLM5AdCCZnDZSrxvUujC6Ueai3pQR2IoybTHB4EdivS+
-	 9ecI71XfS+vKs4MAe8sIl48lZmlzzgvaqJBSXrwI=
+	by mail.kernel.org (Postfix) with ESMTP id 6CEB4222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgAOQHv (ORCPT
+        id S1729061AbgAOQHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:07:51 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38866 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgAOQHt (ORCPT
+        Wed, 15 Jan 2020 11:07:55 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34809 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgAOQHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:07:49 -0500
-Received: by mail-qt1-f195.google.com with SMTP id c24so5413327qtp.5;
-        Wed, 15 Jan 2020 08:07:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zSIfSAzXaUnmeHj5yAo3f8W68OERKqDK+WA3I8DQXME=;
-        b=djnWz5Uv5uxqmn8ZPz8gXmpXymRwdVRfn2Ka203Vjcor3GCoGHr4bsAzTivzjFgh6U
-         qt/PLBVgXNj39rkovMYAxr5MF2wYd7D1+Yjilxz02n8uXjasXFbCy4q2YPMX0PGg9Q7v
-         AFifPDmKFtqeQ5zKZkysF5IAlIlXIeTd/hR03AhLB7eM7sj1erDyBl6wQXZRkYGb04Qc
-         bbJD7lp2zBvZqlWNllNjM1DJCYEHr14B0QQmorF72OTclYQWbKGU8GwceQF01uoCFeuJ
-         PyGvhCAJEeDDu1VnZ2Dtc4Q53lNCP8LEMHDLfgq8EWFk/DBWB8cK2hTbyI/Ixct35Pyg
-         iNxA==
+        Wed, 15 Jan 2020 11:07:54 -0500
+Received: by mail-qt1-f196.google.com with SMTP id 5so16218002qtz.1;
+        Wed, 15 Jan 2020 08:07:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=zSIfSAzXaUnmeHj5yAo3f8W68OERKqDK+WA3I8DQXME=;
-        b=iZexNFORkrGNHZSx8DbOh33CUdI2LntyDKfUrL9hF6PpI2L2ZlOo7XBDmbAnxhhGaw
-         gpV0xL6uUWZBfBmVzUaYvq4huXBfubTmcN6M5U/KOemrMzCvpIqxOuBxmgJf/BerViPZ
-         yLeUUYdMxniOOllQl/Je6dLi9d6OwJ/yewWHqEm3qz36cexI8MnDAX/8GkjCT2S2meN0
-         bomCX5/IZgYraY/Au5kgoeUhab7ihlIqkeuLsZ/Fjqp+8VVhyBQ71obn5OBMFg2b3UP6
-         IsfxsZXiGr5VP1FlbaWKkw+lebxmTj7PFl0tTd9OXpHq89/omDtMT6qKCyIgC1xxcqqm
-         lsgw==
-X-Gm-Message-State: APjAAAVoMIs84YHDIyoPrIiu8P5+GKbmu2D08dPIjrpU8IYih9TV2KEB
-        RkuNAAgl35RpyeF3zlOPMAouwsNYwao=
-X-Google-Smtp-Source: APXvYqwaOY/q4re19MhwRUa9NQCI8Rv79UWbxsm5d1zjBr1b8VHAGwijlXdLYJlD+sB8r6wQNbmHqA==
-X-Received: by 2002:ac8:3510:: with SMTP id y16mr4288551qtb.6.1579104468267;
-        Wed, 15 Jan 2020 08:07:48 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:1e68])
-        by smtp.gmail.com with ESMTPSA id n4sm9344056qti.55.2020.01.15.08.07.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 08:07:47 -0800 (PST)
-Date:   Wed, 15 Jan 2020 08:07:46 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc:     cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH] cgroup: Prevent double killing of css when enabling
- threaded cgroup
-Message-ID: <20200115160746.GG2677547@devbig004.ftw2.facebook.com>
-References: <20191219022716.o7vxxia6o67tyfmf@wittgenstein>
- <20200109150559.14457-1-mkoutny@suse.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=46QQbf/7xY0XXnmz2tYswXMRkkq1sq4i40/0AAKflts=;
+        b=iKcqODa4BncMFy9yf967yQiQ4e1hypZ35Kspvsn9615Df5ihLYfC+Tdhv9HbRxsNG6
+         UL02ocGc692NeBS4c+vI6oDQOOgFSBACcaQK2fOITK8N9reH8U7US4ReD2OfPwUVMkty
+         RI8VFOvYzEz/PTfIlewdardpsm7e62n4vID1mAGOgCLQTUoCYxUkr1FPhb6Jg5fF2o+U
+         zwPu8Nalp/DvyF0Azf1r8rCr5SYyClR2v42p0mpWgHtTH0QSQNP7k715rTcjgEBORGKV
+         Se7uJF6XTZyf72aH46Bfh3IYUWJNecqKpADz5RqxlMjrlRZA/+AwXUlkzI90/bVgydRD
+         Gejg==
+X-Gm-Message-State: APjAAAV4Zk51tATIwafKZxff9NMp0bdmoA/A1cvHGZ8aFZmxSvJ3qcxp
+        b9V3WUOfahDzYnMpZckaFKj0YTAc
+X-Google-Smtp-Source: APXvYqwzN9XlXgiCJOHOzppCDgjC104jsqTEEFdkqciOeSGlAPVe68Kr5Xf4J+iBvOBnPUweFUNeng==
+X-Received: by 2002:aed:3fce:: with SMTP id w14mr4477223qth.0.1579104472892;
+        Wed, 15 Jan 2020 08:07:52 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id a14sm8606047qko.92.2020.01.15.08.07.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 08:07:52 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:07:50 -0500
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH RESEND] sparc/console: kill off obsolete declarations
+Message-ID: <20200115160749.GA3951901@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200109150559.14457-1-mkoutny@suse.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:05:59PM +0100, Michal Koutný wrote:
-> The commit prevents these situations by making cgroup_type_write wait
-> for all dying csses to go away before re-applying subtree controls.
-> When at it, the locations of WARN_ON_ONCE calls are moved so that
-> warning is triggered only when we are about to misuse the dying css.
+commit 09d3f3f0e02c ("sparc: Kill PROM console driver.") missed removing
+the declarations of the deleted prom_con structure and prom_con_init
+function from console.h. Kill them off now.
 
-Applied to cgroup/for-5.6.
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ include/linux/console.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks.
-
+diff --git a/include/linux/console.h b/include/linux/console.h
+index d09951d5a94e..f33016b3a401 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -101,7 +101,6 @@ extern const struct consw *conswitchp;
+ extern const struct consw dummy_con;	/* dummy console buffer */
+ extern const struct consw vga_con;	/* VGA text console */
+ extern const struct consw newport_con;	/* SGI Newport console  */
+-extern const struct consw prom_con;	/* SPARC PROM console */
+ 
+ int con_is_bound(const struct consw *csw);
+ int do_unregister_con_driver(const struct consw *csw);
+@@ -201,7 +200,6 @@ extern void suspend_console(void);
+ extern void resume_console(void);
+ 
+ int mda_console_init(void);
+-void prom_con_init(void);
+ 
+ void vcs_make_sysfs(int index);
+ void vcs_remove_sysfs(int index);
 -- 
-tejun
+2.24.1
+
