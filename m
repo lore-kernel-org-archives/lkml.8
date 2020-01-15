@@ -2,170 +2,124 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E85C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF04C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD2A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956712187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIm/1wIL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlyYWetZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgAOSGP (ORCPT
+        id S1729174AbgAOSHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:06:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57514 "EHLO
+        Wed, 15 Jan 2020 13:07:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31856 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729008AbgAOSGN (ORCPT
+        with ESMTP id S1729126AbgAOSHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:06:13 -0500
+        Wed, 15 Jan 2020 13:07:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579111572;
+        s=mimecast20190719; t=1579111674;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
-        b=XIm/1wIL+v8VymJIBNUelsevMvXU1g4/Fc2etWk/pCdA5Zklc53u8QNbMqQVlseFyFk1Tn
-        WZYPD0G4r39BP+oOR1aRLQ7OJ4claDnFXLcYT7TTZEQ+fFrr+YbFYgROhL+wSyOJ7Ti6Xh
-        XKDek0k7uli/6FDRI4DpguyfMTsF7kg=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-c9Hkd2hkPXC5fXpomk6M-g-1; Wed, 15 Jan 2020 13:06:10 -0500
-X-MC-Unique: c9Hkd2hkPXC5fXpomk6M-g-1
-Received: by mail-io1-f71.google.com with SMTP id s6so3749868iod.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+        bh=7fID6vInRHrxtlo5QRMU7VPDyUEFXJHaww3fjUHk7ZA=;
+        b=WlyYWetZ0IwXHVLEwnqwOiPLIFytcnB5KJOzfEaQncJKAKCoJ1wAkKh5kcXsKknkH/ASgc
+        UR8vuFcjS/RyLshqWph+tja8UfBMj9klyUirZYSWvusAM7r1fQcodSUYL0vRlcWhawtLsz
+        skRNS8X0GHz9SJPOewTFU6lVqjGLUsQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-YyZxsGXrPauJoErqysFj4g-1; Wed, 15 Jan 2020 13:07:53 -0500
+X-MC-Unique: YyZxsGXrPauJoErqysFj4g-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so8363629wrr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:07:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5/JVNCvoMKLbuw+th8Mvpr4NSmYiudENwSQlfto1vYg=;
-        b=H1t+gzLfywOmUrXj2DvN2V1RFtHkO5+hLnWxIjS4HNzhXWh3wRR+SxQv2GUcUQPRKh
-         TiMEqqVR/7FD8zGoo5N5jfVIiXTG8RZ6oANYY2mxW6Xkj2e1P2+/Zvzx4We/SI+X7KWu
-         hv4Y7aUeeIouqxWeC+wW3i5zBsTB7BsQ3SHWSrP1ZgrycRq5UZuQ0P9ElJuLyp5abKbO
-         +IxhkKWetEJyb+fpSkOSiAd0Diwd66f4SBZcdewvR11VdCVBEqqnzX6ml8UtNkOc+Tfm
-         DwAkJ7g6m9zlHqf5M4ozs22pPOtK4QMXSsWfTke2z9mE6B6vp1pjlv3nHi0y+X8PbsC5
-         IDTw==
-X-Gm-Message-State: APjAAAXa1lFUpSGdXF9ONdXGt0e/VKEZpqvR+2ZaUlrUFX0i1l9DCpyA
-        Z/3oSx+vGnVjL1Ty8Nxaueyv/r/Mllq+X3qKoQreZJMELmXBTmGFS/Nrr4D96FA4xphX1059bS8
-        aSmeT99pwBfGmJnymR3U9Ccp78RoXtUeEsDvT2gAd
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486733ilf.249.1579111569278;
-        Wed, 15 Jan 2020 10:06:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyiSpVTrT9xrjDsRfXMdNMLD3zLf65q5AGAKjzBKvyYRr2MTNUMJyyycnXSNnfMh8iTlOsaFXQttkz/wrm0e3g=
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr4486711ilf.249.1579111569023;
- Wed, 15 Jan 2020 10:06:09 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7fID6vInRHrxtlo5QRMU7VPDyUEFXJHaww3fjUHk7ZA=;
+        b=Ukz9id36lk376+tMvDOqTrvAsS/clVGA4OP8/4TDZf1SNvlMDUtKw0LilQ3CdKiOwl
+         vgJGnzEsJpn3vc2PnZlUSKrW9JopaLH79lLFj9sKsLmKPc6XwN6ONioxk7KYseyM4JfX
+         c3kpTwuCj4lbp7bb7MmycpxwogWjF/GhYjtsEoDNnqi71Pao92QkGp8o/+MRC0OJOvhR
+         e2MYeIwjE2FrttqO5AO96earRA6zX+LiFusZp0kf1wK1jJfFkRWf0bIyvmDSoD+YWjRP
+         VlWS4Q72ulSbP7tL0hmEB8ehRW4fVzGtJXnpePWH00ovRLA05XJd26517a9eWbarcq/K
+         QX9A==
+X-Gm-Message-State: APjAAAWIfiIwg2U+kOjAWS9SleRfF8MMuPQ1vJpqH4U7de/YTMTbteJu
+        tTieb2VisR1Uj3CKJzfQ/cFH7xylRy4HDDx/sqig6CbrvRNC93EvhLkyc/kgnL81FpeDk81WG56
+        aa02Mfbp0iD+BfuR2zmFBvCBA
+X-Received: by 2002:a05:600c:1003:: with SMTP id c3mr1208977wmc.120.1579111671873;
+        Wed, 15 Jan 2020 10:07:51 -0800 (PST)
+X-Google-Smtp-Source: APXvYqys82Zum91O5UUcdGXuiZO+7mBL0scxKfEu+8BKC4UyeYAh+0xj3070ENwDj1Okibs0XoRj2A==
+X-Received: by 2002:a05:600c:1003:: with SMTP id c3mr1208948wmc.120.1579111671658;
+        Wed, 15 Jan 2020 10:07:51 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:436:e17d:1fd9:d92a? ([2001:b07:6468:f312:436:e17d:1fd9:d92a])
+        by smtp.gmail.com with ESMTPSA id s65sm773973wmf.48.2020.01.15.10.07.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 10:07:47 -0800 (PST)
+Subject: Re: [PATCH v2 0/5] KVM: x86: X86_FEATURE bit() cleanup
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191217213242.11712-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d53bd488-b871-47c4-c65c-4c231eff3cf9@redhat.com>
+Date:   Wed, 15 Jan 2020 19:07:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
- <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
- <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com> <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
-In-Reply-To: <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Thu, 16 Jan 2020 02:05:57 +0800
-Message-ID: <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Randy Wright <rwright@hpe.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191217213242.11712-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
->
-> On 1/13/20 10:07 AM, Kairui Song wrote:
-> > On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> >>
-> >>> Hi, there are some previous works about this issue, reset PCI devices
-> >>> in kdump kernel to stop ongoing DMA:
-> >>>
-> >>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> >>> https://lore.kernel.org/patchwork/cover/343767/
-> >>>
-> >>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> >>> https://lore.kernel.org/patchwork/patch/379191/
-> >>>
-> >>> And didn't get merged, that patch are trying to fix some DMAR error
-> >>> problem, but resetting devices is a bit too destructive, and the
-> >>> problem is later fixed in IOMMU side. And in most case the DMA seems
-> >>> harmless, as they targets first kernel's memory and kdump kernel only
-> >>> live in crash memory.
-> >>
-> >> I was going to ask the same. If the kdump kernel had IOMMU on, would
-> >> that still be a problem?
-> >
-> > It will still fail, doing DMA is not a problem, it only go wrong when
-> > a device's upstream bridge is mistakenly shutdown before the device
-> > shutdown.
-> >
-> >>
-> >>> Also, by the time kdump kernel is able to scan and reset devices,
-> >>> there are already a very large time window where things could go
-> >>> wrong.
-> >>>
-> >>> The currently problem observed only happens upon kdump kernel
-> >>> shutdown, as the upper bridge is disabled before the device is
-> >>> disabledm so DMA will raise error. It's more like a problem of wrong
-> >>> device shutting down order.
-> >>
-> >> The way it was described earlier "During this time, the SUT sometimes
-> >> gets a PCI error that raises an NMI." suggests that it isn't really
-> >> restricted to kexec/kdump.
-> >> Any attached device without an active driver might attempt spurious or
-> >> malicious DMA and trigger the same during normal operation.
-> >> Do you have available some more reporting of what happens during the
-> >> PCIe error handling?
-> >
-> > Let me add more info about this:
-> >
-> > On the machine where I can reproduce this issue, the first kernel
-> > always runs fine, and kdump kernel works fine during dumping the
-> > vmcore, even if I keep the kdump kernel running for hours, nothing
-> > goes wrong. If there are DMA during normal operation that will cause
-> > problem, this should have exposed it.
-> >
->
-> This is the part that is puzzling me. Error shows up only when kdump
-> kernel is being shut down. kdump kernel can run for hours without this
-> issue. What is the operation from downstream device that is resulting in
-> uncorrectable error - is it indeed a DMA request? Why does that
-> operation from downstream device not happen until shutdown?
->
-> I just want to make sure we fix the right problem in the right way.
->
+On 17/12/19 22:32, Sean Christopherson wrote:
+> Small series to add build-time protections on reverse CPUID lookup (and
+> other usages of bit()), and to rename the misleading-generic bit() helper
+> to something that better conveys its purpose.
+> 
+> I don't love emulator changes in patch 1 as adding one-off helpers is a
+> bit silly, but IMO it's the lesser of two evils, e.g. adding dedicated
+> helpers is arguably less error prone than manually encoding a CPUID
+> lookup, and the helpers approach avoids having to include cpuid.h in the
+> emulator code.
+> 
+> v2:
+>   - Rework the assertions to use the reverse_cpuid table instead of
+>     using the last cpufeatures word (which was not at all intuitive).
+> 
+> Sean Christopherson (5):
+>   KVM: x86: Add dedicated emulator helpers for querying CPUID features
+>   KVM: x86: Move bit() helper to cpuid.h
+>   KVM: x86: Add CPUID_7_1_EAX to the reverse CPUID table
+>   KVM: x86: Expand build-time assertion on reverse CPUID usage
+>   KVM: x86: Refactor and rename bit() to feature_bit() macro
+> 
+>  arch/x86/include/asm/kvm_emulate.h |  4 +++
+>  arch/x86/kvm/cpuid.c               |  5 ++--
+>  arch/x86/kvm/cpuid.h               | 41 +++++++++++++++++++++++++----
+>  arch/x86/kvm/emulate.c             | 21 +++------------
+>  arch/x86/kvm/svm.c                 |  4 +--
+>  arch/x86/kvm/vmx/vmx.c             | 42 +++++++++++++++---------------
+>  arch/x86/kvm/x86.c                 | 18 +++++++++++++
+>  arch/x86/kvm/x86.h                 |  5 ----
+>  8 files changed, 87 insertions(+), 53 deletions(-)
+> 
 
-Actually the device could keep sending request with no problem during
-kdump kernel running. Eg. keep sending DMA, and all DMA targets first
-kernel's system memory, so kdump runs fine as long as nothing touch
-the reserved crash memory. And the error is reported by the port, when
-shutdown it has bus master bit, and downstream request will cause
-error.
+Queued, thanks.
 
-I'm not sure what request it really is either, it could depend on
-device. On that machine, error could be reproduced when either the NIC
-or HPSA is not reset in kdump, and from the bug report, the reporter
-used a different NIC card and it's also reproducible.
-The NIC is much less like to cause bridge error though (HPSA is about
-7/10 reproducible, NIC is about 3/10), so the device could send
-different requests but fail in the same way (UR error reported from
-the bridge).
-
-Will try to do more debug, but I'm not sure how can I intercept the
-PCIe operation to get some info about what is actually causing the
-issue, do you have any suggestion?
-
--- 
-Best Regards,
-Kairui Song
+Paolo
 
