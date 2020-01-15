@@ -2,209 +2,250 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE7DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9E9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87F3214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YcQDNKbD"
+	by mail.kernel.org (Postfix) with ESMTP id 75BF4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579104466;
+	bh=ZBE4WutbNgxPWlPw25HHXkCl/AhkdnbKWiuq9tbKWRs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JU8ywut7Pi3ElQUtyD7+dXynN0D/tYbYmPSxLB0dcKv+EpACzSQ0rripzcx8vOjTp
+	 nTQoRLy3IkzrUHSELwT/22n7RRjjyk3hTSkrfBtPyQDlE5JgwajhWF6kc8ZDC1GvUX
+	 wwFXeur6p1cKuF5P5iMGcf03mqiEu8OXQn59ydqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAOQGe (ORCPT
+        id S1728925AbgAOQHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:06:34 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39904 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgAOQGd (ORCPT
+        Wed, 15 Jan 2020 11:07:45 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:47056 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgAOQHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:06:33 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115160632euoutp024d90754ee367c22f2a9f8eb28e75faa7~qGxQMQLG40076000760euoutp026
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 16:06:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115160632euoutp024d90754ee367c22f2a9f8eb28e75faa7~qGxQMQLG40076000760euoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579104392;
-        bh=CmOiL3BLB2XPduqL5i0vdpv+vtMHGtAOqvLAZdojNyw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=YcQDNKbD6wIeFQB706MJh5dxcvatUYED5vmgk/LjGEmzwDxIbyh/mPUIN4AULbzyG
-         VEd1M2GkhweXBvAcjXuR/kC3B4xG6Kl+b8URNMrcJ9GV99VgpWo7ZgYZGew4eslPIY
-         dfpX1Ss9zb2fQis0maEyvb4R5tD9bqxk4dyVysCw=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200115160631eucas1p1bdc2f079bdc0044ab143aa9aeaa010a1~qGxPsAETn2239722397eucas1p15;
-        Wed, 15 Jan 2020 16:06:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 46.54.60679.7883F1E5; Wed, 15
-        Jan 2020 16:06:31 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115160631eucas1p204c4fec97aff0d30cd441b90b40f6d14~qGxPUwjv41574715747eucas1p2X;
-        Wed, 15 Jan 2020 16:06:31 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200115160631eusmtrp1b491f5ae6df1c9f332b45727baaae811~qGxPUMxpp0946809468eusmtrp1r;
-        Wed, 15 Jan 2020 16:06:31 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-77-5e1f38876c47
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F4.63.08375.7883F1E5; Wed, 15
-        Jan 2020 16:06:31 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115160630eusmtip2d00620257110c787822eef0bea931efb~qGxO0WtVq0273302733eusmtip2J;
-        Wed, 15 Jan 2020 16:06:30 +0000 (GMT)
-Subject: Re: [PATCH 03/10] fbdev: s1d13xxxfb: use resource_size
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     Kristoffer Ericson <kristoffer.ericson@gmail.com>,
-        kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <847e5e23-38fd-ec1b-2296-456435c06fd6@samsung.com>
-Date:   Wed, 15 Jan 2020 17:06:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 15 Jan 2020 11:07:45 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 13so15832957oij.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:07:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GgrG+HKS7SJS1YSumldfNDhrIEBU95RMvZklBq/bHds=;
+        b=efH7hi/oytY7D2GNhHVHSlpgAsfD7h7GAfp4RIcDopgz3+z2KeItZec8TUn1e3WZUo
+         9Munbm1UstJSClW+fQx983+Vh1oFyRV+bBZOL0h6QO2VNjX42Zu5Pc7vDMK5JVZRQsAl
+         4bk/zCdkoft9NQ3E1j9A0SebhzDhhxCssOgXZc6BxEWWaIik3VhOEjBa1mCCD4WBduAh
+         F8nKOwoouFONP67IL+jN1sBN+Hkr1lWWymuQgFfIwwtpdoSPj3F3c6ymer809dRBFIfA
+         3Jirk9bpJ2+sdfAj2ROrwEt0nJcBHlHIpolZZyYOloVRw6H3LwZjoLf/Erl2zIGQMwrH
+         FQiA==
+X-Gm-Message-State: APjAAAVpCZe1G3+PrqSXU7JhTFYqYhgeg7StD6YeI9yzMmNYRC3OZpkN
+        1akXpk1Ob76KvLHHPdkoyPPGFNg=
+X-Google-Smtp-Source: APXvYqzH41C1elzCtX8hkM8gdzTeExYw//rNgfbVoL2J0/NqJYMnprIfH71g3ijxZAG1TLM2POb7bA==
+X-Received: by 2002:a05:6808:143:: with SMTP id h3mr383383oie.61.1579104463457;
+        Wed, 15 Jan 2020 08:07:43 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 15sm5775078oin.5.2020.01.15.08.07.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 08:07:42 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220379
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 15 Jan 2020 10:07:41 -0600
+Date:   Wed, 15 Jan 2020 10:07:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
+Message-ID: <20200115160741.GA20174@bogus>
+References: <20200113161954.29779-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-In-Reply-To: <1577900990-8588-4-git-send-email-Julia.Lawall@inria.fr>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRmVeSWpSXmKPExsWy7djP87rtFvJxBod7tS2ufH3PZtG0qp/Z
-        YustaYt5JyUsTvR9YLW4vGsOmwObx85Zd9k9Jr04xOJxv/s4k8fnTXIBLFFcNimpOZllqUX6
-        dglcGatXvWYtmCZdsXmlcQPjWrEuRk4OCQETiQfnZrJ3MXJxCAmsYJS49rmBDcL5wihx9VE3
-        I4TzmVFi94XXrDAtN3o3QCWWM0qcaTvLAuG8ZZQ4sWoLWJWwgL3Ek+PP2EFsEQENiaUbV4AV
-        MQtsY5TYt/ssWIJNwEpiYvsqoFEcHLwCdhL7n5mBhFkEVCXuHWpiBrFFBSIkPj04DDaTV0BQ
-        4uTMJywgNqeAq8ThV7sYQWxmAXGJW0/mM0HY8hLb385hBtklIbCKXeLIvHdQZ7tITJi7jh3C
-        FpZ4dXwLlC0jcXpyDwtEwzpGib8dL6C6tzNKLJ/8jw2iylrizrlfbCCXMgtoSqzfpQ8RdpR4
-        2n+PFSQsIcAnceOtIMQRfBKTtk1nhgjzSnS0CUFUq0lsWLaBDWZt186VzBMYlWYheW0Wkndm
-        IXlnFsLeBYwsqxjFU0uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQKTzel/x7/sYNz1J+kQowAH
-        oxIPb8YfuTgh1sSy4srcQ4wSHMxKIrwnZ8jGCfGmJFZWpRblxxeV5qQWH2KU5mBREuc1XvQy
-        VkggPbEkNTs1tSC1CCbLxMEp1cA4o0h6ygR16agVdYedM/eHSUwoYPg5ZaO50MkZd25V1DX2
-        rE7nPdH3scztL2dXj6fE682nrz2Y/KPFcnLxvu0Zp5cWRV+S435mtchJik3xy4blkR9Or49M
-        i2dos36dUuZ/ImNz+wL15Jte8dcS+xMPiVvwHru1JbtmoXO/Qua1RW9vF/NOPKKkxFKckWio
-        xVxUnAgAqkUVFjIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xe7rtFvJxBrc/CFlc+fqezaJpVT+z
-        xdZb0hbzTkpYnOj7wGpxedccNgc2j52z7rJ7THpxiMXjfvdxJo/Pm+QCWKL0bIryS0tSFTLy
-        i0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mlaves1aME26YvNK4wbG
-        tWJdjJwcEgImEjd6NzB2MXJxCAksZZT4tPA5kMMBlJCROL6+DKJGWOLPtS42iJrXjBI7Oyax
-        gSSEBewlnhx/xg5iiwhoSCzduIIFpIhZYBujxNSOZewQHZcZJfoWfWAFqWITsJKY2L4KbAOv
-        gJ3E/mdmIGEWAVWJe4eamEFsUYEIicM7ZjGC2LwCghInZz5hAbE5BVwlDr/aBRZnFlCX+DPv
-        EjOELS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0u
-        zUvXS87P3cQIjK1tx35u3sF4aWPwIUYBDkYlHt6MP3JxQqyJZcWVuYcYJTiYlUR4T86QjRPi
-        TUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGDc55XEG5oamltYGpobmxubWSiJ83YIHIwREkhP
-        LEnNTk0tSC2C6WPi4JRqYIx+vSXkfXLaD0um9g8vY9KOxL3/9G/9vbT3TA/yFdslpxkX674y
-        Yg37nXZqq+uBhsuNfQc3VxW8/MWgXOX2ebeUUGdQTLGCRtHcs3/Lbog23YhafzXTYJORQ47i
-        deVIN6cPFWoLF868ny698KPsj09vMnp1GuZlz3we9vY2w8lbTjfdJqr9OaTEUpyRaKjFXFSc
-        CABNmTYhwwIAAA==
-X-CMS-MailID: 20200115160631eucas1p204c4fec97aff0d30cd441b90b40f6d14
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200101182630eucas1p2ba58d07a485bd831a4afb16adbbe9306
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200101182630eucas1p2ba58d07a485bd831a4afb16adbbe9306
-References: <1577900990-8588-1-git-send-email-Julia.Lawall@inria.fr>
-        <CGME20200101182630eucas1p2ba58d07a485bd831a4afb16adbbe9306@eucas1p2.samsung.com>
-        <1577900990-8588-4-git-send-email-Julia.Lawall@inria.fr>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113161954.29779-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/1/20 6:49 PM, Julia Lawall wrote:
-> Use resource_size rather than a verbose computation on
-> the end and start fields.
+On Mon, Jan 13, 2020 at 05:19:54PM +0100, Olivier Moysan wrote:
+> Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
 > 
-> The semantic patch that makes these changes is as follows:
-> (http://coccinelle.lip6.fr/)
-> 
-> <smpl>
-> @@ struct resource ptr; @@
-> - (ptr.end - ptr.start + 1)
-> + resource_size(&ptr)
-> </smpl>
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-
-Patch queued for v5.6, thanks.
- 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 > ---
->  drivers/video/fbdev/s1d13xxxfb.c |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+>  .../bindings/sound/st,stm32-spdifrx.yaml      | 80 +++++++++++++++++++
+>  2 files changed, 80 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
 > 
-> diff --git a/drivers/video/fbdev/s1d13xxxfb.c b/drivers/video/fbdev/s1d13xxxfb.c
-> index 8048499e398d..eaea8c373753 100644
-> --- a/drivers/video/fbdev/s1d13xxxfb.c
-> +++ b/drivers/video/fbdev/s1d13xxxfb.c
-> @@ -746,9 +746,9 @@ s1d13xxxfb_remove(struct platform_device *pdev)
->  	}
->  
->  	release_mem_region(pdev->resource[0].start,
-> -			pdev->resource[0].end - pdev->resource[0].start +1);
-> +			   resource_size(&pdev->resource[0]));
->  	release_mem_region(pdev->resource[1].start,
-> -			pdev->resource[1].end - pdev->resource[1].start +1);
-> +			   resource_size(&pdev->resource[1]));
->  	return 0;
->  }
->  
-> @@ -788,14 +788,14 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
->  	}
->  
->  	if (!request_mem_region(pdev->resource[0].start,
-> -		pdev->resource[0].end - pdev->resource[0].start +1, "s1d13xxxfb mem")) {
-> +		resource_size(&pdev->resource[0]), "s1d13xxxfb mem")) {
->  		dev_dbg(&pdev->dev, "request_mem_region failed\n");
->  		ret = -EBUSY;
->  		goto bail;
->  	}
->  
->  	if (!request_mem_region(pdev->resource[1].start,
-> -		pdev->resource[1].end - pdev->resource[1].start +1, "s1d13xxxfb regs")) {
-> +		resource_size(&pdev->resource[1]), "s1d13xxxfb regs")) {
->  		dev_dbg(&pdev->dev, "request_mem_region failed\n");
->  		ret = -EBUSY;
->  		goto bail;
-> @@ -810,7 +810,7 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, info);
->  	default_par = info->par;
->  	default_par->regs = ioremap(pdev->resource[1].start,
-> -			pdev->resource[1].end - pdev->resource[1].start +1);
-> +				    resource_size(&pdev->resource[1]));
->  	if (!default_par->regs) {
->  		printk(KERN_ERR PFX "unable to map registers\n");
->  		ret = -ENOMEM;
-> @@ -819,7 +819,7 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
->  	info->pseudo_palette = default_par->pseudo_palette;
->  
->  	info->screen_base = ioremap(pdev->resource[0].start,
-> -			pdev->resource[0].end - pdev->resource[0].start +1);
-> +				    resource_size(&pdev->resource[0]));
->  
->  	if (!info->screen_base) {
->  		printk(KERN_ERR PFX "unable to map framebuffer\n");
-> @@ -857,9 +857,9 @@ static int s1d13xxxfb_probe(struct platform_device *pdev)
->  
->  	info->fix = s1d13xxxfb_fix;
->  	info->fix.mmio_start = pdev->resource[1].start;
-> -	info->fix.mmio_len = pdev->resource[1].end - pdev->resource[1].start + 1;
-> +	info->fix.mmio_len = resource_size(&pdev->resource[1]);
->  	info->fix.smem_start = pdev->resource[0].start;
-> -	info->fix.smem_len = pdev->resource[0].end - pdev->resource[0].start + 1;
-> +	info->fix.smem_len = resource_size(&pdev->resource[0]);
->  
->  	printk(KERN_INFO PFX "regs mapped at 0x%p, fb %d KiB mapped at 0x%p\n",
->  	       default_par->regs, info->fix.smem_len / 1024, info->screen_base);
-> 
-> 
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> deleted file mode 100644
+> index 33826f2459fa..000000000000
+> --- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+> -
+> -The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+> -IEC-60958 and IEC-61937.
+> -
+> -Required properties:
+> -  - compatible: should be "st,stm32h7-spdifrx"
+> -  - reg: cpu DAI IP base address and size
+> -  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+> -  - clock-names: must contain "kclk"
+> -  - interrupts: cpu DAI interrupt line
+> -  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+> -    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+> -  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+> -
+> -Optional properties:
+> -  - resets: Reference to a reset controller asserting the SPDIFRX
+> -
+> -The device node should contain one 'port' child node with one child 'endpoint'
+> -node, according to the bindings defined in Documentation/devicetree/bindings/
+> -graph.txt.
+> -
+> -Example:
+> -spdifrx: spdifrx@40004000 {
+> -	compatible = "st,stm32h7-spdifrx";
+> -	reg = <0x40004000 0x400>;
+> -	clocks = <&rcc SPDIFRX_CK>;
+> -	clock-names = "kclk";
+> -	interrupts = <97>;
+> -	dmas = <&dmamux1 2 93 0x400 0x0>,
+> -	       <&dmamux1 3 94 0x400 0x0>;
+> -	dma-names = "rx", "rx-ctrl";
+> -	pinctrl-0 = <&spdifrx_pins>;
+> -	pinctrl-names = "default";
+> -
+> -	spdifrx_port: port {
+> -		cpu_endpoint: endpoint {
+> -			remote-endpoint = <&codec_endpoint>;
+> -		};
+> -	};
+> -};
+> -
+> -spdif_in: spdif-in {
+> -	compatible = "linux,spdif-dir";
+> -
+> -	codec_port: port {
+> -		codec_endpoint: endpoint {
+> -			remote-endpoint = <&cpu_endpoint>;
+> -		};
+> -	};
+> -};
+> -
+> -soundcard {
+> -	compatible = "audio-graph-card";
+> -	dais = <&spdifrx_port>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> new file mode 100644
+> index 000000000000..ab8e9d74ac3c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
+> +
+> +maintainers:
+> +  - Olivier Moysan <olivier.moysan@st.com>
+> +
+> +description: |
+> +  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+> +  IEC-60958 and IEC-61937.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32h7-spdifrx
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: kclk
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: audio data capture DMA
+> +      - description: IEC status bits capture DMA
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: rx-ctrl
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#sound-dai-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - dmas
+> +  - dma-names
+
+Needs a:
+
+additionalProperties: false
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    spdifrx: spdifrx@40004000 {
+> +        compatible = "st,stm32h7-spdifrx";
+> +        #sound-dai-cells = <0>;
+> +        reg = <0x40004000 0x400>;
+> +        clocks = <&rcc SPDIF_K>;
+> +        clock-names = "kclk";
+> +        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> +        dmas = <&dmamux1 2 93 0x400 0x0>,
+> +               <&dmamux1 3 94 0x400 0x0>;
+> +        dma-names = "rx", "rx-ctrl";
+> +        pinctrl-0 = <&spdifrx_pins>;
+> +        pinctrl-names = "default";
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
 > 
