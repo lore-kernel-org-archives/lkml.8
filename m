@@ -2,93 +2,98 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C56EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27679C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0A02465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EBD22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579118232;
+	bh=xU5jGBrXJZIAI5+ahVcCc+dxyDR0JuRPnp8SL2yQq3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E8Nymhvf9c8AUBj4pQuCiJ2rGcIq0eWG2LJVpFP3u8Eick97EtBiTwZw0vhJ0zSGV
+	 zIcK7AEMsuQSkpiRP6Pm1bgi/L4LAc7QolJ/25soysoPV68rL57eJgN1Eqpw2Z+aUE
+	 LeJoXHOuPLhiOY64Yp4TrkNc/yAXTBs0diKl2QFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgAOT5H (ORCPT
+        id S1729643AbgAOT5L convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:57:07 -0500
-Received: from sauhun.de ([88.99.104.3]:41054 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgAOT5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:57:07 -0500
-Received: from localhost (p54B33239.dip0.t-ipconnect.de [84.179.50.57])
-        by pokefinder.org (Postfix) with ESMTPSA id 467852C0742;
-        Wed, 15 Jan 2020 20:57:05 +0100 (CET)
-Date:   Wed, 15 Jan 2020 20:57:05 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 00/12] i2c: convert subsystem to use
- i2c_new_client_device()
-Message-ID: <20200115195704.GC23789@ninjato>
-References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+        Wed, 15 Jan 2020 14:57:11 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46984 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgAOT5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:57:08 -0500
+Received: by mail-ed1-f68.google.com with SMTP id m8so16685520edi.13;
+        Wed, 15 Jan 2020 11:57:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jDNwCuolitAgDOrIDNPnw09f7iD4pjQDMUepa+LBBOA=;
+        b=i3VUDjolXRmMH0mJ+mEpnT5PuZoxPwTz8Q9+Hkp4mfD29H7q/sviiKs8JF1C7RREnb
+         /bLWD20X0IOEVFrc2vbV3sz7G0aaa65HQmTgs985KeNUpB3g0C1WIK+6nQahSdrxx7YP
+         VtOosfgHcpdER1mT+tRIEivbRgribxw/MikXwTrzL3PH7AUV95iHZfD/rJkdpCWn0B7j
+         rqJrk/rJWXJ525PXgShsXWuUQeqUjtrx+yjlGOq911cWVtVPPI4gb5MAmzHiAR+qG5xR
+         nc9aiPRsMed76QHNrKkKZ5pBl57YZTjgr1q/AgmrBPsgW1HGa8Z7AUSEoNyusOKNEUf6
+         J5/w==
+X-Gm-Message-State: APjAAAXm/w53dpnozPV0sxgGK4lOaFg1rziUU77N1IqbFZi3lm6/mvnK
+        iCGCzLqsCA5B+nwhC/Bcb5M=
+X-Google-Smtp-Source: APXvYqywuJ3PR2OFKAoXjeJUN74qmwV/eBqYi90GLh6TA1Yppc7IIV33SnL1hPunPOgNaMuj/qGLCQ==
+X-Received: by 2002:a17:906:b212:: with SMTP id p18mr30068484ejz.208.1579118227369;
+        Wed, 15 Jan 2020 11:57:07 -0800 (PST)
+Received: from kozik-lap ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id u29sm755644edb.22.2020.01.15.11.57.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 11:57:06 -0800 (PST)
+Date:   Wed, 15 Jan 2020 20:57:04 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] i2c: highlander: Use proper printk format for
+ iomem pointer
+Message-ID: <20200115195704.GB8661@kozik-lap>
+References: <1578992765-1418-1-git-send-email-krzk@kernel.org>
+ <1578992765-1418-3-git-send-email-krzk@kernel.org>
+ <20200115174337.GH1239@ninjato>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oTHb8nViIGeoXxdp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200115174337.GH1239@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 15, 2020 at 06:43:37PM +0100, Wolfram Sang wrote:
+> On Tue, Jan 14, 2020 at 10:06:04AM +0100, Krzysztof Kozlowski wrote:
+> > iomem pointers should be printed with pointer format to hide the
+> > actual value and fix warnings when compiling on 64-bit platform (e.g. with
+> > COMPILE_TEST):
+> > 
+> >     drivers/i2c/busses/i2c-highlander.c: In function ‘highlander_i2c_smbus_xfer’:
+> >     drivers/i2c/busses/i2c-highlander.c:325:22: warning:
+> >         format ‘%d’ expects argument of type ‘int’,
+> >         but argument 3 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Wrong commit message. buf_len is size_t and not an iomem pointer.
 
---oTHb8nViIGeoXxdp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll fix it up.
 
-On Tue, Jan 07, 2020 at 06:47:34PM +0100, Wolfram Sang wrote:
-> This patch series converts the I2C subsystem to use the new API. Drivers
-> have been build tested. There is one user left in the SMBus part of the
-> core which will need a seperate series because all users of this
-> function need to be checked/converted, too.
->=20
-> Except for documentation patches, the conversion has been done with a
-> coccinelle script and further simplification have been applied when
-> proofreading the patches.
->=20
-> A branch is here:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/n=
-ew_client_device
->=20
-> Looking forward to comments...
+Best regards,
+Krzysztof
 
-Thanks for all the quick reviews and tests \o/
-
-Series applied to for-next, thanks!
-
-
---oTHb8nViIGeoXxdp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4fbpAACgkQFA3kzBSg
-KbZsuxAAlGN3Qw/NoGCVgmD5F27FU32w32SIt3btqM+Smwb8h/YywvrdIxuaElC4
-U0FVB9Nt21/V6whDPbpRqNwtf3Wld5jgpFt3GinATmO0LBrYZM0qsrAWaf9Mnnaw
-KgDuO5MOsyLhxxgsT7ak2ASe6o+QzDUOxtGJJLgjEUxAcdF7MEVinFLPA1qOgGlu
-qTPNb+z3htcdaoLIVBvUBzS6xIt8HyD2XB71db4C1TqBfdoWI/kRIWn5Fd0Bjiv4
-EmUag6Gy7G0CTw0lzmYne+gSB/U8ugzpNDTWEyns4bxTVUGgyuAdWcPomJ9Duieq
-zA2yUvTbIX/L/smIXiJcXUOwgWiozVsY+oFpDp0lpg7ZaULiuCZbmcdbil6GRfqB
-qVfn8F94w1GRCQ5lNzMTuUbTIo/4w5HFMKQY23lJ8BMI26nVQ4+6YyUoZstLLyMA
-Np0s2EAUUGGO9IdMigfaJrVW7m0ukj1Je4S9a8OAE4eVuV89o1UjNdx0O7kV4BPI
-K0YpHnEvGaEiQB3MonKIE0jUL6WA1eXUUxsgQCBoXyPx9nmz5QzANoenIPmN8PBw
-sf8NAgK8ppLrkWjmbydI2GWMFFhp4gXdGFzvrjLahMNXZsHGLyK/ad9XS6+E54RD
-GynwEX6zU+0Znoa+3I2Po2bbPBRvuHSZqES3obLnS7x/VQ8Xz1w=
-=uUCI
------END PGP SIGNATURE-----
-
---oTHb8nViIGeoXxdp--
