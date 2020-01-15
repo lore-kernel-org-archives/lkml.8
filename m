@@ -2,99 +2,83 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CAFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DAEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EB2222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9A7206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgAOKCx (ORCPT
+        id S1729609AbgAOKHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:02:53 -0500
-Received: from mga12.intel.com ([192.55.52.136]:33446 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729531AbgAOKCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:02:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 02:02:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="305450640"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jan 2020 02:02:50 -0800
-Subject: Re: [PATCH v3] mmc: sdhci: fix minimum clock rate for v3 controller
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <5ce78487-e60a-1ad5-4a12-5d068994416a@intel.com>
-Date:   Wed, 15 Jan 2020 12:01:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 05:07:18 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46674 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729531AbgAOKHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:07:17 -0500
+Received: from [5.158.153.55] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irfZz-0000VM-0i; Wed, 15 Jan 2020 11:07:15 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 64051101225; Wed, 15 Jan 2020 11:07:09 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Doug Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/4] alarmtimer: Make alarmtimer platform device child of RTC device
+In-Reply-To: <CAD=FV=W2xBFxOgdOM2=RJMB56wi24UUYqdR8WE63KKhxRRwsZQ@mail.gmail.com>
+Date:   Wed, 15 Jan 2020 11:07:09 +0100
+Message-ID: <87v9pdxcc2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <ffb489519a446caffe7a0a05c4b9372bd52397bb.1579082031.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/20 11:54 am, Michał Mirosław wrote:
-> For SDHCIv3+ with programmable clock mode, minimal clock frequency is
-> still base clock / max(divider). Minimal programmable clock frequency is
-> always greater than minimal divided clock frequency. Without this patch,
-> SDHCI uses out-of-spec initial frequency when multiplier is big enough:
-> 
-> mmc1: mmc_rescan_try_freq: trying to init card at 468750 Hz
-> [for 480 MHz source clock divided by 1024]
-> 
-> The code in sdhci_calc_clk() already chooses a correct SDCLK clock mode.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: c3ed3877625f ("mmc: sdhci: add support for programmable clock mode")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Doug Anderson <dianders@chromium.org> writes:
+> On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+>> index 4b11f0309eee..ccb6aea4f1d4 100644
+>> --- a/kernel/time/alarmtimer.c
+>> +++ b/kernel/time/alarmtimer.c
+>> @@ -88,6 +88,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+>>         unsigned long flags;
+>>         struct rtc_device *rtc = to_rtc_device(dev);
+>>         struct wakeup_source *__ws;
+>> +       struct platform_device *pdev;
+>>         int ret = 0;
+>>
+>>         if (rtcdev)
+>> @@ -99,6 +100,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+>>                 return -1;
+>>
+>>         __ws = wakeup_source_register(dev, "alarmtimer");
+>> +       pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
+>
+> Don't you need to check for an error here?  If pdev is an error you'll
+> continue on your merry way.  Before your patch if you got an error
+> registering the device it would have caused probe to fail.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Yes, that return value should be checked
 
-> ---
->  v3: commitmsg/comment rewording
->  v2: extend commitmsg and add comment
-> ---
->  drivers/mmc/host/sdhci.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 96609c961465..24fb6d710de6 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3903,11 +3903,13 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	if (host->ops->get_min_clock)
->  		mmc->f_min = host->ops->get_min_clock(host);
->  	else if (host->version >= SDHCI_SPEC_300) {
-> -		if (host->clk_mul) {
-> -			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
-> +		if (host->clk_mul)
->  			max_clk = host->max_clk * host->clk_mul;
-> -		} else
-> -			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
-> +		/*
-> +		 * Divided Clock Mode minimum clock rate is always less than
-> +		 * Programmable Clock Mode minimum clock rate.
-> +		 */
-> +		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
->  	} else
->  		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
->  
-> 
+> I guess you'd only want it to be an error if "rtcdev" is NULL?
 
+If rtcdev is not NULL then this code is not reached. See the begin of
+this function :)
+
+Thanks,
+
+        tglx
