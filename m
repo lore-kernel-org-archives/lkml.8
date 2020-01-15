@@ -2,80 +2,83 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE77EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAEAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9952073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0257E2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgAOImx (ORCPT
+        id S1729195AbgAOInH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:42:53 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:39024 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgAOImu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:42:50 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B4FE61A05BB;
-        Wed, 15 Jan 2020 09:42:48 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A7BD81A0028;
-        Wed, 15 Jan 2020 09:42:48 +0100 (CET)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0757220340;
-        Wed, 15 Jan 2020 09:42:47 +0100 (CET)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
-Date:   Wed, 15 Jan 2020 10:42:23 +0200
-Message-Id: <20200115084225.30464-2-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115084225.30464-1-horia.geanta@nxp.com>
-References: <20200115084225.30464-1-horia.geanta@nxp.com>
+        Wed, 15 Jan 2020 03:43:07 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:56057 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbgAOInG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:43:06 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 71552E0008;
+        Wed, 15 Jan 2020 08:43:00 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 09:43:00 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, nicolas.ferre@microchip.com,
+        ludovic.desroches@microchip.com, vkoul@kernel.org,
+        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
+        mkl@pengutronix.de, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 10/17] dt-bindings: atmel-smc: add
+ microchip,sam9x60-smc
+Message-ID: <20200115084300.GU3137@piout.net>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-11-git-send-email-claudiu.beznea@microchip.com>
+ <20200114095538.GJ3137@piout.net>
+ <20200115080053.GC325@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115080053.GC325@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
- include/dt-bindings/clock/imx8mn-clock.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 15/01/2020 08:00:53+0000, Lee Jones wrote:
+> On Tue, 14 Jan 2020, Alexandre Belloni wrote:
+> 
+> > On 10/01/2020 18:18:02+0200, Claudiu Beznea wrote:
+> > > Add microchip,sam9x60-smc to DT bindings documentation.
+> > > 
+> > > Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > Applied, thanks.
+> 
+> Remind me why you are applying this patch please?
+> 
 
-diff --git a/include/dt-bindings/clock/imx8mn-clock.h b/include/dt-bindings/clock/imx8mn-clock.h
-index 0f2b8423ce1d..43883fe65db5 100644
---- a/include/dt-bindings/clock/imx8mn-clock.h
-+++ b/include/dt-bindings/clock/imx8mn-clock.h
-@@ -228,6 +228,8 @@
- #define IMX8MN_SYS_PLL2_333M_CG			209
- #define IMX8MN_SYS_PLL2_500M_CG			210
- 
--#define IMX8MN_CLK_END				211
-+#define IMX8MN_CLK_SNVS_ROOT			211
-+
-+#define IMX8MN_CLK_END				212
- 
- #endif
+Because the last patch of the series has a soft dependency on this
+patch. I can remove it from the at91 and let you apply it if you think
+this is necessary.
+
+
 -- 
-2.17.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
