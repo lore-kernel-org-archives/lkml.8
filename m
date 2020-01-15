@@ -2,107 +2,106 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549D9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4164C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D22222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71EA2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQ7Ovka4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgAOPLg convert rfc822-to-8bit (ORCPT
+        id S1729147AbgAOPMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:11:36 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50333 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbgAOPLg (ORCPT
+        Wed, 15 Jan 2020 10:12:34 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58935 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728901AbgAOPMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:11:36 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-52-G_3Dq-AqP0mznXXKffIX3Q-1; Wed, 15 Jan 2020 15:11:33 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 Jan 2020 15:11:32 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 Jan 2020 15:11:32 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     'Vincent Guittot' <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Topic: sched/fair: scheduler not running high priority process on idle
- cpu
-Thread-Index: AdXK8cUFXa7JpPXmQNq7oQ32S9fYHAACik4AAADJLkAAAO3PAAAmXEggAAKDBAAAAvfesA==
-Date:   Wed, 15 Jan 2020 15:11:32 +0000
-Message-ID: <9f98b2dd807941a3b85d217815a4d9aa@AcuMS.aculab.com>
-References: <212fabd759b0486aa8df588477acf6d0@AcuMS.aculab.com>
-        <20200114115906.22f952ff@gandalf.local.home>
-        <5ba2ae2d426c4058b314c20c25a9b1d0@AcuMS.aculab.com>
-        <20200114124812.4d5355ae@gandalf.local.home>
-        <878a35a6642d482aa0770a055506bd5e@AcuMS.aculab.com>
- <20200115081830.036ade4e@gandalf.local.home>
-In-Reply-To: <20200115081830.036ade4e@gandalf.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 15 Jan 2020 10:12:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579101152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QY8+0O7c2VwRb5cv2HAAJnI3AuJd5YIMsYZK7EcA7eM=;
+        b=gQ7Ovka41D1ndqnlJNXMWFZW0O5gqgk6JVeuoPHa9CpXPHtZokbn4w9LOSm0zjODhpELR8
+        VyhAn6CyuDsUV/LYJEpD62fm6uIkLjSKqYYkwNgIFV4SAq6B8xY9b/237h8o6BiaxW0hiY
+        VZK6xtcOBQi3Hw2vbjlkP2agITzYIis=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-fEpNw1loObWxgDUPpaV5nQ-1; Wed, 15 Jan 2020 10:12:29 -0500
+X-MC-Unique: fEpNw1loObWxgDUPpaV5nQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 041D410052E2;
+        Wed, 15 Jan 2020 15:12:28 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB0EA84322;
+        Wed, 15 Jan 2020 15:12:24 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 08:12:24 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Liu Yi L <yi.l.liu@intel.com>, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
+        baolu.lu@linux.intel.com
+Subject: Re: [PATCH v4 05/12] vfio_pci: duplicate vfio_pci.c
+Message-ID: <20200115081224.215a994c@w520.home>
+In-Reply-To: <20200115120300.24874a37.cohuck@redhat.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
+        <20200115120300.24874a37.cohuck@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: G_3Dq-AqP0mznXXKffIX3Q-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 15 January 2020 13:19
-> On Wed, 15 Jan 2020 12:44:19 +0000
-> David Laight <David.Laight@ACULAB.COM> wrote:
+On Wed, 15 Jan 2020 12:03:00 +0100
+Cornelia Huck <cohuck@redhat.com> wrote:
+
+> On Tue,  7 Jan 2020 20:01:42 +0800
+> Liu Yi L <yi.l.liu@intel.com> wrote:
 > 
-> > > Yes, even with CONFIG_PREEMPT, Linux has no guarantees of latency for
-> > > any task regardless of priority. If you have latency requirements, then
-> > > you need to apply the PREEMPT_RT patch (which may soon make it to
-> > > mainline this year!), which spin locks and bh wont stop a task from
-> > > scheduling (unless they need the same lock)
+> > This patch has no code change, just a file copy. In following patches,
+> > vfio_pci_common.c will be modified to only include the common functions
+> > and related static functions in original vfio_pci.c. Meanwhile, vfio_pci.c
+> > will be modified to only include vfio-pci module specific codes.
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_common.c | 1708 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 1708 insertions(+)
+> >  create mode 100644 drivers/vfio/pci/vfio_pci_common.c  
 > 
-> Every time you add something to allow higher priority processes to run
-> with less latency you add overhead. By just adding that spinlock check
-> or to migrate a process to a idle cpu will add a measurable overhead,
-> and as you state, distros won't like that.
-> 
-> It's a constant game of give and take.
+> This whole procedure of "let's copy the file and rip out unneeded stuff
+> later" looks very ugly to me, especially if I'd come across it in the
+> future, e.g. during a bisect. This patch only adds a file that is not
+> compiled, and later changes will be "rip out unwanted stuff from
+> vfio_pci_common.c" instead of the more positive "move common stuff to
+> vfio_pci_common.c". I think refactoring/moving interfaces/code that it
+> makes sense to share makes this more reviewable, both now and in the
+> future.
 
-I know exactly how much effect innocuous changes can have...
+I think this comes largely at my request from previous reviews.  It's
+very easy to apply this patch and diff the files to see that nothing
+has changed, then review the subsequent patch to see that code is only
+added or removed to check that there are no actual code changes.  If we
+just selectively move code then I think it's left to our inspection to
+verify nothing has changed.  Maybe this is a dummy step in a bisect,
+but I don't see that you lose any granularity.  Thanks,
 
-Sorting out process migration on a 1024 cpu NUMA system must be a PITA.
-
-For this case an idle cpu doing a unlocked check for a processes that has
-been waiting 'ages' to preempt the running process may not be too
-expensive.
-I presume the locks are in place for the migrate itself.
-The only downside is that the process's data is likely to be in the wrong cache,
-but unless the original cpu becomes available just after the migrate it is
-probably still a win.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Alex
 
