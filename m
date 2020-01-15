@@ -2,193 +2,235 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BD6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FB8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCED2467D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724D92081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="KePd9Zfq"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="G3gFc2OK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgAOVyN (ORCPT
+        id S1730393AbgAOVyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:54:13 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:35965 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728897AbgAOVyM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:54:12 -0500
-Received: by mail-qt1-f171.google.com with SMTP id i13so17185960qtr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:54:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=JtTvNccN+0/+lCGUOatY00GbzmTZrZ9tQej/2dZXgxw=;
-        b=KePd9ZfqDfmOkXqFFTc3Q9LwzsdRxP/xYXtHcwOYE2P45KBCjSc7c09L/RvSjEB3lY
-         QMzCYCg4J138ouYNcOygau/65JCD6GLK9yg6ZujG+wHqgyj6xyoPj6PIg6EXpnaufwh7
-         Z510eSm16ZQQlyVQUQ6H4u455OeTZzrZoL2cHWu/2KDD55t3Dg3KPfSsFqOK1sG2ro6C
-         wpw0NoTRojtNoZ1Mm/O6vJrSogBMAqYbLVyoBo6in2wt4xTkU/Q6oi+gH+1liu+6xGtu
-         DNYenwCawyAjhSHWPmBnnZtQIznYZmw6UFDfQNPmBQgDGs4Z4KR8S2bmvh8uklxplGW+
-         9kVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=JtTvNccN+0/+lCGUOatY00GbzmTZrZ9tQej/2dZXgxw=;
-        b=Cf+IewQYSaTwmPc/EDbIC9wxtAn7qJLR+ctMfLbbL5rrzeJMdBx4XTjXS7ADRp9Qgc
-         dhkUhlN8MAEwGxPc6JbFTaq6X2p7OngHHIbFvqCAzM8wUr2lZupIDN/euWXaZuViw1nG
-         Nxran7lZnYR9g9Bnfe7Dlsjr3oG4SKgY0TZLQJzIFB3VzwHQrCu4p3mY2DkP7Y6pRFvT
-         2hBgHJ8QSNsLNUNKw0X2Zs+MPzMV9DPf+i5iZcOCqxu0d3Tbdjx+iaUoMBuHAUsUN9+6
-         Fboo8oSsgGzFK9I33TKGiyneC0qo2Yp8s6HpXy9pdOJEwTLUseQDzs7qKX6MLDr/yrFN
-         LjFg==
-X-Gm-Message-State: APjAAAXMx+b2WjpdHpLckKlVyDRjodNB2TVie2C/MN8IcPG27s/vmNQT
-        pyKEHwzrwoQCyXzz9BWqVQmWEADF9ruCQg==
-X-Google-Smtp-Source: APXvYqxcRE3B5iQiFW7B0tOZ3c36MzfvnKAl5xIFQTt35nmhPCQoqb66aA5/hose3wVQiuv4Glt7kQ==
-X-Received: by 2002:aed:2150:: with SMTP id 74mr707121qtc.323.1579125251168;
-        Wed, 15 Jan 2020 13:54:11 -0800 (PST)
-Received: from localhost ([107.15.81.208])
-        by smtp.gmail.com with ESMTPSA id g21sm9058033qkl.116.2020.01.15.13.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 13:54:10 -0800 (PST)
-Date:   Wed, 15 Jan 2020 16:54:09 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     lsf-pc <lsf-pc@lists.linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-nvme@lists.infradead.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: REMINDER: LSF/MM/BPF: 2020: Call for Proposals
-Message-ID: <20200115215409.5pd4fnoawqzs7rvw@jbacik-mbp>
+        Wed, 15 Jan 2020 16:54:46 -0500
+Received: from mail-dm6nam10on2128.outbound.protection.outlook.com ([40.107.93.128]:58784
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729022AbgAOVyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:54:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CfkSRvuHLWXaOVom0xklkB6OdFhDz6yb3hPQpEes5YDO6TCUrUYatJEUclJcAEBNUeK2PeaW5NE41dFeEiHsYI6SftDJV9Bh7mX4vK8nqklX+G8+ddFg9rJ8vmFwLCqeOAr14XqdIY7warzsL3iV/Ndom2TNEuf5NnoSqyNi85SEtSmWLsMeTDB3GYAFVnElC8QY4z7KaDjBTOHIBkwtQ1fNVbwIEQt4ZSRE0nSO+cpMb3ojJqm2XVsFg6Vq/QYXIevMQ+cs9sJQejH1nFRkRzPX0BNQhKhw6N/9FF7KGZ072TuWwKHELJFI/FetLvLR8uKUN/k43PLTBSwM2nF4vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8udPcLBXiunmK6SOppCXzlbEzP0DZmdKkhxSfNW0CDU=;
+ b=H93AA+ROTB1w15NpupfZgQIqyZ/FS4aQXnWFmLI6888+3qQvRn1iJlSmXkAeaKgBVk2S+qulnATpogW+yZEoZ7nP19H1cAgiaFDH9TscoQj/tmBL+3Hco1yUG3L7wm6mwmvBv4ZcCsDUfNf5gbnsl8FbA0ILMsZHR5plkGRL4+KfF+7QpVH5/Jb19NPUmiYPKsZUO2Pqn4+wRxuQwjt9AxfeLzN6OulrSnHA/u7CaqTJygr+pqbaZFRd/PxXhJRCcAYGTGtecNR70aboXE0YGis4AQ/55jRl1EYDaJPtXIdI97AY33wM2pn8D6rJ24QiGtmKvDmwMHZgtS8FnNghmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=wavecomp.com;
+ dkim=pass header.d=wavecomp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8udPcLBXiunmK6SOppCXzlbEzP0DZmdKkhxSfNW0CDU=;
+ b=G3gFc2OKx2YY9EQQbzwXQBNswNSmK8+sZotlZqp52HFAcwcEnCi31wRw4z9gxIB2g4UOyEUUNdZqasOw00OMHw6+5BwuoXyAtsC5WtCMIbC99fA1tmGDpqzgaSEyRzGxQS830cIY+yl3GuE9o9dqKP0p5Wn8xKt31QLZr0L2Afs=
+Received: from CY4PR2201MB1719.namprd22.prod.outlook.com (10.171.253.148) by
+ CY4PR2201MB1366.namprd22.prod.outlook.com (10.171.217.144) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Wed, 15 Jan 2020 21:54:43 +0000
+Received: from CY4PR2201MB1719.namprd22.prod.outlook.com
+ ([fe80::b995:dc3f:42c6:c87b]) by CY4PR2201MB1719.namprd22.prod.outlook.com
+ ([fe80::b995:dc3f:42c6:c87b%3]) with mapi id 15.20.2623.017; Wed, 15 Jan 2020
+ 21:54:42 +0000
+Received: from box.mipstec.com (4.15.122.74) by BY5PR20CA0027.namprd20.prod.outlook.com (2603:10b6:a03:1f4::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11 via Frontend Transport; Wed, 15 Jan 2020 21:54:42 +0000
+From:   Dengcheng Zhu <dzhu@wavecomp.com>
+To:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "paulburton@kernel.org" <paulburton@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        Dengcheng Zhu <dzhu@wavecomp.com>
+Subject: [PATCH v2] MIPS: perf: Initial annotation support
+Thread-Topic: [PATCH v2] MIPS: perf: Initial annotation support
+Thread-Index: AQHVy+5kn0rAmE0BZUyn6DEHkZ6YDA==
+Date:   Wed, 15 Jan 2020 21:54:42 +0000
+Message-ID: <20200115215433.12793-1-dzhu@wavecomp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BY5PR20CA0027.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::40) To CY4PR2201MB1719.namprd22.prod.outlook.com
+ (2603:10b6:910:77::20)
+x-originating-ip: [4.15.122.74]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=dzhu@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 530e49f2-9b6a-4c10-905f-08d79a0586fc
+x-ms-traffictypediagnostic: CY4PR2201MB1366:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR2201MB13668D3FF9F007425B4C721CA2370@CY4PR2201MB1366.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:813;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(366004)(376002)(346002)(136003)(199004)(189003)(6486002)(66946007)(36756003)(316002)(6512007)(5660300002)(2906002)(7416002)(54906003)(110136005)(2616005)(52116002)(956004)(6506007)(1076003)(26005)(16526019)(186003)(508600001)(71200400001)(66476007)(81156014)(8676002)(81166006)(8936002)(86362001)(4326008)(66556008)(107886003)(64756008)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1366;H:CY4PR2201MB1719.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zuUGeZB78gHmyAXYQItaPvvH7sJtjy7wfkByQWKEwkcEKQ8GZNcgV96fAox6aS41Ep8VvgP9Z4biNeHr2UmU0ninij/UZynuLRxh9+kN477vO6jA9qEFEJOJbblJYhti3BglygpFS2FHRY5J4xWVKDQ1jt3lt2gqmjrxphuLyhZ5sC5iq420VpHbYeiDiz7JxSXaU4vFa1EfzLc4YegCUdaiSdodUZaLZo+fN9MLwcEVIYwsJHgB9iqMjjMu84CuntEfVbnQZCjuFgQ9AA5V0OZBWV/L11Lfz8pemR4ybUdCmOVTO5qxH1Un2rLMdYd+C9cWCUILOvSVrlC2BEgxbfg5SP9AjCzBkBi3NNQFRlCvdAhS1xTRUIF9cWledhGUEkpfvlr6+fZtPdZa1v9tHEm+L2siDy0ubd2AZrvOEEbIizUxqqyylwbX2gxxOiuX
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wavecomp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 530e49f2-9b6a-4c10-905f-08d79a0586fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 21:54:42.7856
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c2VV5/0X7I3zo6o3UXtGQx/xF0943cbvLiWKaxIfwOPgBxMAuxrUQUcFzvcP2oUOqMicPsqbfX5d1YvY/8Xt/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1366
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a reminder that we are still taking requests for this years Linux
-Storage, Filesystem, Memory Management, and BPF Summit.  Below is the original
-announcement but we would like to hilight a few changes and re-iterate a few
-things.
+Add support for perf annotate on MIPS.
 
-1) The venue has been finalized and as such the website is now live
+Example of `ls /bin` annotation:
 
-	https://events.linuxfoundation.org/lsfmm/
+ Percent |      Source code & Disassembly of libc-2.24.so for cycles (46 sa=
+mples, percent: local period)
+---------------------------------------------------------------------------=
+-----------------------------
+         :
+         :
+         :
+         :           Disassembly of section .text:
+         :
+         :           00000000000a53a0 <strlen@@GLIBC_2.0>:
+    4.22 :   a53a0:  andi    v0,a0,0x7
+    0.00 :   a53a4:  beqzc   v0,a54c4 <strlen@@GLIBC_2.0+0x124>
+    0.00 :   a53a8:  lb      v0,0(a0)
+    0.00 :   a53ac:  beqzc   v0,a54cc <strlen@@GLIBC_2.0+0x12c>
+    0.00 :   a53b0:  move    v0,a0
+    0.00 :   a53b4:  bc      a53c0 <strlen@@GLIBC_2.0+0x20>
+    2.16 :   a53b8:  lb      v1,0(v0)
+    9.07 :   a53bc:  beqzc   v1,a5468 <strlen@@GLIBC_2.0+0xc8>
+    0.00 :   a53c0:  daddiu  v0,v0,1
+...
 
-2) Please make sure to fill out the google form to make sure we don't miss your
-request.
+Reviewed-by: Paul Burton <paulburton@kernel.org>
+Signed-off-by: Dengcheng Zhu <dzhu@wavecomp.com>
+---
+Changes:
 
-3) PLEASE STILL SUBMIT TOPICS TO THE RELEVANT MAILINGLISTS.  The topics of
-interest part of the form is so we can figure out what topics from the
-mailinglist are the relevant discussions to have.  If you submit a topic please
-feel free to paste a lore link in your form if you've not already filled out the
-form.
+v2 - v1:
+ * Adding compact version and branch-likely version instructions.
+ * Adding jalx and jr.hb instructions.
 
-The rest of the details of course are in the original announcment which is
-included below.  Thanks,
+ tools/perf/arch/mips/Build                   |  2 +-
+ tools/perf/arch/mips/annotate/instructions.c | 41 ++++++++++++++++++++
+ tools/perf/util/annotate.c                   |  8 ++++
+ 3 files changed, 50 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/mips/annotate/instructions.c
 
-Josef
+diff --git a/tools/perf/arch/mips/Build b/tools/perf/arch/mips/Build
+index 1bb8bf6d7fd4..e4e5f33c84d8 100644
+--- a/tools/perf/arch/mips/Build
++++ b/tools/perf/arch/mips/Build
+@@ -1 +1 @@
+-# empty
++perf-y +=3D util/
+diff --git a/tools/perf/arch/mips/annotate/instructions.c b/tools/perf/arch=
+/mips/annotate/instructions.c
+new file mode 100644
+index 000000000000..c479b458dc10
+--- /dev/null
++++ b/tools/perf/arch/mips/annotate/instructions.c
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier: GPL-2.0
++
++static struct ins_ops *mips__associate_instruction_ops(struct arch *arch, =
+const char *name)
++{
++	struct ins_ops *ops;
++
++	/*
++	 * Including compact version (beqzalc) and branch-likely
++	 * (e.g. bgezall) versions
++	 */
++	if (!strncmp(name, "bal", 3) ||
++	    !strncmp(name, "bgezal", 6) ||
++	    !strncmp(name, "bltzal", 6) ||
++	    !strncmp(name, "bgtzal", 6) ||
++	    !strncmp(name, "blezal", 6) ||
++	    !strncmp(name, "beqzal", 6) ||
++	    !strncmp(name, "bnezal", 6) ||
++	    !strncmp(name, "jal", 3) || /* jal[rx]? */
++	    !strcmp(name, "jialc"))
++		ops =3D &call_ops;
++	else if (!strncmp(name, "jr", 2)) /* jr(\.hb)? */
++		ops =3D &ret_ops;
++	else if (name[0] =3D=3D 'j' || name[0] =3D=3D 'b')
++		ops =3D &jump_ops;
++	else
++		return NULL;
++
++	arch__associate_ins_ops(arch, name, ops);
++
++	return ops;
++}
++
++static int mips__annotate_init(struct arch *arch, char *cpuid __maybe_unus=
+ed)
++{
++	if (!arch->initialized) {
++		arch->associate_instruction_ops =3D mips__associate_instruction_ops;
++		arch->initialized =3D true;
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index f5e77ed237e8..aeae04a3ff0d 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -153,6 +153,7 @@ static int arch__associate_ins_ops(struct arch* arch, c=
+onst char *name, struct i
+ #include "arch/arm/annotate/instructions.c"
+ #include "arch/arm64/annotate/instructions.c"
+ #include "arch/csky/annotate/instructions.c"
++#include "arch/mips/annotate/instructions.c"
+ #include "arch/x86/annotate/instructions.c"
+ #include "arch/powerpc/annotate/instructions.c"
+ #include "arch/s390/annotate/instructions.c"
+@@ -175,6 +176,13 @@ static struct arch architectures[] =3D {
+ 		.name =3D "csky",
+ 		.init =3D csky__annotate_init,
+ 	},
++	{
++		.name =3D "mips",
++		.init =3D mips__annotate_init,
++		.objdump =3D {
++			.comment_char =3D '#',
++		},
++	},
+ 	{
+ 		.name =3D "x86",
+ 		.init =3D x86__annotate_init,
+--=20
+2.17.1
 
--------------- Original announcement ---------------------
-The annual Linux Storage, Filesystem, Memory Management, and BPF
-(LSF/MM/BPF) Summit for 2020 will be held from April 27 - April 29 at
-The Riviera Palm Springs, A Tribute Portfolio Resort in Palm Springs,
-California. LSF/MM/BPF is an invitation-only technical workshop to map
-out improvements to the Linux storage, filesystem, BPF, and memory
-management subsystems that will make their way into the mainline kernel
-within the coming years.
-
-LSF/MM/BPF 2020 will be a three day, stand-alone conference with four
-subsystem-specific tracks, cross-track discussions, as well as BoF and
-hacking sessions.
-
-On behalf of the committee I am issuing a call for agenda proposals
-that are suitable for cross-track discussion as well as technical
-subjects for the breakout sessions.
-
-If advance notice is required for visa applications then please point
-that out in your proposal or request to attend, and submit the topic
-as soon as possible.
-
-This year will be a little different for requesting attendance.  Please
-do the following by February 15th, 2020.
-
-1) Fill out the following Google form to request attendance and
-suggest any topics
-
-	https://forms.gle/voWi1j9kDs13Lyqf9
-
-In previous years we have accidentally missed people's attendance
-requests because they either didn't cc lsf-pc@ or we simply missed them
-in the flurry of emails we get.  Our community is large and our
-volunteers are busy, filling this out will help us make sure we don't
-miss anybody.
-
-2) Proposals for agenda topics should still be sent to the following
-lists to allow for discussion among your peers.  This will help us
-figure out which topics are important for the agenda.
-
-        lsf-pc@lists.linux-foundation.org
-
-and CC the mailing lists that are relevant for the topic in question:
-
-        FS:     linux-fsdevel@vger.kernel.org
-        MM:     linux-mm@kvack.org
-        Block:  linux-block@vger.kernel.org
-        ATA:    linux-ide@vger.kernel.org
-        SCSI:   linux-scsi@vger.kernel.org
-        NVMe:   linux-nvme@lists.infradead.org
-        BPF:    bpf@vger.kernel.org
-
-Please tag your proposal with [LSF/MM/BPF TOPIC] to make it easier to
-track. In addition, please make sure to start a new thread for each
-topic rather than following up to an existing one. Agenda topics and
-attendees will be selected by the program committee, but the final
-agenda will be formed by consensus of the attendees on the day.
-
-We will try to cap attendance at around 25-30 per track to facilitate
-discussions although the final numbers will depend on the room sizes
-at the venue.
-
-For discussion leaders, slides and visualizations are encouraged to
-outline the subject matter and focus the discussions. Please refrain
-from lengthy presentations and talks; the sessions are supposed to be
-interactive, inclusive discussions.
-
-There will be no recording or audio bridge. However, we expect that
-written minutes will be published as we did in previous years:
-
-2019: https://lwn.net/Articles/lsfmm2019/
-
-2018: https://lwn.net/Articles/lsfmm2018/
-
-2017: https://lwn.net/Articles/lsfmm2017/
-
-2016: https://lwn.net/Articles/lsfmm2016/
-
-2015: https://lwn.net/Articles/lsfmm2015/
-
-2014: http://lwn.net/Articles/LSFMM2014/
-
-3) If you have feedback on last year's meeting that we can use to
-improve this year's, please also send that to:
-
-        lsf-pc@lists.linux-foundation.org
-
-Thank you on behalf of the program committee:
-
-	Josef Bacik (Filesystems)
-	Amir Goldstein (Filesystems)
-	Martin K. Petersen (Storage)
-	Omar Sandoval (Storage)
-	Michal Hocko (MM)
-	Dan Williams (MM)
-	Alexei Starovoitov (BPF)
-	Daniel Borkmann (BPF)
