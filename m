@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B118C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303BFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D061B207E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE15207E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgAOMWU (ORCPT
+        id S1730621AbgAOMWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:22:20 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47399 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbgAOMWT (ORCPT
+        Wed, 15 Jan 2020 07:22:24 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:37373 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730351AbgAOMWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:22:19 -0500
+        Wed, 15 Jan 2020 07:22:24 -0500
 X-Originating-IP: 88.190.179.123
 Received: from localhost (unknown [88.190.179.123])
         (Authenticated sender: repk@triplefau.lt)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 5A2A3C000E;
-        Wed, 15 Jan 2020 12:22:16 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0D1EB24000E;
+        Wed, 15 Jan 2020 12:22:20 +0000 (UTC)
 From:   Remi Pommarel <repk@triplefau.lt>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Yue Wang <yue.wang@Amlogic.com>,
@@ -37,9 +37,9 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v4 2/7] dt-bindings: Add AXG shared MIPI/PCIE PHY bindings
-Date:   Wed, 15 Jan 2020 13:29:03 +0100
-Message-Id: <20200115122908.16954-3-repk@triplefau.lt>
+Subject: [PATCH v4 3/7] dt-bindings: PCI: meson: Update PCIE bindings documentation
+Date:   Wed, 15 Jan 2020 13:29:04 +0100
+Message-Id: <20200115122908.16954-4-repk@triplefau.lt>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200115122908.16954-1-repk@triplefau.lt>
 References: <20200115122908.16954-1-repk@triplefau.lt>
@@ -50,54 +50,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for the shared MIPI/PCIE PHYs found in AXG SoCs.
+Now that a new PHYs has been introduced for AXG SoC family, update
+dt bindings documentation.
+
+Please note that this breaks backward compatibility but as not a single
+devicetree uses that yet that seems ok.
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- .../phy/amlogic,meson-axg-mipi-pcie.yaml      | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
+ .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
-new file mode 100644
-index 000000000000..3184146318cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie.yaml
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 BayLibre, SAS
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-mipi-pcie.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+index 84fdc422792e..b6acbe694ffb 100644
+--- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+@@ -18,7 +18,6 @@ Required properties:
+ - reg-names: Must be
+ 	- "elbi"	External local bus interface registers
+ 	- "cfg"		Meson specific registers
+-	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+ 	- "config"	PCIe configuration space
+ - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+ - clocks: Must contain an entry for each entry in clock-names.
+@@ -26,13 +25,13 @@ Required properties:
+ 	- "pclk"       PCIe GEN 100M PLL clock
+ 	- "port"       PCIe_x(A or B) RC clock gate
+ 	- "general"    PCIe Phy clock
+-	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+ - resets: phandle to the reset lines.
+-- reset-names: must contain "phy" "port" and "apb"
+-       - "phy"         Share PHY reset for AXG SoC Family
++- reset-names: must contain "port" and "apb"
+        - "port"        Port A or B reset
+        - "apb"         Share APB reset
+-- phys: should contain a phandle to the shared phy for G12A SoC Family
++- phys: should contain a phandle to the PCIE phy
++- phy-names: must contain "pcie"
 +
-+title: Amlogic AXG shared MIPI/PCIE PHY
-+
-+maintainers:
-+  - Remi Pommarel <repk@triplefau.lt>
-+
-+properties:
-+  compatible:
-+    const: amlogic,axg-mipi-pcie-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+
-+examples:
-+  - |
-+    mpphy: phy@0 {
-+          compatible = "amlogic,axg-mipi-pcie-phy";
-+          reg = <0x0 0x0 0x0 0xc>;
-+          #phy-cells = <1>;
-+    };
+ - device_type:
+ 	should be "pci". As specified in designware-pcie.txt
+ 
+@@ -43,9 +42,8 @@ Example configuration:
+ 			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+ 			reg = <0x0 0xf9800000 0x0 0x400000
+ 					0x0 0xff646000 0x0 0x2000
+-					0x0 0xff644000 0x0 0x2000
+ 					0x0 0xf9f00000 0x0 0x100000>;
+-			reg-names = "elbi", "cfg", "phy", "config";
++			reg-names = "elbi", "cfg", "config";
+ 			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
+ 			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
+ 			#interrupt-cells = <1>;
+@@ -58,17 +56,15 @@ Example configuration:
+ 			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
+ 
+ 			clocks = <&clkc CLKID_USB
+-					&clkc CLKID_MIPI_ENABLE
+ 					&clkc CLKID_PCIE_A
+ 					&clkc CLKID_PCIE_CML_EN0>;
+ 			clock-names = "general",
+-					"mipi",
+ 					"pclk",
+ 					"port";
+-			resets = <&reset RESET_PCIE_PHY>,
+-				<&reset RESET_PCIE_A>,
++			resets = <&reset RESET_PCIE_A>,
+ 				<&reset RESET_PCIE_APB>;
+-			reset-names = "phy",
+-					"port",
++			reset-names = "port",
+ 					"apb";
++			phys = <&pcie_phy>;
++			phy-names = "pcie";
+ 	};
 -- 
 2.24.1
 
