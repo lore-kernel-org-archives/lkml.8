@@ -2,116 +2,155 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF4FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D21FC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC922081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB29E2081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cBfN8j6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbgAOW50 (ORCPT
+        id S1730978AbgAOW71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:57:26 -0500
-Received: from mga03.intel.com ([134.134.136.65]:17719 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbgAOW5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:57:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 14:57:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="255241149"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2020 14:57:24 -0800
-Date:   Wed, 15 Jan 2020 14:57:24 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v11] x86/split_lock: Enable split lock detection by kernel
-Message-ID: <20200115225724.GA18268@linux.intel.com>
-References: <20191121171214.GD12042@gmail.com>
- <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
- <20191122105141.GY4114@hirez.programming.kicks-ass.net>
- <20191122152715.GA1909@hirez.programming.kicks-ass.net>
- <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
- <20191125161348.GA12178@linux.intel.com>
- <20191212085948.GS2827@hirez.programming.kicks-ass.net>
- <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
- <20200114055521.GI14928@linux.intel.com>
- <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 15 Jan 2020 17:59:27 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:60368 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729083AbgAOW70 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:59:26 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FMwaLk144134;
+        Wed, 15 Jan 2020 22:59:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=erIdwvqHP5opuqomRifTvRAQFoHWWnD94iMZxHl4l4M=;
+ b=cBfN8j6PP9zT7fC44njLC+iLGExFQy5xA7DTrGCNihsN361v0pKPC37cglrQcjIqG8ik
+ waKd1T8QKvk8NVMi88QSRHeWahBWY5lbDurQgGqGczG3RcCOIhqKZY/SYHHnwS8mABDJ
+ OkFmIPGgMWhbNeqpkTGCgopmqQkVyIXLy5eJ3sqDR6/Pj7Nd16gON1PMEWxsLv1XtDrR
+ caVAMwdZZd5ZCqWxsSVRZO0uXpvniLYZIW4OV0Cams7BlNietHv8hbf9KdvtEf2csvlt
+ TL4kwUOhCan9rq1kVTYgsSD8gKBUf81lbRJtP2ps5MvMIp9Yk0w3u6NH6EqKJKLk+bNu HQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xf74sf7te-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 22:59:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FMwvfv127336;
+        Wed, 15 Jan 2020 22:59:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2xj1arjcvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 22:59:20 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FMxJms019906;
+        Wed, 15 Jan 2020 22:59:19 GMT
+Received: from [192.168.14.112] (/109.66.225.253)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 14:59:19 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH RFC 3/3] x86/kvm/hyper-v: don't allow to turn on
+ unsupported VMX controls for nested guests
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20200115171014.56405-4-vkuznets@redhat.com>
+Date:   Thu, 16 Jan 2020 00:59:15 +0200
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Roman Kagan <rkagan@virtuozzo.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CF37ED31-4ED0-45C2-A309-3E1E2C2E54F8@oracle.com>
+References: <20200115171014.56405-1-vkuznets@redhat.com>
+ <20200115171014.56405-4-vkuznets@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:27:54PM -0800, Luck, Tony wrote:
-> On Mon, Jan 13, 2020 at 09:55:21PM -0800, Sean Christopherson wrote:
-> > On Fri, Jan 10, 2020 at 11:24:09AM -0800, Luck, Tony wrote:
-> 
-> All comments accepted and code changed ... except for these three:
 
-Sounds like you're also writing code, in which case you should give
-yourself credit with your own Co-developed-by: tag.
 
-> > > +#define TIF_SLD			18	/* split_lock_detect */
-> > 
-> > A more informative name comment would be helpful since the flag is set when
-> > SLD is disabled by the previous task.  Something like? 
-> > 
-> > #define TIF_NEED_SLD_RESTORE	18	/* Restore split lock detection on context switch */
-> 
-> That name is more informative ... but it is also really, really long. Are
-> you sure?
+> On 15 Jan 2020, at 19:10, Vitaly Kuznetsov <vkuznets@redhat.com> =
+wrote:
+>=20
+> Sane L1 hypervisors are not supposed to turn any of the unsupported =
+VMX
+> controls on for its guests and nested_vmx_check_controls() checks for
+> that. This is, however, not the case for the controls which are =
+supported
+> on the host but are missing in enlightened VMCS and when eVMCS is in =
+use.
+>=20
+> It would certainly be possible to add these missing checks to
+> nested_check_vm_execution_controls()/_vm_exit_controls()/.. but it =
+seems
+> preferable to keep eVMCS-specific stuff in eVMCS and reduce the impact =
+on
+> non-eVMCS guests by doing less unrelated checks. Create a separate
+> nested_evmcs_check_controls() for this purpose.
+>=20
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+> arch/x86/kvm/vmx/evmcs.c  | 56 ++++++++++++++++++++++++++++++++++++++-
+> arch/x86/kvm/vmx/evmcs.h  |  1 +
+> arch/x86/kvm/vmx/nested.c |  3 +++
+> 3 files changed, 59 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+> index b5d6582ba589..88f462866396 100644
+> --- a/arch/x86/kvm/vmx/evmcs.c
+> +++ b/arch/x86/kvm/vmx/evmcs.c
+> @@ -4,9 +4,11 @@
+> #include <linux/smp.h>
+>=20
+> #include "../hyperv.h"
+> -#include "evmcs.h"
+> #include "vmcs.h"
+> +#include "vmcs12.h"
+> +#include "evmcs.h"
+> #include "vmx.h"
+> +#include "trace.h"
+>=20
+> DEFINE_STATIC_KEY_FALSE(enable_evmcs);
+>=20
+> @@ -378,6 +380,58 @@ void nested_evmcs_filter_control_msr(u32 =
+msr_index, u64 *pdata)
+> 	*pdata =3D ctl_low | ((u64)ctl_high << 32);
+> }
+>=20
+> +int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
+> +{
+> +	int ret =3D 0;
+> +	u32 unsupp_ctl;
+> +
+> +	unsupp_ctl =3D vmcs12->pin_based_vm_exec_control &
+> +		EVMCS1_UNSUPPORTED_PINCTRL;
+> +	if (unsupp_ctl) {
+> +		trace_kvm_nested_vmenter_failed(
+> +			"eVMCS: unsupported pin-based VM-execution =
+controls",
+> +			unsupp_ctl);
 
-Not at all.  I picked a semi-arbitrary name that was similar to existing
-TIF names, I'll defer to anyone with an opinion.
+Why not move "CC=E2=80=9D macro from nested.c to nested.h and use it =
+here as-well instead of replicating it=E2=80=99s logic?
 
-> > > +bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-> > > +{
-> > > +	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> > > +		return false;
-> > 
-> > Maybe add "|| WARN_ON_ONCE(sld_state != sld_off)" to try to prevent the
-> > kernel from going fully into the weeds if a spurious #AC occurs.
-> 
-> Can a spurious #AC occur? I don't see how.
+-Liran
 
-It's mostly paranoia, e.g. if sld_state==sld_off but the MSR bit was
-misconfigured.  No objection if you want to omit the check.
-
-> > > @@ -242,7 +243,6 @@ do_trap(int trapnr, int signr, char *str, struct pt_regs *regs,
-> > >  {
-> > >  	struct task_struct *tsk = current;
-> > >  
-> > > -
-> > 
-> > Whitespace.
-> > 
-> > >  	if (!do_trap_no_signal(tsk, trapnr, str, regs, error_code))
-> > >  		return;
-> 
-> I'm staring at the post patch code, and I can't see what whitespace
-> issue you see.
-
-There's a random newline removal in do_trap().  It's a good change in the
-sense that it eliminates an extra newline, bad in the sense that it's
-unrelated to the rest of the patch.
