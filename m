@@ -2,202 +2,166 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA3C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD23C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F09214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916512053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="FdYmDlvQ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tApO0fcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAOPmQ (ORCPT
+        id S1728928AbgAOPmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:42:16 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43898 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgAOPmP (ORCPT
+        Wed, 15 Jan 2020 10:42:46 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:36357 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729011AbgAOPmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:42:15 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so13060940lfq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:42:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=N8b+H5+4AZUL8IrGlHZ9KVMloMXldascwYgfWlKN9rE=;
-        b=FdYmDlvQrDy1LEQoaENUdqQc5r3i7VCErTzZ5eHAyDXArk/GW99jkbp7T/Mxjk+CG5
-         SBO4KnwzdCUIyGt6JV6AdRoxJFp1eVMUJMitA7oIj0LPDMFAhG6SktRL6shLejMecolJ
-         RNf+yvdk+EcEmv89u84BAdIxqY6qt/udZVFDgOdC4nHiuekLe/06CWxUyaKL+AFPoM8w
-         GqHLhnocT6dX9ydIprR4NVtLzNqnbWO7GY1L+fzMKUl0LPNlQ1Ga+enLfzmcwAk7YC4j
-         GfKHXJAQBo9oZP4QqL1b03SoNylfIePIRZZLMJQmcOsmbTR8HAOcM5imRIIFSdmEOZAW
-         3trA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=N8b+H5+4AZUL8IrGlHZ9KVMloMXldascwYgfWlKN9rE=;
-        b=GwZN1gSTM7oJSXIPE+ZJ3172RDVRB5IkTS3tJQS0P5TWWyjtTTkyws42YjrelNVvuj
-         pQMFqe4ZebhW9dNss9NzeLQHhqcB/BPOPC3Q6QfBdHzuHIP6rz/7GVjQW0R/TLCWPQjO
-         D0G71tvUGx5nnP75U7JLp6FygBpdd7oJi+RmC912YVb5oKifbkfzGw+WWyRV3VmZEGPg
-         hZpW0emYUnEDsaqi98C0dbdzJxHhWZIN1Pu9Qnv0hcdds0QpVg1I1pXunnMNGFrXBvqr
-         w81RFkeQQbTgLT1n/OFA2L7VDDIABCb9T1oWi3pvmAQg12OHDm8l3S2HN0+7yarG6mr2
-         xSdA==
-X-Gm-Message-State: APjAAAVeYJk3+lK89heJeM+IfKF964qWC6zNE+6n6k7FX5jsh42Pc8f5
-        AqDtRDyYXeCl5Q82A4kAEY1T1g==
-X-Google-Smtp-Source: APXvYqzYfC/bkCYczOz0Rbf8DDPIo53usGVtIxNysW7JZRLyBZmcO/JlAzaVVBNPrSuP94EewnXcPA==
-X-Received: by 2002:ac2:5503:: with SMTP id j3mr5100238lfk.104.1579102932939;
-        Wed, 15 Jan 2020 07:42:12 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id g85sm9118361lfd.66.2020.01.15.07.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:42:12 -0800 (PST)
-Date:   Wed, 15 Jan 2020 16:42:12 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend] mtd: maps: physmap: Add minimal Runtime PM support
-Message-ID: <20200115154212.GA977577@oden.dyn.berto.se>
-References: <20200115131323.6883-1-geert+renesas@glider.be>
+        Wed, 15 Jan 2020 10:42:44 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115154242euoutp010508428b108d8d5e4edacedadfd27daa~qGccmTDmk1699816998euoutp017
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:42:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115154242euoutp010508428b108d8d5e4edacedadfd27daa~qGccmTDmk1699816998euoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579102962;
+        bh=5UcOrZcqA2Gc029OVzaqHjJku0OF8oexgVfZBcw5ALo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=tApO0fcO2muxSsWhgxaWaMRThdd3/rOQoM2TD2/5J6IUXlWAywGl45oF2so7G6KK/
+         c+5sy0UCvijV0HuNBKRk19AhQTIIc1cAZtNEwWXkIWfzzsiwXoXbr5fcBq7RCKwwGo
+         V2XISi2FNk618NR3NZGPsseF0Kmn4ZywXMQJNW4g=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200115154242eucas1p2028e091c4f5d6430591c9308c0313b96~qGccbKMcS0110001100eucas1p2Y;
+        Wed, 15 Jan 2020 15:42:42 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 32.E4.60698.2F23F1E5; Wed, 15
+        Jan 2020 15:42:42 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115154241eucas1p21c72afb605f6ffc1620212d17d746ba3~qGccF34mD0110001100eucas1p2X;
+        Wed, 15 Jan 2020 15:42:41 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200115154241eusmtrp1f903b55d574667a5152c9417c323f023~qGccFQY412598225982eusmtrp1Q;
+        Wed, 15 Jan 2020 15:42:41 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-31-5e1f32f29a7b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 43.D0.07950.1F23F1E5; Wed, 15
+        Jan 2020 15:42:41 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115154241eusmtip113989aba779e4c4827ea19af8343fba2~qGcbmTfEu3130831308eusmtip1k;
+        Wed, 15 Jan 2020 15:42:41 +0000 (GMT)
+Subject: Re: [PATCH] OMAP: DSS2: remove non-zero check on variable r
+To:     Colin King <colin.king@canonical.com>
+Cc:     Tomi Valkeinen <tomi.valkeinen@nokia.com>,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <6a3951c7-4b17-6371-24ab-17742aeaa464@samsung.com>
+Date:   Wed, 15 Jan 2020 16:42:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115131323.6883-1-geert+renesas@glider.be>
+In-Reply-To: <20191204152847.1435188-1-colin.king@canonical.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djPc7qfjOTjDP5eEbD4vbqXzeLK1/ds
+        FltvSVuc6PvAanF51xw2i9lL+lksVl/9yezA7jGroZfN4373cSaPu7cuMXl83iQXwBLFZZOS
+        mpNZllqkb5fAlXHo91S2grm8FS//7WdtYDzB1cXIySEhYCLx6tEXli5GLg4hgRWMEgeOLYFy
+        vjBKdH6/wQbhfGaUmNXxkx2mpfHtWiaIxHJGie/tN1khnLeMEo93XmYBqRIWcJE4sP4zYxcj
+        B4eIgKbE+XNFIDXMAqcYJfpmdTCD1LAJWElMbF8FVsMrYCex6Wk+SJhFQFXi2+VTYGNEBSIk
+        Pj04zApi8woISpyc+QQszingILGi/R0jiM0sIC5x68l8JghbXmL72znMILskBDaxSxz6+5cV
+        4moXiYW7VjFD2MISr45vgfpGRuL05B4WiIZ1jBJ/O15AdW9nlFg++R8bRJW1xJ1zv9hALmUG
+        +mb9Ln2IsKNEe/8ydpCwhACfxI23ghBH8ElM2jadGSLMK9HRJgRRrSaxYdkGNpi1XTtXMk9g
+        VJqF5LVZSN6ZheSdWQh7FzCyrGIUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMPKf/Hf+6
+        g3Hfn6RDjAIcjEo8vBl/5OKEWBPLiitzDzFKcDArifCenCEbJ8SbklhZlVqUH19UmpNafIhR
+        moNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVAPjHv/fzIkGso+9r3O4/t4qs02gqWPBCb6X
+        Hz++XfJEU0Sqpp/7Usmpt05Vn7lCJ3Z7byk3ZWKunxhtUiN+z2V2kMOMfAXbWe+8N6V9Dg+c
+        q5771FuJr+ncLV+vg6Lb81dqn9HrurI9XNp4wZoO3aI3Jx51XcxZNeON+r3FM9o5uGz499uH
+        W3YosRRnJBpqMRcVJwIARcJ8xjgDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsVy+t/xu7ofjeTjDNZcNLT4vbqXzeLK1/ds
+        FltvSVuc6PvAanF51xw2i9lL+lksVl/9yezA7jGroZfN4373cSaPu7cuMXl83iQXwBKlZ1OU
+        X1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3Ho91S2grm8
+        FS//7WdtYDzB1cXIySEhYCLR+HYtUxcjF4eQwFJGiSc/L7J3MXIAJWQkjq8vg6gRlvhzrYsN
+        ouY1o8TmP6tZQRLCAi4SB9Z/ZgSpFxHQlDh/rgikhlngFKPExtY+VoiGyYwSMy6eZQRpYBOw
+        kpjYvgqsgVfATmLT03yQMIuAqsS3y6dYQGxRgQiJwztmgZXzCghKnJz5BCzOKeAgsaL9HVic
+        WUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfY
+        SK84Mbe4NC9dLzk/dxMjMM62Hfu5ZQdj17vgQ4wCHIxKPLwH/snFCbEmlhVX5h5ilOBgVhLh
+        PTlDNk6INyWxsiq1KD++qDQntfgQoynQcxOZpUST84EpIK8k3tDU0NzC0tDc2NzYzEJJnLdD
+        4GCMkEB6YklqdmpqQWoRTB8TB6dUA+POl/9erX+fo7Siq/GvbXnL9ckLDl44HK180oThoPfJ
+        sxLbXsy3qCxX1hBxa0kLM7tl7LuH8cmEJd98GyeHcnAbHvJ6eOPhPjaWKSLS9is3va2V+XD2
+        /KJyFv0dX9rrX0wy6kphnZP2Ybv4NDG/oMXHDA0C//EV9wXum9Vazqgx9XfwvU8xN6YqsRRn
+        JBpqMRcVJwIA7E4WqckCAAA=
+X-CMS-MailID: 20200115154241eucas1p21c72afb605f6ffc1620212d17d746ba3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191204152851epcas5p413006712eafa500de3013c2ce8a3bc02
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191204152851epcas5p413006712eafa500de3013c2ce8a3bc02
+References: <CGME20191204152851epcas5p413006712eafa500de3013c2ce8a3bc02@epcas5p4.samsung.com>
+        <20191204152847.1435188-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
 
-Thanks for your work.
+On 12/4/19 4:28 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Variable r is being initialized to zero, so the check of a non-zero
+> rv is redundant and can be removed.
+> 
+> It appears that the previous case statements set r to be -EINVAL
+> and the "Fallthrough" comment afterwards suggested it was going
+> to fall through to this non-zero check but won't because of the
+> break statement. Remove the confusion by removing the Fallthrough
+> comment too.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Fixes: b39a982ddecf ("OMAP: DSS2: omapfb driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On 2020-01-15 14:13:23 +0100, Geert Uytterhoeven wrote:
-> Add minimal runtime PM support (enable on probe, disable on remove), to
-> ensure proper operation with a parent device that uses runtime PM.
-> 
-> This is needed on systems where the FLASH is connected to a bus
-> controller that is contained in a PM domain and/or has a gateable
-> functional clock.  In such cases, before accessing any device connected
-> to the external bus, the PM domain must be powered up, and/or the
-> functional clock must be enabled, which is typically handled through
-> runtime PM by the bus controller driver.
-> 
-> An example of this is the Renesas APE6-EVM development board, which has
-> an Ethernet controller and a CFI FLASH connected to the Bus State
-> Controller (BSC) of an R-Mobile APE6 SoC.
-> As long as the Ethernet driver, which had Runtime PM support since
-> commit 3a611e26e958b037 ("net/smsc911x: Add minimal runtime PM
-> support"), keeps the BSC powered, accessing the FLASH works.
-> When the ethernet node in r8a73a4-ape6evm.dts is disabled, the BSC is
-> never powered up, and the kernel crashes when trying to access the
-> FLASH:
-> 
->     Unhandled fault: imprecise external abort (0x1406) at 0x00000000
->     pgd = (ptrval)
->     [00000000] *pgd=7fef2835
->     Internal error: : 1406 [#1] SMP ARM
->     CPU: 0 PID: 122 Comm: hd Tainted: G        W         5.5.0-rc1-ape6evm-00814-g38ca966db25b9dbd-dirty #136
->     Hardware name: Generic R8A73A4 (Flattened Device Tree)
->     PC is at chip_ready+0x12c/0x380
->     LR is at chip_ready+0x10c/0x380
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Patch queued for v5.6, thanks.
+ 
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
 > ---
-> Probably the device should be powered down after probing, and powered
-> up/down on-demand in the various {get,put}_chip() functions.  However,
-> that is an optimization which touches more intimidate details of the
-> internal MTD API, and can be done later.
-> ---
->  drivers/mtd/maps/physmap-core.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
+>  drivers/video/fbdev/omap2/omapfb/omapfb-main.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-> index a9f7964e2edb6668..8f7f966fa9a7ee8a 100644
-> --- a/drivers/mtd/maps/physmap-core.c
-> +++ b/drivers/mtd/maps/physmap-core.c
-> @@ -38,6 +38,7 @@
->  #include <linux/mtd/cfi_endian.h>
->  #include <linux/io.h>
->  #include <linux/of_device.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/gpio/consumer.h>
->  
->  #include "physmap-gemini.h"
-> @@ -64,16 +65,16 @@ static int physmap_flash_remove(struct platform_device *dev)
->  {
->  	struct physmap_flash_info *info;
->  	struct physmap_flash_data *physmap_data;
-> -	int i, err;
-> +	int i, err = 0;
->  
->  	info = platform_get_drvdata(dev);
->  	if (!info)
-> -		return 0;
-> +		goto out;
->  
->  	if (info->cmtd) {
->  		err = mtd_device_unregister(info->cmtd);
->  		if (err)
-> -			return err;
-> +			goto out;
->  
->  		if (info->cmtd != info->mtds[0])
->  			mtd_concat_destroy(info->cmtd);
-> @@ -88,7 +89,10 @@ static int physmap_flash_remove(struct platform_device *dev)
->  	if (physmap_data && physmap_data->exit)
->  		physmap_data->exit(dev);
->  
-> -	return 0;
-> +out:
-> +	pm_runtime_put(&dev->dev);
-> +	pm_runtime_disable(&dev->dev);
-> +	return err;
->  }
->  
->  static void physmap_set_vpp(struct map_info *map, int state)
-> @@ -484,13 +488,19 @@ static int physmap_flash_probe(struct platform_device *dev)
->  		return -EINVAL;
->  	}
->  
-> +	pm_runtime_enable(&dev->dev);
-> +	pm_runtime_get_sync(&dev->dev);
-> +
->  	if (dev->dev.of_node)
->  		err = physmap_flash_of_init(dev);
->  	else
->  		err = physmap_flash_pdata_init(dev);
->  
-> -	if (err)
-> +	if (err) {
-> +		pm_runtime_put(&dev->dev);
-> +		pm_runtime_disable(&dev->dev);
->  		return err;
-> +	}
->  
->  	for (i = 0; i < info->nmaps; i++) {
->  		struct resource *res;
-> -- 
-> 2.17.1
+> diff --git a/drivers/video/fbdev/omap2/omapfb/omapfb-main.c b/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> index 858c2c011d19..a2a2c1b205d9 100644
+> --- a/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> +++ b/drivers/video/fbdev/omap2/omapfb/omapfb-main.c
+> @@ -1154,16 +1154,12 @@ static int _setcolreg(struct fb_info *fbi, u_int regno, u_int red, u_int green,
+>  		   r = fbdev->ctrl->setcolreg(regno, red, green, blue,
+>  		   transp, update_hw_pal);
+>  		   */
+> -		/* Fallthrough */
+>  		r = -EINVAL;
+>  		break;
+>  	case OMAPFB_COLOR_RGB565:
+>  	case OMAPFB_COLOR_RGB444:
+>  	case OMAPFB_COLOR_RGB24P:
+>  	case OMAPFB_COLOR_RGB24U:
+> -		if (r != 0)
+> -			break;
+> -
+>  		if (regno < 16) {
+>  			u32 pal;
+>  			pal = ((red >> (16 - var->red.length)) <<
 > 
 
--- 
-Regards,
-Niklas Söderlund
