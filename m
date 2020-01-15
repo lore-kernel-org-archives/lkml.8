@@ -2,70 +2,101 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11003C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8479C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D552224671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEC9214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgAOOUq (ORCPT
+        id S1728993AbgAOOWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:20:46 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8727 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728925AbgAOOUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:20:45 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5B02BC3A919C29B164B6;
-        Wed, 15 Jan 2020 22:20:41 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
- 22:20:35 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
-        <nborisov@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] btrfs: Fix return value while kcalloc fails in btrfs_rmap_block
-Date:   Wed, 15 Jan 2020 22:20:27 +0800
-Message-ID: <20200115142027.56960-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 15 Jan 2020 09:22:12 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:59397 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgAOOWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:22:11 -0500
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MGQzj-1isYVr058v-00Gsh0; Wed, 15 Jan 2020 15:22:10 +0100
+Received: by mail-qk1-f174.google.com with SMTP id w127so15722566qkb.11;
+        Wed, 15 Jan 2020 06:22:09 -0800 (PST)
+X-Gm-Message-State: APjAAAXR0i/nw4VXfnZSlejgh4fZ2a2KfRmGN3E0gfmq0ia8/P+hmmF9
+        nUgpg7FpHYLLd9n7RfJ6jP2V9rSvBIfoZNJXwig=
+X-Google-Smtp-Source: APXvYqxx2a39ERgImZn16gvReU3L59K4NPZ7rVI6r40qbh59bC6C4RPdM9GIKIPaH4dZYMYOAUlFtEAF/+VlIcIk3y8=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr26665185qki.138.1579098128765;
+ Wed, 15 Jan 2020 06:22:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20200114200846.29434-1-vgupta@synopsys.com> <20200114200846.29434-2-vgupta@synopsys.com>
+ <CAHk-=wjChjfOaDnGygOJpC36R6mtT7=Xf6wWTzD_wLJm=quu0Q@mail.gmail.com>
+ <CAK8P3a2ao=xBuy3XHBkdo03KEjpMHGe9ahwj-uogtkZBXsMkGw@mail.gmail.com> <20200115141224.GH8904@ZenIV.linux.org.uk>
+In-Reply-To: <20200115141224.GH8904@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 Jan 2020 15:21:52 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0eu-2ov-Y0EEuv_XSGUTWoyiScf5z5P=kn5S+ORhxF-A@mail.gmail.com>
+Message-ID: <CAK8P3a0eu-2ov-Y0EEuv_XSGUTWoyiScf5z5P=kn5S+ORhxF-A@mail.gmail.com>
+Subject: Re: [RFC 1/4] asm-generic/uaccess: don't define inline functions if
+ noinline lib/* in use
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:lOdPcxVLcqBDEULU954wg+G6L5Re6fTjFN9BhJpfuxlRd4a6lR4
+ hSIHFUtdbK3ItxmH/gNZwHTsPniOPTxj8q4g7Sg0TRgVIJ6HXkYStxhPEdlWHRWJx0NTd6E
+ OxbYloa5u0vc2cQ6fMPG/0QbTP86Gp5Uos7Lg0pAXCuXVJiKHIMZ3Qg6vGklUWDrQWN2vns
+ sBNaMcqUkwpiZFr+TVQyA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CF8ls0Li9nE=:0MP2x6I/juuYaHyvrvutA8
+ koVW/HnYbXl2tpLoFALXNeZfBM5113zZ8Ayl/3ikXDiU/QHlN9J5C5SCxopTPPo6rCXtjZuca
+ x8T4cGpQcfaMZZZzCC69/9QnAge+YPkrV+/W6VV9Aw1eReYevymbqxiex9ZpYS4NCB+2Erwed
+ f6jpOZ871xncuQ/P8En2WW0rmfMPF5DGO36DlhrCTnnFPm9j6s1E6I7A1Lbv5guEKzT1tHFTJ
+ WQksl+GzfN1mJm1pnoYTAFLL986qEAazRPgiNbBnC5vrPxXq3qFpT04ZLHYIkSiixBpjs4e5B
+ mv4RwRnFDsS5ttwrri1+T86vzIPkPpD6hgrR/Q4lzJNJ08FR1ATxCmP9qPC2Z2m7RYjUe/MhV
+ 7/s0ZU7urU6DhTCW+K4nZ3m/y2rWn5cRxFvxiap+gSy2s+Ebo3kkp5h/8ch+q5Tx+oseHxPjZ
+ eB1BYo8ZiWiXpRIFQy4dLV1VM5Mzg+6p+XD3qP57OfBPfGu7Qs7Fzi1MWUgqYsw4cCK4Gpdxn
+ Kw3jNjW5bUpRqUo/VaoybI+scr5qkj4yWd9KVIPhH7AEfuazB3UjcjlZkjSPCSjvjxcyhK333
+ Wa2qeI6A4Q1yUWyTKTk0AeJ81EWpW974NPQ/GvlPcAc9ngeSVqOirIf0b/wT+So7drFt8p5GA
+ bxn8mgQoYkMujjGtxtd3+jF+7sai+OMd7U25qSbYiZacNTkjL/yWtz4AOWjD3NmGhve83yENZ
+ zOR2K1+0vcO0OodorvBFWrn1RK4aWHHoutumI9F6WcCTxibQBCsxVF9z7RVGs4R7WxRYUsZ9H
+ ZsHLQQtCPfUiE/Eth87r5mQBFylEmP78wQ/G1XbvTBnwMpBz6N236SWxlg3NIDdQqyZqzywa3
+ ODWOzLDMV5qW2FYUVIqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In btrfs_rmap_block(), if kcalloc fails, it should return
--ENOMEM instead of 0.
+On Wed, Jan 15, 2020 at 3:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Wed, Jan 15, 2020 at 10:08:31AM +0100, Arnd Bergmann wrote:
+>
+> > > I would suggest that anybody who uses asm-generic/uaccess.h needs to
+> > > simply use the generic library version.
+> >
+> > Or possibly just everybody altogether: the remaining architectures that
+> > have a custom implementation don't seem to be doing any better either.
+>
+> No go for s390.  There you really want to access userland memory in
+> larger chunks - it's oriented for block transfers.  IIRC, the insn
+> they are using has a costly setup phase, independent of the amount
+> to copy, followed by reasonably fast transfer more or less linear
+> by the size.
 
-Fixes: 767f58cdaf20 ("btrfs: Refactor btrfs_rmap_block to improve readability")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/btrfs/block-group.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, I missed that one while looking through the remaining
+implementations.
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 8877af5..1485158 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1655,7 +1655,7 @@ int btrfs_rmap_block(struct btrfs_fs_info *fs_info, u64 chunk_start,
- 	*stripe_len = io_stripe_size;
- out:
- 	free_extent_map(em);
--	return 0;
-+	return ret;
- }
- 
- static int exclude_super_stripes(struct btrfs_block_group *cache)
--- 
-2.7.4
-
-
+     Arnd
