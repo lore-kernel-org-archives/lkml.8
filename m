@@ -2,188 +2,96 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1620C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38786C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA3922522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BAF24683
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:15:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNmywsPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgAOVOM (ORCPT
+        id S1729829AbgAOVPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:14:12 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:44108 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbgAOVOM (ORCPT
+        Wed, 15 Jan 2020 16:15:25 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40510 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729605AbgAOVPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:14:12 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Jan 2020 16:15:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579122923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=muxxPebkhn0816OH3sFQELSDbHRR8DpTYRznlvVGJa4=;
+        b=VNmywsPbgevR9vgB36yWIw5kDP6PA+6T8OZGrDDmBeHDkvRsGDX9q8CG7mKzshZccpeEnN
+        V5m02vJ+eKhYw9uH/GA6TlIS9b/q+UBR9+jJ3Tawxsg+66XrwqxcGRQ2i88qWTub4lcZUg
+        0dl/wxXCfEeLt72l4UYfn8Nwdapv+mc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-7a51uNlGMiaVLisYQv0icw-1; Wed, 15 Jan 2020 16:15:19 -0500
+X-MC-Unique: 7a51uNlGMiaVLisYQv0icw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 1D865804E5;
-        Wed, 15 Jan 2020 22:14:05 +0100 (CET)
-Date:   Wed, 15 Jan 2020 22:14:04 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com
-Subject: Re: [PATCH v8 2/8] drm/panel: support for BOE tv101wum-nl6 wuxga dsi
- video mode panel
-Message-ID: <20200115211404.GC28904@ravnborg.org>
-References: <20200115135958.126303-1-jitao.shi@mediatek.com>
- <20200115135958.126303-3-jitao.shi@mediatek.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DDB941005502;
+        Wed, 15 Jan 2020 21:15:17 +0000 (UTC)
+Received: from treble (ovpn-121-224.rdu2.redhat.com [10.10.121.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D31AD60BE0;
+        Wed, 15 Jan 2020 21:15:15 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 15:15:13 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] x86/cpu: Update cached HLE state on write to
+ TSX_CTRL_CPUID_CLEAR
+Message-ID: <20200115211513.mxzembrm4hf44d6j@treble>
+References: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200115135958.126303-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=qFe5Z7MAUKcRMEBcnwwA:9 a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22
+In-Reply-To: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+On Fri, Jan 10, 2020 at 02:50:54PM -0800, Pawan Gupta wrote:
+> /proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
+> be present on boot cpu even if it was disabled during the bootup. This
+> is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
+> state is changed via a new MSR IA32_TSX_CTRL.
+> 
+> Update the cached HLE bit also since it is expected to change after an
+> update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+> 
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-> +
-> +static int boe_panel_add(struct boe_panel *boe)
-> +{
-> +	struct device *dev = &boe->dsi->dev;
-> +	int err;
-> +
-> +	boe->avdd = devm_regulator_get(dev, "avdd");
-> +	if (IS_ERR(boe->avdd))
-> +		return PTR_ERR(boe->avdd);
-> +
-> +	boe->avee = devm_regulator_get(dev, "avee");
-> +	if (IS_ERR(boe->avee))
-> +		return PTR_ERR(boe->avee);
-> +
-> +	boe->pp1800 = devm_regulator_get(dev, "pp1800");
-> +	if (IS_ERR(boe->pp1800))
-> +		return PTR_ERR(boe->pp1800);
-> +
-> +	boe->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(boe->enable_gpio)) {
-> +		dev_err(dev, "cannot get reset-gpios %ld\n",
-> +			PTR_ERR(boe->enable_gpio));
-> +		return PTR_ERR(boe->enable_gpio);
-> +	}
-> +
-> +	gpiod_set_value(boe->enable_gpio, 0);
-> +
-> +	err = drm_panel_of_backlight(&boe->base);
-> +	if (err)
-> +		return err;
-From the descrition of drm_panel_of_backlight():
+From the Intel TAA deep dive page [1], it says:
 
-""
-drm_panel_of_backlight() must be called after the call to drm_panel_init().
-""
+  "On processors that enumerate IA32_ARCH_CAPABILITIES[TSX_CTRL] (bit
+   7)=1, HLE prefix hints are always ignored."
 
-Please do as documented.
+So if the CPU has IA32_TSX_CTRL, HLE is implicitly disabled, so why
+would the HLE bit have been set in CPUID in the first place?
 
-	Sam
+[1] https://software.intel.com/security-software-guidance/insights/deep-dive-intel-transactional-synchronization-extensions-intel-tsx-asynchronous-abort
 
-> +
-> +	drm_panel_init(&boe->base, dev, &boe_panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +
-> +	boe->base.funcs = &boe_panel_funcs;
-> +	boe->base.dev = &boe->dsi->dev;
-> +
-> +	return drm_panel_add(&boe->base);
-> +}
-> +
-> +static int boe_panel_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_panel *boe;
-> +	int ret;
-> +	const struct panel_desc *desc;
-> +
-> +	boe = devm_kzalloc(&dsi->dev, sizeof(*boe), GFP_KERNEL);
-> +	if (!boe)
-> +		return -ENOMEM;
-> +
-> +	desc = of_device_get_match_data(&dsi->dev);
-> +	dsi->lanes = desc->lanes;
-> +	dsi->format = desc->format;
-> +	dsi->mode_flags = desc->mode_flags;
-> +	boe->desc = desc;
-> +	boe->dsi = dsi;
-> +	ret = boe_panel_add(boe);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	mipi_dsi_set_drvdata(dsi, boe);
-> +
-> +	ret = mipi_dsi_attach(dsi);
-> +	if (ret)
-> +		drm_panel_remove(&boe->base);
-> +
-> +	return ret;
-> +}
-> +
-> +static void boe_panel_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_panel *boe = mipi_dsi_get_drvdata(dsi);
-> +
-> +	drm_panel_disable(&boe->base);
-> +	drm_panel_unprepare(&boe->base);
-> +}
-> +
-> +static int boe_panel_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_panel *boe = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	boe_panel_shutdown(dsi);
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
-> +
-> +	if (boe->base.dev)
-> +		drm_panel_remove(&boe->base);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id boe_of_match[] = {
-> +	{ .compatible = "boe,tv101wum-nl6",
-> +	  .data = &boe_tv101wum_nl6_desc
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, boe_of_match);
-> +
-> +static struct mipi_dsi_driver boe_panel_driver = {
-> +	.driver = {
-> +		.name = "panel-boe-tv101wum-nl6",
-> +		.of_match_table = boe_of_match,
-> +	},
-> +	.probe = boe_panel_probe,
-> +	.remove = boe_panel_remove,
-> +	.shutdown = boe_panel_shutdown,
-> +};
-> +module_mipi_dsi_driver(boe_panel_driver);
-> +
-> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
-> +MODULE_DESCRIPTION("BOE tv101wum-nl6 1200x1920 video mode panel driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.21.0
+-- 
+Josh
+
