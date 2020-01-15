@@ -2,136 +2,136 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B45AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B178FC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502E120728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FE52084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgAOSsG (ORCPT
+        id S1729130AbgAOSs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:48:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:41270 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgAOSsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:48:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F30C328;
-        Wed, 15 Jan 2020 10:48:05 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A8D03F6C4;
-        Wed, 15 Jan 2020 10:48:02 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: edac: Add DT bindings for Kryo EDAC
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, baicar@os.amperecomputing.com
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <312fc8b8-7019-0c74-6a92-c6740cab5dad@arm.com>
-Date:   Wed, 15 Jan 2020 18:48:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 13:48:29 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:52202 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbgAOSs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:48:29 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1irniB-009spe-PH; Wed, 15 Jan 2020 19:48:15 +0100
+Message-ID: <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Patricia Alfonso <trishalfonso@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, davidgow@google.com,
+        brendanhiggins@google.com
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com
+Date:   Wed, 15 Jan 2020 19:48:13 +0100
+In-Reply-To: <20200115182816.33892-1-trishalfonso@google.com>
+References: <20200115182816.33892-1-trishalfonso@google.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <0101016ed57a3259-eee09e9e-e99a-40f1-ab1c-63e58a42615c-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+Hi Patricia,
 
-(CC: +Tyler)
+On Wed, 2020-01-15 at 10:28 -0800, Patricia Alfonso wrote:
+> Make KASAN run on User Mode Linux on x86_64.
 
-On 05/12/2019 09:53, Sai Prakash Ranjan wrote:
-> This adds DT bindings for Kryo EDAC implemented with RAS
-> extensions on KRYO{3,4}XX CPU cores for reporting of cache
-> errors.
+Oh wow, awesome! Just what I always wanted :-)
 
-KRYO{3,4}XX isn't the only SoC with the RAS extensions. The DT needs to convey the range
-of ways this armv8 RAS extensions stuff can be wired up.
+I tried this before and failed miserably ... mostly I thought we
+actually needed CONFIG_CONSTRUCTORS, which doesn't work (at least I hope
+my patch for it was reverted?) - do you know what's up with that?
 
-The folk who look after the ACPI specs have made a start:
-https://static.docs.arm.com/den0085/a/DEN0085_RAS_ACPI_1.0_BETA_1.pdf
+Couple questions, if you don't mind.
 
-(I suspect that isn't the latest version, I'll try and find out)
+> +#ifdef CONFIG_X86_64
+> +#define KASAN_SHADOW_SIZE 0x100000000000UL
+> +#else
+> +#error "KASAN_SHADOW_SIZE is not defined in this sub-architecture"
+> +#endif
 
-I'd like the ACPI table and DT to convey the same information so that we don't need to
-convert or infer things in the driver. If something is missing, we should get it added!
+Is it even possible today to compile ARCH=um on anything but x86_64? If
+yes, perhaps the above should be
+
+	select HAVE_ARCH_KASAN if X86_64
+
+or so? I assume KASAN itself has some dependencies though, but perhaps
+ARM 64-bit or POWERPC 64-bit could possibly run into this, if not X86
+32-bit.
+
+> +++ b/arch/um/kernel/skas/Makefile
+> @@ -5,6 +5,12 @@
+>  
+>  obj-y := clone.o mmu.o process.o syscall.o uaccess.o
+>  
+> +ifdef CONFIG_UML
+> +# Do not instrument until after start_uml() because KASAN is not
+> +# initialized yet
+> +KASAN_SANITIZE	:= n
+> +endif
+
+Not sure I understand this, can anything in this file even get compiled
+without CONFIG_UML?
+
+> +++ b/kernel/Makefile
+> @@ -32,6 +32,12 @@ KCOV_INSTRUMENT_kcov.o := n
+>  KASAN_SANITIZE_kcov.o := n
+>  CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+>  
+> +ifdef CONFIG_UML
+> +# Do not istrument kasan on panic because it can be called before KASAN
+
+typo there - 'instrument'
+
+> +# is initialized
+> +KASAN_SANITIZE_panic.o := n
+> +endif
+
+but maybe UML shouldn't call panic() in such contexts, instead of this?
+I've had some major trouble with calling into the kernel before things
+are ready (or after we've started tearing things down), so that might be
+a good thing overall anyway?
+
+Could just do it this way and fix it later too though I guess.
+
+> +++ b/lib/Makefile
+> @@ -17,6 +17,16 @@ KCOV_INSTRUMENT_list_debug.o := n
+>  KCOV_INSTRUMENT_debugobjects.o := n
+>  KCOV_INSTRUMENT_dynamic_debug.o := n
+>  
+> +# Don't sanatize 
+
+typo
+
+> vsprintf or string functions in UM because they are used
+> +# before KASAN is initialized from cmdline parsing cmdline and kstrtox are
+> +# also called during uml initialization before KASAN is instrumented
+> +ifdef CONFIG_UML
+> +KASAN_SANITIZE_vsprintf.o := n
+> +KASAN_SANITIZE_string.o := n
+> +KASAN_SANITIZE_cmdline.o := n
+> +KASAN_SANITIZE_kstrtox.o := n
+> +endif
+
+I guess this can't be avoided.
 
 
-> diff --git a/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
-> new file mode 100644
-> index 000000000000..1a39429a73b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/qcom-kryo-edac.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/edac/qcom-kryo-edac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Kryo Error Detection and Correction(EDAC)
-> +
-> +maintainers:
-> +  - Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> +
-> +description: |
-> +  Kryo EDAC is defined to describe on-chip error detection and correction
-> +  for the Kryo CPU cores which implement RAS extensions.
-
-Please don't make this Kryo specific, otherwise this binding becomes an extra thing we
-need to support with a 'v8.2 RAS' driver.
-
-What I'd like is a single 'armv82_ras' edac driver that handles faults and errors reported
-by interrupts, and interacts with the arch code's handling of 'external aborts'. This
-should work for all platforms using v8.2 RAS and later.
-
-
-> +  It will report
-> +  all Single Bit Errors and Double Bit Errors found in L1/L2 caches in
-> +  in two registers ERXSTATUS_EL1 and ERXMISC0_EL1. L3-SCU cache errors
-> +  are reported in ERR1STATUS and ERR1MISC0 registers.
-> +    ERXSTATUS_EL1 - Selected Error Record Primary Status Register, EL1
-> +    ERXMISC0_EL1 - Selected Error Record Miscellaneous Register 0, EL1
-> +    ERR1STATUS - Error Record Primary Status Register
-> +    ERR1MISC0 - Error Record Miscellaneous Register 0
-> +  Current implementation of Kryo ECC(Error Correcting Code) mechanism is
-> +  based on interrupts.
-
-Your SoC picked the system registers as the interface to these component's registers.
-The binding would need to specify which index the 'l1-l2' records start at, and how many
-there are. The same for the 'l3-scu'. You can't hard code these, they are different on
-other platforms.
-
-There is also an MMIO interface which needs a base address, along with the index and
-ranges. (which may be different). The same component may use both the system register and
-the MMIO interface.
-
-This stuff is likely to vary on big/little systems, so you need a way of describing which
-CPUs the settings refer to. This probably isn't something the ACPI tables capture as ACPI
-machines are typically homogenous.
-
+Very cool, I look forward to trying this out! :-)
 
 Thanks,
+johannes
 
-James
