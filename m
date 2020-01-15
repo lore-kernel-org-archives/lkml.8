@@ -2,116 +2,100 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F34C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC1DC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E30E20728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1CC20728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SKYJhUZL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/z2KUJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgAOSpv (ORCPT
+        id S1729190AbgAOSqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:45:51 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34997 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729012AbgAOSpv (ORCPT
+        Wed, 15 Jan 2020 13:46:09 -0500
+Received: from mail-ed1-f54.google.com ([209.85.208.54]:41063 "EHLO
+        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729019AbgAOSqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:45:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so1100345wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:45:49 -0800 (PST)
+        Wed, 15 Jan 2020 13:46:07 -0500
+Received: by mail-ed1-f54.google.com with SMTP id c26so16452348eds.8;
+        Wed, 15 Jan 2020 10:46:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=XhG7oKm+eUCDXzWAmBj1ApEpGRAwwk7JTkSRtwr4uDc=;
-        b=SKYJhUZLU3m5uB+IwXigYsHxvV5o1M+7PQOjuaa8htp7C1d128jxoaBhSeOwMbUuZ5
-         asWpNenhoM1ou5bOufNnZam1MHduqFELyxinQh1KeJSyJE8ICbIB47RiLkeBZdpguPWq
-         NeayeqR6/qGB194gVdes9ah3JpJsuW5dMNdh8=
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=a0rRgPi8qpuxt+ikgqB/GgY+ZCw2HyoB33EFPqTmGV4=;
+        b=X/z2KUJ/PVOccJqrqDgc8Ho50bVKHqCmWXiyKWMO0GB8bEVtnr57Rus0FXR0qp4skq
+         UVfAY7ua5eLk5nyP2gHgiy7HzXQeA2n8WBB+f4h7bGxYd10PhSv10EMMwORupjL6bTyM
+         32wRNV1rWftXKtBg9nM7fcqG72tBetWrR2YQVo/7OLOrhV3ul0nNG503lTuw1F1lk2Ty
+         91CmxxcbAfhKWOBY66XIhS6exFJovVg3rSJbszhr1NYVCNBBunWdApIkgIY/L8XtjX1U
+         Ggcdrjf1gYxQ0Uh8xy0JWjpg4YrAO9gOH4DVLjwBocof5Pxqvalb8oqVeUXIS2GRS+OZ
+         Hcgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=XhG7oKm+eUCDXzWAmBj1ApEpGRAwwk7JTkSRtwr4uDc=;
-        b=K4M3FIxbmGBRMpniSm9UAZer5S+hZ5+jDoaDYKwyUl1Egtii6w7yvMif9cK5YLiNaa
-         OtufSaMed6G7PzHkQBF9A0kqja6zkSGLuCRBrHNxpIiYKQB2mzMeuIe2QmBD9Uiea4cz
-         d2F0LkmQh+ja3GVbwVUYVj9dtb4e3dznDjdfZQHvj6CrmzgdCLRGzXt5CX/bgnlVdmjx
-         lctfi1bdeRjDj9GwymLsENMPlsjqWGZQOxd1lLnvNc6NnqFnBPXSr25JvkqDpVayCGAZ
-         PaQ1d+txUpETnVvxycIgsSHzK9buliMDw3HwVflkBjkpNddKFXUdMAhLRALaFu9cYDx0
-         bHJA==
-X-Gm-Message-State: APjAAAUvITgc+OcPODyg46ZtDW1rT7zUCIgTkFlBBiy3dlyXM0xUohsx
-        rVa5Q3DXyz5irt5p4d+IAd6hkg==
-X-Google-Smtp-Source: APXvYqxJUJuymcgl6BW34ydWB72BE5+YHoGJoQlEbVg0nk9JyqjTNyO7XAGrpWf/djrH7Rdzmj5LAA==
-X-Received: by 2002:a1c:6755:: with SMTP id b82mr1380457wmc.126.1579113948983;
-        Wed, 15 Jan 2020 10:45:48 -0800 (PST)
-Received: from revest ([37.165.158.17])
-        by smtp.gmail.com with ESMTPSA id h17sm26445192wrs.18.2020.01.15.10.45.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 10:45:48 -0800 (PST)
-Message-ID: <b88cbb1fb39175611e4b31e12a47df240a46dd48.camel@chromium.org>
-Subject: Re: [PATCH v2] ima: add the ability to query the hash of a given
- file.
-From:   Florent Revest <revest@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>, KP Singh <kpsingh@chromium.org>
-Cc:     linux-integrity@vger.kernel.org, mjg59@google.com,
-        nramas@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Date:   Wed, 15 Jan 2020 19:45:43 +0100
-In-Reply-To: <1579113367.5032.19.camel@linux.ibm.com>
-References: <20200106162524.164650-1-revest@chromium.org>
-         <20200113104830.GA28588@google.com>
-         <1579113367.5032.19.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=a0rRgPi8qpuxt+ikgqB/GgY+ZCw2HyoB33EFPqTmGV4=;
+        b=TTS5fDcgOGG9uRONQV1GptXQ/AqD8VUM/ha/NygYKK0DkJfGKGgAL8/rHaiUW7m2t2
+         YLRLuPaBwK1LT2W+lNBuog3fK6i3l1Q2FDfXEYxPcSCmcXsYz2Z8c+tbrzss4JVZCVlA
+         YfcX19kvtCwuXaAm80z6mQebgT80bVgrh+Mf4CveoVa0EZ16M+pBY2Nvvc3Mx92voeoE
+         JTKaU6qCPQ/tQ3rAladTr+8DYGLKbGL9NkaCH+y74xN2E3vYvoSNMLpl6X62leUMSnW/
+         Y6yji9q753HPMepi+2QnbeCcmppagGKVomam7QZsug9I2KePYRPdzgzr5zj3WcMz3ZML
+         4ZDA==
+X-Gm-Message-State: APjAAAVW434GXR3GPnolOFw/u2DTqzBuR7StBwKKowNgZfww0oDXkLTc
+        cbLUW2154FDeEERznSt6bscd83BeGhJTFkuu8mzg6xhr
+X-Google-Smtp-Source: APXvYqyTrgWJ1LIzmTrqXapfgFa2R1OYqAfeJV6bZihFAyHMRXUZ3QYJpptivIqDltyoLS2yqDeHHxJCHpHlURPmTuI=
+X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr29845299ejb.241.1579113965153;
+ Wed, 15 Jan 2020 10:46:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Wed, 15 Jan 2020 10:46:04
+ -0800 (PST)
+In-Reply-To: <20200115021545.GD11244@42.do-not-panic.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <20200113154739.GB11244@42.do-not-panic.com> <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
+ <20200115021545.GD11244@42.do-not-panic.com>
+From:   Jari Ruusu <jari.ruusu@gmail.com>
+Date:   Wed, 15 Jan 2020 20:46:04 +0200
+Message-ID: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
+Subject: Re: Fix built-in early-load Intel microcode alignment
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-15 at 13:36 -0500, Mimi Zohar wrote:
-> On Mon, 2020-01-13 at 11:48 +0100, KP Singh wrote:
-> > On 06-Jan 17:25, Florent Revest wrote:
-> > > From: Florent Revest <revest@google.com>
-> > > 
-> > > This allows other parts of the kernel (perhaps a stacked LSM
-> > > allowing
-> > > system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the
-> > > hash
-> > > of a given file from IMA if it's present in the iint cache.
-> > > 
-> > > It's true that the existence of the hash means that it's also in
-> > > the
-> > > audit logs or in
-> > > /sys/kernel/security/ima/ascii_runtime_measurements,
-> > > but it can be difficult to pull that information out for every
-> > > subsequent exec.  This is especially true if a given host has
-> > > been up
-> > > for a long time and the file was first measured a long time ago.
-> > > 
-> > > This is based on Peter Moody's patch:
-> > >  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
-> > > 
-> > > [1] https://lkml.org/lkml/2019/9/10/393
-> > > 
-> > > Signed-off-by: Florent Revest <revest@google.com>
-> > 
-> > Thanks for adding this Florent!
-> > 
-> > Reviewed-by: KP Singh <kpsingh@chromium.org>
-> 
-> Thanks, this patch is now queued in next-integrity-testing.
+On 1/15/20, Luis Chamberlain <mcgrof@kernel.org> wrote:
+> On Mon, Jan 13, 2020 at 09:58:25PM +0200, Jari Ruusu wrote:
+>> Before that 16-byte alignment patch was applied, my only one
+>> microcode built-in BLOB was "accidentally" 16-byte aligned.
+>
+> How did it accidentially get 16-byte aligned?
 
-Good to hear Mimi! Thank you.
+Old code aligned it to 8-bytes.
+There is 50/50-chance of it also being 16-byte aligned.
+So it ended up being both 8-byte and 16-byte aligned.
 
-I would just like to make sure that you queued the v3 of this patch
-though...? (this thread is for the v2 :) ) The v3 includes a couple of
-comments you asked for.
+> Also, how do you *know* something is broken right now?
 
+I haven't spotted brokenness in Linux microcode loader other
+than that small alignment issue.
+
+However, I can confirm that there are 2 microcode updates newer
+than what my laptop computer's latest BIOS includes. Both newer
+ones (20191115 and 20191112) are unstable on my laptop computer
+i5-7200U (fam 6 model 142 step 9 pf 0x80). Hard lockups with both
+of them. Back to BIOS microcode for now.
+
+-- 
+Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
