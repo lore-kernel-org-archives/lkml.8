@@ -2,78 +2,117 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C0C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C9FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2D92073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A1A2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAOOfM (ORCPT
+        id S1729133AbgAOOfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:35:12 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8728 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726418AbgAOOfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:35:11 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A77F31C8A80F63C28F5B;
-        Wed, 15 Jan 2020 22:35:08 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 15 Jan 2020 22:35:02 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Bard Liao <bardliao@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shuming Fan <shumingf@realtek.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: rt711: fix return value check in rt711_sdw_probe()
-Date:   Wed, 15 Jan 2020 14:30:34 +0000
-Message-ID: <20200115143034.94492-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Jan 2020 09:35:22 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:22240 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAOOfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:35:21 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47yVGv2gWTzKmbK;
+        Wed, 15 Jan 2020 15:35:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id P4dLfi4K-_0D; Wed, 15 Jan 2020 15:35:13 +0100 (CET)
+Date:   Thu, 16 Jan 2020 01:34:59 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200115143459.l4wurqyetkmptsdm@yavin>
+References: <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+ <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200108031314.GE8904@ZenIV.linux.org.uk>
+ <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+ <20200110210719.ktg3l2kwjrdutlh6@yavin>
+ <20200114045733.GW8904@ZenIV.linux.org.uk>
+ <20200114200150.ryld4npoblns2ybe@yavin>
+ <20200115142517.GI8904@ZenIV.linux.org.uk>
+ <20200115142906.saagd2lse7i7njux@yavin>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u4mn5eoypdaexxxf"
+Content-Disposition: inline
+In-Reply-To: <20200115142906.saagd2lse7i7njux@yavin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_regmap_init() returns ERR_PTR() and
-never returns NULL. The NULL test in the return value check should be
-replaced with IS_ERR().
 
-Fixes: 320b8b0d13b8 ("ASoC: rt711: add rt711 codec driver")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- sound/soc/codecs/rt711-sdw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--u4mn5eoypdaexxxf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/codecs/rt711-sdw.c b/sound/soc/codecs/rt711-sdw.c
-index e28dc84ede5b..85e62e1059cd 100644
---- a/sound/soc/codecs/rt711-sdw.c
-+++ b/sound/soc/codecs/rt711-sdw.c
-@@ -460,8 +460,8 @@ static int rt711_sdw_probe(struct sdw_slave *slave,
- 
- 	regmap = devm_regmap_init(&slave->dev, NULL,
- 		&slave->dev, &rt711_regmap);
--	if (!regmap)
--		return -EINVAL;
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
- 
- 	rt711_init(&slave->dev, sdw_regmap, regmap, slave);
+On 2020-01-16, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2020-01-15, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > On Wed, Jan 15, 2020 at 07:01:50AM +1100, Aleksa Sarai wrote:
+> >=20
+> > > Yes, there were two patches I sent a while ago[1]. I can re-send them=
+ if
+> > > you like. The second patch switches open_how->mode to a u64, but I'm
+> > > still on the fence about whether that makes sense to do...
+> >=20
+> > IMO plain __u64 is better than games with __aligned_u64 - all sizes are
+> > fixed, so...
+> >=20
+> > > [1]: https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cypha=
+r.com/
+> >=20
+> > Do you want that series folded into "open: introduce openat2(2) syscall"
+> > and "selftests: add openat2(2) selftests" or would you rather have them
+> > appended at the end of the series.  Personally I'd go for "fold them in"
+> > if it had been about my code, but it's really up to you.
+>=20
+> "fold them in" would probably be better to avoid making the mainline
+> history confusing afterwards. Thanks.
 
+Also (if you prefer) I can send a v3 which uses u64s rather than
+aligned_u64s.
 
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
+--u4mn5eoypdaexxxf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXh8jEAAKCRCdlLljIbnQ
+EgAQAQC483OrZyiBJYG/79I435iT1B2imv4w4itecQxjDIotqQEA4j43Ly9wivoP
+vlgdPGsgRV9piX8BxAvqQHyRKdQcdww=
+=q/o9
+-----END PGP SIGNATURE-----
+
+--u4mn5eoypdaexxxf--
