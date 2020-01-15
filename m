@@ -2,156 +2,81 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AA8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEB3C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF2C214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F53214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 17:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSUmC/dY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZd/LM+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAOQ73 (ORCPT
+        id S1729026AbgAORAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:59:29 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35961 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAOQ72 (ORCPT
+        Wed, 15 Jan 2020 12:00:10 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48163 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726574AbgAORAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:59:28 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a203so16318205qkc.3;
-        Wed, 15 Jan 2020 08:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zXrVKnuJiXeQCR3gw20F62xg2np3z08kfj/7nG55paY=;
-        b=OSUmC/dYP9RIlJCOVjfv/a2ZhRCa/XB3teZH6z9cTlpa2INK4lmXFx7a7gmgRTDsrH
-         XHsV9vPzoCRYqP4WOtk/OaTnbdVzXYn07lB76lDBcUF9iDNNB5NUfM5medXGt9zKAxlL
-         V2Nrn3JZ2rvGTGW/rLuJOyVPFhrAfrIQ81c10nP0eVXKtfeeoq9AWdXLlqthZhhudP5C
-         Hr06gGZIn/xF51ZRbGZIT3gKDlM5fO2a0Tw4XTFygoUvgX5Zrk2+Ub8UuINh9tMB/PqK
-         fUoM/aAxz1W5jijfpabq4sgr7V2JQ3OhOott+NfJkhQ+5VGS5J9OjhLVtdRdDi8KPM6l
-         CMcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zXrVKnuJiXeQCR3gw20F62xg2np3z08kfj/7nG55paY=;
-        b=hS9jhCGJQd/5/visierr9+EDcPkghpZqAxKzEygKhZe6IypPgw2awBxQTnGzqifY36
-         fXBAq8ZNqZvFAQmZtYEQpKxHIX12q3tVtEzsbnTh0NHnSg179AfwDzosIggv7O5+0S8Q
-         TFFED6LME8ttaoqrcc4Mki940a7G4vAvyWTQhDBhdI+ZAcTOUbAXtlaBKpyMt95MSZql
-         t9bPIhHLIMrl4PKYpA6Xy6hJbqtmv7n9jquSXRMhl4ytl2CQte4m/remjNkJ1L64iVpM
-         zCrc3LPWAjT4uNnQgzxuT1PZGl6nTlQkX/l1hxrozaazdIavQX3wgUlBhtnoD1L7kNFZ
-         kIDA==
-X-Gm-Message-State: APjAAAVFmJhLXMUQgAGZKMLtgZPOBccM6BawzSOrBSqX80LIAvLc9yo1
-        G6JjIk8/SNzHvLZZRK5lqArRjXS8gft4IOVP2rc=
-X-Google-Smtp-Source: APXvYqyZzPUPKQU82RI/Xe8lh0YQjYoSLtx3Y3/ZmHRzsFSYleooQ9vaYsFcptvbv7JiDAeJrQDfYXfKhtZ6J3dr3Ko=
-X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr28643046qkj.36.1579107567235;
- Wed, 15 Jan 2020 08:59:27 -0800 (PST)
+        Wed, 15 Jan 2020 12:00:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579107608;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oBQnQpVm4eKdteh8IhTOrm9qQNdOr/TSGOdEhhv2XDw=;
+        b=WZd/LM+VhyfI69Xb8chtjnTkq6RCuqJVSEkVO6HoyvGqJ3ODl1na73n7mtKgu4BaNRIUKq
+        5JOxKcR4qqqSHXOigZ40YNYLznZDHP0M6RgXIHE8DEUr81uRbBTp6eNuJ/wHDC8A2dqW7q
+        /aWE+8V3utRbH6m+V2mwUTbMLem02Nc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-xcn94VcLNdidfkTKf6Vnqg-1; Wed, 15 Jan 2020 12:00:04 -0500
+X-MC-Unique: xcn94VcLNdidfkTKf6Vnqg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B90F800D4C;
+        Wed, 15 Jan 2020 17:00:02 +0000 (UTC)
+Received: from asgard.redhat.com (ovpn-112-36.ams2.redhat.com [10.36.112.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C89460BE0;
+        Wed, 15 Jan 2020 17:00:00 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 17:59:57 +0100
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] io_uring: fix compat for IORING_REGISTER_FILES_UPDATE
+Message-ID: <20200115165957.GJ1333@asgard.redhat.com>
+References: <20200115163538.GA13732@asgard.redhat.com>
+ <cce5ac48-641d-3051-d22c-dab7aaa5704c@kernel.dk>
+ <20200115165017.GI1333@asgard.redhat.com>
+ <a039f869-6377-b8b0-e170-0b5c17ebd4da@kernel.dk>
 MIME-Version: 1.0
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk> <157909757089.1192265.9038866294345740126.stgit@toke.dk>
-In-Reply-To: <157909757089.1192265.9038866294345740126.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 15 Jan 2020 08:59:15 -0800
-Message-ID: <CAEf4BzbqY8zivZy637Xy=iTECzBAYQ7vo=M7TvsLM2Yp12bJpg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 02/10] tools/bpf/runqslower: Fix override
- option for VMLINUX_BTF
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a039f869-6377-b8b0-e170-0b5c17ebd4da@kernel.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 6:13 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> The runqslower tool refuses to build without a file to read vmlinux BTF
-> from. The build fails with an error message to override the location by
-> setting the VMLINUX_BTF variable if autodetection fails. However, the
-> Makefile doesn't actually work with that override - the error message is
-> still emitted.
+On Wed, Jan 15, 2020 at 09:53:27AM -0700, Jens Axboe wrote:
+> We'd need it in a union for this to work.
 
-Do you have example command with VMLINUX_BTF override that didn't work
-(and what error message was emitted)?
+Note that union usage may be a bit problematic, as it may lead to difference
+in behaviour (and possible subtle bugs, as a result) between native 32-bit
+kernel and 64-bit one in compat mode due to the fact that u64_to_user_ptr
+doesn't check higher 32 bits on 32 bit kernels; it is mostly ignored
+in the case of plain __u64 usage, as it is less likely to pass garbage
+in the higher 32 bits in that case, but the issue, nevertheless, stands,
+so I'd propose to check these bits in case the union approach
+is implemented.
 
->
-> Fix this by only doing auto-detection if no override is set. And while
-> we're at it, also look for a vmlinux file in the current kernel build dir
-> if none if found on the running kernel.
->
-> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
->  tools/bpf/runqslower/Makefile |   16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefil=
-e
-> index cff2fbcd29a8..fb93ce2bf2fe 100644
-> --- a/tools/bpf/runqslower/Makefile
-> +++ b/tools/bpf/runqslower/Makefile
-> @@ -10,12 +10,16 @@ CFLAGS :=3D -g -Wall
->
->  # Try to detect best kernel BTF source
->  KERNEL_REL :=3D $(shell uname -r)
-> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
-> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
-> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
-> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
-> -else
-> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicit=
-ly")
-> +ifeq ("$(VMLINUX_BTF)","")
-> +  ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
-> +  VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
-> +  else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
-> +  VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
-> +  else ifneq ("$(wildcard $(abspath ../../../vmlinux))","")
-> +  VMLINUX_BTF :=3D $(abspath ../../../vmlinux)
-
-I'm planning to mirror runqslower into libbpf Github repo and this
-../../../vmlinux piece will be completely out of place in that
-context. Also it only will help when building kernel in-tree. So I'd
-rather not add this.
-
-> +  else
-> +  $(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explic=
-itly")
-> +  endif
->  endif
->
->  abs_out :=3D $(abspath $(OUTPUT))
->
