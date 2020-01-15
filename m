@@ -2,87 +2,135 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3178CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76D8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F282724679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bB1RWKWZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9AA052467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579091766;
+	bh=Zn5YUWMjJaii5+Wh6/mMidWzdRlfpQDPnJUaF8RwJxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OdVPE/vopz4qxAsLiHw5hrTTM2kvcEn9uJ8hu3XQZT6nAg3+HIRFtK57eb8HjYHCe
+	 apiL3IewoQgVpXqyVMscgkKYm7kMpDO5hK5WDnPWmEReuH0E8LJF9WQj1D/xHANMjZ
+	 1OGNjunuh1UgAjedjd3o2q6YTNxPU7WwZZXdxzhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgAOMft (ORCPT
+        id S1728939AbgAOMgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:35:49 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:38441 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAOMfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:35:48 -0500
-Received: by mail-qk1-f180.google.com with SMTP id k6so15433016qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:35:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=iqApvHFhN/2y0vIYJ3VQfDet+rTcg9cDecADYiR5JVU=;
-        b=bB1RWKWZMEneVE4Y5JXxfIQj3cSUOnG4agG6xpED5c78v4My2ZxnFoZ+WMxAPgslhd
-         JVkMISZNbybG0bX8TNxmJnMSvWApNKd2Id/EBLco2/Ii+GOIdOpZhVzYtKmFc93NfJD1
-         2f5AmgsPm3oaoWeBThw5rqLj/u/Fu6zwfnozi7Z+jKjrEYPwL791CQwdvJVmXjPTTU3I
-         tSiklFVWzEngTJBXW+8U6MajiNRAmD9xBRvAVLxMV8/WAImaXih3uvL5Ax19Gtps0v71
-         lHk3NKCQrtaZ8HNOV4ZuobUrtMG07l4Tggue9V0/M2GMeQNl38KLUjipG38Hu11bSQ1r
-         2eDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=iqApvHFhN/2y0vIYJ3VQfDet+rTcg9cDecADYiR5JVU=;
-        b=qJfflfXkmBnoE2osgMIX2r1A6vN4R0dlr8vEoE3LCZBNpxCOzQDaZyhjfY9n82dVLq
-         Ww9HXGzLS3TR7WNtmzosgtrLMIE90FCmjLUdZAjMDw5V1vK07x6OpBJz2YvDiw3nfGq5
-         qvQi3TrAtMGe+XgOeZhJqgGpv9dbEsWTkhp378xnFuK444tDDGCNKenezq5G3cMDbAgZ
-         u2mboNITRSC0omgN822bSJsHnvL0ze5hnARLYg46DFsy6z61+ZiVC6kANu/kStoMkVuS
-         4KA8ap51snJRHAbrAkCKKHKJyk8i0a52TcXYVsUAENMpbbZbtCocP5dYG/9S3SEPJ+N7
-         E+8w==
-X-Gm-Message-State: APjAAAUWMnH5saHqmZOBaf1reCTIjugcyK58ETPg/nQyZLOdmwKJTO7R
-        Gm38go9LfKxcnb9LKzkFTcGgkdOeJWU8/A==
-X-Google-Smtp-Source: APXvYqwAXI2OjM9Fg8agJQyfEn0+0DpAuXhCeo2L0sBGBb7M/5mZE/BcGtIoBElTJBWIyL7ZPBan3w==
-X-Received: by 2002:a05:620a:3cf:: with SMTP id r15mr27565236qkm.12.1579091747280;
-        Wed, 15 Jan 2020 04:35:47 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q131sm8414276qke.1.2020.01.15.04.35.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 04:35:46 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next v2] mm/hotplug: silence a lockdep splat with printk()
-Date:   Wed, 15 Jan 2020 07:35:45 -0500
-Message-Id: <39D75B58-A5CE-4837-BCD3-8026E2C88861@lca.pw>
-References: <20200115092221.GX19428@dhcp22.suse.cz>
-Cc:     akpm@linux-foundation.org, sergey.senozhatsky.work@gmail.com,
-        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
-        david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mike Kravetz <mike.kravetz@oracle.com>
-In-Reply-To: <20200115092221.GX19428@dhcp22.suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-X-Mailer: iPhone Mail (17C54)
+        Wed, 15 Jan 2020 07:36:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgAOMgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:36:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDB4724679;
+        Wed, 15 Jan 2020 12:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579091764;
+        bh=Zn5YUWMjJaii5+Wh6/mMidWzdRlfpQDPnJUaF8RwJxg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZnoFqM3ety8zk+QArvc+sqGentBLZikbuLuYiipxowNn2syZ3SHpXBEL2AJDvycQO
+         ZMcELqqcBMDiJz25Ifu/ZxfYWc3a6Iz0gLZkUen6CT31zwuWzKO26SLq/soeClBnFE
+         PBnEuTW2w/Ia7w8sOADXzeT/xgYsrshkv6RwFFBw=
+Date:   Wed, 15 Jan 2020 13:36:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCHv2-next 1/3] sysctl/sysrq: Remove __sysrq_enabled copy
+Message-ID: <20200115123601.GA3461986@kroah.com>
+References: <20200114171912.261787-1-dima@arista.com>
+ <20200114171912.261787-2-dima@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114171912.261787-2-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 14, 2020 at 05:19:10PM +0000, Dmitry Safonov wrote:
+> Many embedded boards have a disconnected TTL level serial which can
+> generate some garbage that can lead to spurious false sysrq detects.
+> 
+> Currently, sysrq can be either completely disabled for serial console
+> or always disabled (with CONFIG_MAGIC_SYSRQ_SERIAL), since
+> commit 732dbf3a6104 ("serial: do not accept sysrq characters via serial port")
+> 
+> At Arista, we have such boards that can generate BREAK and random
+> garbage. While disabling sysrq for serial console would solve
+> the problem with spurious false sysrq triggers, it's also desirable
+> to have a way to enable sysrq back.
+> 
+> Having the way to enable sysrq was beneficial to debug lockups with
+> a manual investigation in field and on the other side preventing false
+> sysrq detections.
+> 
+> As a preparation to add sysrq_toggle_support() call into uart,
+> remove a private copy of sysrq_enabled from sysctl - it should reflect
+> the actual status of sysrq.
+> 
+> Furthermore, the private copy isn't correct already in case
+> sysrq_always_enabled is true. So, remove __sysrq_enabled and use a
+> getter-helper for sysrq enabled status.
+> 
+> Cc: Iurii Zaikin <yzaikin@google.com>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  drivers/tty/sysrq.c   |  7 +++++++
+>  include/linux/sysrq.h |  7 +++++++
+>  kernel/sysctl.c       | 41 ++++++++++++++++++++++-------------------
+>  3 files changed, 36 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index f724962a5906..ef3e78967146 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -73,6 +73,13 @@ static bool sysrq_on_mask(int mask)
+>  	       (sysrq_enabled & mask);
+>  }
+>  
+> +int sysrq_get_mask(void)
+> +{
+> +	if (sysrq_always_enabled)
+> +		return 1;
+> +	return sysrq_enabled;
+> +}
 
+Naming is hard.  And this name is really hard to understand.
 
-> On Jan 15, 2020, at 4:22 AM, Michal Hocko <mhocko@kernel.org> wrote:
->=20
-> Is this correct? CMA pages cannot be comound?
+Traditionally get/put are used for incrementing reference counts.  You
+don't have a sysrq_put_mask() call, right?  :)
 
-I never saw a CMA page also a compound page. Also, in alloc_contig_range(), i=
-t calls migrate_pages()=E2=80=94> unmap_and_move_huge_page() which will free=
- the old huge page, so I think that will clear pageCompound.
+I think what you want this function to do is, "is sysrq enabled right
+now" (hint, it's a global function, add kernel-doc to it so we know what
+it does...).  If so, it should maybe be something like:
 
-Cc Mike in case I miss anything.=
+	bool sysrq_is_enabled(void);
+
+which to me makes more sense.
+
+thoughts?
+
+thanks,
+
+greg k-h
