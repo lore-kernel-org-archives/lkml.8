@@ -2,100 +2,185 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BA7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3F1C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B7C22522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579113792;
-	bh=EYn3cvBA+zKZZyuq+WQ0EKprn8+vzF11tgdyOEbIkzI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BtnrEDLOiDyq3zYZB+ZQY/GBWmZxh68zmy4h8KYyyFCliLTCe8dTOhs53QyB3Yh+z
-	 vmHpB5bv4yDOBi0p5Vpdp0t9LheOYbP7Y4vDSEg9cFArRR1Pnkm7I0TtzRlITysjRL
-	 qdvOXuo/w34JX7GYiZ2EFLlPIh8dFFqC4wLFJBhI=
+	by mail.kernel.org (Postfix) with ESMTP id 09E7B22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y3cA+BWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgAOSnL (ORCPT
+        id S1726778AbgAOSnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:43:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAOSnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:43:11 -0500
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0175220728;
-        Wed, 15 Jan 2020 18:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579113790;
-        bh=EYn3cvBA+zKZZyuq+WQ0EKprn8+vzF11tgdyOEbIkzI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wGdhWFZoEOrLFAPd1W2WMEt146BJ/gYNPsZfSbluvNygAq1OLb0/3+kF1j7G3j9K5
-         wAZgEWbxjWIhoAhSFQPmTDuPVItEyTBWO6KBBdHgzFjzhj2Oe34WKAzaF+TPphkAXi
-         2qAIgW2yAh2knZCUz2Xv6m6oImdr1sD9PQlG8878=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        corbet@lwn.net, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH] Documentation: Call out example SYM_FUNC_* usage as x86-specific
-Date:   Wed, 15 Jan 2020 18:43:05 +0000
-Message-Id: <20200115184305.1187-1-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Jan 2020 13:43:22 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:50275 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728596AbgAOSnW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:43:22 -0500
+Received: by mail-pl1-f201.google.com with SMTP id g5so4000407plq.17
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=quGuCKW4EISGK4Hy3QkXGiA4O368RfnyVO/5mhv/zy0=;
+        b=Y3cA+BWUSe9akT5omGsDbcfs51Z43HYfnbw4ChN9ZtZigtQkZQ6CaDsQx/0x/Ti7ef
+         ffcFvdtz4TLUdDR6fzYYWyfV/0qzfWpqkLdV8Qklhpi7O/tagoRRpRntD/HElkizyrRL
+         xQYZ3DtH3dtbOElyGa9/poaqWS8Sj+nQsfY1Y2E8juFusIp6HLwPy6F1YNexpBZ+hVdc
+         7NQRIkD72A4DNQbUr+UkqSzUke1YeoNNhn4RCfErO8Mdcx9XO931ftK5PyCqF8L4t9JJ
+         5lHacg5KeIe3WHBaHrFx3VjN0KSLeTNDcbktb2qwPb4Avk+X+YVNugBjtp0X6LIEwL31
+         I+Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=quGuCKW4EISGK4Hy3QkXGiA4O368RfnyVO/5mhv/zy0=;
+        b=gtCAaPcBdAX2jbZhs8JJfCgcdKRMz7AvKmJhykPf2NtNt3JwnIASjqvh2dnKnjtkMI
+         WTFxzsPT7ztG13WLdRjhdRtMityDWNemgItMCmhP4CurA3qMWtzstEIz8D11wLnH7eRs
+         5eetinFTByz/wN10H3K4F5wJzom4PvGAbtie26lNuzWLYaPNDhSx/ryWjUtPXC7gXUer
+         mmRZ0aGVLt8Hd5huiJvWuyUG82Hpw/RFwYwJRZHpM92kDlFc0oOJVUymNb1vnQhIDji/
+         yDJ417FvO8jZc94+PsCQP//gxxDFNzU91DixZZIHzRPT+9poc+hrthkVZb09dEs3Snl5
+         GGMA==
+X-Gm-Message-State: APjAAAVx0cbLxuInNCeE46LA9WQQDPqZk2uSa4AESOmAs/GCMVvDjfFW
+        fFLsljt9SRQ76LlWpxDm0srVixGlMqMN
+X-Google-Smtp-Source: APXvYqwnWiWJM3nIWopzaQLOFXUvYOBDJHYtnbHtV4I6g6NTAk1EW1MagpO1ixh0/8tS7jTs6Sfe6SL7vSQ9
+X-Received: by 2002:a65:55cc:: with SMTP id k12mr35481833pgs.184.1579113801410;
+ Wed, 15 Jan 2020 10:43:21 -0800 (PST)
+Date:   Wed, 15 Jan 2020 10:42:59 -0800
+Message-Id: <20200115184308.162644-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+Subject: [PATCH v5 bpf-next 0/9] add bpf batch ops to process more than 1 elem
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The example given in asm-annotations.rst to describe the constraints that
-a function should meet in order to be annotated with a SYM_FUNC_* macro
-is x86-specific, and not necessarily applicable to architectures using
-branch-and-link style calling conventions such as arm64.
+This patch series introduce batch ops that can be added to bpf maps to
+lookup/lookup_and_delete/update/delete more than 1 element at the time,
+this is specially useful when syscall overhead is a problem and in case
+of hmap it will provide a reliable way of traversing them.
 
-Tweak the example text to call out the x86-specific text.
+The implementation inclues a generic approach that could potentially be
+used by any bpf map and adds it to arraymap, it also includes the specific
+implementation of hashmaps which are traversed using buckets instead
+of keys.
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
+The bpf syscall subcommands introduced are:
 
-As an aside: if somebody could explain the high-level guarantees required
-here for things like livepatching, then I'd be happy to try to put together
-another patch adding an example for arm64. I'm currently not completely sure
-about what is required in the face of things like leaf functions and tail calls.
+  BPF_MAP_LOOKUP_BATCH
+  BPF_MAP_LOOKUP_AND_DELETE_BATCH
+  BPF_MAP_UPDATE_BATCH
+  BPF_MAP_DELETE_BATCH
 
- Documentation/asm-annotations.rst | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+The UAPI attribute is:
 
-diff --git a/Documentation/asm-annotations.rst b/Documentation/asm-annotations.rst
-index f55c2bb74d00..32ea57483378 100644
---- a/Documentation/asm-annotations.rst
-+++ b/Documentation/asm-annotations.rst
-@@ -73,10 +73,11 @@ The new macros are prefixed with the ``SYM_`` prefix and can be divided into
- three main groups:
- 
- 1. ``SYM_FUNC_*`` -- to annotate C-like functions. This means functions with
--   standard C calling conventions, i.e. the stack contains a return address at
--   the predefined place and a return from the function can happen in a
--   standard way. When frame pointers are enabled, save/restore of frame
--   pointer shall happen at the start/end of a function, respectively, too.
-+   standard C calling conventions. For example, on x86, this means that the
-+   stack contains a return address at the predefined place and a return from
-+   the function can happen in a standard way. When frame pointers are enabled,
-+   save/restore of frame pointer shall happen at the start/end of a function,
-+   respectively, too.
- 
-    Checking tools like ``objtool`` should ensure such marked functions conform
-    to these rules. The tools can also easily annotate these functions with
+  struct { /* struct used by BPF_MAP_*_BATCH commands */
+         __aligned_u64   in_batch;       /* start batch,
+                                          * NULL to start from beginning
+                                          */
+         __aligned_u64   out_batch;      /* output: next start batch */
+         __aligned_u64   keys;
+         __aligned_u64   values;
+         __u32           count;          /* input/output:
+                                          * input: # of key/value
+                                          * elements
+                                          * output: # of filled elements
+                                          */
+         __u32           map_fd;
+         __u64           elem_flags;
+         __u64           flags;
+  } batch;
+
+
+in_batch and out_batch are only used for lookup and lookup_and_delete since
+those are the only two operations that attempt to traverse the map.
+
+update/delete batch ops should provide the keys/values that user wants
+to modify.
+
+Here are the previous discussions on the batch processing:
+ - https://lore.kernel.org/bpf/20190724165803.87470-1-brianvv@google.com/
+ - https://lore.kernel.org/bpf/20190829064502.2750303-1-yhs@fb.com/
+ - https://lore.kernel.org/bpf/20190906225434.3635421-1-yhs@fb.com/
+
+Changelog sinve v4:
+ - Remove unnecessary checks from libbpf API (Andrii Nakryiko)
+ - Move DECLARE_LIBBPF_OPTS with all var declarations (Andrii Nakryiko)
+ - Change bucket internal buffer size to 5 entries (Yonghong Song)
+ - Fix some minor bugs in hashtab batch ops implementation (Yonghong Song)
+
+Changelog sinve v3:
+ - Do not use copy_to_user inside atomic region (Yonghong Song)
+ - Use _opts approach on libbpf APIs (Andrii Nakryiko)
+ - Drop generic_map_lookup_and_delete_batch support
+ - Free malloc-ed memory in tests (Yonghong Song)
+ - Reverse christmas tree (Yonghong Song)
+ - Add acked labels
+
+Changelog sinve v2:
+ - Add generic batch support for lpm_trie and test it (Yonghong Song)
+ - Use define MAP_LOOKUP_RETRIES for retries (John Fastabend)
+ - Return errors directly and remove labels (Yonghong Song)
+ - Insert new API functions into libbpf alphabetically (Yonghong Song)
+ - Change hlist_nulls_for_each_entry_rcu to
+   hlist_nulls_for_each_entry_safe in htab batch ops (Yonghong Song)
+
+Changelog since v1:
+ - Fix SOB ordering and remove Co-authored-by tag (Alexei Starovoitov)
+
+Changelog since RFC:
+ - Change batch to in_batch and out_batch to support more flexible opaque
+   values to iterate the bpf maps.
+ - Remove update/delete specific batch ops for htab and use the generic
+   implementations instead.
+
+Brian Vazquez (5):
+  bpf: add bpf_map_{value_size,update_value,map_copy_value} functions
+  bpf: add generic support for lookup batch op
+  bpf: add generic support for update and delete batch ops
+  bpf: add lookup and update batch ops to arraymap
+  selftests/bpf: add batch ops testing to array bpf map
+
+Yonghong Song (4):
+  bpf: add batch ops to all htab bpf map
+  tools/bpf: sync uapi header bpf.h
+  libbpf: add libbpf support to batch ops
+  selftests/bpf: add batch ops testing for htab and htab_percpu map
+
+ include/linux/bpf.h                           |  18 +
+ include/uapi/linux/bpf.h                      |  21 +
+ kernel/bpf/arraymap.c                         |   2 +
+ kernel/bpf/hashtab.c                          | 264 +++++++++
+ kernel/bpf/syscall.c                          | 554 ++++++++++++++----
+ tools/include/uapi/linux/bpf.h                |  21 +
+ tools/lib/bpf/bpf.c                           |  58 ++
+ tools/lib/bpf/bpf.h                           |  22 +
+ tools/lib/bpf/libbpf.map                      |   4 +
+ .../bpf/map_tests/array_map_batch_ops.c       | 129 ++++
+ .../bpf/map_tests/htab_map_batch_ops.c        | 283 +++++++++
+ 11 files changed, 1248 insertions(+), 128 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c
+ create mode 100644 tools/testing/selftests/bpf/map_tests/htab_map_batch_ops.c
+
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
