@@ -2,115 +2,170 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B17C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A688BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96EFE207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB7B222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3MkQlYT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nPDCiW+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgAONCY (ORCPT
+        id S1728928AbgAONEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:02:24 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36255 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgAONCY (ORCPT
+        Wed, 15 Jan 2020 08:04:13 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60314 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgAONEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:02:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so15673826wru.3;
-        Wed, 15 Jan 2020 05:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
-        b=p3MkQlYTQj+lULTBr6mWn5nKzLDUF5GJ9cat1feO+Q3nCwwmKt7aJRqL3jb8Xypk6t
-         5K3Zyc5pjjBItrPOQkjZpSi+P+SBB6aY9ZSoI7Dkwuczv7HnBk9NKnzWO91rxXupd4A1
-         ucnu3R3CAPXZQAGX0XU+Lt/U7EgARw1EwYbNZ8/cul9gYaEeW00ZQ5+lB3iIFdGO5wa8
-         zg+4xaiTNx+kSKfvHbOTyQhwokkdI1VaCx0nGVZcC6v/EJ3+8Q6YoTiur4K5TW8vWdV3
-         rHxz6NYn2z0u+1WamRmX0on1wJU/FN1ZzovgHY9f4qsArULVd2M/p6dKrDnfrgJFVjdD
-         OKyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
-        b=Qj+77oRXMMevL3Un4fornuls6pZkb7eTr3U47+jCbARTgnCziq7E01YplbXNs/1FrL
-         tkC5z/dbnqcdxBJ55WSmkwg0sWAep4lPcyCBcJ1LaOrE35jNzVSEEngmitK0oiq/nv6Y
-         QW8YVXxx8ixvlZVasPcwyBPpODqppdcKLHGCc0GWJpnTQ65tBeq4K24mI1QGRHZT6Fgy
-         KuuPir0tq849TMfZO3GT8oPjqFIJcFzPmDH5w850LlhKMwAvrb9NlbbPJOSIFevN7FE9
-         MVZmBchbEuPHZ5PgXa/3da9+Luf9Z1ZcCJDUxSjWELEs0ZbmB+z+OEygu2d/DpCG7FTb
-         QMew==
-X-Gm-Message-State: APjAAAU7npScLRJawNEYqU0Psjm2GMk2tFr9COrx62EmF2qTW2OZ4Ake
-        dzb6ocvOiTLSiljcmq+Y7VY=
-X-Google-Smtp-Source: APXvYqxcOwmlY+O6QGUZ/kxCeDj2gNn1kTWrnJRjeqw5YwD9D/edsH1lRUE34oPl6X1lmo7nvZDggA==
-X-Received: by 2002:adf:fa12:: with SMTP id m18mr30163062wrr.309.1579093342407;
-        Wed, 15 Jan 2020 05:02:22 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id p26sm22390808wmc.24.2020.01.15.05.02.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 05:02:21 -0800 (PST)
-Subject: Re: [RFC PATCH v1 1/3] dt-bindings: mmc: combine common mmc and
- dw-mshc properties
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-References: <20200114213809.27166-1-jbx6244@gmail.com>
- <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <12bbbdbc-027e-90de-fd57-291013167b06@gmail.com>
-Date:   Wed, 15 Jan 2020 14:02:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Jan 2020 08:04:12 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200115130410euoutp028d11214e5366d9189248c458ca6ed45f~qESB2TBvb1368313683euoutp02b
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:04:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200115130410euoutp028d11214e5366d9189248c458ca6ed45f~qESB2TBvb1368313683euoutp02b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579093450;
+        bh=LoaTV2n5Eoqzvx6Gxu+M9H4pmHkxUC7eO0DHb88DkeA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nPDCiW+HBT7Ij4h/DNX8zWfOsLoCBPnM4ZHct70hMjnz11iJsnw7b2pX3sTkHEcWy
+         JjAt4ymyfwqF3VLwp1OSMugyp53VeEEbBYcY9uZyv6bszLP+iVAj6i1+1kuwM1iojy
+         4ATfjT/1b9i1/5tzAyXyHd6xIbcnuApfcUCJi1SU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200115130410eucas1p128522d8bb705e517b100358168660e6e~qESBp5Flr2849528495eucas1p1U;
+        Wed, 15 Jan 2020 13:04:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4E.6D.60698.ACD0F1E5; Wed, 15
+        Jan 2020 13:04:10 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115130409eucas1p251a4e356d21c6b3ea536aba33ea1a624~qESBHF3pT2361223612eucas1p25;
+        Wed, 15 Jan 2020 13:04:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200115130409eusmtrp2c4a6c794f3b0899776adcb44da01b51d~qESBGT7cQ0534205342eusmtrp2z;
+        Wed, 15 Jan 2020 13:04:09 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-6d-5e1f0dcaafd2
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6A.8B.07950.9CD0F1E5; Wed, 15
+        Jan 2020 13:04:09 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200115130408eusmtip2f0dc32512b4bf9aab813674c8435aad6~qESAboN8D2382323823eusmtip2P;
+        Wed, 15 Jan 2020 13:04:08 +0000 (GMT)
+Subject: Re: [PATCH v2] ata: pata_arasan_cf: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vireshk@kernel.org, axboe@kernel.dk, vkoul@kernel.org,
+        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <c305572c-7412-f4c5-1599-668983000c8c@samsung.com>
+Date:   Wed, 15 Jan 2020 14:04:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200113142747.15240-1-peter.ujfalusi@ti.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRmVeSWpSXmKPExsWy7djPc7qneOXjDI485LBYfbefzeLYjkdM
+        Fpd3zWGzmPXxB6vF5gfH2Cx23jnB7MDmcflsqcemVZ1sHsdvbGfy+LxJLoAlissmJTUnsyy1
+        SN8ugSujb9ZDloK9vBVTrvYwNzB+4epi5OSQEDCRaF9/i7GLkYtDSGAFo0RvYw+U84VR4uip
+        f2wQzmdGiZuNV9lhWn433WOFSCxnlJg4E6b/LaPEsT0/WUCqhAUyJV7N+ccIYosIaEncunYT
+        yObgYBYokdiwxwMkzCZgJTGxfRVYCa+AncT8M7vBFrAIqEpcvPARLC4qECHx6cFhVogaQYmT
+        M5+AjecUsJZ49WQ/E4jNLCAucevJfChbXmL72znMIPdICCxil/jxYhLYXgkBF4mJzfYQDwhL
+        vDq+BeoZGYn/O0F6QerXMUr87XgB1bydUWL5ZJD/QaqsJe6c+8UG8YCmxPpd+hBhR4nVd1vY
+        IObzSdx4KwhxA5/EpG3TmSHCvBIdbUIQ1WoSG5ZtYINZ27VzJfMERqVZSD6bheSbWUi+mYWw
+        dwEjyypG8dTS4tz01GLjvNRyveLE3OLSvHS95PzcTYzAZHP63/GvOxj3/Uk6xCjAwajEw5vx
+        Ry5OiDWxrLgy9xCjBAezkgjvyRmycUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jRe9jBUSSE8s
+        Sc1OTS1ILYLJMnFwSjUw8u0wT9hVtKD6vueMZ3ovtUxbtt5dI9WXnShS2noy/GnBpOZl5SGx
+        H7vmSVzVddG/Lm2c99R1p2WabgFbaETwHB/dXbevRZTcXJbzb6bZxr5NTsyOAssrpyh+en3o
+        rP7fuVI1BneW7y1bICndc6lf6kG5hn8//5tk94OSTZMcFpx/dXCm1pfFSizFGYmGWsxFxYkA
+        AxPvvjIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsVy+t/xe7oneeXjDA42qFisvtvPZnFsxyMm
+        i8u75rBZzPr4g9Vi84NjbBY775xgdmDzuHy21GPTqk42j+M3tjN5fN4kF8ASpWdTlF9akqqQ
+        kV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRN+shS8Fe3oopV3uY
+        Gxi/cHUxcnJICJhI/G66x9rFyMUhJLCUUWJJ92K2LkYOoISMxPH1ZRA1whJ/rnWxQdS8ZpQ4
+        +ecgC0hCWCBT4tWcf4wgtoiAlsStazfBbGaBEonlK2eC1QgJ9DFKzLxbBGKzCVhJTGxfBVbD
+        K2AnMf/MbnYQm0VAVeLihY9gcVGBCInDO2ZB1QhKnJz5BGwOp4C1xKsn+5kg5qtL/Jl3iRnC
+        Fpe49WQ+VFxeYvvbOcwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dL
+        zs/dxAiMrm3Hfm7Zwdj1LvgQowAHoxIP74F/cnFCrIllxZW5hxglOJiVRHhPzpCNE+JNSays
+        Si3Kjy8qzUktPsRoCvTcRGYp0eR8YOTnlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1O
+        TS1ILYLpY+LglGpg1Eje829u2SEz1vAjjdUJx0Nf/k7KEU+7ofpk5bPrVwNsGIXiP762DDU4
+        tLvmregpk4+sursVjFvWSMYJeFoXCz0Mb/g+5RTTBO/ZB4+9u79b9ebkeQcVFArcp4c+Ndyu
+        +EKVky/p5J69YdsKnjy00qqX0AtYVxC97KGXYE/JESeGtcnGT+V2KbEUZyQaajEXFScCAMP9
+        KiLEAgAA
+X-CMS-MailID: 20200115130409eucas1p251a4e356d21c6b3ea536aba33ea1a624
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200113142721eucas1p2b925aa86ed9230da52d2f1652cf83db0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200113142721eucas1p2b925aa86ed9230da52d2f1652cf83db0
+References: <CGME20200113142721eucas1p2b925aa86ed9230da52d2f1652cf83db0@eucas1p2.samsung.com>
+        <20200113142747.15240-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 1/13/20 3:27 PM, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
+> 
+> The dma_request_chan() is the standard API to request slave channel,
+> clients should be moved away from the legacy API to allow us to retire
+> them.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Thank you for your explanation.
-I was not aware that was playing.
-So now we go from a 'simple' txt to yaml conversion to a complete
-'change your node name first' operation.
-Can you indicate if that common yaml file for dw-mshc and Rockchip
-is still a good idea?
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-Thanks
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-
-On 1/14/20 11:06 PM, Rob Herring wrote:
-> On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>
->> Combine the common properties for mmc and dw-mshc in
->> mmc-controller-common.yaml
->
-> Commit messages should explain the why, not what.
->
-> AFAICT, the only reason is to not have a node name of 'mmc'. That's
-> entirely the reason why it is defined. Fix your node names to use the
-> standard name.
->
->
->
-> Rob
->
+> ---
+> Hi,
+> 
+> Changes since v1:
+> - Fixed type in subject
+> - Removed reference to deferred probing in commit message
+> 
+> Regards,
+> Peter
+> 
+>  drivers/ata/pata_arasan_cf.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
+> index 391dff0f25a2..e9cf31f38450 100644
+> --- a/drivers/ata/pata_arasan_cf.c
+> +++ b/drivers/ata/pata_arasan_cf.c
+> @@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
+>  
+>  	/* request dma channels */
+>  	/* dma_request_channel may sleep, so calling from process context */
+> -	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
+> -	if (!acdev->dma_chan) {
+> +	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
+> +	if (IS_ERR(acdev->dma_chan)) {
+>  		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
+> +		acdev->dma_chan = NULL;
+>  		goto chan_request_fail;
+>  	}
+>  
+> @@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
+>  	}
+>  
+>  	dma_release_channel(acdev->dma_chan);
+> +	acdev->dma_chan = NULL;
+>  
+>  	/* data xferred successfully */
+>  	if (!ret) {
+> 
