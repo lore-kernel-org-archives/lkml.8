@@ -2,69 +2,105 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7EAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA8BC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9E5222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933D7222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JSk1F/Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgAOVip (ORCPT
+        id S1730145AbgAOVjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:38:45 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:60420 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgAOVio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:38:44 -0500
-Received: from localhost (unknown [62.21.130.100])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6CE2315A0E3F0;
-        Wed, 15 Jan 2020 13:38:42 -0800 (PST)
-Date:   Wed, 15 Jan 2020 13:38:41 -0800 (PST)
-Message-Id: <20200115.133841.500823231264389395.davem@davemloft.net>
-To:     mgamal@redhat.com
-Cc:     linux-hyperv@vger.kernel.org, sthemmin@microsoft.com,
-        haiyangz@microsoft.com, netdev@vger.kernel.org, kys@microsoft.com,
-        sashal@kernel.org, vkuznets@redhat.com, cavery@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] hv_netvsc: Fix memory leak when removing rndis
- device
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200114130950.6962-1-mgamal@redhat.com>
-References: <20200114130950.6962-1-mgamal@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 15 Jan 2020 13:38:44 -0800 (PST)
+        Wed, 15 Jan 2020 16:39:00 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48844 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgAOVi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:38:58 -0500
+Received: from zn.tnic (p200300EC2F0C7700F109D32638BACFBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:f109:d326:38ba:cfbd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36EDB1EC01AD;
+        Wed, 15 Jan 2020 22:38:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579124337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LBMtE/WMICvJacbss6a6c+JL3sMqakCf7ajkvPVSGoo=;
+        b=JSk1F/Vcfrva9TnlLBIVasySWnMIdW/M+wVf3lz4G4ILhs9oEKcj0SIZ+hCC5rKyENug+m
+        ViBqPkNwMGLa10+B0A5/XUJxrMcu/PoyEVuUSbvM284vucuDOru9eBDD7mtgubw5OV09UP
+        qo71qnAvNtpRVfXCaiCXtWV2V7DNV5Y=
+Date:   Wed, 15 Jan 2020 22:38:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>, sashal@kernel.org
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20200115213848.GO20975@zn.tnic>
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohammed Gamal <mgamal@redhat.com>
-Date: Tue, 14 Jan 2020 15:09:50 +0200
+On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
+> New driver supports error detection and correction on the devices with ARM
+> DMC-520 memory controller.
+> 
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-> kmemleak detects the following memory leak when hot removing
-> a network device:
-> 
-> unreferenced object 0xffff888083f63600 (size 256):
- ...
-> 
-> rndis_filter_device_add() allocates an instance of struct rndis_device
-> which never gets deallocated as rndis_filter_device_remove() sets
-> net_device->extension which points to the rndis_device struct to NULL,
-> leaving the rndis_device dangling.
-> 
-> Since net_device->extension is eventually freed in free_netvsc_device(),
-> we refrain from setting it to NULL inside rndis_filter_device_remove()
-> 
-> Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+This mail still has your From: because I guess you pasted the patch in
+the mail.
 
-Applied, thanks.
+But, if you look at what I wrote here:
+
+https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
+
+you'll see the
+
+From: Lei Wang <leiwang_git@outlook.com>
+
+which is the last From: in the mail and that is taken by git as the
+author of the patch.
+
+However, if I apply this mail of yours, it will make you the
+author. Because in git there can be only one author per patch
+and other authors can be additionally accredited with the
+Co-developed-by: tag from the same doc I was pointing at before:
+Documentation/process/submitting-patches.rst
+
+Looking at this driver, however, you have supplied three authors. And I
+think you guys need to discuss it amongst yourselves who is going to be
+the author of this driver in the git history.
+
+If there are more questions, I'm pretty sure Sasha would be glad to
+explain to you how the whole authorship thing works and what the
+implications are.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
