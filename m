@@ -2,180 +2,170 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D36EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE82222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE442187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enLnaSMd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Ii7bwv+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgAOKuN (ORCPT
+        id S1729100AbgAOKyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:50:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26864 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725999AbgAOKuN (ORCPT
+        Wed, 15 Jan 2020 05:54:50 -0500
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:27018 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgAOKyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:50:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579085412;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0zPdYw55o/NQ5YWQsGG35pXdQyrv0EYjb0Mj4Frs9Ks=;
-        b=enLnaSMdQxg+rRqxahneSLTdm2ENo+aATIEUZtQA2tqAwvbISHbgPbixf3Eor8fwwAk0nB
-        EMq/4H0Du/BMPxSuhv4qGZy5Anvj2yJ5Or3zK3NA8u2mKOT4E0XCszC+XssAFAXZJdFejI
-        f/W/R+QCilNe+DPKwTNLXTq8FysZxsA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-cbxP8LseO_KtS8U4TNSm7A-1; Wed, 15 Jan 2020 05:50:11 -0500
-X-MC-Unique: cbxP8LseO_KtS8U4TNSm7A-1
-Received: by mail-wr1-f69.google.com with SMTP id z10so7778391wrt.21
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:50:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0zPdYw55o/NQ5YWQsGG35pXdQyrv0EYjb0Mj4Frs9Ks=;
-        b=UCKEM3ITB6//Y5zYU0jt0F+zS+J/CdSKm/HDThMFzx1VEG4Q8iKZs0RiVr9UmxnE8C
-         yCc6jNSKR6B+XJxrtydBOkmZ7KKiW9/3OAz2+sQ+yudpAYmeKcdQyFjv3fzfbA7URRVq
-         vCKK97EuxEomEoxwUKISebUU99ydrLGw2FpyVH2C6XvI05Nu8vS98l0o2+VV0bjP0v/h
-         8fT2qjnb7OevGdJKnl+nQQKbQLT/4U/o6imbW5g7DIxIJPAbFzTMj4yU/KZvnB2ycE0y
-         ys/r8rS8Grty97cw1CZs1T1jCfo6ko1Rq/vWqUpibBwGFPzSql/rxdtxI33IUTn1bp1Y
-         FL8A==
-X-Gm-Message-State: APjAAAXUU2S++tEQ4nUn+FzzYH5WZtCo+UMRmcB6QrfAfj57gDrdBz1H
-        7OySClGwUhwl0GdUT+F68kcZV81zJAjOcHcj8JcaVQN1lBlZ2ekzOnpQq5rtGobVXThmF+2xg5w
-        k7pOj4NPAa5aDw4Q1izx2JY7N
-X-Received: by 2002:a7b:c1c7:: with SMTP id a7mr31182570wmj.168.1579085409810;
-        Wed, 15 Jan 2020 02:50:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxXY+dnsYNXC/k0VTIyQlvYqpGEx/a/AJP7STlMcs8KdLZzeEcSOCesRyRmKX4FhdBaQrIkKw==
-X-Received: by 2002:a7b:c1c7:: with SMTP id a7mr31182549wmj.168.1579085409606;
-        Wed, 15 Jan 2020 02:50:09 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id r68sm22683998wmr.43.2020.01.15.02.50.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 02:50:08 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] Input: axp20x-pek - Respect userspace wakeup
- configuration
-To:     Samuel Holland <samuel@sholland.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200115051253.32603-1-samuel@sholland.org>
- <20200115051253.32603-2-samuel@sholland.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <674932c7-c120-092f-0255-5fa94925155d@redhat.com>
-Date:   Wed, 15 Jan 2020 11:50:08 +0100
+        Wed, 15 Jan 2020 05:54:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1579085690;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=AeFpzl9W8RMkzDObRdSKGPOTUauIYvgnFjYGCvlbA+E=;
+  b=Ii7bwv+qLOIty49SAp7lHPWzdUU4c+it+zA6ZuCC0w24SfO5MuPSlzmV
+   Bsd6UhJvGJj1ckla/oEiBMFvmvMTuhm5jDn+yzd8tsiMy3rn2EKnhDnek
+   I8pYrbIHD9OHsKS2OdTD9XG/pE83gHw2+sH1zULEPIh4ynmyYJKozgjaK
+   0=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  sergey.dyasli@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  sergey.dyasli@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="sergey.dyasli@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="sergey.dyasli@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 8vnPUVL20+CvVAJWJD85khQfIOSnPqu0B+Er7JkKHXTdCo+UTQIF497/lLCTw15rM6VfeOFUgH
+ Ix3WmP83OThzJn2DzWh9ahOEMop+BdNMldmBWXwzyBXwGNWlId/98nkjjTg00ZXepcMoFhY6AN
+ T7jtR9DIFe7xRMzbdDZn4NhTbo6g28XT+WuIvH17ODFV2hfxmR7CNDTMXh6xBHMXffVvJSClMJ
+ 5PYgaHrQJHMit11ZOLHXYjxeHsKN4LLS+LQkLCDHvq0ZSZVct8+yXcycojHs1B3bsHXjdvycCW
+ GFg=
+X-SBRS: 2.7
+X-MesageID: 11102939
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,322,1574139600"; 
+   d="scan'208";a="11102939"
+Subject: Re: [PATCH v1 1/4] kasan: introduce set_pmd_early_shadow()
+To:     Juergen Gross <jgross@suse.com>
+CC:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Dmitry Vyukov" <dvyukov@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        George Dunlap <george.dunlap@citrix.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "sergey.dyasli@citrix.com >> Sergey Dyasli" 
+        <sergey.dyasli@citrix.com>
+References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
+ <20200108152100.7630-2-sergey.dyasli@citrix.com>
+From:   Sergey Dyasli <sergey.dyasli@citrix.com>
+Autocrypt: addr=sergey.dyasli@citrix.com; keydata=
+ xsFNBFtMVHEBEADc/hZcLexrB6vGTdGqEUsYZkFGQh6Z1OO7bCtM1go1RugSMeq9tkFHQSOc
+ 9c7W9NVQqLgn8eefikIHxgic6tGgKoIQKcPuSsnqGao2YabsTSSoeatvmO5HkR0xGaUd+M6j
+ iqv3cD7/WL602NhphT4ucKXCz93w0TeoJ3gleLuILxmzg1gDhKtMdkZv6TngWpKgIMRfoyHQ
+ jsVzPbTTjJl/a9Cw99vuhFuEJfzbLA80hCwhoPM+ZQGFDcG4c25GQGQFFatpbQUhNirWW5b1
+ r2yVOziSJsvfTLnyzEizCvU+r/Ek2Kh0eAsRFr35m2X+X3CfxKrZcePxzAf273p4nc3YIK9h
+ cwa4ZpDksun0E2l0pIxg/pPBXTNbH+OX1I+BfWDZWlPiPxgkiKdgYPS2qv53dJ+k9x6HkuCy
+ i61IcjXRtVgL5nPGakyOFQ+07S4HIJlw98a6NrptWOFkxDt38x87mSM7aSWp1kjyGqQTGoKB
+ VEx5BdRS5gFdYGCQFc8KVGEWPPGdeYx9Pj2wTaweKV0qZT69lmf/P5149Pc81SRhuc0hUX9K
+ DnYBa1iSHaDjifMsNXKzj8Y8zVm+J6DZo/D10IUxMuExvbPa/8nsertWxoDSbWcF1cyvZp9X
+ tUEukuPoTKO4Vzg7xVNj9pbK9GPxSYcafJUgDeKEIlkn3iVIPwARAQABzShTZXJnZXkgRHlh
+ c2xpIDxzZXJnZXkuZHlhc2xpQGNpdHJpeC5jb20+wsGlBBMBCgA4FiEEkI7HMI5EbM2FLA1L
+ Aa+w5JvbyusFAltMVHECGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AAIQkQAa+w5JvbyusW
+ IQSQjscwjkRszYUsDUsBr7Dkm9vK65AkEACvL+hErqbQj5yTVNqvP1rVGsXvevViglSTkHD4
+ 9LGwEk4+ne8N4DPcqrDnyqYFd42UxTjVyoDEXEIIoy0RHWCmaspYEDX8fVmgFG3OFoeA9NAv
+ JHssHU6B2mDAQ6M3VDmAwTw+TbXL/c1wblgGAP9kdurydZL8bevTTUh7edfnm5pwaT9HLXvl
+ xLjz5qyt6tKEowM0xPVzCKaj3Mf/cuZFOlaWiHZ0biOPC0JeoHuz4UQTnBBUKk+n2nnn72k9
+ 37cNeaxARwn/bxcej9QlbrrdaNGVFzjCA/CIL0KjUepowpLN0+lmYjkPgeLNYfyMXumlSNag
+ 9qnCTh0QDsCXS/HUHPeBskAvwNpGBCkfiP/XqJ+V618ZQ1sclHa9aWNnlIR/a8xVx25t/14V
+ R8EX/045HUpyPU8hI/yw+Fw/ugJ8W0dFzFeHU5K2tEW2W0m3ZWWWgpcBSCB17DDLIPjGX1Qc
+ J8jiVJ7E4rfvA1JBg9BxVw5LVuXg2FB6bqnDYALfY2ydATk+ZzMUAMMilaE7/5a2RMV4TYcd
+ 8Cf77LdgO0pB3vF6z1QmNA2IbOICtJOXpmvHj+dKFUt5hFVbvqXbuAjlrwFktbAFVGxaeIYz
+ nQ44lQu9JqDuSH5yOytdek24Dit8SgEHGvumyj17liCG6kNzxd+2xh3uaUCA5MIALy5mZ87B
+ TQRbTFRxARAAwqL3u/cPDA+BhU9ghtAkC+gyC5smWUL1FwTQ9CwTqcQpKt85PoaHn8sc5ctt
+ Aj2fNT/F2vqQx/BthVOdkhj9LCwuslqBIqbri3XUyMLVV/Tf+ydzHW2AjufCowwgBguxedD1
+ f9Snkv+As7ZgMg/GtDqDiCWBFg9PneKvr+FPPd2WmrI8Kium4X5Zjs/a6OGUWVcIBoPpu088
+ z/0tlKYjTFLhoIEsf6ll4KvRQZIyGxclg3RBEuN+wgMbKppdUf2DBXYeCyrrPx809CUFzcik
+ O99drWti2CV1gF8bnbUvfCewxwqgVKtHl2kfsm2+/lgG4CTyvnvWqUyHICZUqISdz5GidaXn
+ TcPlsAeo2YU2NXbjwnmxzJEP/4FxgsjYIUbbxdmsK+PGre7HmGmaDZ8K77L3yHr/K7AH8mFs
+ WUM5KiW4SnKyIQvdHkZMpvE4XrrirlZ+JI5vE043GzzpS2CGo0NFQmDJLRbpN/KQY6dkNVgA
+ L0aDxJtAO1rXKYDSrvpL80bYyskQ4ivUa06v9SM2/bHi9bnp3Nf/fK6ErWKWmDOHWrnTgRML
+ oQpcxoVPxw2CwyWT1069Y/CWwgnbj34+LMwMUYhPEZMitABpQE74dEtIFh0c2scm3K2QGhOP
+ KQK3szqmXuX6MViMZLDh/B7FXLQyqwMBnZygfzZFM9vpDskAEQEAAcLBjQQYAQoAIBYhBJCO
+ xzCORGzNhSwNSwGvsOSb28rrBQJbTFRxAhsMACEJEAGvsOSb28rrFiEEkI7HMI5EbM2FLA1L
+ Aa+w5Jvbyuvvbg//S3d1+XL568K5BTHXaYxSqCeMqYbV9rPhEHyk+rzKtwNXSbSO8x0xZutL
+ gYV+nkW0KMPH5Bz3I1xiRKAkiX/JLcMfx2HAXJ1Cv2rpR6bxyCGBJmuwR68uMS/gKe6AWwTY
+ q2kt1rtZPjGl9OwVoWGJKbu2pFBLWmLAnHlXOL6WDSE1Mz2Ah3jMHOaSyAgPu1XSNa600gMJ
+ QrSxgbe7bW72gCjeHcrIjfv+uh5cZ5/J/edpWXRuE4Tz82nxudBIHE2vnQEoJrXOh2kAJiYs
+ G+IllDqFKDPrnS0R3DenBNG0Ir8h9W6heETnhQUc9NDFCSr81Mp0fROdBfYZnQzgSZMjN2eY
+ pkNEWshJER4ZYY+7hAmqI51HnsKuM46QINh00jJHRMykW3TBMlwnUFxZ0gplAecjCFC7g2zj
+ g1qNxLnxMS4wCsyEVhCkPyYnS8zuoa4ZUH37CezD01Ph4O1saln5+M4blHCEAUpZIkTGpUoi
+ SEwtoxu6EEUYfbcjWgzJCs023hbRykZlFALoRNCwVz/FnPuVu291jn9kjvCTEeE6g2dCtOrO
+ ukuXzk1tIeeoggsU7AJ0bzP7QOEhEckaBbP4k6ic26LJGWNMinllePyEMXzsgmMHVN//8wDT
+ NWaanhP/JZ1v5Mfn8s1chIqC0sJIw73RvvuBkOa+jx0OwW3RFoQ=
+Message-ID: <96c2414e-91fb-5a28-44bc-e30d2daabec5@citrix.com>
+Date:   Wed, 15 Jan 2020 10:54:45 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200115051253.32603-2-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200108152100.7630-2-sergey.dyasli@citrix.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Juergen,
 
-On 15-01-2020 06:12, Samuel Holland wrote:
-> Unlike most other power button drivers, this driver unconditionally
-> enables its wakeup IRQ. It should be using device_may_wakeup() to
-> respect the userspace configuration of wakeup sources.
-> 
-> Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
-> nested off of regmap-irq's threaded interrupt handler. The device core
-> ignores such interrupts, so to actually disable wakeup, we must
-> explicitly disable all non-wakeup interrupts during suspend.
-> 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On 08/01/2020 15:20, Sergey Dyasli wrote:
+> It is incorrect to call pmd_populate_kernel() multiple times for the
+> same page table. Xen notices it during kasan_populate_early_shadow():
+>
+>     (XEN) mm.c:3222:d155v0 mfn 3704b already pinned
+>
+> This happens for kasan_early_shadow_pte when USE_SPLIT_PTE_PTLOCKS is
+> enabled. Fix this by introducing set_pmd_early_shadow() which calls
+> pmd_populate_kernel() only once and uses set_pmd() afterwards.
+>
+> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
 
-Patch looks good to me:
+Looks like the plan to use set_pmd() directly has failed: it's an
+arch-specific function and can't be used in arch-independent code
+(as kbuild test robot has proven).
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Do you see any way out of this other than disabling SPLIT_PTE_PTLOCKS
+for PV KASAN?
 
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/input/misc/axp20x-pek.c | 37 ++++++++++++++++++++++++++++++++-
->   1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-> index 17c1cca74498..0ace3fe3d7dc 100644
-> --- a/drivers/input/misc/axp20x-pek.c
-> +++ b/drivers/input/misc/axp20x-pek.c
-> @@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
->   	}
->   
->   	if (axp20x_pek->axp20x->variant == AXP288_ID)
-> -		enable_irq_wake(axp20x_pek->irq_dbr);
-> +		device_init_wakeup(&pdev->dev, true);
->   
->   	return 0;
->   }
-> @@ -352,6 +352,40 @@ static int axp20x_pek_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> +static int __maybe_unused axp20x_pek_suspend(struct device *dev)
-> +{
-> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * As nested threaded IRQs are not automatically disabled during
-> +	 * suspend, we must explicitly disable non-wakeup IRQs.
-> +	 */
-> +	if (device_may_wakeup(dev)) {
-> +		enable_irq_wake(axp20x_pek->irq_dbf);
-> +		enable_irq_wake(axp20x_pek->irq_dbr);
-> +	} else {
-> +		disable_irq(axp20x_pek->irq_dbf);
-> +		disable_irq(axp20x_pek->irq_dbr);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused axp20x_pek_resume(struct device *dev)
-> +{
-> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		disable_irq_wake(axp20x_pek->irq_dbf);
-> +		disable_irq_wake(axp20x_pek->irq_dbr);
-> +	} else {
-> +		enable_irq(axp20x_pek->irq_dbf);
-> +		enable_irq(axp20x_pek->irq_dbr);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
->   {
->   	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-> @@ -371,6 +405,7 @@ static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
->   }
->   
->   static const struct dev_pm_ops axp20x_pek_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(axp20x_pek_suspend, axp20x_pek_resume)
->   #ifdef CONFIG_PM_SLEEP
->   	.resume_noirq = axp20x_pek_resume_noirq,
->   #endif
-> 
-
+--
+Thanks,
+Sergey
