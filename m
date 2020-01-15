@@ -2,381 +2,181 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1074C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F08C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C77F2084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fUOK91om"
+	by mail.kernel.org (Postfix) with ESMTP id 418172084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579095152;
+	bh=LBZuicrn/IEkOok7VeiPR4swe2oChXBB6C4r6cUoGRA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KI4XQ2wr2rhQf0NqqYJBIi9CUwlIwlqCHGdBtGGfjU8YkfO+sXHYkRfY8sm7xUqZ6
+	 AYfkr3msMYWPSsjkaBPo/SIDgZUhtgUFKDI3G1yN+MpNHNy1dJIpNzEClGwHObV7yS
+	 Tpb0aG5dN5X0ZNpxmWu9Ck9cM+vS34QzW1grBH88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgAONc2 (ORCPT
+        id S1729365AbgAONcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 Jan 2020 08:32:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729340AbgAONc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jan 2020 08:32:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50087 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728946AbgAONc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:32:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579095145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xw/f3n5bD2UHropjz/lBOnsY06YP1A7ZbnfKqMhhuJc=;
-        b=fUOK91om8ppPW56IoaqEQdAxQHaJL/u4nToc6U+a/21DjdLtqNR2uZyBYN8KGnNtqZqrA7
-        m8GYR84tsrKn2Yv/1tRWpyIWJgtMYGAmlUU+hqJYiE3vxJ9imp1xESWy6AlW/UZOWBmvyj
-        RaTYSXWINfsOOUjFKqQVhVxQ3pPvnFI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-cbtRm0YyPgSkOTBs1g_Kiw-1; Wed, 15 Jan 2020 08:32:19 -0500
-X-MC-Unique: cbtRm0YyPgSkOTBs1g_Kiw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78721800D50;
-        Wed, 15 Jan 2020 13:32:17 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BB2595C28C;
-        Wed, 15 Jan 2020 13:32:14 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 11/14] block: Add block layer notifications [ver #3]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        dhowells@redhat.com, keyrings@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jan 2020 13:32:14 +0000
-Message-ID: <157909513401.20155.11696586597485616420.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-References: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8662187F;
+        Wed, 15 Jan 2020 13:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579095147;
+        bh=LBZuicrn/IEkOok7VeiPR4swe2oChXBB6C4r6cUoGRA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=O/hsVzSWBJjzjSiGpoAyGFB7AiG+palU0ZwEhonoG35ekYOpNbQX/1TZ5KXos9mrV
+         eN1/EuF6rqVn+GDOzBrYD1VJUG980V9dzEylrJAd+0VIaXHqqSL0CEBLRVn1pdQ1WS
+         6j2CTCNiEuMlNv6mOuUXd6HwAqyB2dgyIantp0yo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1irimX-0008K4-Nd; Wed, 15 Jan 2020 13:32:25 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Date:   Wed, 15 Jan 2020 13:32:25 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+Subject: Re: [PATCH v3 29/32] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+In-Reply-To: <6e24d53e-64d9-a682-6753-9e16155c7fde@huawei.com>
+References: <20191224111055.11836-1-maz@kernel.org>
+ <20191224111055.11836-30-maz@kernel.org>
+ <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
+ <6e24d53e-64d9-a682-6753-9e16155c7fde@huawei.com>
+Message-ID: <c30b23cf220a4b2965a42ea87b27285f@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, zhangshaokun@hisilicon.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, rrichter@marvell.com, tangnianyao@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a block layer notification mechanism whereby notifications about
-block-layer events such as I/O errors, can be reported to a monitoring
-process asynchronously.
+On 2020-01-15 03:49, Zenghui Yu wrote:
+> Hi,
+> 
+> On 2020/1/15 10:49, Shaokun Zhang wrote:
+>> Hi Marc, [This is from Nianyao]
+>> 
+>> On 2019/12/24 19:10, Marc Zyngier wrote:
+>>> In order to let a guest buy in the new, active-less SGIs, we
+>>> need to be able to switch between the two modes.
+>>> 
+>>> Handle this by stopping all guest activity, transfer the state
+>>> from one mode to the other, and resume the guest.
+>>> 
+>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>> ---
+> 
+> [...]
+> 
+>>> diff --git a/virt/kvm/arm/vgic/vgic-v4.c 
+>>> b/virt/kvm/arm/vgic/vgic-v4.c
+>>> index c2fcde104ea2..063785fd2dc7 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-v4.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+>>> @@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int 
+>>> irq, void *info)
+>>>   	return IRQ_HANDLED;
+>>>   }
+>>>   +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct 
+>>> vgic_irq *irq)
+>>> +{
+>>> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
+>>> +	vpe->sgi_config[irq->intid].group 	= irq->group;
+>>> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
+>>> +}
+>>> +
+>>> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
+>>> +{
+>>> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
+>>> +	int i;
+>>> +
+>>> +	/*
+>>> +	 * With GICv4.1, every virtual SGI can be directly injected. So
+>>> +	 * let's pretend that they are HW interrupts, tied to a host
+>>> +	 * IRQ. The SGI code will do its magic.
+>>> +	 */
+>>> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+>>> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+>>> +		struct irq_desc *desc;
+>>> +		int ret;
+>>> +
+>>> +		if (irq->hw) {
+>>> +			vgic_put_irq(vcpu->kvm, irq);
+>>> +			continue;
+>>> +		}
+>>> +
+>>> +		irq->hw = true;
+>>> +		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
+>> 
+>> I think we need to check whether irq_find_mapping returns 0.
+>> 
+>>> +		vgic_v4_sync_sgi_config(vpe, irq);
+>>> +		/*
+>>> +		 * SGIs are initialised as disabled. Enable them if
+>>> +		 * required by the rest of the VGIC init code.
+>>> +		 */
+>>> +		desc = irq_to_desc(irq->host_irq);
+>>> +		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
+>>> +					      false);
+>> 
+>> If irq->host_irq is not valid , in irq_domain_activate_irq, it will 
+>> trigger NULL pointer
+>> dereference in host kernel.
+>> I meet a problem here. When hw support GIC4.1, and host kernel is 
+>> started with
+>> kvm-arm.vgic_v4_enable=0, starting a virtual machine will trigger NULL 
+>> pointer
+>> dereference in host.
+> 
+> I think the thing is that we should _not_ try to configure vSGIs at all
+> if kvm-arm.vgic_v4_enable=0 (which indicates we don't allow use of the
+> GICv4 of direct injection).
+> 
+> We currently set kvm_vgic_global_state.has_gicv4_1 to true if HW 
+> support
+> GICv4.1, regardless whatever the gicv4_enable is (see patch#23 -
+> vgic_v3_probe).  I think this is what actually needs fixing.
 
-Firstly, an event queue needs to be created:
+Yes, my point exactly. I've pushed out a potential fix [1], and I'd be
+grateful if you could let me know whether that fixes it for you.
 
-	pipe2(fds, O_NOTIFICATION_PIPE);
-	ioctl(fds[1], IOC_WATCH_QUEUE_SET_SIZE, 256);
+Thanks,
 
-then a notification can be set up to report block notifications via that
-queue:
+         M.
 
-	struct watch_notification_filter filter = {
-		.nr_filters = 1,
-		.filters = {
-			[0] = {
-				.type = WATCH_TYPE_BLOCK_NOTIFY,
-				.subtype_filter[0] = UINT_MAX;
-			},
-		},
-	};
-	ioctl(fds[1], IOC_WATCH_QUEUE_SET_FILTER, &filter);
-	watch_devices(fds[1], 12);
-
-After that, records will be placed into the queue when, for example, errors
-occur on a block device.  Records are of the following format:
-
-	struct block_notification {
-		struct watch_notification watch;
-		__u64	dev;
-		__u64	sector;
-	} *n;
-
-Where:
-
-	n->watch.type will be WATCH_TYPE_BLOCK_NOTIFY
-
-	n->watch.subtype will be the type of notification, such as
-	NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM.
-
-	n->watch.info & WATCH_INFO_LENGTH will indicate the length of the
-	record.
-
-	n->watch.info & WATCH_INFO_ID will be the second argument to
-	watch_devices(), shifted.
-
-	n->dev will be the device numbers munged together.
-
-	n->sector will indicate the affected sector (if appropriate for the
-	event).
-
-Note that it is permissible for event records to be of variable length -
-or, at least, the length may be dependent on the subtype.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- Documentation/watch_queue.rst    |    4 +++-
- block/Kconfig                    |    9 +++++++++
- block/blk-core.c                 |   29 ++++++++++++++++++++++++++++
- include/linux/blkdev.h           |   15 ++++++++++++++
- include/uapi/linux/watch_queue.h |   30 ++++++++++++++++++++++++++++-
- samples/watch_queue/watch_test.c |   40 +++++++++++++++++++++++++++++++++++++-
- 6 files changed, 124 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/watch_queue.rst b/Documentation/watch_queue.rst
-index ed592700be0e..f2299f631ae8 100644
---- a/Documentation/watch_queue.rst
-+++ b/Documentation/watch_queue.rst
-@@ -8,7 +8,9 @@ opened by userspace.  This can be used in conjunction with::
- 
-   * Key/keyring notifications
- 
--  * General device event notifications
-+  * General device event notifications, including::
-+
-+    * Block layer event notifications
- 
- 
- The notifications buffers can be enabled by:
-diff --git a/block/Kconfig b/block/Kconfig
-index c23094a14a2b..9fa6ce2177bc 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -181,6 +181,15 @@ config BLK_SED_OPAL
- 	Enabling this option enables users to setup/unlock/lock
- 	Locking ranges for SED devices using the Opal protocol.
- 
-+config BLK_NOTIFICATIONS
-+	bool "Block layer event notifications"
-+	depends on DEVICE_NOTIFICATIONS
-+	help
-+	  This option provides support for getting block layer event
-+	  notifications.  This makes use of the /dev/watch_queue misc device to
-+	  handle the notification buffer and provides the device_notify() system
-+	  call to enable/disable watches.
-+
- menu "Partition Types"
- 
- source "block/partitions/Kconfig"
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 089e890ab208..50a5de025d5e 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -187,6 +187,22 @@ static const struct {
- 	[BLK_STS_IOERR]		= { -EIO,	"I/O" },
- };
- 
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+static const
-+enum block_notification_type blk_notifications[ARRAY_SIZE(blk_errors)] = {
-+	[BLK_STS_TIMEOUT]	= NOTIFY_BLOCK_ERROR_TIMEOUT,
-+	[BLK_STS_NOSPC]		= NOTIFY_BLOCK_ERROR_NO_SPACE,
-+	[BLK_STS_TRANSPORT]	= NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT,
-+	[BLK_STS_TARGET]	= NOTIFY_BLOCK_ERROR_CRITICAL_TARGET,
-+	[BLK_STS_NEXUS]		= NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS,
-+	[BLK_STS_MEDIUM]	= NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM,
-+	[BLK_STS_PROTECTION]	= NOTIFY_BLOCK_ERROR_PROTECTION,
-+	[BLK_STS_RESOURCE]	= NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE,
-+	[BLK_STS_DEV_RESOURCE]	= NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE,
-+	[BLK_STS_IOERR]		= NOTIFY_BLOCK_ERROR_IO,
-+};
-+#endif
-+
- blk_status_t errno_to_blk_status(int errno)
- {
- 	int i;
-@@ -227,6 +243,19 @@ static void print_req_error(struct request *req, blk_status_t status,
- 		req->cmd_flags & ~REQ_OP_MASK,
- 		req->nr_phys_segments,
- 		IOPRIO_PRIO_CLASS(req->ioprio));
-+
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+	if (blk_notifications[idx]) {
-+		struct block_notification n = {
-+			.watch.type	= WATCH_TYPE_BLOCK_NOTIFY,
-+			.watch.subtype	= blk_notifications[idx],
-+			.watch.info	= watch_sizeof(n),
-+			.dev		= req->rq_disk ? disk_devt(req->rq_disk) : 0,
-+			.sector		= blk_rq_pos(req),
-+		};
-+		post_block_notification(&n);
-+	}
-+#endif
- }
- 
- static void req_bio_endio(struct request *rq, struct bio *bio,
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 47eb22a3b7f9..3cd1853dbdac 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -27,6 +27,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/scatterlist.h>
- #include <linux/blkzoned.h>
-+#include <linux/watch_queue.h>
- 
- struct module;
- struct scsi_ioctl_command;
-@@ -1770,6 +1771,20 @@ static inline bool blk_req_can_dispatch_to_zone(struct request *rq)
- }
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
-+#ifdef CONFIG_BLK_NOTIFICATIONS
-+static inline void post_block_notification(struct block_notification *n)
-+{
-+	u64 id = 0; /* Might want to allow dev# here. */
-+
-+	post_device_notification(&n->watch, id);
-+}
-+#else
-+static inline void post_block_notification(struct block_notification *n)
-+{
-+}
-+#endif
-+
-+
- #else /* CONFIG_BLOCK */
- 
- struct block_device;
-diff --git a/include/uapi/linux/watch_queue.h b/include/uapi/linux/watch_queue.h
-index c3d8320b5d3a..557771413242 100644
---- a/include/uapi/linux/watch_queue.h
-+++ b/include/uapi/linux/watch_queue.h
-@@ -14,7 +14,8 @@
- enum watch_notification_type {
- 	WATCH_TYPE_META		= 0,	/* Special record */
- 	WATCH_TYPE_KEY_NOTIFY	= 1,	/* Key change event notification */
--	WATCH_TYPE__NR		= 2
-+	WATCH_TYPE_BLOCK_NOTIFY	= 2,	/* Block layer event notification */
-+	WATCH_TYPE__NR		= 3
- };
- 
- enum watch_meta_notification_subtype {
-@@ -101,4 +102,31 @@ struct key_notification {
- 	__u32	aux;		/* Per-type auxiliary data */
- };
- 
-+/*
-+ * Type of block layer notification.
-+ */
-+enum block_notification_type {
-+	NOTIFY_BLOCK_ERROR_TIMEOUT		= 1, /* Timeout error */
-+	NOTIFY_BLOCK_ERROR_NO_SPACE		= 2, /* Critical space allocation error */
-+	NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT = 3, /* Recoverable transport error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_TARGET	= 4, /* Critical target error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS	= 5, /* Critical nexus error */
-+	NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM	= 6, /* Critical medium error */
-+	NOTIFY_BLOCK_ERROR_PROTECTION		= 7, /* Protection error */
-+	NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE	= 8, /* Kernel resource error */
-+	NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE	= 9, /* Device resource error */
-+	NOTIFY_BLOCK_ERROR_IO			= 10, /* Other I/O error */
-+};
-+
-+/*
-+ * Block layer notification record.
-+ * - watch.type = WATCH_TYPE_BLOCK_NOTIFY
-+ * - watch.subtype = enum block_notification_type
-+ */
-+struct block_notification {
-+	struct watch_notification watch; /* WATCH_TYPE_BLOCK_NOTIFY */
-+	__u64	dev;			/* Device number */
-+	__u64	sector;			/* Affected sector */
-+};
-+
- #endif /* _UAPI_LINUX_WATCH_QUEUE_H */
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-index 0eaff5dc04c3..f5260fb792d1 100644
---- a/samples/watch_queue/watch_test.c
-+++ b/samples/watch_queue/watch_test.c
-@@ -58,6 +58,32 @@ static void saw_key_change(struct watch_notification *n, size_t len)
- 	       k->key_id, n->subtype, key_subtypes[n->subtype], k->aux);
- }
- 
-+static const char *block_subtypes[256] = {
-+	[NOTIFY_BLOCK_ERROR_TIMEOUT]			= "timeout",
-+	[NOTIFY_BLOCK_ERROR_NO_SPACE]			= "critical space allocation",
-+	[NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT]	= "recoverable transport",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_TARGET]		= "critical target",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS]		= "critical nexus",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM]		= "critical medium",
-+	[NOTIFY_BLOCK_ERROR_PROTECTION]			= "protection",
-+	[NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE]		= "kernel resource",
-+	[NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE]		= "device resource",
-+	[NOTIFY_BLOCK_ERROR_IO]				= "I/O",
-+};
-+
-+static void saw_block_change(struct watch_notification *n, size_t len)
-+{
-+	struct block_notification *b = (struct block_notification *)n;
-+
-+	if (len < sizeof(struct block_notification))
-+		return;
-+
-+	printf("BLOCK %08llx e=%u[%s] s=%llx\n",
-+	       (unsigned long long)b->dev,
-+	       n->subtype, block_subtypes[n->subtype],
-+	       (unsigned long long)b->sector);
-+}
-+
- /*
-  * Consume and display events.
-  */
-@@ -131,6 +157,9 @@ static void consumer(int fd)
- 			case WATCH_TYPE_KEY_NOTIFY:
- 				saw_key_change(&n.n, len);
- 				break;
-+			case WATCH_TYPE_BLOCK_NOTIFY:
-+				saw_block_change(&n.n, len);
-+				break;
- 			default:
- 				printf("other type\n");
- 				break;
-@@ -142,12 +171,16 @@ static void consumer(int fd)
- }
- 
- static struct watch_notification_filter filter = {
--	.nr_filters	= 1,
-+	.nr_filters	= 2,
- 	.filters = {
- 		[0]	= {
- 			.type			= WATCH_TYPE_KEY_NOTIFY,
- 			.subtype_filter[0]	= UINT_MAX,
- 		},
-+		[1]	= {
-+			.type			= WATCH_TYPE_BLOCK_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
- 	},
- };
- 
-@@ -181,6 +214,11 @@ int main(int argc, char **argv)
- 		exit(1);
- 	}
- 
-+	if (syscall(__NR_watch_devices, fd, 0x04, 0) == -1) {
-+		perror("watch_devices");
-+		exit(1);
-+	}
-+
- 	consumer(fd);
- 	exit(0);
- }
-
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/gic-v4.1-devel&id=b82c2ee1d3fef66fb85793965c344260f618219d
+-- 
+Jazz is not dead. It just smells funny...
