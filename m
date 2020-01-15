@@ -2,98 +2,289 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9472FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FAAC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0322081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13FE2081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579106727;
+	bh=Y4IYUVVjZSqNT4KHF506A9nSH7m+8bY0oPsOq9XflGA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=GyyG6VVSZmOBLHTJu0FLtriNrUcItiHAqEapJ/sGlpVaKYR+ohT/K9AXOOgFLTNJC
+	 3Q+yfDQlnhUKKO6UI+dZL7qNSnaaGpVGcRtHaGcVWJGcm6Mx+5cVnRICSfa/DSacE2
+	 ky0PF3tTAutCRjcqgz11HJtzHFZCXkXcjmRNEP7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAOQob (ORCPT
+        id S1729005AbgAOQpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:44:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:39868 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbgAOQob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:44:31 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9EB6328;
-        Wed, 15 Jan 2020 08:44:30 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B5AC3F718;
-        Wed, 15 Jan 2020 08:44:30 -0800 (PST)
-Subject: Re: [stable] [PATCH 1/2] coresight: etb10: Do not call
- smp_processor_id from preemptible
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
+        Wed, 15 Jan 2020 11:45:25 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:16849 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOQpZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:45:25 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 00FGivO6011079;
+        Thu, 16 Jan 2020 01:44:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 00FGivO6011079
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579106697;
+        bh=SZOkYphT7E9GHjXKlgV0QDCeNekw7U6rZwFuYSvNizY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lx0ln1tP6OWFky+GojsB/NB82j+COpWI/RRYP8E8JvKhGC0+W3VmISGmKk0JzRu20
+         6T5YjGFgNyG/mUf6BInQa2RW84MR/ix0cDo0fv9sN/IHYvDZuVnIDESalqMhOIGgcK
+         YUzSoUmhVnwIE9KSNOsy/7h3rp2Y9jr9D62IKYFQCxRgSKgO36Q09hqtjEtJvDsvYJ
+         n5AfMXRtb1cIVxujBoqX0bm8NJfXTZV+hnjHfD6CjU2dhOJLn+JgdvkATwbyIAI5cd
+         J90vyX2mxOmWpHG3ge+atVdTS0YOxaXG5WpOygW17cpakQZrkaSWRmrLKUWefCcRlk
+         qizmzh+kUmj2A==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-References: <20200108110541.318672-1-suzuki.poulose@arm.com>
- <20200109143537.GE1706@sasha-vm>
- <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
- <20200115151118.GC3740793@kroah.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <d3cd59e0-8fa2-9e69-534f-15f13cb14897@arm.com>
-Date:   Wed, 15 Jan 2020 16:44:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200115151118.GC3740793@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2] staging: most: remove header include path to drivers/staging
+Date:   Thu, 16 Jan 2020 01:44:51 +0900
+Message-Id: <20200115164451.13203-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There is no need to add "ccflags-y += -I $(srctree)/drivers/staging"
+just for including <most/most.h>.
 
-Hi Greg,
+Use the #include "..." directive with the correct relative path.
 
-On 15/01/2020 15:11, Greg KH wrote:
-> On Thu, Jan 09, 2020 at 02:36:17PM +0000, Suzuki Kuruppassery Poulose wrote:
->> On 09/01/2020 14:35, Sasha Levin wrote:
->>> On Wed, Jan 08, 2020 at 11:05:40AM +0000, Suzuki K Poulose wrote:
->>>> [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
->>>>
->>>> During a perf session we try to allocate buffers on the "node" associated
->>>> with the CPU the event is bound to. If it is not bound to a CPU, we
->>>> use the current CPU node, using smp_processor_id(). However this is
->>>> unsafe
->>>> in a pre-emptible context and could generate the splats as below :
->>>>
->>>> BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
->>>>
->>>> Use NUMA_NO_NODE hint instead of using the current node for events
->>>> not bound to CPUs.
->>>>
->>>> Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
->>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>>> Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
->>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>> Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
->>>>
->>>
->>> I've queued this for 4.9-4.19. There was a simple conflict on 4.9 which
->>> also had to be resolved.
->>>
->>
->>
->> Thanks Sasha !
-> 
-> Note, these had to all be dropped as they broke the build :(
-> 
-> So can you please send us patches that at least build?  :)
-> 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Do you have a build failure log ? I did build test it before sending it 
-over. I tried it again on 4.9, 4.14 and 4.19. I don't hit any build
-failures here.
+Changes in v2:
+ - rebase on linux-next
 
-Please could you share the log if you have it handy ?
+ drivers/staging/most/Makefile       | 1 -
+ drivers/staging/most/cdev/Makefile  | 1 -
+ drivers/staging/most/cdev/cdev.c    | 3 ++-
+ drivers/staging/most/configfs.c     | 3 ++-
+ drivers/staging/most/core.c         | 3 ++-
+ drivers/staging/most/dim2/Makefile  | 1 -
+ drivers/staging/most/dim2/dim2.c    | 2 +-
+ drivers/staging/most/i2c/Makefile   | 1 -
+ drivers/staging/most/i2c/i2c.c      | 2 +-
+ drivers/staging/most/net/Makefile   | 1 -
+ drivers/staging/most/net/net.c      | 3 ++-
+ drivers/staging/most/sound/Makefile | 1 -
+ drivers/staging/most/sound/sound.c  | 3 ++-
+ drivers/staging/most/usb/Makefile   | 1 -
+ drivers/staging/most/usb/usb.c      | 3 ++-
+ drivers/staging/most/video/Makefile | 1 -
+ drivers/staging/most/video/video.c  | 2 +-
+ 17 files changed, 15 insertions(+), 17 deletions(-)
 
-Suzuki
+diff --git a/drivers/staging/most/Makefile b/drivers/staging/most/Makefile
+index 85ea5a434ced..20a99ecb37c4 100644
+--- a/drivers/staging/most/Makefile
++++ b/drivers/staging/most/Makefile
+@@ -2,7 +2,6 @@
+ obj-$(CONFIG_MOST) += most_core.o
+ most_core-y := core.o
+ most_core-y += configfs.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+ 
+ obj-$(CONFIG_MOST_CDEV)	+= cdev/
+ obj-$(CONFIG_MOST_NET)	+= net/
+diff --git a/drivers/staging/most/cdev/Makefile b/drivers/staging/most/cdev/Makefile
+index 9f4a8b8c9c27..ef90cd71994a 100644
+--- a/drivers/staging/most/cdev/Makefile
++++ b/drivers/staging/most/cdev/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_CDEV) += most_cdev.o
+ 
+ most_cdev-objs := cdev.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
+index 59f346d1f4af..71943d17f825 100644
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -16,7 +16,8 @@
+ #include <linux/kfifo.h>
+ #include <linux/uaccess.h>
+ #include <linux/idr.h>
+-#include <most/most.h>
++
++#include "../most.h"
+ 
+ #define CHRDEV_REGION_SIZE 50
+ 
+diff --git a/drivers/staging/most/configfs.c b/drivers/staging/most/configfs.c
+index 9818f6c8b22a..034ab96ef69e 100644
+--- a/drivers/staging/most/configfs.c
++++ b/drivers/staging/most/configfs.c
+@@ -10,7 +10,8 @@
+ #include <linux/slab.h>
+ #include <linux/init.h>
+ #include <linux/configfs.h>
+-#include <most/most.h>
++
++#include "most.h"
+ 
+ #define MAX_STRING_SIZE 80
+ 
+diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
+index af542ed6c7f0..4958921f3bb3 100644
+--- a/drivers/staging/most/core.c
++++ b/drivers/staging/most/core.c
+@@ -21,7 +21,8 @@
+ #include <linux/kthread.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/idr.h>
+-#include <most/most.h>
++
++#include "most.h"
+ 
+ #define MAX_CHANNELS	64
+ #define STRING_SIZE	80
+diff --git a/drivers/staging/most/dim2/Makefile b/drivers/staging/most/dim2/Makefile
+index 116f04d69244..861adacf6c72 100644
+--- a/drivers/staging/most/dim2/Makefile
++++ b/drivers/staging/most/dim2/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_DIM2) += most_dim2.o
+ 
+ most_dim2-objs := dim2.o hal.o sysfs.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/dim2/dim2.c b/drivers/staging/most/dim2/dim2.c
+index 9eb10fc0903e..15c6aa8fa1ea 100644
+--- a/drivers/staging/most/dim2/dim2.c
++++ b/drivers/staging/most/dim2/dim2.c
+@@ -21,7 +21,7 @@
+ #include <linux/sched.h>
+ #include <linux/kthread.h>
+ 
+-#include <most/most.h>
++#include "../most.h"
+ #include "hal.h"
+ #include "errors.h"
+ #include "sysfs.h"
+diff --git a/drivers/staging/most/i2c/Makefile b/drivers/staging/most/i2c/Makefile
+index 2b3769dc19e7..71099dd0f85b 100644
+--- a/drivers/staging/most/i2c/Makefile
++++ b/drivers/staging/most/i2c/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_I2C) += most_i2c.o
+ 
+ most_i2c-objs := i2c.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/i2c/i2c.c b/drivers/staging/most/i2c/i2c.c
+index d07719c38fc9..2980f7065846 100644
+--- a/drivers/staging/most/i2c/i2c.c
++++ b/drivers/staging/most/i2c/i2c.c
+@@ -14,7 +14,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/err.h>
+ 
+-#include <most/most.h>
++#include "../most.h"
+ 
+ enum { CH_RX, CH_TX, NUM_CHANNELS };
+ 
+diff --git a/drivers/staging/most/net/Makefile b/drivers/staging/most/net/Makefile
+index f0ac64dee71b..1582c97eb204 100644
+--- a/drivers/staging/most/net/Makefile
++++ b/drivers/staging/most/net/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_NET) += most_net.o
+ 
+ most_net-objs := net.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/net/net.c b/drivers/staging/most/net/net.c
+index db4273256ce8..8218c9a06cb5 100644
+--- a/drivers/staging/most/net/net.c
++++ b/drivers/staging/most/net/net.c
+@@ -15,7 +15,8 @@
+ #include <linux/list.h>
+ #include <linux/wait.h>
+ #include <linux/kobject.h>
+-#include <most/most.h>
++
++#include "../most.h"
+ 
+ #define MEP_HDR_LEN 8
+ #define MDP_HDR_LEN 16
+diff --git a/drivers/staging/most/sound/Makefile b/drivers/staging/most/sound/Makefile
+index a3d086c6ca70..f0cd9d8d213e 100644
+--- a/drivers/staging/most/sound/Makefile
++++ b/drivers/staging/most/sound/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_SOUND) += most_sound.o
+ 
+ most_sound-objs := sound.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/sound/sound.c b/drivers/staging/most/sound/sound.c
+index 23baf4bd7c12..44cf2334834f 100644
+--- a/drivers/staging/most/sound/sound.c
++++ b/drivers/staging/most/sound/sound.c
+@@ -17,7 +17,8 @@
+ #include <sound/pcm_params.h>
+ #include <linux/sched.h>
+ #include <linux/kthread.h>
+-#include <most/most.h>
++
++#include "../most.h"
+ 
+ #define DRIVER_NAME "sound"
+ #define STRING_SIZE	80
+diff --git a/drivers/staging/most/usb/Makefile b/drivers/staging/most/usb/Makefile
+index 83cf2ead7122..c2b207339aec 100644
+--- a/drivers/staging/most/usb/Makefile
++++ b/drivers/staging/most/usb/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_USB) += most_usb.o
+ 
+ most_usb-objs := usb.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/usb/usb.c b/drivers/staging/most/usb/usb.c
+index 491b38e91e9d..35217ca65cbb 100644
+--- a/drivers/staging/most/usb/usb.c
++++ b/drivers/staging/most/usb/usb.c
+@@ -23,7 +23,8 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/etherdevice.h>
+ #include <linux/uaccess.h>
+-#include <most/most.h>
++
++#include "../most.h"
+ 
+ #define USB_MTU			512
+ #define NO_ISOCHRONOUS_URB	0
+diff --git a/drivers/staging/most/video/Makefile b/drivers/staging/most/video/Makefile
+index 2d857d3cbcc8..856175fec8b6 100644
+--- a/drivers/staging/most/video/Makefile
++++ b/drivers/staging/most/video/Makefile
+@@ -2,4 +2,3 @@
+ obj-$(CONFIG_MOST_VIDEO) += most_video.o
+ 
+ most_video-objs := video.o
+-ccflags-y += -I $(srctree)/drivers/staging/
+diff --git a/drivers/staging/most/video/video.c b/drivers/staging/most/video/video.c
+index 9e9e45ac386e..d32ae49d617b 100644
+--- a/drivers/staging/most/video/video.c
++++ b/drivers/staging/most/video/video.c
+@@ -21,7 +21,7 @@
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fh.h>
+ 
+-#include <most/most.h>
++#include "../most.h"
+ 
+ #define V4L2_CMP_MAX_INPUT  1
+ 
+-- 
+2.17.1
+
