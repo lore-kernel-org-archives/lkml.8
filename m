@@ -2,134 +2,98 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C8AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0EDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FA720661
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E0A24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MQURN8Zw"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gWPeUiIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbgAOKZu (ORCPT
+        id S1729721AbgAOK2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:25:50 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6509 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729631AbgAOKZu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:25:50 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1ee8750000>; Wed, 15 Jan 2020 02:24:54 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 15 Jan 2020 02:25:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 15 Jan 2020 02:25:49 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
- 2020 10:25:47 +0000
-Subject: Re: [PATCH v4 02/14] dmaengine: tegra-apb: Implement synchronization
- callback
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-3-digetx@gmail.com>
- <c225399c-f032-8001-e67b-b807dcda748c@nvidia.com>
- <627f996c-1487-1b9a-e953-f5737f3ad32a@gmail.com>
- <34ec4c18-f082-def6-8544-0d15a109d7f8@nvidia.com>
-Message-ID: <d07d3d64-8abd-e3d7-ca1c-01ab8607b8c2@nvidia.com>
-Date:   Wed, 15 Jan 2020 10:25:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 05:28:00 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53459 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729650AbgAOK2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:28:00 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yNnT3JS8z9sNx;
+        Wed, 15 Jan 2020 21:27:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579084077;
+        bh=5BX5OlZ3cL9ZYJfFFsrqoIGdVYAvou9z99rpn7nk698=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gWPeUiIl1aKxs9n0teqH4h1KX7q/F0QLv/X2wbS9eTbzTUNcNw71MXxQmZ3iDzs1o
+         7ZM8o07J3YcHyz1GvQAygCvB8TPcmJlAzJPbU/FDuskkD196XQBacO5y81cP0+rVTC
+         rccupVYg3Cqf6DEHfodUODDzAFv5YMMLiuxWNr7k1jqNFzemLTAfteYSjs5cEkldcW
+         GzRVazcfIRKytx2Mr4aYN9SHQLv8HgOGT6iBLNyxKwvMv8Q+iprjo34ThyDryco/9o
+         r3tvoGaOPxYgr55UW/w+zVbGuALizPRAYvYuSBfyBvhH4j3Rej79P5mCR2NbDXaZJn
+         kdOfVmj0A+N2g==
+Date:   Wed, 15 Jan 2020 21:27:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jean Pihet <jean.pihet@newoldbits.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the spi tree
+Message-ID: <20200115212739.474e8272@canb.auug.org.au>
+In-Reply-To: <CAORVsuWs=0su+y2iLfL7zUygW8UgT8WzTXoCJiyBGFp_UG8yFA@mail.gmail.com>
+References: <20200115132325.3ac3ca0f@canb.auug.org.au>
+        <CAORVsuWs=0su+y2iLfL7zUygW8UgT8WzTXoCJiyBGFp_UG8yFA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <34ec4c18-f082-def6-8544-0d15a109d7f8@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579083894; bh=WDMyn/ZqNy9l1iysLsV2lNTZb/96GII9G+k29s8H9tY=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=MQURN8Zw4jvuLuapdX0bHMWKlRbOsoej7k6+p4drP5m6V+CEidzrouaGDiiHZWlQ4
-         x9xPnF951BwUjSrWp8Okv9aidiHrG0OXJGab3agHi9rfXfiIba/cg+03h2YjPEUipe
-         mdC8+tHCthzfmetGHXkamozI1tcVD1LapvWEQArL2xWJGkA9N4feBaD8cEvnpuUCJv
-         rcm9w3zMOR+0IjQGQjL/5UCeSA0kNx3LG7fRGX7l6/9eKqc4fZQtj7pfshn+4qZ15K
-         o57qvPFykaEh6MQxv7Jv/go7oEO9o4y/5Ph5YHn+ae80GrloQuV9Ci1Mn63wO87g2h
-         tpdgnRXuznHsA==
+Content-Type: multipart/signed; boundary="Sig_/Qf_b=7/3tSMR196pg1OnJo0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Qf_b=7/3tSMR196pg1OnJo0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 15/01/2020 09:18, Jon Hunter wrote:
->=20
-> On 14/01/2020 21:02, Dmitry Osipenko wrote:
->> 14.01.2020 18:15, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>
->>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->>>> The ISR tasklet could be kept scheduled after DMA transfer termination=
-,
->>>> let's add synchronization callback which blocks until tasklet is finis=
-hed.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/dma/tegra20-apb-dma.c | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
-ma.c
->>>> index 319f31d27014..664e9c5df3ba 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>> @@ -798,6 +798,13 @@ static int tegra_dma_terminate_all(struct dma_cha=
-n *dc)
->>>>  	return 0;
->>>>  }
->>>> =20
->>>> +static void tegra_dma_synchronize(struct dma_chan *dc)
->>>> +{
->>>> +	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
->>>> +
->>>> +	tasklet_kill(&tdc->tasklet);
->>>> +}
->>>> +
->>>
->>> Wouldn't there need to be some clean-up here? If the tasklet is
->>> scheduled, seems that there would be some other house-keeping that need=
-s
->>> to be done after killing it.
->>
->> I'm not seeing anything to clean-up, could you please clarify?
->=20
-> Clean-up with regard to the descriptors. I was concerned if you will the
-> tasklet the necessary clean-up of the descriptors is not handled.
+Hi Jean,
 
-Ah I see that tasklet_kill, unlike tasklet_kill_immediate, does wait for
-the tasklet to run if scheduled. OK, then this should be fine.
+On Wed, 15 Jan 2020 10:10:09 +0100 Jean Pihet <jean.pihet@newoldbits.com> w=
+rote:
+>
+> I did not have this warning, it may be a combination of compiler
+> version and build flags. Do you need a fixup patch for it?
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+That is up to Mark, really.  Unfortunately, Linus will probably get
+this warning during the merge window which he will complain about.
 
-Cheers
-Jon
+It is really weird, as there are three other references to rx_wlen
+immediately before the one complained about ... so maybe this is a bug
+in the compiler I am using (gcc 9.2.1 from Debian, cross compiler
+ppc64le hosted).
 
 --=20
-nvpublic
+Cheers,
+Stephen Rothwell
+
+--Sig_/Qf_b=7/3tSMR196pg1OnJo0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4e6RsACgkQAVBC80lX
+0Gx6Wwf+Ji5II4vWFmpzkIB9qJqtNt2wP+TjEN9PPgCMJQLLMZDvWDOmA6DVjs82
+3JvgyqPB4uZIb52XOp5NcZ3ySvaV2K117jCqdCAsEIuTljxQM7/6JHhh0cuEm1Yb
+ONkjH+V8+l+wvTIdxzPtz0XG3o9nNzemXWWHzUFNBvS38ClWS5aQFfzxRDt/Cint
+QxtJspLF5fd8GAm1sX/tuquzyN9U6rcIy8LXg+EIOEYBextx2ax8miOi+DOyTYYZ
+Wd2Oaui6jDiWJRqoa6w/iStxNNsf+3Md6OYxaYL3eMTKQE79naE2VSH0l6D0TUo6
+kxVD46IZGCvSEEoPpeUQUN7Qs0NMAA==
+=+m32
+-----END PGP SIGNATURE-----
+
+--Sig_/Qf_b=7/3tSMR196pg1OnJo0--
