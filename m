@@ -2,138 +2,116 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A54C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F34C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A17020728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E30E20728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="O3qUU/HH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="O5yLqWdK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SKYJhUZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgAOSo1 (ORCPT
+        id S1729083AbgAOSpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:44:27 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:48779 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729279AbgAOSo0 (ORCPT
+        Wed, 15 Jan 2020 13:45:51 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34997 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbgAOSpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:44:26 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6CE0B21F69;
-        Wed, 15 Jan 2020 13:44:25 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 15 Jan 2020 13:44:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=3KlDlXJYP55FN2KlL735TAQHph
-        ecdn0T19PaZ/sz2EU=; b=O3qUU/HHgvK3c+ZwrOSrkOkV3J3HowBFw2ezurVez2
-        P8BlsjXTKg1/SM4s4FLgaI8M1zZIUsOMRBzh7KiwLRdME9FxF5AmGvsUOxTjQth6
-        rLnQgpzhWv1vIOB51po0CAt+AhiOP7hzSulWXznXHt9yghnoKHp8ZGGhX49SW/Vv
-        oEXwAEZ1LySG7HJD1pUFifFYULgIQ8YHzj1trvJnmNYYDkKOVScRWr5tVTAy7jaq
-        +XHbEe5boyv/wFKonXlhN5y9675YVPy275yKUYvTe1qNBdxqfitHjou5XAsy8DyY
-        cxGyEjY/CKSy+Qc5P8UGykw1/Z1E59nXLFxXF49e7QVw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=3KlDlXJYP55FN2KlL
-        735TAQHphecdn0T19PaZ/sz2EU=; b=O5yLqWdKDUsbaAgoQdIT/vCuJogO+OSxU
-        pwvWeFOKYgL9g5LwJvc0hUXhYCA9S6229D9ud5gKUT/Aw5/mLnkAtjIR19l8evxU
-        ayFMTp070Sn5M2ePB+9qb1SCctpng00ewKAkIZjnb5FbF1Lgy52uGjFl5J9fOZlr
-        pbhwrQudQHyhSuaJWt9XD1YXwIIaCZruMGOT4kAgYu6lxSKiHCtkeDRXJrlBdohD
-        Kl0uFwqh8u6Xc6RYwIzhsMa+SsxjkyPeznD2B1E5fS3o0D+1ZvmlhBilfH+4YybW
-        my/FdnbCBaCV7H7cjJV3fE72uwEuiRqqLeKNdtPI+6yiHpFcDY/5g==
-X-ME-Sender: <xms:iF0fXngrJ6eBGGMJwsIT1N_BNGXy5bunTjNGd53wSM0zu340QSRxdw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdefgdduudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhgurhgvshcu
-    hfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepieejrd
-    duiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshes
-    rghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:iF0fXutXCF4QMqZj6RtX2jAD3QtOVVeiJqzpUW8SegJeDZC-GD-SVQ>
-    <xmx:iF0fXvxasAxVE3gOorzDDGZqjiTLt632KpbsQdsGIJv6O1iGo1xPew>
-    <xmx:iF0fXrbHGvviZpBbB_9O6kbdXBqjl4eOx8M6FWDwEm_EO3LCJTfGYQ>
-    <xmx:iV0fXoABTEroMU1B3inWaYEDHRzIRKa_VUrEi8wLF0fnIoPaFwYMJA>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AA11130602DE;
-        Wed, 15 Jan 2020 13:44:24 -0500 (EST)
-From:   Andres Freund <andres@anarazel.de>
-To:     Tushar Dave <tushar.n.dave@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andres Freund <andres@anarazel.de>
-Subject: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg PCH.
-Date:   Wed, 15 Jan 2020 10:44:15 -0800
-Message-Id: <20200115184415.1726953-1-andres@anarazel.de>
-X-Mailer: git-send-email 2.25.0.rc1
+        Wed, 15 Jan 2020 13:45:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so1100345wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=XhG7oKm+eUCDXzWAmBj1ApEpGRAwwk7JTkSRtwr4uDc=;
+        b=SKYJhUZLU3m5uB+IwXigYsHxvV5o1M+7PQOjuaa8htp7C1d128jxoaBhSeOwMbUuZ5
+         asWpNenhoM1ou5bOufNnZam1MHduqFELyxinQh1KeJSyJE8ICbIB47RiLkeBZdpguPWq
+         NeayeqR6/qGB194gVdes9ah3JpJsuW5dMNdh8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=XhG7oKm+eUCDXzWAmBj1ApEpGRAwwk7JTkSRtwr4uDc=;
+        b=K4M3FIxbmGBRMpniSm9UAZer5S+hZ5+jDoaDYKwyUl1Egtii6w7yvMif9cK5YLiNaa
+         OtufSaMed6G7PzHkQBF9A0kqja6zkSGLuCRBrHNxpIiYKQB2mzMeuIe2QmBD9Uiea4cz
+         d2F0LkmQh+ja3GVbwVUYVj9dtb4e3dznDjdfZQHvj6CrmzgdCLRGzXt5CX/bgnlVdmjx
+         lctfi1bdeRjDj9GwymLsENMPlsjqWGZQOxd1lLnvNc6NnqFnBPXSr25JvkqDpVayCGAZ
+         PaQ1d+txUpETnVvxycIgsSHzK9buliMDw3HwVflkBjkpNddKFXUdMAhLRALaFu9cYDx0
+         bHJA==
+X-Gm-Message-State: APjAAAUvITgc+OcPODyg46ZtDW1rT7zUCIgTkFlBBiy3dlyXM0xUohsx
+        rVa5Q3DXyz5irt5p4d+IAd6hkg==
+X-Google-Smtp-Source: APXvYqxJUJuymcgl6BW34ydWB72BE5+YHoGJoQlEbVg0nk9JyqjTNyO7XAGrpWf/djrH7Rdzmj5LAA==
+X-Received: by 2002:a1c:6755:: with SMTP id b82mr1380457wmc.126.1579113948983;
+        Wed, 15 Jan 2020 10:45:48 -0800 (PST)
+Received: from revest ([37.165.158.17])
+        by smtp.gmail.com with ESMTPSA id h17sm26445192wrs.18.2020.01.15.10.45.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 10:45:48 -0800 (PST)
+Message-ID: <b88cbb1fb39175611e4b31e12a47df240a46dd48.camel@chromium.org>
+Subject: Re: [PATCH v2] ima: add the ability to query the hash of a given
+ file.
+From:   Florent Revest <revest@chromium.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>, KP Singh <kpsingh@chromium.org>
+Cc:     linux-integrity@vger.kernel.org, mjg59@google.com,
+        nramas@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Date:   Wed, 15 Jan 2020 19:45:43 +0100
+In-Reply-To: <1579113367.5032.19.camel@linux.ibm.com>
+References: <20200106162524.164650-1-revest@chromium.org>
+         <20200113104830.GA28588@google.com>
+         <1579113367.5032.19.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that I couldn't read the PCH temperature on my workstation
-(C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to go
-through IPMI. Looking at the data sheet, it looks to me like the
-existing intel PCH thermal driver should work without changes for
-Lewisburg.
+On Wed, 2020-01-15 at 13:36 -0500, Mimi Zohar wrote:
+> On Mon, 2020-01-13 at 11:48 +0100, KP Singh wrote:
+> > On 06-Jan 17:25, Florent Revest wrote:
+> > > From: Florent Revest <revest@google.com>
+> > > 
+> > > This allows other parts of the kernel (perhaps a stacked LSM
+> > > allowing
+> > > system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the
+> > > hash
+> > > of a given file from IMA if it's present in the iint cache.
+> > > 
+> > > It's true that the existence of the hash means that it's also in
+> > > the
+> > > audit logs or in
+> > > /sys/kernel/security/ima/ascii_runtime_measurements,
+> > > but it can be difficult to pull that information out for every
+> > > subsequent exec.  This is especially true if a given host has
+> > > been up
+> > > for a long time and the file was first measured a long time ago.
+> > > 
+> > > This is based on Peter Moody's patch:
+> > >  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
+> > > 
+> > > [1] https://lkml.org/lkml/2019/9/10/393
+> > > 
+> > > Signed-off-by: Florent Revest <revest@google.com>
+> > 
+> > Thanks for adding this Florent!
+> > 
+> > Reviewed-by: KP Singh <kpsingh@chromium.org>
+> 
+> Thanks, this patch is now queued in next-integrity-testing.
 
-I suspect there's some other PCI id's missing. But I hope somebody at
-Intel would have an easier time figuring that out than I...
+Good to hear Mimi! Thank you.
 
-Signed-off-by: Andres Freund <andres@anarazel.de>
----
- drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
-index 4f0bb8f502e1..1f3ff0d489ef 100644
---- a/drivers/thermal/intel/intel_pch_thermal.c
-+++ b/drivers/thermal/intel/intel_pch_thermal.c
-@@ -23,6 +23,7 @@
- #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100 series */
- #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
- #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
-+#define PCH_THERMAL_DID_LWB	0xA1B1 /* Lewisburg PCH */
- 
- /* Wildcat Point-LP  PCH Thermal registers */
- #define WPT_TEMP	0x0000	/* Temperature */
-@@ -272,6 +273,7 @@ enum board_ids {
- 	board_wpt,
- 	board_skl,
- 	board_cnl,
-+	board_lwb,
- };
- 
- static const struct board_info {
-@@ -294,6 +296,10 @@ static const struct board_info {
- 		.name = "pch_cannonlake",
- 		.ops = &pch_dev_ops_wpt,
- 	},
-+	[board_lwb] = {
-+		.name = "pch_lewisburg",
-+		.ops = &pch_dev_ops_wpt,
-+	},
- };
- 
- static int intel_pch_thermal_probe(struct pci_dev *pdev,
-@@ -398,6 +404,8 @@ static const struct pci_device_id intel_pch_thermal_id[] = {
- 		.driver_data = board_cnl, },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
- 		.driver_data = board_cnl, },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_LWB),
-+		.driver_data = board_lwb, },
- 	{ 0, },
- };
- MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
--- 
-2.25.0.rc1
+I would just like to make sure that you queued the v3 of this patch
+though...? (this thread is for the v2 :) ) The v3 includes a couple of
+comments you asked for.
 
