@@ -2,80 +2,203 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82095C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E51C33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3A920728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p609hwBl"
+	by mail.kernel.org (Postfix) with ESMTP id E269120728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgAOMpn (ORCPT
+        id S1729196AbgAOMqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:45:43 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44913 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgAOMpn (ORCPT
+        Wed, 15 Jan 2020 07:46:01 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:56492 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgAOMqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:45:43 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so12584449lfa.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:45:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zw7fLVZlBWPnFhNuSoVVujGBuN87u3KYLlAHzC+pN0M=;
-        b=p609hwBlIti1BDsa7AwFn6dgioFQ0T7bs0x5a9KD1WrN+GkE0lBl0ys22xowzPOQR7
-         V3lR5+PDDQjvesDRY7vNcrJl8xPPyG9qkeKXPvq9oVzBZ3FUI64ahWTx+NwqkpTi6l/2
-         GXCAV+iOUL1CkpVjVjNKo9rtmIKvr+aLjKD79JbVXlAZvE9IfzPkiuQUdBZbMuDZS/K9
-         W/81pW8YAKB/Bcu2v5tKncJV9mNNWW2hjlQ0IlP1kgKmNRp1JEmSrpGp4mOIpabiaTVq
-         vL5bFI31WSMmy9zFuO/najdCeBAdjCD8+E/Odh79W28kiLQT22RzQxGGD1U4Er2g8AvD
-         PB/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zw7fLVZlBWPnFhNuSoVVujGBuN87u3KYLlAHzC+pN0M=;
-        b=NsI/A2Dgsfl65YBgJOYUWs1ssKu2vnEHaxaz43LET3PwH7CUNQNxPhtWqbDhTHfFc1
-         o81cfthRzpcP3BGsPh3Ky5QxDZq1W424g//K6R8dCPOHIu/LKexBcerIqwtGSlOaiR9v
-         lRw6SeVs6Vc49rmRL/fM4GFAsdN+WASn8wtfPmZEnONI7opXqIcUN7eyzx8Kiz4I2D/B
-         +Mv8gfmTcoizluYl1YnA9zsYYspQiNG3t/u0itNEA5fzQ+rbd7cqfciguLeH7rnr/V7Q
-         WNlyApfIyfKGAWZI4udE/FDhOhrKMKGkgobK7fGEreG865+kJb2lHlZff6H15qMDp2eN
-         Q82Q==
-X-Gm-Message-State: APjAAAWyWJFRZEn5KxN8uGQe3wA7hGZddhXRqoi+04vrTKJ4MEIQq5yC
-        t2vgkLMuD7Dm7bmlU2+XRYwn86d/TayJWEmH/rfozw==
-X-Google-Smtp-Source: APXvYqwSaA74Wo0u94HIU5oNVPlQJPvUFTlEtrMxfPTAIykGqb3bFAFJMktSIsrWP4Hs5KTLmEsFohek2rxDoppQqCo=
-X-Received: by 2002:a19:5513:: with SMTP id n19mr4407533lfe.205.1579092339536;
- Wed, 15 Jan 2020 04:45:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
-In-Reply-To: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 13:45:28 +0100
-Message-ID: <CACRpkdZGkPgB7wh3bKeeu+rD4_YnXLM9aLFt-wKti2YkU7yVqQ@mail.gmail.com>
-Subject: Re: [PATCH] GPIO: vx855: fixed a typo
-To:     sachin agarwal <asachin591@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 Jan 2020 07:46:00 -0500
+Received: from ramsan ([84.195.182.253])
+        by baptiste.telenet-ops.be with bizsmtp
+        id qclq210045USYZQ01clqd9; Wed, 15 Jan 2020 13:45:57 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iri3S-0003yz-3C; Wed, 15 Jan 2020 13:45:50 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iri3S-00012Z-1m; Wed, 15 Jan 2020 13:45:50 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to DT schema
+Date:   Wed, 15 Jan 2020 13:45:44 +0100
+Message-Id: <20200115124548.3951-2-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 3:33 PM sachin agarwal <asachin591@gmail.com> wrote:
+Convert the DT binding documentation for Sitronix ST7735R displays to DT
+schema.
 
-> From: Sachin agarwal <asachin591@gmail.com>
->
-> we had written "betwee" rather than "between".
->
-> Signed-off-by: Sachin agarwal <asachin591@gmail.com>
+Add a reference to the Adafruit 1.8" LCD while at it.
 
-Patch applied.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - New.
+---
+ .../bindings/display/sitronix,st7735r.txt     | 35 ----------
+ .../bindings/display/sitronix,st7735r.yaml    | 65 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 66 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+ create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+deleted file mode 100644
+index cd5c7186890a2be7..0000000000000000
+--- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-Sitronix ST7735R display panels
+-
+-This binding is for display panels using a Sitronix ST7735R controller in SPI
+-mode.
+-
+-Required properties:
+-- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
+-- dc-gpios:	Display data/command selection (D/CX)
+-- reset-gpios:	Reset signal (RSTX)
+-
+-The node for this driver must be a child node of a SPI controller, hence
+-all mandatory properties described in ../spi/spi-bus.txt must be specified.
+-
+-Optional properties:
+-- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
+-- backlight:	phandle of the backlight device attached to the panel
+-
+-Example:
+-
+-	backlight: backlight {
+-		compatible = "gpio-backlight";
+-		gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+-	};
+-
+-	...
+-
+-	display@0{
+-		compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
+-		reg = <0>;
+-		spi-max-frequency = <32000000>;
+-		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
+-		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
+-		rotation = <270>;
+-		backlight = &backlight;
+-	};
+diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+new file mode 100644
+index 0000000000000000..21bccc91f74255e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sitronix ST7735R Display Panels Device Tree Bindings
++
++maintainers:
++  - David Lechner <david@lechnology.com>
++
++description:
++  This binding is for display panels using a Sitronix ST7735R controller in
++  SPI mode.
++
++allOf:
++  - $ref: panel/panel-common.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - description:
++          Adafruit 1.8" 160x128 Color TFT LCD (Product ID 358 or 618)
++        items:
++          - enum:
++              - jianda,jd-t18003-t01
++          - const: sitronix,st7735r
++
++  spi-max-frequency:
++    maximum: 32000000
++
++  dc-gpios:
++    maxItems: 1
++    description: Display data/command selection (D/CX)
++
++required:
++  - compatible
++  - reg
++  - dc-gpios
++  - reset-gpios
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    backlight: backlight {
++            compatible = "gpio-backlight";
++            gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
++    };
++
++    spi {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            display@0{
++                    compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
++                    reg = <0>;
++                    spi-max-frequency = <32000000>;
++                    dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
++                    reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
++                    rotation = <270>;
++            };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea8262509bdd21ac..3007f83bd504194a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5382,7 +5382,7 @@ M:	David Lechner <david@lechnology.com>
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ S:	Maintained
+ F:	drivers/gpu/drm/tiny/st7735r.c
+-F:	Documentation/devicetree/bindings/display/sitronix,st7735r.txt
++F:	Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+ 
+ DRM DRIVER FOR SONY ACX424AKP PANELS
+ M:	Linus Walleij <linus.walleij@linaro.org>
+-- 
+2.17.1
+
