@@ -2,165 +2,98 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF29C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9472FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5F62081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0322081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgAOQnp (ORCPT
+        id S1729016AbgAOQob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:43:45 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59258 "EHLO mga05.intel.com"
+        Wed, 15 Jan 2020 11:44:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:39868 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgAOQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:43:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 08:43:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="226170948"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga006.jf.intel.com with ESMTP; 15 Jan 2020 08:43:42 -0800
-Subject: Re: [PATCH v11 2/4] uacce: add uacce driver
-To:     zhangfei <zhangfei.gao@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-References: <1578710919-12141-1-git-send-email-zhangfei.gao@linaro.org>
- <1578710919-12141-3-git-send-email-zhangfei.gao@linaro.org>
- <20200111194006.GD435222@kroah.com>
- <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
- <20200114145934.GA1960403@kroah.com>
- <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <9454d674-85db-32ba-4f28-eb732777d59d@intel.com>
-Date:   Wed, 15 Jan 2020 09:43:41 -0700
+        id S1728896AbgAOQob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 11:44:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9EB6328;
+        Wed, 15 Jan 2020 08:44:30 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B5AC3F718;
+        Wed, 15 Jan 2020 08:44:30 -0800 (PST)
+Subject: Re: [stable] [PATCH 1/2] coresight: etb10: Do not call
+ smp_processor_id from preemptible
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20200108110541.318672-1-suzuki.poulose@arm.com>
+ <20200109143537.GE1706@sasha-vm>
+ <a183da32-b933-6ed0-f8b8-703e27d3f15e@arm.com>
+ <20200115151118.GC3740793@kroah.com>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <d3cd59e0-8fa2-9e69-534f-15f13cb14897@arm.com>
+Date:   Wed, 15 Jan 2020 16:44:29 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
+In-Reply-To: <20200115151118.GC3740793@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Greg,
 
-On 1/15/20 4:18 AM, zhangfei wrote:
-> Hi, Greg
-> 
-> On 2020/1/14 下午10:59, Greg Kroah-Hartman wrote:
->> On Mon, Jan 13, 2020 at 11:34:55AM +0800, zhangfei wrote:
->>> Hi, Greg
->>>
->>> Thanks for the review.
->>>
->>> On 2020/1/12 上午3:40, Greg Kroah-Hartman wrote:
->>>> On Sat, Jan 11, 2020 at 10:48:37AM +0800, Zhangfei Gao wrote:
->>>>> +static int uacce_fops_open(struct inode *inode, struct file *filep)
->>>>> +{
->>>>> +    struct uacce_mm *uacce_mm = NULL;
->>>>> +    struct uacce_device *uacce;
->>>>> +    struct uacce_queue *q;
->>>>> +    int ret = 0;
->>>>> +
->>>>> +    uacce = xa_load(&uacce_xa, iminor(inode));
->>>>> +    if (!uacce)
->>>>> +        return -ENODEV;
->>>>> +
->>>>> +    if (!try_module_get(uacce->parent->driver->owner))
->>>>> +        return -ENODEV;
->>>> Why are you trying to grab the module reference of the parent device?
->>>> Why is that needed and what is that going to help with here?
+On 15/01/2020 15:11, Greg KH wrote:
+> On Thu, Jan 09, 2020 at 02:36:17PM +0000, Suzuki Kuruppassery Poulose wrote:
+>> On 09/01/2020 14:35, Sasha Levin wrote:
+>>> On Wed, Jan 08, 2020 at 11:05:40AM +0000, Suzuki K Poulose wrote:
+>>>> [ Upstream commit 730766bae3280a25d40ea76a53dc6342e84e6513 ]
 >>>>
->>>> This shouldn't be needed as the module reference of the owner of the
->>>> fileops for this module is incremented, and the "parent" module depends
->>>> on this module, so how could it be unloaded without this code being
->>>> unloaded?
+>>>> During a perf session we try to allocate buffers on the "node" associated
+>>>> with the CPU the event is bound to. If it is not bound to a CPU, we
+>>>> use the current CPU node, using smp_processor_id(). However this is
+>>>> unsafe
+>>>> in a pre-emptible context and could generate the splats as below :
 >>>>
->>>> Yes, if you build this code into the kernel and the "parent" driver 
->>>> is a
->>>> module, then you will not have a reference, but when you remove that
->>>> parent driver the device will be removed as it has to be unregistered
->>>> before that parent driver can be removed from the system, right?
+>>>> BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
 >>>>
->>>> Or what am I missing here?
->>> The refcount here is preventing rmmod "parent" module after fd is 
->>> opened,
->>> since user driver has mmap kernel memory to user space, like mmio, 
->>> which may
->>> still in-use.
+>>>> Use NUMA_NO_NODE hint instead of using the current node for events
+>>>> not bound to CPUs.
+>>>>
+>>>> Fixes: 2997aa4063d97fdb39 ("coresight: etb10: implementing AUX API")
+>>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>> Cc: stable <stable@vger.kernel.org> # v4.9 to v4.19
+>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>> Link: https://lore.kernel.org/r/20190620221237.3536-5-mathieu.poirier@linaro.org
+>>>>
 >>>
->>> With the refcount protection, rmmod "parent" module will fail until
->>> application free the fd.
->>> log like: rmmod: ERROR: Module hisi_zip is in use
->> But if the "parent" module is to be unloaded, it has to unregister the
->> "child" device and that will call the destructor in here and then you
->> will tear everything down and all should be good.
+>>> I've queued this for 4.9-4.19. There was a simple conflict on 4.9 which
+>>> also had to be resolved.
+>>>
 >>
->> There's no need to "forbid" a module from being unloaded, even if it is
->> being used.  Look at all networking drivers, they work that way, right?
-> Thanks Greg for the kind suggestion.
+>>
+>> Thanks Sasha !
 > 
-> I still have one uncertainty.
-> Does uacce has to block process continue accessing the mmapped area when 
-> remove "parent" module?
-> Uacce can block device access the physical memory when parent module 
-> call uacce_remove.
-> But application is still running, and suppose it is not the kernel 
-> driver's responsibility to call unmap.
+> Note, these had to all be dropped as they broke the build :(
 > 
-> I am looking for some examples in kernel,
-> looks vfio does not block process continue accessing when 
-> vfio_unregister_iommu_driver either.
+> So can you please send us patches that at least build?  :)
 > 
-> In my test, application will keep waiting after rmmod parent, until 
-> ctrl+c, when unmap is called.
-> During the process, kernel does not report any error.
-> 
-> Do you have any advice?
 
-Would it work to call unmap_mapping_range() on the char dev 
-inode->i_mappings? I think you need to set the vma->fault function ptr 
-for the vm_operations_struct in the original mmap(). After the mappings 
-are unmapped, you can set a state variable to trigger the return of 
-VM_FAULT_SIGBUS in the ->fault function when the user app accesses the 
-mmap region again and triggers a page fault. The user app needs to be 
-programmed to catch exceptions to deal with that.
+Do you have a build failure log ? I did build test it before sending it 
+over. I tried it again on 4.9, 4.14 and 4.19. I don't hit any build
+failures here.
 
-> 
->>>>> +static void uacce_release(struct device *dev)
->>>>> +{
->>>>> +    struct uacce_device *uacce = to_uacce_device(dev);
->>>>> +
->>>>> +    kfree(uacce);
->>>>> +    uacce = NULL;
->>>> That line didn't do anything :)
->>> Yes, this is a mistake.
->>> It is up to caller to set to NULL to prevent release multi times.
->> Release function is called by the driver core which will not touch the
->> value again.
-> Yes, I understand, it's my mistake. Will remove it.
-> 
-> Thanks
+Please could you share the log if you have it handy ?
+
+Suzuki
