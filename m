@@ -2,99 +2,110 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3796EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E237C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091982467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034B824679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:20:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kIWJKZcs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VFbqD0Pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAOOTi (ORCPT
+        id S1729021AbgAOOUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:19:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38139 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgAOOTh (ORCPT
+        Wed, 15 Jan 2020 09:20:30 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51195 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726085AbgAOOU3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:19:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so8602134pfc.5;
-        Wed, 15 Jan 2020 06:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rv/DqUwBL0cLyteq+cLEvFpPEt4GgePPdmAX2ItXChM=;
-        b=kIWJKZcsvkuUZvwRivtFvgIWWDo/Tti9TY17prXqhn8ou+0J4BFvJ8oIYES3K08qiV
-         R2Vd/rvzIe6i8Dil+hZ1hPy5ShyssowGgZBxu6/JRIa6PsjSIBRLZaXZ8XByGPpMGHXb
-         HMEh9ZxA9USfjlI/OVFGBEnv4FMtGnmgrp8YW8Bne7Sob31aw40Lz7ldLM/hNyY+ouRL
-         nO67kdJRx5Qqwd6mEg1nF2oLI06lV89EutTw90xedrb8KftavppvbuE85RQRPFz+aWLB
-         jofInZLvvseBm3dWeaCgohHSctkr/z6cg19t3fVZFRNbnLUnK+IO6HNECzCuhrooY2aC
-         7PAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rv/DqUwBL0cLyteq+cLEvFpPEt4GgePPdmAX2ItXChM=;
-        b=CavODgW43/U5eCvFO6KXXtU/lkl+g4CVa6s46dQvKvCZGCHS/G0EIg4tYW0XDFBK3x
-         ZVbWDjldpFX36VfnlFcUg4BOuIFjy32+mCwT9nvvqbMnOw0c0dpyQrvR3GCITEzhlygN
-         MG+/XXC6mP/9aToGwZCYTdO8xrRY7+GV3Jn9Bs4qRafs9oj2jfDv4sPdzx+Nu2Oxq3lx
-         qoyGDW609xzGDorCaDohM7Q7kcpSyI98Hrq8XkmHdKkbIwauUxWMPYJNWBWPm0tqJZgl
-         GaHkVCCWaNpENJ8aht0DRxRdCUJwtPLD0dcRlbZ9XEH2nFr8oddYmWDc1wUE2GXVsPLy
-         hvVA==
-X-Gm-Message-State: APjAAAXQ0gC/NpIPnpKzLBITq2Jm7iNCWg5Mh5PboJmCJnifUik+kG5R
-        O0U5Brnd9zmOjarCMO5KOIU=
-X-Google-Smtp-Source: APXvYqw/Ek4M3Mu/gGAWjG9C64Bz9YXgOVv1wSXGZqMVwUNkMRrlLduGljYrzFwonam0LSkXgoxpww==
-X-Received: by 2002:a63:534d:: with SMTP id t13mr31890500pgl.89.1579097977017;
-        Wed, 15 Jan 2020 06:19:37 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee8:ed72:75ba:e01f:bdbc:c547])
-        by smtp.gmail.com with ESMTPSA id p35sm21208425pgl.47.2020.01.15.06.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 06:19:36 -0800 (PST)
-From:   madhuparnabhowmik04@gmail.com
-To:     wei.liu@kernel.org, paul@xen.org
-Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, paulmck@kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-Subject: [PATCH] net: xen-netback: hash.c: Use built-in RCU list checking
-Date:   Wed, 15 Jan 2020 19:48:40 +0530
-Message-Id: <20200115141840.10553-1-madhuparnabhowmik04@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jan 2020 09:20:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579098028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HtSguD4DonoXKrAZPQ1DK5ewTREMerhNuGoZ0KSdPnQ=;
+        b=VFbqD0PrToG09vUgR/3iqeQcBTMeI8eu6/AhiSGvVSZcLRN/93a1EddrNhFFJmVzgsRn+w
+        P+ItHXWknOBej6kH1sQzL6gkjUUeqtLzeP3wbazGY3pz9TRhsDt+JSk8Dq/1TRPNbKA//P
+        JZBU5Wbr+H/MKl4aq91iLTprlyO9h1M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-Bu9W6yxqPZODu82iaD6qdw-1; Wed, 15 Jan 2020 09:20:24 -0500
+X-MC-Unique: Bu9W6yxqPZODu82iaD6qdw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2BB5107ACFA;
+        Wed, 15 Jan 2020 14:20:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B4B060E1C;
+        Wed, 15 Jan 2020 14:20:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca>
+References: <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     dhowells@redhat.com, Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Problems with determining data presence by examining extents?
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <24869.1579098019.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 15 Jan 2020 14:20:19 +0000
+Message-ID: <24870.1579098019@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Andreas Dilger <adilger@dilger.ca> wrote:
 
-list_for_each_entry_rcu has built-in RCU and lock checking.
-Pass cond argument to list_for_each_entry_rcu.
+> > Would you like to explain why you want to know such fs internal info?
+> =
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
----
- drivers/net/xen-netback/hash.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> I believe David wants it to store sparse files as an cache and use FIEMA=
+P to
+> determine if the blocks are cached locally, or if they need to be fetche=
+d from
+> the server.  If the filesystem doesn't store the written blocks accurate=
+ly,
+> there is no way for the local cache to know whether it is holding valid =
+data
+> or not.
 
-diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
-index 10d580c3dea3..3f9783f70a75 100644
---- a/drivers/net/xen-netback/hash.c
-+++ b/drivers/net/xen-netback/hash.c
-@@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
- 
- 	found = false;
- 	oldest = NULL;
--	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
-+	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
-+				lockdep_is_held(&vif->hash.cache.lock)) {
- 		/* Make sure we don't add duplicate entries */
- 		if (entry->len == len &&
- 		    memcmp(entry->tag, tag, len) == 0)
--- 
-2.17.1
+More or less.  I have no particular attachment to bmap or FIEMAP as the
+interface to use.  I'm just interested in finding out quickly if the data =
+I
+want is present.
+
+If call_read_iter() will return a short read on hitting a hole, I can mana=
+ge
+if I can find out if just the first byte is present.
+
+Finding out if the block is present allows me to avoid shaping read reques=
+ts
+from VM readahead into 256k blocks - which may require the allocation of e=
+xtra
+pages for bufferage.
+
+David
 
