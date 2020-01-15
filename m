@@ -2,104 +2,76 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474D0C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B46D24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B/+xH4/E"
+	by mail.kernel.org (Postfix) with ESMTP id E3A502467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgAOQ1I (ORCPT
+        id S1728931AbgAOQ3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:27:08 -0500
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:38210 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgAOQ1H (ORCPT
+        Wed, 15 Jan 2020 11:29:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54681 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAOQ3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:27:07 -0500
-Received: by mail-oi1-f178.google.com with SMTP id l9so15927386oii.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J/jN6ywbZWrd/e8wYUMEIXDZGBzSANaQq7yRDAP83uc=;
-        b=B/+xH4/Eyp1dZWuwN1qXlcnEbTiaIUXw/zmnO4Y6MoV4k/4b2iNTvNyaZhqAM4CGtq
-         fHJeB+YOuhn5WfoFBtoRru9xTPQ4PajJiJnSKedbVonXe95HUhzEDuqWwhOaoOgn81iM
-         LHecuREADg4u5m7mmnxYjFqU6qv+PQb8lOeFEhBPuBEfQicxP66s9nx84LROlbjNswRa
-         OG3z6Z+Pm4p/eVq6bLaqSf4Nkok7ohkH9mmGEHduPOLkd+QDnK1i54BEQg8Nond9vTcF
-         ZBPasnleuQA3UsLlu2TgysfoVVYD5jzO2gbt0PKpty8q+NjriD3JDjX7IOxf+RYUYVQi
-         aC5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J/jN6ywbZWrd/e8wYUMEIXDZGBzSANaQq7yRDAP83uc=;
-        b=USumyuHrwnfIt8G21YwtElcosqPHwt/qvHVRIztFxBsjmDWZLXe6rBry6bJ87BmrFV
-         v04R8Cz++E/go12exh3/Sjj1B7gP058UuwmoJUBz2GL24kebQ+lGYRm1egFfDUITkBqi
-         7RcdEj1M5AUjkNLISs7muxV/jgVfWmiLy8C/uGAsphMvqtSJIRd6ETeqk9qARhVYngw5
-         uBcVg8RLR5VUK5id1IAnp/LvoEMC/ox2hUIH3v/Bg22jm9uc61F1eSWFuB1U/zCe/rHh
-         6NYkRYh92NikWejbuvNyWi1wfZoEfOg6wtbEzCxCJabMI7Y8O75JuXUJGXfmMqCfgeK4
-         gsCw==
-X-Gm-Message-State: APjAAAXSoaJcLDaG0lH0xRlJciuO7ArT1NG4EoZPR8sPyJV6GzGxw6Qm
-        TLQptupgTyY+aE411G/wwVrWvOGgFbVyndkuLioLVw==
-X-Google-Smtp-Source: APXvYqzR8LTgGm365RkfsuoKvbZoY28BmfWLpQCIRElF/Ak1oay/+JhQpn/p6sl0OfHOxyt/vnuBT0ybBwrsH+DkgCw=
-X-Received: by 2002:aca:36c1:: with SMTP id d184mr501516oia.70.1579105626648;
- Wed, 15 Jan 2020 08:27:06 -0800 (PST)
+        Wed, 15 Jan 2020 11:29:19 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXg-0004mW-B5; Wed, 15 Jan 2020 17:29:16 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXf-0003Us-Nz; Wed, 15 Jan 2020 17:29:15 +0100
+Date:   Wed, 15 Jan 2020 17:29:15 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
+Message-ID: <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
+References: <20200108104746.1765-1-m.felsch@pengutronix.de>
+ <20200108104746.1765-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <20200114124919.11891-1-elver@google.com> <CAG_fn=X1rFGd1gfML3D5=uiLKTmMbPUm0UD6D0+bg+_hJtQMqA@mail.gmail.com>
-In-Reply-To: <CAG_fn=X1rFGd1gfML3D5=uiLKTmMbPUm0UD6D0+bg+_hJtQMqA@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 15 Jan 2020 17:26:55 +0100
-Message-ID: <CANpmjNP6+NTr7_rkNPVDbczst5vutW2K6FXXqkqFg6GGbQC31Q@mail.gmail.com>
-Subject: Re: [PATCH -rcu] kcsan: Make KCSAN compatible with lockdep
-To:     Alexander Potapenko <glider@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108104746.1765-4-m.felsch@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:28:40 up 61 days,  7:47, 54 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 at 18:24, Alexander Potapenko <glider@google.com> wrote:
->
-> > --- a/kernel/kcsan/core.c
-> > +++ b/kernel/kcsan/core.c
-> > @@ -337,7 +337,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
-> >          *      detection point of view) to simply disable preemptions to ensure
-> >          *      as many tasks as possible run on other CPUs.
-> >          */
-> > -       local_irq_save(irq_flags);
-> > +       raw_local_irq_save(irq_flags);
->
-> Please reflect the need to use raw_local_irq_save() in the comment.
->
-> >
-> >         watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
-> >         if (watchpoint == NULL) {
-> > @@ -429,7 +429,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
-> >
-> >         kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
-> >  out_unlock:
-> > -       local_irq_restore(irq_flags);
-> > +       raw_local_irq_restore(irq_flags);
->
-> Ditto
+Hi Linus,
 
-Done. v2: http://lkml.kernel.org/r/20200115162512.70807-1-elver@google.com
+On 20-01-08 11:47, Marco Felsch wrote:
+> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> be used as input, output or have a special use-case.
+> 
+> The patch adds the support for the normal input/output use-case.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Thanks,
--- Marco
+Is it possible to get this into 5.6?
+
+Regards,
+  Marco
+
