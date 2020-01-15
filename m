@@ -2,69 +2,126 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E50AC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FB0C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F9A2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDB72465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579126840;
+	bh=MecWhcCJAGPUJ4OXDGGrCD3wo4H4PxqxgKhgor6BbSI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=teHv7ER4kxOjSxC5z8GbNMTo0NIB2S/kmpOUf1fBFjQxesA6OieQjVOBSYPYSE1uh
+	 LspRCMSV3YJ/faW7Ef/YDM/VTuPcRCnOc3jWX+mvR0CWtcVKikgUMJtPFV/35PNhLO
+	 aTOVXxw5Yop4C3xr+jgCN5O69zEFMCw1WLLsiAcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgAOWTz (ORCPT
+        id S1730645AbgAOWUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:19:55 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49401 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbgAOWTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:19:55 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irr0v-0002IC-V0; Wed, 15 Jan 2020 23:19:50 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 0D22D101228; Wed, 15 Jan 2020 23:19:49 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
-        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
-Subject: Re: [PATCH] x86/cpu: clear X86_BUG_SPECTRE_V2 on Zhaoxin family 7 CPUs
-In-Reply-To: <1579075500-7065-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-References: <1579075500-7065-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-Date:   Wed, 15 Jan 2020 23:19:49 +0100
-Message-ID: <87h80wxsze.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Wed, 15 Jan 2020 17:20:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728899AbgAOWUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:20:38 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417742187F;
+        Wed, 15 Jan 2020 22:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579126838;
+        bh=MecWhcCJAGPUJ4OXDGGrCD3wo4H4PxqxgKhgor6BbSI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kbk0a/GXE86lIbzo/QxgQJJd57fWJrBt8kybb3SilQpU2LHP7WMunGcQDYj0Td7zV
+         GIemnGEZzeSV0KuLG5Y8yStj56NJNmZknHopWreVDnI/pPRCsux8OM0z/7ijL7eJUg
+         dn2zDdklBL/lf6lJNDjSf3x9jE319JVeRmYfxHb4=
+Date:   Thu, 16 Jan 2020 07:20:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Chen Zhou <chenzhou10@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        keescook@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] init/main.c: make some symbols static
+Message-Id: <20200116072034.93933a2acc82627b86e091bf@kernel.org>
+In-Reply-To: <20200115142057.GE19826@linux.ibm.com>
+References: <20200115135458.71460-1-chenzhou10@huawei.com>
+        <20200115142057.GE19826@linux.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony W Wang-oc <TonyWWang-oc@zhaoxin.com> writes:
+Hi Chen Hulk and Mike,
 
-> These CPUs are not affected by spectre_v2, so clear spectre_v2 bug flag
-> in their specific initialization code.
->  
->  	if (cpu_has(c, X86_FEATURE_VMX))
->  		centaur_detect_vmx_virtcap(c);
-> +
-> +	if (c->x86 == 7) {
-> +		setup_clear_cpu_cap(X86_BUG_SPECTRE_V2);
-> +		clear_bit(X86_BUG_SPECTRE_V2, (unsigned long *)cpu_caps_set);
+Thanks for reporting.
 
-No. Please use cpu_vuln_whitelist. It exists for exactly this
-purpose. You just need to extend it with a NO_SPECTRE_V2 bit.
+This looks good to me.
 
-Thanks,
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-        tglx
+Thank you!
 
 
+On Wed, 15 Jan 2020 16:20:58 +0200
+Mike Rapoport <rppt@linux.ibm.com> wrote:
+
+> (added Steven and Masami)
+> 
+> On Wed, Jan 15, 2020 at 09:54:58PM +0800, Chen Zhou wrote:
+> > Make variable xbc_namebuf and function boot_config_checksum static to
+> > fix build warnings, warnings are as follows:
+> > 
+> > init/main.c:254:6:
+> > 	warning: symbol 'xbc_namebuf' was not declared. Should it be static?
+> > init/main.c:330:5:
+> > 	warning: symbol 'boot_config_checksum' was not declared. Should it be static?
+> > 
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> > ---
+> >  init/main.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/init/main.c b/init/main.c
+> > index a77114f..3a95591 100644
+> > --- a/init/main.c
+> > +++ b/init/main.c
+> > @@ -251,7 +251,7 @@ early_param("loglevel", loglevel);
+> >  
+> >  #ifdef CONFIG_BOOT_CONFIG
+> >  
+> > -char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+> > +static char xbc_namebuf[XBC_KEYLEN_MAX] __initdata;
+> >  
+> >  #define rest(dst, end) ((end) > (dst) ? (end) - (dst) : 0)
+> >  
+> > @@ -327,7 +327,7 @@ static char * __init xbc_make_cmdline(const char *key)
+> >  	return new_cmdline;
+> >  }
+> >  
+> > -u32 boot_config_checksum(unsigned char *p, u32 size)
+> > +static u32 boot_config_checksum(unsigned char *p, u32 size)
+> >  {
+> >  	u32 ret = 0;
+> >  
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
