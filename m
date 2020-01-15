@@ -2,110 +2,134 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3267C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB87CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB3324658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F83924658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="Dj6RekFY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FvkWcFhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgAOAaV (ORCPT
+        id S1728879AbgAOAoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 19:30:21 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38555 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgAOAaV (ORCPT
+        Tue, 14 Jan 2020 19:44:11 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58072 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbgAOAoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 19:30:21 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so7479454pfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 16:30:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2uhXxJrpNwhDXk9w5jQc+1ryIzo08zTX5UifvdF/pDY=;
-        b=Dj6RekFYo2OwXbRK+O1AQ0vjKi6Ro2yluA2wQT5Y1favqbhm1f08DgK2+5jazZksuW
-         C+9ia4nJupQ9Ju3guCueIoC1e7hFXG/erqMN1McuCn7ERQ4GlWapSijCdp+w0jD451/v
-         uH3duKtwf8E5Z55j2l20CFyLzF+vs6tF4M7a8oyGJGWCHKUqBgbdbghaMUSlFErWscE2
-         iUkBulr6BTQV6vvdeiXDaj7PXI8wzD7vVDFtmDKKfUoyiOmseWA2on6pGoWmbGe+W/QK
-         QiG6pzkTQK5irGjCSY2Z5VDx5YEfW5nefjEsKf9L/nATDCFk3DemGxidF/PHS+RLx6LZ
-         MyYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2uhXxJrpNwhDXk9w5jQc+1ryIzo08zTX5UifvdF/pDY=;
-        b=VUU1Cw1mz6tEXYxZdTtP1djDJouh9SVVR73d819AsT7p9qCpppWcRnyCYXsGmeBAj3
-         H+58ZWIlzijj+NvfO3kWN+hSo5tVFFoF5gAVjHvIhgvTGz5DflL0+YSJnE2AWL7f+qvy
-         VpDUlWT4FkgNVQv8PbwhL93qdaleHc+lTXWOFF22xZguaYFQ8WUMPEyMsgfxt9QdU4gK
-         SQKmfU8W+8Vcd7Q2ZDs0Wpxhbtxri7CV3p05RBd78Z6U61pOcmFWZCCmDhr7lzW/QVGv
-         msDFB2yYRDhnm9my9kAEUqZpxBYbVQ6vVDwTek8Mk4GLoyexrJNpxSpWtZ02LKiKtemX
-         nkcw==
-X-Gm-Message-State: APjAAAWAYTHSwlQ83+a6RvqiuoZSztwgw9zyB8KbwpwWjlTNcIWhmhY3
-        HTWFU8UloSmy7QU8woNviMzDLg==
-X-Google-Smtp-Source: APXvYqzwpNDwOwqUi+FNMt9PWk5H7yfUQKRU9edFhU6evZLIfwvYFB4NOBn3ZXTiJZ8v/Zv1mLCXiQ==
-X-Received: by 2002:a63:b141:: with SMTP id g1mr31273224pgp.168.1579048220401;
-        Tue, 14 Jan 2020 16:30:20 -0800 (PST)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id h3sm14684706pjs.0.2020.01.14.16.30.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 16:30:19 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: mpq7920: Fix incorrect defines
-Date:   Wed, 15 Jan 2020 08:29:53 +0800
-Message-Id: <20200115002953.14731-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Jan 2020 19:44:11 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F0cB4e094838;
+        Wed, 15 Jan 2020 00:44:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=dMM6cB6N2/2q/GMJ9/bh185cN65XzXsqykH1AXgKeoc=;
+ b=FvkWcFhdEcbbLDUHTuq4NwqXO7eQaJh8R9WeqK0FZ5u3m22WGn2eE51xIM65a6umo32C
+ GXal6DDDTwvazy5oxwo7CbaZLOET6JcJ097f7P7BdimpT8FiNSvSq2NpUi2iYM64yav/
+ au7+LnFkFxA3eY2E6aDrp1fO8PyuNpdGQSm4xDDureVSI1aj0OJ4mWLNprtVis9/W0MH
+ KX6MZR2doEI5JuCuRaUaexY8xCao7yuMaTpXK1O1KJY/k0C2KAwY30K/eIHuyUX6wpSo
+ pmestUO2L8YE3M43jwsIpuBM8V+AP41vF2m6bHI3Lzkk/4K7lF/MwBDnZh+13s3bE7kX 1w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xf74s9ep3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 00:44:01 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F0dQK6147575;
+        Wed, 15 Jan 2020 00:44:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xh2sdhmsk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 00:44:01 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00F0hshW017576;
+        Wed, 15 Jan 2020 00:43:55 GMT
+Received: from localhost (/10.159.156.8)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jan 2020 16:43:54 -0800
+Date:   Tue, 14 Jan 2020 16:43:53 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     hch@lst.de, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Add __packed to xfs_dir2_sf_entry_t definition
+Message-ID: <20200115004353.GX8247@magnolia>
+References: <20200114120352.53111-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200114120352.53111-1-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150004
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix defines for MPQ7920_MASK_BUCK_ILIM and MPQ7920_DISCHARGE_ON
-Remove unused MPQ7920_REG_REGULATOR_EN1.
+On Tue, Jan 14, 2020 at 12:03:52PM +0000, Vincenzo Frascino wrote:
+> xfs_check_ondisk_structs() verifies that the sizes of the data types
+> used by xfs are correct via the XFS_CHECK_STRUCT_SIZE() macro.
+> 
+> Since the structures padding can vary depending on the ABI (e.g. on
+> ARM OABI structures are padded to multiple of 32 bits), it may happen
+> that xfs_dir2_sf_entry_t size check breaks the compilation with the
+> assertion below:
+> 
+> In file included from linux/include/linux/string.h:6,
+>                  from linux/include/linux/uuid.h:12,
+>                  from linux/fs/xfs/xfs_linux.h:10,
+>                  from linux/fs/xfs/xfs.h:22,
+>                  from linux/fs/xfs/xfs_super.c:7:
+> In function ‘xfs_check_ondisk_structs’,
+>     inlined from ‘init_xfs_fs’ at linux/fs/xfs/xfs_super.c:2025:2:
+> linux/include/linux/compiler.h:350:38:
+>     error: call to ‘__compiletime_assert_107’ declared with attribute
+>     error: XFS: sizeof(xfs_dir2_sf_entry_t) is wrong, expected 3
+>     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+> 
+> Restore the correct behavior adding __packed to the structure definition.
+> 
+> Cc: Darrick J. Wong <darrick.wong@oracle.com>
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/mpq7920.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Will give this a spin,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-diff --git a/drivers/regulator/mpq7920.h b/drivers/regulator/mpq7920.h
-index 1498a1e3f4f5..489924655a96 100644
---- a/drivers/regulator/mpq7920.h
-+++ b/drivers/regulator/mpq7920.h
-@@ -43,11 +43,10 @@
- #define MPQ7920_LDO5_REG_B		0x1e
- #define MPQ7920_LDO5_REG_C		0x1f
- #define MPQ7920_REG_MODE		0x20
--#define MPQ7920_REG_REGULATOR_EN1	0x22
- #define MPQ7920_REG_REGULATOR_EN	0x22
- 
- #define MPQ7920_MASK_VREF		0x7f
--#define MPQ7920_MASK_BUCK_ILIM		0xd0
-+#define MPQ7920_MASK_BUCK_ILIM		0xc0
- #define MPQ7920_MASK_LDO_ILIM		BIT(6)
- #define MPQ7920_MASK_DISCHARGE		BIT(5)
- #define MPQ7920_MASK_MODE		0xc0
-@@ -57,7 +56,7 @@
- #define MPQ7920_MASK_DVS_SLEWRATE	0xc0
- #define MPQ7920_MASK_OVP		0x40
- #define MPQ7920_OVP_DISABLE		~(0x40)
--#define MPQ7920_DISCHARGE_ON		0x1
-+#define MPQ7920_DISCHARGE_ON		BIT(5)
- 
- #define MPQ7920_REGULATOR_EN_OFFSET	7
- 
--- 
-2.20.1
+--D
 
+> ---
+>  fs/xfs/libxfs/xfs_da_format.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+> index 3dee33043e09..60db25f30430 100644
+> --- a/fs/xfs/libxfs/xfs_da_format.h
+> +++ b/fs/xfs/libxfs/xfs_da_format.h
+> @@ -217,7 +217,7 @@ typedef struct xfs_dir2_sf_entry {
+>  	 * A 64-bit or 32-bit inode number follows here, at a variable offset
+>  	 * after the name.
+>  	 */
+> -} xfs_dir2_sf_entry_t;
+> +} __packed xfs_dir2_sf_entry_t;
+>  
+>  static inline int xfs_dir2_sf_hdr_size(int i8count)
+>  {
+> -- 
+> 2.24.1
+> 
