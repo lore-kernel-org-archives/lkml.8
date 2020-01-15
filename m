@@ -2,207 +2,344 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB46C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAA8C47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E372081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FDC24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="F2ewjwg9"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bJ5JQDFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgAONJk (ORCPT
+        id S1728963AbgAONLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:09:40 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37582 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAONJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:09:40 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200115130938euoutp01dad866682990e65cc118dbda39c48c01~qEWzWHoWr1900919009euoutp01f
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:09:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200115130938euoutp01dad866682990e65cc118dbda39c48c01~qEWzWHoWr1900919009euoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579093778;
-        bh=ueSGlkXTpFk7VXNWLhrgWBJ0hToomm/X8o6QoUdinb8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=F2ewjwg9r/omc4RxFTFZ6/9ejp2YYMbOj2iI3m+gE4P1AEDxG8cqnETqo5AO5yVMK
-         bPVz+c397OJj0OLUMEju34BFESLBbMe86MHbL0xYrWdh4Qg3jfstwJTudVp2xlc3Gg
-         v3ctWe30hzg3E8B81666+xh/uI2TwZuBpf282Vvs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200115130938eucas1p209b4204b639c05afc3880b4aa4ed47f1~qEWzACZoT1216012160eucas1p2t;
-        Wed, 15 Jan 2020 13:09:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5B.5F.61286.11F0F1E5; Wed, 15
-        Jan 2020 13:09:38 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200115130937eucas1p2674b7613bb50697556ab3068985b8776~qEWynydpI1216512165eucas1p2r;
-        Wed, 15 Jan 2020 13:09:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115130937eusmtrp261b214e7212697676c420e59c0951e30~qEWym_ss00896208962eusmtrp2B;
-        Wed, 15 Jan 2020 13:09:37 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-c9-5e1f0f112373
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2E.FB.08375.11F0F1E5; Wed, 15
-        Jan 2020 13:09:37 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115130936eusmtip13802b1dead4248941f960f209aad27df~qEWxmaNxD2707427074eusmtip15;
-        Wed, 15 Jan 2020 13:09:36 +0000 (GMT)
-Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Peter Rosin <peda@axentia.se>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, security@kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <6ed59903-afe7-d5b2-73eb-ca626616dd6f@samsung.com>
-Date:   Wed, 15 Jan 2020 14:09:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 15 Jan 2020 08:11:15 -0500
+Received: from mout.gmx.net ([212.227.17.20]:36431 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgAONLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:11:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1579093853;
+        bh=GACHe/A4NUnsLt6nmN4a3IUPIpCXBBUk3t4qf+8W5LE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=bJ5JQDFuYjGGY/Ss8AQ92FDQn6RuVRBW8x4ChJGGlsUj8I9yykF+XlM9SzTOaGBiU
+         8kCupuLIeuTtsX8SQQeF0hSAnml7Dmtw2nC1Fcr+ZXGYYU05gj+erFwIcEALsJBYdY
+         Fj0/n0bBpFLLV9N99opzHKH+EG6MBm1Bae4UWUZg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([149.28.201.231]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MVN6t-1jGHiV2EoZ-00SK2N; Wed, 15
+ Jan 2020 14:10:53 +0100
+Subject: Re: Problems with determining data presence by examining extents?
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <4467.1579020509@warthog.procyon.org.uk>
+ <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
+ <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAU4EEwEIADgCGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1oQAKCRDC
+ PZHzoSX+qCY6CACd+mWu3okGwRKXju6bou+7VkqCaHTdyXwWFTsr+/0ly5nUdDtT3yEVggPJ
+ 3VP70wjlrxUjNjFb6iIvGYxiPOrop1NGwGYvQktgRhaIhALG6rPoSSAhGNjwGVRw0km0PlIN
+ D29BTj/lYEk+jVM1YL0QLgAE1AI3krihg/lp/fQT53wLhR8YZIF8ETXbClQG1vJ0cllPuEEv
+ efKxRyiTSjB+PsozSvYWhXsPeJ+KKjFen7ebE5reQTPFzSHctCdPnoR/4jSPlnTlnEvLeqcD
+ ZTuKfQe1gWrPeevQzgCtgBF/WjIOeJs41klnYzC3DymuQlmFubss0jShLOW8eSOOWhLRuQEN
+ BFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcgaCbPEwhLj
+ 1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj/IrRUUka
+ 68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fNGSsRb+pK
+ EKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0q1eW4Jrv
+ 0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEvABEBAAGJ
+ ATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAKCRDCPZHz
+ oSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gyfmtBnUai
+ fnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsSoCEEynby
+ 72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAkZkA523JG
+ ap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gGUO/iD/T5
+ oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
+Message-ID: <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com>
+Date:   Wed, 15 Jan 2020 21:10:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxNYRz2ds4993Tr1tu90m+F5o4mS7TMXqJly5zNbGqG2cSJs0L31u4t
-        ZLZC9LUlUbgZfVglSW7qiqXuzUpqEZI1H1nJ1+6SihVdOp2a/nn3/J7f8+z3PNvLUqoMxpM9
-        oIsX9Do+RsMo6NrmsY7lKlfviJUnQshETrOcfLNfpEnhh7cUeTk6yJC/tSlykv++jyYlvW2I
-        tGdqSU2PFxnoaaXI46zvMvLi/hWGFA7V0KTeeg2Rq03dDCkbq0GkayINhbhxv8dzEJfXmC/n
-        8pM7aa7+ZwHN1RnfyjlTeTrDXW0N4+rvHuTeZ7Y4cEMfe2hupPwVxV3P62K4wYeTz7BpIXfB
-        mkpvdd2lWLdfiDlwWNCvCN6riK5saURxv+YdHT/dJk9GJnUGcmQBr4Jbg9l0BlKwKlyGIHPM
-        KJOGEQSWkWwkDcMIat5lOcxYhm9kyUWswqUIJhr8JJENwWiFmREXarwJsopKkIjn4kWQ+3mA
-        EkUUviyDJ386ZeKCwWvhXGr5lEiJg6EpfWCSZ1kaLwHzp1CRdsc74Udvk0ySuEHr5X5axI44
-        DJoKTk0ForAH9PRfm8beYLZdmboF+BELud2jSEodCu1nC6exGr623JVLeD78rRPNoqFysk3a
-        52m3GUHpeTsjqYLgTcc4I6ajsC/cvr9CojdA8b1sSqQBu8Brm5sUwgVyai9O00pIO6OS1D5Q
-        VVLFzJzNqLtBZSONcVY146w6xll1jP/vFiC6HHkICQZtlGAI0AlH/A281pCgi/LfF6s1ockf
-        2mZv+XEPjT6PtCLMIo2zMvrPwgiVjD9sSNRaEbCUZq6y9dKCCJVyP594TNDH7tEnxAgGK/Ji
-        aY2HMrDoy24VjuLjhUOCECfoZ7YOrKNnMsoz1buvflW3LcnT/9cW35DApNpzFb1O/SfJ7h2D
-        pZrcbteA3NA+32fBPkETfavHXfRRZy3e25dWNK957fTzqV+4cyXv5EX3fhA2V0c6Hms4rq6K
-        fz4nbucieyBvu2NuuNkcyQnXu8YSFZ3hzhZbiu5FmaX643r7A0tBsTpyy+KNGzS0IZoPWEbp
-        Dfw/bb/g+J0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsVy+t/xu7qC/PJxBlN6FC3+TjrGbvH633QW
-        i4UP7zJbXPn6ns3i/7YWdovZ9x+zWCx7cJrR4kx3rsXWW9IWz26dZLY40feB1eLyrjlsFgs/
-        bmWx2HtoPqPFvMPX2SxW/NzKaHH1bwejg6DH71+TGD2mHZjN7jG74SKLx95vC1g8ds66y+6x
-        aVUnm8e8k4Eee7dkedzvPs7k8fHpLRaPL6uuMXssmXaVzeP9PiDxeZOcx5RD7SwB/FF6NkX5
-        pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GeuOH2As+C5W
-        8av1NHsD4ybhLkZODgkBE4nPK/vYuxi5OIQEljJKvPt1hKWLkQMoISNxfH0ZRI2wxJ9rXWwQ
-        Na8ZJe5+PcQGkhAWcJfoW7SMEcQWEVCUmPriGTNIEbPAbFaJplVrWSE6ljBJdP64CNbBJmAl
-        MbF9FVgHr4CdxOHOZ6wg21gEVCW2P3cBCYsKREgc3jELqkRQ4uTMJywgNqdAoMThBc1MIDaz
-        gLrEn3mXmCFscYlbT+ZDxeUltr+dwzyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYkO9
-        4sTc4tK8dL3k/NxNjMCkse3Yz807GC9tDD7EKMDBqMTDm/FHLk6INbGsuDL3EKMEB7OSCO/J
-        GbJxQrwpiZVVqUX58UWlOanFhxhNgX6byCwlmpwPTGh5JfGGpobmFpaG5sbmxmYWSuK8HQIH
-        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYVZLvPc9be8d2yT4O8aeMf6REc2xL6/ladU/UmJzdVb7+
-        gd2BAJW5tcnTw7mW/Ah+sSXCOH7+rfpvsz4XXL3m1zhzb3f1DxfDtSfiMi+fXusYWNf8Tv5b
-        3OcnOdbuwTEBC3sOL80Tvpz80ikk4gm/ka68cuwkvo2Na/2tbD6JV6/eOa/9HXO4EktxRqKh
-        FnNRcSIA0JCo2jADAAA=
-X-CMS-MailID: 20200115130937eucas1p2674b7613bb50697556ab3068985b8776
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e
-References: <20191029182320.GA17569@mwanda>
-        <CGME20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e@epcas3p4.samsung.com>
-        <87zhhjjryk.fsf@x220.int.ebiederm.org>
-        <fd4e6f01-074b-def7-7ffb-9a9197930c31@samsung.com>
-        <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
+In-Reply-To: <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="wnxGRQSvPQJqBidzcPInLcdXSne6ta9CM"
+X-Provags-ID: V03:K1:xeioVm+ZwQ2APp3sx+DTCx+5rWOntoHy2WWP9n2fYnhMN8PXldd
+ lvciigPL7iL2XdDgrUQqcmH81FmHiF/3RZlL8LSzp4nPb9lJY01aqDajXUfDtBiQKBws1eb
+ RKobljuooeyF6KJPBLZGjLnavdY/+MCpxc15vc+oBbvp9VcsqdXeaT2QeoYqjRq43/vGqwo
+ Kz97aNapx8LzWhDXbSB8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g88NoOBjGB0=:NgtpghqqQQj8tD09+qLvao
+ L46Yvv6PVIwsboxU+BZ3Wr0isQf1Q254wOzOxQQLzA7PhU7xyeEqNjLtwdT3t32PQJEJ2c5x7
+ AVUPBHrun2ija98vAQHzjemiAbSoSOM3lrh2NQWlq/jxemHGRZx+h4TdnbLrxXDMZunfh1td+
+ /lCw9Lj5DuufzUpSAwvGbZ9WKJhYsmhLs7Z6kLcepTTtPWOIzXVVYaPFEtP9ND6C4XQZpvLJs
+ phDOx32y67kYx/Ys9pl9wqs044qAXtnHzmbwMAETvVQQbIczAsqEw+dKBNPoa0qif6LH2bKcj
+ A6yBs84QHcXTeDJuZVKu/4mfhsvURotgmUCWgYTsQ12bjaMLfoNefm56XuoSCLL44tUKOhzZn
+ xXPl0nNaFc8H1G/L7ZgVD4TO5DKA+gw0mfSH0Bc+knL9JWnALuMBH71/jVm6eo3fXwVoYc9P9
+ tk4ypbAx1r0K2qEoM8pWGA+F4ATeJcQDUNjCI3KEDFvvmYZTLp3vyjTaAeRt5YtcWn3i7KraP
+ 4d22PCuUY25UJfvRccXPsgbt7ZBlwProGoHUMaOsbZXhOFAsWS7e5eIe3KW/LlUJ8MbBUc2TU
+ WGF7nWCDuk0ssJlAXKmlMHkgKnKWA53xnjrS/jJJchUt1jSyWKICS61xRtbxocnSjBUrO20Wn
+ EwRMYUxQNQ3s7o26PsN2AYid28TW2wCLQtFNhPisLtmyCNYEPqLsZoLHnvS9Xl7VagRu/VRTJ
+ +SZKbymvPBRhd3w1z5c32tRwD4aF1uVZ/qhfBWAKw/LaSEera3szmuKrybe6WXQyL9Va/cg80
+ 3NP2IaIMV60iY7Ksz4RatNGvUGE8wBCxREy9ckhoh8vdlQEpCpQizm8orw6BdNLC4xkoS0rdD
+ QVSIDN4r4GwIYfioesD9tls/8llMjEKXB2m5pIuYg7NJ4YWW2Z4y2zn2UcUV2IqJtZixnh6Ac
+ HgrHQ9bDqX6iivPKrSnBH6pZ6Ia/O9s5HzkAZowpWq5UrcvwJiPJ+KeGn51sk8DH5TDErqnCv
+ 4zl7A+809rBdyBeNpvF6wgTlBulzCJGlBOgdRjFjeMUBGAXfoDoAsqB70DZ2aiywYdpXB/KRg
+ BOq1ychUGM0AjKFoxKUyqMJgokpBqG7tWykZGV5EGU9UgWqibmVl3DXMU4BvvVbL32QRlmWnY
+ rOrI8eDTk8SxOilNsJ3vn+6csx5K0pQPl2iWH63OQM0BmeH+ooxWUGVeENjcsqTkO+2QwBFUd
+ JtrT0DrxSbonGI4vSec+oJOSB2AVPbO/RNJCiNweXSw/E20GCU/BuDcrAuQXBZ0veKX/N+tHl
+ cEyMKQ83gcZezUdTaH61YtOxaLAv458Rd22yoBgm1peLLfmEDUpjEuOnBrJrrULC7ByyEr7OQ
+ HxRf1nfrp4926wIlp/bUF0adxBzAa2RXvEwo6JP+YpUzsAOgvJI66tJviEVPftfYqBxSA4k/r
+ HAfuzQL/X7pCrUqit1llHSGFj+tpyGVg/yLbnXvTZYOPGkK145o5M68JHXorSTUm8Yu0f5tkZ
+ aOw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--wnxGRQSvPQJqBidzcPInLcdXSne6ta9CM
+Content-Type: multipart/mixed; boundary="Rvojnmd15NITd9vuRIw68oGUfjalcLZtS"
 
-On 1/13/20 1:49 PM, Arnd Bergmann wrote:
-> On Fri, Jan 3, 2020 at 2:09 PM Bartlomiej Zolnierkiewicz
-> <b.zolnierkie@samsung.com> wrote:
->> On 10/29/19 8:02 PM, Eric W. Biederman wrote:
->>>
->>> The goal is to avoid memory that has values of the previous users of
->>> that memory region from leaking to userspace.  Which depending on who
->>> the previous user of that memory region is could tell userspace
->>> information about what the kernel is doing that it should not be allowed
->>> to find out.
->>>
->>> I tried to trace through where "info" and thus presumably "info->fix" is
->>> coming from and only made it as far as  register_framebuffer.  Given
+--Rvojnmd15NITd9vuRIw68oGUfjalcLZtS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+
+On 2020/1/15 =E4=B8=8B=E5=8D=888:46, Andreas Dilger wrote:
+> On Jan 14, 2020, at 8:54 PM, Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
 >>
->> "info" (and thus "info->fix") comes from framebuffer_alloc() (which is
->> called by fbdev device drivers prior to registering "info" with
->> register_framebuffer()). framebuffer_alloc() does kzalloc() on "info".
+>> On 2020/1/15 =E4=B8=8A=E5=8D=8812:48, David Howells wrote:
+>>> Again with regard to my rewrite of fscache and cachefiles:
+>>>
+>>> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.gi=
+t/log/?h=3Dfscache-iter
+>>>
+>>> I've got rid of my use of bmap()!  Hooray!
+>>>
+>>> However, I'm informed that I can't trust the extent map of a backing =
+file to
+>>> tell me accurately whether content exists in a file because:
 >>
->> Therefore shouldn't memcpy() (as suggested by Jeo Perches) be enough?
-> 
-> Is it guaranteed that all drivers call framebuffer_alloc() rather than
-> open-coding it somewhere?
-> 
-> Here is a list of all files that call register_framebuffer() without first
-> calling framebuffer_alloc:
-> 
-> $ git grep -wl register_framebuffer | xargs grep -L framebuffer_alloc
-> Documentation/fb/framebuffer.rst
-> drivers/media/pci/ivtv/ivtvfb.c
-> drivers/media/platform/vivid/vivid-osd.c
-> drivers/video/fbdev/68328fb.c
-> drivers/video/fbdev/acornfb.c
-> drivers/video/fbdev/amba-clcd.c
-> drivers/video/fbdev/atafb.c
-> drivers/video/fbdev/au1100fb.c
-> drivers/video/fbdev/controlfb.c
-> drivers/video/fbdev/core/fbmem.c
-> drivers/video/fbdev/cyber2000fb.c
-> drivers/video/fbdev/fsl-diu-fb.c
-> drivers/video/fbdev/g364fb.c
-> drivers/video/fbdev/goldfishfb.c
-> drivers/video/fbdev/hpfb.c
-> drivers/video/fbdev/macfb.c
-> drivers/video/fbdev/matrox/matroxfb_base.c
-> drivers/video/fbdev/matrox/matroxfb_crtc2.c
-> drivers/video/fbdev/maxinefb.c
-> drivers/video/fbdev/ocfb.c
-> drivers/video/fbdev/pxafb.c
-> drivers/video/fbdev/sa1100fb.c
-> drivers/video/fbdev/stifb.c
-> drivers/video/fbdev/valkyriefb.c
-> drivers/video/fbdev/vermilion/vermilion.c
-> drivers/video/fbdev/vt8500lcdfb.c
-> drivers/video/fbdev/wm8505fb.c
-> drivers/video/fbdev/xilinxfb.c
-> 
-> It's possible (even likely, the ones I looked at are fine) that they
-> all correctly
-> zero out the fb_info structure first, but it seems hard to guarantee, so
-> Eric's suggestion would possibly still be the safer choice.
+>>>
+>>> (b) Blocks of zeros that I write into the file may get punched out by=
 
-I've audited all above instances and they are all fine. They either
-use the fb_info structure embedded in a driver specific structure
-(which is zeroed out) or (in case of some m68k specific drivers) use
-a static fb_info instance.
+>>>     filesystem optimisation since a read back would be expected to re=
+ad zeros
+>>>     there anyway, provided it's below the EOF.  This would give me a =
+false
+>>>     negative.
+>>
+>> I know some qemu disk backend has such zero detection.
+>> But not btrfs. So this is another per-fs based behavior.
+>>
+>> And problem (c):
+>>
+>> (c): A multi-device fs (btrfs) can have their own logical address mapp=
+ing.
+>> Meaning the bytenr returned makes no sense to end user, unless used fo=
+r
+>> that fs specific address space.
+>=20
+> It would be useful to implement the multi-device extension for FIEMAP, =
+adding
+> the fe_device field to indicate which device the extent is resident on:=
 
-Since fbdev is closed for new drivers it should be now fine to use
-the simpler approach (just use memcpy()).
- 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+>=20
+> + #define FIEMAP_EXTENT_DEVICE		0x00008000 /* fe_device is valid, non-
+> +						    * local with EXTENT_NET */
+> + #define FIEMAP_EXTENT_NET		0x80000000 /* Data stored remotely. */
+>=20
+>  struct fiemap_extent {
+>  	__u64 fe_logical;  /* logical offset in bytes for the start of
+>  			    * the extent from the beginning of the file */
+>  	__u64 fe_physical; /* physical offset in bytes for the start
+>  			    * of the extent from the beginning of the disk */
+>  	__u64 fe_length;   /* length in bytes for this extent */
+>  	__u64 fe_reserved64[2];
+>  	__u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
+> -	__u32 fe_reserved[3];
+> +	__u32 fe_device;   /* device number (fs-specific if FIEMAP_EXTENT_NET=
+)*/
+> +	__u32 fe_reserved[2];
+>  };
+>=20
+> That allows userspace to distinguish fe_physical addresses that may be
+> on different devices.  This isn't in the kernel yet, since it is mostly=
+
+> useful only for Btrfs and nobody has implemented it there.  I can give
+> you details if working on this for Btrfs is of interest to you.
+
+IMHO it's not good enough.
+
+The concern is, one extent can exist on multiple devices (mirrors for
+RAID1/RAID10/RAID1C2/RAID1C3, or stripes for RAID5/6).
+I didn't see how it can be easily implemented even with extra fields.
+
+And even we implement it, it can be too complex or bug prune to fill
+per-device info.
+
+>=20
+>> This is even more trickier when considering single device btrfs.
+>> It still utilize the same logical address space, just like all multipl=
+e
+>> disks btrfs.
+>>
+>> And it completely possible for a single 1T btrfs has logical address
+>> mapped beyond 10T or even more. (Any aligned bytenr in the range [0,
+>> U64_MAX) is valid for btrfs logical address).
+>>
+>>
+>> You won't like this case either.
+>> (d): Compressed extents
+>> One compressed extent can represents more data than its on-disk size.
+>>
+>> Furthermore, current fiemap interface hasn't considered this case, thu=
+s
+>> there it only reports in-memory size (aka, file size), no way to
+>> represent on-disk size.
+>=20
+> There was a prototype patch to add compressed extent support to FIEMAP
+> for btrfs, but it was never landed:
+>=20
+> [PATCH 0/5 v4] fiemap: introduce EXTENT_DATA_COMPRESSED flag David Ster=
+ba
+> https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg35837.html
+>=20
+> This adds a separate "fe_phys_length" field for each extent:
+
+That would work much better.
+Although we could has some corner cases.
+
+E.g. a compressed extent which is 128K on-disk, and 1M uncompressed.
+But only the last 4K of the uncompressed extent is referred.
+Then current fields are still not enough.
+
+But if the user only cares about hole and non-hole, then all these
+hassles are not related.
+
+>=20
+> +#define FIEMAP_EXTENT_DATA_COMPRESSED  0x00000040 /* Data is compresse=
+d by fs.
+> +                                                   * Sets EXTENT_ENCOD=
+ED and
+> +                                                   * the compressed si=
+ze is
+> +                                                   * stored in fe_phys=
+_length */
+>=20
+>  struct fiemap_extent {
+>  	__u64 fe_physical;    /* physical offset in bytes for the start
+> 			       * of the extent from the beginning of the disk */
+>  	__u64 fe_length;      /* length in bytes for this extent */
+> -	__u64 fe_reserved64[2];
+> +	__u64 fe_phys_length; /* physical length in bytes, may be different f=
+rom
+> +			       * fe_length and sets additional extent flags */
+> +	__u64 fe_reserved64;
+>  	__u32 fe_flags;	      /* FIEMAP_EXTENT_* flags for this extent */
+>  	__u32 fe_reserved[3];
+>  };
+>=20
+>=20
+>> And even more bad news:
+>> (e): write time dedupe
+>> Although no fs known has implemented it yet (btrfs used to try to
+>> support that, and I guess XFS could do it in theory too), you won't
+>> known when a fs could get such "awesome" feature.
+>>
+>> Where your write may be checked and never reach disk if it matches wit=
+h
+>> existing extents.
+>>
+>> This is a little like the zero-detection-auto-punch.
+>>
+>>> Is there some setting I can use to prevent these scenarios on a file =
+- or can
+>>> one be added?
+>>
+>> I guess no.
+>>
+>>> Without being able to trust the filesystem to tell me accurately what=
+ I've
+>>> written into it, I have to use some other mechanism.  Currently, I've=
+ switched
+>>> to storing a map in an xattr with 1 bit per 256k block, but that gets=
+ hard to
+>>> use if the file grows particularly large and also has integrity conse=
+quences -
+>>> though those are hopefully limited as I'm now using DIO to store data=
+ into the
+>>> cache.
+>>
+>> Would you like to explain why you want to know such fs internal info?
+>=20
+> I believe David wants it to store sparse files as an cache and use FIEM=
+AP to
+> determine if the blocks are cached locally, or if they need to be fetch=
+ed from
+> the server.  If the filesystem doesn't store the written blocks accurat=
+ely,
+> there is no way for the local cache to know whether it is holding valid=
+ data
+> or not.
+
+That looks like a hack, by using fiemap result as out-of-band info.
+
+Although looks very clever, not sure if this is the preferred way to do
+it, as that's too fs internal mechanism specific.
+
+Thanks,
+Qu
+
+>=20
+>=20
+> Cheers, Andreas
+>=20
+>=20
+>=20
+>=20
+>=20
+
+
+--Rvojnmd15NITd9vuRIw68oGUfjalcLZtS--
+
+--wnxGRQSvPQJqBidzcPInLcdXSne6ta9CM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl4fD1QACgkQwj2R86El
+/qh38Qf/aAKZSXVTdhZ99I7zYzvyS24APpZMrdqjxnCHx722R7/rn9cTBjCsLPnW
+wp0pEWvHbjBA1e9FIjT1NoEa3LZ8in2mW7mXfPbLrlTnRhmmHFk5TjhdiPdMzhoK
+33n3HAeBYLq9PtaZi7i6d9kumY6Fpz8MGBQTyfVV5quvlSu8Uun1PZlngq4z76xC
+v/Yb5b0DUe/n+yUlVLjXO4rt+AmtGI+I233NuIve9cl4OgFNeVnzo/cgs0NIRf50
+nHmWnerwcUlAB6XIfM0Amcg4U8+vJljKuE44zXhUQ45700pp+bPMobcz3TB0ycq0
+1Z9cdHJWeO0ORmYOkvw/SWgEc8pTqw==
+=46ox
+-----END PGP SIGNATURE-----
+
+--wnxGRQSvPQJqBidzcPInLcdXSne6ta9CM--
