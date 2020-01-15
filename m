@@ -2,112 +2,90 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4943EC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF08C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1F92053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579101929;
-	bh=fXHwWrM70vqgMiNEcITYA/2VoMaOOkctg8qxw/jut9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jC9/ELh8cpECwODMu4F3ISdU8c5O8vI8tssTa6C1MqfOixR4YjtpdfQJxt9euStul
-	 wex97TKvDflLeN5U+wK3IEvZGFFBpbqaYE47fAgjbmWr6S/54HD1lpB8x2zCVcwdDn
-	 OI18/xhGQQV6c4Q+G12JLK7AwL6oZpbZAy9uYsPg=
+	by mail.kernel.org (Postfix) with ESMTP id 8415724671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kHpvzbDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgAOPZ2 (ORCPT
+        id S1726248AbgAOP0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:25:28 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38699 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgAOPZZ (ORCPT
+        Wed, 15 Jan 2020 10:26:09 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50548 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgAOP0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:25:25 -0500
-Received: by mail-ot1-f68.google.com with SMTP id z9so14296209oth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 07:25:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WFi9eiSujdmRgUALnYgUAdNpHS3NpE41hamHBXYiuxI=;
-        b=dxue5j6S0FArJ1t/i4Ca7hoRW2gCVp22oHSQ5ytUjiFFjOkwkIdm/tcaeYjW8Jwrvp
-         GRCBekR2Vu/6t9wcFmrn9GBGuiB8iOvpGxRjLQnTO3j66whtzfgbYCgZfRGBMU5/rajk
-         Nag4DYkKFJi/vEIaeKjuCR4ghP1FOxHn59dR7uMahYIKcUHyGmG+b+FZCUkichf7HhqJ
-         gBWegjY2d+toU6cM4sNBZX5p15DuOyYmNf/dx45zwhM3DBqE7GIsa86l0eFjID2Se1zm
-         nNXZDAArWbND/0UNy7qKs2s8MmPSVz+4d/sHEO9OBqHtOne0Cs4p/NJr5K3iOJVcLAMP
-         P9gw==
-X-Gm-Message-State: APjAAAXtdoQ/NvbJ1pW30DtQg3tO65Dq7l1DyZoZnaX6Pda3F45HoPcs
-        vJt4ouEkisYxkFZ8Ad/7alP2wM0=
-X-Google-Smtp-Source: APXvYqxbvTLnARgPUediqb3CMuoMub/gZrv57lgIAo/wn7U9reLTQJ51v4mzACCKYJLI0UH/PWUU8w==
-X-Received: by 2002:a05:6830:c2:: with SMTP id x2mr3211022oto.8.1579101924512;
-        Wed, 15 Jan 2020 07:25:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r63sm5687292oib.56.2020.01.15.07.25.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:25:23 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 22040c
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 15 Jan 2020 09:25:22 -0600
-Date:   Wed, 15 Jan 2020 09:25:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: input: touchscreen: add compatible
- string for Goodix GT917S
-Message-ID: <20200115152522.GA15943@bogus>
-References: <20200110162608.1066397-1-icenowy@aosc.io>
- <20200110162608.1066397-2-icenowy@aosc.io>
+        Wed, 15 Jan 2020 10:26:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=kHpvzbDYrkkUL3cc6cAeI5E40
+        ZM4+K5yaMP71I4XDs4NUIgcsDzecXQdTVQOI9UytyY4m6+JLlmCUKImi6/dR6L0pfsC4d/T3wdp6O
+        MiH8oMX11mdJxpFGhOL7MY3IiaLtrvOA39N0TisTI5sK4J7NubFbUAjuMwaWVei004tfkvfbrpAij
+        WTdPFX3eGuXTIlhNJQiA3RF5rEAKjEdpqrrh5f1fKjYLIoyd1CXYcnXJpOIhCKF5zP2Ta6n7nspuK
+        beARcZPMIHEiIKJBTW/sqFRg/NbSX1PMvzETS5fO9gFel4MAap2iKW4+78ZJA1pxuRM3jK5szGNmG
+        Rhb44UCRQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1irkYK-0000mL-Dn; Wed, 15 Jan 2020 15:25:52 +0000
+Date:   Wed, 15 Jan 2020 07:25:52 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: Re: [PATCH v12 08/22] mm/gup: allow FOLL_FORCE for
+ get_user_pages_fast()
+Message-ID: <20200115152552.GD19546@infradead.org>
+References: <20200107224558.2362728-1-jhubbard@nvidia.com>
+ <20200107224558.2362728-9-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110162608.1066397-2-icenowy@aosc.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200107224558.2362728-9-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 12:26:06AM +0800, Icenowy Zheng wrote:
-> Goodix GT917S is a new touchscreen chip from Goodix.
-> 
-> Add its compatible string to the device tree binding.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index fc03ea4cf5ab..c5447b136eb3 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  				 or "goodix,gt911"
->  				 or "goodix,gt9110"
->  				 or "goodix,gt912"
-> +				 or "goodix,gt917s"
+Looks good,
 
-This binding is getting converted to schema, so you'll probably need to 
-respin. In any case,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  				 or "goodix,gt927"
->  				 or "goodix,gt9271"
->  				 or "goodix,gt928"
-> -- 
-> 2.23.0
-> 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
