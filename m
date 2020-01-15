@@ -2,167 +2,112 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE80C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF539C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4268224658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4BD24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SbEo5zBp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7eWKs0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgAOB1J (ORCPT
+        id S1728892AbgAOBag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:27:09 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:44622 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbgAOB1H (ORCPT
+        Tue, 14 Jan 2020 20:30:36 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35479 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728844AbgAOBag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:27:07 -0500
-Received: by mail-pf1-f201.google.com with SMTP id r127so9897212pfc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 17:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=+hDgtcJ/OAWe9zIJj2uUM/Qj+y1M7vqqOqi2MY740cw=;
-        b=SbEo5zBpBq30EMJ5WGTJdUleiraqh7pRa2Nw0a4bsfHNDUmiBRMRcceqj5vgsp+yZD
-         zA15qcUMkkqs0G0mlULqVgoPx8f6lINvEm/HUSYSvsASmziRYje1qMrSXwmErtDz2Bon
-         ryd41KYz/6mj3AI2ESiO0S1m7FKOKJ0uP1mWiSBLxILSDpqupMzcecid/pl+I/2FMEBV
-         BGJRAG0xlusuZ66v01XbYj+nn1YuYpw7QeNfBjSRZTV6hRnBYGFnFZzyXFp/XCy7SrX1
-         n+QZNB7SfXv9qStndFXqL7ojGlE9+1hkKxpS9zTRIp7b3i4VOp5qe8J+VekK5NT3ycMn
-         16RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+hDgtcJ/OAWe9zIJj2uUM/Qj+y1M7vqqOqi2MY740cw=;
-        b=E84dgZXj37KDtX3HxgHEjgeQcN5zC/E5Nebr/GSSgsBRnmmdn6MMEZqvf/bUJXeSvS
-         T+cNBicDbpapf5SzHqslgpj/j2eQJ6UMPcR9sKqyAwIlNu/MYZqfTcRUFanEYZ8d//Yx
-         FuvHLvnI6HFAYLy68fkn8PjFrizkUSmWLTK1zipD4tV0+ksAhl81rpiQtQKJp/zKZwz4
-         gkPtxcM+96VyNwBVv3esahWowyhfR33u7EIE8TlRhbPaaFLxOu804uCZUHkap+LJqD9X
-         5S0uERM24EnBMubHsNfa4/erY6FUD2Yga66eRhaz/N7a68rr2qz4+ycPl9W/cpO9cEs4
-         7adw==
-X-Gm-Message-State: APjAAAUzHw826fM2uFzU4cAOFH+VdyM5MTFblQHiNYkV0aiXnAqj8TvW
-        NBadwIwfbBu+BZAOrPEATZvVGHM0tZuJm4wQpg==
-X-Google-Smtp-Source: APXvYqyyjl2zNq7/Fihix9iuEtq3Q06GE1o8i8KAInm5+9bDeWN7QRw6hAI7tkCO4X/1w9M2HxbiSoxA5H5cI3IpCQ==
-X-Received: by 2002:a65:4142:: with SMTP id x2mr29535809pgp.393.1579051626821;
- Tue, 14 Jan 2020 17:27:06 -0800 (PST)
-Date:   Tue, 14 Jan 2020 17:26:49 -0800
-In-Reply-To: <20200115012651.228058-1-almasrymina@google.com>
-Message-Id: <20200115012651.228058-6-almasrymina@google.com>
-Mime-Version: 1.0
-References: <20200115012651.228058-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH v10 6/8] hugetlb_cgroup: support noreserve mappings
-From:   Mina Almasry <almasrymina@google.com>
-To:     mike.kravetz@oracle.com, rientjes@google.com, shakeelb@google.com
-Cc:     shuah@kernel.org, almasrymina@google.com, gthelen@google.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 Jan 2020 20:30:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579051835;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cq04Ga1b8xTrH17T3rkjESGzzrFCqY7RRinYPFVL2u0=;
+        b=Q7eWKs0w9E1gn14AnUZJCdjk1u2cWMfRu1SefhIc4yLM8s7FcZXMEdlN4/L6KKzqHsZQXj
+        IBj7oPVJV1Kepe539MehgjLIpixYGfY/ZnFB50Dhn9+5IRICkY4fY6Gx4ZOYjD3gPSzLTy
+        KxIEXtJFbtt+Svgt0F9vA0qez0Vf4Hk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-MILkH8OSOieJ7asONUSy-w-1; Tue, 14 Jan 2020 20:30:31 -0500
+X-MC-Unique: MILkH8OSOieJ7asONUSy-w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A71C1800D78;
+        Wed, 15 Jan 2020 01:30:30 +0000 (UTC)
+Received: from plouf.redhat.com (ovpn-116-34.ams2.redhat.com [10.36.116.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B657A675AE;
+        Wed, 15 Jan 2020 01:30:26 +0000 (UTC)
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH] Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+Date:   Wed, 15 Jan 2020 02:30:23 +0100
+Message-Id: <20200115013023.9710-1-benjamin.tissoires@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support MAP_NORESERVE accounting as part of the new counter.
+The Yoga 11e is using LEN0049, but it doesn't have a trackstick.
 
-For each hugepage allocation, at allocation time we check if there is
-a reservation for this allocation or not. If there is a reservation for
-this allocation, then this allocation was charged at reservation time,
-and we don't re-account it. If there is no reserevation for this
-allocation, we charge the appropriate hugetlb_cgroup.
+Thus, there is no need to create a software top buttons row.
 
-The hugetlb_cgroup to uncharge for this allocation is stored in
-page[3].private. We use new APIs added in an earlier patch to set this
-pointer.
+However, it seems that the device works under SMBus, so keep it as part
+of the smbus_pnp_ids.
 
-Signed-off-by: Mina Almasry <almasrymina@google.com>
 
----
+Link: https://gitlab.freedesktop.org/libinput/libinput/issues/414
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-Changes in v10:
-- Refactored deferred_reserve check.
-
----
- mm/hugetlb.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 9bcfc12c5d214..d3f107626f927 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1374,6 +1374,9 @@ static void __free_huge_page(struct page *page)
- 	clear_page_huge_active(page);
- 	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
- 				     page, false);
-+	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
-+				     page, true);
-+
- 	if (restore_reserve)
- 		h->resv_huge_pages++;
-
-@@ -2207,6 +2210,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
- 	long gbl_chg;
- 	int ret, idx;
- 	struct hugetlb_cgroup *h_cg;
-+	bool deferred_reserve;
-
- 	idx = hstate_index(h);
- 	/*
-@@ -2244,10 +2248,20 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
- 			gbl_chg = 1;
- 	}
-
-+	/* If this allocation is not consuming a reservation, charge it now.
-+	 */
-+	deferred_reserve = map_chg || avoid_reserve || !vma_resv_map(vma);
-+	if (deferred_reserve) {
-+		ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h),
-+						   &h_cg, true);
-+		if (ret)
-+			goto out_subpool_put;
-+	}
-+
- 	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
- 					   false);
- 	if (ret)
--		goto out_subpool_put;
-+		goto out_uncharge_cgroup_reservation;
-
- 	spin_lock(&hugetlb_lock);
- 	/*
-@@ -2271,6 +2285,14 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
- 	}
- 	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
- 				     false);
-+	/* If allocation is not consuming a reservation, also store the
-+	 * hugetlb_cgroup pointer on the page.
-+	 */
-+	if (deferred_reserve) {
-+		hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg,
-+					     page, true);
-+	}
-+
- 	spin_unlock(&hugetlb_lock);
-
- 	set_page_private(page, (unsigned long)spool);
-@@ -2296,6 +2318,10 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
- out_uncharge_cgroup:
- 	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
- 				       false);
-+out_uncharge_cgroup_reservation:
-+	if (deferred_reserve)
-+		hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h),
-+					       h_cg, true);
- out_subpool_put:
- 	if (map_chg || avoid_reserve)
- 		hugepage_subpool_put_pages(spool, 1);
 --
-2.25.0.rc1.283.g88dfdc4193-goog
+
+Hi Dmitry,
+
+Sending the patch to the list untested (sanity only), and I'll ask
+for the reporter to provide a little bit more testing.
+
+I will keep you updated when you can merge the patch.
+
+Cheers,
+Benjamin
+---
+ drivers/input/mouse/synaptics.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synapt=
+ics.c
+index 1ae6f8bba9ae..7aa84f743c48 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -146,7 +146,6 @@ static const char * const topbuttonpad_pnp_ids[] =3D =
+{
+ 	"LEN0042", /* Yoga */
+ 	"LEN0045",
+ 	"LEN0047",
+-	"LEN0049",
+ 	"LEN2000", /* S540 */
+ 	"LEN2001", /* Edge E431 */
+ 	"LEN2002", /* Edge E531 */
+@@ -166,6 +165,7 @@ static const char * const smbus_pnp_ids[] =3D {
+ 	/* all of the topbuttonpad_pnp_ids are valid, we just add some extras *=
+/
+ 	"LEN0048", /* X1 Carbon 3 */
+ 	"LEN0046", /* X250 */
++	"LEN0049", /* Yoga 11e */
+ 	"LEN004a", /* W541 */
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+--=20
+2.24.1
+
