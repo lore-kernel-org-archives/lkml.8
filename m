@@ -2,110 +2,106 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C93C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E66C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BE92077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C332B2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 20:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgAOUws (ORCPT
+        id S1729253AbgAOUxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:52:48 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48750 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbgAOUws (ORCPT
+        Wed, 15 Jan 2020 15:53:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48976 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729208AbgAOUxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:52:48 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 8FBA828EAC8
-Received: by earth.universe (Postfix, from userid 1000)
-        id C2D3C3C0C7C; Wed, 15 Jan 2020 21:52:43 +0100 (CET)
-Date:   Wed, 15 Jan 2020 21:52:43 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     l.stach@pengutronix.de, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] power: suppy: ucs1002: Make the symbol
- 'ucs1002_regulator_enable' static
-Message-ID: <20200115205243.mqhlgwxazdz4n3ob@earth.universe>
-References: <20191220094144.41142-1-chenwandun@huawei.com>
+        Wed, 15 Jan 2020 15:53:50 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1irpfb-0000cw-2s; Wed, 15 Jan 2020 21:53:43 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 919D71C0879;
+        Wed, 15 Jan 2020 21:53:42 +0100 (CET)
+Date:   Wed, 15 Jan 2020 20:53:42 -0000
+From:   "tip-bot2 for Chunyan Zhang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] tick/common: Touch watchdog in tick_unfreeze() on all CPUs
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200110083902.27276-1-chunyan.zhang@unisoc.com>
+References: <20200110083902.27276-1-chunyan.zhang@unisoc.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hnlpxa6gspkazlpn"
-Content-Disposition: inline
-In-Reply-To: <20191220094144.41142-1-chenwandun@huawei.com>
+Message-ID: <157912162226.396.7446117828577037844.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the timers/core branch of tip:
 
---hnlpxa6gspkazlpn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     5167c506d62dd9ffab73eba23c79b0a8845c9fe1
+Gitweb:        https://git.kernel.org/tip/5167c506d62dd9ffab73eba23c79b0a8845c9fe1
+Author:        Chunyan Zhang <zhang.lyra@gmail.com>
+AuthorDate:    Fri, 10 Jan 2020 16:39:02 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 15 Jan 2020 21:29:45 +01:00
 
-Hi,
+tick/common: Touch watchdog in tick_unfreeze() on all CPUs
 
-Thanks, queued.
+Suspend to IDLE invokes tick_unfreeze() on resume. tick_unfreeze() on the
+first resuming CPU resumes timekeeping, which also has the side effect of
+resetting the softlockup watchdog on this CPU.
 
--- Sebastian
+But on the secondary CPUs the watchdog is not reset in the resume /
+unfreeze() path, which can result in false softlockup warnings on those
+CPUs depending on the time spent in suspend.
 
-On Fri, Dec 20, 2019 at 05:41:44PM +0800, Chen Wandun wrote:
-> Fix the following sparse warning:
->=20
-> drivers/power/supply/ucs1002_power.c:492:5: warning: symbol 'ucs1002_regu=
-lator_enable' was not declared. Should it be static?
->=20
-> Fixes: a3d70dacc727 ("power: suppy: ucs1002: disable power when maxcurren=
-t is 0")
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
-> ---
->  drivers/power/supply/ucs1002_power.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/ucs1002_power.c b/drivers/power/supply/=
-ucs1002_power.c
-> index 0ca80d00b80a..cdb9a23d825f 100644
-> --- a/drivers/power/supply/ucs1002_power.c
-> +++ b/drivers/power/supply/ucs1002_power.c
-> @@ -489,7 +489,7 @@ static irqreturn_t ucs1002_alert_irq(int irq, void *d=
-ata)
->  	return IRQ_HANDLED;
->  }
-> =20
-> -int ucs1002_regulator_enable(struct regulator_dev *rdev)
-> +static int ucs1002_regulator_enable(struct regulator_dev *rdev)
->  {
->  	struct ucs1002_info *info =3D rdev_get_drvdata(rdev);
-> =20
-> --=20
-> 2.17.1
->=20
+Prevent this by clearing the softlock watchdog in the unfreeze path also
+on the secondary resuming CPUs.
 
---hnlpxa6gspkazlpn
-Content-Type: application/pgp-signature; name="signature.asc"
+[ tglx: Massaged changelog ]
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200110083902.27276-1-chunyan.zhang@unisoc.com
+---
+ kernel/time/tick-common.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4fe5sACgkQ2O7X88g7
-+po6jQ/+Irt0N8MOKBe+boPgXjEaA6LsQ9Ua1tMtYTjeX/ZJq3Vd+yJoPTzpxn5L
-sf2Xpa9c8qc69XrJwXcJ32FNjkTLYjooC8aWjNcQOtE6hHcpW0hGITVCsImt+Chr
-xbumKUl7hrX2h1eSTtNsU2r0okxk5Ct0MMIb7KmMdoiwO+Vq4l2CFjdh0N2Qw7V3
-hGNaEw2DjYCt8WKEe7+owFeaEnFxedxOZYMYoQSNya/SOOgWKaufKI3BkMqhMQFG
-3mqrL2BN/BAzV1flRK7BIDMpMtrTiskKfaYQW++AOI3Jmab9zyOu5hhie/WWcXwh
-uUdxYWRh3UDRIyA4rHvxE9dkawWYmKmZeX2aVRalywE5zo2/dzMoBSd8kENM01Q6
-8ocnp44v9elSwtB+UZKNGZLZWTCbdmyFAkMfq4hCCkIBGxNIXihwbFB+IHrTMuJi
-v9qS+qJhTvO/uidA9lnrq8GsKy6lRU9KJNXngZG2oWinU4G+6flrTvJ+Hc2OsXwx
-dr7xUBDwJaAKiNOQqeDwS9x8LKJ3Wh42DCNboOykLRzy6dFBYlkRaz9rmVimP7EG
-yOk68F7C9PIXeOsjV3Ovz9egMqYQY9hhg746x157OY9M6RZP6xPwSNbxvWJOZLSm
-zBIFVnTa5O3UjAqQn5yktnWnCANf2EY7NTXGQQ/n05IwSCsQPhg=
-=8Odx
------END PGP SIGNATURE-----
-
---hnlpxa6gspkazlpn--
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 59225b4..7e5d352 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -11,6 +11,7 @@
+ #include <linux/err.h>
+ #include <linux/hrtimer.h>
+ #include <linux/interrupt.h>
++#include <linux/nmi.h>
+ #include <linux/percpu.h>
+ #include <linux/profile.h>
+ #include <linux/sched.h>
+@@ -558,6 +559,7 @@ void tick_unfreeze(void)
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
+ 	} else {
++		touch_softlockup_watchdog();
+ 		tick_resume_local();
+ 	}
+ 
