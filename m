@@ -2,143 +2,121 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D042CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B9AC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66BB2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAE920728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 16:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfCcRraP"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="l3NLCWBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgAOQyu (ORCPT
+        id S1729025AbgAOQzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:54:50 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37209 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAOQyu (ORCPT
+        Wed, 15 Jan 2020 11:55:47 -0500
+Received: from mail-qk1-f175.google.com ([209.85.222.175]:37901 "EHLO
+        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgAOQzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:54:50 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so8788780pfn.4;
-        Wed, 15 Jan 2020 08:54:49 -0800 (PST)
+        Wed, 15 Jan 2020 11:55:46 -0500
+Received: by mail-qk1-f175.google.com with SMTP id k6so16281249qki.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:55:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x4biuHfD3qt3U+cEUvYuc5XAFxMv7j6Z3eytJc0II1Y=;
-        b=bfCcRraPut1UtBkp6mO1CihzI9YRUJa26KCh/08jw4yRys4sWs3rTpvhwCc0khFiWB
-         FugeJ9vEglq+j+DCq8CqhtNd4aQ6TP2MHC+Ry98PnsxCsVEqvZEnzdF3WL6MHnljR7Cm
-         IqsnBs5c6gji/PaG1YDRkcdQegf88o2oVToeXYNRH1+VsDdARd/Mg9gcEtOXPbETWMH3
-         IFCijkJ1alVo0uIuRjn0m/fLCon1c2Qp61hA4C0Ko314feIUc3/4kkahpcWRDZTGlX+n
-         pJLPu4fP682Ex0yntbssl5mcBsqquMLHXsTKEf7t/05grPb7obFOWVM/8j6MEd/aGp8V
-         srKQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FPFBNeVEX0/iA2zW+3P39jtu411peuzYQwYNyRGywAY=;
+        b=l3NLCWBQOEKrvK2JK/Zpgr1tIdj/9joXe8PKlcfxKiMKnFz6Beu1JSdeUL+m4r/BpU
+         wakcl80DcORdCiYIOh9k2O+yVImroYtnNb/mf7XhtZHrVpKKloy0lhzN0w9Ebw5M219e
+         iCaGujiyLPqRiPi6TLC09B6pF/dRPzOXZKtJaYQMqj5i3k0DsuCl53s0aJg+Tg0+qz/Y
+         Z0/qHGpBkefnRS44gN79nUqYQl3NHdYexV3fh8HNY3TnqjdjTiiHl1FjQh1kt0bdwA6d
+         UFB8o0dsA4Nj26djQO9e+dlfrZr/gLfwTWniIWcTVLjhIQ7J8omXsDKnz0uluJ56sllX
+         9bsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x4biuHfD3qt3U+cEUvYuc5XAFxMv7j6Z3eytJc0II1Y=;
-        b=U/OrJhwyiKdnINdW2Jbxk8sUIZO+tDKgE9dYxxWiSyWn9c5gzGX7ZtkQczv0tzrZ+2
-         JHL+0DiVJFDplmD4b+KFd5fGKbTf0O3LIgOs1d4/BSyQ99i3JkIGPGBuqM4j89ZNILXC
-         cL7QNS/0c+y20ayaHApU8xgy77Kf7jt3IoB/khgsxA54XvVdjVOKpqdTI+hPRAcCdrg9
-         85IzjJAQEfq+6Nj/VfE0pl750pO1t0C+Rbu8xQciRkNNRd2KLkSnqqVZxMp03liZENhq
-         u+Tg2sxZvwbhzLp5FcMWY8IJU1MWOud0/Cco+wTdji4/A44XV2HSRywTx7cpLPJF3Dm+
-         7mpw==
-X-Gm-Message-State: APjAAAUmzneC4pxzdI4Tj5TMWTNvl0JmiiDdWSDFZC+zFD8EF/gEJOrW
-        2Ycr/Iu0PhezY6iHvFxwvkiBdFhZ
-X-Google-Smtp-Source: APXvYqzFMwW4qCkVOIV4BudBn7rrS0g2rXrBGLq1kfP81ZvGbuGNrwzm/ijmFrgQFGF9MX2DSZxpSg==
-X-Received: by 2002:aa7:8749:: with SMTP id g9mr8330925pfo.40.1579107289226;
-        Wed, 15 Jan 2020 08:54:49 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a26sm22658998pfo.27.2020.01.15.08.54.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 Jan 2020 08:54:48 -0800 (PST)
-Date:   Wed, 15 Jan 2020 08:54:47 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, contact@stefanchrist.eu,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] watchdog: da9062: make restart handler atomic safe
-Message-ID: <20200115165447.GA13912@roeck-us.net>
-References: <20200115162307.7336-1-m.felsch@pengutronix.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FPFBNeVEX0/iA2zW+3P39jtu411peuzYQwYNyRGywAY=;
+        b=ip9SkQOsNVcAqYRqs5mwh8+bZxEOhuIa4R1yR9bx9pTFRX0cLkq57QZAQ86Bsz3mci
+         MdTCZ0WxKoDd4q1iNhK6l6oLYDE1g8nuhI6JJ6OzqtwVbtLqyzLXnEup98wQ89qLAoGT
+         kcxyEhnu3ZOSoOqQzS8F+jqO9OB9ttkqzzKvOkb7MuzT4YRoyf1nS9AJaqaahal8oDmg
+         ylY2JI2HzXOU/Ne582nUzvdRsFF58hdUs8oTK0vY6aZv81hBODhik5f4pefnQj4SaNE6
+         vMg4mVIOW/1BbDzf9eEkiy4ZybGQrJ3ZgqyNJliPngztypqGik6TwPnHjzixSbMO1APy
+         6SXw==
+X-Gm-Message-State: APjAAAVlHGfJ0DFSToNRfS1BUH2VTcRA6jnI3rj5bl9qCNKVXMFXOoBD
+        cgCsuOG92FvhkgHlt1yMxqGNW3cUh2A=
+X-Google-Smtp-Source: APXvYqzhOz4JR1/HdclghA76Mn55l8him78waefGfymoKZLbbSR4NLC0xIPzpN27WDG45b1iUiylCQ==
+X-Received: by 2002:a05:620a:139b:: with SMTP id k27mr28027169qki.112.1579107345574;
+        Wed, 15 Jan 2020 08:55:45 -0800 (PST)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id k4sm8698193qki.35.2020.01.15.08.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 08:55:44 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:55:43 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Ivan Babrou <ivan@cloudflare.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: Lower than expected CPU pressure in PSI
+Message-ID: <20200115165543.GA47772@cmpxchg.org>
+References: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
+ <20200109161632.GB8547@cmpxchg.org>
+ <CABWYdi1Hs3Jgn5Rq=4X9w2+kG4mfsbGuV=8UMS=6mr=SVjOfVw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115162307.7336-1-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CABWYdi1Hs3Jgn5Rq=4X9w2+kG4mfsbGuV=8UMS=6mr=SVjOfVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:23:07PM +0100, Marco Felsch wrote:
-> The restart handler is executed during the shutdown phase which is
-> atomic/irq-less. The i2c framework supports atomic transfers since
-> commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
-> transfers") to address this use case. Using regmap within an atomic
-> context is allowed only if the regmap type is MMIO and the cache type
-> 'flat' or no cache is used. Using the i2c_smbus_write_byte_data()
-> function can be done without additional tests because:
->  1) the DA9062 is an i2c-only device and
->  2) the i2c framework emulates the smbus protocol if the host adapter
->     does not support smbus_xfer by using the master_xfer.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+On Fri, Jan 10, 2020 at 11:28:32AM -0800, Ivan Babrou wrote:
+> I applied the patch on top of 5.5.0-rc3 and it's definitely better
+> now, both competing cgroups report 500ms/s delay. Feel free to add
+> Tested-by from me.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Thanks, Ivan!
 
-> ---
-> Hi,
-> 
-> This patch is based on Stefan Lengfeld's RFC Patch [1].
-> 
-> [1] https://patchwork.ozlabs.org/patch/1085942/
-> 
-> Changes:
-> 
-> v2:
-> - adapt commit message
-> - add comment
-> - make use of i2c_smbus_write_byte_data()
-> ---
->  drivers/watchdog/da9062_wdt.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> index c9b9d6394525..77b6b5336067 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -11,6 +11,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/uaccess.h>
->  #include <linux/slab.h>
-> +#include <linux/i2c.h>
->  #include <linux/delay.h>
->  #include <linux/jiffies.h>
->  #include <linux/mfd/da9062/registers.h>
-> @@ -149,12 +150,13 @@ static int da9062_wdt_restart(struct watchdog_device *wdd, unsigned long action,
->  			      void *data)
->  {
->  	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-> +	struct i2c_client *client = to_i2c_client(wdt->hw->dev);
->  	int ret;
->  
-> -	ret = regmap_write(wdt->hw->regmap,
-> -			   DA9062AA_CONTROL_F,
-> -			   DA9062AA_SHUTDOWN_MASK);
-> -	if (ret)
-> +	/* Don't use regmap because it is not atomic safe */
-> +	ret = i2c_smbus_write_byte_data(client, DA9062AA_CONTROL_F,
-> +					DA9062AA_SHUTDOWN_MASK);
-> +	if (ret < 0)
->  		dev_alert(wdt->hw->dev, "Failed to shutdown (err = %d)\n",
->  			  ret);
->  
-> -- 
-> 2.20.1
-> 
+> I'm still seeing /unified/system.slice at 385ms/s and /unified.slice
+> at 372ms/s, do you have an explanation for that part? Maybe it's
+> totally reasonable, but warrants a patch for documentation.
+
+Yes, this is a combination of CPU pinning and how pressure is
+calculated in SMP systems.
+
+The stall times are defined as lost compute potential - which scales
+with the number of concurrent threads - normalized to wallclock
+time. See the "Multiple CPUs" section in kernel/sched/psi.c.
+
+By restricting the CPUs in system.slice, there is less compute
+available in that group than in the parent, which means that the
+relative loss of potential can be higher.
+
+It's a bit unintuitive because most cgroup metrics are plain numbers
+that add up to bigger numbers as you go up the tree. If we exported
+both the numerator (waste) and denominator (compute potential) here,
+the numbers would act more conventionally, with parent numbers always
+bigger than the child's. But because pressure is normalized to
+wallclock time, you only see the ratio at each level, and that can
+shrink as you go up the tree if lower levels are CPU-constrained.
+
+We could have exported both numbers, but for most usecases that would
+be more confusing than helpful. And in practice it's the ratio that
+really matters: the pressure in the leaf cgroups is high due to the
+CPU restriction; but when you go higher up the tree and look at not
+just the pinned tasks, but also include tasks in other groups that
+have more CPUs available to them, the aggregate productivity at that
+level *is* actually higher.
+
+I hope that helps!
