@@ -2,153 +2,151 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0433C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0722CC32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAA62187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:02:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N6MrOUce"
+	by mail.kernel.org (Postfix) with ESMTP id D8CC6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAOSCR (ORCPT
+        id S1729121AbgAOSC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:02:17 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36776 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAOSCR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:02:17 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k3so8562831pgc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 10:02:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a8LsyuIcXiV6GxZuQ/qDUpNfxej2Q4xX/Ea2X8PrBBA=;
-        b=N6MrOUcetHlWNiGjyh1yM3nRrf/N9ML4S25qtKj3wqpHhbDwS0jMWAw4uhMgDVuhB5
-         Rlw3GvcQ6y4WaFuzA5vtxCSDCUrDZXgr2XasGJSHXusRLbydOxUC61aboxuN67p4dlh9
-         m29dfH5Iy9NIZQzCZkSAotRc1UUzOe2fgeFAY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a8LsyuIcXiV6GxZuQ/qDUpNfxej2Q4xX/Ea2X8PrBBA=;
-        b=oQFKQ/mYT7RSxsMTo6mT5BxHWKRMjojHXZoHZUb5nmi3EUljosECG4IpEgA995UqAI
-         av3Q8e+sNFJGxR2UYqsR5F30CBbOvsGs5zqm66959f/75ixxwtn28R6s1gtcxbTupyOo
-         v/IDo881Kl9hcUs2i3Ccposw5WAVToheiiIzsb3D1nq4m8cTjjLaSJiBAJBXs6j+yMBm
-         lTMegy6x1wux1jJEYN26ITf4XVBrKAoPpD1BLpi5cVWoixoTyPdYnxRU1ite2ssuu40V
-         yzoG7ow8NT65xyacJ1oKPPBONBprK29/70k749U1mMX138izCVxqGWi8v9r+r0cwlwk7
-         DLQw==
-X-Gm-Message-State: APjAAAUFWi2myW7QowKbRplZPrMnfKjpbcbO9aZAV4lVrb9IP5Vps3gq
-        5n0UJi44hS5sRd18Ob2egwLBaS+3DiY=
-X-Google-Smtp-Source: APXvYqwxAlWV4lOiHqPYrRKLBE8Ht/oZ3dQOxLRzOY43DWBuxGLDaqBFGzli8uH1Ex5ck+6CwT22yg==
-X-Received: by 2002:a63:3f82:: with SMTP id m124mr34595127pga.431.1579111336473;
-        Wed, 15 Jan 2020 10:02:16 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b24sm22297554pfo.55.2020.01.15.10.02.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:02:15 -0800 (PST)
-Date:   Wed, 15 Jan 2020 10:02:14 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        hemantg@codeaurora.org
-Subject: Re: [PATCH v4 3/3] Bluetooth: hci_qca: Enable power off/on support
- during hci down/up for QCA Rome
-Message-ID: <20200115180214.GO89495@google.com>
-References: <20191225060317.5258-1-rjliao@codeaurora.org>
- <20200115085552.11483-1-rjliao@codeaurora.org>
- <20200115085552.11483-3-rjliao@codeaurora.org>
+        Wed, 15 Jan 2020 13:02:26 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60610 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728921AbgAOSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:02:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E839EAEA7;
+        Wed, 15 Jan 2020 18:02:23 +0000 (UTC)
+Subject: Re: reiserfs broke between 4.9.205 and 4.9.208
+To:     Jan Kara <jack@suse.cz>, Randy Dunlap <rdunlap@infradead.org>
+Cc:     Michael Brunnbauer <brunni@netestate.de>,
+        linux-kernel@vger.kernel.org, reiserfs-devel@vger.kernel.org
+References: <20200108193634.GA17390@netestate.de>
+ <481c595b-46c9-0b4d-c618-a998ab6247c6@infradead.org>
+ <20200109121216.GC22232@quack2.suse.cz>
+From:   Jeff Mahoney <jeffm@suse.com>
+Organization: SUSE Labs Data & Performance
+Message-ID: <96be232a-94c9-87ad-16c9-18eb32149e19@suse.com>
+Date:   Wed, 15 Jan 2020 13:02:21 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200115085552.11483-3-rjliao@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109121216.GC22232@quack2.suse.cz>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="a4rZm46Z1dtwr0bxi6Nli88ZYKlg7rV21"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 04:55:52PM +0800, Rocky Liao wrote:
-> This patch registers hdev->shutdown() callback and also sets
-> HCI_QUIRK_NON_PERSISTENT_SETUP for QCA Rome. It will power-off the BT chip
-> during hci down and power-on/initialize the chip again during hci up. As
-> wcn399x already enabled this, this patch also removed the callback register
-> and QUIRK setting in qca_setup() for wcn399x and uniformly do this in the
-> probe() routine.
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> 
-> Changes in v2: None
-> Changes in v3: 
->   -moved the quirk and callback register to probe()
-> Changes in v4:
->   -rebased the patch with latest code
->   -moved the quirk and callback register to probe() for wcn399x
->   -updated commit message
-> 
->  drivers/bluetooth/hci_qca.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 1139142e8eed..3c6c6bd20177 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1569,12 +1569,7 @@ static int qca_setup(struct hci_uart *hu)
->  		return ret;
->  
->  	if (qca_is_wcn399x(soc_type)) {
-> -		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
-> -		 * setup for every hci up.
-> -		 */
-> -		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
->  		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--a4rZm46Z1dtwr0bxi6Nli88ZYKlg7rV21
+Content-Type: multipart/mixed; boundary="r6nCrV9Cg9A7JctM2W3kaaMeill81n14Q"
 
-I guess this should also move to _probe() eventually, but it's not really
-the scope of this patch.
+--r6nCrV9Cg9A7JctM2W3kaaMeill81n14Q
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> -		hu->hdev->shutdown = qca_power_off;
->  
->  		ret = qca_read_soc_version(hdev, &soc_ver, soc_type);
->  		if (ret)
-> @@ -1813,6 +1808,7 @@ static int qca_init_regulators(struct qca_power *qca,
->  static int qca_serdev_probe(struct serdev_device *serdev)
->  {
->  	struct qca_serdev *qcadev;
-> +	struct hci_dev *hdev;
->  	const struct qca_vreg_data *data;
->  	int err;
->  
-> @@ -1881,7 +1877,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  			clk_disable_unprepare(qcadev->susclk);
->  	}
->  
-> -out:	return err;
-> +out:
-> +	if (!err) {
-> +		hdev = qcadev->serdev_hu.hdev;
-> +		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
-> +		hdev->shutdown = qca_power_off;
-> +	}
-> +	return err;
+On 1/9/20 7:12 AM, Jan Kara wrote:
+>=20
+> Hello,
+>=20
+> On Wed 08-01-20 15:42:58, Randy Dunlap wrote:
+>> On 1/8/20 11:36 AM, Michael Brunnbauer wrote:
+>>> after upgrading from 4.9.205 to 4.9.208, I get errors on two differen=
+t
+>>> reiserfs filesystems when doing cp -a (the chown part seems to fail) =
+and
+>>> on other occasions:
+>>>
+>>>  kernel: REISERFS warning (device sda1): jdm-20004 reiserfs_delete_xa=
+ttrs: Couldn't delete all xattrs (-95)
+>>>
+>>>  kernel: REISERFS warning (device sdc1): jdm-20004 reiserfs_delete_xa=
+ttrs: Couldn't delete all xattrs (-95)
+>>>
+>>> This behaviour disappeared after a downgrade to 4.9.205.
+>>>
+>>> I understand there have been changes to the file system code but I'm =
+not
+>>> sure they affect reiserfs, e.g.
+>>>
+>>>  https://bugzilla.kernel.org/show_bug.cgi?id=3D205433
+>>>
+>>> Any Idea?
+>>>
+>>> Regards,
+>>>
+>>> Michael Brunnbauer
+>>>
+>>
+>> Looks to me like 4.9.207 contains reiserfs changes.
+>>
+>> Adding CC's.
+>=20
+> Looks like a regression from commit 60e4cf67a582 "reiserfs: fix extende=
+d
+> attributes on the root directory". We are getting -EOPNOTSUPP from
+> reiserfs_for_each_xattr() likely originally from open_xa_root(). Previo=
+usly
+> we were returning -ENODATA from there which error reiserfs_for_each_xat=
+tr()
+> converted to 0. I don't understand reiserfs xattrs enough to quickly te=
+ll
+> what should actually be happening after the Jeff's change - naively I'd=
 
-Since there is no unwinding in case of an error I would suggest to
-change the jumps to the 'out' label further above to 'return err;'
-and change the above lines to:
+> think we should just silence the bogus warning in case of EOPNOTSUPP. J=
+eff,
+> can you have a look?
+>=20
+> Also Michael, I'd like to clarify: Does 'cp -a' return any error or is =
+it
+> just that the kernel is spewing these annoying warnings?  Because from =
+the
+> code reading I'd think that it is only the kernel spewing errors but
+> userspace should be fine...
 
-	hdev = qcadev->serdev_hu.hdev;
-	set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
-	hdev->shutdown = qca_power_off;
+This error occurs when extended attributes are not enabled on the file
+system *and* the module is not built with extended attributes enabled.
+I've sent out the fix for it just now.
 
-	return 0;
+-Jeff
 
-This will also require to return directly when hci_uart_register_device()
-fails.
+--=20
+Jeff Mahoney
+Director, SUSE Labs Data & Performance
+
+
+--r6nCrV9Cg9A7JctM2W3kaaMeill81n14Q--
+
+--a4rZm46Z1dtwr0bxi6Nli88ZYKlg7rV21
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE8wzgbmZ74SnKPwtDHntLYyF55bIFAl4fU60ACgkQHntLYyF5
+5bJ9DxAArJ4JFl+V3VqJwcVGW1Dt49Tolal19rG8EgewbEsIxs1CJ4PDnSfZyp19
+/5WjnnffKXTdrYxrBMD1Q3O9vPnWaeYft3uES/3VNaQoosVFBw1B0JpFT1TW13cs
+Zr2m/PUHAA+BO+UC+hbNzQL5g/aGbDXhh3KAYTtF3N/tiE7Snngcagu7lNa+1WFR
+n7aXu5IGTIpFfC+ySdONoClwSOBHFgL+mBqdmr1qjXAh4nwW/waLl9w6XsqlCQ0Q
+Dx3/HSnGY3733JMd9fzcn4YOotJGUy0bBqAmCXahD9oTLQoxhcynQKgGmmpti5/N
+S9f91moRsIi3e7ubmalYtg7Xss5RH8/trYqUe2LpnbSwYA8g0U8Z+3DFtU4k9zD0
+lTKWJUB/I2Nvmty6+RAy4NlgiKV1dQY4n80yLr3zwUDA+p1khP2Hjbco6ax+Hc3S
+CKZSO8skO1/BBOD1meP45YcWyqCGUXAaOPX1tTVPXlB/LAoTlWfL5/O1ifAWZV2x
+sm8E8MhsUlv93p8ydjgDw/tHx+CqRVrThnxfnO4sUvrtPLrBZlgbvY9nQ30l5YOE
+C3OeQ3W6FZ2VR48ypZT83KcRoHgsAyJFsjaDrCT26xRpGjFUimLij9rUjozzzfE5
+W1Gts2Jz1xxXjEq6MGxeaay9DjuZsSVm+o46eZqcw8b5sO5CH5s=
+=1li/
+-----END PGP SIGNATURE-----
+
+--a4rZm46Z1dtwr0bxi6Nli88ZYKlg7rV21--
