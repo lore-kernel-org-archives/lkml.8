@@ -2,130 +2,170 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B4CC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62787C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F7124671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301D424679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 04:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d5XINOTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAOEEM (ORCPT
+        id S1728921AbgAOEPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 23:04:12 -0500
-Received: from mga06.intel.com ([134.134.136.31]:26364 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgAOEEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 23:04:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 20:04:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
-   d="scan'208";a="217983429"
-Received: from unknown (HELO joy-OptiPlex-7040.sh.intel.com) ([10.239.13.9])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jan 2020 20:04:09 -0800
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     zhenyuw@linux.intel.com
-Cc:     alex.williamson@redhat.com, intel-gvt-dev@lists.freedesktop.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, kevin.tian@intel.com, peterx@redhat.com,
-        Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with vfio_dma_rw
-Date:   Tue, 14 Jan 2020 22:54:55 -0500
-Message-Id: <20200115035455.12417-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115034132.2753-1-yan.y.zhao@intel.com>
-References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+        Tue, 14 Jan 2020 23:15:14 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:48036 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbgAOEPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 23:15:13 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F4D5AF039901;
+        Wed, 15 Jan 2020 04:14:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2019-08-05;
+ bh=/LHdEjokvBNjEKKUvhzUKlbwCr2b2RZEzd+gLDpABRg=;
+ b=d5XINOTUWPNbBmpmcvDJN7goBOlrMgL6VzRWmNmVz/9BbCB7IdL2wjmSwtSSZl06JyAC
+ 1XTQ+5Eldj8d5jGH23yhcvrEOA4G63sn1LezuS7EXwPLeQLBd6Wgi28+X8W+2GIpLZHl
+ nOPV5RtVIe5TQcMqIEsQwOrQ9+C6j4YgOWmk788pkIQXprnWzQymuXEwugrscWNYqpNs
+ BjDJ559DS9Jl2NnJkjx8OEp5yV/L5UAr1+VKqoKuDPITzuK+j3+H01Z190H3x8QX2Tsx
+ nUG1wJYwGBFW7T5ovf6UzrmiSgauBprUxQBUEMrVph6vcQE3xff5NkBKqk1IzIYI/dnI pQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74s9ysj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 04:14:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00F4Dw4l021452;
+        Wed, 15 Jan 2020 04:14:01 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xh2tpv3ap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 04:14:01 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00F4D2s8015869;
+        Wed, 15 Jan 2020 04:13:02 GMT
+Received: from neelam.us.oracle.com (/10.152.128.16)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jan 2020 20:13:02 -0800
+From:   Alex Kogan <alex.kogan@oracle.com>
+To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
+        will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, guohanjun@huawei.com,
+        jglauber@marvell.com
+Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        alex.kogan@oracle.com, dave.dice@oracle.com
+Subject: [PATCH v9 2/5] locking/qspinlock: Refactor the qspinlock slow path
+Date:   Tue, 14 Jan 2020 22:59:17 -0500
+Message-Id: <20200115035920.54451-3-alex.kogan@oracle.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200115035920.54451-1-alex.kogan@oracle.com>
+References: <20200115035920.54451-1-alex.kogan@oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001150033
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9500 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001150033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As a device model, it is better to read/write guest memory using vfio
-interface, so that vfio is able to maintain dirty info of device IOVAs.
+Move some of the code manipulating the spin lock into separate functions.
+This would allow easier integration of alternative ways to manipulate
+that lock.
 
-Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
-cycles more overhead on average.
-
--------------------------------------
-|    interface     | avg cpu cycles |
-|-----------------------------------|
-| kvm_write_guest  |     1554       |
-| ----------------------------------|
-| kvm_read_guest   |     707        |
-|-----------------------------------|
-| vfio_dma_rw(w)   |     2274       |
-|-----------------------------------|
-| vfio_dma_rw(r)   |     1378       |
--------------------------------------
-
-Comparison of benchmarks scores are as blow:
-------------------------------------------------------
-|  avg score  | kvm_read/write_guest  | vfio_dma_rw  |
-|----------------------------------------------------|
-|   Glmark2   |         1284          |    1296      |
-|----------------------------------------------------|
-|  Lightsmark |         61.24         |    61.27     |
-|----------------------------------------------------|
-|  OpenArena  |         140.9         |    137.4     |
-|----------------------------------------------------|
-|   Heaven    |          671          |     670      |
-------------------------------------------------------
-No obvious performance downgrade found.
-
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
+Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
+Reviewed-by: Waiman Long <longman@redhat.com>
 ---
- drivers/gpu/drm/i915/gvt/kvmgt.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ kernel/locking/qspinlock.c | 38 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index bd79a9718cc7..17edc9a7ff05 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -1966,31 +1966,19 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
- 			void *buf, unsigned long len, bool write)
- {
- 	struct kvmgt_guest_info *info;
--	struct kvm *kvm;
--	int idx, ret;
--	bool kthread = current->mm == NULL;
-+	int ret;
-+	struct intel_vgpu *vgpu;
-+	struct device *dev;
+diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+index 804c0fbd6328..c06d1e8075d9 100644
+--- a/kernel/locking/qspinlock.c
++++ b/kernel/locking/qspinlock.c
+@@ -288,6 +288,34 @@ static __always_inline u32  __pv_wait_head_or_lock(struct qspinlock *lock,
+ #define queued_spin_lock_slowpath	native_queued_spin_lock_slowpath
+ #endif
  
- 	if (!handle_valid(handle))
- 		return -ESRCH;
++/*
++ * __try_clear_tail - try to clear tail by setting the lock value to
++ * _Q_LOCKED_VAL.
++ * @lock: Pointer to the queued spinlock structure
++ * @val: Current value of the lock
++ * @node: Pointer to the MCS node of the lock holder
++ */
++static __always_inline bool __try_clear_tail(struct qspinlock *lock,
++						   u32 val,
++						   struct mcs_spinlock *node)
++{
++	return atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL);
++}
++
++/*
++ * __mcs_pass_lock - pass the MCS lock to the next waiter
++ * @node: Pointer to the MCS node of the lock holder
++ * @next: Pointer to the MCS node of the first waiter in the MCS queue
++ */
++static __always_inline void __mcs_pass_lock(struct mcs_spinlock *node,
++					    struct mcs_spinlock *next)
++{
++	arch_mcs_pass_lock(&next->locked, 1);
++}
++
++#define try_clear_tail	__try_clear_tail
++#define mcs_pass_lock		__mcs_pass_lock
++
+ #endif /* _GEN_PV_LOCK_SLOWPATH */
  
- 	info = (struct kvmgt_guest_info *)handle;
--	kvm = info->kvm;
--
--	if (kthread) {
--		if (!mmget_not_zero(kvm->mm))
--			return -EFAULT;
--		use_mm(kvm->mm);
--	}
--
--	idx = srcu_read_lock(&kvm->srcu);
--	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
--		      kvm_read_guest(kvm, gpa, buf, len);
--	srcu_read_unlock(&kvm->srcu, idx);
-+	vgpu = info->vgpu;
-+	dev = mdev_dev(vgpu->vdev.mdev);
+ /**
+@@ -532,7 +560,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	 *       PENDING will make the uncontended transition fail.
+ 	 */
+ 	if ((val & _Q_TAIL_MASK) == tail) {
+-		if (atomic_try_cmpxchg_relaxed(&lock->val, &val, _Q_LOCKED_VAL))
++		if (try_clear_tail(lock, val, node))
+ 			goto release; /* No contention */
+ 	}
  
--	if (kthread) {
--		unuse_mm(kvm->mm);
--		mmput(kvm->mm);
--	}
-+	ret = write ? vfio_dma_rw(dev, gpa, buf, len, true) :
-+			vfio_dma_rw(dev, gpa, buf, len, false);
+@@ -549,7 +577,7 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+ 	if (!next)
+ 		next = smp_cond_load_relaxed(&node->next, (VAL));
  
- 	return ret;
- }
+-	arch_mcs_pass_lock(&next->locked, 1);
++	mcs_pass_lock(node, next);
+ 	pv_kick_node(lock, next);
+ 
+ release:
+@@ -574,6 +602,12 @@ EXPORT_SYMBOL(queued_spin_lock_slowpath);
+ #undef pv_kick_node
+ #undef pv_wait_head_or_lock
+ 
++#undef try_clear_tail
++#define try_clear_tail		__try_clear_tail
++
++#undef mcs_pass_lock
++#define mcs_pass_lock			__mcs_pass_lock
++
+ #undef  queued_spin_lock_slowpath
+ #define queued_spin_lock_slowpath	__pv_queued_spin_lock_slowpath
+ 
 -- 
-2.17.1
+2.21.0 (Apple Git-122.2)
 
