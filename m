@@ -2,64 +2,106 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED04C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6955AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC1824671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3673C24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 06:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cSn9hQGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgAOGJi (ORCPT
+        id S1726418AbgAOGNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 01:09:38 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:52727 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725962AbgAOGJi (ORCPT
+        Wed, 15 Jan 2020 01:13:53 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58618 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgAOGNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 01:09:38 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TnmuvRl_1579068565;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TnmuvRl_1579068565)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 15 Jan 2020 14:09:35 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: mempolicy: use VM_BUG_ON_VMA in queue_pages_test_walk()
-Date:   Wed, 15 Jan 2020 14:09:25 +0800
-Message-Id: <1579068565-110432-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 15 Jan 2020 01:13:52 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00F6DU9g079483;
+        Wed, 15 Jan 2020 00:13:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579068810;
+        bh=6ErZheo3CWGhZ2ZZ3TOwWdBo8wbw7aegRQVfbsnMC+U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cSn9hQGbSJKA7g/x0S69FYOMVzXf5biDoRCFijkk84skr8qLLAG4y9KjOadmp6+hc
+         p5MbEAntSqWiB49+rUwlK4dGTvaClGgPKURPdU/qgALIuZ7x+UKjsoBkPATlFsDlbm
+         +rDrGC4g8Jdv7vIxlG340MV90YFZgcwNr8mM4N14=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00F6DUtc101258
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jan 2020 00:13:30 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
+ Jan 2020 00:13:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 15 Jan 2020 00:13:30 -0600
+Received: from [10.250.133.94] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00F6DQ3R023371;
+        Wed, 15 Jan 2020 00:13:27 -0600
+Subject: Re: [PATCH v6 0/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <dan.carpenter@oracle.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
+References: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <860aecbc-22d3-c9ce-3570-44115d6e81b2@ti.com>
+Date:   Wed, 15 Jan 2020 11:43:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191230074102.50982-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VM_BUG_ON() is already used by queue_pages_test_walk(), it sounds
-better to dump more debug information by using VM_BUG_ON_VMA() to help
-debugging.
+Hi,
 
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/mempolicy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 12/30/2019 1:11 PM, Ramuthevar,Vadivel MuruganX wrote:
+> Add support for the Cadence QSPI controller. This controller is
+> present in the Intel Lightning Mountain(LGM) SoCs, Altera and TI SoCs.
+> This driver has been tested on the Intel LGM SoCs.
+> 
+> This driver does not support generic SPI and also the implementation
+> only supports spi-mem interface to replace the existing driver in
+> mtd/spi-nor/cadence-quadspi.c, the existing driver only support SPI-NOR
+> flash memory.
+> 
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 067cf7d..801d45d 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -621,7 +621,7 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
- 	unsigned long flags = qp->flags;
- 
- 	/* range check first */
--	VM_BUG_ON((vma->vm_start > start) || (vma->vm_end < end));
-+	VM_BUG_ON_VMA((vma->vm_start > start) || (vma->vm_end < end), vma);
- 
- 	if (!qp->first) {
- 		qp->first = vma;
--- 
-1.8.3.1
+
+
+I am finally able to get spi-mem based cadence-quaspi driver working on
+TI platforms with DMA and DAC mode. I have also incorporated changes to
+disable DAC and autopolling for your intel SoC:
+
+https://github.com/r-vignesh/linux/commits/qspi
+
+(Top two patches are of interest)
+
+I have tested both DAC and INDAC mode with s25fl flash and everything
+seems to be fine. Could you re test the driver on your SoC? Feel free to
+fold it into your series if everything works.
+
+Regards
+Vignesh
+
+
 
