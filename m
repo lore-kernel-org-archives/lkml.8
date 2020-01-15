@@ -2,156 +2,250 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD175C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B6CC33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923B52084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3DD24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579097399;
+	bh=FlFqqR3ep0w7X3r1X435q+1q/fXSDP3JlX8xmqhTkLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=brgZU6B24oQdBZvwgjQF+gcILywTmFYLOKIxswRQ0+7M8/u1HESYIhzZYXksbkUe3
+	 Zhq9JHyTANiFigdigtMIa0JR4RLkRnlZ3xTq5xr1nOlulaYGY1NXrBvbTcMcchkKly
+	 tZQ+iY5KFibOhs5exEQpi7o0qAEZWCpp1lkzNxJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgAOOHT (ORCPT
+        id S1729153AbgAOOJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:07:19 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:38441 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbgAOOHT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:07:19 -0500
-Received: from [192.168.100.1] ([78.238.229.36]) by mrelayeu.kundenserver.de
- (mreue107 [213.165.67.119]) with ESMTPSA (Nemesis) id
- 1MBV2f-1iwQh13Mat-00D2xA; Wed, 15 Jan 2020 15:07:09 +0100
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        YunQiang Su <ysu@wavecomp.com>
-References: <20191122150830.15855-1-laurent@vivier.eu>
- <b39e59a6-82f2-2122-5b22-4d8a77eda275@vivier.eu>
- <2a464b33-0b1d-ff35-5aab-77019a072593@vivier.eu>
- <20200115135527.GG8904@ZenIV.linux.org.uk>
-From:   Laurent Vivier <laurent@vivier.eu>
-Autocrypt: addr=laurent@vivier.eu; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [RFC v2] binfmt_misc: pass binfmt_misc flags to the interpreter
-Message-ID: <20e6c345-b984-7b28-4d3f-c8f3799b8579@vivier.eu>
-Date:   Wed, 15 Jan 2020 15:07:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 09:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgAOOJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 09:09:58 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010802084D;
+        Wed, 15 Jan 2020 14:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579097396;
+        bh=FlFqqR3ep0w7X3r1X435q+1q/fXSDP3JlX8xmqhTkLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V8shj0k0AugIqzFoz9BP5XRu1xSwT3KvR/6Wza1WB/ufg6Uqfq9HL9FHWbOj1p63I
+         /wAlOTMEF4tyPGGfsoIaoqVjqRmrzu/nA455HScTMMcxviXg16UzEF29BFjjtl3+ia
+         nh0Jjinc5D1oHzIbs3TV5JX0Cnu+sWwLksCMqISg=
+Date:   Wed, 15 Jan 2020 15:09:53 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+Message-ID: <20200115140953.GB3627564@kroah.com>
+References: <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001100558550.31925@namei.org>
+ <20200109194302.GA85350@google.com>
+ <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
+ <20200110152758.GA260168@google.com>
+ <20200110175304.f3j4mtach4mccqtg@ast-mbp.dhcp.thefacebook.com>
+ <554ab109-0c23-aa82-779f-732d10f53d9c@tycho.nsa.gov>
+ <49a45583-b4fb-6353-a8d4-6f49287b26eb@tycho.nsa.gov>
+ <20200115024830.4ogd3mi5jy5hwr2v@ast-mbp.dhcp.thefacebook.com>
+ <38a82df5-7610-efe1-d6cd-76f6f68c6110@tycho.nsa.gov>
 MIME-Version: 1.0
-In-Reply-To: <20200115135527.GG8904@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:nTwzQVh2u4oVadeeiv+dIe1lMrHXNviOKXiJwUq0IR1CGR5YW7i
- lWt3QbVabpPspqHHsb01rMgUnL+DDd8q3xcSKTZHRg+wfeN33hHFfvMIxIrzAtmM6EqKJXI
- OC/R/nt1EwBexq3Vfn7Vh+VrpZxF94jqcKF+W+Cs71Gmvs1EGlLeITLVHVbaVEPSdL0Ucjs
- ttL5GiwLcorc9ZFgp5S/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:N1gVj2CRluU=:+oUeag9k4GsJtut/wbXOtF
- NEXjja5oN1/HXNc6axFNrVfUwocqMGOJnp33bSptcUq+z1HbwSxtTnUKu0NrdtQ5qM87Lb1cK
- CbY6J8Xj1LDA2ykkEUC6IQCydoZ/ythKi0O/+h7C2JNEbPYVKER3z3OQaVDnIcR3LmTKFaLvU
- BUvv6k+jlsUHh+iSvpx0r3h2fnn3IRhWyp+z8IN1+4WmSgjX+0ma+IGACjrNbCwh/RO416z1D
- JDnKZRLCa3qxgjAp51HhTMNqx+Lkx6O2o+q3dHkHlAtLX+B5DZBXD83pQZNFxSkJTLvG8W0FF
- f2vedyA0VkrVZkBmJkWajasp/d+T76CDkKM9vS0xKlD7WgNGUjADS+OjnOvhTXNk0IF3l2FCb
- wRqCUY99LfX3flle3T318iAONTBbLD1PVUx1W5Ac2yxty4ICr2z66DhOf2cW3OPHvxLcxOUPF
- crlj9YWcf7AgU8Z+8S9eVPn5bSeMNpQ0ylZzjdAAAx6RABI/k2YKp7FeyZP4mFx6rNLjV564u
- nZcf34KWahCDcQqjRHFGtAvVkGX81k4Fiq5OzgQxyqB3Vey4RgTlo5VxzRx6qGqt+UPFrHKDc
- tf66QzjuL/INKVMvG2VMwUQx3VW87014ky1aM2Op7EMtddpU5WZ2jp++sis3AB2Ey1ASqCWeq
- 54cdZOxza40DaHG2wLGM9e9xP+DB4/c/GLKRgqy6sv1uUrh5jzJ7g2r/gWUE5LKOinl1qe7j0
- YHU3+Pwc4i9H5rlCZQUBkxIXtFRXgKFqOBJ3TxfvrwrPgYllmzmOcWRiEIrsRX/4pN8nTli/E
- 04IRpm6u0bkcHf9L3hS6nhWuBja/Ydy75PxVG4lE3xXvrggbjZ6jxJlc3xRvp0VDvj6q9eALp
- gLUttve8FxwjWPR0E0ykZF44ocjWdzMsotlSPMsMc=
+In-Reply-To: <38a82df5-7610-efe1-d6cd-76f6f68c6110@tycho.nsa.gov>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 15/01/2020 Ã  14:55, Al Viro a Ã©critÂ :
-> On Wed, Jan 15, 2020 at 01:19:16PM +0100, Laurent Vivier wrote:
->> Le 07/01/2020 Ã  15:50, Laurent Vivier a Ã©critÂ :
->>> Hi,
->>>
->>> this change is simple, easy to read and understand but it is really
->>> needed by user space application interpreter to know the status of the
->>> system configuration.
->>>
->>> Could we have a comment saying if there is a problem or if it is good to
->>> be merged?
->>
->> Anyone?
+On Wed, Jan 15, 2020 at 08:59:08AM -0500, Stephen Smalley wrote:
+> On 1/14/20 9:48 PM, Alexei Starovoitov wrote:
+> > On Tue, Jan 14, 2020 at 12:42:22PM -0500, Stephen Smalley wrote:
+> > > On 1/14/20 11:54 AM, Stephen Smalley wrote:
+> > > > On 1/10/20 12:53 PM, Alexei Starovoitov wrote:
+> > > > > On Fri, Jan 10, 2020 at 04:27:58PM +0100, KP Singh wrote:
+> > > > > > On 09-Jan 14:47, Stephen Smalley wrote:
+> > > > > > > On 1/9/20 2:43 PM, KP Singh wrote:
+> > > > > > > > On 10-Jan 06:07, James Morris wrote:
+> > > > > > > > > On Thu, 9 Jan 2020, Stephen Smalley wrote:
+> > > > > > > > > 
+> > > > > > > > > > On 1/9/20 1:11 PM, James Morris wrote:
+> > > > > > > > > > > On Wed, 8 Jan 2020, Stephen Smalley wrote:
+> > > > > > > > > > > 
+> > > > > > > > > > > > The cover letter subject line and the
+> > > > > > > > > > > > Kconfig help text refer to it as a
+> > > > > > > > > > > > BPF-based "MAC and Audit policy".  It
+> > > > > > > > > > > > has an enforce config option that
+> > > > > > > > > > > > enables the bpf programs to deny access,
+> > > > > > > > > > > > providing access control. IIRC,
+> > > > > > > > > > > > in
+> > > > > > > > > > > > the earlier discussion threads, the BPF
+> > > > > > > > > > > > maintainers suggested that Smack
+> > > > > > > > > > > > and
+> > > > > > > > > > > > other LSMs could be entirely
+> > > > > > > > > > > > re-implemented via it in the future, and
+> > > > > > > > > > > > that
+> > > > > > > > > > > > such an implementation would be more optimal.
+> > > > > > > > > > > 
+> > > > > > > > > > > In this case, the eBPF code is similar to a
+> > > > > > > > > > > kernel module, rather than a
+> > > > > > > > > > > loadable policy file.  It's a loadable
+> > > > > > > > > > > mechanism, rather than a policy, in
+> > > > > > > > > > > my view.
+> > > > > > > > > > 
+> > > > > > > > > > I thought you frowned on dynamically loadable
+> > > > > > > > > > LSMs for both security and
+> > > > > > > > > > correctness reasons?
+> > > > > > > > 
+> > > > > > > > Based on the feedback from the lists we've updated the design for v2.
+> > > > > > > > 
+> > > > > > > > In v2, LSM hook callbacks are allocated dynamically using BPF
+> > > > > > > > trampolines, appended to a separate security_hook_heads and run
+> > > > > > > > only after the statically allocated hooks.
+> > > > > > > > 
+> > > > > > > > The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
+> > > > > > > > still remains __lsm_ro_after_init and cannot be modified. We are still
+> > > > > > > > working on v2 (not ready for review yet) but the general idea can be
+> > > > > > > > seen here:
+> > > > > > > > 
+> > > > > > > >       https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > Evaluating the security impact of this is the next
+> > > > > > > > > step. My understanding
+> > > > > > > > > is that eBPF via BTF is constrained to read only access to hook
+> > > > > > > > > parameters, and that its behavior would be entirely restrictive.
+> > > > > > > > > 
+> > > > > > > > > I'd like to understand the security impact more
+> > > > > > > > > fully, though.  Can the
+> > > > > > > > > eBPF code make arbitrary writes to the kernel, or
+> > > > > > > > > read anything other than
+> > > > > > > > > the correctly bounded LSM hook parameters?
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > As mentioned, the BPF verifier does not allow writes to BTF types.
+> > > > > > > > 
+> > > > > > > > > > And a traditional security module would necessarily fall
+> > > > > > > > > > under GPL; is the eBPF code required to be
+> > > > > > > > > > likewise?  If not, KRSI is a
+> > > > > > > > > > gateway for proprietary LSMs...
+> > > > > > > > > 
+> > > > > > > > > Right, we do not want this to be a GPL bypass.
+> > > > > > > > 
+> > > > > > > > This is not intended to be a GPL bypass and the BPF verifier checks
+> > > > > > > > for license compatibility of the loaded program with GPL.
+> > > > > > > 
+> > > > > > > IIUC, it checks that the program is GPL compatible if it
+> > > > > > > uses a function
+> > > > > > > marked GPL-only.  But what specifically is marked GPL-only
+> > > > > > > that is required
+> > > > > > > for eBPF programs using KRSI?
+> > > > > > 
+> > > > > > Good point! If no-one objects, I can add it to the BPF_PROG_TYPE_LSM
+> > > > > > specific verification for the v2 of the patch-set which would require
+> > > > > > all BPF-LSM programs to be GPL.
+> > > > > 
+> > > > > I don't think it's a good idea to enforce license on the program.
+> > > > > The kernel doesn't do it for modules.
+> > > > > For years all of BPF tracing progs were GPL because they have to use
+> > > > > GPL-ed helpers to do anything meaningful.
+> > > > > So for KRSI just make sure that all helpers are GPL-ed as well.
+> > > > 
+> > > > IIUC, the example eBPF code included in this patch series showed a
+> > > > program that used a GPL-only helper for the purpose of reporting event
+> > > > output to userspace. But it could have just as easily omitted the use of
+> > > > that helper and still implemented its own arbitrary access control model
+> > > > on the LSM hooks to which it attached.  It seems like the question is
+> > > > whether the kernel developers are ok with exposing the entire LSM hook
+> > > > interface and all the associated data structures to non-GPLd code,
+> > > > irrespective of what helpers it may or may not use.
+> > > 
+> > > Also, to be clear, while kernel modules aren't necessarily GPL, prior to
+> > > this patch series, all Linux security modules were necessarily GPLd in order
+> > > to use the LSM interface.
+> > 
+> > Because they use securityfs_create_file() GPL-ed api, right?
+> > but not because module license is enforced.
 > 
-> 	FWIW, one thing that looks worrying here is that these bits become
-> userland ABI after this patch - specific values passed in that thing
-> can't be changed.  And no a single mention of that in fs/binfmt_misc.c,
-> leaving a nasty trap.  As far as one can tell, their values are fair game
-> for reordering, etc. - not even visible outside of fs/binfmt_misc.c;
-> purely internal constants.  And the effect of such modifications after
-> your patch will not be "everything breaks, patch gets caught by somebody's
-> tests" - it will be a quiet breakage for some users.
+> No, securityfs was a later addition and is not required by all LSMs either.
+> Originally LSMs had to register their hooks via register_security(), which
+> was intentionally EXPORT_SYMBOL_GPL() to avoid exposing the LSM interface to
+> non-GPLd modules because there were significant concerns with doing so when
+> LSM was first merged.  Then in 20510f2f4e2dabb0ff6c13901807627ec9452f98
+> ("security: Convert LSM into a static interface"), the ability for loadable
+> modules to use register_security() at all was removed, limiting its use to
+> built-in modules.  In commit b1d9e6b0646d0e5ee5d9050bd236b6c65d66faef ("LSM:
+> Switch to lists of hooks"), register_security() was replaced by
+> security_add_hooks(), but this was likewise not exported for use by modules
+> and could only be used by built-in code.  The bpf LSM is providing a shim
+> that allows eBPF code to attach to these hooks that would otherwise not be
+> exposed to non-GPLd code, so if the bpf LSM does not require the eBPF
+> programs to also be GPLd, then that is a change from current practice.
 > 
->>>>  #define MISC_FMT_OPEN_BINARY (1 << 30)
->>>>  #define MISC_FMT_CREDENTIALS (1 << 29)
->>>>  #define MISC_FMT_OPEN_FILE (1 << 28)
->>>> +#define MISC_FMT_FLAGS_MASK (MISC_FMT_PRESERVE_ARGV0 | MISC_FMT_OPEN_BINARY | \
->>>> +			     MISC_FMT_CREDENTIALS | MISC_FMT_OPEN_FILE)
+> > > So allowing non-GPL eBPF-based LSMs would be a
+> > > change.
+> > 
+> > I don't see it this way. seccomp progs technically unlicensed. Yet they can
+> > disallow any syscall. Primitive KRSI progs like
+> > int bpf-prog(void*) { return REJECT; }
+> > would be able to do selectively disable a syscall with an overhead acceptable
+> > in production systems (unlike seccomp). I want this use case to be available to
+> > people. It's a bait, because to do real progs people would need to GPL them.
+> > Key helpers bpf_perf_event_output, bpf_ktime_get_ns, bpf_trace_printk are all
+> > GPL-ed. It may look that most networking helpers are not-GPL, but real life is
+> > different. To debug programs bpf_trace_printk() is necessary. To have
+> > communication with user space bpf_perf_event_output() is necssary. To measure
+> > anything or implement timestamps bpf_ktime_get_ns() is necessary. So today all
+> > meaninful bpf programs are GPL. Those that are not GPL probably exist, but
+> > they're toy programs. Hence I have zero concerns about GPL bypass coming from
+> > tracing, networking, and, in the future, KRSI progs too.
 > 
-> IOW, you are making those parts of userland ABI cast in stone forever.
-> Whether this bit assignment does make sense or not, such things really
-> should not be hidden.
-> 
+> You have more confidence than I do about that.  I would anticipate
+> developers of out-of-tree LSMs latching onto this bpf LSM and using it to
+> avoid GPL.  I don't see that any of those helpers are truly needed to
+> implement an access control model.
 
-Thank you for your answer.
+Yeah, I'm with Stephen here, this should be explicitly marked for
+GPL-only bpf code to prevent anyone from trying to route around the LSM
+apis we have today.  We have enough problem with companies trying to do
+that as-is, let's not give them any other ways to abuse our license.
 
-So I think the patch from YunQiang Su is a better approach than mine,
-much cleaner, see:
+thanks,
 
-  binfmt_misc: pass info about P flag by AT_FLAGS
-  https://patchwork.kernel.org/patch/10902935/
-
-It does the same thing as my patch but uses a dedicated value for AT_FLAGS.
-
-Perhaps YunQiang can send a new version (without the kdebug() part)?
-
-Thanks,
-Laurent
+greg k-h
