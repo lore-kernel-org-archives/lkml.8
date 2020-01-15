@@ -2,101 +2,88 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F8FC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36905C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F1022522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579124683;
-	bh=mE/mjZUev0yWvsC/cdIQQ/2Qb6eYka5CK2eFeu8pbQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CMba88lbAxZaHCvzOypMkJalTjvg9vt85bqknvGvs0hvOqPG5aTfLhtRDhLBn7Q9K
-	 6R/OduA+5q0b8NGoH/8OVUFZk782NfBLAFHccU3dKkcLAFdffIDota5XiI9koRv3Le
-	 SDwRLg1raQZAt947ZuAEARkeqKjzx/RfVMdjD25I=
+	by mail.kernel.org (Postfix) with ESMTP id F1DD42467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgAOVom (ORCPT
+        id S1729945AbgAOVre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:44:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgAOVol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:44:41 -0500
-Received: from localhost (unknown [104.132.0.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BFBE222C3;
-        Wed, 15 Jan 2020 21:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579124681;
-        bh=mE/mjZUev0yWvsC/cdIQQ/2Qb6eYka5CK2eFeu8pbQg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X/0gVxnbzIOTvm8thhpsxDek7Zjf+LrsoK5jZp5opS37qy7ZLJqtiJMQsseDTjcE5
-         7fGgDy/w+49Ywon+fjhrMt/rz8VYhjuEYaU81FBLQ5iNs4FGT4bhG0QgtlA3//YCTs
-         pFRhLD9Qh0wTC42lS26hHny2Ybt+ge6g2srPddgs=
-Date:   Wed, 15 Jan 2020 13:44:40 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Yuehaibing <yuehaibing@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>
-Subject: Re: [f2fs-dev] [PATCH -next] f2fs: remove set but not used variable
- 'cs_block'
-Message-ID: <20200115214440.GC57854@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191224124359.15040-1-yuehaibing@huawei.com>
- <673efe18-d528-2e9b-6d44-a6a7a22086f3@huawei.com>
- <62ce1981-9061-f798-a65d-9599ceceb4b8@huawei.com>
- <20191226082419.ljbhystwkhp2d4gh@shindev.dhcp.fujisawa.hgst.com>
- <20200115023328.bummaaa7pdnao5qk@shindev.dhcp.fujisawa.hgst.com>
+        Wed, 15 Jan 2020 16:47:34 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49315 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgAOVrd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:47:33 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irqVO-0001fH-05; Wed, 15 Jan 2020 22:47:14 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 74BEA101228; Wed, 15 Jan 2020 22:47:13 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Krzysztof Piecuch <piecuch@protonmail.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "juri.lelli\@redhat.com" <juri.lelli@redhat.com>,
+        "malat\@debian.org" <malat@debian.org>,
+        "piecuch\@protonmail.com" <piecuch@protonmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "mzhivich\@akamai.com" <mzhivich@akamai.com>,
+        "viresh.kumar\@linaro.org" <viresh.kumar@linaro.org>,
+        "drake\@endlessm.com" <drake@endlessm.com>,
+        "rafael.j.wysocki\@intel.com" <rafael.j.wysocki@intel.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>, "bp\@alien8.de" <bp@alien8.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>
+Subject: Re: [PATCH] x86/tsc: Add tsc_guess flag disabling CPUID.16h use for tsc calibration
+In-Reply-To: <03j72W25Dne_HDSwI8Y7xiXPzvEBX5Ezw_xw8ed8DC83bpdMxoPcjhbinNcDD0yeoX9GGN691f3kqqtGLztTnW8Pay3FrbO5sTlj3vjnh-Y=@protonmail.com>
+References: <03j72W25Dne_HDSwI8Y7xiXPzvEBX5Ezw_xw8ed8DC83bpdMxoPcjhbinNcDD0yeoX9GGN691f3kqqtGLztTnW8Pay3FrbO5sTlj3vjnh-Y=@protonmail.com>
+Date:   Wed, 15 Jan 2020 22:47:13 +0100
+Message-ID: <87pnfkxuhq.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115023328.bummaaa7pdnao5qk@shindev.dhcp.fujisawa.hgst.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/15, Shinichiro Kawasaki wrote:
-> On Dec 26, 2019 / 17:24, Shin'ichiro Kawasaki wrote:
-> > On Dec 26, 2019 / 14:05, Yuehaibing wrote:
-> > > On 2019/12/26 11:44, Chao Yu wrote:
-> > > > On 2019/12/24 20:43, YueHaibing wrote:
-> > > >> fs/f2fs/segment.c: In function fix_curseg_write_pointer:
-> > > >> fs/f2fs/segment.c:4485:35: warning: variable cs_block set but not used [-Wunused-but-set-variable]
-> > > >>
-> > > >> It is never used since commit 362d8a920384 ("f2fs: Check
-> > > >> write pointer consistency of open zones") , so remove it.
-> > > > 
-> > > > Thanks for the fix!
-> > > > 
-> > > > Do you mind merging this patch to original patch? as it's still
-> > > > pending in dev branch.
-> > > 
-> > > It's ok for me.
-> > >
-> > 
-> > Thank you for this catch and the fix. Appreciated.
-> 
-> I have merged YueHaibing's change to the write pointer consistency fix patch
-> and sent out as the v6 series. Thanks again for finding out the unused variable.
+Krzysztof Piecuch <piecuch@protonmail.com> writes:
 
-I applied the fix in the original patch.
+> Changing base clock frequency directly impacts tsc hz but not CPUID.16h
+> values. An overclocked CPU supporting CPUID.16h and partial CPUID.15h
+> support will set tsc hz according to "best guess" given by CPUID.16h
+> relying on tsc_refine_calibration_work to give better numbers later.
+> tsc_refine_calibration_work will refuse to do its work when the outcome is
+> off the early tsc hz value by more than 1% which is certain to happen on an
+> overclocked system.
+
+The above sets the context which is great, but it does not explain what the
+solution is.
+
+> +	tsc_guess=	[X86,INTEL] Don't use data provided by CPUID.16h during
+> +			early tsc calibration. Disabling this may be useful for
+> +			CPUs with altered base clocks.
+> +			Format: <bool> (1/Y/y=enable, 0/N/n=disable)
+> +			default: enabled
+
+That's really a misnomer. CPUID.16h is way more than a guess. It's
+pretty accurate except for the case you describe. This command line
+option should clearly tell what it is about, i.e. overclocking.
+
+Aside of that we have to be careful because on quite some modern systems
+CPUID 16h is the only way to calibrate TSC and local APIC because PIT
+and HPET are either not exposed or disfunct. So disabling CPUID.16h
+should be prominently noted in dmesg.
 
 Thanks,
 
-> 
-> I was not sure if I should add Chao Yu's reviewed by tag to the patch from which
-> the unused variable was removed. To be strict, I didn't add the tag. Just
-> another quick review by Chao will be appreciated.
-> 
-> --
-> Best Regards,
-> Shin'ichiro Kawasaki
+       tglx
