@@ -2,117 +2,289 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82C5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B68C47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF452467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359B224655
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pl3HcE7H"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Bi7yrjmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgAOI2F (ORCPT
+        id S1728981AbgAOI2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:28:05 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45562 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726088AbgAOI2F (ORCPT
+        Wed, 15 Jan 2020 03:28:25 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:56685 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgAOI2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:28:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579076883;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=adl4YTtGwDsGU3mcOyNEDPoRcVEGa1oR2kpCSJ2EC6U=;
-        b=Pl3HcE7Hrvu75Zc0j77XI1BUYpRVHzchDfJEiTSx7LgNSEN840opV3qp/BpBaW8oMZbAH6
-        IlVIrWgQVKgkVMC2LVae7wtuhIAc/LWsOlD7ze6A3PxlhO3//7Kl9j6iEFe5S9K3KDb719
-        ZDG3/GKLT/unCTs+cFUMe2sGGNxu1y8=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-p9ScF3kkMnadRwXNd1Le3w-1; Wed, 15 Jan 2020 03:28:01 -0500
-X-MC-Unique: p9ScF3kkMnadRwXNd1Le3w-1
-Received: by mail-qv1-f72.google.com with SMTP id dw11so10457714qvb.16
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:28:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=adl4YTtGwDsGU3mcOyNEDPoRcVEGa1oR2kpCSJ2EC6U=;
-        b=I7lgP0avZsS+T2/UeKs8fL10liSqYUpId+gPo9D6GJO1gTkEiiDdMwkIso4gFyfxQC
-         75OdvxyqX+kqXXvZkNdFyVHHSxrbew/WLlN5jTiMFtVE2dOjiPl9qq6S/ADUaxun2RPh
-         epYBh9nTXuRtYhXqawA9Qb1S1O6vhpDJ0GYkno1bmDMBLRbFWvA4u1UktxGNN7xtKiC6
-         7O5NA2CajUbdVLWq3HYT0oEWsKJf6YUdbcOgRG4R0AIRygRkr4H2jU3zbda1m2FBLiKS
-         oc0L1XObQtmb9D80JkN/J690IEhCoRn9Pnjxf4YyBP9VDxQncQm5mtN1k//pco2v/6Tz
-         MLoA==
-X-Gm-Message-State: APjAAAUFxJEUXj7i739hP/4sdwALffxyuUX76WDW0KhUevfKl60Y+SMD
-        hK1SZ9W2K73xv/Zfb1WYv4jV8cLhOLTBAxKn1/CcqenZ+endikN3hkRkoa+jn98B3MkMgoXf5YT
-        T9JteHtkNqtFgN32GxhZBBdc01a3ZVDLgV9tJxHOR
-X-Received: by 2002:a0c:bd20:: with SMTP id m32mr20837535qvg.197.1579076881139;
-        Wed, 15 Jan 2020 00:28:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqynnIvI5Tdl1vtJm+JFA4/fXl3/u2hfPlTaOuV5Y0yec93AWwALsaiQEu+kRVo1l9SynVVGsOGBz9NPoVfX9pQ=
-X-Received: by 2002:a0c:bd20:: with SMTP id m32mr20837524qvg.197.1579076880853;
- Wed, 15 Jan 2020 00:28:00 -0800 (PST)
-MIME-Version: 1.0
-From:   Ondrej Holy <oholy@redhat.com>
-Date:   Wed, 15 Jan 2020 09:27:24 +0100
-Message-ID: <CA+wuGHCr2zJKFkHyRECOLAXsijLAcQgHVoACcNbvLbXnqarOtg@mail.gmail.com>
-Subject: Weird fuse_operations.read calls with Linux 5.4
+        Wed, 15 Jan 2020 03:28:24 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200115082821epoutp040df5dcf3b7518b71ec1ea592f0d2467f~qAhNXFwgU0504105041epoutp04w
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200115082821epoutp040df5dcf3b7518b71ec1ea592f0d2467f~qAhNXFwgU0504105041epoutp04w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579076901;
+        bh=BXX6+4pvZh5wrB2K0cL8X76QOB9BlOVJkMnYxZmQJXc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Bi7yrjmHhRyXQkYdDLbF2OTzk43t+NazPbL0EcZoWy3itPNIsvW1BhcYrzDcewjOV
+         HyS5H8Bx1eBz2d8YE5HqbMeRX1fFw2wnEJy3YX3Vrl2hDBzvYMh0i7x4NzjZS3XV/5
+         zBPqlJ0Wv/vjCqkASdeoZ/Q30iqPz26Il7t3fv1c=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200115082820epcas1p30b4c37cf97a82ee9f01a3560d5bfabd5~qAhMltQUn3105131051epcas1p3j;
+        Wed, 15 Jan 2020 08:28:20 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47yL7R4QRCzMqYly; Wed, 15 Jan
+        2020 08:28:19 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D0.AE.57028.22DCE1E5; Wed, 15 Jan 2020 17:28:18 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200115082818epcas1p4892a99345626188afd111ee263132458~qAhKeKEoY3123031230epcas1p4Z;
+        Wed, 15 Jan 2020 08:28:18 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200115082818epsmtrp116e8319670acf493ddf637170fba6fa2~qAhKdTJJN0484504845epsmtrp1C;
+        Wed, 15 Jan 2020 08:28:18 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-45-5e1ecd22fe6c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E6.4A.10238.22DCE1E5; Wed, 15 Jan 2020 17:28:18 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200115082818epsmtip1864356369192f49c3e5200ae46803604~qAhKS1RUA0089400894epsmtip1d;
+        Wed, 15 Jan 2020 08:28:18 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
+        arnd@arndb.de, Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v10 00/14] add the latest exfat driver
+Date:   Wed, 15 Jan 2020 17:24:33 +0900
+Message-Id: <20200115082447.19520-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUgTYRzu3e3jtCbH1HxRtHVQYbbcOTdP0QqSuChIKIKiXKe7Nmlf3G2S
+        lWWFn0RlRIU1EIuiaUxq+bEKdWYqYVRCNfvQyCDFdGa1So22nVH/Pb/n9zzv73nf94cisq+i
+        eLTIbGNYM23ExZHClu7kVAU+kJSvbC1XkvPnHknIk1ddYvJmY4+AfPl2CCHvP+gXkoOeK2Ly
+        x8VjZO3jWQHp/v1QRD6f8gs3RFKzv84Bqr3urYTqcDRJqHu+MjF12u0E1MztJMrbOiHOk+w2
+        ZhsYWsewcsZcaNEVmfU5+Jbt2o1atUZJKIhMMgOXm2kTk4Pnbs1TbCoyBuPh8mLaaA9SeTTH
+        4anrslmL3cbIDRbOloMzVp3RSiitaznaxNnN+rWFFlMWoVSmqYPKfUbD4KwTWDvIg+2jDqQM
+        XFxTA1AUYunQ6U+oAZGoDGsDcGTohJAvvgB4K5iaL74D2Dveg9SAiLBj4qdfwDceAHi93vXP
+        cj3QgITOFWMpcM4dGzLEYOvhncudYQ2CdQE48dQhCTWiMQ3s+lwZxkJsBewfey8KYSmWDX0f
+        BwX8tGWwsbkTCZkh1iSGtSOjQr6RC/ucp0Q8jobjvW4Jj+Ph2JkKCX+5w3C6YyF1FYCfAjk8
+        VkGfq1kUkiBYMnR5Unl6OWyfdYAQRrAoOPntlIg/RQqrKmS8ZAU8/bx7IVkCrKn0LwyloPtF
+        Q5iXYXuh59Kw8CxIrPs3oB4AJ1jKWDmTnuEIK/H/H90G4Y1brW4D559s9QIMBfgSqfxNYr5M
+        RBdzJSYvgCiCx0j7LwUpqY4uOcSwFi1rNzKcF6iDb1eLxMcWWoL7a7ZpCXWaSqUi0zUZGrUK
+        j5Pm1iflyzA9bWMOMIyVYf/6BGhEfBkgPLIL21KIiuOBA/Jku/ikcmqHtqDlrmLn+P25b7q4
+        wwPNR/eYJttKF0UP91VPOsud+pG5R1ffZWY75D7L615y1/pyRew12P4hasbU2HdDUfkksLeN
+        LXqz2eVYeU861JBYTR5J2a96UTqdJSnwNUw9mzmzih0o3YArFmPzTemvcCFnoInVCMvRfwCM
+        GgbEhwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMLMWRmVeSWpSXmKPExsWy7bCSnK7SWbk4gzlt/BZ/Jx1jt2hevJ7N
+        YuXqo0wW1+/eYrbYs/cki8XlXXPYLH5Mr7eYePo3k8WWf0dYLS69/8DiwOXx+9ckRo+ds+6y
+        e+yfu4bdY/fNBjaPvi2rGD0+b5LzOLT9DVsAexSXTUpqTmZZapG+XQJXxuXfqxgL9ltU7Hwy
+        l7mBcbpOFyMnh4SAicSbnx+Yuhi5OIQEdjNK3N0wiQkiIS1x7MQZ5i5GDiBbWOLw4WKImg+M
+        Eg9vdbCDxNkEtCX+bBEFKRcRcJTo3XWYBaSGWeA0o0T3xodgc4QFzCQOvm1nB7FZBFQlTr58
+        yApi8wrYSNx8ehlql7zE6g0HmCcw8ixgZFjFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7
+        iREcdFqaOxgvL4k/xCjAwajEw6twRzZOiDWxrLgy9xCjBAezkgjvyRlAId6UxMqq1KL8+KLS
+        nNTiQ4zSHCxK4rxP845FCgmkJ5akZqemFqQWwWSZODilGhhl4/af5fqxQkPk0D8FZdcfT+Se
+        ZJxq2f9hs8yNtNNSj/xF2XI6m65Xc9z0O7dKbF5mvYF/Ydj3xJfxiTf9++80ed2e4bPxXahm
+        5r+Jz2aXdew9rbVns5vxXFX7s6edQicdWfrxpO76PPVC44+7vkyfJ6i8KJDhbJw328lOu+wi
+        NYace0ddkpcosRRnJBpqMRcVJwIAxpSB/DYCAAA=
+X-CMS-MailID: 20200115082818epcas1p4892a99345626188afd111ee263132458
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200115082818epcas1p4892a99345626188afd111ee263132458
+References: <CGME20200115082818epcas1p4892a99345626188afd111ee263132458@epcas1p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, and a random previous
+snaphot has been merged in drivers/staging/.
 
-I have been directed here from https://github.com/libfuse/libfuse/issues/488.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-My issue is that with Linux Kernel 5.4, one read kernel call (e.g.
-made by cat tool) triggers two fuse_operations.read executions and in
-both cases with 0 offset even though that first read successfully
-returned some bytes.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-For gvfs, it leads to redundant I/O operations, or to "Operation not
-supported" errors if seeking is not supported. This doesn't happen
-with Linux 5.3. Any idea what is wrong here?
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-$ strace cat /run/user/1000/gvfs/ftp\:host\=server\,user\=user/foo
-...
-openat(AT_FDCWD, "/run/user/1000/gvfs/ftp:host=server,user=user/foo",
-O_RDONLY) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=20, ...}) = 0
-fadvise64(3, 0, 0, POSIX_FADV_SEQUENTIAL) = 0
-mmap(NULL, 139264, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
--1, 0) = 0x7fbc42b92000
-read(3, 0x7fbc42b93000, 131072)         = -1 EOPNOTSUPP (Operation not
-supported)
-...
+v10:
+ - Make PBR structures as packed structure.
+ - Fix build error on 32 bit system.
+ - Change L suffix of UNIX_SECS_2108 macro with LL suffix to work
+   on both 32/64bit system.
+ - Rework exfat time handling.
+ - Don't warp exfat specification URLs.
+ - Add _FS suffix to config name.
+ - Remove case_sensitive mount option.
+ - iocharset=utf8 mount option work as utf8 option.
+ - Rename the misleading nls names to corresponding ones.
+ - Fix wrong header guard name of exfat_fs.h.
+ - Remove the unneeded braces of macros in exfat_fs.h.
+ - Move the ondisk values to exfat_raw.h
+ - Put the operators at the previous line in exfat_cluster_to_sector().
+ - Braces of EXFAT_DELETE macro would outside the ~.
+ - Directly use exfat dentry field name.
+ - Add EXFAT_CLUSTERS_UNTRACKED macro.
+ - Remove both sets of inner braces in exfat_set_vol_flags().
+ - Replace is_reserved_cluster() with an explicit check
+   for EXFAT_EOF_CLUSTER.
+ - Initialize superblock s_time_gran/max/min.
+ - Clean-up exfat_bmap and exfat_get_block().
+ - Fix wrong boundlen to avoid potential buffer overflow
+   in exfat_convert_char_to_ucs2().
+ - Process length value as 1 when conversion is failed.
+ - Replace union exfat_timezone with masking the valid bit.
+ - Change exfat_cmp_uniname() with exfat_uniname_ncmp().
+ - Remove struct exfat_timestamp.
+ - Add atime update support.
+ - Add time_offset mount option.
+ - Remove unneeded CLUSTER_32 macro.
+ - Process utf16 surroage pair as one character.
+ - Rename MUST_ZERO_LEN to PBR64_RESERVED_LEN.
+ - Simplify is_exfat function by just using memchr_inv().
+ - Remove __exfat_init_name_hash.
+ - Remove exfat_striptail_len.
+ - Split dentry ops for the utf8 vs non-utf8 cases.
 
-$ /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -d
-...
-open flags: 0x8000 /ftp:host=server,user=user/foo
-   open[139679517117488] flags: 0x8000 /ftp:host=server,user=user/foo
-   unique: 8, success, outsize: 32
-unique: 10, opcode: READ (15), nodeid: 3, insize: 80, pid: 5053
-read[139679517117488] 4096 bytes from 0 flags: 0x8000
-   read[139679517117488] 20 bytes from 0
-   unique: 10, success, outsize: 36
-unique: 12, opcode: READ (15), nodeid: 3, insize: 80, pid: 5053
-read[139679517117488] 4096 bytes from 0 flags: 0x8000
-   unique: 12, error: -95 (Operation not supported), outsize: 16
-...
+v9:
+ - Add support time zone.
+ - Fix data past EOF resulting from fsx testsuite.
+ - Remove obsolete comments in __exfat_resolve_path().
+ - Remove unused file attributes macros.
+ - Remove unneeded #if BITS_PER_LONG.
 
-See for other information: https://gitlab.gnome.org/GNOME/gvfs/issues/441
+v8:
+ - Rearrange the function grouping in exfat_fs.h
+   (exfat_count_dir_entries, exfat_get_dentry, exfat_get_dentry_set,
+    exfat_find_location).
+ - Mark exfat_extract_uni_name(), exfat_get_uniname_from_ext_entry() and
+   exfat_mirror_bh() as static.
 
-Regards
+v7:
+ - Add the helpers macros for bitmap and fat entry to improve readability.
+ - Rename exfat_test_bitmap to exfat_find_free_bitmap.
+ - Merge exfat_get_num_entries into exfat_calc_num_entries.
+ - Add EXFAT_DATA_CLUSTERS and EXFAT_RESERVED_CLUSTERS macro.
+ - Add the macros for EXFAT BIOS block(JUMP_BOOT_LEN, OEM_NAME_LEN,
+   MUST_BE_ZERO_LEN).
+ - Add the macros for EXFAT entry type (IS_EXFAT_CRITICAL_PRI,
+   IS_EXFAT_BENIGN_PRI, IS_EXFAT_CRITICAL_SEC).
+ - Add EXFAT_FILE_NAME_LEN macro.
+ - Change the data type of is_dir with bool in __exfat_write_inode().
+ - Change the data type of sync with bool in exfat_set_vol_flags().
+ - Merge __exfat_set_vol_flags into exfat_set_vol_flags.
+ - Fix wrong statfs->f_namelen.
 
-Ondrej
---
-Ondrej Holy
-Software Engineer, Core Desktop Development
-Red Hat Czech s.r.o
+v6:
+ - Fix always false comparison due to limited range of allow_utime's data
+   type.
+ - Move bh into loop in exfat_find_dir_entry().
+ - Move entry_uniname and unichar variables into
+   an if "entry_type == TYPE_EXTEND" branch.
+
+v5:
+ - Remove a blank line between the message and the error code in
+   exfat_load_upcase_table.
+ - Move brelse to the end of the while loop and rename release_bh label
+   to free_table in exfat_load_upcase_table.
+ - Move an error code assignment after a failed function call.
+ - Rename labels and directly return instead of goto.
+ - Improve the exception handling in exfat_get_dentry_set().
+ - Remove ->d_time leftover.
+ - fix boolreturn.cocci warnings.
+
+v4:
+ - Declare ALLOC_FAT_CHAIN and ALLOC_NO_FAT_CHAIN macros.
+ - Rename labels with proper name.
+ - Remove blank lines.
+ - Remove pointer check for bh.
+ - Move ep into loop in exfat_load_bitmap().
+ - Replace READ/WRITE_ONCE() with test_and_clear_bit() and set_bit().
+ - Change exfat_allow_set_time return type with bool.
+
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename goto labels in several places.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printf calls into a single one.
+
+Namjae Jeon (14):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add fat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+  staging: exfat: make staging/exfat and fs/exfat mutually exclusive
+
+ MAINTAINERS                   |    7 +
+ drivers/staging/exfat/Kconfig |    2 +-
+ fs/Kconfig                    |    3 +-
+ fs/Makefile                   |    1 +
+ fs/exfat/Kconfig              |   21 +
+ fs/exfat/Makefile             |    8 +
+ fs/exfat/balloc.c             |  282 +++++++
+ fs/exfat/cache.c              |  325 ++++++++
+ fs/exfat/dir.c                | 1244 ++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h           |  520 ++++++++++++
+ fs/exfat/exfat_raw.h          |  184 +++++
+ fs/exfat/fatent.c             |  463 +++++++++++
+ fs/exfat/file.c               |  355 ++++++++
+ fs/exfat/inode.c              |  667 +++++++++++++++
+ fs/exfat/misc.c               |  162 ++++
+ fs/exfat/namei.c              | 1442 +++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c                |  834 +++++++++++++++++++
+ fs/exfat/super.c              |  724 +++++++++++++++++
+ 18 files changed, 7242 insertions(+), 2 deletions(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
+-- 
+2.17.1
 
