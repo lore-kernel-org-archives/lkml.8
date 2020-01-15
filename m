@@ -2,106 +2,193 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B0C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BD6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFB82081E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCED2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 21:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfehPDJo"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="KePd9Zfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgAOVxl (ORCPT
+        id S1730377AbgAOVyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:53:41 -0500
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:43880 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729516AbgAOVxk (ORCPT
+        Wed, 15 Jan 2020 16:54:13 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:35965 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbgAOVyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:53:40 -0500
-Received: by mail-ot1-f51.google.com with SMTP id p8so17463468oth.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:53:40 -0800 (PST)
+        Wed, 15 Jan 2020 16:54:12 -0500
+Received: by mail-qt1-f171.google.com with SMTP id i13so17185960qtr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 13:54:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rif7OTSlbjKeTverAR4D1rWAOFI/XOBA+YksPtckMNk=;
-        b=AfehPDJoXfZ0wuTfgNJehsRLDPkD6ddrEE4bAhRtbUfgYwObP0HW4UuTok+WGILILx
-         U6kCdNVJuLZ2IVBZlxBV+wT9zvpc54Dwwc3QtE7+kLRNgiPHAcAN7GybBQPulYg1yVxo
-         8Am0b6iAibnpywmcsGSeQTBxiwBAsShvW4HnJ1BAXDGo1XewD29bohTS+/Qtv2lmFCH6
-         66X+VXpwNl1M3wAKLNMDOdyPZn5M2/2owF/XdEHhJ0mMtVao0hVpE92+kQ27TO4f3Xnv
-         J9003iTHnQ+83onBMJYWlBkMKHraR8pqW4XakZzSdi/vW3P3X7mYAT5JCeL1X+F0xa7X
-         lzOg==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=JtTvNccN+0/+lCGUOatY00GbzmTZrZ9tQej/2dZXgxw=;
+        b=KePd9ZfqDfmOkXqFFTc3Q9LwzsdRxP/xYXtHcwOYE2P45KBCjSc7c09L/RvSjEB3lY
+         QMzCYCg4J138ouYNcOygau/65JCD6GLK9yg6ZujG+wHqgyj6xyoPj6PIg6EXpnaufwh7
+         Z510eSm16ZQQlyVQUQ6H4u455OeTZzrZoL2cHWu/2KDD55t3Dg3KPfSsFqOK1sG2ro6C
+         wpw0NoTRojtNoZ1Mm/O6vJrSogBMAqYbLVyoBo6in2wt4xTkU/Q6oi+gH+1liu+6xGtu
+         DNYenwCawyAjhSHWPmBnnZtQIznYZmw6UFDfQNPmBQgDGs4Z4KR8S2bmvh8uklxplGW+
+         9kVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rif7OTSlbjKeTverAR4D1rWAOFI/XOBA+YksPtckMNk=;
-        b=LWUcldG76Rc0BEmsmZvB5JWwL1NLp8wp1vPWykbVbsog6LgnBPQOMIDjlD9hyHvHk1
-         AbIG8zYGo9Lh6q67X62kD48+UpIER1Z1KUC/vZx22x/T5JpRTrJ54Vnn9H+KDFuPUnBX
-         KDyc3HZUftD/2l/FBFIE9eoBe+qRlyOi7Tkx51lHm9QEp9ms9KJx0h23TmDlhSE3HS33
-         fr8TvYtzFepmlpoVHmxqw6YVNychxeFgawNTE+tG8QGVyRIqT7u7VzLMggxskwJ/cp1c
-         JCGtolHLh3MdPB0Zywjp+PQmJLlGp+NUnPbRUXYgjYkZ8Tx5dAvLgiyNcRekDqzBiDQ2
-         PwZg==
-X-Gm-Message-State: APjAAAVi7EZa/7pUugB+L/AvJWIoKZX2+XGvjFRyK+zLuESWZigEWecI
-        xEFvPseNAEjqXqXOKSrmhmmNxAI1Rk/3DFPcQVo=
-X-Google-Smtp-Source: APXvYqybLLkAFyebqGnNXeuiIeVRBrE8bP9ZScdLeM8OtwtBS5JVcy9oSUbmJvarBaDaX8nq7AU3NRX7n1/hkjEEp2c=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr4195764otk.189.1579125219729;
- Wed, 15 Jan 2020 13:53:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=JtTvNccN+0/+lCGUOatY00GbzmTZrZ9tQej/2dZXgxw=;
+        b=Cf+IewQYSaTwmPc/EDbIC9wxtAn7qJLR+ctMfLbbL5rrzeJMdBx4XTjXS7ADRp9Qgc
+         dhkUhlN8MAEwGxPc6JbFTaq6X2p7OngHHIbFvqCAzM8wUr2lZupIDN/euWXaZuViw1nG
+         Nxran7lZnYR9g9Bnfe7Dlsjr3oG4SKgY0TZLQJzIFB3VzwHQrCu4p3mY2DkP7Y6pRFvT
+         2hBgHJ8QSNsLNUNKw0X2Zs+MPzMV9DPf+i5iZcOCqxu0d3Tbdjx+iaUoMBuHAUsUN9+6
+         Fboo8oSsgGzFK9I33TKGiyneC0qo2Yp8s6HpXy9pdOJEwTLUseQDzs7qKX6MLDr/yrFN
+         LjFg==
+X-Gm-Message-State: APjAAAXMx+b2WjpdHpLckKlVyDRjodNB2TVie2C/MN8IcPG27s/vmNQT
+        pyKEHwzrwoQCyXzz9BWqVQmWEADF9ruCQg==
+X-Google-Smtp-Source: APXvYqxcRE3B5iQiFW7B0tOZ3c36MzfvnKAl5xIFQTt35nmhPCQoqb66aA5/hose3wVQiuv4Glt7kQ==
+X-Received: by 2002:aed:2150:: with SMTP id 74mr707121qtc.323.1579125251168;
+        Wed, 15 Jan 2020 13:54:11 -0800 (PST)
+Received: from localhost ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id g21sm9058033qkl.116.2020.01.15.13.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 13:54:10 -0800 (PST)
+Date:   Wed, 15 Jan 2020 16:54:09 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     lsf-pc <lsf-pc@lists.linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvme@lists.infradead.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: REMINDER: LSF/MM/BPF: 2020: Call for Proposals
+Message-ID: <20200115215409.5pd4fnoawqzs7rvw@jbacik-mbp>
 MIME-Version: 1.0
-References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
- <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
- <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com> <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 15 Jan 2020 13:53:28 -0800
-Message-ID: <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
-Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Taehee Yoo <ap420073@gmail.com>,
-        syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 3:11 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> +Taehee, Cong,
->
-> In the other thread Taehee mentioned the creation of dynamic keys for
-> net devices that was added recently and that they are subject to some
-> limits.
-> syzkaller creates lots of net devices for isolation (several dozens
-> per test process, but then these can be created and destroyed
-> periodically). I wonder if it's the root cause of the lockdep limits
-> problems?
+This is a reminder that we are still taking requests for this years Linux
+Storage, Filesystem, Memory Management, and BPF Summit.  Below is the original
+announcement but we would like to hilight a few changes and re-iterate a few
+things.
 
-Very possibly. In current code base, there are 4 lockdep keys
-per netdev:
+1) The venue has been finalized and as such the website is now live
 
-        struct lock_class_key   qdisc_tx_busylock_key;
-        struct lock_class_key   qdisc_running_key;
-        struct lock_class_key   qdisc_xmit_lock_key;
-        struct lock_class_key   addr_list_lock_key;
+	https://events.linuxfoundation.org/lsfmm/
 
-so the number of lockdep keys is at least 4x number of network
-devices.
+2) Please make sure to fill out the google form to make sure we don't miss your
+request.
 
-I think only addr_list_lock_key is necessary as it has a nested
-locking use case, all the rest are not. Taehee, do you agree?
+3) PLEASE STILL SUBMIT TOPICS TO THE RELEVANT MAILINGLISTS.  The topics of
+interest part of the form is so we can figure out what topics from the
+mailinglist are the relevant discussions to have.  If you submit a topic please
+feel free to paste a lore link in your form if you've not already filled out the
+form.
 
-I plan to remove at least qdisc_xmit_lock_key for net-next
-after the fix for net gets merged.
+The rest of the details of course are in the original announcment which is
+included below.  Thanks,
 
-Thanks!
+Josef
+
+-------------- Original announcement ---------------------
+The annual Linux Storage, Filesystem, Memory Management, and BPF
+(LSF/MM/BPF) Summit for 2020 will be held from April 27 - April 29 at
+The Riviera Palm Springs, A Tribute Portfolio Resort in Palm Springs,
+California. LSF/MM/BPF is an invitation-only technical workshop to map
+out improvements to the Linux storage, filesystem, BPF, and memory
+management subsystems that will make their way into the mainline kernel
+within the coming years.
+
+LSF/MM/BPF 2020 will be a three day, stand-alone conference with four
+subsystem-specific tracks, cross-track discussions, as well as BoF and
+hacking sessions.
+
+On behalf of the committee I am issuing a call for agenda proposals
+that are suitable for cross-track discussion as well as technical
+subjects for the breakout sessions.
+
+If advance notice is required for visa applications then please point
+that out in your proposal or request to attend, and submit the topic
+as soon as possible.
+
+This year will be a little different for requesting attendance.  Please
+do the following by February 15th, 2020.
+
+1) Fill out the following Google form to request attendance and
+suggest any topics
+
+	https://forms.gle/voWi1j9kDs13Lyqf9
+
+In previous years we have accidentally missed people's attendance
+requests because they either didn't cc lsf-pc@ or we simply missed them
+in the flurry of emails we get.  Our community is large and our
+volunteers are busy, filling this out will help us make sure we don't
+miss anybody.
+
+2) Proposals for agenda topics should still be sent to the following
+lists to allow for discussion among your peers.  This will help us
+figure out which topics are important for the agenda.
+
+        lsf-pc@lists.linux-foundation.org
+
+and CC the mailing lists that are relevant for the topic in question:
+
+        FS:     linux-fsdevel@vger.kernel.org
+        MM:     linux-mm@kvack.org
+        Block:  linux-block@vger.kernel.org
+        ATA:    linux-ide@vger.kernel.org
+        SCSI:   linux-scsi@vger.kernel.org
+        NVMe:   linux-nvme@lists.infradead.org
+        BPF:    bpf@vger.kernel.org
+
+Please tag your proposal with [LSF/MM/BPF TOPIC] to make it easier to
+track. In addition, please make sure to start a new thread for each
+topic rather than following up to an existing one. Agenda topics and
+attendees will be selected by the program committee, but the final
+agenda will be formed by consensus of the attendees on the day.
+
+We will try to cap attendance at around 25-30 per track to facilitate
+discussions although the final numbers will depend on the room sizes
+at the venue.
+
+For discussion leaders, slides and visualizations are encouraged to
+outline the subject matter and focus the discussions. Please refrain
+from lengthy presentations and talks; the sessions are supposed to be
+interactive, inclusive discussions.
+
+There will be no recording or audio bridge. However, we expect that
+written minutes will be published as we did in previous years:
+
+2019: https://lwn.net/Articles/lsfmm2019/
+
+2018: https://lwn.net/Articles/lsfmm2018/
+
+2017: https://lwn.net/Articles/lsfmm2017/
+
+2016: https://lwn.net/Articles/lsfmm2016/
+
+2015: https://lwn.net/Articles/lsfmm2015/
+
+2014: http://lwn.net/Articles/LSFMM2014/
+
+3) If you have feedback on last year's meeting that we can use to
+improve this year's, please also send that to:
+
+        lsf-pc@lists.linux-foundation.org
+
+Thank you on behalf of the program committee:
+
+	Josef Bacik (Filesystems)
+	Amir Goldstein (Filesystems)
+	Martin K. Petersen (Storage)
+	Omar Sandoval (Storage)
+	Michal Hocko (MM)
+	Dan Williams (MM)
+	Alexei Starovoitov (BPF)
+	Daniel Borkmann (BPF)
