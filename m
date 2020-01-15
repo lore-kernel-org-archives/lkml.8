@@ -2,202 +2,118 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B6CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7D9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A062467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bw2vwbgo"
+	by mail.kernel.org (Postfix) with ESMTP id 9D89E24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAOC1p (ORCPT
+        id S1729015AbgAOC2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 21:27:45 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42559 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728862AbgAOC1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 21:27:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579055262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6MX/KqGc3zFqH4ifets/x9qWKK78+84NEcESsqTPOJo=;
-        b=Bw2vwbgoKHUMpnd+j2yf22voyvpcl+WuC2Afpjewu4Cs2jgW65qrHMKuU1I8Nq70YL2c9h
-        syHlDd5K9XjRZtE/dSA0iAWgZi9HAMfF6I0vQqR4Kb+Nz5pW0A+ZptYMMoJQJhP/Qp2xRb
-        9ZtCkAtOlx4sSep6TA5g3JLjVMpojIM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-ib40Bu_HNEi4h-Uz0Q1jfw-1; Tue, 14 Jan 2020 21:27:38 -0500
-X-MC-Unique: ib40Bu_HNEi4h-Uz0Q1jfw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 Jan 2020 21:28:06 -0500
+Received: from trent.utfs.org ([94.185.90.103]:33164 "EHLO trent.utfs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728885AbgAOC2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 21:28:06 -0500
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3852E107ACC5;
-        Wed, 15 Jan 2020 02:27:37 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 05D645C1D6;
-        Wed, 15 Jan 2020 02:27:29 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 10:27:25 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        zhangsaisai <zhangsaisai@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>
-Subject: Re: [PATCH V3] brd: check and limit max_part par
-Message-ID: <20200115022725.GA14585@ming.t460p>
-References: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
+        by trent.utfs.org (Postfix) with ESMTPS id 5AA0C5FFED;
+        Wed, 15 Jan 2020 03:28:04 +0100 (CET)
+Date:   Tue, 14 Jan 2020 18:28:04 -0800 (PST)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     intel-gfx@lists.freedesktop.org
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: bugs.freedesktop.org is no longer accepting bugs
+Message-ID: <alpine.DEB.2.21.99999.375.2001141825300.21037@trent.utfs.org>
+User-Agent: Alpine 2.21.99999 (DEB 375 2019-10-29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <c8236e55-f64f-ef40-b394-8b7e86ce50df@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 07:56:07PM +0800, Zhiqiang Liu wrote:
->=20
-> In brd_init func, rd_nr num of brd_device are firstly allocated
-> and add in brd_devices, then brd_devices are traversed to add each
-> brd_device by calling add_disk func. When allocating brd_device,
-> the disk->first_minor is set to i * max_part, if rd_nr * max_part
-> is larger than MINORMASK, two different brd_device may have the same
-> devt, then only one of them can be successfully added.
-> when rmmod brd.ko, it will cause oops when calling brd_exit.
->=20
-> Follow those steps:
->   # modprobe brd rd_nr=3D3 rd_size=3D102400 max_part=3D1048576
->   # rmmod brd
-> then, the oops will appear.
->=20
-> Oops log:
-> [  726.613722] Call trace:
-> [  726.614175]  kernfs_find_ns+0x24/0x130
-> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-> [  726.615749]  sysfs_remove_group+0x38/0xb0
-> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-> [  726.617320]  blk_unregister_queue+0x98/0x100
-> [  726.618105]  del_gendisk+0x144/0x2b8
-> [  726.618759]  brd_exit+0x68/0x560 [brd]
-> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-> [  726.620384]  el0_svc_common+0x78/0x130
-> [  726.621057]  el0_svc_handler+0x38/0x78
-> [  726.621738]  el0_svc+0x8/0xc
-> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
->=20
-> Here, we add brd_check_and_reset_par func to check and limit max_part p=
-ar.
->=20
-> --
-> V2->V3: (suggested by Ming Lei)
->  - clear .minors when running out of consecutive minor space in brd_all=
-oc
->  - remove limit of rd_nr
->=20
-> V1->V2: add more checks in brd_check_par_valid as suggested by Ming Lei=
-.
->=20
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> ---
->  drivers/block/brd.c | 35 ++++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index df8103dd40ac..2295a0bafb5e 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -330,16 +330,16 @@ static const struct block_device_operations brd_f=
-ops =3D {
->  /*
->   * And now the modules code and kernel interface.
->   */
-> -static int rd_nr =3D CONFIG_BLK_DEV_RAM_COUNT;
-> -module_param(rd_nr, int, 0444);
-> +static unsigned int rd_nr =3D CONFIG_BLK_DEV_RAM_COUNT;
-> +module_param(rd_nr, uint, 0444);
+Hello,
 
-The above change isn't needed.
-
->  MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
->=20
->  unsigned long rd_size =3D CONFIG_BLK_DEV_RAM_SIZE;
->  module_param(rd_size, ulong, 0444);
->  MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
->=20
-> -static int max_part =3D 1;
-> -module_param(max_part, int, 0444);
-> +static unsigned int max_part =3D 1;
-> +module_param(max_part, uint, 0444);
-
-The above change isn't needed.
-
->  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
->=20
->  MODULE_LICENSE("GPL");
-> @@ -393,7 +393,14 @@ static struct brd_device *brd_alloc(int i)
->  	if (!disk)
->  		goto out_free_queue;
->  	disk->major		=3D RAMDISK_MAJOR;
-> -	disk->first_minor	=3D i * max_part;
-> +	/*
-> +	 * Clear .minors when running out of consecutive minor space since
-> +	 * GENHD_FL_EXT_DEVT is set, and we can allocate from extended devt.
-> +	 */
-> +	if ((i * disk->minors) & ~MINORMASK)
-> +		disk->minors =3D 0;
-> +	else
-> +		disk->first_minor =3D i * disk->minors;
-
-The above looks a bit ugly, one nice way could be to change in
-brd_alloc():
-
-	disk =3D brd->brd_disk =3D alloc_disk(((i * max_part) & ~MINORMASK) ?
-		0 : max_part);
-
->  	disk->fops		=3D &brd_fops;
->  	disk->private_data	=3D brd;
->  	disk->queue		=3D brd->brd_queue;
-> @@ -468,6 +475,21 @@ static struct kobject *brd_probe(dev_t dev, int *p=
-art, void *data)
->  	return kobj;
->  }
->=20
-> +static inline void brd_check_and_reset_par(void)
-> +{
-> +	if (unlikely(!rd_nr))
-> +		rd_nr =3D 1;
-
-zero rd_nr should work as expected, given user can create dev file via
-mknod, and brd_probe() will be called for populate brd disk/queue when
-the disk file is opened.
-
-> +static inline void brd_check_and_reset_par(void)
-> +{
-> + =A0 =A0 =A0 if (unlikely(!rd_nr))
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 rd_nr =3D 1;
-> +
-> + =A0 =A0 =A0 if (unlikely(!max_part))
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 max_part =3D 1;
-
-Another limit is that 'max_part' needs to be divided exactly by (1U <<
-MINORBITS), something like:
-
-	max_part =3D 1UL << fls(max_part);
+this should apply cleanly to drm-tip.
 
 
-Thanks,=20
-Ming
+    drm: bugs.freedesktop.org is no longer accepting bugs.
+    
+    freedesktop.org Bugzilla is no longer in use and new DRM bugs
+    should be reported to https://gitlab.freedesktop.org/drm/intel
+    instead. While we're at it, update some URLs of still-open bugs
+    that have been moved to the new bug tracker.
+    
+     drivers/gpu/drm/i915/Kconfig           | 3 +--
+     drivers/gpu/drm/i915/i915_gpu_error.c  | 2 +-
+     drivers/gpu/drm/i915/i915_utils.c      | 2 +-
+     drivers/gpu/drm/radeon/radeon_device.c | 2 +-
+     4 files changed, 4 insertions(+), 5 deletions(-)
+    
+    Signed-off-by: Christian Kujau <lists@nerdbynature.de>
 
+diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
+index ba9595960bbe..f2f4bcaaa1d5 100644
+--- a/drivers/gpu/drm/i915/Kconfig
++++ b/drivers/gpu/drm/i915/Kconfig
+@@ -75,8 +75,7 @@ config DRM_I915_CAPTURE_ERROR
+ 	help
+ 	  This option enables capturing the GPU state when a hang is detected.
+ 	  This information is vital for triaging hangs and assists in debugging.
+-	  Please report any hang to
+-	    https://bugs.freedesktop.org/enter_bug.cgi?product=DRI
++	  Please report any hang to https://gitlab.freedesktop.org/drm/intel
+ 	  for triaging.
+ 
+ 	  If in doubt, say "Y".
+diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
+index 4c1836f0a991..9fba5ac9020d 100644
+--- a/drivers/gpu/drm/i915/i915_gpu_error.c
++++ b/drivers/gpu/drm/i915/i915_gpu_error.c
+@@ -1852,7 +1852,7 @@ void i915_error_state_store(struct i915_gpu_coredump *error)
+ 	if (!xchg(&warned, true) &&
+ 	    ktime_get_real_seconds() - DRIVER_TIMESTAMP < DAY_AS_SECONDS(180)) {
+ 		pr_info("GPU hangs can indicate a bug anywhere in the entire gfx stack, including userspace.\n");
+-		pr_info("Please file a _new_ bug report on bugs.freedesktop.org against DRI -> DRM/Intel\n");
++		pr_info("Please file a new bug report on https://gitlab.freedesktop.org/drm/intel\n");
+ 		pr_info("drm/i915 developers can then reassign to the right component if it's not a kernel issue.\n");
+ 		pr_info("The GPU crash dump is required to analyze GPU hangs, so please always attach it.\n");
+ 		pr_info("GPU crash dump saved to /sys/class/drm/card%d/error\n",
+diff --git a/drivers/gpu/drm/i915/i915_utils.c b/drivers/gpu/drm/i915/i915_utils.c
+index c47261ae86ea..f93a4c005d7a 100644
+--- a/drivers/gpu/drm/i915/i915_utils.c
++++ b/drivers/gpu/drm/i915/i915_utils.c
+@@ -8,7 +8,7 @@
+ #include "i915_drv.h"
+ #include "i915_utils.h"
+ 
+-#define FDO_BUG_URL "https://bugs.freedesktop.org/enter_bug.cgi?product=DRI"
++#define FDO_BUG_URL "https://gitlab.freedesktop.org/drm/intel"
+ #define FDO_BUG_MSG "Please file a bug at " FDO_BUG_URL " against DRM/Intel " \
+ 		    "providing the dmesg log by booting with drm.debug=0xf"
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
+index a522e092038b..b044dd912239 100644
+--- a/drivers/gpu/drm/radeon/radeon_device.c
++++ b/drivers/gpu/drm/radeon/radeon_device.c
+@@ -144,7 +144,7 @@ static struct radeon_px_quirk radeon_px_quirk_list[] = {
+ 	 */
+ 	{ PCI_VENDOR_ID_ATI, 0x6840, 0x1043, 0x2122, RADEON_PX_QUIRK_DISABLE_PX },
+ 	/* Asus K53TK laptop with AMD A6-3420M APU and Radeon 7670m GPU
+-	 * https://bugs.freedesktop.org/show_bug.cgi?id=101491
++	 * https://gitlab.freedesktop.org/drm/amd/issues/803
+ 	 */
+ 	{ PCI_VENDOR_ID_ATI, 0x6741, 0x1043, 0x2122, RADEON_PX_QUIRK_DISABLE_PX },
+ 	/* Asus K73TK laptop with AMD A6-3420M APU and Radeon 7670m GPU
+
+-- 
+BOFH excuse #397:
+
+T-1's congested due to porn traffic to the news server.
