@@ -2,176 +2,166 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05400C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433B8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D970824655
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C002187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579081549;
+	bh=TQOb4zgeCXG3lBNI7fgMzGAxcDUV9hyEnYwNbb9G8e4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vCgZyoLqqgIcGZM3RwXPrstnsSHZNWEHnze5f7I+lIFJaGRiFX2RuKivqqlHqncdj
+	 qw2Gb4dIJ+HoIOxxaPWp56iS0Jcj+o/Qs4q7QGbwjsBVzqMG/sTE53kiZEd1wz5o/0
+	 pfrXqUss2XtW4Oo0uCjy1wsHz1PAufxiFGrFmTGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgAOJpY (ORCPT
+        id S1729563AbgAOJps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:45:24 -0500
-Received: from relay.sw.ru ([185.231.240.75]:43806 "EHLO relay.sw.ru"
+        Wed, 15 Jan 2020 04:45:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgAOJpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:45:23 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1irfEj-0002LN-LS; Wed, 15 Jan 2020 12:45:17 +0300
-Subject: Re: [PATCH RESEND] mm: fix tick_sched timer blocked by
- pgdat_resize_lock
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
- <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
- <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
- <c7ac0338-78a6-2ae3-465c-2d6371d96a72@linux.alibaba.com>
- <9420eab3-5e5e-150f-53c9-6cd40bacf859@virtuozzo.com>
- <ba242ee6-22be-3047-5a88-e6b39e1509ef@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <e87a04fa-c96b-c15e-126e-46f1cc2885d1@virtuozzo.com>
-Date:   Wed, 15 Jan 2020 12:45:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <ba242ee6-22be-3047-5a88-e6b39e1509ef@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1729505AbgAOJps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:45:48 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28DB124655;
+        Wed, 15 Jan 2020 09:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579081546;
+        bh=TQOb4zgeCXG3lBNI7fgMzGAxcDUV9hyEnYwNbb9G8e4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hX+lvCddJsSUCpId4xv9CqcR1fy1caHO+eqxJuoYSRyBOG5GE69c5XVkebnAsbl4o
+         hRCkoMPC3oObsW6MerzPqLPDhnN1g++ssNP/xrFE3X4os8kdm5urcKN2NOXalziwlR
+         lKk7LGBMvE2QVo0b+sJ+2QcZWP7pCm0PJMFTn79o=
+Date:   Wed, 15 Jan 2020 18:45:38 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Message-Id: <20200115184538.bb8604e914dcc0eaeaf357fd@kernel.org>
+In-Reply-To: <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+        <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+        <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+        <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+        <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+        <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
+        <20200110164531.GA2598@kernel.org>
+        <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
+        <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+        <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+        <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+        <20200114122506.3cf442dc189a649d4736f86e@kernel.org>
+        <CAADnVQLCtrvvagbbkZG4PyAKb2PWzUouxG3=nxvm8QdpgEWtGQ@mail.gmail.com>
+        <81abaa29-d1be-a888-8b2f-fdf9b7e9fde8@linux.intel.com>
+        <CAADnVQKddDCRV9Zp7N_TR51wc5rtRwFN-pSZHLiXDXe23+B_5Q@mail.gmail.com>
+        <257a949a-b7cc-5ff1-6f1a-34bc44b1efc5@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.01.2020 11:54, Shile Zhang wrote:
-> 
-> 
-> On 2020/1/13 16:11, Kirill Tkhai wrote:
->> On 13.01.2020 03:54, Shile Zhang wrote:
->>>
->>> On 2020/1/10 19:42, Kirill Tkhai wrote:
->>>> On 10.01.2020 12:30, Shile Zhang wrote:
->>>>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
->>>>> will be called inside 'pgdatinit' kthread to initialise the deferred
->>>>> pages with local interrupts disabled. Which is introduced by
->>>>> commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
->>>>> pages").
->>>>>
->>>>> But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
->>>>> default), especially in small system with NRCPUS <= 2. In this case, the
->>>>> interrupts are disabled on boot CPU during memory initialising, which
->>>>> caused the tick_sched timer be blocked, leading to wall clock stuck.
->>>>>
->>>>> Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
->>>>> deferred pages")
->>>>>
->>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->>>>> ---
->>>>>    include/linux/memory_hotplug.h | 16 ++++++++++++++--
->>>>>    1 file changed, 14 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->>>>> index ba0dca6aac6e..be69a6dc4fee 100644
->>>>> --- a/include/linux/memory_hotplug.h
->>>>> +++ b/include/linux/memory_hotplug.h
->>>>> @@ -6,6 +6,8 @@
->>>>>    #include <linux/spinlock.h>
->>>>>    #include <linux/notifier.h>
->>>>>    #include <linux/bug.h>
->>>>> +#include <linux/sched.h>
->>>>> +#include <linux/smp.h>
->>>>>      struct page;
->>>>>    struct zone;
->>>>> @@ -282,12 +284,22 @@ static inline bool movable_node_is_enabled(void)
->>>>>    static inline
->>>>>    void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
->>>>>    {
->>>>> -    spin_lock_irqsave(&pgdat->node_size_lock, *flags);
->>>>> +    /*
->>>>> +     * Disable local interrupts on boot CPU will stop the tick_sched
->>>>> +     * timer, which will block jiffies(wall clock) update.
->>>>> +     */
->>>>> +    if (current->cpu != get_boot_cpu_id())
->>>>> +        spin_lock_irqsave(&pgdat->node_size_lock, *flags);
->>>>> +    else
->>>>> +        spin_lock(&pgdat->node_size_lock);
->>>>>    }
->>>>>    static inline
->>>>>    void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
->>>>>    {
->>>>> -    spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
->>>>> +    if (current->cpu != get_boot_cpu_id())
->>>>> +        spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
->>>>> +    else
->>>>> +        spin_unlock(&pgdat->node_size_lock);
->>>>>    }
->>>>>    static inline
->>>>>    void pgdat_resize_init(struct pglist_data *pgdat)
->>>> 1)Linux kernel is *preemptible*. Kernel with CONFIG_PREEMPT_RT option even may preempt
->>>> *kernel* code in the middle of function. When you are executing a code containing
->>>> pgdat_resize_lock() and pgdat_resize_unlock(), the process may migrate to another cpu
->>>> between them.
->>>>
->>>> bool cpu               another cpu
->>>> ----------------------------------
->>>> pgdat_resize_lock()
->>>>     spin_lock()
->>>>     --> migrate to another cpu
->>>>                         pgdat_resize_unlock()
->>>>                         spin_unlock_irqrestore(<uninitialized flags>)
->>>>
->>>> (Yes, in case of CONFIG_PREEMPT_RT, process is preemptible even after spin_lock() call).
->>>>
->>>> This looks like a bad helpers, and we should not introduce such the design.
->>> Hi Kirill,
->>>
->>> Thanks for your comments!
->>> Sorry for I'm not very clear about this lock/unlock, but I encountered this issue
->>> with "CONFIG_PREEMPT is not set".
->> The thing is we simply shouldn't introduce such the primitives since the thread
->> may migrate to another cpu, while you own the lock. This looks like a buggy design.
->>
->>>> 2)I think there is no the problem this patch solves. Do we really this statistics?
->>>> Can't we simple remove print message from deferred_init_memmap() and solve this?
->>> Sorry for I've not put this issue very clearly. It's *not* just one statistics log
->>> with wrong time calculate, but the wall clock is stuck.
->>> So the 'systemd-analyze' command also give a wrong time as I mentioned in the cover
->>> letter. I don't think is OK just remove the log, it cannot solve the wall clock latency.
->> Have you tried temporary enabling interrupts in the middle of cycle after a huge enough
->> memory block is initialized? Something like:
->>
->> deferred_init_memmap()
->> {
->>     while (spfn < epfn) {
->>         nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
->>         local_irq_enable();
->>         local_irq_disable();
->>     }
->> }
-> 
-> Yes, I'd tried this for issue confirm, before I sent this patch. Likes I mentioned the debug log in cover letter, I also add mdelay between local_irq_enable/disable, this system jiffies is stuck without update.
-> So I think there must be problem to use spin_lock_irqsave in early boot path on boot CPU.
+On Tue, 14 Jan 2020 21:50:33 +0300
+Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
 
-This time SMP is enabled. You have many threads are running. Interrupts are enabled
-and they occur. So, it's OK to disable interrupts for some time.
-
-My opinion is we should try to enable interrupts in the cycle after some fixed
-amount of memory is initialized. Say, every 1GB. This should resolve two problems:
-handling timer interrupt with update jiffies at time, and keeping the fix for the issue,
-that Pavel fixed in 3a2d7fa8a3d5.
-
->> Or, maybe, enable/disable interrupts somewhere inside deferred_init_maxorder().
->>
->>>> Also, you may try to check that sched_clock() gives better results with interrupts
->>>> disabled (on x86 it uses rdtsc, when it's possible. But it also may fallback to
->>>> jiffies-based clock in some hardware cases, and they also won't go with interrupts
->>>> disabled).
+> 
+> On 14.01.2020 21:06, Alexei Starovoitov wrote:
+> > On Tue, Jan 14, 2020 at 1:47 AM Alexey Budankov
+> > <alexey.budankov@linux.intel.com> wrote:
+> >>>>
+> >>>> As we talked at RFC series of CAP_SYS_TRACING last year, I just expected
+> >>>> to open it for enabling/disabling kprobes, not for creation.
+> >>>>
+> >>>> If we can accept user who has no admin priviledge but the CAP_SYS_PERFMON,
+> >>>> to shoot their foot by their own risk, I'm OK to allow it. (Even though,
+> >>>> it should check the max number of probes to be created by something like
+> >>>> ulimit)
+> >>>> I think nowadays we have fixed all such kernel crash problems on x86,
+> >>>> but not sure for other archs, especially on the devices I can not reach.
+> >>>> I need more help to stabilize it.
+> >>>
+> >>> I don't see how enable/disable is any safer than creation.
+> >>> If there are kernel bugs in kprobes the kernel will crash anyway.
+> >>> I think such partial CAP_SYS_PERFMON would be very confusing to the users.
+> >>> CAP_* is about delegation of root privileges to non-root.
+> >>> Delegating some of it is ok, but disallowing creation makes it useless
+> >>> for bpf tracing, so we would need to add another CAP later.
+> >>> Hence I suggest to do it right away instead of breaking
+> >>> sys_perf_even_open() access into two CAPs.
+> >>>
+> >>
+> >> Alexei, Masami,
+> >>
+> >> Thanks for your meaningful input.
+> >> If we know in advance that it still can crash the system in some cases and on
+> >> some archs, even though root fully controls delegation thru CAP_SYS_PERFMON,
+> >> such delegation looks premature until the crashes are avoided. So it looks like
+> >> access to eBPF for CAP_SYS_PERFMON privileged processes is the subject for
+> >> a separate patch set.
+> > 
+> > perf_event_open is always dangerous. sw cannot guarantee non-bugginess of hw.
 > 
 
+OK, anyway, for higher security, admin may not give CAP_SYS_PERFMON to
+unpriviledged users, since it might allows users to analyze kernel, which
+can lead security concerns.
+
+> Sure, software cannot guarantee, but known software bugs could still be fixed,
+> that's what I meant.
+
+Agreed, bugs must be fixed anyway.
+
+Thank you,
+
+> > imo adding a cap just for pmc is pointless.
+> > if you add a new cap it should cover all of sys_perf_event_open syscall.
+> > subdividing it into sw vs hw counters, kprobe create vs enable, etc will
+> > be the source of ongoing confusion. nack to such cap.
+> > 
+> 
+> Well, as this patch set already covers complete perf_event_open functionality,
+> and also eBPF related parts too, could you please review and comment on it?
+> Does the patches 2/9 and 5/9 already bring all required extentions?
+> 
+> Thanks,
+> Alexey
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
