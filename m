@@ -2,153 +2,118 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7093EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333D9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465A82467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579082297;
-	bh=h6zCE0q6DO1rnPqpR4VKOLirQ6rXBOlucf/Pdr3iGhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RFgn6q1e6pL7qUULWKwdU7CF4Flehq6i2uvBTTvrh3xXo/zQjLAg7x0zSRxufanL2
-	 SGFrllnrMl/BbkZI4tQZZVj5fMaopsmv491eZ6T4BdBe6iQHo0XCDpSkhLxekmJ+Tf
-	 CKF3DjwmTOC/wAONpKj6/FGvD/XjMTv/CXCtz7JM=
+	by mail.kernel.org (Postfix) with ESMTP id 0F1C724683
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgAOJ6Q (ORCPT
+        id S1729604AbgAOKBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:58:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
+        Wed, 15 Jan 2020 05:01:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:34234 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgAOJ6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:58:16 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49A2E207FF;
-        Wed, 15 Jan 2020 09:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579082295;
-        bh=h6zCE0q6DO1rnPqpR4VKOLirQ6rXBOlucf/Pdr3iGhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ntVKidoCwc/REx7d3xtVRIRcqEeC/ILpT+VwTyu9Dp+vdEim3PyRmPMGeJExhqrF8
-         bqheIe6iQZhB6aqNjJQcx6HAxgSbtukgRpYETrbkUd1F89UVd/Sp1KwLdVYhHnspyU
-         4eH3BWkBkVllZhy41HNEXokIiWie35dUrJFa+zVE=
-Date:   Wed, 15 Jan 2020 09:58:11 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>, julien@xen.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v2] arm64: cpufeature: Export matrix and other features
- to userspace
-Message-ID: <20200115095810.GD21692@willie-the-truck>
-References: <20191216113337.13882-1-steven.price@arm.com>
- <20200115094916.GC21692@willie-the-truck>
+        id S1729532AbgAOKBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:01:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E91F31B;
+        Wed, 15 Jan 2020 02:01:02 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268343F6C4;
+        Wed, 15 Jan 2020 02:01:00 -0800 (PST)
+Date:   Wed, 15 Jan 2020 10:00:54 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        mbrugger@suse.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 3/6] PCI: brcmstb: Add Broadcom STB PCIe host
+ controller driver
+Message-ID: <20200115100054.GA2174@e121166-lin.cambridge.arm.com>
+References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
+ <20191216110113.30436-4-nsaenzjulienne@suse.de>
+ <20200114171101.GA11177@e121166-lin.cambridge.arm.com>
+ <8a7057fe1aaf415272d28f4e690313984c3a148d.camel@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115094916.GC21692@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8a7057fe1aaf415272d28f4e690313984c3a148d.camel@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:49:17AM +0000, Will Deacon wrote:
-> In other words, I'll drop the SPECRES parts from this patch. Sound ok?
+On Tue, Jan 14, 2020 at 07:18:46PM +0100, Nicolas Saenz Julienne wrote:
+> Hi Lorenzo,
+> 
+> On Tue, 2020-01-14 at 17:11 +0000, Lorenzo Pieralisi wrote:
+> > On Mon, Dec 16, 2019 at 12:01:09PM +0100, Nicolas Saenz Julienne wrote:
+> > > From: Jim Quinlan <james.quinlan@broadcom.com>
+> > > 
+> > > This adds a basic driver for Broadcom's STB PCIe controller, for now
+> > > aimed at Raspberry Pi 4's SoC, bcm2711.
+> > > 
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+> > > 
+> > > ---
+> > > 
+> > > Changes since v3:
+> > >   - Update commit message
+> > >   - rollback roundup_pow_two usage, it'll be updated later down the line
+> > >   - Remove comment in register definition
+> > > 
+> > > Changes since v2:
+> > >   - Correct rc_bar2_offset sign
+> > 
+> > In relation to this change.
+> > 
+> > [...]
+> > 
+> > > +static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie
+> > > *pcie,
+> > > +							u64 *rc_bar2_size,
+> > > +							u64 *rc_bar2_offset)
+> > > +{
+> > > +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > > +	struct device *dev = pcie->dev;
+> > > +	struct resource_entry *entry;
+> > > +
+> > > +	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+> > > +	if (!entry)
+> > > +		return -ENODEV;
+> > > +
+> > > +	*rc_bar2_offset = -entry->offset;
+> > 
+> > I think this deserves a comment - I guess it has to do with how the
+> > controller expects CPU<->PCI offsets to be expressed compared to how it
+> > is computed in dma_ranges entries.
+> 
+> You're right, OF code calculates it by doing:
+> 
+> 	offset = cpu_start_addr - pci_start_addr (see
+> devm_of_pci_get_host_bridge_resources())
+> 
+> While the RC_BAR2_CONFIG register expects the opposite subtraction.
+> I'll add a comment on the next revision.
 
-Diff below.
+There is no need for a new posting, either write that comment here
+and I update the code or inline the patch or just resend *this* updated
+patch to the list.
 
-Will
-
---->8
-
-diff --git a/Documentation/arm64/cpu-feature-registers.rst b/Documentation/arm64/cpu-feature-registers.rst
-index 5382981533f8..27877d25dd9b 100644
---- a/Documentation/arm64/cpu-feature-registers.rst
-+++ b/Documentation/arm64/cpu-feature-registers.rst
-@@ -206,8 +206,6 @@ infrastructure:
-      +------------------------------+---------+---------+
-      | BF16                         | [47-44] |    y    |
-      +------------------------------+---------+---------+
--     | SPECRES                      | [43-40] |    y    |
--     +------------------------------+---------+---------+
-      | SB                           | [39-36] |    y    |
-      +------------------------------+---------+---------+
-      | FRINTTS                      | [35-32] |    y    |
-diff --git a/Documentation/arm64/elf_hwcaps.rst b/Documentation/arm64/elf_hwcaps.rst
-index 183ba86ad46e..4fafc57d8e73 100644
---- a/Documentation/arm64/elf_hwcaps.rst
-+++ b/Documentation/arm64/elf_hwcaps.rst
-@@ -232,10 +232,6 @@ HWCAP2_DGH
- 
-     Functionality implied by ID_AA64ISAR1_EL1.DGH == 0b0001.
- 
--HWCAP2_SPECRES
--
--    Functionality implied by ID_AA64ISAR1_EL1.SPECRES == 0b0001.
--
- 4. Unused AT_HWCAP bits
- -----------------------
- 
-diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
-index ac7180b2c20b..fcb390ea29ea 100644
---- a/arch/arm64/include/asm/hwcap.h
-+++ b/arch/arm64/include/asm/hwcap.h
-@@ -93,7 +93,6 @@
- #define KERNEL_HWCAP_I8MM		__khwcap2_feature(I8MM)
- #define KERNEL_HWCAP_DGH		__khwcap2_feature(DGH)
- #define KERNEL_HWCAP_BF16		__khwcap2_feature(BF16)
--#define KERNEL_HWCAP_SPECRES		__khwcap2_feature(SPECRES)
- 
- /*
-  * This yields a mask that user programs can use to figure out what
-diff --git a/arch/arm64/include/uapi/asm/hwcap.h b/arch/arm64/include/uapi/asm/hwcap.h
-index 8f3f1b66f7b2..e6dad5924703 100644
---- a/arch/arm64/include/uapi/asm/hwcap.h
-+++ b/arch/arm64/include/uapi/asm/hwcap.h
-@@ -72,6 +72,5 @@
- #define HWCAP2_I8MM		(1 << 13)
- #define HWCAP2_BF16		(1 << 14)
- #define HWCAP2_DGH		(1 << 15)
--#define HWCAP2_SPECRES		(1 << 16)
- 
- #endif /* _UAPI__ASM_HWCAP_H */
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9164ee5351a4..c88f8fb80e2e 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -138,7 +138,7 @@ static const struct arm64_ftr_bits ftr_id_aa64isar1[] = {
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_I8MM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_DGH_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_BF16_SHIFT, 4, 0),
--	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SPECRES_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SPECRES_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_SB_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64ISAR1_FRINTTS_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE_IF_IS_ENABLED(CONFIG_ARM64_PTR_AUTH),
-@@ -1678,7 +1678,6 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_LRCPC_SHIFT, FTR_UNSIGNED, 2, CAP_HWCAP, KERNEL_HWCAP_ILRCPC),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_FRINTTS_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_FRINT),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SB_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SB),
--	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_SPECRES_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_SPECRES),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_BF16_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_BF16),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_DGH_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_DGH),
- 	HWCAP_CAP(SYS_ID_AA64ISAR1_EL1, ID_AA64ISAR1_I8MM_SHIFT, FTR_UNSIGNED, 1, CAP_HWCAP, KERNEL_HWCAP_I8MM),
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index c689e26889c7..9013b224591a 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -91,7 +91,6 @@ static const char *const hwcap_str[] = {
- 	"i8mm",
- 	"bf16",
- 	"dgh",
--	"specres",
- 	NULL
- };
- 
+Thanks,
+Lorenzo
