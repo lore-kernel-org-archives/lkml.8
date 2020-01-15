@@ -2,246 +2,167 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90D3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D219C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53B722522
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DFA22522
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z23W7ASG"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Ij75ESAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgAOMe3 (ORCPT
+        id S1728984AbgAOMe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:34:29 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46000 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgAOMe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 Jan 2020 07:34:28 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00FCYQxF082837;
-        Wed, 15 Jan 2020 06:34:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579091666;
-        bh=sMlhyiE8VEkpNFwxItSFOijYYslhkKkXrTwP/fEjClM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Z23W7ASGR+0kPOQfFyW9AfXTN5QobP4jZQSQCuuK+4iULyyalGfNXQnrTquddFjxl
-         vDn2LQH8OubwIoF413MCd2fP4Z6LOtnGwtdKQBTmGcMH/chK+3HNWxJb35msD4vV8E
-         vQoGjyDqCXrB2vNtSvsW3Ph4JQk/fdwhijKj5RDk=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00FCYQVb013611
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jan 2020 06:34:26 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
- Jan 2020 06:34:25 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 15 Jan 2020 06:34:25 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00FCYNLK112002;
-        Wed, 15 Jan 2020 06:34:24 -0600
-Subject: Re: [PATCHv4 07/14] remoteproc/omap: Add support for DRA7xx remote
- processors
-To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>
-References: <20200102131845.12992-1-t-kristo@ti.com>
- <20200102131845.12992-8-t-kristo@ti.com>
- <7ff029a9-20bd-2fec-9bcf-f97cd1bd5f85@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <065b32a7-f346-e262-2f03-9ad5e2a462c8@ti.com>
-Date:   Wed, 15 Jan 2020 14:34:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <7ff029a9-20bd-2fec-9bcf-f97cd1bd5f85@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Received: from mail-eopbgr40123.outbound.protection.outlook.com ([40.107.4.123]:20855
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbgAOMe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:34:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HpxlPHKwkbD4dSz/pVZk7Uf2WKtJnPPeuQzoKV1fNtmI5pToTLE3Wf1nAVWchu4+YeP1CQqX2pp+iD4p5o7pqaLv0F0SKdqMylkRrxTEirnED/u4H1DGbCo1GFeQq7HwLFqQ9RfPmWLUt03ZPzU+X7S9YJNy/3us8DgRxX4pUQ1jZ2E1A29yv8w5wq4P9f5ezp/uYdecQ2K2CSaJdeidxYIPsIbNlRFb2kEy1Ab9Q6dazf6Xf15JOmyM44RF2ai+M5HBUNcs6janHWSXI1pp3VSwXfZPVfg+skxKeuewpmi0oy5kUtc1jgSNsWsjeO87VjI9dvBTde6q7rWm78f7sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0e5hvsKVP4k1Kk56nRQhdu/kgSOJ9v30lY9F0Pwy1A=;
+ b=DgUwYW5RUW21YlhoIyaq1eSt9d4TKexkn+gku7AvmcXuy9ycjv4iZcVBdTnAOgpcKoSonQumP0YtglQI0UoaVIvvU804Mqr+n0mDV73iUCS8jdSdgNvBD3L37xGdjZc838YlaiqFB4uflaHUYAXaEePFu8DvnkWCxeZR/KndEhAh6MnQIWxFR0zLEpapr9GVjwufdjXkvaijsU69oVWy4+1chJZBIEXu0AGjJK8FM2ZnK2RRsS3PR2nq4WxbtnY1U1b0+X9JVWXHdDUkwKVwCdRUwPe4GBb5LUIeIhri5i2IvH/fBkCZm4gnb0lS7FF+M/OB1AzxDarUYZJw8anZjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0e5hvsKVP4k1Kk56nRQhdu/kgSOJ9v30lY9F0Pwy1A=;
+ b=Ij75ESAPg8DsarfpGQibTAo5GgXs4jeXXYNuxpxDmsn6nNyr3w4/iOKWfITkeQWoCwE+T135COraY/B9FjIAsjuAQurhmDhxxpGcwVotrvS4OIn9GKPI79ch2IrduxMcBGhE6+SJFEE/sBZvN3kTlc29R3Aj8H3k3QPQPL4vG0k=
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ AM6SPR01MB0060.eurprd05.prod.outlook.com (10.255.22.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Wed, 15 Jan 2020 12:34:21 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2623.018; Wed, 15 Jan 2020
+ 12:34:21 +0000
+Received: from localhost (194.105.145.90) by PR2P264CA0019.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Wed, 15 Jan 2020 12:34:20 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 3/3] ARM: dts: imx7-colibri: add generic RGB (DPI) panel
+Thread-Topic: [PATCH 3/3] ARM: dts: imx7-colibri: add generic RGB (DPI) panel
+Thread-Index: AQHVy6Ac56X4lthwbEG5Llfds1xgWw==
+Date:   Wed, 15 Jan 2020 12:34:21 +0000
+Message-ID: <20200115123401.2264293-4-oleksandr.suvorov@toradex.com>
+References: <20200115123401.2264293-1-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20200115123401.2264293-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR2P264CA0019.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::31)
+ To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30637859-925a-4466-8881-08d799b73ee0
+x-ms-traffictypediagnostic: AM6SPR01MB0060:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6SPR01MB00600399F936FD98B11B93ADF9370@AM6SPR01MB0060.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1107;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(136003)(396003)(346002)(376002)(366004)(189003)(199004)(54906003)(52116002)(6496006)(6916009)(81156014)(316002)(66556008)(64756008)(8676002)(66446008)(66946007)(7416002)(86362001)(71200400001)(44832011)(66476007)(4326008)(36756003)(16526019)(26005)(478600001)(2906002)(5660300002)(81166006)(8936002)(186003)(1076003)(6486002)(956004)(2616005)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6SPR01MB0060;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WhYFIsF4VjdBUzIJUPqeeVo1gjQuQmPw9zQMEBh+CMQHCv9yqFQiaIvZTCZjA39nwh8mxjiZdVFdv9+ar0v0kGeYpZMbrkuG2Ko5E5/UVVFNB52eZyQ3PWRAAC4PxrqZ1GYQOTt6MCyiNkaz4cC0tKrpQSunAB/+bjbObAI9NU89p2WQz66Tgvl0MDZqSrw9Q0ilLRpcqbGsJZwQViQptr/i7iA+/0iGhBBE4CHe0P8MQS+1frO1IH8798aIdUMz9rPy6F94Q3N+AFGhTUKCdnUGZYYDjLdwGQ41T7qB01Nk+VUh/9aySbgSngQTsWYoNx38SHWLMaZZrmFsxHP7HTPF88DnL8KD6HxTUqaKRK0+70AaamvHMU0EimA6FzQFpwnjnM4LIJ/gM/eM53on6+GIO4QHK1KG50aO4zRFStS9oGMhifQgKnk/GaXWDVYjXZdiLN1DTFO5KI1Bc74VGLq1Bo53//C6g+ZHNBSFEM8Pw55w3Gd14sOQbCJRo00t
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30637859-925a-4466-8881-08d799b73ee0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 12:34:21.1240
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cNARAofJ42mt1LwnIXiv6Ji3jX4K/sNtc9bhqzIM5F4O+HIZw7W5BkmLLCigeeC597b5bc6RrG2/89Kwhr7nIjYZNuBqyMsTNoLhdOq6YcA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6SPR01MB0060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/01/2020 21:39, Suman Anna wrote:
-> Hi Tero,
-> 
-> On 1/2/20 7:18 AM, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> DRA7xx/AM57xx SoCs have two IPU and up to two DSP processor subsystems
->> for offloading different computation algorithms. The IPU processor
->> subsystem contains dual-core ARM Cortex-M4 processors, and is very
->> similar to those on OMAP5. The DSP processor subsystem is based on
->> the TI's standard TMS320C66x DSP CorePac core.
->>
->> Support has been added to the OMAP remoteproc driver through new
->> DRA7xx specific compatibles for properly probing and booting all
->> the different processor subsystem instances on DRA7xx/AM57xx
->> SoCs - IPU1, IPU2, DSP1 & DSP2. A build dependency with SOC_DRA7XX
->> is added to enable the driver to be built in DRA7xx-only configuration.
->>
->> The DSP boot address programming needed enhancement for DRA7xx as the
->> boot register fields are different on DRA7 compared to OMAP4 and OMAP5
->> SoCs. The register on DRA7xx contains additional fields within the
->> register and the boot address bit-field is right-shifted by 10 bits.
->> The internal memory parsing logic has also been updated to compute
->> the device addresses for the L2 RAM for DSP devices using relative
->> addressing logic, and to parse two additional RAMs at L1 level - L1P
->> and L1D. This allows the remoteproc driver to support loading into
->> these regions for a small subset of firmware images requiring as
->> such. The most common usage would be to use the L1 programmable
->> RAMs as L1 Caches.
->>
->> The firmware lookup logic also has to be adjusted for DRA7xx as
->> there are (can be) more than one instance of both the IPU and DSP
->> remote processors for the first time in OMAP4+ SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> [t-kristo@ti.com: moved address translation quirks to pdata]
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->> v4:
->>    - data format change due to device data changes to mem layout
->>
->>   drivers/remoteproc/Kconfig           |  2 +-
->>   drivers/remoteproc/omap_remoteproc.c | 38 +++++++++++++++++++++++++++-
->>   2 files changed, 38 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index 94afdde4bc9f..d6450d7fcf92 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -25,7 +25,7 @@ config IMX_REMOTEPROC
->>   
->>   config OMAP_REMOTEPROC
->>   	tristate "OMAP remoteproc support"
->> -	depends on ARCH_OMAP4 || SOC_OMAP5
->> +	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
->>   	depends on OMAP_IOMMU
->>   	select MAILBOX
->>   	select OMAP2PLUS_MBOX
->> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
->> index 8a6dd742a8b1..9140c528c416 100644
->> --- a/drivers/remoteproc/omap_remoteproc.c
->> +++ b/drivers/remoteproc/omap_remoteproc.c
->> @@ -34,10 +34,13 @@
->>    * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
->>    * @syscon: regmap handle for the system control configuration module
->>    * @boot_reg: boot register offset within the @syscon regmap
->> + * @boot_reg_shift: bit-field shift required for the boot address value in
->> + *		    @boot_reg
->>    */
->>   struct omap_rproc_boot_data {
->>   	struct regmap *syscon;
->>   	unsigned int boot_reg;
->> +	unsigned int boot_reg_shift;
->>   };
->>   
->>   /**
->> @@ -159,6 +162,8 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
->>   	struct omap_rproc *oproc = rproc->priv;
->>   	struct omap_rproc_boot_data *bdata = oproc->boot_data;
->>   	u32 offset = bdata->boot_reg;
->> +	u32 value;
->> +	u32 mask;
->>   
->>   	if (rproc->bootaddr & (SZ_1K - 1)) {
->>   		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
->> @@ -166,7 +171,10 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
->>   		return -EINVAL;
->>   	}
->>   
->> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
->> +	value = rproc->bootaddr >> bdata->boot_reg_shift;
->> +	mask = ~(SZ_1K - 1) >> bdata->boot_reg_shift;
->> +
->> +	regmap_update_bits(bdata->syscon, offset, mask, value);
->>   
->>   	return 0;
->>   }
->> @@ -296,6 +304,13 @@ static const struct omap_rproc_mem_data ipu_mems[] = {
->>   	{ },
->>   };
->>   
->> +static const struct omap_rproc_mem_data dra7_dsp_mems[] = {
->> +	{ .name = "l2ram", .dev_addr = 0x800000 },
->> +	{ .name = "l1pram", .dev_addr = 0xe00000 },
->> +	{ .name = "l1dram", .dev_addr = 0xf00000 },
->> +	{ },
->> +};
->> +
->>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
->>   	.device_name	= "dsp",
->>   };
->> @@ -314,6 +329,16 @@ static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
->>   	.mems		= ipu_mems,
->>   };
->>   
->> +static const struct omap_rproc_dev_data dra7_dsp_dev_data = {
->> +	.device_name	= "dsp",
->> +	.mems		= dra7_dsp_mems,
->> +};
->> +
->> +static const struct omap_rproc_dev_data dra7_ipu_dev_data = {
->> +	.device_name	= "ipu",
->> +	.mems		= ipu_mems,
->> +};
->> +
->>   static const struct of_device_id omap_rproc_of_match[] = {
->>   	{
->>   		.compatible     = "ti,omap4-dsp",
->> @@ -331,6 +356,14 @@ static const struct of_device_id omap_rproc_of_match[] = {
->>   		.compatible     = "ti,omap5-ipu",
->>   		.data           = &omap5_ipu_dev_data,
->>   	},
->> +	{
->> +		.compatible     = "ti,dra7-dsp",
->> +		.data           = &dra7_dsp_dev_data,
->> +	},
->> +	{
->> +		.compatible     = "ti,dra7-ipu",
->> +		.data           = &dra7_ipu_dev_data,
->> +	},
->>   	{
->>   		/* end */
->>   	},
->> @@ -383,6 +416,9 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
->>   		return -EINVAL;
->>   	}
->>   
->> +	of_property_read_u32(np, "ti,bootreg-shift",
->> +			     &oproc->boot_data->boot_reg_shift);
-> 
-> Missing error checks, guess you will have to change this anyway when you
-> address Rob's comments.
+Make panel definition generic and default to VESA VGA display timings.
 
-This one is actually intentional. The only expected failure is missing 
-the ti,bootreg-shift, but even this is a valid situation; we will just 
-use bootreg shift value of zero (boot-data is zero initialized.)
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
--Tero
+---
 
-> 
-> regards
-> Suman
-> 
->> +
->>   	return 0;
->>   }
->>   
->>
-> 
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 29 ++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dt=
+s/imx7-colibri-eval-v3.dtsi
+index 6aa123cbdadb..af043526852e 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -67,9 +67,36 @@ power {
+ 	};
+=20
+ 	panel: panel {
+-		compatible =3D "edt,et057090dhu";
++		/*
++		 * edt,et057090dhu: EDT 5.7" LCD TFT
++		 * edt,et070080dh6: EDT 7.0" LCD TFT
++		 * logictechno,lt161010-2nhc: Cap. Touch Display 7" Parallel
++		 * logictechno,lt161010-2nhr: Res. Touch Display 7" Parallel
++		 * logictechno,lt170410-2whc: Cap. Touch Display 10.1" LVDS
++		 * tpk,f07a-0102: Capacitive Multi-Touch Display Fusion 7"
++		 * tpk,f10a-0102: Capacitive Multi-Touch Display Fusion 10"
++		 */
++		compatible =3D "panel-dpi";
+ 		backlight =3D <&bl>;
+ 		power-supply =3D <&reg_3v3>;
++		width-mm =3D <217>;
++		height-mm =3D <136>;
++
++		data-mapping =3D "bgr666";
++
++		panel-timing {
++			/* Default VESA VGA display timings */
++			clock-frequency =3D <25175000>;
++			hactive =3D <640>;
++			hback-porch =3D <48>;
++			hfront-porch =3D <16>;
++			hsync-len =3D <96>;
++			vactive =3D <480>;
++			vback-porch =3D <31>;
++			vfront-porch =3D <11>;
++			vsync-len =3D <2>;
++			pixelclk-active =3D <0>;
++		};
+=20
+ 		port {
+ 			panel_in: endpoint {
+--=20
+2.24.1
+
