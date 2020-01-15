@@ -2,95 +2,227 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A235C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C1C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 062EB2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722DD2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:13:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="trCS9XoU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLpj6IJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbgAOWMv (ORCPT
+        id S1730649AbgAOWNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:12:51 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43989 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgAOWMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:12:50 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yhQm1bqvz9sR4;
-        Thu, 16 Jan 2020 09:12:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579126368;
-        bh=VwvnsRF5QyUYzsy7hKl2SwdTNWpbDKTxHWiuRJ/KUU0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=trCS9XoUbj2orwWa1DRQMMu8nasf2lh6PxVys0jL9R8tpfvZQCI8vzhZnyvvkL8x0
-         nNFwrQnsggHhT9pjE6izo7/9pvMgG+D7Ywf0FmKXuSql3tDvvULc7yVdkf3d6EkEug
-         6hzwDOPEMf0YfLFQ7fRfn4driTm0Xj0qEj/57r5+K7rssQFsFSf1TfkQQXiqKIKqhO
-         ewR/VozV/CKjGhwGkfWM9UlZMTUTYnqrt9DEV8yPlgi77ve8VUqi2NGC3Tb4SKaHBy
-         mX0LnO7ZpcEMjEZwKtHONAIUU4yMQc2OV92lmUdLEe+9Iap+p59frL3fbtlitgOLi0
-         aX5y16EUHvFYQ==
-Date:   Thu, 16 Jan 2020 09:12:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the xfs tree
-Message-ID: <20200116091242.087b425e@canb.auug.org.au>
+        Wed, 15 Jan 2020 17:13:08 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:45990 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgAOWNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:13:08 -0500
+Received: by mail-qv1-f65.google.com with SMTP id l14so8146009qvu.12;
+        Wed, 15 Jan 2020 14:13:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NdrNo8IamZRgsCJr5eQGAFS+g4soVkI5zBtKR0TgO/Q=;
+        b=kLpj6IJ+Kq8J+2h4Foa9HFCmuZW6v/7a9ul6Tyk5+TbjcjPUqGQ1Qpmfh0OslCjH7C
+         9OK09b1jamxHnopP37XQsOXToYjT4kPIL7/ttdlgxV/S+Bwr1vGXlaWzY4yuOJWTVSe+
+         djndRNcFNW8yayLSu1yedGuI2f9fsmjzyYWLoN+NrLWnofCVkVUpxv/Z0EkVYng6ehvQ
+         QooLaNokrMyRoCH4jTJIiBqQcLCv/9F+eyIxtupV1lqdsgFY/7eMp++JLvLRIE2d6oWV
+         zit/l+4z7gCxoX3qf6ZHKIkYjNLF/YJnZezFZec+OlvCzTuAiSuX/1Byrk3rjsIujNAM
+         nMXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NdrNo8IamZRgsCJr5eQGAFS+g4soVkI5zBtKR0TgO/Q=;
+        b=FJDtVUkt811DrYxOikj+8Ngn0jvdSr9ifeBaWc6eO2Vq2nUAa3brezy4/Lxd8ST8Y1
+         S6PluB1kLoP0LNcK6jJ1mUGKSInt7miRy1wGXV7oVm7d+21tWTjSHVoE2O5vgU5feTsE
+         QpTIoU+UeUccz2VPcBoby56JhFYna7JiPJ1ICeCUHUMLQSLXG2ZPbM4hVpQUNkCs54S3
+         5FB6qZOY1sT5POwWeEqEymaWU5AGQDk1MPNYHCwxk3CEczKbOgbRPjHqvW7lp8B+ZPhc
+         OmXX4Mnpk+ulpbzC8PlnST0UYHC7Sa0wNXsS9YP4R8tf6Ivv50NQxiZ5WEorxSK0FZLo
+         CMKg==
+X-Gm-Message-State: APjAAAWEdpBsxGg/XMCr67lPQx0Megcst950bWE1dddXGMM7VK7tOuQ9
+        K/2j82O4BIVFXewUphSoksk9GrVAGz3xtPBQy6g=
+X-Google-Smtp-Source: APXvYqwpbbKh4YnDjlOr0HWieml0jdynEhSU43Nj67TWOLO4Zn6h4Fqb68hH5bwQ1ZuTYboA6a4gs0dmeOO+wyRO+B8=
+X-Received: by 2002:ad4:514e:: with SMTP id g14mr24632449qvq.196.1579126386728;
+ Wed, 15 Jan 2020 14:13:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tB5K.FQed=J=16rHUY7Q0_c";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200115171333.28811-1-kpsingh@chromium.org>
+In-Reply-To: <20200115171333.28811-1-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 15 Jan 2020 14:12:55 -0800
+Message-ID: <CAEf4BzbCT8_LvgyeOtfjx7tm+Q41iGEmjvHwSkR=aBoBs3xVZA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 00/10] MAC and Audit policy using eBPF (KRSI)
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tB5K.FQed=J=16rHUY7Q0_c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 15, 2020 at 9:15 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> # Changes since v1 (https://lore.kernel.org/bpf/20191220154208.15895-1-kpsingh@chromium.org/):
+>
+> * Eliminate the requirement to maintain LSM hooks separately in
+>   security/bpf/hooks.h Use BPF trampolines to dynamically allocate
+>   security hooks
+> * Drop the use of securityfs as bpftool provides the required
+>   introspection capabilities.  Update the tests to use the bpf_skeleton
+>   and global variables
+> * Use O_CLOEXEC anonymous fds to represent BPF attachment in line with
+>   the other BPF programs with the possibility to use bpf program pinning
+>   in the future to provide "permanent attachment".
+> * Drop the logic based on prog names for handling re-attachment.
+> * Drop bpf_lsm_event_output from this series and send it as a separate
+>   patch.
+>
+> # Motivation
+>
+> Google does analysis of rich runtime security data to detect and thwart
+> threats in real-time. Currently, this is done in custom kernel modules
+> but we would like to replace this with something that's upstream and
+> useful to others.
+>
+> The current kernel infrastructure for providing telemetry (Audit, Perf
+> etc.) is disjoint from access enforcement (i.e. LSMs).  Augmenting the
+> information provided by audit requires kernel changes to audit, its
+> policy language and user-space components. Furthermore, building a MAC
+> policy based on the newly added telemetry data requires changes to
+> various LSMs and their respective policy languages.
+>
+> This patchset proposes a new stackable and privileged LSM which allows
+> the LSM hooks to be implemented using eBPF. This facilitates a unified
+> and dynamic (not requiring re-compilation of the kernel) audit and MAC
+> policy.
+>
+> # Why an LSM?
+>
+> Linux Security Modules target security behaviours rather than the
+> kernel's API. For example, it's easy to miss out a newly added system
+> call for executing processes (eg. execve, execveat etc.) but the LSM
+> framework ensures that all process executions trigger the relevant hooks
+> irrespective of how the process was executed.
+>
+> Allowing users to implement LSM hooks at runtime also benefits the LSM
+> eco-system by enabling a quick feedback loop from the security community
+> about the kind of behaviours that the LSM Framework should be targeting.
+>
+> # How does it work?
+>
+> The LSM introduces a new eBPF (https://docs.cilium.io/en/v1.6/bpf/)
+> program type BPF_PROG_TYPE_LSM which can only be attached to LSM hooks.
+> Attachment requires CAP_SYS_ADMIN for loading eBPF programs and
+> CAP_MAC_ADMIN for modifying MAC policies.
+>
+> The eBPF programs are attached to a separate security_hook_heads
+> maintained by the BPF LSM for mutable hooks and executed after all the
+> statically defined hooks (i.e. the ones declared by SELinux, AppArmor,
+> Smack etc). This also ensures that statically defined LSM hooks retain
+> the behaviour of "being read-only after init", i.e. __lsm_ro_after_init.
+>
+> Upon attachment, a security hook is dynamically allocated with
+> arch_bpf_prepare_trampoline which generates code to handle the
+> conversion from the signature of the hook to the BPF context and allows
+> the JIT'ed BPF program to be called as a C function with the same
+> arguments as the LSM hooks. If any of the attached eBPF programs returns
+> an error (like ENOPERM), the behaviour represented by the hook is
+> denied.
+>
+> Audit logs can be written using a format chosen by the eBPF program to
+> the perf events buffer or to global eBPF variables or maps and can be
+> further processed in user-space.
+>
+> # BTF Based Design
+>
+> The current design uses BTF
+> (https://facebookmicrosites.github.io/bpf/blog/2018/11/14/btf-enhancement.html,
+> https://lwn.net/Articles/803258/) which allows verifiable read-only
+> structure accesses by field names rather than fixed offsets. This allows
+> accessing the hook parameters using a dynamically created context which
+> provides a certain degree of ABI stability:
+>
+>
+> // Only declare the structure and fields intended to be used
+> // in the program
+> struct vm_area_struct {
+>         unsigned long vm_start;
+> } __attribute__((preserve_access_index));
+>
 
-Hi all,
+It would be nice to also mention that you don't even have to
+"re-define" these structs if you use vmlinux.h generated with `bpftool
+btf dump file <path-to-vm-linux-or-/sys/kernel/btf/vmlinux> format c`.
+Its output will contain all types of the kernel, including internal
+ones not exposed through any public headers. And it will also
+automatically have __attribute__((preserve_access_index)) applied to
+all structs/unions. It can be pre-generated and checked in somewhere
+along the application or generated on the fly, if environment and use
+case allows.
 
-After merging the xfs tree, today's linux-next build
-(powerpppc64_defconfig) produced this warning:
+> // Declare the eBPF program mprotect_audit which attaches to
+> // to the file_mprotect LSM hook and accepts three arguments.
+> SEC("lsm/file_mprotect")
+> int BPF_PROG(mprotect_audit, struct vm_area_struct *vma,
+>              unsigned long reqprot, unsigned long prot)
+> {
+>         unsigned long vm_start = vma->vm_start;
+>
+>         return 0;
+> }
+>
+> By relocating field offsets, BTF makes a large portion of kernel data
+> structures readily accessible across kernel versions without requiring a
+> large corpus of BPF helper functions and requiring recompilation with
+> every kernel version. The BTF type information is also used by the BPF
+> verifier to validate memory accesses within the BPF program and also
+> prevents arbitrary writes to the kernel memory.
+>
+> The limitations of BTF compatibility are described in BPF Co-Re
+> (http://vger.kernel.org/bpfconf2019_talks/bpf-core.pdf, i.e. field
+> renames, #defines and changes to the signature of LSM hooks).
+>
+> This design imposes that the MAC policy (eBPF programs) be updated when
+> the inspected kernel structures change outside of BTF compatibility
+> guarantees. In practice, this is only required when a structure field
+> used by a current policy is removed (or renamed) or when the used LSM
+> hooks change. We expect the maintenance cost of these changes to be
+> acceptable as compared to the previous design
+> (https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/).
+>
 
-fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
-fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variab=
-le]
- 1523 |  int   done =3D 0;
-      |        ^~~~
-
-Introduced by commit
-
-  4bbb04abb4ee ("xfs: truncate should remove all blocks, not just to the en=
-d of the page cache")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/tB5K.FQed=J=16rHUY7Q0_c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fjloACgkQAVBC80lX
-0GyFbgf/SIwCXuZtZ2ZSV9E8IC+eVzezoHsE8WZu5CVL4ryy20oS769RhR1EHc1H
-LYh9P0lz/SEAYMKWEY+f+ubbQCergd6afMuvslD4ZHBGllxnQ8XAjOfUjOouHKwP
-qhBwFkw72B6fFxxG3I/cRJHXrIR1BqR4R5Ojiqa8r7vOje2LKVGY5AhiVOJYsp58
-zM1k+c7r5aivAilTQzhSxo+jfRfPLrnC4xOkGPhTQFF1MjYGAtVhMgrdMKh1JuFS
-up9L0mARr8sgvBsjSWljvSlBE4F5/+nIiRw6RF4lAqLXKUJz+ol8Ie2A6pfOe7OM
-AT4XutEInIkqyGLqR2qHf2Yq49tYFQ==
-=Bzn/
------END PGP SIGNATURE-----
-
---Sig_/tB5K.FQed=J=16rHUY7Q0_c--
+[...]
