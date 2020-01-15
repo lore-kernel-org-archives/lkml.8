@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BC5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0F6C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0D124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFD524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 14:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5wr0Pf2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L01R6wDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgAOONC (ORCPT
+        id S1729353AbgAOOM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:13:02 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34741 "EHLO
+        Wed, 15 Jan 2020 09:12:59 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55930 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729345AbgAOONA (ORCPT
+        by vger.kernel.org with ESMTP id S1729263AbgAOOM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:13:00 -0500
+        Wed, 15 Jan 2020 09:12:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579097579;
+        s=mimecast20190719; t=1579097576;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tdkfMOU4O1JSYnyvWTMVAu0Pbml2FCrACzP/iFrbkaQ=;
-        b=R5wr0Pf2i7AV+e4UjmtAaY16oCKvxCSnH8DNqU5kKw/+rbXOj9Zx/H+u5zzAFSb1MoLGAV
-        BoObtBT28JNm2+WPhiibg/YGdHNj+W0czTK9z7uS5XWHMWA1aFUFlH1lVJMba7m0XccRga
-        pB8haNbQAlKV+2paUtD0pJoiZb56sDs=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-03x-UGO4MBCQT90PKVyQnQ-1; Wed, 15 Jan 2020 09:12:57 -0500
-X-MC-Unique: 03x-UGO4MBCQT90PKVyQnQ-1
-Received: by mail-lj1-f200.google.com with SMTP id f15so4188870ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:12:56 -0800 (PST)
+        bh=B9j+W7gDIaDJz39H0dsQUAJSNrjtTec2FhMoAkHknrs=;
+        b=L01R6wDjrJUa2jsqeMymFoujfwEFMGcv9qQD0H3KFU3ZBpCxuBrSTef7zY9XiRw2hL7OX7
+        fbZL+nUOEGQj1nWQp81zBw4FFvOa+pniDb6OFZ6hKkNuxe13LXYIytZCR2m870tNhoEWzu
+        whb/qzEcw2+7eXuF7GvT9iyx3DJkUTo=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-Rkw1x_04OL2BIOXEs4TVwg-1; Wed, 15 Jan 2020 09:12:55 -0500
+X-MC-Unique: Rkw1x_04OL2BIOXEs4TVwg-1
+Received: by mail-lf1-f71.google.com with SMTP id t8so3246490lfc.21
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 06:12:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=tdkfMOU4O1JSYnyvWTMVAu0Pbml2FCrACzP/iFrbkaQ=;
-        b=l3dn0M8mNhoE0VY4wXlWinNPj55Zf2BwIS7UG7yQYLlBZc3BXDsO10NigDX9wjWZbn
-         +t0I544ol2z/i60HzieaSWcRobQB+IObvscuS2e7mMHIYZtteYczRnrGeiwPfK5bHpck
-         XrJEYc2rEis2JcUdKw9ln/vtvfJWHkF86knQ4P+uj9Z180/gLTqkmfX/7Af4fy0ZqhqK
-         dyDwXPg+et4FZ7XwTw8+KfuP0f6PZ9uVNIzOqR8zDwb0ontJTDpeW8DwnTI5ezEeUWYh
-         Hh4+qJZFqucQaIwfpLIcI/vL5bpJVrO+X71EOE5pxU33QjEKhj2t8WHVVhzWYCyrqMVW
-         t+Fg==
-X-Gm-Message-State: APjAAAXAiUr4vnwGXH2nh2gxMUMXBIjv54y6p86J9qVU8h6c6+O6GIFO
-        3mWC0PHnptgR7TQJgvvrIy59Vn818FBL+S+GqZsVQxo4w4fxULaEjyNGqDdGzonn0kMtRHCbXFo
-        ckCQmlfvbYTA3Sdeowkyd7cr8
-X-Received: by 2002:ac2:58ea:: with SMTP id v10mr4813038lfo.202.1579097574924;
+        bh=B9j+W7gDIaDJz39H0dsQUAJSNrjtTec2FhMoAkHknrs=;
+        b=iAyTM0Tdurq9cPiLjKRcRqRwMOH4sSEMsKWzlgUsnh9oEizWwJJ1kCSqAs/YNz0XMg
+         gS8NgCT9Ld3dwj5+6nPYG+ouKJrLZHFefS4scoDhw4sVRDJEY5VjMRPMPYiiWAqgMEpY
+         3Dt3LKG+3UZesGDVCvtPxkyPggjBSQR6R3dm8+YOYFaigZNwCLI3aeFbyhO6kPTExqju
+         ANskpi5KD0YFensWlEi8Zo3qXnOsRdUvbRaenirLJDdpsdF4Q5Bumc19Fu9MU968muO0
+         PSY0NAspnk3JgMnO20RAoFlHuRtZB3IeYG/b7wjHzAW5U1S3/PKR4OdIZgHSlsDicQvY
+         AWmg==
+X-Gm-Message-State: APjAAAV+ig5VsFVwcTqTEnlT8AyOeAcOnUbx/Y4bbyrZCizL0qzwxGK3
+        HaqIl3W3XgPfqMMVoR8pzRNtr1YuDmZMVO3ien5qZG5xXi1Ul/pevD6P/cD9G4CUz4azYQfGlP/
+        EAv9KmrwSn2Tf5rBRTyHDbX5x
+X-Received: by 2002:a2e:a37c:: with SMTP id i28mr1772083ljn.118.1579097574010;
         Wed, 15 Jan 2020 06:12:54 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyUFS3e2zIy8rA7HqNCGr/3h2PBROEBA0CL5i8AxlW9KAm7efsIsFDqmChe4488tRaJn+o0VQ==
-X-Received: by 2002:ac2:58ea:: with SMTP id v10mr4813000lfo.202.1579097574687;
-        Wed, 15 Jan 2020 06:12:54 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id 195sm9156230ljj.55.2020.01.15.06.12.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+X-Google-Smtp-Source: APXvYqyUW0Ep6uEXtLij//fHtTp+5adTa9pXL0f4oBHP8qleNZhf8ZN29IWsfrnAs2scQN/yNWVb2Q==
+X-Received: by 2002:a2e:a37c:: with SMTP id i28mr1772066ljn.118.1579097573864;
         Wed, 15 Jan 2020 06:12:53 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id p136sm9082048lfa.8.2020.01.15.06.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:12:52 -0800 (PST)
 Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 149BD1804D6; Wed, 15 Jan 2020 15:12:52 +0100 (CET)
-Subject: [PATCH bpf-next v2 03/10] tools/runqslower: Use consistent include
- paths for libbpf
+        id EE0AE1804D8; Wed, 15 Jan 2020 15:12:50 +0100 (CET)
+Subject: [PATCH bpf-next v2 02/10] tools/bpf/runqslower: Fix override option
+ for VMLINUX_BTF
 From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
 To:     Alexei Starovoitov <ast@kernel.org>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>,
@@ -89,8 +89,8 @@ Cc:     Daniel Borkmann <daniel@iogearbox.net>,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Date:   Wed, 15 Jan 2020 15:12:52 +0100
-Message-ID: <157909757197.1192265.9826436565959764419.stgit@toke.dk>
+Date:   Wed, 15 Jan 2020 15:12:50 +0100
+Message-ID: <157909757089.1192265.9038866294345740126.stgit@toke.dk>
 In-Reply-To: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
 References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
 User-Agent: StGit/0.21
@@ -104,76 +104,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-Fix the runqslower tool to include libbpf header files with the bpf/
-prefix, to be consistent with external users of the library. Also ensure
-that all includes of exported libbpf header files (those that are exported
-on 'make install' of the library) use bracketed includes instead of quoted.
+The runqslower tool refuses to build without a file to read vmlinux BTF
+from. The build fails with an error message to override the location by
+setting the VMLINUX_BTF variable if autodetection fails. However, the
+Makefile doesn't actually work with that override - the error message is
+still emitted.
 
-To not break the build, keep the old include path until everything has been
-changed to the new one; a subsequent patch will remove that.
+Fix this by only doing auto-detection if no override is set. And while
+we're at it, also look for a vmlinux file in the current kernel build dir
+if none if found on the running kernel.
 
-Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken from selftests dir")
+Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
 Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 ---
- tools/bpf/runqslower/Makefile         |    5 +++--
- tools/bpf/runqslower/runqslower.bpf.c |    2 +-
- tools/bpf/runqslower/runqslower.c     |    4 ++--
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ tools/bpf/runqslower/Makefile |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index fb93ce2bf2fe..3b7ae76c8ec4 100644
+index cff2fbcd29a8..fb93ce2bf2fe 100644
 --- a/tools/bpf/runqslower/Makefile
 +++ b/tools/bpf/runqslower/Makefile
-@@ -5,6 +5,7 @@ LLC := llc
- LLVM_STRIP := llvm-strip
- DEFAULT_BPFTOOL := $(OUTPUT)/sbin/bpftool
- BPFTOOL ?= $(DEFAULT_BPFTOOL)
-+LIBBPF_INCLUDE := -I$(abspath ../../lib) -I$(abspath ../../lib/bpf)
- LIBBPF_SRC := $(abspath ../../lib/bpf)
- CFLAGS := -g -Wall
+@@ -10,12 +10,16 @@ CFLAGS := -g -Wall
  
-@@ -59,13 +60,13 @@ $(OUTPUT)/%.skel.h: $(OUTPUT)/%.bpf.o | $(BPFTOOL)
+ # Try to detect best kernel BTF source
+ KERNEL_REL := $(shell uname -r)
+-ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
+-VMLINUX_BTF := /sys/kernel/btf/vmlinux
+-else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
+-VMLINUX_BTF := /boot/vmlinux-$(KERNEL_REL)
+-else
+-$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicitly")
++ifeq ("$(VMLINUX_BTF)","")
++  ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
++  VMLINUX_BTF := /sys/kernel/btf/vmlinux
++  else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
++  VMLINUX_BTF := /boot/vmlinux-$(KERNEL_REL)
++  else ifneq ("$(wildcard $(abspath ../../../vmlinux))","")
++  VMLINUX_BTF := $(abspath ../../../vmlinux)
++  else
++  $(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicitly")
++  endif
+ endif
  
- $(OUTPUT)/%.bpf.o: %.bpf.c $(OUTPUT)/libbpf.a | $(OUTPUT)
- 	$(call msg,BPF,$@)
--	$(Q)$(CLANG) -g -O2 -target bpf -I$(OUTPUT) -I$(LIBBPF_SRC)	      \
-+	$(Q)$(CLANG) -g -O2 -target bpf -I$(OUTPUT) $(LIBBPF_INCLUDE)	      \
- 		 -c $(filter %.c,$^) -o $@ &&				      \
- 	$(LLVM_STRIP) -g $@
- 
- $(OUTPUT)/%.o: %.c | $(OUTPUT)
- 	$(call msg,CC,$@)
--	$(Q)$(CC) $(CFLAGS) -I$(LIBBPF_SRC) -I$(OUTPUT) -c $(filter %.c,$^) -o $@
-+	$(Q)$(CC) $(CFLAGS) $(LIBBPF_INCLUDE) -I$(OUTPUT) -c $(filter %.c,$^) -o $@
- 
- $(OUTPUT):
- 	$(call msg,MKDIR,$@)
-diff --git a/tools/bpf/runqslower/runqslower.bpf.c b/tools/bpf/runqslower/runqslower.bpf.c
-index 623cce4d37f5..48a39f72fadf 100644
---- a/tools/bpf/runqslower/runqslower.bpf.c
-+++ b/tools/bpf/runqslower/runqslower.bpf.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2019 Facebook
- #include "vmlinux.h"
--#include <bpf_helpers.h>
-+#include <bpf/bpf_helpers.h>
- #include "runqslower.h"
- 
- #define TASK_RUNNING 0
-diff --git a/tools/bpf/runqslower/runqslower.c b/tools/bpf/runqslower/runqslower.c
-index 996f0e2c560e..d89715844952 100644
---- a/tools/bpf/runqslower/runqslower.c
-+++ b/tools/bpf/runqslower/runqslower.c
-@@ -6,8 +6,8 @@
- #include <string.h>
- #include <sys/resource.h>
- #include <time.h>
--#include <libbpf.h>
--#include <bpf.h>
-+#include <bpf/libbpf.h>
-+#include <bpf/bpf.h>
- #include "runqslower.h"
- #include "runqslower.skel.h"
- 
+ abs_out := $(abspath $(OUTPUT))
 
