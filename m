@@ -2,80 +2,101 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C456C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16342C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DECB2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8572467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgAOHCf (ORCPT
+        id S1729123AbgAOHEX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:02:35 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9176 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbgAOHCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:02:35 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2E0C26AAF424853E4FA2;
-        Wed, 15 Jan 2020 15:02:33 +0800 (CST)
-Received: from huawei.com (10.175.107.192) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
- 15:02:24 +0800
-From:   wanghongzhe <wanghongzhe@huawei.com>
-To:     <peterhuewe@gmx.de>
-CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhangchenfeng1@huawei.com>, <wanghongzhe@huawei.com>
-Subject: [PATCH] tpm:tpm_tis_spi: set cs_change = 0 when timesout
-Date:   Tue, 15 Jan 2019 15:02:29 +0800
-Message-ID: <1547535749-23221-1-git-send-email-wanghongzhe@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 15 Jan 2020 02:04:23 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:36166 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgAOHEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 02:04:23 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00F744CQ024629, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00F744CQ024629
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 15:04:04 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTITCAS11.realtek.com.tw (172.21.6.12) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Wed, 15 Jan 2020 15:04:04 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 15 Jan 2020 15:04:03 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 15 Jan 2020 15:04:03 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>
+CC:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "grundler@chromium.org" <grundler@chromium.org>,
+        "<David.Chen7@dell.com>" <David.Chen7@Dell.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] r8152: Add MAC passthrough support to new device
+Thread-Topic: [PATCH] r8152: Add MAC passthrough support to new device
+Thread-Index: AQHVypTrvWsj1nE3Z02rCzrvB8fQNKfqGHCAgACphYCAAIjAgA==
+Date:   Wed, 15 Jan 2020 07:04:03 +0000
+Message-ID: <2eddafe6b9694a288013c3af41321ce5@realtek.com>
+References: <20200114044127.20085-1-kai.heng.feng@canonical.com>
+ <d8af34dbf4994b7b8b0bf48e81084dd0@AUSX13MPC101.AMER.DELL.COM>
+ <430A264A-27E0-489D-B7B1-8E78AAD528D7@canonical.com>
+In-Reply-To: <430A264A-27E0-489D-B7B1-8E78AAD528D7@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.107.192]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hongzhe <wanghongzhe@huawei.com>
+Kai Heng Feng [mailto:kai.heng.feng@canonical.com]
+> Sent: Wednesday, January 15, 2020 2:40 PM
+[...]
+> >> Device 0xa387 also supports MAC passthrough, therefore add it to the
+> >> whitelst.
+> >
+> > Have you confirmed whether this product ID is unique to the products that
+> > support this feature or if it's also re-used in other products?
+> 
+> This is unique for Lenovo product.
+> 
+> >
+> > For Dell's devices there are very specific tests that make sure that this
+> > feature only applies on the products it is supposed to and nothing else
+> > (For example RTL8153-AD checks variant as well as effuse value)
+> > (Example two: RTL8153-BND is a Dell only part).
+> 
+> Hayes, do you know how macpassthru on Lenovo dock works?
 
-when i reach TPM_RETRY, the cs cannot  change back to 'high'.
-So the TPM chips thinks this communication is not over.
-And next times communication cannot be effective because the
-communications mixed up with the last time.
+I don't sure about it.
 
-Signed-off-by: Wang Hongzhe <wanghongzhe@huawei.com>
----
- drivers/char/tpm/tpm_tis_spi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+The Dell's devices use the VID/PID of Realtek, so they have another way
+to check which devices support macpassthru.
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index d1754fd..27e57bf 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -66,8 +66,15 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
- 				break;
- 		}
- 
--		if (i == TPM_RETRY)
-+		if (i == TPM_RETRY) {
-+			spi_xfer->len = 1;
-+			spi_xfer->cs_change = 0;
-+			spi_message_init(&m);
-+			spi_message_add_tail(spi_xfer, &m);
-+			if (ret < 0)
-+				return ret;
- 			return -ETIMEDOUT;
-+		}
- 	}
- 
- 	return 0;
--- 
-1.7.12.4
+The Lenovo use their VID/PID, so I guess they only check VID/PID.
+
+Best Regards,
+Hayes
+
+
 
