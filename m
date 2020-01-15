@@ -2,190 +2,141 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6416C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B35C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8884C24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579053430;
-	bh=+RnBK1mCOewjQFIBYg85WmzjncWkAV2zsiVMVrHN9hg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aP3hP87KvBJVRylXiB5N18VO33Nwe7x08Tam5TLXlPog8AyzUlRkBfO4PvyJbDoSw
-	 cV5tIwT9WzhzXD1zV7jZ7G4skR9vs78w/mZ5qd8s2thm0dnO5rrrf8fFXljhajgoba
-	 7xBeZHjnIfeRwasp8C/486GeeiI6Smz2igJ4QhfU=
+	by mail.kernel.org (Postfix) with ESMTP id 9E6DE24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 01:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rp40sf94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgAOB5J (ORCPT
+        id S1728909AbgAOB6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:57:09 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34053 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbgAOB5J (ORCPT
+        Tue, 14 Jan 2020 20:58:38 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35951 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728882AbgAOB6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:57:09 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so14718989otf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 17:57:08 -0800 (PST)
+        Tue, 14 Jan 2020 20:58:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a6so6100021plm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 17:58:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=fj5c4UIrwrHuebCnymMMYIFQTDYFE/X+bvsiYmpq1Rk=;
+        b=rp40sf94iCEseNvhH50Jdc6oYJ86AKGlN+xQYpJeK1VMwb6JRd2kU1FwlPEuRsWOgG
+         hsQkXNJ3e/tUuqqEQY/m+jjKwKoHayO6J5kXj4zv6kLZRc+B/ofINmXQrFJWsLj/5Pi6
+         f3xl6aoH8pYHbyNccC+LvUJ1AiiZZBdHE9gLsj/7QZpxPQFxC7W3ZkkWC5HZotUMisMj
+         9elVQEz5uMUgUGHnu0/Ps13cnWB3cermPzMjh/u+As8TMPfB27Q6z4QZNMyUXuQgd0yI
+         yGMzs5dVse9AYzVxXI5BDhihKFC3UoDSubrflA3nuOGDl2Q6pq7qwbDXfJaOGtEO886X
+         fuOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XGLcLKcTFWSB66QXGtgKLA+04IUnUM9PoGpdYQjMx20=;
-        b=FwNe81rFWtOPRZkjGrnQv9G3RNHqpjWoEfe+fglqArzOQEYb7ipqibQswunyEaYPDd
-         IU4r/2Cx6a8UnlfYxDvybKQQqBr0Gbp4Us5guEAetZb+oJPm5k6M2co+7YuBQ7wMZ38j
-         vwLVgslik4DtfYJxlPxATg91cRinmya1WL8453W48zX71ztxoONkzw5xM2buhxgvW0G4
-         YygI34GOyVPFqeVNEYWhTcZ/TwEhK7oZknKkdmuggRYaTAKV13o/y93lK23+lVSCWkzR
-         UXF/cClU3bp7icVuUO9Tv7fyny2d6kfpFDw11wGOUKGrJTrb6BWN1/e261dXv+Nt7b/U
-         PRyw==
-X-Gm-Message-State: APjAAAWIM8sTMuBi14efZ7c7mZXViJB7LKVsU5/bPM2pxMcbEAfo1Qqa
-        KUmPQreGJmboNHk4AHQALKOKD8g=
-X-Google-Smtp-Source: APXvYqwECNNnGegiYjYvc2PtVVmYvyUa0YoQ5HN8uqQ7QesxlbhBqHRiLwMwl/7h8Py5GZy59Fa8gQ==
-X-Received: by 2002:a05:6830:145:: with SMTP id j5mr1042329otp.242.1579053428016;
-        Tue, 14 Jan 2020 17:57:08 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q25sm6088590otf.45.2020.01.14.17.57.07
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=fj5c4UIrwrHuebCnymMMYIFQTDYFE/X+bvsiYmpq1Rk=;
+        b=lMOwT1Kk6b7blSqHEzltwOhXMlEzYDmsI27G21stMzC3zTzvvx0bTnCjoniiBgjeps
+         uOSozTGIxto7ezM123dz3+TR6oOKGpZ64IzM1QPOgui8ypF5DOQPzkbib5sufaXPO4bo
+         UYmEf31EmUN2Y+PY1rqUfOu2rZ2la38JcWg72bmiQWF2L7W5dpuwv891cYrms7gg+QzE
+         nskfNTSdA8RxRVVHw7RF566BAIX7b8rJsCFn3tE5rx1EAbkAKp1tDSCVDtLpGarVIbm4
+         a/CS6LuqNE/PUVccu1nNhhn+7zV0ahLHBusBwS9yvQs1fhIYGS4Sj8kSwxVzD8BJPoy3
+         sAmQ==
+X-Gm-Message-State: APjAAAXtyIAie8pXY2zl3iwcc+kxWDdNk+UGDAv4rhsjqkK6baoJ1Psh
+        sbTgSwoat0Bt9SXa902HyEWvpQ==
+X-Google-Smtp-Source: APXvYqyPSthc9ZtJ5YzXVGQgIPCZZDAyRXEc85YTMs1GQxMFcjiC8jCWCdzTe75XV+KW4Mf/Rfm1LA==
+X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr33633296pjv.15.1579053517840;
+        Tue, 14 Jan 2020 17:58:37 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id g9sm19978122pfm.150.2020.01.14.17.58.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 17:57:07 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2209ae
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 19:57:06 -0600
-Date:   Tue, 14 Jan 2020 19:57:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        mark.rutland@arm.com, heiko@sntech.de,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 01/10] dt-bindings: mtd: add rockchip nand
- controller bindings
-Message-ID: <20200115015706.GA30647@bogus>
-References: <20200108205338.11369-1-jbx6244@gmail.com>
- <20200108205338.11369-2-jbx6244@gmail.com>
+        Tue, 14 Jan 2020 17:58:37 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:58:36 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [patch] mm, thp: fix defrag setting if newline is not used
+Message-ID: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108205338.11369-2-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 09:53:29PM +0100, Johan Jonker wrote:
-> Add the Rockchip NAND controller bindings.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../devicetree/bindings/mtd/rockchip,nandc.yaml    | 78 ++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-> new file mode 100644
-> index 000000000..573d1a580
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: GPL-2.0
+If thp defrag setting "defer" is used and a newline is *not* used when
+writing to the sysfs file, this is interpreted as the "defer+madvise"
+option.
 
-Dual license new bindings:
+This is because we do prefix matching and if five characters are written
+without a newline, the current code ends up comparing to the first five
+bytes of the "defer+madvise" option and using that instead.
 
-(GPL-2.0-only OR BSD-2-Clause)
+Find the length of what the user is writing and use that to guide our
+decision on which string comparison to do.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/rockchip,nandc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
+Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ This can be done in *many* different ways including extracting logic to
+ a helper function.  If someone would like this to be implemented
+ differently, please suggest it.
 
-Should end with a '#'.
+ mm/huge_memory.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,nandc-v6
-> +      - rockchip,nandc-v9
-
-Use SoC specific compatibles, not version numbers.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:
-> +        - const: hclk_nandc
-> +      - items:
-> +        - const: clk_nandc
-> +        - const: hclk_nandc
-
-Can't you put hclk_nandc first so it's always index 0.
-
-> +
-> +patternProperties:
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 3
-> +
-> +      nand-is-boot-medium: true
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3188-cru-common.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    nandc: nand-controller@10500000 {
-> +      compatible = "rockchip,nandc-v6";
-> +      reg = <0x10500000 0x4000>;
-> +      interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru HCLK_NANDC0>;
-> +      clock-names = "hclk_nandc";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-is-boot-medium;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -250,32 +250,33 @@ static ssize_t defrag_store(struct kobject *kobj,
+ 			    struct kobj_attribute *attr,
+ 			    const char *buf, size_t count)
+ {
+-	if (!memcmp("always", buf,
+-		    min(sizeof("always")-1, count))) {
++	size_t len = count;
++
++	/* For prefix matching, find the length of interest */
++	if (buf[len-1] == '\n')
++		len--;
++
++	if (len == sizeof("always")-1 && !memcmp("always", buf, len)) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer+madvise", buf,
+-		    min(sizeof("defer+madvise")-1, count))) {
++	} else if (len == sizeof("defer+madvise")-1 && !memcmp("defer+madvise", buf, len)) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer", buf,
+-		    min(sizeof("defer")-1, count))) {
++	} else if (len == sizeof("defer")-1 && !memcmp("defer", buf, len)) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("madvise", buf,
+-			   min(sizeof("madvise")-1, count))) {
++	} else if (len == sizeof("madvise")-1 && !memcmp("madvise", buf, len)) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("never", buf,
+-			   min(sizeof("never")-1, count))) {
++	} else if (len == sizeof("never")-1 && !memcmp("never", buf, len)) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
