@@ -2,87 +2,197 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5AEC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A52C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7536207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3652207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:48:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BTau1aLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731176AbgAOXsR convert rfc822-to-8bit (ORCPT
+        id S1731204AbgAOXs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:48:17 -0500
-Received: from mga17.intel.com ([192.55.52.151]:29451 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730573AbgAOXsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:48:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 15:48:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="225768893"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga003.jf.intel.com with ESMTP; 15 Jan 2020 15:48:16 -0800
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.94]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.58]) with mapi id 14.03.0439.000;
- Wed, 15 Jan 2020 15:48:16 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: RE: [PATCH v11] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Topic: [PATCH v11] x86/split_lock: Enable split lock detection by
- kernel
-Thread-Index: AQHVx+uK8yhbkFdMCUil9IyDWo661KfqNK6AgAIhjACAAI5YAP//h3yQ
-Date:   Wed, 15 Jan 2020 23:48:15 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F52799E@ORSMSX115.amr.corp.intel.com>
-References: <20191121171214.GD12042@gmail.com>
- <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
- <20191122105141.GY4114@hirez.programming.kicks-ass.net>
- <20191122152715.GA1909@hirez.programming.kicks-ass.net>
- <20191123003056.GA28761@agluck-desk2.amr.corp.intel.com>
- <20191125161348.GA12178@linux.intel.com>
- <20191212085948.GS2827@hirez.programming.kicks-ass.net>
- <20200110192409.GA23315@agluck-desk2.amr.corp.intel.com>
- <20200114055521.GI14928@linux.intel.com>
- <20200115222754.GA13804@agluck-desk2.amr.corp.intel.com>
- <20200115225724.GA18268@linux.intel.com>
-In-Reply-To: <20200115225724.GA18268@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 15 Jan 2020 18:48:58 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39304 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbgAOXs5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:48:57 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so9273983pfs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 15:48:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=L7QJ/f4bNLbu+zgtCVRouMzQLIb9HBj4OTPjr+5W3DQ=;
+        b=BTau1aLSM6XrFVbAH+llCS5d4H+w35zbbek1SIBSul6t2IoGnURs9KRucAaII9sIAA
+         vzmCi3yFZcXsVxej1C/1WF4hUzQ0+OBzSVqoRcT9RfWZPUDIvh8ymfzXODzSzFAagVn4
+         NFVg/I20YGMksvLl8JG/RCdxGgq4bvo05sqEPbBqkkAVzLqoQ6IiwZjKbOebTDdczIm6
+         OX9M0LTO+0F47835owNuEjvvkSwrEmsa42vn/rkPqrtrT1GuneEFjPEjknBte3l1lPK7
+         TEkMxBfV2v0/G45kv0htZmEEdRhbt8oIAQYJEv8gPLfkH3vIGV3KmO40OXcBO/E/nkHz
+         0fNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=L7QJ/f4bNLbu+zgtCVRouMzQLIb9HBj4OTPjr+5W3DQ=;
+        b=VrRNr9hJY7PpOIrvWxT2G7fvUDNFCQR0zzQiaQ8UqwHwbl6/u6jM0oDPmsBZNuBfD4
+         p5dzTRj3SrVZUZKrD2Ihkp4rtQwR0ceoF99MLuAby6YB427aHEccp8+e660R5Y1hiVkV
+         kxoJBf71DGQtOAiYw3NmC+ud5GdkjAxSFPfWz48aOCg8q4QsxuLVIvl/N1pQk/1B92vp
+         OikqI9NzSUqxwYNYCxbF3+2aMuoyIOb4d/E8tPLoBT5rgZpY0Bz3t7kRdk4lloQT6G9+
+         youjO3igFAOY9xoA7hrrpF1kTUKoXiXaWxfxe/NKzGX4ci4IDI15XC2c6tWuOsWB1Rv+
+         5JyA==
+X-Gm-Message-State: APjAAAUrkH3OXdqNDnmuyjOd+M1FDI7YPlLtqGQYeLnU6kXPoBSpp2rn
+        TlNj7sV2JO9c5HD9tahltP4n9n2EP4cVPg==
+X-Google-Smtp-Source: APXvYqzQezgaIHoyQ/jj/ag6xo34GmtpMCzDlxA+NN9cqOv5Lk+Ja1eNh7pAY5vJ4rACqZNsogl00g==
+X-Received: by 2002:a63:214e:: with SMTP id s14mr35566633pgm.428.1579132136730;
+        Wed, 15 Jan 2020 15:48:56 -0800 (PST)
+Received: from localhost ([2601:602:9200:a1a5:2952:4c53:16b9:8f97])
+        by smtp.gmail.com with ESMTPSA id j14sm21588497pgs.57.2020.01.15.15.48.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 Jan 2020 15:48:56 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH resend] mtd: maps: physmap: Add minimal Runtime PM support
+In-Reply-To: <20200115131323.6883-1-geert+renesas@glider.be>
+References: <20200115131323.6883-1-geert+renesas@glider.be>
+Date:   Wed, 15 Jan 2020 15:48:53 -0800
+Message-ID: <7hk15s9t7e.fsf@baylibre.com>
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> All comments accepted and code changed ... except for these three:
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
+
+> Add minimal runtime PM support (enable on probe, disable on remove), to
+> ensure proper operation with a parent device that uses runtime PM.
 >
-> Sounds like you're also writing code, in which case you should give
-> yourself credit with your own Co-developed-by: tag.
+> This is needed on systems where the FLASH is connected to a bus
+> controller that is contained in a PM domain and/or has a gateable
+> functional clock.  In such cases, before accessing any device connected
+> to the external bus, the PM domain must be powered up, and/or the
+> functional clock must be enabled, which is typically handled through
+> runtime PM by the bus controller driver.
+>
+> An example of this is the Renesas APE6-EVM development board, which has
+> an Ethernet controller and a CFI FLASH connected to the Bus State
+> Controller (BSC) of an R-Mobile APE6 SoC.
+> As long as the Ethernet driver, which had Runtime PM support since
+> commit 3a611e26e958b037 ("net/smsc911x: Add minimal runtime PM
+> support"), keeps the BSC powered, accessing the FLASH works.
+> When the ethernet node in r8a73a4-ape6evm.dts is disabled, the BSC is
+> never powered up, and the kernel crashes when trying to access the
+> FLASH:
+>
+>     Unhandled fault: imprecise external abort (0x1406) at 0x00000000
+>     pgd = (ptrval)
+>     [00000000] *pgd=7fef2835
+>     Internal error: : 1406 [#1] SMP ARM
+>     CPU: 0 PID: 122 Comm: hd Tainted: G        W         5.5.0-rc1-ape6evm-00814-g38ca966db25b9dbd-dirty #136
+>     Hardware name: Generic R8A73A4 (Flattened Device Tree)
+>     PC is at chip_ready+0x12c/0x380
+>     LR is at chip_ready+0x10c/0x380
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I just fixed some typos in PeterZ's untested example patch. Now changed
-a few names as per your suggestions. I don't' really think of that as "writing code".
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
 
--Tony
+> ---
+> Probably the device should be powered down after probing, and powered
+> up/down on-demand in the various {get,put}_chip() functions.  However,
+> that is an optimization which touches more intimidate details of the
+> internal MTD API, and can be done later.
+
+Agreed.  Without that, the BSC (in your example) will never get powered
+off as long as there's a flash device pobed.
+
+Kevin
+
+> ---
+>  drivers/mtd/maps/physmap-core.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
+> index a9f7964e2edb6668..8f7f966fa9a7ee8a 100644
+> --- a/drivers/mtd/maps/physmap-core.c
+> +++ b/drivers/mtd/maps/physmap-core.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/mtd/cfi_endian.h>
+>  #include <linux/io.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/gpio/consumer.h>
+>  
+>  #include "physmap-gemini.h"
+> @@ -64,16 +65,16 @@ static int physmap_flash_remove(struct platform_device *dev)
+>  {
+>  	struct physmap_flash_info *info;
+>  	struct physmap_flash_data *physmap_data;
+> -	int i, err;
+> +	int i, err = 0;
+>  
+>  	info = platform_get_drvdata(dev);
+>  	if (!info)
+> -		return 0;
+> +		goto out;
+>  
+>  	if (info->cmtd) {
+>  		err = mtd_device_unregister(info->cmtd);
+>  		if (err)
+> -			return err;
+> +			goto out;
+>  
+>  		if (info->cmtd != info->mtds[0])
+>  			mtd_concat_destroy(info->cmtd);
+> @@ -88,7 +89,10 @@ static int physmap_flash_remove(struct platform_device *dev)
+>  	if (physmap_data && physmap_data->exit)
+>  		physmap_data->exit(dev);
+>  
+> -	return 0;
+> +out:
+> +	pm_runtime_put(&dev->dev);
+> +	pm_runtime_disable(&dev->dev);
+> +	return err;
+>  }
+>  
+>  static void physmap_set_vpp(struct map_info *map, int state)
+> @@ -484,13 +488,19 @@ static int physmap_flash_probe(struct platform_device *dev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	pm_runtime_enable(&dev->dev);
+> +	pm_runtime_get_sync(&dev->dev);
+> +
+>  	if (dev->dev.of_node)
+>  		err = physmap_flash_of_init(dev);
+>  	else
+>  		err = physmap_flash_pdata_init(dev);
+>  
+> -	if (err)
+> +	if (err) {
+> +		pm_runtime_put(&dev->dev);
+> +		pm_runtime_disable(&dev->dev);
+>  		return err;
+> +	}
+>  
+>  	for (i = 0; i < info->nmaps; i++) {
+>  		struct resource *res;
+> -- 
+> 2.17.1
