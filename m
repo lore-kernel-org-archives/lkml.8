@@ -2,130 +2,161 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC81DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D74C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B113324658
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+w4ML/E"
+	by mail.kernel.org (Postfix) with ESMTP id 60FF024679
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgAOAqN (ORCPT
+        id S1728897AbgAOA53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 19:46:13 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43237 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728795AbgAOAqN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 19:46:13 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d18so14280122qtj.10;
-        Tue, 14 Jan 2020 16:46:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s4r1q77v2s7ZfbF1lFyj2jG69/QqX8a/sPqCqv9z2TU=;
-        b=Q+w4ML/ESIMWpC1fZG7nIOe9piH9hK34vUOcI8ptwCey5nH6SbQlk5tHgbWYxIaFOv
-         V7gl3m21RueWZT/+6K3zxOzv+g1Q/CbFb7YcmeGFkFBUW4yGpHZO2uqml3CbqmLc8mKE
-         +45q0e7j+uk3TJhBWYg7SU3+qQRuCW9Rbd5V39xiXv0+waCDCU17Fa3jkx8RZ85cgMKh
-         /nmYxaOvN1XOrKKTNnmyBXYw1Ab55YCi5ebqHhJcgKQ91oo3/ekSmzt0Omn5ZL9Vthx6
-         n400S3wrTWTGB/Unai40vvgO/cLKUVFu6vqccktt4w43/Z0RhK7QKuF0HRBgcynxLZai
-         WRmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s4r1q77v2s7ZfbF1lFyj2jG69/QqX8a/sPqCqv9z2TU=;
-        b=c/Al6pOm4PeiwtjilhM9mrzgoXXKQtn4bCKRXpgK+27Radz8bmUsTcC70GVNhL928q
-         IFw/RgRai+cY5JJ0H4beLpjIZKjUbAZokZzi7bymqzW8yARaIFKLmbp8ETW62JoX+ZrP
-         apMaoxlz5oVMv3sXPCkiepvjUn873NLaryyIxCV+rq2kDIh4N/e0TFKIJoSjkO6ZFoX6
-         h2jDaIGnyfLFM6qTyDKYZZ+ZqiPqmUZ8OSXTYO29Zec0gFVcusgH57bpeN++6Fx1ihfR
-         EBQaAJTfQHdTa9p4kUPxm1E1PDW/ykVgu8FDwD87wguw+rQoMAJqU5vPmzBHcqV+Ln8j
-         PkKw==
-X-Gm-Message-State: APjAAAVTy1kPKi9KzYnNohjMAezX8N5V452ZJxXYOccJKYDjw85Lwr5q
-        ulFnXZz/R5pulJpo+4fpDXj9HX3HHyPuwj+W0D8=
-X-Google-Smtp-Source: APXvYqzYhDU86soYONX1MrheBhLVTkosBXTthKd8IDn4NsNllcFetjABmRkonlmp4ewmsuRyXXZHOrRnMJcUgkIpLbc=
-X-Received: by 2002:ac8:1385:: with SMTP id h5mr1212274qtj.59.1579049171812;
- Tue, 14 Jan 2020 16:46:11 -0800 (PST)
+        Tue, 14 Jan 2020 19:57:29 -0500
+Received: from mga09.intel.com ([134.134.136.24]:41193 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728795AbgAOA53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 19:57:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 16:57:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="225393056"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga003.jf.intel.com with ESMTP; 14 Jan 2020 16:57:28 -0800
+Date:   Tue, 14 Jan 2020 16:57:28 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 08/12] fs/xfs: Add lock/unlock mode to xfs
+Message-ID: <20200115005727.GB23311@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-9-ira.weiny@intel.com>
+ <20200113221957.GN8247@magnolia>
+ <20200114003521.GB29860@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20200114164614.47029-1-brianvv@google.com> <20200114164614.47029-11-brianvv@google.com>
-In-Reply-To: <20200114164614.47029-11-brianvv@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 14 Jan 2020 16:46:00 -0800
-Message-ID: <CAEf4BzZvtHTJFQ1_Qdb+VFpaZmLqX+-Nd9g06qsXRC1cgBA5oA@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 9/9] selftests/bpf: add batch ops testing to
- array bpf map
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Yonghong Song <yhs@fb.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114003521.GB29860@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 8:46 AM Brian Vazquez <brianvv@google.com> wrote:
->
-> Tested bpf_map_lookup_batch() and bpf_map_update_batch()
-> functionality.
->
->   $ ./test_maps
->       ...
->         test_array_map_batch_ops:PASS
->       ...
->
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> Signed-off-by: Yonghong Song <yhs@fb.com>
-> ---
->  .../bpf/map_tests/array_map_batch_ops.c       | 131 ++++++++++++++++++
->  1 file changed, 131 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c
->
-> diff --git a/tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c b/tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c
-> new file mode 100644
-> index 0000000000000..05b7caea6a444
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/map_tests/array_map_batch_ops.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <stdio.h>
-> +#include <errno.h>
-> +#include <string.h>
-> +
-> +#include <bpf/bpf.h>
-> +#include <bpf/libbpf.h>
-> +
-> +#include <test_maps.h>
-> +
-> +static void map_batch_update(int map_fd, __u32 max_entries, int *keys,
-> +                            int *values)
-> +{
-> +       int i, err;
-> +
-> +       DECLARE_LIBBPF_OPTS(bpf_map_batch_opts, opts,
+On Mon, Jan 13, 2020 at 04:35:21PM -0800, 'Ira Weiny' wrote:
+> On Mon, Jan 13, 2020 at 02:19:57PM -0800, Darrick J. Wong wrote:
+> > On Fri, Jan 10, 2020 at 11:29:38AM -0800, ira.weiny@intel.com wrote:
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> 
+> [snip]
+> 
+> > >  
+> > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > > index 401da197f012..e8fd95b75e5b 100644
+> > > --- a/fs/xfs/xfs_inode.c
+> > > +++ b/fs/xfs/xfs_inode.c
+> > > @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
+> > >   *
+> > >   * Basic locking order:
+> > >   *
+> > > - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+> > > + * i_rwsem -> i_dax_sem -> i_mmap_lock -> page_lock -> i_ilock
+> > 
+> > Mmmmmm, more locks.  Can we skip the extra lock if CONFIG_FSDAX=n or if
+> > the filesystem devices don't support DAX at all?
+> 
+> I'll look into it.
+> 
+> > 
+> > Also, I don't think we're actually following the i_rwsem -> i_daxsem
+> > order in fallocate, and possibly elsewhere too?
+> 
+> I'll have to verify.  It took a lot of iterations to get the order working so
+> I'm not going to claim perfection.
 
-Here, below, and in other patch: DECLARE_LIBBPF_OPTS declares a local
-variable, so it shouldn't be separated from all the other variable
-declarations.
+Yes this was inconsistent.  The code was right WRT i_rwsem.
 
+mmap_sem may have issues:
 
-> +               .elem_flags = 0,
-> +               .flags = 0,
-> +       );
-> +
+What about this?
 
-[...]
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index c5d11b70d067..8808782a085e 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
+  *
+  * Basic locking order:
+  *
+- * i_rwsem -> i_dax_sem -> i_mmap_lock -> page_lock -> i_ilock
++ * i_dax_sem -> i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
+  *
+  * mmap_sem locking order:
+  *
+  * i_rwsem -> page lock -> mmap_sem
+- * mmap_sem -> i_dax_sem -> i_mmap_lock -> page_lock
++ * i_dax_sem -> mmap_sem -> i_mmap_lock -> page_lock
+  *
+  * The difference in mmap_sem locking order mean that we cannot hold the
+  * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
+diff --git a/mm/mmap.c b/mm/mmap.c
+index e6b68924b7ca..b500aef30b27 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1547,18 +1547,12 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+                        vm_flags |= VM_NORESERVE;
+        }
+ 
+-       if (file)
+-               lock_inode_mode(file_inode(file));
+-
+        addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);
+        if (!IS_ERR_VALUE(addr) &&
+            ((vm_flags & VM_LOCKED) ||
+             (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
+                *populate = len;
+ 
+-       if (file)
+-               unlock_inode_mode(file_inode(file));
+-
+        return addr;
+ }
+ 
+diff --git a/mm/util.c b/mm/util.c
+index 988d11e6c17c..1cfead8cd1ce 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -501,11 +501,18 @@ unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,
+ 
+        ret = security_mmap_file(file, prot, flag);
+        if (!ret) {
+-               if (down_write_killable(&mm->mmap_sem))
++               if (file)
++                       lock_inode_mode(file_inode(file));
++               if (down_write_killable(&mm->mmap_sem)) {
++                       if (file)
++                               unlock_inode_mode(file_inode(file));
+                        return -EINTR;
++               }
+                ret = do_mmap_pgoff(file, addr, len, prot, flag, pgoff,
+                                    &populate, &uf);
+                up_write(&mm->mmap_sem);
++               if (file)
++                       unlock_inode_mode(file_inode(file));
+                userfaultfd_unmap_complete(mm, &uf);
+                if (populate)
+                        mm_populate(ret, populate);
+
