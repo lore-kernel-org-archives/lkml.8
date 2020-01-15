@@ -2,175 +2,103 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678EAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C73C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B062073A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4155E2073A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:05:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DA06P+qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAONFt (ORCPT
+        id S1728992AbgAONF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:05:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35516 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgAONFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:05:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 82A9FAD66;
-        Wed, 15 Jan 2020 13:05:46 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: [PATCH] leds: add SGI IP30 led support
-Date:   Wed, 15 Jan 2020 14:05:35 +0100
-Message-Id: <20200115130536.11453-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.24.1
+        Wed, 15 Jan 2020 08:05:58 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40100 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgAONF5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:05:57 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c77so15264813oib.7;
+        Wed, 15 Jan 2020 05:05:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=H6BEq2s6qwUB7XkhW258dUzmVLj2UZKqUrk3pae1Gs0=;
+        b=DA06P+qiBjRI7oO1e/2aTjANs8Bvc8xArp5OO1/uEkYRSL67h0uVkDIX8RuCQ3q6UC
+         yUx3NZGpyUwsjlJR+7lXFQyPQZYbv7+bvq2SqDpso0ARNvGna96AeghU4NEpK7hzlB0v
+         TuBwjCmLxfQBtNw6s/Zukpe2JP692kbTWUg720/XzLDrK/m3Sbhousk0icyggOFPK+jF
+         VM4dacW6MsdAlq6NgK0eQqpMb8n609anzI8svSQszTHWovXnlbVxBPIic5pHyQrKQvKE
+         W519w+qVJH1o7nPGhN8E0OBzC8TbgeC5EUamtbPVz1ViXVeQHBbyXSmZ3s+OaeElUAXE
+         kaZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=H6BEq2s6qwUB7XkhW258dUzmVLj2UZKqUrk3pae1Gs0=;
+        b=m4wLr8UaHyV+gZUf0pDwoHIeY0NcgGaInTQMrCrDLyGyXlkw7V7coZzdqHLOboKdLs
+         IDon4aYa3STvnAwJMxCwUmNKJF6oNGUe6qq/5W8BgtCzc27gD0yC5CnaYkqYYPy0khvg
+         j8504ucoCw/fPkj8mQRnW210mnBMjrYsY3brpPCM0eJY4ac6idNH9lSGvp/pVxcWtcZH
+         MeGhX10HH49GmzOQe5pB1/JxylnNPbNJ+v8+H4Vp3QpSu1fSfi7dllgVwnEB/K2EVhjT
+         G6S+CXjqdRZW/RZzf5fjiIiW5gHQrayl/I61zQ+1wG17dYavpUDDodBwRfhRSPhm2ESg
+         a8Zw==
+X-Gm-Message-State: APjAAAVViR7V8SYUHrqT3wVsy5HXEixMPoZT/wUI7uGhBb7l7ApObVb1
+        mgVCt4XiZfEx378YJ0v8VuaRdkhPXHrAPvueMEQZJw==
+X-Google-Smtp-Source: APXvYqwIkGNliK8WGdVz6f0X4PNRU83A/8S8ETo5iuUEpsAnfbuFAWGsTOz4is+DVgq7eJGGTUQQO13WvtbQOdpzAG4=
+X-Received: by 2002:a54:4715:: with SMTP id k21mr21339030oik.163.1579093556436;
+ Wed, 15 Jan 2020 05:05:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 05:05:55 -0800 (PST)
+In-Reply-To: <20200115094732.bou23s3bduxpnr4k@pali>
+References: <CGME20200115082818epcas1p4892a99345626188afd111ee263132458@epcas1p4.samsung.com>
+ <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115094732.bou23s3bduxpnr4k@pali>
+From:   Namjae Jeon <linkinjeon@gmail.com>
+Date:   Wed, 15 Jan 2020 22:05:55 +0900
+Message-ID: <CAKYAXd9BQJ-KKaqLycJU6HVHo7qFgvpyOOmzjcfeibkrwwMK9g@mail.gmail.com>
+Subject: Re: [PATCH v10 00/14] add the latest exfat driver
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, arnd@arndb.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implemenets a driver to support the front panel LEDs of
-SGI Octane (IP30) workstations.
-
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/leds/Kconfig     | 11 ++++++
- drivers/leds/Makefile    |  1 +
- drivers/leds/leds-ip30.c | 82 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 94 insertions(+)
- create mode 100644 drivers/leds/leds-ip30.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 4b68520ac251..8ef0fe900928 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -836,6 +836,17 @@ config LEDS_LM36274
- 	  Say Y to enable the LM36274 LED driver for TI LMU devices.
- 	  This supports the LED device LM36274.
- 
-+config LEDS_IP30
-+	tristate "LED support for SGI Octane machines"
-+	depends on LEDS_CLASS
-+	depends on SGI_MFD_IOC3
-+	help
-+	  This option enables support for the Red and White LEDs of
-+	  SGI Octane machines.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-ip30.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2da39e896ce8..89a527ac8ab6 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
- obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
-+obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
-new file mode 100644
-index 000000000000..b0a83f78c439
---- /dev/null
-+++ b/drivers/leds/leds-ip30.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LED Driver for SGI Octane machines
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/leds.h>
-+
-+struct ip30_led {
-+	struct led_classdev cdev;
-+	u32 __iomem *reg;
-+};
-+
-+static void ip30led_set(struct led_classdev *led_cdev,
-+			enum led_brightness value)
-+{
-+	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
-+
-+	if (value)
-+		writel(1, led->reg);
-+	else
-+		writel(0, led->reg);
-+}
-+
-+static int ip30led_create(struct platform_device *pdev, int num)
-+{
-+	struct resource *res;
-+	struct ip30_led *data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
-+	if (!res)
-+		return -EBUSY;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->reg = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->reg))
-+		return PTR_ERR(data->reg);
-+
-+
-+	if (num == 0) {
-+		data->cdev.name = "ip30:white";
-+		data->cdev.default_trigger = "default-on";
-+	} else {
-+		data->cdev.name = "ip30:red";
-+		data->cdev.default_trigger = "panic";
-+		writel(0, data->reg);
-+	}
-+	data->cdev.max_brightness = 1;
-+	data->cdev.brightness_set = ip30led_set;
-+
-+	return devm_led_classdev_register(&pdev->dev, &data->cdev);
-+}
-+
-+static int ip30led_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = ip30led_create(pdev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ip30led_create(pdev, 1);
-+}
-+
-+static struct platform_driver ip30led_driver = {
-+	.probe		= ip30led_probe,
-+	.driver		= {
-+		.name		= "ip30-leds",
-+	},
-+};
-+
-+module_platform_driver(ip30led_driver);
-+
-+MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-+MODULE_DESCRIPTION("SGI Octane LED driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:ip30-leds");
--- 
-2.24.1
-
+2020-01-15 18:47 GMT+09:00, Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> Hello! I have reviewed all changes in time when v10 has been preparing.
+>
+> There is just a small issue with description of EXFAT_DEFAULT_IOCHARSET
+> option (see email). Otherwise it looks good you can add my Reviewed-by
+> on whole patch series.
+>
+> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Thanks for your review and help.
+I will add your reviewed-by tag on next version.
+>
+> Next steps for future:
+>
+> * De-duplicate cache code between fat and exfat. Currently fs/exfat
+>   cache code is heavily copy-paste of fs/fat cache code.
+>
+> * De-duplicate UTF-16 functions. Currently fs/exfat has e.g. helper
+>   functions for surrogate pairs copy-paste from fs/nls.
+>
+> * Unify EXFAT_DEFAULT_IOCHARSET and FAT_DEFAULT_IOCHARSET. Or maybe
+>   unify it with other filesystems too.
+>
+> * After applying this patch series, remote staging exfat implementation.
+Yep, I will check them.
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+>
