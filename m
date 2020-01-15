@@ -2,595 +2,185 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F74C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C23C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE90424680
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CFD2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 08:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b+wrzkcN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxINdBip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgAOI3V (ORCPT
+        id S1729279AbgAOI3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:29:21 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:37553 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgAOI22 (ORCPT
+        Wed, 15 Jan 2020 03:29:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44513 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgAOI3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:28:28 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200115082824epoutp017cfbd97cbfa774aae215315b04ba96dc~qAhQWahPf1528515285epoutp01i
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 08:28:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200115082824epoutp017cfbd97cbfa774aae215315b04ba96dc~qAhQWahPf1528515285epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579076904;
-        bh=Bv/xH0aMYkb89l0b0dMAtiAEZSaR7Lrj0eVtrzw8YUQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b+wrzkcNOCP96o5hdNVn2m0FlO440XvlhRy15DdAoH2Sx3AikRQNOr+K8Xfmhmjvu
-         A+jSm2hqE9ChR3S7jgdOZaxCqWha0askjgl5vWf+geMoZi/lCG+CfMm8yMubEbuPw9
-         YCX6eXHpEsPQROmRegWfm02+WPN3FYVTr8AWPvJ8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200115082823epcas1p289e1f23beaea9e60c0ed8185f45f5a27~qAhPtwQz-1293712937epcas1p2J;
-        Wed, 15 Jan 2020 08:28:23 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47yL7V5ntRzMqYkg; Wed, 15 Jan
-        2020 08:28:22 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6F.86.48019.62DCE1E5; Wed, 15 Jan 2020 17:28:22 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2~qAhOSrVnW0883908839epcas1p3T;
-        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200115082822epsmtrp22306cdc84af4ecdbcbab0a0b6384ae3a~qAhOR9b-u1143311433epsmtrp2S;
-        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-75-5e1ecd267c39
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9A.4A.10238.62DCE1E5; Wed, 15 Jan 2020 17:28:22 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200115082822epsmtip154363f7b87997ab99d8f61a9bb7a4f68~qAhODZAGp0110101101epsmtip1n;
-        Wed, 15 Jan 2020 08:28:22 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, pali.rohar@gmail.com,
-        arnd@arndb.de, Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v10 06/14] exfat: add fat entry operations
-Date:   Wed, 15 Jan 2020 17:24:39 +0900
-Message-Id: <20200115082447.19520-7-namjae.jeon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115082447.19520-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpik+LIzCtJLcpLzFFi42LZdlhTV1ftrFycwdPJOhZ/Jx1jt2hevJ7N
-        YuXqo0wW1+/eYrbYs/cki8XlXXPYLH5Mr7eYePo3k8WWf0dYLS69/8DiwOXx+9ckRo+ds+6y
-        e+yfu4bdY/fNBjaPvi2rGD0+b5LzOLT9DVsAe1SOTUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7yp
-        mYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QeUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XU
-        gpScAkODAr3ixNzi0rx0veT8XCtDAwMjU6DKhJyMpfcXMhWsjqr427qaqYHxm1sXIyeHhICJ
-        xOOOHrYuRi4OIYEdjBJnVr+Fcj4xSmxcupcJwvnGKHHw70NmmJaje58yQyT2Mkrcev6KFa5l
-        8bH/QC0cHGwC2hJ/toiCNIgI2Etsnn2ABaSGWeAgo8SbC3PZQRLCAlYSB5beYAWxWQRUJfae
-        fwFm8wrYSNx6t4MJYpu8xOoNB8A2cwrYShzZcpkdZJCEwBE2iZ8tbSwQRS4SD1d2sEPYwhKv
-        jm+BsqUkPr/bywZykIRAtcTH/VAfdDBKvPhuC2EbS9xcv4EVpIRZQFNi/S59iLCixM7fcxlB
-        bGYBPol3X3tYIabwSnS0CUGUqEr0XToMdaW0RFf7B6ilHhKbjh1ihATJBEaJzV9usUxglJuF
-        sGEBI+MqRrHUguLc9NRiwwIT5BjbxAhOf1oWOxj3nPM5xCjAwajEw6twRzZOiDWxrLgy9xCj
-        BAezkgjvyRlAId6UxMqq1KL8+KLSnNTiQ4ymwICcyCwlmpwPTM15JfGGpkbGxsYWJmbmZqbG
-        SuK8rgvk4oQE0hNLUrNTUwtSi2D6mDg4pRoY23dMS2hs/X9xpoIkl/A514Vz5K7qB7wrPCyz
-        fdKDDRc3zNtzRaHxSYBZmXmLexjn/RvGaZHmkpnR98M/3Q3pv7/54s+LvxuVZtw7pBHEr1V+
-        OCEwyz7y0sq/jD1nLmirvV/fGJk7hcNpWsuO3kCWrtxvT5YVmr5et0lacslbRu0Y+ZkHORql
-        lViKMxINtZiLihMBMumn5JUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsWy7bCSnK7aWbk4g947whZ/Jx1jt2hevJ7N
-        YuXqo0wW1+/eYrbYs/cki8XlXXPYLH5Mr7eYePo3k8WWf0dYLS69/8DiwOXx+9ckRo+ds+6y
-        e+yfu4bdY/fNBjaPvi2rGD0+b5LzOLT9DVsAexSXTUpqTmZZapG+XQJXxtL7C5kKVkdV/G1d
-        zdTA+M2ti5GTQ0LAROLo3qfMXYxcHEICuxklmr5vY4ZISEscO3EGyOYAsoUlDh8uBgkLCXxg
-        lNhxmg0kzCagLfFniyhIWETAUaJ312EWkDHMAqcZJbo3PmQCSQgLWEkcWHqDFcRmEVCV2Hv+
-        BZjNK2AjcevdDiaIVfISqzccAFvLKWArcWTLZXaIXTYS056cZJrAyLeAkWEVo2RqQXFuem6x
-        YYFhXmq5XnFibnFpXrpecn7uJkZwiGpp7mC8vCT+EKMAB6MSD6/CHdk4IdbEsuLK3EOMEhzM
-        SiK8J2cAhXhTEiurUovy44tKc1KLDzFKc7AoifM+zTsWKSSQnliSmp2aWpBaBJNl4uCUamBM
-        yfOfkVNwwejpp/8JvOaFZ0oEW30uKzw9qvGi2nHfNqW0KsbzqXIvZm15qGj7jF+JP3rj7YL5
-        AcplCy953FGvTWHar3jIS7DH7ttvedXy6oU2jBaHTGdnLpjvWB1oMH3K9tzZM2yEvnRMao00
-        tBW1cnyb0u9/TqHzocxUzVNdj3S/Nv3+UanEUpyRaKjFXFScCADYNyFSTQIAAA==
-X-CMS-MailID: 20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
-        <CGME20200115082822epcas1p37aca37dad0aa9159d7eddde01edfeec2@epcas1p3.samsung.com>
+        Wed, 15 Jan 2020 03:29:21 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so14804003wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 00:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3GK5Djc6Es4Lf2bms5LobhRrB6cfPeA6TPSSmCtuW7o=;
+        b=pxINdBipIObKzAeju8UwLEZAh1c5Lz1AFYRX/gAiXp8HUgwfqjdIyb/QJQy8cq+DGJ
+         G1TfipKXPwr+RZM/eigUSHh5njYxyxJZKjJKCrRroT1Rn0/X8060NszcvuJnUWQ3pKq9
+         i9lA5p3Q1AUb8ZoVC/koPJs1YWYGrmRXX7YlokbI2szyEJ84euHOPRCiCyQGQEUfLhKF
+         lN/1qkVsQZSmhhBxica9csSceRRk4mUwyx3bsn93E4AuWl8gLuDD8fxO0lc5XB8QUORb
+         94ecpjrpXdaL3osYQWCL5R3SF0gGpKlUlb6qqYB9ywtCqBxyDGWk1lOqGWUu/kpCRtiy
+         Gn6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3GK5Djc6Es4Lf2bms5LobhRrB6cfPeA6TPSSmCtuW7o=;
+        b=iOpqzdDOkhgzdnj54EQUGJmg511ON2ZX+JviCvfiJYfsirsPlaMecxCLinUQXuntyH
+         1QfC9JQ70VmJtdxO3dojpKamxJ4kINaQSxsZbo7ingp3j1YkP81q2A8z/H4iJAoZa7zq
+         B1p4H2nicgwPOGNHw+Lqrpd1ZBNP/yC/vmxX/BP+sYalkBZcu3uuaKhjwYkFclxXRWuH
+         +7jAGWHKkKSGXaCUsDZHE818v7xX5aesQnK1C+bhD02+KCiFbvuNM7v0mq03svfUDnv8
+         YEk+1yn7NDG4MtoC5FXt/gNgAVPVDopCc178iBIPKq/PuQUOisLcES2aC2TRMZiiPikP
+         xKHQ==
+X-Gm-Message-State: APjAAAVIIUl+PmkZR3FqrfZ2lXLdZVstE6HqwKhil+yvTES4zL78830b
+        w2GfR/p5JT/fstb6yMRPBujk4A==
+X-Google-Smtp-Source: APXvYqxg5fYMbpzJkbMnE9bwu+VJEIcsdrHoYIUzhPAxEC31+lysJdWQxte1D3bkl5SWo9KJvHl4Nw==
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr29019061wrm.290.1579076959924;
+        Wed, 15 Jan 2020 00:29:19 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id b16sm24408442wrj.23.2020.01.15.00.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 00:29:18 -0800 (PST)
+Date:   Wed, 15 Jan 2020 08:29:37 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200115082937.GD325@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200107124124.GI14821@dell>
+ <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+ <20200113105301.GF5414@dell>
+ <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
+ <20200113121109.GG5414@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200113121109.GG5414@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the implementation of fat entry operations for exfat.
+On Mon, 13 Jan 2020, Lee Jones wrote:
+> On Mon, 13 Jan 2020, Vaittinen, Matti wrote:
+> > On Mon, 2020-01-13 at 10:53 +0000, Lee Jones wrote:
+> > > On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
+> > > > On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
+> > > > > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+> > > > > 
+> > > > > > Few ROHM PMICs allow setting the voltage states for different
+> > > > > > system states
+> > > > > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via
+> > > > > > SoC
+> > > > > > specific
+> > > > > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > > > > functions for
+> > > > > > these state specific voltages. The parsing functions can be re-
+> > > > > > used 
+> > > > > > by
+> > > > > > other ROHM chip drivers like bd71828. Split the generic
+> > > > > > functions
+> > > > > > from
+> > > > > > bd718x7-regulator.c to rohm-regulator.c and export them for
+> > > > > > other
+> > > > > > modules
+> > > > > > to use.
+> > > > > > 
+> > > > > > Signed-off-by: Matti Vaittinen <
+> > > > > > matti.vaittinen@fi.rohmeurope.com>
+> > > > > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > > > > ---
+> > > 
+> > > [...]
+> > > 
+> > > > > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> > > > > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
+> > > > > > *dvs,
+> > > > > > +				  struct device_node *np,
+> > > > > > +				  const struct regulator_desc
+> > > > > > *desc,
+> > > > > > +				  struct regmap *regmap);
+> > > > > 
+> > > > > Does these really need to live in the parent's header file?
+> > > > 
+> > > > I don't know what would be a better place?
+> > > 
+> > > You don't have a regulator header file?
+> > > 
+> > > It seems over-kill to create one for this, so leave it as is.
+> > > 
+> > > > > What other call-sites are there?
+> > > > 
+> > > > After this series the bd718x7-regulator.c and bd71828-regulator.c
+> > > > are
+> > > > the in-tree drivers using these. rohm-regulator.c is implementing
+> > > > them.
+> > > > And I hope we see yet another driver landing in later this year. 
+> > > > 
+> > > > Anyways, I will investigate if I can switch this to some common
+> > > > (not
+> > > > rohm specific) DT bindings at some point (I've scheduled this study
+> > > > to
+> > > > March) - If I can then they should live in regulator core headers.
+> > > > 
+> > > > But changing the existing properties should again be own set of
+> > > > patches
+> > > > and I'd prefer doing that work independently of this series and not
+> > > > delaying the BD71828 due to not-yet-evaluated bd718x7 property
+> > > > changes.
+> > > 
+> > > That's fine.
+> > 
+> > Glad to hear :) By the way, I already sent the v9 ;)
+> 
+> It's in my queue.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
----
- fs/exfat/fatent.c | 463 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 463 insertions(+)
- create mode 100644 fs/exfat/fatent.c
+Although you didn't submit the whole set to me, so I only have a few
+of the patches.  Why did you choose to do that this time?
 
-diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
-new file mode 100644
-index 000000000000..a855b1769a96
---- /dev/null
-+++ b/fs/exfat/fatent.c
-@@ -0,0 +1,463 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-+ */
-+
-+#include <linux/slab.h>
-+#include <asm/unaligned.h>
-+#include <linux/buffer_head.h>
-+
-+#include "exfat_raw.h"
-+#include "exfat_fs.h"
-+
-+static int exfat_mirror_bh(struct super_block *sb, sector_t sec,
-+		struct buffer_head *bh)
-+{
-+	struct buffer_head *c_bh;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	sector_t sec2;
-+	int err = 0;
-+
-+	if (sbi->FAT2_start_sector != sbi->FAT1_start_sector) {
-+		sec2 = sec - sbi->FAT1_start_sector + sbi->FAT2_start_sector;
-+		c_bh = sb_getblk(sb, sec2);
-+		if (!c_bh)
-+			return -ENOMEM;
-+		memcpy(c_bh->b_data, bh->b_data, sb->s_blocksize);
-+		set_buffer_uptodate(c_bh);
-+		mark_buffer_dirty(c_bh);
-+		if (sb->s_flags & SB_SYNCHRONOUS)
-+			err = sync_dirty_buffer(c_bh);
-+		brelse(c_bh);
-+	}
-+
-+	return err;
-+}
-+
-+static int __exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
-+{
-+	unsigned int off;
-+	sector_t sec;
-+	struct buffer_head *bh;
-+
-+	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
-+	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
-+
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	*content = le32_to_cpu(*(__le32 *)(&bh->b_data[off]));
-+
-+	/* remap reserved clusters to simplify code */
-+	if (*content > EXFAT_BAD_CLUSTER)
-+		*content = EXFAT_EOF_CLUSTER;
-+
-+	brelse(bh);
-+	return 0;
-+}
-+
-+int exfat_ent_set(struct super_block *sb, unsigned int loc,
-+		unsigned int content)
-+{
-+	unsigned int off;
-+	sector_t sec;
-+	__le32 *fat_entry;
-+	struct buffer_head *bh;
-+
-+	sec = FAT_ENT_OFFSET_SECTOR(sb, loc);
-+	off = FAT_ENT_OFFSET_BYTE_IN_SECTOR(sb, loc);
-+
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	fat_entry = (__le32 *)&(bh->b_data[off]);
-+	*fat_entry = cpu_to_le32(content);
-+	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
-+	exfat_mirror_bh(sb, sec, bh);
-+	brelse(bh);
-+	return 0;
-+}
-+
-+static inline bool is_valid_cluster(struct exfat_sb_info *sbi,
-+		unsigned int clus)
-+{
-+	if (clus < EXFAT_FIRST_CLUSTER || sbi->num_clusters <= clus)
-+		return false;
-+	return true;
-+}
-+
-+int exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
-+{
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	int err;
-+
-+	if (!is_valid_cluster(sbi, loc)) {
-+		exfat_fs_error(sb, "invalid access to FAT (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	err = __exfat_ent_get(sb, loc, content);
-+	if (err) {
-+		exfat_fs_error(sb,
-+			"failed to access to FAT (entry 0x%08x, err:%d)",
-+			loc, err);
-+		return err;
-+	}
-+
-+	if (*content == EXFAT_FREE_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT free cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	if (*content == EXFAT_BAD_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT bad cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	if (*content != EXFAT_EOF_CLUSTER && !is_valid_cluster(sbi, *content)) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT (entry 0x%08x) bogus content (0x%08x)",
-+			loc, *content);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+int exfat_chain_cont_cluster(struct super_block *sb, unsigned int chain,
-+		unsigned int len)
-+{
-+	if (!len)
-+		return 0;
-+
-+	while (len > 1) {
-+		if (exfat_ent_set(sb, chain, chain + 1))
-+			return -EIO;
-+		chain++;
-+		len--;
-+	}
-+
-+	if (exfat_ent_set(sb, chain, EXFAT_EOF_CLUSTER))
-+		return -EIO;
-+	return 0;
-+}
-+
-+int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
-+{
-+	unsigned int num_clusters = 0;
-+	unsigned int clu;
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	/* invalid cluster number */
-+	if (p_chain->dir == EXFAT_FREE_CLUSTER ||
-+	    p_chain->dir == EXFAT_EOF_CLUSTER ||
-+	    p_chain->dir < EXFAT_FIRST_CLUSTER)
-+		return 0;
-+
-+	/* no cluster to truncate */
-+	if (p_chain->size == 0)
-+		return 0;
-+
-+	/* check cluster validation */
-+	if (p_chain->dir < 2 && p_chain->dir >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "invalid start cluster (%u)",
-+				p_chain->dir);
-+		return -EIO;
-+	}
-+
-+	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
-+	clu = p_chain->dir;
-+
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		do {
-+			exfat_clear_bitmap(inode, clu);
-+			clu++;
-+
-+			num_clusters++;
-+		} while (num_clusters < p_chain->size);
-+	} else {
-+		do {
-+			exfat_clear_bitmap(inode, clu);
-+
-+			if (exfat_get_next_cluster(sb, &clu))
-+				goto dec_used_clus;
-+
-+			num_clusters++;
-+		} while (clu != EXFAT_EOF_CLUSTER);
-+	}
-+
-+dec_used_clus:
-+	sbi->used_clusters -= num_clusters;
-+	return 0;
-+}
-+
-+int exfat_find_last_cluster(struct super_block *sb, struct exfat_chain *p_chain,
-+		unsigned int *ret_clu)
-+{
-+	unsigned int clu, next;
-+	unsigned int count = 0;
-+
-+	next = p_chain->dir;
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		*ret_clu = next + p_chain->size - 1;
-+		return 0;
-+	}
-+
-+	do {
-+		count++;
-+		clu = next;
-+		if (exfat_ent_get(sb, clu, &next))
-+			return -EIO;
-+	} while (next != EXFAT_EOF_CLUSTER);
-+
-+	if (p_chain->size != count) {
-+		exfat_fs_error(sb,
-+			"bogus directory size (clus : ondisk(%d) != counted(%d))",
-+			p_chain->size, count);
-+		return -EIO;
-+	}
-+
-+	*ret_clu = clu;
-+	return 0;
-+}
-+
-+static inline int exfat_sync_bhs(struct buffer_head **bhs, int nr_bhs)
-+{
-+	int i, err = 0;
-+
-+	for (i = 0; i < nr_bhs; i++)
-+		write_dirty_buffer(bhs[i], 0);
-+
-+	for (i = 0; i < nr_bhs; i++) {
-+		wait_on_buffer(bhs[i]);
-+		if (!err && !buffer_uptodate(bhs[i]))
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
-+int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
-+{
-+	struct super_block *sb = dir->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct buffer_head *bhs[MAX_BUF_PER_PAGE];
-+	int nr_bhs = MAX_BUF_PER_PAGE;
-+	sector_t blknr, last_blknr;
-+	int err, i, n;
-+
-+	blknr = exfat_cluster_to_sector(sbi, clu);
-+	last_blknr = blknr + sbi->sect_per_clus;
-+
-+	if (last_blknr > sbi->num_sectors && sbi->num_sectors > 0) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: out of range(sect:%llu len:%u)",
-+			__func__, (unsigned long long)blknr,
-+			sbi->sect_per_clus);
-+		return -EIO;
-+	}
-+
-+	/* Zeroing the unused blocks on this cluster */
-+	n = 0;
-+	while (blknr < last_blknr) {
-+		bhs[n] = sb_getblk(sb, blknr);
-+		if (!bhs[n]) {
-+			err = -ENOMEM;
-+			goto release_bhs;
-+		}
-+		memset(bhs[n]->b_data, 0, sb->s_blocksize);
-+		exfat_update_bh(sb, bhs[n], 0);
-+
-+		n++;
-+		blknr++;
-+
-+		if (n == nr_bhs) {
-+			if (IS_DIRSYNC(dir)) {
-+				err = exfat_sync_bhs(bhs, n);
-+				if (err)
-+					goto release_bhs;
-+			}
-+
-+			for (i = 0; i < n; i++)
-+				brelse(bhs[i]);
-+			n = 0;
-+		}
-+	}
-+
-+	if (IS_DIRSYNC(dir)) {
-+		err = exfat_sync_bhs(bhs, n);
-+		if (err)
-+			goto release_bhs;
-+	}
-+
-+	for (i = 0; i < n; i++)
-+		brelse(bhs[i]);
-+
-+	return 0;
-+
-+release_bhs:
-+	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu\n",
-+		(unsigned long long)blknr);
-+	for (i = 0; i < n; i++)
-+		bforget(bhs[i]);
-+	return err;
-+}
-+
-+int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
-+		struct exfat_chain *p_chain)
-+{
-+	int ret = -ENOSPC;
-+	unsigned int num_clusters = 0, total_cnt;
-+	unsigned int hint_clu, new_clu, last_clu = EXFAT_EOF_CLUSTER;
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	total_cnt = EXFAT_DATA_CLUSTER_COUNT(sbi);
-+
-+	if (unlikely(total_cnt < sbi->used_clusters)) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: invalid used clusters(t:%u,u:%u)\n",
-+			__func__, total_cnt, sbi->used_clusters);
-+		return -EIO;
-+	}
-+
-+	if (num_alloc > total_cnt - sbi->used_clusters)
-+		return -ENOSPC;
-+
-+	hint_clu = p_chain->dir;
-+	/* find new cluster */
-+	if (hint_clu == EXFAT_EOF_CLUSTER) {
-+		if (sbi->clu_srch_ptr < EXFAT_FIRST_CLUSTER) {
-+			exfat_msg(sb, KERN_ERR,
-+				"sbi->clu_srch_ptr is invalid (%u)\n",
-+				sbi->clu_srch_ptr);
-+			sbi->clu_srch_ptr = EXFAT_FIRST_CLUSTER;
-+		}
-+
-+		hint_clu = exfat_find_free_bitmap(sb, sbi->clu_srch_ptr);
-+		if (hint_clu == EXFAT_EOF_CLUSTER)
-+			return -ENOSPC;
-+	}
-+
-+	/* check cluster validation */
-+	if (hint_clu < EXFAT_FIRST_CLUSTER && hint_clu >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)\n",
-+			hint_clu);
-+		hint_clu = EXFAT_FIRST_CLUSTER;
-+		if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters))
-+				return -EIO;
-+			p_chain->flags = ALLOC_FAT_CHAIN;
-+		}
-+	}
-+
-+	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
-+
-+	p_chain->dir = EXFAT_EOF_CLUSTER;
-+
-+	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) !=
-+	       EXFAT_EOF_CLUSTER) {
-+		if (new_clu != hint_clu &&
-+		    p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+			p_chain->flags = ALLOC_FAT_CHAIN;
-+		}
-+
-+		/* update allocation bitmap */
-+		if (exfat_set_bitmap(inode, new_clu)) {
-+			ret = -EIO;
-+			goto free_cluster;
-+		}
-+
-+		num_clusters++;
-+
-+		/* update FAT table */
-+		if (p_chain->flags == ALLOC_FAT_CHAIN) {
-+			if (exfat_ent_set(sb, new_clu, EXFAT_EOF_CLUSTER)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+		}
-+
-+		if (p_chain->dir == EXFAT_EOF_CLUSTER) {
-+			p_chain->dir = new_clu;
-+		} else if (p_chain->flags == ALLOC_FAT_CHAIN) {
-+			if (exfat_ent_set(sb, last_clu, new_clu)) {
-+				ret = -EIO;
-+				goto free_cluster;
-+			}
-+		}
-+		last_clu = new_clu;
-+
-+		if (--num_alloc == 0) {
-+			sbi->clu_srch_ptr = hint_clu;
-+			sbi->used_clusters += num_clusters;
-+
-+			p_chain->size += num_clusters;
-+			return 0;
-+		}
-+
-+		hint_clu = new_clu + 1;
-+		if (hint_clu >= sbi->num_clusters) {
-+			hint_clu = EXFAT_FIRST_CLUSTER;
-+
-+			if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+				if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+						num_clusters)) {
-+					ret = -EIO;
-+					goto free_cluster;
-+				}
-+				p_chain->flags = ALLOC_FAT_CHAIN;
-+			}
-+		}
-+	}
-+free_cluster:
-+	if (num_clusters)
-+		exfat_free_cluster(inode, p_chain);
-+	return ret;
-+}
-+
-+int exfat_count_num_clusters(struct super_block *sb,
-+		struct exfat_chain *p_chain, unsigned int *ret_count)
-+{
-+	unsigned int i, count;
-+	unsigned int clu;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	if (!p_chain->dir || p_chain->dir == EXFAT_EOF_CLUSTER) {
-+		*ret_count = 0;
-+		return 0;
-+	}
-+
-+	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) {
-+		*ret_count = p_chain->size;
-+		return 0;
-+	}
-+
-+	clu = p_chain->dir;
-+	count = 0;
-+	for (i = EXFAT_FIRST_CLUSTER; i < sbi->num_clusters; i++) {
-+		count++;
-+		if (exfat_ent_get(sb, clu, &clu))
-+			return -EIO;
-+		if (clu == EXFAT_EOF_CLUSTER)
-+			break;
-+	}
-+
-+	*ret_count = count;
-+	return 0;
-+}
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
