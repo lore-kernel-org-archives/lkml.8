@@ -2,261 +2,197 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37574C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E1CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03461207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D181B207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpKz3ov4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yDGgmpDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgAONrP (ORCPT
+        id S1726566AbgAONtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:47:15 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40499 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAONrO (ORCPT
+        Wed, 15 Jan 2020 08:49:21 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57192 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgAONtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:47:14 -0500
-Received: by mail-pj1-f66.google.com with SMTP id bg7so7723314pjb.5;
-        Wed, 15 Jan 2020 05:47:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qCxb07O3jS5MzDJ5KpEFySLAZYUkoV5oCpYOYUF2fuA=;
-        b=BpKz3ov4HpQHJOoXWclUr67slGzmMYVwSSgrOa57jr9BUR4E3B7OeMxkE75uSze3hR
-         Z0278JymCg/BE1nrzEdute+6kSsczp22VUmgzc5/YBSP0bv39/DQHrhCRwE02D5xlJJ3
-         IRJNCwrNr/a10bU+POKq0gQ8qeZ+BSYTCeGe2r9tgqMyHcm3/eG99rr3tXopHn5nFcsy
-         gEpMcfMW4aEOCUSCOcII2jaU3hCnOXDMK+4erGjJws8+FBxnxDLHHtY6zGi2y9kgHuCe
-         EBWpAi59dPYnY9XDodeluDZxo+BrvBhIkYsVrdOiBdgb9ejbt9tv5KxNdpjiLOL2P43R
-         iT4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qCxb07O3jS5MzDJ5KpEFySLAZYUkoV5oCpYOYUF2fuA=;
-        b=Zg4j28IQ+4ZNzErCnVUfgppggSidjGsrb7nnYdHtuwALDTzLg0/Xs+TKsnuPI1AbkH
-         qUBKklFso0f/ryunpvfAjmyqOpmz47LAD23sdC+7z5sIv6zMZxMHunOc05IRKfAqlPuv
-         pWJHJO1jk+W8yHbYyplCJXCKLie40PjNXdbCdEHdDT+tc3e3yzQ1/FgkPwZZdOgRUX0A
-         ny8oP9+P5JF7e3t0g4l8nX7Zv3mVar+XhP0y5B1hy3//efZmzqMLA7unZco1S4H8DZTa
-         LvpJKCXV4toAtcR8Q/pdx9xB0mZu3gBeJHQzCBL4lCEBIO6Hp6pTHYULtwnGcJ/m+WGg
-         hhOA==
-X-Gm-Message-State: APjAAAWjHcZjyOAzeUaQ5Cdn8NgXp8XaHn+hD/z/D2Mt7Fjgs6Gvy7Ka
-        lX/cbGgGzvZzdephCldjNYA=
-X-Google-Smtp-Source: APXvYqwv7ezrYAKzSWltLFywSXn+1dKl9mNzVXU+ZOl+9ohEy1e+HVp1oNtxEnD4ZXIF0ibvfgE2KA==
-X-Received: by 2002:a17:902:a515:: with SMTP id s21mr19390176plq.177.1579096033818;
-        Wed, 15 Jan 2020 05:47:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d26sm20414077pgv.66.2020.01.15.05.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 05:47:13 -0800 (PST)
-Subject: Re: [PATCH v12 3/4] watchdog: mtk_wdt: mt8183: Add reset controller
-To:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
-        p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
-        jiaxin.yu@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
- <20200115085828.27791-4-yong.liang@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <18c3d0ca-a5d9-ede4-d13e-279b71272d44@roeck-us.net>
-Date:   Wed, 15 Jan 2020 05:47:11 -0800
+        Wed, 15 Jan 2020 08:49:20 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00FDnCS7081492;
+        Wed, 15 Jan 2020 07:49:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579096152;
+        bh=fzI8kwVr+5hXza98K+UGFAa4YR6NM4hcw0gyyXklECs=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=yDGgmpDwC7/JeK4bFtiYSW6KQQIS4Tg93kmRCW6l+ee5OnzyQrtRBrX1pcgVDQC3b
+         vFdd0FFfn42LXep5fbrksYnt5py6jsgfhWOWinXCZP/DsIAYDzh2E8GUh5hZUBc8YX
+         SSSZYvo10sq8stVzQrBVVkyTMi+OXx+Se63A14/4=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00FDnCnp057301;
+        Wed, 15 Jan 2020 07:49:12 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
+ Jan 2020 07:49:12 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 15 Jan 2020 07:49:12 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00FDnBYi056543;
+        Wed, 15 Jan 2020 07:49:11 -0600
+Subject: Re: [PATCH] leds: add SGI IP30 led support
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20200115130536.11453-1-tbogendoerfer@suse.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b5bf7941-3fc1-641d-5482-509eeae34eac@ti.com>
+Date:   Wed, 15 Jan 2020 07:46:13 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200115085828.27791-4-yong.liang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200115130536.11453-1-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 12:58 AM, Yong Liang wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
-> 
-> Add reset controller API in watchdog driver.
-> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
-> camera, codec and connectivity) software reset functionality.
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thomas
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On 1/15/20 7:05 AM, Thomas Bogendoerfer wrote:
+> This patch implemenets a driver to support the front panel LEDs of
+> SGI Octane (IP30) workstations.
 
+Thanks for the patch
+
+Some nitpicks below
+
+
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 > ---
->   drivers/watchdog/mtk_wdt.c | 99 +++++++++++++++++++++++++++++++++++++-
->   1 file changed, 98 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index 9c3d0033260d..e88aacb0404d 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -9,6 +9,8 @@
->    * Based on sunxi_wdt.c
->    */
+>   drivers/leds/Kconfig     | 11 ++++++
+>   drivers/leds/Makefile    |  1 +
+>   drivers/leds/leds-ip30.c | 82 ++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 94 insertions(+)
+>   create mode 100644 drivers/leds/leds-ip30.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 4b68520ac251..8ef0fe900928 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -836,6 +836,17 @@ config LEDS_LM36274
+>   	  Say Y to enable the LM36274 LED driver for TI LMU devices.
+>   	  This supports the LED device LM36274.
 >   
-> +#include <dt-bindings/reset-controller/mt8183-resets.h>
-> +#include <linux/delay.h>
->   #include <linux/err.h>
->   #include <linux/init.h>
->   #include <linux/io.h>
-> @@ -16,10 +18,11 @@
->   #include <linux/module.h>
->   #include <linux/moduleparam.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
->   #include <linux/types.h>
->   #include <linux/watchdog.h>
-> -#include <linux/delay.h>
->   
->   #define WDT_MAX_TIMEOUT		31
->   #define WDT_MIN_TIMEOUT		1
-> @@ -44,6 +47,9 @@
->   #define WDT_SWRST		0x14
->   #define WDT_SWRST_KEY		0x1209
->   
-> +#define WDT_SWSYSRST		0x18U
-> +#define WDT_SWSYS_RST_KEY	0x88000000
+> +config LEDS_IP30
+> +	tristate "LED support for SGI Octane machines"
+> +	depends on LEDS_CLASS
+> +	depends on SGI_MFD_IOC3
+What is the dependency on the MFD?
+> +	help
+> +	  This option enables support for the Red and White LEDs of
+> +	  SGI Octane machines.
 > +
->   #define DRV_NAME		"mtk-wdt"
->   #define DRV_VERSION		"1.0"
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called leds-ip30.
+> +
+>   comment "LED Triggers"
+>   source "drivers/leds/trigger/Kconfig"
 >   
-> @@ -53,8 +59,90 @@ static unsigned int timeout;
->   struct mtk_wdt_dev {
->   	struct watchdog_device wdt_dev;
->   	void __iomem *wdt_base;
-> +	spinlock_t lock; /* protects WDT_SWSYSRST reg */
-> +	struct reset_controller_dev rcdev;
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 2da39e896ce8..89a527ac8ab6 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
+>   obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+>   obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+>   obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+> +obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
+>   
+
+Extra tab
+
+
+>   # LED SPI Drivers
+>   obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+> diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
+> new file mode 100644
+> index 000000000000..b0a83f78c439
+> --- /dev/null
+> +++ b/drivers/leds/leds-ip30.c
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LED Driver for SGI Octane machines
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/leds.h>
+> +
+> +struct ip30_led {
+> +	struct led_classdev cdev;
+> +	u32 __iomem *reg;
 > +};
 > +
-> +struct mtk_wdt_data {
-> +	int toprgu_sw_rst_num;
->   };
->   
-> +static const struct mtk_wdt_data mt8183_data = {
-> +	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
-> +};
-> +
-> +static int toprgu_reset_update(struct reset_controller_dev *rcdev,
-> +			       unsigned long id, bool assert)
+> +static void ip30led_set(struct led_classdev *led_cdev,
+> +			enum led_brightness value)
 > +{
-> +	unsigned int tmp;
-> +	unsigned long flags;
-> +	struct mtk_wdt_dev *data =
-> +		 container_of(rcdev, struct mtk_wdt_dev, rcdev);
+> +	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
 > +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	tmp = readl(data->wdt_base + WDT_SWSYSRST);
-> +	if (assert)
-> +		tmp |= BIT(id);
+> +	if (value)
+> +		writel(1, led->reg);
 > +	else
-> +		tmp &= ~BIT(id);
-> +	tmp |= WDT_SWSYS_RST_KEY;
-> +	writel(tmp, data->wdt_base + WDT_SWSYSRST);
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
+> +		writel(0, led->reg);
 > +}
 > +
-> +static int toprgu_reset_assert(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
+> +static int ip30led_create(struct platform_device *pdev, int num)
 > +{
-> +	return toprgu_reset_update(rcdev, id, true);
-> +}
+> +	struct resource *res;
+> +	struct ip30_led *data;
 > +
-> +static int toprgu_reset_deassert(struct reset_controller_dev *rcdev,
-> +				 unsigned long id)
-> +{
-> +	return toprgu_reset_update(rcdev, id, false);
-> +}
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
+> +	if (!res)
+> +		return -EBUSY;
 > +
-> +static int toprgu_reset(struct reset_controller_dev *rcdev,
-> +			unsigned long id)
-> +{
-> +	int ret;
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
 > +
-> +	ret = toprgu_reset_assert(rcdev, id);
-> +	if (ret)
-> +		return ret;
+> +	data->reg = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(data->reg))
+> +		return PTR_ERR(data->reg);
 > +
-> +	return toprgu_reset_deassert(rcdev, id);
-> +}
 > +
-> +static const struct reset_control_ops toprgu_reset_ops = {
-> +	.assert = toprgu_reset_assert,
-> +	.deassert = toprgu_reset_deassert,
-> +	.reset = toprgu_reset,
-> +};
-> +
-> +static int toprgu_register_reset_controller(struct platform_device *pdev,
-> +					    int rst_num)
-> +{
-> +	int ret;
-> +	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
-> +
-> +	spin_lock_init(&mtk_wdt->lock);
-> +
-> +	mtk_wdt->rcdev.owner = THIS_MODULE;
-> +	mtk_wdt->rcdev.nr_resets = rst_num;
-> +	mtk_wdt->rcdev.ops = &toprgu_reset_ops;
-> +	mtk_wdt->rcdev.of_node = pdev->dev.of_node;
-> +	ret = devm_reset_controller_register(&pdev->dev, &mtk_wdt->rcdev);
-> +	if (ret != 0)
-> +		dev_err(&pdev->dev,
-> +			"couldn't register wdt reset controller: %d\n", ret);
-> +	return ret;
-> +}
-> +
->   static int mtk_wdt_restart(struct watchdog_device *wdt_dev,
->   			   unsigned long action, void *data)
->   {
-> @@ -155,6 +243,7 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct mtk_wdt_dev *mtk_wdt;
-> +	const struct mtk_wdt_data *wdt_data;
->   	int err;
->   
->   	mtk_wdt = devm_kzalloc(dev, sizeof(*mtk_wdt), GFP_KERNEL);
-> @@ -190,6 +279,13 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->   	dev_info(dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
->   		 mtk_wdt->wdt_dev.timeout, nowayout);
->   
-> +	wdt_data = of_device_get_match_data(dev);
-> +	if (wdt_data) {
-> +		err = toprgu_register_reset_controller(pdev,
-> +						       wdt_data->toprgu_sw_rst_num);
-> +		if (err)
-> +			return err;
-> +	}
->   	return 0;
->   }
->   
-> @@ -219,6 +315,7 @@ static int mtk_wdt_resume(struct device *dev)
->   
->   static const struct of_device_id mtk_wdt_dt_ids[] = {
->   	{ .compatible = "mediatek,mt6589-wdt" },
-> +	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
->   	{ /* sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
-> 
+> +	if (num == 0) {
+> +		data->cdev.name = "ip30:white";
+This also needs a function as defined in dt-bindings/common.h
+> +		data->cdev.default_trigger = "default-on";
+
+The name, color, function and trigger can be pulled from the DT or Firmware.
+
+The firmware should contain a node for each LED to be configured.
+
+> +	} else {
+> +		data->cdev.name = "ip30:red";
+Same as above
+> +		data->cdev.default_trigger = "panic";
+> +		writel(0, data->reg);
+
+Is the LED on by default?
+
+Dan
 
