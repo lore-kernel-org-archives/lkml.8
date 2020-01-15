@@ -2,124 +2,180 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845DAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57EFA24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE82222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enLnaSMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAOKtW (ORCPT
+        id S1729208AbgAOKuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:49:22 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:32843 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOKtW (ORCPT
+        Wed, 15 Jan 2020 05:50:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26864 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725999AbgAOKuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:49:22 -0500
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MWAay-1jApfm21pi-00Xa9s; Wed, 15 Jan 2020 11:49:20 +0100
-Received: by mail-qk1-f179.google.com with SMTP id x129so15152028qke.8;
-        Wed, 15 Jan 2020 02:49:20 -0800 (PST)
-X-Gm-Message-State: APjAAAUS+G+kHEaD3VnBKf2Be0T/HuC9ycpmmCkUlkdzy0LSqyzoO57y
-        i7t76cYoAPnThnktoI+RfU9etpEW/Tzo+Mql/+M=
-X-Google-Smtp-Source: APXvYqx/5s855DLcrc1gRr+GKEkvylSSHgSnuAyI754FsKb/zhyBUMBjzYxvxT5+lGlSwqkoG8sWPpdvRZpbxm+d9Gw=
-X-Received: by 2002:a37:84a:: with SMTP id 71mr25699141qki.138.1579085359252;
- Wed, 15 Jan 2020 02:49:19 -0800 (PST)
+        Wed, 15 Jan 2020 05:50:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579085412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0zPdYw55o/NQ5YWQsGG35pXdQyrv0EYjb0Mj4Frs9Ks=;
+        b=enLnaSMdQxg+rRqxahneSLTdm2ENo+aATIEUZtQA2tqAwvbISHbgPbixf3Eor8fwwAk0nB
+        EMq/4H0Du/BMPxSuhv4qGZy5Anvj2yJ5Or3zK3NA8u2mKOT4E0XCszC+XssAFAXZJdFejI
+        f/W/R+QCilNe+DPKwTNLXTq8FysZxsA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-cbxP8LseO_KtS8U4TNSm7A-1; Wed, 15 Jan 2020 05:50:11 -0500
+X-MC-Unique: cbxP8LseO_KtS8U4TNSm7A-1
+Received: by mail-wr1-f69.google.com with SMTP id z10so7778391wrt.21
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:50:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0zPdYw55o/NQ5YWQsGG35pXdQyrv0EYjb0Mj4Frs9Ks=;
+        b=UCKEM3ITB6//Y5zYU0jt0F+zS+J/CdSKm/HDThMFzx1VEG4Q8iKZs0RiVr9UmxnE8C
+         yCc6jNSKR6B+XJxrtydBOkmZ7KKiW9/3OAz2+sQ+yudpAYmeKcdQyFjv3fzfbA7URRVq
+         vCKK97EuxEomEoxwUKISebUU99ydrLGw2FpyVH2C6XvI05Nu8vS98l0o2+VV0bjP0v/h
+         8fT2qjnb7OevGdJKnl+nQQKbQLT/4U/o6imbW5g7DIxIJPAbFzTMj4yU/KZvnB2ycE0y
+         ys/r8rS8Grty97cw1CZs1T1jCfo6ko1Rq/vWqUpibBwGFPzSql/rxdtxI33IUTn1bp1Y
+         FL8A==
+X-Gm-Message-State: APjAAAXUU2S++tEQ4nUn+FzzYH5WZtCo+UMRmcB6QrfAfj57gDrdBz1H
+        7OySClGwUhwl0GdUT+F68kcZV81zJAjOcHcj8JcaVQN1lBlZ2ekzOnpQq5rtGobVXThmF+2xg5w
+        k7pOj4NPAa5aDw4Q1izx2JY7N
+X-Received: by 2002:a7b:c1c7:: with SMTP id a7mr31182570wmj.168.1579085409810;
+        Wed, 15 Jan 2020 02:50:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxXY+dnsYNXC/k0VTIyQlvYqpGEx/a/AJP7STlMcs8KdLZzeEcSOCesRyRmKX4FhdBaQrIkKw==
+X-Received: by 2002:a7b:c1c7:: with SMTP id a7mr31182549wmj.168.1579085409606;
+        Wed, 15 Jan 2020 02:50:09 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id r68sm22683998wmr.43.2020.01.15.02.50.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 02:50:08 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] Input: axp20x-pek - Respect userspace wakeup
+ configuration
+To:     Samuel Holland <samuel@sholland.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20200115051253.32603-1-samuel@sholland.org>
+ <20200115051253.32603-2-samuel@sholland.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <674932c7-c120-092f-0255-5fa94925155d@redhat.com>
+Date:   Wed, 15 Jan 2020 11:50:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
- <20200114213914.198223-1-ndesaulniers@google.com>
-In-Reply-To: <20200114213914.198223-1-ndesaulniers@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 11:49:03 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3JfUjm88CLqkvAmCoEA1FsmQ33sfHGK4=Y5iuhWxet5Q@mail.gmail.com>
-Message-ID: <CAK8P3a3JfUjm88CLqkvAmCoEA1FsmQ33sfHGK4=Y5iuhWxet5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
- prior to version 4.8
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Q5qixYB3a1v4oUpjiPFKsupY0vRc/WhIhIV2W+YOmaig7Ji2CzT
- UMKhoOID58MNc71U5purxEfZ4M5bjTWD6hvoLoHF05hsoKbeHM1ZpYizUC/TbsuShgN1QTH
- 7LL6PEy5W2j+MOYfTP/K53aqVHyUuraDgl2OS/SLytbsCQciXgJ2B4CTT9xy67DAm+8rX+M
- 0zTY0Enw38HMRMS2L1eFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yNPqsFBf42k=:6LFXgCJMYu9dcqahQa8E6N
- QzCc/Se57zAT+n99E938ETYZAEg6+yIgbo1jb25YpgOrHBSRa4fYwCFZiJjWkmRYWvz5F+Fwf
- o0GpAp/B7kLYsZOUyN3N4ZgZS6GwaWI3zHeFaRgIKmFomCD+fW/F1K6Iel/Qnu/ZlsSJs+G73
- dwgkutaRsDoVxvAGSkfEP032J6saCluLep5ulEwtmdwX9VkoT0EH5pXvotCXg1TWVUMLpcaTg
- S1V0oTWp5axqXPSuOKMIr+K3ayZ/0jV/1NjwVmtzngWBGP1E/oo/PDzuUJHhj59tuu5chC0S4
- xjfzs0bt1jNVz3/6XRsign++c/RPaHbaZaNCNbuOCaNpUgjVd8U7aGJtJf0h3inzjYffJ0B6H
- glNSdEtNcIjvGamTsgNacY5AEucmb6H6+0/RJeGb8o1wL5TNU7feV7mOQCkhfTx+03pLjMT9g
- DF/8+nt+yreizVeHIT2Q/ZuPAdadeHsGSloeJAdtnOGN9Gh/H1EfhGrpGmiP8FxzgwQtmvG40
- lVCLOn03/L/GeU9nlQmIJthM8cjaGtWO9Pv/LR8J9V91emnDMuYYw/ZTlB0pVK0qBsNc7ueCW
- rKbDM1KhlkPTPIH1gnXUTkC+as7P22smNj9RSwFkpAOPYV6M9W/1tbq5a4Jodbr86gr0kC/1g
- 3PXxW+DKo5rVrtMNw/HyjmmwtALuhWEvp6f3tjdmYrt9/iccAaZywb8zgAIU/BTE7BJGTuCb8
- SRSR7H/1YlC/ILSQcuuAwCirXYafm1BFbqWzl2PrwoDTHS90jCoej+VcPYcQpIRDlgO9Suu10
- YAMA2bYZP/jbsRof6RgHDDM1Amswdzvao62BMrJOtxn4VWFyZPP+aH/WaSHfL8LIImar2OaTm
- tLTFloo5RcETiiCEthNQ==
+In-Reply-To: <20200115051253.32603-2-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:39 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Fri, Jan 10, 2020 at 06:35:02PM +0100, Arnd Bergmann wrote:
-> > On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
-> > > discarding the 'volatile' qualifier:
-> > >
-> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-> > >
-> > > We've been working around this using some nasty hacks which make
-> > > READ_ONCE() both horribly complicated and also prevent us from enforcing
-> > > that it is only used on scalar types. Since GCC 4.8 is pretty old for
-> > > kernel builds now, emit a warning if we detect it during the build.
-> >
-> > No objection to recommending gcc-4.8, but I think this should either
-> > just warn once during the kernel build instead of for every file, or
-> > it should become a hard requirement.
->
-> Yeah, hard requirement sounds good to me. Arnd, do you have stats on which
-> distros have which versions of GCC (IIRC, you had some stats for the GCC 4.6
-> upgrade)? This allows us to clean up more cruft in the kernel (grep for
-> GCC_VERSION).
+Hi,
 
-This is the list that Kirill and I came up with in the thread I linked to
+On 15-01-2020 06:12, Samuel Holland wrote:
+> Unlike most other power button drivers, this driver unconditionally
+> enables its wakeup IRQ. It should be using device_may_wakeup() to
+> respect the userspace configuration of wakeup sources.
+> 
+> Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
+> nested off of regmap-irq's threaded interrupt handler. The device core
+> ignores such interrupts, so to actually disable wakeup, we must
+> explicitly disable all non-wakeup interrupts during suspend.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-> - Debian 8.0 Jessie has 4.9.2, EOL 2020-05
-> - Ubuntu 14.04 LTS Trusty has 4.8.2, EOL 2019-04;
-> - Fedora 21 has 4.9.2, EOL 2015-12;
-> - OpenSUSE 42.3 has 4.8.5, EOL 2019-06;
-> - RHEL 7.7 has 4.8.5, EOL 2024-06;
-> - RHEL 6.9 has 4.4.7, EOL 2020-11;
-> - SUSE 12-SP4 has 4.8.6, EOL 2024, extended support 2027
-> - Oracle 7.6 has 4.8.5, EOL ?;
-> - Slackware 14.1 (no EOL announced): gcc-4.8
+Patch looks good to me:
 
-In an older thread about moving to gcc-4.3 or 4.6 as a minimum,
-this were the even older distros:
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-> - RHEL 5.x has 4.1; extended support EOL 2020
-> - SLES11 had gcc-4.3; extended support EOL 2022
-> - Debian  Wheezy (oldoldstable) had gcc-4.6, EOL 2018.
-> - OpenWRT 12.07 Attitude Adjustment had gcc-4.6
->    and is still used with devices that have only 4MB flash / 32 MB RAM
+Regards,
 
-      Arnd
+Hans
+
+
+
+> ---
+>   drivers/input/misc/axp20x-pek.c | 37 ++++++++++++++++++++++++++++++++-
+>   1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+> index 17c1cca74498..0ace3fe3d7dc 100644
+> --- a/drivers/input/misc/axp20x-pek.c
+> +++ b/drivers/input/misc/axp20x-pek.c
+> @@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+>   	}
+>   
+>   	if (axp20x_pek->axp20x->variant == AXP288_ID)
+> -		enable_irq_wake(axp20x_pek->irq_dbr);
+> +		device_init_wakeup(&pdev->dev, true);
+>   
+>   	return 0;
+>   }
+> @@ -352,6 +352,40 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +static int __maybe_unused axp20x_pek_suspend(struct device *dev)
+> +{
+> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> +
+> +	/*
+> +	 * As nested threaded IRQs are not automatically disabled during
+> +	 * suspend, we must explicitly disable non-wakeup IRQs.
+> +	 */
+> +	if (device_may_wakeup(dev)) {
+> +		enable_irq_wake(axp20x_pek->irq_dbf);
+> +		enable_irq_wake(axp20x_pek->irq_dbr);
+> +	} else {
+> +		disable_irq(axp20x_pek->irq_dbf);
+> +		disable_irq(axp20x_pek->irq_dbr);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused axp20x_pek_resume(struct device *dev)
+> +{
+> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev)) {
+> +		disable_irq_wake(axp20x_pek->irq_dbf);
+> +		disable_irq_wake(axp20x_pek->irq_dbr);
+> +	} else {
+> +		enable_irq(axp20x_pek->irq_dbf);
+> +		enable_irq(axp20x_pek->irq_dbr);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
+>   {
+>   	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> @@ -371,6 +405,7 @@ static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
+>   }
+>   
+>   static const struct dev_pm_ops axp20x_pek_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(axp20x_pek_suspend, axp20x_pek_resume)
+>   #ifdef CONFIG_PM_SLEEP
+>   	.resume_noirq = axp20x_pek_resume_noirq,
+>   #endif
+> 
+
