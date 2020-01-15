@@ -2,189 +2,255 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F6C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460BDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11EE20728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148242084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:52:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOf0Dy5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbgAOSuQ (ORCPT
+        id S1729107AbgAOSwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:50:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:41368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgAOSuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:50:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABDD2328;
-        Wed, 15 Jan 2020 10:50:15 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCB283F6C4;
-        Wed, 15 Jan 2020 10:50:11 -0800 (PST)
-Subject: Re: [PATCH v7 3/3] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     bp@alien8.de, mchehab@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, frowand.list@gmail.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        daniel@iogearbox.net, paulmck@linux.ibm.com, Sudeep.Holla@arm.com,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com
-References: <20191015120927.10470-1-hhhawa@amazon.com>
- <20191015120927.10470-4-hhhawa@amazon.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <a6c7d925-22fb-4324-ce12-662b97976e61@arm.com>
-Date:   Wed, 15 Jan 2020 18:50:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191015120927.10470-4-hhhawa@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Jan 2020 13:52:55 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37763 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAOSwy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:52:54 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so16832252wru.4;
+        Wed, 15 Jan 2020 10:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZKbkfQFGcDjwsClT1OKqzInSbgiQQ9mGLFaz9bGeYd4=;
+        b=AOf0Dy5Fon60mpk9fYvpXhjPf7hixSrjiVwgONswX+BJ8gWUDq/uHcM2K5eRbkAiwv
+         8THTdT1rXx9bK44xOZ1ZBl4M9ciSmt4yKo49OsGp0mK9NF1wQ8a2K6oqiKeWq4ggf0qi
+         lI1kmOB1Pnexkje26KK6JkCAxWXhaw4ymLKQK142EVGl9t0ptvNE1Rgjvb26KSUQcQrR
+         881ghRw/MXSApVG4ou2o4yu2+oW4sxxBW919SCLhEcNGbrL4H/i65xdwIythdo7KRl5n
+         mKaJx/zFPu1qsXXy17Hi9kAEYySnT/1+qNIr+aUoxib3+VZ6eYq/uCzHVV3Z1UytG5Wg
+         eBiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZKbkfQFGcDjwsClT1OKqzInSbgiQQ9mGLFaz9bGeYd4=;
+        b=f2rZhrNC9dYYwTvONA0kTnNgBRTaPFPU1RdTLrdSoN6FZLjznwVocxH7HV7yO84Pe3
+         obK4sac/zd475szw930gw9SslrFliP3UgEsF/xFBHpDANmWNJo2CEj9vXF00V61WTU+A
+         l/5PlKSmq7mfmxl97px0wIoGNNuqHrDFcsqMHVZl6LWoQgT+KHHx3smiHyRHQic3CCL3
+         h4cdqI7qgI+IuC/mlwsuOS8AQsF1Mxsygt8OQfKenaJ0m+kABHzWKJI2LS+knisiwJhU
+         wKfexoF3xUrD12/ip6nY2x1HHTpY5t+AnfvcamY5wM7FFAFk4TUUUrASXNEi1FM+fojr
+         vbXA==
+X-Gm-Message-State: APjAAAWdot4wx1iWBSTnzztPRbYQrWIWO9aNAe/R2t0/tliqs2Mwdvmd
+        nivkpIErmiuir2MvzdYDWR4=
+X-Google-Smtp-Source: APXvYqxV12+42V6D8tiScZA75LHa8aUfF3oUkAivjr11wUSnWolsYdOchApqGdsdwKamXM031jFVvQ==
+X-Received: by 2002:adf:f18b:: with SMTP id h11mr31825959wro.56.1579114372394;
+        Wed, 15 Jan 2020 10:52:52 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i5sm26296759wrv.34.2020.01.15.10.52.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 10:52:51 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: rockchip: rename dwmmc node names to mmc
+Date:   Wed, 15 Jan 2020 19:52:43 +0100
+Message-Id: <20200115185244.18149-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hanna,
+Current dts files with 'dwmmc' nodes are manually verified.
+In order to automate this process rockchip-dw-mshc.txt
+has to be converted to yaml. In the new setup
+rockchip-dw-mshc.yaml will inherit properties from
+mmc-controller.yaml and synopsys-dw-mshc-common.yaml.
+'dwmmc' will no longer be a valid name for a node,
+so change them all to 'mmc'
 
-On 15/10/2019 13:09, Hanna Hawa wrote:
-> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> report L2 errors.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3036.dtsi | 6 +++---
+ arch/arm/boot/dts/rk322x.dtsi | 6 +++---
+ arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
+ arch/arm/boot/dts/rk3xxx.dtsi | 6 +++---
+ arch/arm/boot/dts/rv1108.dtsi | 6 +++---
+ 5 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index c70182c5a..cf36e2519 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -224,7 +224,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdmmc: dwmmc@10214000 {
++	sdmmc: mmc@10214000 {
+ 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x10214000 0x4000>;
+ 		clock-frequency = <37500000>;
+@@ -238,7 +238,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdio: dwmmc@10218000 {
++	sdio: mmc@10218000 {
+ 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x10218000 0x4000>;
+ 		max-frequency = <37500000>;
+@@ -252,7 +252,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	emmc: dwmmc@1021c000 {
++	emmc: mmc@1021c000 {
+ 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x1021c000 0x4000>;
+ 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 340ed6ccb..4e90efdc9 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -662,7 +662,7 @@
+ 		};
+ 	};
+ 
+-	sdmmc: dwmmc@30000000 {
++	sdmmc: mmc@30000000 {
+ 		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30000000 0x4000>;
+ 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+@@ -675,7 +675,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdio: dwmmc@30010000 {
++	sdio: mmc@30010000 {
+ 		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30010000 0x4000>;
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+@@ -688,7 +688,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	emmc: dwmmc@30020000 {
++	emmc: mmc@30020000 {
+ 		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30020000 0x4000>;
+ 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 415c75f57..9beb66216 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -247,7 +247,7 @@
+ 		ports = <&vopl_out>, <&vopb_out>;
+ 	};
+ 
+-	sdmmc: dwmmc@ff0c0000 {
++	sdmmc: mmc@ff0c0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		max-frequency = <150000000>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+@@ -261,7 +261,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdio0: dwmmc@ff0d0000 {
++	sdio0: mmc@ff0d0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		max-frequency = <150000000>;
+ 		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>,
+@@ -275,7 +275,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdio1: dwmmc@ff0e0000 {
++	sdio1: mmc@ff0e0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		max-frequency = <150000000>;
+ 		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>,
+@@ -289,7 +289,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	emmc: dwmmc@ff0f0000 {
++	emmc: mmc@ff0f0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		max-frequency = <150000000>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 97307a405..241f43e29 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -231,7 +231,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	mmc0: dwmmc@10214000 {
++	mmc0: mmc@10214000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10214000 0x1000>;
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+@@ -245,7 +245,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	mmc1: dwmmc@10218000 {
++	mmc1: mmc@10218000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10218000 0x1000>;
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+@@ -259,7 +259,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	emmc: dwmmc@1021c000 {
++	emmc: mmc@1021c000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x1021c000 0x1000>;
+ 		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 5876690ee..1fd06e7cb 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -456,7 +456,7 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
+-	emmc: dwmmc@30110000 {
++	emmc: mmc@30110000 {
+ 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30110000 0x4000>;
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+@@ -468,7 +468,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdio: dwmmc@30120000 {
++	sdio: mmc@30120000 {
+ 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30120000 0x4000>;
+ 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+@@ -480,7 +480,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	sdmmc: dwmmc@30130000 {
++	sdmmc: mmc@30130000 {
+ 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
+ 		reg = <0x30130000 0x4000>;
+ 		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.11.0
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7887a62dc843..0eabcfcf91a9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -748,6 +748,11 @@ M:	Hanna Hawa <hhhawa@amazon.com>
->  S:	Maintained
->  F:	drivers/edac/al_l1_edac.c
->  
-> +AMAZON ANNAPURNA LABS L2 EDAC
-> +M:	Hanna Hawa <hhhawa@amazon.com>
-> +S:	Maintained
-> +F:	drivers/edac/al_l2_edac.c
-
-(Why not add the file to the previous section? All this does is come up with an email
-address based on the file)
-
-
-> diff --git a/drivers/edac/al_l2_edac.c b/drivers/edac/al_l2_edac.c
-> new file mode 100644
-> index 000000000000..156610c85591
-> --- /dev/null
-> +++ b/drivers/edac/al_l2_edac.c
-> @@ -0,0 +1,251 @@
-> +static int al_l2_edac_probe(struct platform_device *pdev)
-> +{
-
-> +	for_each_possible_cpu(i) {
-> +		struct device_node *cpu;
-> +		struct device_node *cpu_cache;
-> +		struct al_l2_cache *l2_cache;
-> +		bool found = false;
-> +
-> +		cpu = of_get_cpu_node(i, NULL);
-> +		if (!cpu)
-> +			continue;
-> +
-> +		cpu_cache = of_find_next_cache_node(cpu);
-> +		list_for_each_entry(l2_cache, &al_l2->l2_caches, list_node) {
-> +			if (l2_cache->of_node == cpu_cache) {
-> +				found = true;
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (found) {
-> +			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-
-			of_node_put(cpu_cache); ?
-
-(I can see why you might keep the reference in the else block)
-
-
-> +		} else {
-> +			l2_cache = devm_kzalloc(dev, sizeof(*l2_cache),
-> +						GFP_KERNEL);
-> +			l2_cache->of_node = cpu_cache;
-> +			list_add(&l2_cache->list_node, &al_l2->l2_caches);
-> +			cpumask_set_cpu(i, &l2_cache->cluster_cpus);
-> +		}
-> +
-> +		of_node_put(cpu);
-> +	}
-> +
-> +	if (list_empty(&al_l2->l2_caches)) {
-> +		dev_err(dev, "L2 Cache list is empty for EDAC device\n");
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-
-You are doing this at probe time to create a static list of which CPUs map onto the L2
-caches. cacheinfo does something very similar, but it looks like you can't use it as its
-only populated for online CPUs, and you'd need to walk multiple CPUs cacheinfo leaves to
-find the same information. The alternative is more complicated.
-
-
-> +	ret = edac_device_add_device(edac_dev);
-> +	if (ret)
-
-Any references held in the al_l2->l2_caches list leak here.
-
-
-> +		goto err;
-> +
-> +	return 0;
-> +
-> +err:
-> +	dev_err(dev, "Failed to add L2 edac device (%d)\n", ret);
-> +	edac_device_free_ctl_info(edac_dev);
-> +
-> +	return ret;
-> +}
-
-
-> +static int al_l2_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
-
-Do you need to roll over the al_l2->l2_caches list to of_node_put() the l2_cache's ?
-
-
-> +	edac_device_del_device(edac_dev->dev);
-> +	edac_device_free_ctl_info(edac_dev);
-> +
-> +	return 0;
-> +}
-
-[..]
-
-> +static const struct of_device_id al_l2_edac_of_match[] = {
-> +	{ .compatible = "al,alpine-v2" },
-> +	{ .compatible = "amazon,alpine-v3" },
-> +	{}
-> +};
-
-Same comment on these being machine compatibles and what property that applies to.
-
-The code to match the platform and create the platform_device is identical, is there any
-way it can be shared?
-
-I'm guessing the two-files is because these can be built as independent modules. Would
-anyone ever have one, but not the other? The L1 support is optional, but you've listed the
-same set of platforms in both cases here, so do we need to support one but not the other
-today?
-
-
-Thanks,
-
-James
