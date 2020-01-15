@@ -2,97 +2,83 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E1DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D075C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634D12465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k1O5EC3m"
+	by mail.kernel.org (Postfix) with ESMTP id E1B702467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgAOT4N (ORCPT
+        id S1729592AbgAOT4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:56:13 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50597 "EHLO ozlabs.org"
+        Wed, 15 Jan 2020 14:56:24 -0500
+Received: from sauhun.de ([88.99.104.3]:41034 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbgAOT4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:56:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ydP55yHWz9sPW;
-        Thu, 16 Jan 2020 06:56:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579118170;
-        bh=VTfQ6EkdMl10C6Rosx3bqpTYw61hQ2UeI7wLuUE6c8A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=k1O5EC3mqbg88paDtd62zE8kYnQl5cN9o3b3K4N0D9rJi39Q1qT0uDvbgRQdXJNrd
-         fVGhwVvLqPQvXaHH0g0Q/s2Zxyr+EU8c/n6yZzGk0ymO5J03tpe40g/kgJ0A9qX4JI
-         Br8Oadmcykk4l9J4Eb+aw0EuEsGfEH7TP0WcNkJ2gW8S2VCfzpFGc3ixQYgthWTLBu
-         eSxBIDQjXi2hm8da2YQYCcTSpLfh7bhbKCmAoLfedJ5APi0RLab/88Sfs/+nF97uQo
-         GOkKZRur+VG2EMNjfakngSMOpalR98vANi8AapTt6M3w9f/nM+8pFSCgnmzaUK60y3
-         lTyYzOB822xUA==
-Date:   Thu, 16 Jan 2020 06:56:08 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chen Wandun <chenwandun@huawei.com>
-Subject: linux-next: Fixes tag needs some work in the battery tree
-Message-ID: <20200116065608.704b7331@canb.auug.org.au>
+        id S1729025AbgAOT4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:56:24 -0500
+Received: from localhost (p54B33239.dip0.t-ipconnect.de [84.179.50.57])
+        by pokefinder.org (Postfix) with ESMTPSA id 334D62C0742;
+        Wed, 15 Jan 2020 20:56:22 +0100 (CET)
+Date:   Wed, 15 Jan 2020 20:56:21 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/12] i2c: taos-evm: convert to use
+ i2c_new_client_device()
+Message-ID: <20200115195621.GB23789@ninjato>
+References: <20200107174748.9616-1-wsa+renesas@sang-engineering.com>
+ <20200107174748.9616-7-wsa+renesas@sang-engineering.com>
+ <20200108115822.20871d77@endymion>
+ <20200109094228.2e058653@endymion>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cASzhwhBhHBsccXdFsQiwDX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
+Content-Disposition: inline
+In-Reply-To: <20200109094228.2e058653@endymion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cASzhwhBhHBsccXdFsQiwDX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--QTprm0S8XgL7H0Dt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In commit
 
-  89cfe2fc3ad4 ("power: suppy: ucs1002: Make the symbol 'ucs1002_regulator_=
-enable' static")
+> In my opinion -ENODEV should only be used for "I expected a device but
+> could not find it". For the case where we simply don't know what slave
+> device to instantiate, NULL seems more appropriate, as it's not an
+> error.
 
-Fixes tag
+Well, I copied the behaviour from driver core here. -ENODEV is the one
+errno where no messages will be displayed when returned from probe. So,
+I think we can keep it as is.
 
-  Fixes: a3d70dacc727 ("power: suppy: ucs1002: disable power when maxcurren=
-t is 0")
 
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/cASzhwhBhHBsccXdFsQiwDX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--QTprm0S8XgL7H0Dt
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fblgACgkQAVBC80lX
-0GwaRQf9EWbn6PZqkTqUi4RLz+TNST8ZDZdn3UE5yqn/qF1nknHMWaX34kr4C2nj
-WF1HL+bGk5qyF14pyLPZZx4iHRicTsiYY9r7VBsKL0PllmWwml3LWkHPM/p3rPSu
-QN36+OvW0p5tyuj5EWqBmqicgXWlm/TpqKYO+n24aqWavQxF/ZlHxCU5XK4+LIIV
-TSQYa6kdcqltxfABx2HQTfYY+qeuQwewqrxH2af3xpRtqXLMHikSMOwbfNvsXO9l
-cUFPvbnz1PBp8k7NuOjqd0lIAi6CklizXkvKvfg1Aw7Xt3GDJIrkgRkFF1Thd91K
-l8NC5BIw+SaPFZagene4U/X8GX+UkQ==
-=H0FF
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4fbmUACgkQFA3kzBSg
+KbZROxAAqc2hmKmkG203rrtIiUXGmbpTvszqf/43X9B9O1wXnGdxx1x6WSWTX4YB
+XxEdu03zUqg0uop2ISE3lb9QhS9de4X0WRGwg+U1y2jAwgDXs/ZPNC1tpkUsXl97
+2k61rSY2Xzgit70Lul4Y5JpZ/xEtpx9FFMrREMCkzUz7D9xol5gtnX+nkiOVJnPn
+Pq7FN/Euvo3zpFHoDW5DFDsSM110d1KbSM1+gE8BxUrOpJVX1UHur8NQKcvMCMBL
+vc7bG+UsLZi3OJb58wpkgnSrFJaWhulcckjWTkPMnWeFy+0QZA5EJindpaSNE1sw
+2X950JNs0I8SUO4BtyEJCCsHMnkibaU7Pa57WN6DtYM+DX7DX9I7goQSGHZ5mN9M
+0zz6eMQZyk6qTab+lhk2n9yuIyBhjqE4OZoxKJ/kKDj0R8lxT35NLBpNxu52/g6v
+kfbJY1SkhwCeBo2aBmHZG0Hcj45Ef51RPZcYdyYSyEFzVBIpTUF8JbpvA1UcH08f
+1BaIhlFQKNp3eadlq+/hsnyiKs1wsogvOFirDBm6D0JU0k4CSLuWGXtBIexbYiIO
+Dx6G9VmKa3w/7uNzXVOWSX5ukiWEUeH25/WnPkfrYZBy+bsbtPn5zyyv+6Z90eK9
+mgNOgEbLxkrBrUligXqMGD5tdyufSH02hO7OkgxNGag9w726V7k=
+=kYJM
 -----END PGP SIGNATURE-----
 
---Sig_/cASzhwhBhHBsccXdFsQiwDX--
+--QTprm0S8XgL7H0Dt--
