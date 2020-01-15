@@ -2,158 +2,80 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40DCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82095C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F410222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3A920728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:45:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p609hwBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgAOMp2 (ORCPT
+        id S1729122AbgAOMpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:45:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52176 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAOMp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:45:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BCDC4ADE7;
-        Wed, 15 Jan 2020 12:45:25 +0000 (UTC)
-Message-ID: <330ca207dcbcb41b9d094fb2606c45e4173fa8f6.camel@suse.de>
-Subject: Re: [PATCH v5 0/6] Raspberry Pi 4 PCIe support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com, maz@kernel.org,
-        phil@raspberrypi.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, mbrugger@suse.com,
-        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
-        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
-        andrew.murray@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Date:   Wed, 15 Jan 2020 13:45:23 +0100
-In-Reply-To: <20200115120238.GA7233@e121166-lin.cambridge.arm.com>
-References: <20191216110113.30436-1-nsaenzjulienne@suse.de>
-         <20200115120238.GA7233@e121166-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-F2otfZC9sOf6KTpP904O"
-User-Agent: Evolution 3.34.3 
+        Wed, 15 Jan 2020 07:45:43 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44913 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729073AbgAOMpn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:45:43 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so12584449lfa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:45:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zw7fLVZlBWPnFhNuSoVVujGBuN87u3KYLlAHzC+pN0M=;
+        b=p609hwBlIti1BDsa7AwFn6dgioFQ0T7bs0x5a9KD1WrN+GkE0lBl0ys22xowzPOQR7
+         V3lR5+PDDQjvesDRY7vNcrJl8xPPyG9qkeKXPvq9oVzBZ3FUI64ahWTx+NwqkpTi6l/2
+         GXCAV+iOUL1CkpVjVjNKo9rtmIKvr+aLjKD79JbVXlAZvE9IfzPkiuQUdBZbMuDZS/K9
+         W/81pW8YAKB/Bcu2v5tKncJV9mNNWW2hjlQ0IlP1kgKmNRp1JEmSrpGp4mOIpabiaTVq
+         vL5bFI31WSMmy9zFuO/najdCeBAdjCD8+E/Odh79W28kiLQT22RzQxGGD1U4Er2g8AvD
+         PB/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zw7fLVZlBWPnFhNuSoVVujGBuN87u3KYLlAHzC+pN0M=;
+        b=NsI/A2Dgsfl65YBgJOYUWs1ssKu2vnEHaxaz43LET3PwH7CUNQNxPhtWqbDhTHfFc1
+         o81cfthRzpcP3BGsPh3Ky5QxDZq1W424g//K6R8dCPOHIu/LKexBcerIqwtGSlOaiR9v
+         lRw6SeVs6Vc49rmRL/fM4GFAsdN+WASn8wtfPmZEnONI7opXqIcUN7eyzx8Kiz4I2D/B
+         +Mv8gfmTcoizluYl1YnA9zsYYspQiNG3t/u0itNEA5fzQ+rbd7cqfciguLeH7rnr/V7Q
+         WNlyApfIyfKGAWZI4udE/FDhOhrKMKGkgobK7fGEreG865+kJb2lHlZff6H15qMDp2eN
+         Q82Q==
+X-Gm-Message-State: APjAAAWyWJFRZEn5KxN8uGQe3wA7hGZddhXRqoi+04vrTKJ4MEIQq5yC
+        t2vgkLMuD7Dm7bmlU2+XRYwn86d/TayJWEmH/rfozw==
+X-Google-Smtp-Source: APXvYqwSaA74Wo0u94HIU5oNVPlQJPvUFTlEtrMxfPTAIykGqb3bFAFJMktSIsrWP4Hs5KTLmEsFohek2rxDoppQqCo=
+X-Received: by 2002:a19:5513:: with SMTP id n19mr4407533lfe.205.1579092339536;
+ Wed, 15 Jan 2020 04:45:39 -0800 (PST)
 MIME-Version: 1.0
+References: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
+In-Reply-To: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Jan 2020 13:45:28 +0100
+Message-ID: <CACRpkdZGkPgB7wh3bKeeu+rD4_YnXLM9aLFt-wKti2YkU7yVqQ@mail.gmail.com>
+Subject: Re: [PATCH] GPIO: vx855: fixed a typo
+To:     sachin agarwal <asachin591@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jan 12, 2020 at 3:33 PM sachin agarwal <asachin591@gmail.com> wrote:
 
---=-F2otfZC9sOf6KTpP904O
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> From: Sachin agarwal <asachin591@gmail.com>
+>
+> we had written "betwee" rather than "between".
+>
+> Signed-off-by: Sachin agarwal <asachin591@gmail.com>
 
-On Wed, 2020-01-15 at 12:02 +0000, Lorenzo Pieralisi wrote:
-> On Mon, Dec 16, 2019 at 12:01:06PM +0100, Nicolas Saenz Julienne wrote:
-> > This series aims at providing support for Raspberry Pi 4's PCIe
-> > controller, which is also shared with the Broadcom STB family of
-> > devices.
-> >=20
-> > There was a previous attempt to upstream this some years ago[1] but was
-> > blocked as most STB PCIe integrations have a sparse DMA mapping[2] whic=
-h
-> > is something currently not supported by the kernel.  Luckily this is no=
-t
-> > the case for the Raspberry Pi 4.
-> >=20
-> > Note the series is based on top of linux next, as the DTS patch depends
-> > on it.
-> >=20
-> > [1] https://patchwork.kernel.org/cover/10605933/
-> > [2] https://patchwork.kernel.org/patch/10605957/
-> >=20
-> > ---
-> >=20
-> > Changes since v4:
-> >   - Rebase DTS patch
-> >   - Respin log2.h code into it's own series as it's still contentious
-> >     yet mostly unrelated to the PCIe part
-> >=20
-> > Changes since v3:
-> >   - Moved all the log2.h related changes at the end of the series, as I
-> >     presume they will be contentious and I don't want the PCIe patches
-> >     to depend on them. Ultimately I think I'll respin them on their own
-> >     series but wanted to keep them in for this submission just for the
-> >     sake of continuity.
-> >   - Addressed small nits here and there.
-> >=20
-> > Changes since v2:
-> >   - Redo register access in driver avoiding indirection while keeping
-> >     the naming intact
-> >   - Add patch editing ARM64's config
-> >   - Last MSI cleanups, notably removing MSIX flag
-> >   - Got rid of all _RB writes
-> >   - Got rid of all of_data
-> >   - Overall churn removal
-> >   - Address the rest of Andrew's comments
-> >=20
-> > Changes since v1:
-> >   - add generic rounddown/roundup_pow_two64() patch
-> >   - Add MAINTAINERS patch
-> >   - Fix Kconfig
-> >   - Cleanup probe, use up to date APIs, exit on MSI failure
-> >   - Get rid of linux,pci-domain and other unused constructs
-> >   - Use edge triggered setup for MSI
-> >   - Cleanup MSI implementation
-> >   - Fix multiple cosmetic issues
-> >   - Remove supend/resume code
-> >=20
-> > Jim Quinlan (3):
-> >   dt-bindings: PCI: Add bindings for brcmstb's PCIe device
-> >   PCI: brcmstb: Add Broadcom STB PCIe host controller driver
-> >   PCI: brcmstb: Add MSI support
-> >=20
-> > Nicolas Saenz Julienne (3):
-> >   ARM: dts: bcm2711: Enable PCIe controller
-> >   MAINTAINERS: Add brcmstb PCIe controller
-> >   arm64: defconfig: Enable Broadcom's STB PCIe controller
-> >=20
-> >  .../bindings/pci/brcm,stb-pcie.yaml           |   97 ++
-> >  MAINTAINERS                                   |    4 +
-> >  arch/arm/boot/dts/bcm2711.dtsi                |   31 +-
-> >  arch/arm64/configs/defconfig                  |    1 +
-> >  drivers/pci/controller/Kconfig                |    9 +
-> >  drivers/pci/controller/Makefile               |    1 +
-> >  drivers/pci/controller/pcie-brcmstb.c         | 1007 +++++++++++++++++
-> >  7 files changed, 1149 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie=
-.yaml
-> >  create mode 100644 drivers/pci/controller/pcie-brcmstb.c
->=20
-> Applied patches [1,3,4] to pci/brcmstb, please have a look to check
-> everything is in order after the minor update I included.
+Patch applied.
 
-Looks good to me.
-
-Thanks,
-Nicolas
-
-
---=-F2otfZC9sOf6KTpP904O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4fCWMACgkQlfZmHno8
-x/7eNAf9E5M7dM+K4pFouDMsP1SzO9yIUBi8WCbONKVbOsyQ6p7LQBY4Kzj3sLoL
-NB1VQMbdAD9+0ZxluUkMeuOxdiJU2CPHdEh8efJuyGzr3qMr4w8raGvUsOnAOzy9
-zBgwz3k6phZZwcVHV+N/tNGQYbhHud7N09NHLLDZKN1GLYd3ezgoE72apUFKYvHi
-7D7nByGSTSI6mhnQoRR243ct0usUQG4HHsB7ddDTno5sCNd9ViLPPtFna2bA9x6w
-B/7ahcSzHd1z3MamuEyNYNgZ173kYI4pZmovxkWX/Nm+qAbJioQK/hmaCwsBl+jQ
-8fAZVXVrBG8TYkR/zbChpgjg/RM3Tw==
-=lFyM
------END PGP SIGNATURE-----
-
---=-F2otfZC9sOf6KTpP904O--
-
+Yours,
+Linus Walleij
