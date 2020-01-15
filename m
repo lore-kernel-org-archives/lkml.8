@@ -2,87 +2,123 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF243C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE6BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06FE24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E4jE3An7"
+	by mail.kernel.org (Postfix) with ESMTP id 188572075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgAOKX2 (ORCPT
+        id S1729765AbgAOKYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:23:28 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41112 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgAOKX2 (ORCPT
+        Wed, 15 Jan 2020 05:24:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46714 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729539AbgAOKYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:23:28 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so12260078lfp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:23:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0kDyGOaxaI1GMqThNHth9V/5VSfUUwVFewl6E0xy0nc=;
-        b=E4jE3An78Ex2CgQPVi5COQjsp0vDCZeW6pA72WOdA+dPszIB5smmk5ZEh4dswC0+er
-         OwY2CCBnl8JnyoX02lSRZpLJK2slg7BhZGnfdOXQwQN9j/Nro48Xxg0+Chv3rwmAm5Mi
-         KXIfKiTiWjOg3GKkjypiRFqPKGBWBOWc3wP5bfSNKDgTRWafDjGWwvNGaXdMMVtZ0pwy
-         viXP7tzxMcPo7JTth0XG6xK5L5A71EcSTOdGLMhHbmfsg7LPtruMwMMJR+kDpLKT8cg2
-         rdPsl9+BkssxuDwNvACevxoT4h3y7ObHKDLDGl8vSgBhdVpG7QIuvsQIP7Z7+oEQnjkR
-         20aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0kDyGOaxaI1GMqThNHth9V/5VSfUUwVFewl6E0xy0nc=;
-        b=QIQn66JFND2f7zcsf109w6wdoy8rmBW0EMK53d1EKmaT5AMJIB7YlnnsEbORTeClBa
-         9cPhDZvxdZJ/scduQJDLIQH0JbeJeGFJV3D/IWO6j1AKuNq6mdvLOXX0gD862uMVWTgH
-         pei5oyx1ud7/ZhTid93dLDFW+fgp5ODNdXDUfOTcWs65jg1S2nXh5Ne2ovZsB/xKCMwZ
-         Fxw8qi3EGAHwJqE9WLWTkv+Tr9aj2gFGPmWA2hxjgnC+tVPxALZzQwp63xrtVMWn/SG2
-         +MHNUDY3uDwEDIZ47X1JR8d+ZSlOTq10cq+XCQelTB88uX4m8bWm/ynFmFozMXOP/Ynv
-         /FaQ==
-X-Gm-Message-State: APjAAAVdfYGOUEmbd9/n+EAsi/DKYWj/83CTyP6LzLnp6MVAohFe9MZV
-        Gji5tKjOOx748cuX2sivT2duyMDOWZPu52mc6g1/7A==
-X-Google-Smtp-Source: APXvYqzoH/cbCUM9WkqwMpVkWL8950Zqu8b72maR4cxbaUVrgqLDgiiLP876Lez3Tc1YvlB2kW9QJ7yqo7qN1cw9djc=
-X-Received: by 2002:a19:5513:: with SMTP id n19mr4126113lfe.205.1579083806398;
- Wed, 15 Jan 2020 02:23:26 -0800 (PST)
+        Wed, 15 Jan 2020 05:24:10 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1irfqI-0000rf-Dv; Wed, 15 Jan 2020 11:24:06 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F37D81C0864;
+        Wed, 15 Jan 2020 11:24:05 +0100 (CET)
+Date:   Wed, 15 Jan 2020 10:24:05 -0000
+From:   "tip-bot2 for Stephen Boyd" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] alarmtimer: Unregister wakeup source when module get fails
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200109155910.907-2-swboyd@chromium.org>
+References: <20200109155910.907-2-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20200114231103.85641-1-swboyd@chromium.org>
-In-Reply-To: <20200114231103.85641-1-swboyd@chromium.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 11:23:15 +0100
-Message-ID: <CACRpkdbzqeAo9+muiTez3PjSLS3-pCocktFe2Lm8tDMVzSnr4A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Set lockdep class for hierarchical irq domains
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157908384579.396.18418981905772146869.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 12:11 AM Stephen Boyd <swboyd@chromium.org> wrote:
+The following commit has been merged into the timers/core branch of tip:
 
-> I see the following lockdep splat in the qcom pinctrl driver when
-> attempting to suspend the device.
->
->  ============================================
->  WARNING: possible recursive locking detected
+Commit-ID:     6b6d188aae79a630957aefd88ff5c42af6553ee3
+Gitweb:        https://git.kernel.org/tip/6b6d188aae79a630957aefd88ff5c42af6553ee3
+Author:        Stephen Boyd <swboyd@chromium.org>
+AuthorDate:    Thu, 09 Jan 2020 07:59:07 -08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 15 Jan 2020 11:16:54 +01:00
 
-Thanks Stephen, patch applied!
+alarmtimer: Unregister wakeup source when module get fails
 
-Yours,
-Linus Walleij
+The alarmtimer_rtc_add_device() function creates a wakeup source and then
+tries to grab a module reference. If that fails the function returns early
+with an error code, but fails to remove the wakeup source.
+
+Cleanup this exit path so there is no dangling wakeup source, which is
+named 'alarmtime' left allocated which will conflict with another RTC
+device that may be registered later.
+
+Fixes: 51218298a25e ("alarmtimer: Ensure RTC module is not unloaded")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200109155910.907-2-swboyd@chromium.org
+---
+ kernel/time/alarmtimer.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index b51b36e..9dc7a09 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -91,6 +91,7 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 	unsigned long flags;
+ 	struct rtc_device *rtc = to_rtc_device(dev);
+ 	struct wakeup_source *__ws;
++	int ret = 0;
+ 
+ 	if (rtcdev)
+ 		return -EBUSY;
+@@ -105,8 +106,8 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 	spin_lock_irqsave(&rtcdev_lock, flags);
+ 	if (!rtcdev) {
+ 		if (!try_module_get(rtc->owner)) {
+-			spin_unlock_irqrestore(&rtcdev_lock, flags);
+-			return -1;
++			ret = -1;
++			goto unlock;
+ 		}
+ 
+ 		rtcdev = rtc;
+@@ -115,11 +116,12 @@ static int alarmtimer_rtc_add_device(struct device *dev,
+ 		ws = __ws;
+ 		__ws = NULL;
+ 	}
++unlock:
+ 	spin_unlock_irqrestore(&rtcdev_lock, flags);
+ 
+ 	wakeup_source_unregister(__ws);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static inline void alarmtimer_rtc_timer_init(void)
