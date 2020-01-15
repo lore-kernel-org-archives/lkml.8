@@ -2,95 +2,76 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4685C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05E6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755652467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FD92467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579092018;
+	bh=zTGCcTH+zuuEPEMCypp/98qgq+Cl+r+pOzE4p1d1l3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cz5LDiacRjz1Qj/jG27e9QgNQms+ukWuYiNIj9RZvJ/dBGKuUoIZSYkDZWPVv1RzG
+	 OFGf++aRDLJGtp87Ox3hWK4BHOxpjijlwJUe3L09clnqiQ8D4fL9Ir5dDLU1R19GD3
+	 HaaAa79NcmsrURtFxf9mPPAGRh6WB61Y7Lyh6DuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgAOMj3 (ORCPT
+        id S1728913AbgAOMkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:39:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47072 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOMj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:39:29 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1irhxB-00057y-BI; Wed, 15 Jan 2020 13:39:21 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CBF581C0870;
-        Wed, 15 Jan 2020 13:39:20 +0100 (CET)
-Date:   Wed, 15 Jan 2020 12:39:20 -0000
-From:   "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Print "VMX disabled" error message iff KVM is enabled
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200114202545.20296-1-sean.j.christopherson@intel.com>
-References: <20200114202545.20296-1-sean.j.christopherson@intel.com>
+        Wed, 15 Jan 2020 07:40:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbgAOMkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:40:17 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC3CB2467C;
+        Wed, 15 Jan 2020 12:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579092017;
+        bh=zTGCcTH+zuuEPEMCypp/98qgq+Cl+r+pOzE4p1d1l3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rx6YGJgJS+147krh4fIi4LbiffxplbddVF+NbLtNgRjQvW0oy6msAcz0YFF9OPU19
+         VbD80RBe/bvYrIsAhtZY6Nobof2AagdJBtBxZlVbUMPe977oYzWN8ra6AaEleCy4Wc
+         /LCSsT87BAJ1pgnwUdwpB7jixE9siZsHUvfr/Znw=
+Date:   Wed, 15 Jan 2020 13:40:14 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCHv2-next 3/3] serial_core: Remove unused member in uart_port
+Message-ID: <20200115124014.GA3485808@kroah.com>
+References: <20200114171912.261787-1-dima@arista.com>
+ <20200114171912.261787-4-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157909196055.396.1953638570358257374.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114171912.261787-4-dima@arista.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Tue, Jan 14, 2020 at 05:19:12PM +0000, Dmitry Safonov wrote:
+> It should remove the align-padding before @name.
+> 
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  include/linux/serial_core.h | 1 -
+>  1 file changed, 1 deletion(-)
 
-Commit-ID:     bb02e2cb715a3f3552dbe765ea4a07799e4dff43
-Gitweb:        https://git.kernel.org/tip/bb02e2cb715a3f3552dbe765ea4a07799e4dff43
-Author:        Sean Christopherson <sean.j.christopherson@intel.com>
-AuthorDate:    Tue, 14 Jan 2020 12:25:45 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 15 Jan 2020 13:26:50 +01:00
+I've applied this patch to my tree now.  See my comments on the first
+patch and then feel free to rebase and redo those and resend.
 
-x86/cpu: Print "VMX disabled" error message iff KVM is enabled
+thanks,
 
-Don't print an error message about VMX being disabled by BIOS if KVM,
-the sole user of VMX, is disabled. E.g. if KVM is disabled and the MSR
-is unlocked, the kernel will intentionally disable VMX when locking
-feature control and then complain that "BIOS" disabled VMX.
-
-Fixes: ef4d3bf19855 ("x86/cpu: Clear VMX feature flag if VMX is not fully enabled")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200114202545.20296-1-sean.j.christopherson@intel.com
----
- arch/x86/kernel/cpu/feat_ctl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/feat_ctl.c b/arch/x86/kernel/cpu/feat_ctl.c
-index 24a4fdc..0268185 100644
---- a/arch/x86/kernel/cpu/feat_ctl.c
-+++ b/arch/x86/kernel/cpu/feat_ctl.c
-@@ -133,8 +133,9 @@ update_caps:
- 
- 	if ( (tboot && !(msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX)) ||
- 	    (!tboot && !(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX))) {
--		pr_err_once("VMX (%s TXT) disabled by BIOS\n",
--			    tboot ? "inside" : "outside");
-+		if (IS_ENABLED(CONFIG_KVM_INTEL))
-+			pr_err_once("VMX (%s TXT) disabled by BIOS\n",
-+				    tboot ? "inside" : "outside");
- 		clear_cpu_cap(c, X86_FEATURE_VMX);
- 	} else {
- #ifdef CONFIG_X86_VMX_FEATURE_NAMES
+greg k-h
