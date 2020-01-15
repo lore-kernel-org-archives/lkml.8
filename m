@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E39C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C80C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98853214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDDC214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m/9tVdbp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YN2TcjMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgAOSEd (ORCPT
+        id S1729225AbgAOSFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:04:33 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39983 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728921AbgAOSEd (ORCPT
+        Wed, 15 Jan 2020 13:05:10 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38033 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgAOSFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:04:33 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c17so16495521qkg.7;
-        Wed, 15 Jan 2020 10:04:31 -0800 (PST)
+        Wed, 15 Jan 2020 13:05:10 -0500
+Received: by mail-qk1-f194.google.com with SMTP id k6so16513472qki.5;
+        Wed, 15 Jan 2020 10:05:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ss+UmlZVtE/vW4Voi8rjchoMoL8kSa87h+YBviJi6cE=;
-        b=m/9tVdbpFwlaL8g+ujNS1vn1vFqn9dbjQt2XQx7HklXqkX+eZYFoBMowH0NT53WajQ
-         UCRMiHdkhaDcT3Kqb1S6i1LxJJa/dwEkPGkKurr1mXxl361XECcMthoP0xop/olKiP+G
-         pWa55wbibZSCyepjyruh43BZsSOP9rtr50DmFHwxre/IglZQEixXhIDDac/bSam1xLUn
-         KC2vf7IFJXMDmyGFzCAZMUyOCtwX356/jv1jrBxIy+M35mBuxYaxsRTgFQ+A4T4RyGtu
-         ip4H3YiJtljufi+E6cq92VXtRMN6h0P37zn2zNHlcSbV1k5V/SsPdH5Bz6+BjdmLzVZb
-         yBgA==
+        bh=JFnfBYy+EUaeEFRwE0UkvfnLO805OPsK7j9dY/7rS/A=;
+        b=YN2TcjMeq9s4o/QYSBiRsaXIt909I44P4LIko7DR6QqZc1Siu+R+4VgUTwXkik+1P0
+         hdr1+V13zfDT6G0Do4BpXZasUOj3tM+2XKn1DorkLHog8ktIIzW7yHFxbZhSIKf6xCzp
+         x9f5bVUi4keeRSzQMxVs5gkO0AgFWZKwY/NdAPXIElgw8wxMsTcJQhvbAru+99v5oBFk
+         UgtAk9DG2K4TVWfRdiM3eCwB5DGiiLKiZDu7TR0uI++qAlL98bDghTIKdKXfCw0OJeDu
+         9L0OJRpD8NlCExa8A72kC9zyec/Ki/fmUw8hasETL68AK1ct0ehuCEAeHZtjBlNTH/sf
+         vErA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ss+UmlZVtE/vW4Voi8rjchoMoL8kSa87h+YBviJi6cE=;
-        b=Kc22qjjIDX8xBJjvP9LGQ4cZN01YfYBBqIjKWSZLJYDX5EsygtLfDe4A9H9OGPkx5q
-         fa8DARdQUiL6BjDGP03a4Taoa+1VYgGq/nOrnX389iYPzB7bHec7DRk+7WHvpVQVvadQ
-         IBUexC3nRB7ybCiHpCFj+Pdme+dgLd2O+fY4V39viUa2gPNXA8zz7OP17x5RQSEtJh1l
-         cdGvaHCjPRz0DW+kLC09aDJqNQ8I2s8Hio/GYS7W6oCTX8Ub/xCt63E9omqMWT0XpDFN
-         C1S94cFgJUphzMhHcI9rgN2Kayrudr3t4Min6QcxqDhNYRUEDyA9NFSbDWJbY1LGJ6L5
-         ZaWw==
-X-Gm-Message-State: APjAAAUBMoXED0233VCNr9pRh//i0y6HaeY1b7xtmEcaBo8pncwoDZ58
-        0iYLLFasBHgUaOGemdkh7Cg=
-X-Google-Smtp-Source: APXvYqzQ7TPsnW3dm022ArmvVDHRhfrtmqWsnptNpbQNhAY+exO3cl/4BLUtZKbOOihTekYtPirx0g==
-X-Received: by 2002:a05:620a:11aa:: with SMTP id c10mr22957097qkk.439.1579111470536;
-        Wed, 15 Jan 2020 10:04:30 -0800 (PST)
+        bh=JFnfBYy+EUaeEFRwE0UkvfnLO805OPsK7j9dY/7rS/A=;
+        b=dXz6nJz9NeE8uqeYhIaSC4VBce6yjzeYLcoDzqHIHvzZo3PQPiljwiJymgXkTHDns3
+         S8RN/TsPP0Kubc8ZtMVw2bcSd6U9TZQBp4uYDBAmHvlhT3LDMiATSW+Qb8fEW2jORIuD
+         tHJJELZ6VsbXlSW7uHrBvMG9Kw7D4ky7EYoG6iOhb11+wMRCwkKoSzOo8uuxJVc0uoAM
+         4V9YETW3937oSq63F+Qn6wss57fyGJlx7DR4u3vbFJE7h9paYWL0S1iPu8j0mftxj4bu
+         Qa9AXMjHSxtImcc8KblDRtn7axm6276SjENlsCMYSFsnK1mkW2njNkDilgzwzj0xamiG
+         hcVQ==
+X-Gm-Message-State: APjAAAUU/b8U6j77pqao7MSFVGdT7CVPNQrxc4dAp3ZRE9OmF210RWNQ
+        KuFjhV0Ukqwj3DmekRsR48w=
+X-Google-Smtp-Source: APXvYqyDcgfa3TdsRiifDZ4jDBAX3i8gRet8d48klKFbwYUmnFcXsZLPoY/OShLpsAJNZt8m0IZbQA==
+X-Received: by 2002:a37:bcc4:: with SMTP id m187mr30082956qkf.329.1579111508386;
+        Wed, 15 Jan 2020 10:05:08 -0800 (PST)
 Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a144sm8964268qkc.30.2020.01.15.10.04.29
+        by smtp.gmail.com with ESMTPSA id l6sm8810185qkc.65.2020.01.15.10.05.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:04:30 -0800 (PST)
+        Wed, 15 Jan 2020 10:05:08 -0800 (PST)
 Subject: Re: [RFC PATCH 0/2] of: unittest: add overlay gpio test to catch gpio
  hog problem
 From:   Frank Rowand <frowand.list@gmail.com>
@@ -68,8 +68,8 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alan Tull <atull@kernel.org>
 References: <1579070828-18221-1-git-send-email-frowand.list@gmail.com>
  <578a2d41-e146-1f26-6bf4-30509ebe6941@gmail.com>
-Message-ID: <58a264a9-c8a3-02fb-00bb-bd5332cd9e2a@gmail.com>
-Date:   Wed, 15 Jan 2020 12:04:29 -0600
+Message-ID: <979218ea-c237-d2ff-2ec8-78db252f924c@gmail.com>
+Date:   Wed, 15 Jan 2020 12:05:07 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
@@ -88,9 +88,6 @@ On 1/15/20 11:28 AM, Frank Rowand wrote:
 
 < snip >
 
-> I will reply to this email with examples of console boot message
-> changes as a result of this patch series.
-> 
 > (1) boot before patches
 > (2) boot after this patch series
 > (3) messages from (2) processed by of_unittest_expect
@@ -99,28 +96,11 @@ On 1/15/20 11:28 AM, Frank Rowand wrote:
 
 < snip >
 
-(3) messages from (2) processed by of_unittest_expect
+4) messages from boot after Geert's patches on top of this patch
+   series processed by of_unittest_expect
 
-Much easier to read than (2).  The first two columns contain
-flags to point out lines that might be interesting.  This version
-of of_unittest_expect has five spaces following the flag columns,
-that will be fixed to be one space.
-
-  EXPECT begin and EXPECT end lines are suppressed.
-  Lines that match an EXPECT line are flagged with a leading 'ok'.
-  Lines reporting a of_unittest_expect warning or error are flagged with a leading '**'.
-  Lines reporting start or end of the unittests are flagged with a leading '->'.
-  Lines reporting a unittest test FAIL are flagged with a leading '>>'.
-
-The lines with a leading '**' are reporting that an expected message
-was not found.  The messages do exist, but of_unittest_expect is not
-yet smart enough to realize that '<<int>>' in the EXPECT messages are
-meant to match an integer value.
-
-The new unittest fail message to show the issue that Geert reported
-is flagged with the leading '>>'.
-
-The various messages triggered by unittest are flagged with 'ok'.
+No unittest fails, so the line flagged with '>>' in (3) is no
+longer present.
 
 ============================================================
 
@@ -138,22 +118,22 @@ The various messages triggered by unittest are flagged with 'ok'.
        [80] Loading keystore failed status 5 [80] ERROR: scm_protect_keystore Failed[200] USB init ept @ 0xf96b000
        [220] fastboot_init()
        [220] udc_start()
-       [340] -- reset --
+       [350] -- reset --
        [350] -- portchange --
        [460] -- reset --
        [460] -- portchange --
-       [650] fastboot: processing commands
-       [760] fastboot: download:00f30000
+       [590] fastboot: processing commands
+       [750] fastboot: download:00f30000
        [1250] fastboot: boot
-       [1270] Found Appeneded Flattened Device tree
+       [1260] Found Appeneded Flattened Device tree
        [1270] cmdline: console=ttyMSM0,115200,n8 androidboot.hardware=qcom maxcpus=2 msm_rtb.filter=0x37 ehci-hcd.park=3 norandmaps androidboot.emmc=true androidboot.serialno=40081c41 androidboot.baseband=apq
-       [1290] Updating device tree: start
-       [1300] Updating device tree: done
-       [1300] booting linux @ 0x8000, ramdisk @ 0x2000000 (9533134), tags/device tree @ 0x1e00000
-       [1310] Turn off MIPI_VIDEO_PANEL.
-       [1310] Continuous splash enabled, keeping panel alive.
+       [1280] Updating device tree: start
+       [1290] Updating device tree: done
+       [1290] booting linux @ 0x8000, ramdisk @ 0x2000000 (9533134), tags/device tree @ 0x1e00000
+       [1300] Turn off MIPI_VIDEO_PANEL.
+       [1300] Continuous splash enabled, keeping panel alive.
        Booting Linux on physical CPU 0x0
-       Linux version 5.5.0-rc2-00002-gbc60035cbebc-dirty (frowand@xps8900) (gcc version 4.6.x-google 20120106 (prerelease) (GCC)) #26 SMP PREEMPT Wed Jan 15 11:12:23 CST 2020
+       Linux version 5.5.0-rc2-00002-gbc60035cbebc-dirty (frowand@xps8900) (gcc version 4.6.x-google 20120106 (prerelease) (GCC)) #25 SMP PREEMPT Wed Jan 15 00:19:58 CST 2020
        CPU: ARMv7 Processor [512f06f0] revision 0 (ARMv7), cr=10c5787d
        CPU: div instructions available: patching division code
        CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
@@ -316,127 +296,101 @@ The various messages triggered by unittest are flagged with 'ok'.
        Loading compiled-in X.509 certificates
        debugfs: Directory 'fc4a9000.thermal-sensor' with parent 'tsens' already present!
        sdhci_msm f98a4900.sdhci: Got CD GPIO
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+       rtc-pm8xxx fc4cf000.spmi:pm8941@0:rtc@6000: setting system clock to 1970-01-03T01:15:24 UTC (177324)
+->     ### dt-test ### start of unittest - you will see error messages
        s1: supplied by regulator-dummy
+ok     Duplicate name in testcase-data, renamed to "duplicate-name#1"
        s1: Bringing 0uV into 675000-675000uV
        s2: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
        s2: Bringing 0uV into 500000-500000uV
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
+ok     OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
        s3: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-a: could not find phandle
        s3: Bringing 0uV into 500000-500000uV
+ok     OF: /testcase-data/phandle-tests/consumer-a: could not find phandle
        s4: supplied by regulator-dummy
-       s4: Bringing 0uV into 500000-500000uV
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-       s5: supplied by regulator-dummy
-       s6: supplied by regulator-dummy
-       rtc-pm8xxx fc4cf000.spmi:pm8941@0:rtc@6000: setting system clock to 1970-01-03T12:08:21 UTC (216501)
-->     ### dt-test ### start of unittest - you will see error messages
-ok     Duplicate name in testcase-data, renamed to "duplicate-name#1"
-       s7: supplied by regulator-dummy
-       s8: supplied by regulator-dummy
-ok     OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-       s1: supplied by regulator-dummy
-ok     OF: /testcase-data/phandle-tests/consumer-a: could not get #phandle-cells-missing for /testcase-data/phandle-tests/provider1
-       s1: Bringing 0uV into 1300000-1300000uV
-       s2: supplied by regulator-dummy
-ok     OF: /testcase-data/phandle-tests/consumer-a: could not find phandle
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-ok     OF: /testcase-data/phandle-tests/consumer-a: could not find phandle
-       s2: Bringing 0uV into 2150000-2150000uV
-       s3: supplied by regulator-dummy
 ok     OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1
+       s4: Bringing 0uV into 500000-500000uV
+       s5: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1
+       s6: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-b: could not get #phandle-missing-cells for /testcase-data/phandle-tests/provider1
+       s7: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-b: could not find phandle
+       s8: supplied by regulator-dummy
+       s1: supplied by regulator-dummy
+ok     OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
+       s1: Bringing 0uV into 1300000-1300000uV
+ok     platform testcase-data:testcase-device2: IRQ index 0 not found
+       s2: supplied by regulator-dummy
+       s2: Bringing 0uV into 2150000-2150000uV
+ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest0/status
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+       s3: supplied by regulator-dummy
+ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest1/status
        s3: Bringing 0uV into 1800000-1800000uV
        l1: supplied by s1
-ok     OF: /testcase-data/phandle-tests/consumer-a: #phandle-cells = 3 found -1
+ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest2/status
        l1: Bringing 0uV into 1225000-1225000uV
        l2: supplied by s3
-ok     OF: /testcase-data/phandle-tests/consumer-b: could not get #phandle-missing-cells for /testcase-data/phandle-tests/provider1
-       l2: Bringing 0uV into 1200000-1200000uV
-ok     OF: /testcase-data/phandle-tests/consumer-b: could not find phandle
-       l3: supplied by s1
-       l3: Bringing 0uV into 1225000-1225000uV
-ok     OF: /testcase-data/phandle-tests/consumer-b: #phandle-cells = 2 found -1
-       l4: supplied by s1
-       l4: Bringing 0uV into 1225000-1225000uV
-ok     platform testcase-data:testcase-device2: IRQ index 0 not found
-       l5: supplied by s2
-       l5: Bringing 0uV into 1800000-1800000uV
-ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest0/status
-       l6: supplied by s2
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest1/status
-       l6: Bringing 0uV into 1800000-1800000uV
-       l7: supplied by s2
-       l7: Bringing 0uV into 1800000-1800000uV
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l8: supplied by regulator-dummy
-ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest2/status
-       l8: Bringing 0uV into 1800000-1800000uV
-       l9: supplied by regulator-dummy
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest3/status
-       l9: Bringing 0uV into 1800000-1800000uV
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l10: supplied by regulator-dummy
+       l2: Bringing 0uV into 1200000-1200000uV
+       l3: supplied by s1
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest5/status
-       l10: Bringing 0uV into 1800000-1800000uV
-       l11: supplied by s1
-ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest6/status
-       l11: Bringing 0uV into 1300000-1300000uV
-       l12: supplied by s2
-ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest7/status
-       l12: Bringing 0uV into 1800000-1800000uV
        sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l13: supplied by regulator-dummy
-       l13: Bringing 0uV into 1800000-1800000uV
+       l3: Bringing 0uV into 1225000-1225000uV
+ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest6/status
+       l4: supplied by s1
+ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest7/status
+       l4: Bringing 0uV into 1225000-1225000uV
+       l5: supplied by s2
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/status
-       l14: supplied by s2
+       l5: Bringing 0uV into 1800000-1800000uV
+       l6: supplied by s2
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/test-unittest8/property-foo
        sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l14: Bringing 0uV into 1800000-1800000uV
+       l6: Bringing 0uV into 1800000-1800000uV
 ok     OF: overlay: node_overlaps_later_cs: #6 overlaps with #7 @/testcase-data/overlay-node/test-bus/test-unittest8
 ok     OF: overlay: overlay #6 is not topmost
-       l15: supplied by s2
+       l7: supplied by s2
 ok     i2c i2c-1: Added multiplexed i2c bus 2
-       l15: Bringing 0uV into 2050000-2050000uV
-       l16: supplied by regulator-dummy
+       l7: Bringing 0uV into 1800000-1800000uV
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest12/status
-       l16: Bringing 0uV into 2700000-2700000uV
-       l17: supplied by regulator-dummy
-       sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l17: Bringing 0uV into 2700000-2700000uV
+       l8: supplied by regulator-dummy
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest13/status
-       l18: supplied by regulator-dummy
-       l18: Bringing 0uV into 2850000-2850000uV
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+       l8: Bringing 0uV into 1800000-1800000uV
 ok     i2c i2c-1: Added multiplexed i2c bus 3
-       l19: supplied by regulator-dummy
        sdhci_msm f98a4900.sdhci: Got CD GPIO
-       l19: Bringing 0uV into 3300000-3300000uV
-       l20: supplied by regulator-dummy
-       l20: Bringing 0uV into 2950000-2950000uV
+       l9: supplied by regulator-dummy
+       l9: Bringing 0uV into 1800000-1800000uV
        GPIO line 315 (line-B-input) hogged as input
-       l21: supplied by regulator-dummy
-       GPIO line 309 (line-A-input) hogged as input
-       l21: Bringing 0uV into 2950000-2950000uV
-**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-A-input) hogged as input
-       l22: supplied by regulator-dummy
-**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-B-input) hogged as input
-       l22: Bringing 0uV into 3000000-3000000uV
-       l23: supplied by regulator-dummy
-       GPIO line 307 (line-D-input) hogged as input
-       l23: Bringing 0uV into 3000000-3000000uV
-**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-D-input) hogged as input
-       l24: supplied by regulator-dummy
-       l24: Bringing 0uV into 3075000-3075000uV
-       mmc0: SDHCI controller on f9824900.sdhci [f9824900.sdhci] using ADMA
-       lvs1: supplied by s3
-**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-C-input) hogged as input
-       lvs2: supplied by s3
->>     ### dt-test ### FAIL of_unittest_overlay_gpio():2668 unittest_gpio_chip_request() called 0 times (expected 1 time)
-       lvs3: supplied by s3
        sdhci_msm f98a4900.sdhci: Got CD GPIO
-       5vs1: supplied by s4
-       5vs2: supplied by s4
-       mmc1: SDHCI controller on f98a4900.sdhci [f98a4900.sdhci] using ADMA
+       GPIO line 309 (line-A-input) hogged as input
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-A-input) hogged as input
+       l10: supplied by regulator-dummy
+**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-B-input) hogged as input
+       l10: Bringing 0uV into 1800000-1800000uV
+       GPIO line 307 (line-D-input) hogged as input
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-D-input) hogged as input
+       l11: supplied by s1
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
+       GPIO line 301 (line-C-input) hogged as input
+       l11: Bringing 0uV into 1300000-1300000uV
+**     (of_unittest_expect WARNING - not found ---> ) GPIO line <<int>> (line-C-input) hogged as input
+       l12: supplied by s2
+       l12: Bringing 0uV into 1800000-1800000uV
+       l13: supplied by regulator-dummy
+       l13: Bringing 0uV into 1800000-1800000uV
+       l14: supplied by s2
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/status
+       l14: Bringing 0uV into 1800000-1800000uV
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/status
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@30/incline-up
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/fairway-1/ride@100/track@40/incline-up
@@ -447,34 +401,63 @@ ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_left
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /__symbols__/ride_200_right
+       l15: supplied by s2
+       l15: Bringing 0uV into 2050000-2050000uV
+       l16: supplied by regulator-dummy
+       l16: Bringing 0uV into 2700000-2700000uV
+       l17: supplied by regulator-dummy
+       l17: Bringing 0uV into 2700000-2700000uV
+       l18: supplied by regulator-dummy
 ok     OF: overlay: ERROR: multiple fragments add and/or delete node /testcase-data-2/substation@100/motor-1/controller
+       l18: Bringing 0uV into 2850000-2850000uV
 ok     OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/controller/name
-       mmc1: new ultra high speed DDR50 SDHC card at address aaaa
+       l19: supplied by regulator-dummy
+       l19: Bringing 0uV into 3300000-3300000uV
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
-       mmcblk1: mmc1:aaaa SU16G 14.8 GiB 
 ok     OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data-2/substation@100/motor-1/rpm_avail
 ok     OF: overlay: ERROR: multiple fragments add, update, and/or delete property /testcase-data-2/substation@100/motor-1/rpm_avail
-        mmcblk1: p1
-->     ### dt-test ### end of unittest - 258 passed, 1 failed
-       mmc0: new HS200 MMC card at address 0001
+       l20: supplied by regulator-dummy
+->     ### dt-test ### end of unittest - 259 passed, 0 failed
+       l20: Bringing 0uV into 2950000-2950000uV
        ALSA device list:
-         No soundcards found.
-       mmcblk0: mmc0:0001 SEM16[    4.341533] mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
-       mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB, chardev (247:0)
+       l21: supplied by regulator-dummy
+         No soundcard�[    4.252703] l22: supplied by regulator-dummy
+       l22: Bringing 0uV into 3000000-3000000uV
        Freeing unused kernel memory: 1024K
+       l23: supplied by regulator-dummy
        Run /init as init process
-        mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20
+       l23: Bringing 0uV into 3000000-3000000uV
+       l24: supplied by regulator-dummy
+       l24: Bringing 0uV into 3075000-3075000uV
+       lvs1: supplied by s3
        mkdir: can't create directory '/bin': File exists
+       lvs2: supplied by s3
+       lvs3: supplied by s3
+       5vs1: supplied by s4
        mkdir: can't create directory '/dev': File exists
+       5vs2: supplied by s4
        /init: line 25: can't create /proc/sys/kernel/hotplug: nonexistent directory
+       mmc0: SDHCI controller on f9824900.sdhci [f9824900.sdhci] using ADMA
+       sdhci_msm f98a4900.sdhci: Got CD GPIO
        mdev: unknown user/group 'root:uucp' on line 34
+       mmc1: SDHCI controller on f98a4900.sdhci [f98a4900.sdhci] using ADMA
+       mmc0: new HS200 MMC card at address 0001
+       mmcblk0: mmc0:0001 SEM16G 14.7 GiB 
+       mmcblk0boot0: mmc0:0001 SEM16G partition 1 4.00 MiB
+       mmcblk0boot1: mmc0:0001 SEM16G partition 2 4.00 MiB
+       mmcblk0rpmb: mmc0:0001 SEM16G partition 3 4.00 MiB, chardev (247:0)
+       mmc1: new ultra high speed DDR50 SDHC card at address aaaa
+        mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20
+       mmcblk1: mmc1:aaaa SU16G 14.8 GiB 
+        mmcblk1: p1
        Attempt to mount partitions: /usr/system /usr/data
        Mounting partitions from: /dev/mmcblk0
        EXT4-fs (mmcblk0p12): mounted filesystem with ordered data mode. Opts: (null)
+       random: fast init done
        EXT4-fs (mmcblk0p13): recovery complete
        EXT4-fs (mmcblk0p13): mounted filesystem with ordered data mode. Opts: (null)
-       / # [    5.288378] random: fast init done
-       
+       / # 
+       / # 
        / # cat /proc/version
-       Linux version 5.5.0-rc2-00002-gbc60035cbebc-dirty (frowand@xps8900) (gcc version 4.6.x-google 20120106 (prerelease) (GCC)) #26 SMP PREEMPT Wed Jan 15 11:12:23 CST 2020
+       Linux version 5.5.0-rc2-00002-gbc60035cbebc-dirty (frowand@xps8900) (gcc version 4.6.x-google 20120106 (prerelease) (GCC)) #25 SMP PREEMPT Wed Jan 15 00:19:58 CST 2020
        / # 
