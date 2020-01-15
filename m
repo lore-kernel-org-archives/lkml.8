@@ -2,196 +2,73 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FE0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C9DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACD72077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JXR810T9"
+	by mail.kernel.org (Postfix) with ESMTP id 457902077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgAONbF (ORCPT
+        id S1729094AbgAONbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:31:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26539 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729021AbgAONbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:31:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579095062;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GQ2XRP21NZuztGMRryaosSMfssmG+japErixEXGjARs=;
-        b=JXR810T95h5HwTMYracOp599LMHmn2XMt16/fQbHDS+CLxtySTr8HnqJmixGGaIoz4jgTp
-        ZfRTBnP7KJoKURq6O6Iod7xMUOgVpk3Ykil1SFRtUfze1OpNUBliWTa25dyfaB83A0jrus
-        jCBvcUzk4d8q3hio2GhPwpSWElB9nGc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-1ywfiLYhPqad1cHeU8Iv_Q-1; Wed, 15 Jan 2020 08:30:59 -0500
-X-MC-Unique: 1ywfiLYhPqad1cHeU8Iv_Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 649DC801E6C;
-        Wed, 15 Jan 2020 13:30:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A86B310372F3;
-        Wed, 15 Jan 2020 13:30:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 02/14] security: Add hooks to rule on setting a watch
- [ver #3]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, Christian Brauner <christian@brauner.io>,
-        dhowells@redhat.com, keyrings@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 15 Jan 2020 13:30:53 +0000
-Message-ID: <157909505391.20155.3152153524575565871.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-References: <157909503552.20155.3030058841911628518.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 15 Jan 2020 08:31:08 -0500
+Received: from verein.lst.de ([213.95.11.211]:50875 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbgAONbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:31:06 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4D61968BE1; Wed, 15 Jan 2020 14:31:02 +0100 (CET)
+Date:   Wed, 15 Jan 2020 14:31:01 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Problems with determining data presence by examining extents?
+Message-ID: <20200115133101.GA28583@lst.de>
+References: <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add security hooks that will allow an LSM to rule on whether or not a watch
-may be set.  More than one hook is required as the watches watch different
-types of object.
+On Wed, Jan 15, 2020 at 09:10:44PM +0800, Qu Wenruo wrote:
+> > That allows userspace to distinguish fe_physical addresses that may be
+> > on different devices.  This isn't in the kernel yet, since it is mostly
+> > useful only for Btrfs and nobody has implemented it there.  I can give
+> > you details if working on this for Btrfs is of interest to you.
+> 
+> IMHO it's not good enough.
+> 
+> The concern is, one extent can exist on multiple devices (mirrors for
+> RAID1/RAID10/RAID1C2/RAID1C3, or stripes for RAID5/6).
+> I didn't see how it can be easily implemented even with extra fields.
+> 
+> And even we implement it, it can be too complex or bug prune to fill
+> per-device info.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Casey Schaufler <casey@schaufler-ca.com>
-cc: Stephen Smalley <sds@tycho.nsa.gov>
-cc: linux-security-module@vger.kernel.org
----
-
- include/linux/lsm_hooks.h |   24 ++++++++++++++++++++++++
- include/linux/security.h  |   17 +++++++++++++++++
- security/security.c       |   14 ++++++++++++++
- 3 files changed, 55 insertions(+)
-
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 20d8cf194fb7..79d7c73676d7 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -1416,6 +1416,18 @@
-  *	@ctx is a pointer in which to place the allocated security context.
-  *	@ctxlen points to the place to put the length of @ctx.
-  *
-+ * Security hooks for the general notification queue:
-+ *
-+ * @watch_key:
-+ *	Check to see if a process is allowed to watch for event notifications
-+ *	from a key or keyring.
-+ *	@key: The key to watch.
-+ *
-+ * @watch_devices:
-+ *	Check to see if a process is allowed to watch for event notifications
-+ *	from devices (as a global set).
-+ *
-+ *
-  * Security hooks for using the eBPF maps and programs functionalities through
-  * eBPF syscalls.
-  *
-@@ -1698,6 +1710,12 @@ union security_list_options {
- 	int (*inode_notifysecctx)(struct inode *inode, void *ctx, u32 ctxlen);
- 	int (*inode_setsecctx)(struct dentry *dentry, void *ctx, u32 ctxlen);
- 	int (*inode_getsecctx)(struct inode *inode, void **ctx, u32 *ctxlen);
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+	int (*watch_key)(struct key *key);
-+#endif
-+#ifdef CONFIG_DEVICE_NOTIFICATIONS
-+	int (*watch_devices)(void);
-+#endif
- 
- #ifdef CONFIG_SECURITY_NETWORK
- 	int (*unix_stream_connect)(struct sock *sock, struct sock *other,
-@@ -1985,6 +2003,12 @@ struct security_hook_heads {
- 	struct hlist_head inode_notifysecctx;
- 	struct hlist_head inode_setsecctx;
- 	struct hlist_head inode_getsecctx;
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+	struct hlist_head watch_key;
-+#endif
-+#ifdef CONFIG_DEVICE_NOTIFICATIONS
-+	struct hlist_head watch_devices;
-+#endif
- #ifdef CONFIG_SECURITY_NETWORK
- 	struct hlist_head unix_stream_connect;
- 	struct hlist_head unix_may_send;
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 3e8d4bacd59d..8f2fa100d128 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -1274,6 +1274,23 @@ static inline int security_locked_down(enum lockdown_reason what)
- }
- #endif	/* CONFIG_SECURITY */
- 
-+#if defined(CONFIG_SECURITY) && defined(CONFIG_KEY_NOTIFICATIONS)
-+int security_watch_key(struct key *key);
-+#else
-+static inline int security_watch_key(struct key *key)
-+{
-+	return 0;
-+}
-+#endif
-+#if defined(CONFIG_SECURITY) && defined(CONFIG_DEVICE_NOTIFICATIONS)
-+int security_watch_devices(void);
-+#else
-+static inline int security_watch_devices(void)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_SECURITY_NETWORK
- 
- int security_unix_stream_connect(struct sock *sock, struct sock *other, struct sock *newsk);
-diff --git a/security/security.c b/security/security.c
-index cd2d18d2d279..578863f230a6 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1956,6 +1956,20 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
- 
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+int security_watch_key(struct key *key)
-+{
-+	return call_int_hook(watch_key, 0, key);
-+}
-+#endif
-+
-+#ifdef CONFIG_DEVICE_NOTIFICATIONS
-+int security_watch_devices(void)
-+{
-+	return call_int_hook(watch_devices, 0);
-+}
-+#endif
-+
- #ifdef CONFIG_SECURITY_NETWORK
- 
- int security_unix_stream_connect(struct sock *sock, struct sock *other, struct sock *newsk)
-
+It's also completely bogus for the use cases to start with.  fiemap
+is a debug tool reporting the file system layout.  Using it for anything
+related to actual data storage and data integrity is a receipe for
+disaster.  As said the right thing for the use case would be something
+like the NFS READ_PLUS operation.  If we can't get that easily it can
+be emulated using lseek SEEK_DATA / SEEK_HOLE assuming no other thread
+could be writing to the file, or the raciness doesn't matter.
