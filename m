@@ -2,312 +2,129 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DEAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3643C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CE9222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E892222C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 09:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MhojVoYQ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ERFjVhJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgAOJOF (ORCPT
+        id S1729423AbgAOJO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:14:05 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28558 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726472AbgAOJOF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:14:05 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F9Dowl027725;
-        Wed, 15 Jan 2020 10:13:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=HlHbEvYjB0DFsNrNSDZVNAFVsnTnh8Skc5KNww6mesE=;
- b=MhojVoYQ/rX9nVDtZ1lsBN6W8ayvN/TsErKPCp9nm56qV84EPyHqcfwmteimov2xkH3O
- 3nsBX14R6YEVsi++vRpCAE9YabaKzMfSln8IvImz1Ma8Zw+k/rWKaeE5H5iuD4ujsyHF
- hzOzxDPBJu4fWXm30gRlkBzPpCSFPrwWzZn2vr/ENnjJdlkCu8tw9AbHdHE2RdG7QL/o
- xZFo9aj/KBYRlsZFQ4JSTyTAg/SGfFyrAPaXPYasRC4MOoW5LFvC1mFUF3Dl8Mgfm1f2
- 731lu9N0XD1hzJZZli1rbf9H5YMWPNGlA19xNchYYWc7hIkQg6U3Eae6B254TYbZyZSS Dg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf78saa74-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 10:13:52 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 35CBD10003A;
-        Wed, 15 Jan 2020 10:13:50 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2508D21CA99;
-        Wed, 15 Jan 2020 10:13:50 +0100 (CET)
-Received: from [10.48.1.171] (10.75.127.46) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
- 2020 10:13:49 +0100
-Subject: Re: [PATCH 5/6] i2c: i2c-stm32f7: allow controller to be
- wakeup-source
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
+        Wed, 15 Jan 2020 04:14:26 -0500
+Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:20885
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726472AbgAOJOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:14:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TX02DQt4F3C85T+OSX45qXpQ4/N/pzuKtfd2aAt9SV+gVW4fumYLdTEkuImRq1jIPqsVwUMH/Md7W7q0CiHDvxIlnj6IaCN0s67OO45nSq1qQuQzSKqF2c2fOGAN0E2JD6OrOWNz5K2oNhE2H+Vo2OiH/Z+nxVHTREAIDom2VT1VAs1krwgsVT+PLkP+l0pmdyfOdTV4YWypDFGLlLToTnV1k9Cxj9/GQPGce/slAjpH0geU7YUQF27ph3xa0c0+q+4lbK4hKW3CIJMIxys/yhe9FcBn8N9bvQcAsGDhViVxf4yuY5SvJwNRxj98gSjpngL3aDn/fHWjwtXxW2SfxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M+VApoI90aCR5uJ5qRi1FH6HYnxgZsGSCNsM8GQyhBo=;
+ b=daRV/MabKiSCEnIg9mVMEz0/HctcPK84suTQIc1V858+g4e5KdgNlKPseW/+CBE1Dx4QFx7ApR/vYPA9YzWGU2AM6na0R9hyf/luF0F6wFcu7NHiCa68WZoajLeZO94uwhkmSWlA34YW7vqhXwHJU7a4FPvjvDpYLfxPcRKFRxTAqqBu5Jip4x7D7bBci7L7epRNUknzzaQlP2GZlBXJkx6t8C5ofmKBAszEuayT+DGmPpFmjycf3OboNBHhQwcl6FKNotn6d7Bpt9AnPWBlB+OncJb/Z+BR+NlqzOjcz1bpTL7ibNyRMMMOxTCHw32hTwM4wrK9ED3+uwxngTYxIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M+VApoI90aCR5uJ5qRi1FH6HYnxgZsGSCNsM8GQyhBo=;
+ b=ERFjVhJVNsRirsBO0zW/fONtyglkVhttlE0gbg3MQacAzgRlF8HLv6ne0e9CpNl3DSYGiyZ8CK5E7ua2grYAU3k3FkQpU2XIhQwDOz/9SIraUx8+ojO/xP+uo1TPrsMrPjhRNAoTKtxFy3/6kCfmmKagl2i1RIlFVNw7Z6J9v2w=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB5539.eurprd04.prod.outlook.com (20.178.113.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.12; Wed, 15 Jan 2020 09:14:20 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::6d52:5678:e02f:95f4]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::6d52:5678:e02f:95f4%3]) with mapi id 15.20.2623.015; Wed, 15 Jan 2020
+ 09:14:20 +0000
+Received: from localhost (89.37.124.34) by AM5P190CA0006.EURP190.PROD.OUTLOOK.COM (2603:10a6:206:14::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Wed, 15 Jan 2020 09:14:20 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>
+CC:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
- <1578317314-17197-6-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <803ec9f1-c940-0c95-612d-f1222fc0dcc2@st.com>
-Date:   Wed, 15 Jan 2020 10:13:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1578317314-17197-6-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
+Thread-Topic: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
+Thread-Index: AQHVy3/EUCcWFKJUfUCi5MhN1UqJ1afrcVWA
+Date:   Wed, 15 Jan 2020 09:14:20 +0000
+Message-ID: <20200115091419.grdz67mef5mkm4mt@fsr-ub1664-175>
+References: <20200115084225.30464-1-horia.geanta@nxp.com>
+ <20200115084225.30464-2-horia.geanta@nxp.com>
+In-Reply-To: <20200115084225.30464-2-horia.geanta@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-15_01:2020-01-15,2020-01-14 signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5P190CA0006.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:206:14::19) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5e5e1c55-4a49-4e47-91a8-08d7999b4e15
+x-ms-traffictypediagnostic: AM0PR04MB5539:|AM0PR04MB5539:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5539CA39A1E63E4D67A40844F6370@AM0PR04MB5539.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:989;
+x-forefront-prvs: 02830F0362
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(199004)(189003)(81156014)(478600001)(81166006)(8676002)(6486002)(33716001)(64756008)(66476007)(16526019)(66446008)(66556008)(6862004)(66946007)(26005)(6496006)(186003)(52116002)(1076003)(956004)(4326008)(8936002)(7416002)(71200400001)(53546011)(5660300002)(316002)(2906002)(9686003)(44832011)(6636002)(54906003)(86362001)(4744005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5539;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jLmVass1jlZZPKfCLB0mz7QHx2Jz93nu83FKOF78yuCpdec8NYlKn5XA/PaLw91qRFWwB4KYquI0yV3afasvGt+9ZiGciM3O75i54nUErb7JWybPaVoWiByCz3zYR5hERlAbmP8D8exT8nKnZjkIN9+dybmR/DoqaGc28LVLsE1XTHwGJso1I27EpbXoAQS6XiutRzVLaSkm4sjTbYi5Ihfm4K8+zUEaZPLu9FsVENG3xXAf/8Sp49xUjbsm6oxvQ2AC8LVCVPByFCOzmHqtddt0ac4IL9SOowemR1Zm8ogIwOCl0+Pe50PntKvQt5i2RtN3b6k/uH+RcbPcn2BeZ4ntWL0KZDBJ+c79XY7Phd/fufWXQPNPn/5nySZtBYunMvnvxrv2Me47MejYRC0lymQv0+OmgmK0bGsgou+yCJojDvThhw42MEKFXnpGMJZqjdfFrakqbjKoxY8KkpU48iccNHwNXpGDUP31amVRepk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9929C85D2C788B46A82BFA6DED278892@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5e1c55-4a49-4e47-91a8-08d7999b4e15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2020 09:14:20.7630
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6m89QR9ilNasrAY4ECucnSUobH0QW3XakMlmqaBl+SfrzyBUGtSU1DElxGo2wiyr0Hg84Xnq/5sauX5ogf0eGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5539
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Thanks and regards
-
-On 1/6/20 2:28 PM, Alain Volmat wrote:
-> Allow the i2c-stm32f7 controller to become a wakeup-source
-> of the system. In such case, when a slave is registered to the
-> I2C controller, receiving a I2C message targeting that registered
-> slave address wakes up the suspended system.
-> 
-> In order to be able to wake-up, the I2C controller DT node
-> must have the property wakeup-source defined and a slave
-> must be registered.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 98 ++++++++++++++++++++++++++++++++++------
->  1 file changed, 83 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 5c3e8ac6ad92..844a22d64aa8 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -29,6 +29,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pinctrl/consumer.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_wakeirq.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/slab.h>
-> @@ -49,6 +50,7 @@
->  
->  /* STM32F7 I2C control 1 */
->  #define STM32F7_I2C_CR1_PECEN			BIT(23)
-> +#define STM32F7_I2C_CR1_WUPEN			BIT(18)
->  #define STM32F7_I2C_CR1_SBC			BIT(16)
->  #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
->  #define STM32F7_I2C_CR1_TXDMAEN			BIT(14)
-> @@ -301,6 +303,7 @@ struct stm32f7_i2c_msg {
->   * @dma: dma data
->   * @use_dma: boolean to know if dma is used in the current transfer
->   * @regmap: holds SYSCFG phandle for Fast Mode Plus bits
-> + * @wakeup_src: boolean to know if the device is a wakeup source
->   */
->  struct stm32f7_i2c_dev {
->  	struct i2c_adapter adap;
-> @@ -323,6 +326,7 @@ struct stm32f7_i2c_dev {
->  	struct stm32_i2c_dma *dma;
->  	bool use_dma;
->  	struct regmap *regmap;
-> +	bool wakeup_src;
->  };
->  
->  /*
-> @@ -1691,6 +1695,9 @@ static int stm32f7_i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
->  	return ret;
->  }
->  
-> +static void stm32f7_i2c_enable_wakeup(struct stm32f7_i2c_dev *i2c_dev,
-> +				      bool enable);
-> +
->  static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(slave->adapter);
-> @@ -1717,6 +1724,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, true);
-> +
->  	if (id == 0) {
->  		/* Configure Own Address 1 */
->  		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
-> @@ -1758,6 +1768,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
->  
->  	ret = 0;
->  pm_free:
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-> +
->  	pm_runtime_mark_last_busy(dev);
->  	pm_runtime_put_autosuspend(dev);
->  
-> @@ -1791,8 +1804,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
->  
->  	i2c_dev->slave[id] = NULL;
->  
-> -	if (!(stm32f7_i2c_is_slave_registered(i2c_dev)))
-> +	if (!stm32f7_i2c_is_slave_registered(i2c_dev)) {
->  		stm32f7_i2c_disable_irq(i2c_dev, STM32F7_I2C_ALL_IRQ_MASK);
-> +		stm32f7_i2c_enable_wakeup(i2c_dev, false);
-> +	}
->  
->  	pm_runtime_mark_last_busy(i2c_dev->dev);
->  	pm_runtime_put_autosuspend(i2c_dev->dev);
-> @@ -1879,6 +1894,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  		return irq_error ? : -ENOENT;
->  	}
->  
-> +	i2c_dev->wakeup_src = of_property_read_bool(pdev->dev.of_node,
-> +						    "wakeup-source");
-> +
->  	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(i2c_dev->clk)) {
->  		dev_err(&pdev->dev, "Error: Missing controller clock\n");
-> @@ -1985,6 +2003,16 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  		goto clk_free;
->  	}
->  
-> +	if (i2c_dev->wakeup_src) {
-> +		device_set_wakeup_capable(i2c_dev->dev, true);
-> +
-> +		ret = dev_pm_set_wake_irq(i2c_dev->dev, irq_event);
-> +		if (ret) {
-> +			dev_err(i2c_dev->dev, "Failed to set wake up irq\n");
-> +			goto clr_wakeup_capable;
-> +		}
-> +	}
-> +
->  	platform_set_drvdata(pdev, i2c_dev);
->  
->  	pm_runtime_set_autosuspend_delay(i2c_dev->dev,
-> @@ -2014,6 +2042,13 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  	pm_runtime_set_suspended(i2c_dev->dev);
->  	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
->  
-> +	if (i2c_dev->wakeup_src)
-> +		dev_pm_clear_wake_irq(i2c_dev->dev);
-> +
-> +clr_wakeup_capable:
-> +	if (i2c_dev->wakeup_src)
-> +		device_set_wakeup_capable(i2c_dev->dev, false);
-> +
->  	if (i2c_dev->dma) {
->  		stm32_i2c_dma_free(i2c_dev->dma);
->  		i2c_dev->dma = NULL;
-> @@ -2032,6 +2067,15 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
->  	i2c_del_adapter(&i2c_dev->adap);
->  	pm_runtime_get_sync(i2c_dev->dev);
->  
-> +	if (i2c_dev->wakeup_src) {
-> +		dev_pm_clear_wake_irq(i2c_dev->dev);
-> +		/*
-> +		 * enforce that wakeup is disabled and that the device
-> +		 * is marked as non wakeup capable
-> +		 */
-> +		device_init_wakeup(i2c_dev->dev, false);
-> +	}
-> +
->  	pm_runtime_put_noidle(i2c_dev->dev);
->  	pm_runtime_disable(i2c_dev->dev);
->  	pm_runtime_set_suspended(i2c_dev->dev);
-> @@ -2127,20 +2171,41 @@ stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
->  	return ret;
->  }
->  
-> +static void stm32f7_i2c_enable_wakeup(struct stm32f7_i2c_dev *i2c_dev,
-> +				      bool enable)
-> +{
-> +	void __iomem *base = i2c_dev->base;
-> +	u32 mask = STM32F7_I2C_CR1_WUPEN;
-> +
-> +	if (!i2c_dev->wakeup_src)
-> +		return;
-> +
-> +	if (enable) {
-> +		device_set_wakeup_enable(i2c_dev->dev, true);
-> +		stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, mask);
-> +	} else {
-> +		device_set_wakeup_enable(i2c_dev->dev, false);
-> +		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1, mask);
-> +	}
-> +}
-> +
->  static int __maybe_unused stm32f7_i2c_suspend(struct device *dev)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->  	int ret;
->  
->  	i2c_mark_adapter_suspended(&i2c_dev->adap);
-> -	ret = stm32f7_i2c_regs_backup(i2c_dev);
-> -	if (ret < 0) {
-> -		i2c_mark_adapter_resumed(&i2c_dev->adap);
-> -		return ret;
-> -	}
->  
-> -	pinctrl_pm_select_sleep_state(dev);
-> -	pm_runtime_force_suspend(dev);
-> +	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-> +		ret = stm32f7_i2c_regs_backup(i2c_dev);
-> +		if (ret < 0) {
-> +			i2c_mark_adapter_resumed(&i2c_dev->adap);
-> +			return ret;
-> +		}
-> +
-> +		pinctrl_pm_select_sleep_state(dev);
-> +		pm_runtime_force_suspend(dev);
-> +	}
->  
->  	return 0;
->  }
-> @@ -2150,14 +2215,17 @@ static int __maybe_unused stm32f7_i2c_resume(struct device *dev)
->  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
->  	int ret;
->  
-> -	ret = pm_runtime_force_resume(dev);
-> -	if (ret < 0)
-> -		return ret;
-> -	pinctrl_pm_select_default_state(dev);
-> +	if (!device_may_wakeup(dev) && !dev->power.wakeup_path) {
-> +		ret = pm_runtime_force_resume(dev);
-> +		if (ret < 0)
-> +			return ret;
-> +		pinctrl_pm_select_default_state(dev);
-> +
-> +		ret = stm32f7_i2c_regs_restore(i2c_dev);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
->  
-> -	ret = stm32f7_i2c_regs_restore(i2c_dev);
-> -	if (ret < 0)
-> -		return ret;
->  	i2c_mark_adapter_resumed(&i2c_dev->adap);
->  
->  	return 0;
-> 
+T24gMjAtMDEtMTUgMTA6NDI6MjMsIEhvcmlhIEdlYW50xIMgd3JvdGU6DQo+IFNpZ25lZC1vZmYt
+Ynk6IEhvcmlhIEdlYW50xIMgPGhvcmlhLmdlYW50YUBueHAuY29tPg0KDQpBZGQgYSBjb21taXQg
+bWVzc2FnZSBwbGVhc2UuDQoNCk5vdGUsIHRoaXMgbW9kaWZpZXMgdGhlIGRldmljZXRyZWUgQUJJ
+Lg0KDQo+IC0tLQ0KPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg4bW4tY2xvY2suaCB8
+IDQgKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14OG1uLWNs
+b2NrLmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2lteDhtbi1jbG9jay5oDQo+IGluZGV4
+IDBmMmI4NDIzY2UxZC4uNDM4ODNmZTY1ZGI1IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2R0LWJp
+bmRpbmdzL2Nsb2NrL2lteDhtbi1jbG9jay5oDQo+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+Y2xvY2svaW14OG1uLWNsb2NrLmgNCj4gQEAgLTIyOCw2ICsyMjgsOCBAQA0KPiAgI2RlZmluZSBJ
+TVg4TU5fU1lTX1BMTDJfMzMzTV9DRwkJCTIwOQ0KPiAgI2RlZmluZSBJTVg4TU5fU1lTX1BMTDJf
+NTAwTV9DRwkJCTIxMA0KPiAgDQo+IC0jZGVmaW5lIElNWDhNTl9DTEtfRU5ECQkJCTIxMQ0KPiAr
+I2RlZmluZSBJTVg4TU5fQ0xLX1NOVlNfUk9PVAkJCTIxMQ0KPiArDQo+ICsjZGVmaW5lIElNWDhN
+Tl9DTEtfRU5ECQkJCTIxMg0KPiAgDQo+ICAjZW5kaWYNCj4gLS0gDQo+IDIuMTcuMQ0KPiANCg==
