@@ -2,485 +2,157 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A17CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF268C33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D22F2467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B138724673
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 00:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579047117;
+	bh=HLlIuKSukby77nU8tEm+SpVYPXkB4qmHH90lCBTZ6WE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pT9uFZ3URRqJRQVqyY1ISVjJeAvvBS1q8WA1VXxh0qYu08jKj21pyplInTXbNY4Ue
+	 BdTWKntgfIk5Z/QIcycnOCcpriSvpvfaVznoBq5dN5ip6FpK9XgnrPh6UOEpUofezz
+	 E/Aski0UfZt1MaTkfjRTDH1C8zWJfYgSxr7DyQu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgAOAKJ (ORCPT
+        id S1728882AbgAOAL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 19:10:09 -0500
-Received: from mga01.intel.com ([192.55.52.88]:8662 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgAOAJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 19:09:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 16:09:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
-   d="scan'208";a="273468602"
-Received: from emkilgox-mobl2.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.0.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2020 16:09:55 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Rander Wang <rander.wang@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 09/10] soundwire: bus: add clock stop helpers
-Date:   Tue, 14 Jan 2020 18:08:43 -0600
-Message-Id: <20200115000844.14695-10-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200115000844.14695-1-pierre-louis.bossart@linux.intel.com>
-References: <20200115000844.14695-1-pierre-louis.bossart@linux.intel.com>
+        Tue, 14 Jan 2020 19:11:56 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44710 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgAOAL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 19:11:56 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so14459669otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 16:11:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rqYwFYlybDxb7rHCNCkg0gK4e3FUvJBmLmo+IxQN78U=;
+        b=DAw0DiNPXWkYy/jOs5uSIUxLr6iU9qWd7k3XMsIaj6wTDGxJigxJrwm/GcFGj8xGS+
+         o/tKhhbT9xtAUAQN/fut0v1hsuxVtYcYky9fjwIAQHQW/072VGyVjt4yd/eZrWPY1fmL
+         clWSYwOYMj2g78h/fnejLQHZ1M0Qe8M+hdL7fFbiGuRmw1+064Pj1KLk44Sde++QinJd
+         vVozaKmIga6GWHsm+jkh23GOg8PgRoSP+tkMHSqTrlAzAOswIfGPX9aLRMoPzC42HxMK
+         1jcl1E46qJ44yhT9hLiFE9UC6KlRTCLy3jNlxlnrQnL+PEaTkLlkLDA7rojUQEDxMuGq
+         L56Q==
+X-Gm-Message-State: APjAAAXaK8ZADfFvgmbzlCoEivQFAqhM7uGtWNJkip4Ke95R1EFGDJVu
+        m+3PK/puDex0lz0GGFKivttYlho=
+X-Google-Smtp-Source: APXvYqx3hmq4EfXe42kTS0r5zIRH50rnbbcS13jmXowU00L5H9UgVHmKuUA/8Qd77PkvSm24W9Rwbg==
+X-Received: by 2002:a9d:242:: with SMTP id 60mr779590otb.253.1579047115225;
+        Tue, 14 Jan 2020 16:11:55 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h7sm5895085otk.56.2020.01.14.16.11.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 16:11:54 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2209ae
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Tue, 14 Jan 2020 18:11:52 -0600
+Date:   Tue, 14 Jan 2020 18:11:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 2/3] dt-bindings: pinctrl: Convert i.MX8MM to
+ json-schema
+Message-ID: <20200115001152.GA12156@bogus>
+References: <1578629120-25793-1-git-send-email-Anson.Huang@nxp.com>
+ <1578629120-25793-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578629120-25793-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@intel.com>
+On Fri, Jan 10, 2020 at 12:05:19PM +0800, Anson Huang wrote:
+> Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V1:
+>         - use "grp$" instead of "-grp$";
+>         - use space instead of tab for "ref$";
+> 	- add missed "reg" property;
+>         - remove the "maxItem" for "fsl,pins" to avoid build warning, as the item number is changable.
+> ---
+>  .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        | 36 -----------
+>  .../bindings/pinctrl/fsl,imx8mm-pinctrl.yaml       | 69 ++++++++++++++++++++++
+>  2 files changed, 69 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+> deleted file mode 100644
+> index e4e01c0..0000000
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+> +++ /dev/null
+> @@ -1,36 +0,0 @@
+> -* Freescale IMX8MM IOMUX Controller
+> -
+> -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> -for common binding part and usage.
+> -
+> -Required properties:
+> -- compatible: "fsl,imx8mm-iomuxc"
+> -- reg: should contain the base physical address and size of the iomuxc
+> -  registers.
+> -
+> -Required properties in sub-nodes:
+> -- fsl,pins: each entry consists of 6 integers and represents the mux and config
+> -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+> -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+> -  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+> -  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
+> -  Reference Manual for detailed CONFIG settings.
+> -
+> -Examples:
+> -
+> -&uart1 {
+> -       pinctrl-names = "default";
+> -       pinctrl-0 = <&pinctrl_uart1>;
+> -};
+> -
+> -iomuxc: pinctrl@30330000 {
+> -        compatible = "fsl,imx8mm-iomuxc";
+> -        reg = <0x0 0x30330000 0x0 0x10000>;
+> -
+> -        pinctrl_uart1: uart1grp {
+> -                fsl,pins = <
+> -                        MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX             0x140
+> -                        MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX             0x140
+> -                >;
+> -        };
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+> new file mode 100644
+> index 0000000..a3c4275
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
-SoundWire supports two clock stop modes. Add support to handle the
-clock stop modes and add pm_runtime calls in the bus.
+Sorry, one other thing.
 
-Credits: this patch is based on an earlier internal contribution by
-Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah.
+You're good with GPLv9? Plus this is a license change. Do you have 
+rights to do so as some of this comes from the old binding doc? If you 
+do, then make it:
 
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Rander Wang <rander.wang@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/bus.c       | 332 ++++++++++++++++++++++++++++++++++
- include/linux/soundwire/sdw.h |  24 +++
- 2 files changed, 356 insertions(+)
+(GPL-2.0-only OR BSD-2-Clause)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index 23bc24c8e9d1..3395abd2ed39 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -2,6 +2,7 @@
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/acpi.h>
-+#include <linux/delay.h>
- #include <linux/mod_devicetable.h>
- #include <linux/pm_runtime.h>
- #include <linux/soundwire/sdw_registers.h>
-@@ -359,6 +360,52 @@ static int sdw_write_no_pm(struct sdw_slave *slave, u32 addr, u8 value)
- 	return sdw_nwrite_no_pm(slave, addr, 1, &value);
- }
- 
-+static int
-+sdw_bread_no_pm(struct sdw_bus *bus, u16 dev_num, u32 addr)
-+{
-+	struct sdw_msg msg;
-+	u8 buf;
-+	int ret;
-+
-+	ret = sdw_fill_msg(&msg, NULL, addr, 1, dev_num,
-+			   SDW_MSG_FLAG_READ, &buf);
-+	if (ret)
-+		return ret;
-+
-+	ret = sdw_transfer(bus, &msg);
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return buf;
-+}
-+
-+static int
-+sdw_bwrite_no_pm(struct sdw_bus *bus, u16 dev_num, u32 addr, u8 value)
-+{
-+	struct sdw_msg msg;
-+	int ret;
-+
-+	ret = sdw_fill_msg(&msg, NULL, addr, 1, dev_num,
-+			   SDW_MSG_FLAG_WRITE, &value);
-+	if (ret)
-+		return ret;
-+
-+	return sdw_transfer(bus, &msg);
-+}
-+
-+static int
-+sdw_read_no_pm(struct sdw_slave *slave, u32 addr)
-+{
-+	u8 buf;
-+	int ret;
-+
-+	ret = sdw_nread_no_pm(slave, addr, 1, &buf);
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return buf;
-+}
-+
- /**
-  * sdw_nread() - Read "n" contiguous SDW Slave registers
-  * @slave: SDW Slave
-@@ -673,6 +720,291 @@ static void sdw_modify_slave_status(struct sdw_slave *slave,
- 	mutex_unlock(&slave->bus->bus_lock);
- }
- 
-+static enum sdw_clk_stop_mode sdw_get_clk_stop_mode(struct sdw_slave *slave)
-+{
-+	enum sdw_clk_stop_mode mode;
-+
-+	/*
-+	 * Query for clock stop mode if Slave implements
-+	 * ops->get_clk_stop_mode, else read from property.
-+	 */
-+	if (slave->ops && slave->ops->get_clk_stop_mode) {
-+		mode = slave->ops->get_clk_stop_mode(slave);
-+	} else {
-+		if (slave->prop.clk_stop_mode1)
-+			mode = SDW_CLK_STOP_MODE1;
-+		else
-+			mode = SDW_CLK_STOP_MODE0;
-+	}
-+
-+	return mode;
-+}
-+
-+static int sdw_slave_clk_stop_callback(struct sdw_slave *slave,
-+				       enum sdw_clk_stop_mode mode,
-+				       enum sdw_clk_stop_type type)
-+{
-+	int ret;
-+
-+	if (slave->ops && slave->ops->clk_stop) {
-+		ret = slave->ops->clk_stop(slave, mode, type);
-+		if (ret < 0) {
-+			dev_err(&slave->dev,
-+				"Clk Stop type =%d failed: %d\n", type, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int sdw_slave_clk_stop_prepare(struct sdw_slave *slave,
-+				      enum sdw_clk_stop_mode mode,
-+				      bool prepare)
-+{
-+	bool wake_en;
-+	u32 val = 0;
-+	int ret;
-+
-+	wake_en = slave->prop.wake_capable;
-+
-+	if (prepare) {
-+		val = SDW_SCP_SYSTEMCTRL_CLK_STP_PREP;
-+
-+		if (mode == SDW_CLK_STOP_MODE1)
-+			val |= SDW_SCP_SYSTEMCTRL_CLK_STP_MODE1;
-+
-+		if (wake_en)
-+			val |= SDW_SCP_SYSTEMCTRL_WAKE_UP_EN;
-+	} else {
-+		val = sdw_read_no_pm(slave, SDW_SCP_SYSTEMCTRL);
-+
-+		val &= ~(SDW_SCP_SYSTEMCTRL_CLK_STP_PREP);
-+	}
-+
-+	ret = sdw_write_no_pm(slave, SDW_SCP_SYSTEMCTRL, val);
-+
-+	if (ret != 0)
-+		dev_err(&slave->dev,
-+			"Clock Stop prepare failed for slave: %d", ret);
-+
-+	return ret;
-+}
-+
-+static int sdw_bus_wait_for_clk_prep_deprep(struct sdw_bus *bus, u16 dev_num)
-+{
-+	int retry = bus->clk_stop_timeout;
-+	int val;
-+
-+	do {
-+		val = sdw_bread_no_pm(bus, dev_num, SDW_SCP_STAT) &
-+			SDW_SCP_STAT_CLK_STP_NF;
-+		if (!val) {
-+			dev_info(bus->dev, "clock stop prep/de-prep done slave:%d",
-+				 dev_num);
-+			return 0;
-+		}
-+
-+		usleep_range(1000, 1500);
-+		retry--;
-+	} while (retry);
-+
-+	dev_err(bus->dev, "clock stop prep/de-prep failed slave:%d",
-+		dev_num);
-+
-+	return -ETIMEDOUT;
-+}
-+
-+/**
-+ * sdw_bus_prep_clk_stop: prepare Slave(s) for clock stop
-+ *
-+ * @bus: SDW bus instance
-+ *
-+ * Query Slave for clock stop mode and prepare for that mode.
-+ */
-+int sdw_bus_prep_clk_stop(struct sdw_bus *bus)
-+{
-+	enum sdw_clk_stop_mode slave_mode;
-+	bool simple_clk_stop = true;
-+	struct sdw_slave *slave;
-+	bool is_slave = false;
-+	int ret = 0;
-+
-+	/*
-+	 * In order to save on transition time, prepare
-+	 * each Slave and then wait for all Slave(s) to be
-+	 * prepared for clock stop.
-+	 */
-+	list_for_each_entry(slave, &bus->slaves, node) {
-+		if (!slave->dev_num)
-+			continue;
-+
-+		/* Identify if Slave(s) are available on Bus */
-+		is_slave = true;
-+
-+		if (slave->status != SDW_SLAVE_ATTACHED &&
-+		    slave->status != SDW_SLAVE_ALERT)
-+			continue;
-+
-+		slave_mode = sdw_get_clk_stop_mode(slave);
-+		slave->curr_clk_stop_mode = slave_mode;
-+
-+		ret = sdw_slave_clk_stop_callback(slave, slave_mode,
-+						  SDW_CLK_PRE_PREPARE);
-+		if (ret < 0) {
-+			dev_err(&slave->dev,
-+				"pre-prepare failed:%d", ret);
-+			return ret;
-+		}
-+
-+		ret = sdw_slave_clk_stop_prepare(slave,
-+						 slave_mode, true);
-+		if (ret < 0) {
-+			dev_err(&slave->dev,
-+				"pre-prepare failed:%d", ret);
-+			return ret;
-+		}
-+
-+		if (slave_mode == SDW_CLK_STOP_MODE1)
-+			simple_clk_stop = false;
-+	}
-+
-+	if (is_slave && !simple_clk_stop) {
-+		ret = sdw_bus_wait_for_clk_prep_deprep(bus,
-+						       SDW_BROADCAST_DEV_NUM);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Inform slaves that prep is done */
-+	list_for_each_entry(slave, &bus->slaves, node) {
-+		if (!slave->dev_num)
-+			continue;
-+
-+		if (slave->status != SDW_SLAVE_ATTACHED &&
-+		    slave->status != SDW_SLAVE_ALERT)
-+			continue;
-+
-+		slave_mode = slave->curr_clk_stop_mode;
-+
-+		if (slave_mode == SDW_CLK_STOP_MODE1) {
-+			ret = sdw_slave_clk_stop_callback(slave,
-+							  slave_mode,
-+							  SDW_CLK_POST_PREPARE);
-+
-+			if (ret < 0) {
-+				dev_err(&slave->dev,
-+					"post-prepare failed:%d", ret);
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(sdw_bus_prep_clk_stop);
-+
-+/**
-+ * sdw_bus_clk_stop: stop bus clock
-+ *
-+ * @bus: SDW bus instance
-+ *
-+ * After preparing the Slaves for clock stop, stop the clock by broadcasting
-+ * write to SCP_CTRL register.
-+ */
-+int sdw_bus_clk_stop(struct sdw_bus *bus)
-+{
-+	int ret;
-+
-+	/*
-+	 * broadcast clock stop now, attached Slaves will ACK this,
-+	 * unattached will ignore
-+	 */
-+	ret = sdw_bwrite_no_pm(bus, SDW_BROADCAST_DEV_NUM,
-+			       SDW_SCP_CTRL, SDW_SCP_CTRL_CLK_STP_NOW);
-+	if (ret < 0) {
-+		dev_err(bus->dev,
-+			"ClockStopNow Broadcast message failed %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_bus_clk_stop);
-+
-+/**
-+ * sdw_bus_exit_clk_stop: Exit clock stop mode
-+ *
-+ * @bus: SDW bus instance
-+ *
-+ * This De-prepares the Slaves by exiting Clock Stop Mode 0. For the Slaves
-+ * exiting Clock Stop Mode 1, they will be de-prepared after they enumerate
-+ * back.
-+ */
-+int sdw_bus_exit_clk_stop(struct sdw_bus *bus)
-+{
-+	enum sdw_clk_stop_mode mode;
-+	bool simple_clk_stop = true;
-+	struct sdw_slave *slave;
-+	bool is_slave = false;
-+	int ret;
-+
-+	/*
-+	 * In order to save on transition time, de-prepare
-+	 * each Slave and then wait for all Slave(s) to be
-+	 * de-prepared after clock resume.
-+	 */
-+	list_for_each_entry(slave, &bus->slaves, node) {
-+		if (!slave->dev_num)
-+			continue;
-+
-+		/* Identify if Slave(s) are available on Bus */
-+		is_slave = true;
-+
-+		if (slave->status != SDW_SLAVE_ATTACHED &&
-+		    slave->status != SDW_SLAVE_ALERT)
-+			continue;
-+
-+		mode = slave->curr_clk_stop_mode;
-+
-+		if (mode == SDW_CLK_STOP_MODE1) {
-+			simple_clk_stop = false;
-+			continue;
-+		}
-+
-+		ret = sdw_slave_clk_stop_callback(slave, mode,
-+						  SDW_CLK_PRE_DEPREPARE);
-+		if (ret < 0)
-+			dev_warn(&slave->dev,
-+				 "clk stop deprep failed:%d", ret);
-+
-+		ret = sdw_slave_clk_stop_prepare(slave, mode,
-+						 false);
-+
-+		if (ret < 0)
-+			dev_warn(&slave->dev,
-+				 "clk stop deprep failed:%d", ret);
-+	}
-+
-+	if (is_slave && !simple_clk_stop)
-+		sdw_bus_wait_for_clk_prep_deprep(bus, SDW_BROADCAST_DEV_NUM);
-+
-+	list_for_each_entry(slave, &bus->slaves, node) {
-+		if (!slave->dev_num)
-+			continue;
-+
-+		if (slave->status != SDW_SLAVE_ATTACHED &&
-+		    slave->status != SDW_SLAVE_ALERT)
-+			continue;
-+
-+		mode = slave->curr_clk_stop_mode;
-+		sdw_slave_clk_stop_callback(slave, mode,
-+					    SDW_CLK_POST_DEPREPARE);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(sdw_bus_exit_clk_stop);
-+
- int sdw_configure_dpn_intr(struct sdw_slave *slave,
- 			   int port, bool enable, int mask)
- {
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index b451bb622335..b8427df034ce 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -79,6 +79,21 @@ enum sdw_slave_status {
- 	SDW_SLAVE_RESERVED = 3,
- };
- 
-+/**
-+ * enum sdw_clk_stop_type: clock stop operations
-+ *
-+ * @SDW_CLK_PRE_PREPARE: pre clock stop prepare
-+ * @SDW_CLK_POST_PREPARE: post clock stop prepare
-+ * @SDW_CLK_PRE_DEPREPARE: pre clock stop de-prepare
-+ * @SDW_CLK_POST_DEPREPARE: post clock stop de-prepare
-+ */
-+enum sdw_clk_stop_type {
-+	       SDW_CLK_PRE_PREPARE = 0,
-+	       SDW_CLK_POST_PREPARE,
-+	       SDW_CLK_PRE_DEPREPARE,
-+	       SDW_CLK_POST_DEPREPARE,
-+};
-+
- /**
-  * enum sdw_command_response - Command response as defined by SDW spec
-  * @SDW_CMD_OK: cmd was successful
-@@ -533,6 +548,11 @@ struct sdw_slave_ops {
- 	int (*port_prep)(struct sdw_slave *slave,
- 			 struct sdw_prepare_ch *prepare_ch,
- 			 enum sdw_port_prep_ops pre_ops);
-+	int (*get_clk_stop_mode)(struct sdw_slave *slave);
-+	int (*clk_stop)(struct sdw_slave *slave,
-+			enum sdw_clk_stop_mode mode,
-+			enum sdw_clk_stop_type type);
-+
- };
- 
- /**
-@@ -575,6 +595,7 @@ struct sdw_slave {
- #endif
- 	struct list_head node;
- 	struct completion *port_ready;
-+	enum sdw_clk_stop_mode curr_clk_stop_mode;
- 	u16 dev_num;
- 	u16 dev_num_sticky;
- 	bool probed;
-@@ -892,6 +913,9 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream);
- int sdw_enable_stream(struct sdw_stream_runtime *stream);
- int sdw_disable_stream(struct sdw_stream_runtime *stream);
- int sdw_deprepare_stream(struct sdw_stream_runtime *stream);
-+int sdw_bus_prep_clk_stop(struct sdw_bus *bus);
-+int sdw_bus_clk_stop(struct sdw_bus *bus);
-+int sdw_bus_exit_clk_stop(struct sdw_bus *bus);
- 
- /* messaging and data APIs */
- 
--- 
-2.20.1
-
+Rob
