@@ -2,155 +2,89 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CE1C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D07C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063F520728
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A465220728
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 12:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gNMuhELw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgAOMq0 (ORCPT
+        id S1729021AbgAOMrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:46:26 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:56504 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgAOMqA (ORCPT
+        Wed, 15 Jan 2020 07:47:04 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39694 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAOMrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 07:46:00 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id qclq210075USYZQ01clqdC; Wed, 15 Jan 2020 13:45:57 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-0003z5-4W; Wed, 15 Jan 2020 13:45:50 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-00012d-3B; Wed, 15 Jan 2020 13:45:50 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/5] drm/mipi_dbi: Add support for display offsets
-Date:   Wed, 15 Jan 2020 13:45:46 +0100
-Message-Id: <20200115124548.3951-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
+        Wed, 15 Jan 2020 07:47:04 -0500
+Received: by mail-lj1-f195.google.com with SMTP id l2so18368729lja.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 04:47:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LKM41qfZK+I1YPOs3sE0ln+ytjb0AeE1CS75B4GClME=;
+        b=gNMuhELwoO28aS9RrTIh/9249e1lPntBbdbAhxIt/a5SboIutP1c//C+mVDqR4q3Z6
+         /pMkgdWk4sIKijEfs9JvArrTWEUpuvIMBbByausxTy30f0TEnOA3SY2E9UGpF71fPWs0
+         vXtSTf9z1wONQDaLg03dtE9BQyn7/rBqnuAUWoy+1YpuFMnKLbokY+nXxC/aexy9WA8/
+         HlzSf1FzshN7h3ZBGJctu3Z0b65JD05cTf8n9JlFEdl+Da3o9yKthGB6O/uWsWvpswo6
+         EdjeFs8bpAwDrR6d8llwIytZHYhrCokCkbVLuXwYq60OKSkFZFHVIHr3zsX/YF1Lm910
+         ZZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LKM41qfZK+I1YPOs3sE0ln+ytjb0AeE1CS75B4GClME=;
+        b=TMd6cg3rgasVj+q1xwZq29TvnBWbFDd0Bea4uTdgup/gRkMTfmjNRF3WGxykdMVtwv
+         AuP1kpB8QPAuHEeY/BseuDTA+7e14x7/WFZthNEcQhLsGqc/w8xm4aFPC/EA1p+7KtVa
+         VqEOiK18Diql361s1/ryHYIBVOc/SVaq9DVVCkRGrP+Q3oQ+c3EozpDjDIe5eBuI436h
+         qWbSeMfBJ/Or3cMBs3+lZdTxad824mgH6uZIaEv/llnhjwJEisVZY4Jk0EI7k9iR2Zrg
+         fYMQoI1vwxs5H2FQIxZEfWI0PngqTHWJh1X8IOeZvuDmVRx8frG4oYRQ0NrI167jI56w
+         RNew==
+X-Gm-Message-State: APjAAAWpOR0Tq1PuBLxfCvn5WtLmwsUbNN+sGr4EJBalrBSEepkpxD+k
+        jSmokc2WN4LHK7o4ea0wtaEzROxTlYv1feHTDQzlWw==
+X-Google-Smtp-Source: APXvYqxgC8+7LaK6QdmhvvjkFCM2K1oiJ6yj576t1oav2aAPfmEdhF224oj2nleQBgwhKi4di3PdkxDOsJLznvwlhHY=
+X-Received: by 2002:a2e:918c:: with SMTP id f12mr1683852ljg.66.1579092422193;
+ Wed, 15 Jan 2020 04:47:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 15 Jan 2020 13:46:51 +0100
+Message-ID: <CACRpkdZhEQ9-d+NSB0++EEbLs3RQxfRHVubuqB-SPv130YW-SQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional() to
+ avoid error message
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Li Jin <li.jin@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the resolution of the TFT display is smaller than the maximum
-resolution supported by the display controller, the display may be
-connected to the driver output arrays with a horizontal and/or vertical
-offset, leading to a shifted image.
+On Fri, Jan 10, 2020 at 4:55 AM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 
-Add support for specifying these offsets.
+> Use platform_get_irq_optional() instead of platform_get_irq() to avoid
+> below error message during probe:
+>
+> [ 0.589121] iproc-gpio 66424800.gpio: IRQ index 0 not found
+>
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
-v2:
-  - Add Reviewed-by.
----
- drivers/gpu/drm/drm_mipi_dbi.c | 30 ++++++++++++++++++++----------
- include/drm/drm_mipi_dbi.h     | 12 ++++++++++++
- 2 files changed, 32 insertions(+), 10 deletions(-)
+Patch applied with Chris' ACK.
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index 16bff1be4b8ac622..27fe81a53c88e338 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -238,6 +238,23 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
- }
- EXPORT_SYMBOL(mipi_dbi_buf_copy);
- 
-+static void mipi_dbi_set_window_address(struct mipi_dbi_dev *dbidev,
-+					unsigned int xs, unsigned int xe,
-+					unsigned int ys, unsigned int ye)
-+{
-+	struct mipi_dbi *dbi = &dbidev->dbi;
-+
-+	xs += dbidev->left_offset;
-+	xe += dbidev->left_offset;
-+	ys += dbidev->top_offset;
-+	ye += dbidev->top_offset;
-+
-+	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, (xs >> 8) & 0xff,
-+			 xs & 0xff, (xe >> 8) & 0xff, xe & 0xff);
-+	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, (ys >> 8) & 0xff,
-+			 ys & 0xff, (ye >> 8) & 0xff, ye & 0xff);
-+}
-+
- static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
- {
- 	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
-@@ -271,12 +288,8 @@ static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
- 		tr = cma_obj->vaddr;
- 	}
- 
--	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS,
--			 (rect->x1 >> 8) & 0xff, rect->x1 & 0xff,
--			 ((rect->x2 - 1) >> 8) & 0xff, (rect->x2 - 1) & 0xff);
--	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS,
--			 (rect->y1 >> 8) & 0xff, rect->y1 & 0xff,
--			 ((rect->y2 - 1) >> 8) & 0xff, (rect->y2 - 1) & 0xff);
-+	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
-+				    rect->y2 - 1);
- 
- 	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr,
- 				   width * height * 2);
-@@ -366,10 +379,7 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
- 
- 	memset(dbidev->tx_buf, 0, len);
- 
--	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
--			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
--	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
--			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
-+	mipi_dbi_set_window_address(dbidev, 0, width - 1, 0, height - 1);
- 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
- 			     (u8 *)dbidev->tx_buf, len);
- 
-diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-index 67c66f5ee591e80f..33f325f5af2b921f 100644
---- a/include/drm/drm_mipi_dbi.h
-+++ b/include/drm/drm_mipi_dbi.h
-@@ -109,6 +109,18 @@ struct mipi_dbi_dev {
- 	 */
- 	unsigned int rotation;
- 
-+	/**
-+	 * @left_offset: Horizontal offset of the display relative to the
-+	 *               controller's driver array
-+	 */
-+	unsigned int left_offset;
-+
-+	/**
-+	 * @top_offset: Vertical offset of the display relative to the
-+	 *              controller's driver array
-+	 */
-+	unsigned int top_offset;
-+
- 	/**
- 	 * @backlight: backlight device (optional)
- 	 */
--- 
-2.17.1
-
+Yours,
+Linus Walleij
