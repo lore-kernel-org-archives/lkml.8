@@ -2,99 +2,127 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE497C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB9FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95089222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F6A24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579096662;
+	bh=kDxBEFkuUbvzLTfjaH1verzxm7gzx+LyA1aV0p4NN/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rck4aT6lAjvRFqx4Cl3/dFmsECkOjjeEk2AJbFyVquOme9boA+VSXjrmjXFUbqOf3
+	 6F6RLXcWXYfDncyr4kpLtuMNgQvVcvRRkaVMi8X6Lm+W3VmM68TioaTQ0B364Y1P/S
+	 U7C+E4LUKlEgawySiJuHcmyzz31O9WH0PXXbhphQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgAON5d (ORCPT
+        id S1730333AbgAON4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:57:33 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:20812 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729360AbgAON5b (ORCPT
+        Wed, 15 Jan 2020 08:56:40 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38480 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729604AbgAON4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:57:31 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47yTRD1PgRzKmfm;
-        Wed, 15 Jan 2020 14:57:28 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id kTcyfk68cgcH; Wed, 15 Jan 2020 14:57:21 +0100 (CET)
-Date:   Thu, 16 Jan 2020 00:57:04 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200115135704.eh4atya6fwnikyll@yavin>
-References: <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200108031314.GE8904@ZenIV.linux.org.uk>
- <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
- <20200110210719.ktg3l2kwjrdutlh6@yavin>
- <20200114045733.GW8904@ZenIV.linux.org.uk>
+        Wed, 15 Jan 2020 08:56:36 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so15849471wrh.5;
+        Wed, 15 Jan 2020 05:56:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UVc+vS25sl77DRieZ7fqDsmqFprVJrI4fDKBKV1QbSs=;
+        b=LRpnvGdzzWtUwKgyeGcGGN7KeOpl9e8FWnHjZMCHy6xvS2RmAld9JGtTRK5wpmr4Wr
+         f+68izFS//Rwjzy2ijVLI7F7bdxenZkGhvqP2Pe4MqZ5x0t4yCahrso4U28zqIMkRHMr
+         giavbBMV6yGFzf1LwFPQodHd5TaIXwJXkXp2iK6EZCjSETdMAyJLSqtfj+r97j8if8QQ
+         04zYn5zghbhZQ9g+Wu2QGrm63urnz2NEK8ylxGcqCUXkT3O/lIP+3clkdHSv28fyrZJp
+         kZS9E5BlRlN2sbrVS0vfRTMpLfhaTbICuYtHl4FjQ0oYUeHnAPac/0t+6ohMCIqy3LRR
+         wFlA==
+X-Gm-Message-State: APjAAAVASCXfzYEd7FJv3jD/qPlXT8DRKTyNg63woSkDC9kGsI6iAr7O
+        GAMMPu0gBJCewGcRHZZDX3w=
+X-Google-Smtp-Source: APXvYqyXYe4s0+Dcy7oHJR4GBgwa+hNOEdtdbuIIeeHe/ERVxkCyU9BEoy570XvbPj01KdjYPiKSMQ==
+X-Received: by 2002:adf:df90:: with SMTP id z16mr33198153wrl.273.1579096594676;
+        Wed, 15 Jan 2020 05:56:34 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id r6sm25367610wrq.92.2020.01.15.05.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 05:56:33 -0800 (PST)
+Date:   Wed, 15 Jan 2020 13:56:31 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     wei.liu@kernel.org, paul@xen.org, davem@davemloft.net,
+        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paulmck@kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] net: xen-netbank: hash.c: Use built-in RCU list checking
+Message-ID: <20200115135631.edr2nrfkycppxcku@debian>
+References: <20200115124129.5684-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3nfjay3o6o7sfgzp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114045733.GW8904@ZenIV.linux.org.uk>
+In-Reply-To: <20200115124129.5684-1-madhuparnabhowmik04@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks for the patch.
 
---3nfjay3o6o7sfgzp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is a typo in the subject line. It should say xen-netback, not
+xen-netbank.
 
-On 2020-01-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> 1) do you see any problems on your testcases with the current #fixes?
-> That's commit 7a955b7363b8 as branch tip.
+On Wed, Jan 15, 2020 at 06:11:28PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> 
+> list_for_each_entry_rcu has built-in RCU and lock checking.
+> Pass cond argument to list_for_each_entry_rcu.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> ---
+>  drivers/net/xen-netback/hash.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
+> index 10d580c3dea3..30709bc9d170 100644
+> --- a/drivers/net/xen-netback/hash.c
+> +++ b/drivers/net/xen-netback/hash.c
+> @@ -51,7 +51,8 @@ static void xenvif_add_hash(struct xenvif *vif, const u8 *tag,
+>  
+>  	found = false;
+>  	oldest = NULL;
+> -	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
+> +	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
+> +							lockdep_is_held(&vif->hash.cache.lock)) {
 
-I just finished testing the few cases I reported earlier and they both
-appear to be fixed with the current #work.namei branch. And I don't have
-any troubles booting whatsoever.
+There are probably too many tabs here. Indentation looks wrong.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+The surrounding code makes it pretty clear that the lock is already held
+by the time list_for_each_entry_rcu is called, yet the checking involved
+in lockdep_is_held is not trivial, so I'm afraid I don't consider this a
+strict improvement over the existing code.
 
---3nfjay3o6o7sfgzp
-Content-Type: application/pgp-signature; name="signature.asc"
+If there is something I misunderstood, let me know.
 
------BEGIN PGP SIGNATURE-----
+Wei.
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXh8aLQAKCRCdlLljIbnQ
-El7BAP4mVcB8EHkVpb1BiYmM6aGj6dmCburCpsIPyRObtfW53wD9GQvyGsKlZef1
-tVRXIsFXbnwRaq5E9oXLf8yZ1F1nuAc=
-=l76M
------END PGP SIGNATURE-----
-
---3nfjay3o6o7sfgzp--
+>  		/* Make sure we don't add duplicate entries */
+>  		if (entry->len == len &&
+>  		    memcmp(entry->tag, tag, len) == 0)
+> @@ -102,7 +103,8 @@ static void xenvif_flush_hash(struct xenvif *vif)
+>  
+>  	spin_lock_irqsave(&vif->hash.cache.lock, flags);
+>  
+> -	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link) {
+> +	list_for_each_entry_rcu(entry, &vif->hash.cache.list, link,
+> +							lockdep_is_held(&vif->hash.cache.lock)) {
+>  		list_del_rcu(&entry->link);
+>  		vif->hash.cache.count--;
+>  		kfree_rcu(entry, rcu);
+> -- 
+> 2.17.1
+> 
