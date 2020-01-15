@@ -2,292 +2,241 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB20C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3828C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA09206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ssHrk6c5"
+	by mail.kernel.org (Postfix) with ESMTP id A812D206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbgAOKMQ (ORCPT
+        id S1729719AbgAOKMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:12:16 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46562 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgAOKMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:12:15 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so7978470pgb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 02:12:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=nO18urJdX03zMsCtxN5PDbUx1QevamzVjKXTZ+QJcYA=;
-        b=ssHrk6c5ruBQTJYA01vD04T40VjYXgxdKRbXJRpsmRs/kdJ+s8wU7esG9MF59PdCQF
-         x+uNxrk1FdlmpHYZViQb70pzynLC1PdSHqVdm2xXo1BL4O7Nm9H71kY3yU5tPMzz0Lo3
-         766hdD4noLkKI3KjZ5xWTx6cXIWFxwoq7SBHsUsTuCMTHEhWEm2EAHkFmTVnc6hQM6gt
-         Xa77TfI4cKrmTQKbNpldyTx7rOOoei6FrN+i5nYiNDFWjEDRlKxd8TrIT9ZqVVS7F85w
-         ZpuaeDRXnIDvJBcLkEWsD2NRUf9x5GfOp+8/WTmcmrEjxfuWMmfv0kAiC4JU/KTIyVUa
-         qx+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=nO18urJdX03zMsCtxN5PDbUx1QevamzVjKXTZ+QJcYA=;
-        b=SrhriPRGBy0wjJJHPqEleJxGm7b9uEJMb88vHRPDzLMouJwYeJUrnuVlinUI3+ea7h
-         h+AHontPR0kR8FlmCmU64zQ1o6moBFco+cDg8jRz1uGAEkZ8igTre7r1jLW5XpgKsBt9
-         HW9xlatW7zF0JIpIO0ws3vQfks7anx5lnrIrvhWf9bS0T68O0R4VBShWbcD+G1lNGMIQ
-         Lu/u9RVvlolitMYhKRujlnYpFe9FDSEWCWg7HHTe6plXAkOXr8zOWSr1pxH2L5nMIU42
-         ZH2jwGDeoat31gI7G2CK+a1ArYLl/G48Y8MwXSVcz2jDFF8ci7XX7NTuE2RTWf7w6Mgi
-         9Aog==
-X-Gm-Message-State: APjAAAW4gwnEwk9Xi7w6RBXjxKVu3xlBmO3lDoK5z56IgcsVqzFbAHcS
-        7WDAnsjSea15TjOpcx4ZIRk=
-X-Google-Smtp-Source: APXvYqwbtqmrR744QPVDLEoXogIaZwOe8/1ms74bczD1fzISn+1frOC+f7Q/+RZVk6beDgB7ci2D2A==
-X-Received: by 2002:aa7:9d87:: with SMTP id f7mr30244349pfq.138.1579083134930;
-        Wed, 15 Jan 2020 02:12:14 -0800 (PST)
-Received: from localhost.localdomain (125-237-41-215-adsl.sparkbb.co.nz. [125.237.41.215])
-        by smtp.gmail.com with ESMTPSA id x21sm21069446pfn.164.2020.01.15.02.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 02:12:14 -0800 (PST)
-Date:   Wed, 15 Jan 2020 23:12:08 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     puranjay12@gmail.com, stephen@brennan.io,
-        bhanusreemahesh@gmail.com, sanjana99reddy99@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH] staging: rtl8192u: replace printk with natdev_<LEVEL>
- statements in ieee80211
-Message-ID: <20200115101208.GA683742@localhost.localdomain>
+        Wed, 15 Jan 2020 05:12:19 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49484 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729539AbgAOKMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 05:12:18 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 253B280157DB9357ED58;
+        Wed, 15 Jan 2020 18:12:16 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 Jan
+ 2020 18:12:14 +0800
+Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
+ <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
+ <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
+ <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
+ <20200110235214.GA25700@jaegeuk-macbookpro.roam.corp.google.com>
+ <3776cb0b-4b18-ae0d-16a7-a591bec77a5e@huawei.com>
+ <20200111180200.GA36424@jaegeuk-macbookpro.roam.corp.google.com>
+ <72418aa5-7d2a-de26-f0b5-9c839f0c3404@huawei.com>
+ <20200113161120.GA49290@jaegeuk-macbookpro.roam.corp.google.com>
+ <326f0049-936c-7dc4-52c3-aa64e13b2cc6@huawei.com>
+ <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d68d27d3-2501-2641-d929-6293dfe683b0@huawei.com>
+Date:   Wed, 15 Jan 2020 18:12:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200114224837.GB19274@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checkpatch reports 'WARNING: printk() should include KERN_<LEVEL>
-facility level'. Fix this by specifying a relevant KERN_<LEVEL> value
-for each line in which it was missing.
+On 2020/1/15 6:48, Jaegeuk Kim wrote:
+> On 01/14, Chao Yu wrote:
+>> On 2020/1/14 0:11, Jaegeuk Kim wrote:
+>>> On 01/13, Chao Yu wrote:
+>>>> On 2020/1/12 2:02, Jaegeuk Kim wrote:
+>>>>> On 01/11, Chao Yu wrote:
+>>>>>> On 2020/1/11 7:52, Jaegeuk Kim wrote:
+>>>>>>> On 01/06, Jaegeuk Kim wrote:
+>>>>>>>> On 01/06, Chao Yu wrote:
+>>>>>>>>> On 2020/1/3 14:50, Chao Yu wrote:
+>>>>>>>>>> This works to me. Could you run fsstress tests on compressed root directory?
+>>>>>>>>>> It seems still there are some bugs.
+>>>>>>>>>
+>>>>>>>>> Jaegeuk,
+>>>>>>>>>
+>>>>>>>>> Did you mean running por_fsstress testcase?
+>>>>>>>>>
+>>>>>>>>> Now, at least I didn't hit any problem for normal fsstress case.
+>>>>>>>>
+>>>>>>>> Yup. por_fsstress
+>>>>>>>
+>>>>>>> Please check https://github.com/jaegeuk/f2fs/commits/g-dev-test.
+>>>>>>> I've fixed
+>>>>>>> - truncation offset
+>>>>>>> - i_compressed_blocks and its lock coverage
+>>>>>>> - error handling
+>>>>>>> - etc
+>>>>>>
+>>>>>> I changed as below, and por_fsstress stops panic the system.
+>>>>>>
+>>>>>> Could you merge all these fixes into original patch?
+>>>>>
+>>>>> Yup, let m roll up some early patches first once test results become good.
+>>>>
+>>>> I didn't encounter issue any more, how about por_fsstress test result in your
+>>>> enviornment? If there is, please share the call stack with me.
+>>>
+>>> Sure, will do, once I hit an issue. BTW, I'm hitting another unreacheable nat
+>>> entry issue during por_stress without compression. :(
+>>
+>> Did you enable any features during por_fsstress test?
+>>
+>> I only hit below warning during por_fsstress test on image w/o compression.
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 10 PID: 33483 at fs/fs-writeback.c:1448 __writeback_single_inode+0x28c/0x340
+>> Call Trace:
+>>  writeback_single_inode+0xad/0x120
+>>  sync_inode_metadata+0x3d/0x60
+>>  f2fs_sync_inode_meta+0x90/0xe0 [f2fs]
+>>  block_operations+0x17c/0x360 [f2fs]
+>>  f2fs_write_checkpoint+0x101/0xff0 [f2fs]
+>>  f2fs_sync_fs+0xa8/0x130 [f2fs]
+>>  f2fs_do_sync_file+0x19c/0x880 [f2fs]
+>>  do_fsync+0x38/0x60
+>>  __x64_sys_fsync+0x10/0x20
+>>  do_syscall_64+0x5f/0x220
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Does gc_mutex patch fix this?
 
-Once they are fixed, checkpatch reports 'WARNING: Prefer [subsystem eg:
-netdev]_dbg([subsystem]dev, ... then dev_dbg(dev, ... then
-pr_debug(...  to printk(KERN_DEBUG ...'. Fix this by replacing
-relevant printk_<level> statements with their netdev_<level>
-equivalent.
+No, gc_mutex patch fixes another problem.
 
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
- .../staging/rtl8192u/ieee80211/ieee80211_rx.c | 62 +++++++++----------
- 1 file changed, 30 insertions(+), 32 deletions(-)
+BTW, it looks like a bug of VFS.
 
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-index 00fea127bdc3..e101f7b13c7e 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_rx.c
-@@ -232,8 +232,7 @@ ieee80211_rx_frame_mgmt(struct ieee80211_device *ieee, struct sk_buff *skb,
- 
- 	#ifdef NOT_YET
- 	if (ieee->iw_mode == IW_MODE_MASTER) {
--		printk(KERN_DEBUG "%s: Master mode not yet supported.\n",
--		       ieee->dev->name);
-+		netdev_dbg(ieee->dev, "Master mode not yet supported.\n");
- 		return 0;
- /*
-   hostap_update_sta_ps(ieee, (struct hostap_ieee80211_hdr_4addr *)
-@@ -261,9 +260,9 @@ ieee80211_rx_frame_mgmt(struct ieee80211_device *ieee, struct sk_buff *skb,
- 
- 	    if (ieee->iw_mode == IW_MODE_MASTER) {
- 		if (type != WLAN_FC_TYPE_MGMT && type != WLAN_FC_TYPE_CTRL) {
--			printk(KERN_DEBUG "%s: unknown management frame "
-+			netdev_dbg(skb->dev, "unknown management frame "
- 			       "(type=0x%02x, stype=0x%02x) dropped\n",
--			       skb->dev->name, type, stype);
-+			       type, stype);
- 			return -1;
- 		}
- 
-@@ -271,8 +270,8 @@ ieee80211_rx_frame_mgmt(struct ieee80211_device *ieee, struct sk_buff *skb,
- 		return 0;
- 	}
- 
--	printk(KERN_DEBUG "%s: hostap_rx_frame_mgmt: management frame "
--	       "received in non-Host AP mode\n", skb->dev->name);
-+	netdev_dbg(skb->dev, "hostap_rx_frame_mgmt: management frame "
-+	       "received in non-Host AP mode\n");
- 	return -1;
- 	#endif
- }
-@@ -349,9 +348,9 @@ ieee80211_rx_frame_decrypt(struct ieee80211_device *ieee, struct sk_buff *skb,
- 	if (ieee->tkip_countermeasures &&
- 	    strcmp(crypt->ops->name, "TKIP") == 0) {
- 		if (net_ratelimit()) {
--			printk(KERN_DEBUG "%s: TKIP countermeasures: dropped "
-+			netdev_dbg(ieee->dev, "TKIP countermeasures: dropped "
- 			       "received packet from %pM\n",
--			       ieee->dev->name, hdr->addr2);
-+			       hdr->addr2);
- 		}
- 		return -1;
- 	}
-@@ -397,9 +396,9 @@ ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device *ieee, struct sk_buff *s
- 	res = crypt->ops->decrypt_msdu(skb, keyidx, hdrlen, crypt->priv);
- 	atomic_dec(&crypt->refcnt);
- 	if (res < 0) {
--		printk(KERN_DEBUG "%s: MSDU decryption/MIC verification failed"
-+		netdev_dbg(ieee->dev, "MSDU decryption/MIC verification failed"
- 		       " (SA=%pM keyidx=%d)\n",
--		       ieee->dev->name, hdr->addr2, keyidx);
-+		       hdr->addr2, keyidx);
- 		return -1;
- 	}
- 
-@@ -749,7 +748,8 @@ static void RxReorderIndicatePacket(struct ieee80211_device *ieee,
- 	kfree(prxbIndicateArray);
- }
- 
--static u8 parse_subframe(struct sk_buff *skb,
-+static u8 parse_subframe(struct ieee80211_device *ieee,
-+			 struct sk_buff *skb,
- 			 struct ieee80211_rx_stats *rx_stats,
- 			 struct ieee80211_rxb *rxb, u8 *src, u8 *dst)
- {
-@@ -810,11 +810,11 @@ static u8 parse_subframe(struct sk_buff *skb,
- 			nSubframe_Length = (nSubframe_Length >> 8) + (nSubframe_Length << 8);
- 
- 			if (skb->len < (ETHERNET_HEADER_SIZE + nSubframe_Length)) {
--				printk("%s: A-MSDU parse error!! pRfd->nTotalSubframe : %d\n",\
--						__func__, rxb->nr_subframes);
--				printk("%s: A-MSDU parse error!! Subframe Length: %d\n", __func__, nSubframe_Length);
--				printk("nRemain_Length is %d and nSubframe_Length is : %d\n", skb->len, nSubframe_Length);
--				printk("The Packet SeqNum is %d\n", SeqNum);
-+				netdev_dbg(ieee->dev, "A-MSDU parse error!! pRfd->nTotalSubframe : %d\n",
-+					   rxb->nr_subframes);
-+				netdev_dbg(ieee->dev, "A-MSDU parse error!! Subframe Length: %d\n", nSubframe_Length);
-+				netdev_dbg(ieee->dev, "nRemain_Length is %d and nSubframe_Length is : %d\n", skb->len, nSubframe_Length);
-+				netdev_dbg(ieee->dev, "The Packet SeqNum is %d\n", SeqNum);
- 				return 0;
- 			}
- 
-@@ -904,8 +904,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 	stats = &ieee->stats;
- 
- 	if (skb->len < 10) {
--		printk(KERN_INFO "%s: SKB length < 10\n",
--		       dev->name);
-+		netdev_info(dev, "SKB length < 10\n");
- 		goto rx_dropped;
- 	}
- 
-@@ -919,7 +918,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 
- 	if (HTCCheck(ieee, skb->data)) {
- 		if (net_ratelimit())
--			printk("find HTCControl\n");
-+			netdev_warn(dev, "find HTCControl\n");
- 		hdrlen += 4;
- 		rx_stats->bContainHTC = true;
- 	}
-@@ -1113,7 +1112,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 
- 	if (ieee->host_decrypt && (fc & IEEE80211_FCTL_WEP) &&
- 	    (keyidx = ieee80211_rx_frame_decrypt(ieee, skb, crypt)) < 0) {
--		printk("decrypt frame error\n");
-+		netdev_dbg(ieee->dev, "decrypt frame error\n");
- 		goto rx_dropped;
- 	}
- 
-@@ -1141,9 +1140,8 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 			flen -= hdrlen;
- 
- 		if (frag_skb->tail + flen > frag_skb->end) {
--			printk(KERN_WARNING "%s: host decrypted and "
--			       "reassembled frame did not fit skb\n",
--			       dev->name);
-+			netdev_warn(dev, "host decrypted and "
-+			       "reassembled frame did not fit skb\n");
- 			ieee80211_frag_cache_invalidate(ieee, hdr);
- 			goto rx_dropped;
- 		}
-@@ -1178,7 +1176,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 	 * encrypted/authenticated */
- 	if (ieee->host_decrypt && (fc & IEEE80211_FCTL_WEP) &&
- 	    ieee80211_rx_frame_decrypt_msdu(ieee, skb, keyidx, crypt)) {
--		printk("==>decrypt msdu error\n");
-+		netdev_dbg(ieee->dev, "==>decrypt msdu error\n");
- 		goto rx_dropped;
- 	}
- 
-@@ -1250,7 +1248,7 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
- 		goto rx_dropped;
- 	/* to parse amsdu packets */
- 	/* qos data packets & reserved bit is 1 */
--	if (parse_subframe(skb, rx_stats, rxb, src, dst) == 0) {
-+	if (parse_subframe(ieee, skb, rx_stats, rxb, src, dst) == 0) {
- 		/* only to free rxb, and not submit the packets to upper layer */
- 		for (i = 0; i < rxb->nr_subframes; i++) {
- 			dev_kfree_skb(rxb->subframes[i]);
-@@ -1863,7 +1861,7 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
- 				info_element->data[0] == 0x00 &&
- 				info_element->data[1] == 0x13 &&
- 				info_element->data[2] == 0x74)) {
--				printk("========>%s(): athros AP is exist\n", __func__);
-+				netdev_dbg(ieee->dev, "========> athros AP is exist\n");
- 				network->atheros_cap_exist = true;
- 			} else
- 				network->atheros_cap_exist = false;
-@@ -1980,8 +1978,8 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
- 			}
- 			break;
- 		case MFIE_TYPE_QOS_PARAMETER:
--			printk(KERN_ERR
--			       "QoS Error need to parse QOS_PARAMETER IE\n");
-+			netdev_err(ieee->dev,
-+				   "QoS Error need to parse QOS_PARAMETER IE\n");
- 			break;
- 
- 		case MFIE_TYPE_COUNTRY:
-@@ -2357,14 +2355,14 @@ static inline void ieee80211_process_probe_response(
- 			if (IS_COUNTRY_IE_VALID(ieee)) {
- 				// Case 1: Country code
- 				if (!is_legal_channel(ieee, network->channel)) {
--					printk("GetScanInfo(): For Country code, filter probe response at channel(%d).\n", network->channel);
-+					netdev_warn(ieee->dev, "GetScanInfo(): For Country code, filter probe response at channel(%d).\n", network->channel);
- 					goto out;
- 				}
- 			} else {
- 				// Case 2: No any country code.
- 				// Filter over channel ch12~14
- 				if (network->channel > 11) {
--					printk("GetScanInfo(): For Global Domain, filter probe response at channel(%d).\n", network->channel);
-+					netdev_warn(ieee->dev, "GetScanInfo(): For Global Domain, filter probe response at channel(%d).\n", network->channel);
- 					goto out;
- 				}
- 			}
-@@ -2372,14 +2370,14 @@ static inline void ieee80211_process_probe_response(
- 			if (IS_COUNTRY_IE_VALID(ieee)) {
- 				// Case 1: Country code
- 				if (!is_legal_channel(ieee, network->channel)) {
--					printk("GetScanInfo(): For Country code, filter beacon at channel(%d).\n", network->channel);
-+					netdev_warn(ieee->dev, "GetScanInfo(): For Country code, filter beacon at channel(%d).\n", network->channel);
- 					goto out;
- 				}
- 			} else {
- 				// Case 2: No any country code.
- 				// Filter over channel ch12~14
- 				if (network->channel > 14) {
--					printk("GetScanInfo(): For Global Domain, filter beacon at channel(%d).\n", network->channel);
-+					netdev_warn(ieee->dev, "GetScanInfo(): For Global Domain, filter beacon at channel(%d).\n", network->channel);
- 					goto out;
- 				}
- 			}
--- 
-2.24.1
+Thanks,
 
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> >From bb17d7d77fe0b8a3e3632a7026550800ab9609e9 Mon Sep 17 00:00:00 2001
+>>>>>> From: Chao Yu <yuchao0@huawei.com>
+>>>>>> Date: Sat, 11 Jan 2020 16:58:20 +0800
+>>>>>> Subject: [PATCH] f2fs: compress: fix f2fs_put_rpages_mapping()
+>>>>>>
+>>>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>>>>> ---
+>>>>>>  fs/f2fs/compress.c | 30 +++++++++++++++---------------
+>>>>>>  1 file changed, 15 insertions(+), 15 deletions(-)
+>>>>>>
+>>>>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>>>>> index 502cd0ddc2a7..5c6a31d84ce4 100644
+>>>>>> --- a/fs/f2fs/compress.c
+>>>>>> +++ b/fs/f2fs/compress.c
+>>>>>> @@ -74,18 +74,10 @@ static void f2fs_put_compressed_page(struct page *page)
+>>>>>>  }
+>>>>>>
+>>>>>>  static void f2fs_drop_rpages(struct compress_ctx *cc,
+>>>>>> -		struct address_space *mapping, int len, bool unlock)
+>>>>>> +					int len, bool unlock)
+>>>>>>  {
+>>>>>>  	unsigned int i;
+>>>>>>  	for (i = 0; i < len; i++) {
+>>>>>> -		if (mapping) {
+>>>>>> -			pgoff_t start = start_idx_of_cluster(cc);
+>>>>>> -			struct page *page = find_get_page(mapping, start + i);
+>>>>>> -
+>>>>>> -			put_page(page);
+>>>>>> -			put_page(page);
+>>>>>> -			cc->rpages[i] = NULL;
+>>>>>> -		}
+>>>>>>  		if (!cc->rpages[i])
+>>>>>>  			continue;
+>>>>>>  		if (unlock)
+>>>>>> @@ -97,18 +89,25 @@ static void f2fs_drop_rpages(struct compress_ctx *cc,
+>>>>>>
+>>>>>>  static void f2fs_put_rpages(struct compress_ctx *cc)
+>>>>>>  {
+>>>>>> -	f2fs_drop_rpages(cc, NULL, cc->cluster_size, false);
+>>>>>> +	f2fs_drop_rpages(cc, cc->cluster_size, false);
+>>>>>>  }
+>>>>>>
+>>>>>>  static void f2fs_unlock_rpages(struct compress_ctx *cc, int len)
+>>>>>>  {
+>>>>>> -	f2fs_drop_rpages(cc, NULL, len, true);
+>>>>>> +	f2fs_drop_rpages(cc, len, true);
+>>>>>>  }
+>>>>>>
+>>>>>>  static void f2fs_put_rpages_mapping(struct compress_ctx *cc,
+>>>>>> -				struct address_space *mapping, int len)
+>>>>>> +				struct address_space *mapping,
+>>>>>> +				pgoff_t start, int len)
+>>>>>>  {
+>>>>>> -	f2fs_drop_rpages(cc, mapping, len, false);
+>>>>>> +	int i;
+>>>>>> +	for (i = 0; i < len; i++) {
+>>>>>> +		struct page *page = find_get_page(mapping, start + i);
+>>>>>> +
+>>>>>> +		put_page(page);
+>>>>>> +		put_page(page);
+>>>>>> +	}
+>>>>>>  }
+>>>>>>
+>>>>>>  static void f2fs_put_rpages_wbc(struct compress_ctx *cc,
+>>>>>> @@ -680,7 +679,8 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>>>>>>
+>>>>>>  		if (!PageUptodate(page)) {
+>>>>>>  			f2fs_unlock_rpages(cc, i + 1);
+>>>>>> -			f2fs_put_rpages_mapping(cc, mapping, cc->cluster_size);
+>>>>>> +			f2fs_put_rpages_mapping(cc, mapping, start_idx,
+>>>>>> +					cc->cluster_size);
+>>>>>>  			f2fs_destroy_compress_ctx(cc);
+>>>>>>  			goto retry;
+>>>>>>  		}
+>>>>>> @@ -714,7 +714,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+>>>>>>  unlock_pages:
+>>>>>>  	f2fs_unlock_rpages(cc, i);
+>>>>>>  release_pages:
+>>>>>> -	f2fs_put_rpages_mapping(cc, mapping, i);
+>>>>>> +	f2fs_put_rpages_mapping(cc, mapping, start_idx, i);
+>>>>>>  	f2fs_destroy_compress_ctx(cc);
+>>>>>>  	return ret;
+>>>>>>  }
+>>>>>> -- 
+>>>>>> 2.18.0.rc1
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> One another fix in f2fs-tools as well.
+>>>>>>> https://github.com/jaegeuk/f2fs-tools
+>>>>>>>
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>> .
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
