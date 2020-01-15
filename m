@@ -2,86 +2,107 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ED6C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28483C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98142467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0235B2081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgAOTdR (ORCPT
+        id S1729073AbgAOTew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:33:17 -0500
-Received: from sauhun.de ([88.99.104.3]:40806 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAOTdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:33:16 -0500
-Received: from localhost (p54B33239.dip0.t-ipconnect.de [84.179.50.57])
-        by pokefinder.org (Postfix) with ESMTPSA id D51362C0742;
-        Wed, 15 Jan 2020 20:33:14 +0100 (CET)
-Date:   Wed, 15 Jan 2020 20:33:14 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: iop3xx: Fix memory leak in probe error path
-Message-ID: <20200115193314.GA23789@ninjato>
-References: <20200113172954.5096-1-krzk@kernel.org>
+        Wed, 15 Jan 2020 14:34:52 -0500
+Received: from mailoutvs50.siol.net ([185.57.226.241]:34084 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725999AbgAOTev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 14:34:51 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 0AE41522613;
+        Wed, 15 Jan 2020 20:34:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id q7oHK5Sc6x-2; Wed, 15 Jan 2020 20:34:48 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id B92D752262F;
+        Wed, 15 Jan 2020 20:34:48 +0100 (CET)
+Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id A6357522613;
+        Wed, 15 Jan 2020 20:34:46 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] arm64: dts: allwinner: h6: tanix-tx6: enable emmc
+Date:   Wed, 15 Jan 2020 20:34:41 +0100
+Message-Id: <20200115193441.172902-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
-Content-Disposition: inline
-In-Reply-To: <20200113172954.5096-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tanix TX6 has 32 GiB eMMC. Add a node for it.
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-On Mon, Jan 13, 2020 at 06:29:54PM +0100, Krzysztof Kozlowski wrote:
-> When handling devm_gpiod_get_optional() errors, free the memory already
-> allocated.  This fixes Smatch warnings:
->=20
->     drivers/i2c/busses/i2c-iop3xx.c:437 iop3xx_i2c_probe() warn: possible=
- memory leak of 'new_adapter'
->     drivers/i2c/busses/i2c-iop3xx.c:442 iop3xx_i2c_probe() warn: possible=
- memory leak of 'new_adapter'
->=20
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch=
+/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+index 83e6cb0e59ce..8cbf4e4a761e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+@@ -31,6 +31,13 @@ hdmi_con_in: endpoint {
+ 		};
+ 	};
+=20
++	reg_vcc1v8: vcc1v8 {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "vcc1v8";
++		regulator-min-microvolt =3D <1800000>;
++		regulator-max-microvolt =3D <1800000>;
++	};
++
+ 	reg_vcc3v3: vcc3v3 {
+ 		compatible =3D "regulator-fixed";
+ 		regulator-name =3D "vcc3v3";
+@@ -78,6 +85,15 @@ &mmc0 {
+ 	status =3D "okay";
+ };
+=20
++&mmc2 {
++	vmmc-supply =3D <&reg_vcc3v3>;
++	vqmmc-supply =3D <&reg_vcc1v8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	bus-width =3D <8>;
++	status =3D "okay";
++};
++
+ &ohci0 {
+ 	status =3D "okay";
+ };
+@@ -86,6 +102,10 @@ &ohci3 {
+ 	status =3D "okay";
+ };
+=20
++&pio {
++	vcc-pc-supply =3D <&reg_vcc1v8>;
++};
++
+ &r_ir {
+ 	linux,rc-map-name =3D "rc-tanix-tx5max";
+ 	status =3D "okay";
+--=20
+2.24.1
 
-Applied to for-current, thanks! Please add a 'Fixes' tag next time,
-added it for you now.
-
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4faPIACgkQFA3kzBSg
-Kbbk2w/+NtYh/9pzq1Cay6U7CbprQKH2/wmfdXJH1ycJteHmo394nhmZh7mvJdrw
-/6aSQTQzibxn7nzttVDC24EB97K+jgoOeGpS4pcePvMV0WX8feDvDeV6NQOkTAxx
-64sbL8nej0ZBKiB6OnxMDkbPq1Su3aQhUWFC1U1COjpGq7VoiEv9TOT/ybtjgr3i
-Wu4eU786wZhYCJvvs/fdfCMTTxk7EGARLxPXKgw/B2RPWnQyla7egPbkUrfUSebr
-PbrJPHNGAqzc1+W6dM61TVW97nT6ORe0fHnII4ysX4NfLBYYIyduYuVBGmzkknm/
-LhmhTdsMix8XJ0AxLLcMMeX4hKvWmwVrfTymW9wJZL/Kj1HDgwCYLmSLYwwLqyVg
-JZsGMGpl6/NvttTWXVQ2UbQlBGyL42MXsWRN1JpgzX4iNnl11C5oVagrVJpP1C2n
-NmofwVqeSk5ufvxyTO8kEduNXPEYPevSeian6eC1FqMT/mjk5MH82AwebpQhLy27
-ROP9F/g4yL7ZHT1h+Bi8NuZ3Aj+57r4c3nXUku0bnH6dCWo1QKOdmxPy8x3BymWt
-+Lskzt2E1OCK/90PWg7CsnRIX06QYs7cVLFNk+xCEwSyJjibJukqFmZu/iD+8qre
-ejGlqZ/mF1igswHCxNwxM3R71LaXDPkNEY0uBwa0jHULPRpAgwI=
-=0i7M
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
