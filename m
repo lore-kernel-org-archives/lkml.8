@@ -2,316 +2,211 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82475C33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741F2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BF42187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579101006;
-	bh=On973BrhoR475dnZRG2cRmV2OCexuQ6TyfNxjO5OTMU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FO0qIEXb+333+BpezJojzdTyPOoIT0B9zwOWZuwA/nsb5Nng+18q8rKneuc559xys
-	 +ydU06xeL8OYoZo9lfn4KGA5DV16nDo82+AM2e2DvZyJMBb6giZDDWgccef6MZ3FOl
-	 Ifb/16qRuDFAAW944zFwemdL0Lgl2QMpecbWjHxA=
+	by mail.kernel.org (Postfix) with ESMTP id 45C982187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 15:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="lygI9pvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgAOPKF (ORCPT
+        id S1729015AbgAOPLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:10:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbgAOPKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 10:10:04 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C6BF2467C;
-        Wed, 15 Jan 2020 15:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579101003;
-        bh=On973BrhoR475dnZRG2cRmV2OCexuQ6TyfNxjO5OTMU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i7TASilUBsLzntR4gZSZHePscwjsdF68olcDcQcdM8scE6YROBtjYmsEljI9tHe2M
-         iUOxZ/sCOIOCRgIwsB1WZ5dUPqbufeznera6GS1zXw+i32gBJaJMutR8k3EB7SFvRw
-         S3x/HUye5vt7l+QY3t8fn2jHtVbATxmHG+Qn96x4=
-Received: by mail-qk1-f171.google.com with SMTP id c17so15906273qkg.7;
-        Wed, 15 Jan 2020 07:10:03 -0800 (PST)
-X-Gm-Message-State: APjAAAWMLwlhCQaWk7ESs5HlVGf2YynP0EhTNVHPj+05ZiEidYSWhYoE
-        qvf9Aqofln+XHBrvfcooZpljXhYgLQQrHessrQ==
-X-Google-Smtp-Source: APXvYqztAMAd0OsajU/QPMm8GA80nrSr6KedsAz2pVVqZrrY6JN6tyfc5i2NXErAO/T/CmJxzbPlK1MdeXVIH7n8XoA=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr27937250qkg.152.1579101002403;
- Wed, 15 Jan 2020 07:10:02 -0800 (PST)
+        Wed, 15 Jan 2020 10:11:06 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:45312 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgAOPLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:11:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 1DEB827E0D9F;
+        Wed, 15 Jan 2020 16:11:04 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jGtPhsUPDTD7; Wed, 15 Jan 2020 16:11:03 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 70FFB27E1110;
+        Wed, 15 Jan 2020 16:11:03 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 70FFB27E1110
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1579101063;
+        bh=tQNg8W4B8It38KS9py0wzoez0QyArcbSpmUEs0bg+o0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=lygI9pvO6qxSgj7WW4L36Q07iz/d/9CzwOB5QZlVMV8QfEkOH3XzgoaMZRtQ8Y3rc
+         dFz1W3A7aLZbniZ9L32Lv6NazsQECc76Uc2GzwSmPS6PpuoU24IwNEpomo42W8F+78
+         HdIvkdkAdNxotcJctFLAFV5FTq3GILww6f2vZRvg=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id YGtuSEVMnM9r; Wed, 15 Jan 2020 16:11:03 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 5CC8127E0D9F;
+        Wed, 15 Jan 2020 16:11:03 +0100 (CET)
+Date:   Wed, 15 Jan 2020 16:11:03 +0100 (CET)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <612100872.12377996.1579101063237.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com>
+References: <20200115102142.11229-1-cleger@kalray.eu> <088ceab9-f135-6e70-dcf6-f75ec46110b1@st.com> <79048597.12371594.1579098506802.JavaMail.zimbra@kalray.eu> <a1116656-cf2e-c1a1-7cc3-0fe2a79f076e@st.com>
+Subject: Re: [PATCH] remoteproc: Add support for predefined notifyids
 MIME-Version: 1.0
-References: <20200114213809.27166-1-jbx6244@gmail.com> <20200114213809.27166-3-jbx6244@gmail.com>
-In-Reply-To: <20200114213809.27166-3-jbx6244@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 15 Jan 2020 09:09:50 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKhJNcrR-RjbS8eAzot5FdE=C23b272QcOj5-12EobE0w@mail.gmail.com>
-Message-ID: <CAL_JsqKhJNcrR-RjbS8eAzot5FdE=C23b272QcOj5-12EobE0w@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 3/3] dt-bindings: mmc: convert rockchip dw-mshc
- bindings to yaml
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
+Thread-Topic: remoteproc: Add support for predefined notifyids
+Thread-Index: J8aJAfA4my59MouK2aS5tI7ySP9YKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Convert the Rockchip designware mobile storage host controller
-> device tree bindings to yaml.
-> Add maintainer.
->
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  49 --------
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.yaml  | 137 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  3 files changed, 138 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
->
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> deleted file mode 100644
-> index 6f629b12b..000000000
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ /dev/null
-> @@ -1,49 +0,0 @@
-> -* Rockchip specific extensions to the Synopsys Designware Mobile
-> -  Storage Host Controller
-> -
-> -The Synopsys designware mobile storage host controller is used to interface
-> -a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
-> -differences between the core Synopsys dw mshc controller properties described
-> -by synopsys-dw-mshc.txt and the properties used by the Rockchip specific
-> -extensions to the Synopsys Designware Mobile Storage Host Controller.
-> -
-> -Required Properties:
-> -
-> -* compatible: should be
-> -       - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
-> -                                                       before RK3288
-> -       - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
-> -       - "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RV1108
-> -       - "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip PX30
-> -       - "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
-> -       - "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK322x
-> -       - "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3328
-> -       - "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
-> -       - "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
-> -
-> -Optional Properties:
-> -* clocks: from common clock binding: if ciu-drive and ciu-sample are
-> -  specified in clock-names, should contain handles to these clocks.
-> -
-> -* clock-names: Apart from the clock-names described in synopsys-dw-mshc.txt
-> -  two more clocks "ciu-drive" and "ciu-sample" are supported. They are used
-> -  to control the clock phases, "ciu-sample" is required for tuning high-
-> -  speed modes.
-> -
-> -* rockchip,default-sample-phase: The default phase to set ciu-sample at
-> -  probing, low speeds or in case where all phases work at tuning time.
-> -  If not specified 0 deg will be used.
-> -
-> -* rockchip,desired-num-phases: The desired number of times that the host
-> -  execute tuning when needed. If not specified, the host will do tuning
-> -  for 360 times, namely tuning for each degree.
-> -
-> -Example:
-> -
-> -       rkdwmmc0@12200000 {
-> -               compatible = "rockchip,rk3288-dw-mshc";
-> -               reg = <0x12200000 0x1000>;
-> -               interrupts = <0 75 0>;
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-> new file mode 100644
-> index 000000000..da16916b7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
-> @@ -0,0 +1,137 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mmc/rockchip-dw-mshc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip designware mobile storage host controller device tree bindings
-> +
-> +description:
-> +  Rockchip uses the Synopsys designware mobile storage host controller
-> +  to interface a SoC with storage medium such as eMMC or SD/MMC cards.
-> +  This file documents the combined properties for
 
-Strange place for a line break...
 
-> +  the core Synopsys dw mshc controller that are not already included
-> +  in the synopsys-dw-mshc-common.yaml file and the Rockchip specific
-> +  extensions.
-> +
-> +allOf:
-> +  - $ref: "synopsys-dw-mshc-common.yaml"
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      # for Rockchip PX30
-> +      - items:
-> +          - const: rockchip,px30-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK2928 and before RK3288
-> +      - const: rockchip,rk2928-dw-mshc
-> +      # for Rockchip RK3036
-> +      - items:
-> +          - const: rockchip,rk3036-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK322x
-> +      - items:
-> +          - const: rockchip,rk3228-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK3288
-> +      - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK3328
-> +      - items:
-> +          - const: rockchip,rk3328-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK3368
-> +      - items:
-> +          - const: rockchip,rk3368-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RK3399
-> +      - items:
-> +          - const: rockchip,rk3399-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
-> +      # for Rockchip RV1108
-> +      - items:
-> +          - const: rockchip,rv1108-dw-mshc
-> +          - const: rockchip,rk3288-dw-mshc
+----- On 15 Jan, 2020, at 16:09, Arnaud Pouliquen arnaud.pouliquen@st.com w=
+rote:
 
-All the ones with fallback rockchip,rk3288-dw-mshc can be grouped as
-one items list with 'enum' for the first item.
+> On 1/15/20 3:28 PM, Cl=C3=A9ment Leger wrote:
+>> Hi Arnaud,
+>>=20
+>> ----- On 15 Jan, 2020, at 15:06, Arnaud Pouliquen arnaud.pouliquen@st.co=
+m wrote:
+>>=20
+>>> Hi Cl=C3=A9ment,
+>>>
+>>> On 1/15/20 11:21 AM, Clement Leger wrote:
+>>>> In order to support preallocated notify ids, if their value is
+>>>> equal to FW_RSC_NOTIFY_ID_ANY, then do no allocate a notify id
+>>>> dynamically but try to allocate the requested one. This is useful when
+>>>> using custom ids to bind them to custom vendor resources. For instance=
+,
+>>>> it allow to assign a group of queues to a specific interrupti in order
+>>>> to dispatch notifications.
+>>>>
+>>>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>>>> ---
+>>>>  drivers/remoteproc/remoteproc_core.c | 27 +++++++++++++++++++--------
+>>>>  include/linux/remoteproc.h           |  1 +
+>>>>  2 files changed, 20 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+>>>> b/drivers/remoteproc/remoteproc_core.c
+>>>> index 307df98347ba..b1485fcd0f11 100644
+>>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>>> @@ -351,14 +351,27 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, =
+int i)
+>>>>  =09/*
+>>>>  =09 * Assign an rproc-wide unique index for this vring
+>>>>  =09 * TODO: assign a notifyid for rvdev updates as well
+>>>> -=09 * TODO: support predefined notifyids (via resource table)
+>>>>  =09 */
+>>>> -=09ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+>>>> -=09if (ret < 0) {
+>>>> -=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>>> -=09=09return ret;
+>>>> +=09if (rsc->vring[i].notifyid =3D=3D FW_RSC_NOTIFY_ID_ANY) {
+>>>> +=09=09ret =3D idr_alloc(&rproc->notifyids, rvring, 0, 0, GFP_KERNEL);
+>>>> +=09=09if (ret < 0) {
+>>>> +=09=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>>> +=09=09=09return ret;
+>>>> +=09=09}
+>>>> +=09=09notifyid =3D ret;
+>>>> +
+>>>> +=09=09/* Let the rproc know the notifyid of this vring.*/
+>>>> +=09=09rsc->vring[i].notifyid =3D notifyid;
+>>>> +=09} else {
+>>>> +=09=09/* Reserve requested notify_id */
+>>>> +=09=09notifyid =3D rsc->vring[i].notifyid;
+>>>> +=09=09ret =3D idr_alloc(&rproc->notifyids, rvring, notifyid,
+>>>> +=09=09=09=09notifyid + 1, GFP_KERNEL);
+>>>> +=09=09if (ret < 0) {
+>>>> +=09=09=09dev_err(dev, "idr_alloc failed: %d\n", ret);
+>>>> +=09=09=09return ret;
+>>>> +=09=09}
+>>>>  =09}
+>>>> -=09notifyid =3D ret;
+>>>> =20
+>>>>  =09/* Potentially bump max_notifyid */
+>>>>  =09if (notifyid > rproc->max_notifyid)
+>>>> @@ -366,8 +379,6 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, in=
+t i)
+>>>> =20
+>>>>  =09rvring->notifyid =3D notifyid;
+>>>> =20
+>>>> -=09/* Let the rproc know the notifyid of this vring.*/
+>>>> -=09rsc->vring[i].notifyid =3D notifyid;
+>>>>  =09return 0;
+>>>>  }
+>>> The rproc_free_vring function resets the notifyid to -1 on free.
+>>> This could generate a side effect if the resource table is not reloaded=
+.
+>>=20
+>> Oh indeed, I did not thought of that. What would you recommend ?
+>> If using -1 in free vring, notify ids will be reallocated at next
+>> round.
+> Regarding the code i'm not sure that it is useful to reset the notifyID t=
+o -1 on
+> free.
+> In current version, on alloc, the notifyID is overwriten without check.
+> And as vdev status is updated, vring struct in resource table should be
+> considered as invalid
+> Except if i missed a usecase/race condition...
+>=20
+>>=20
+>> I was also worried that it would break some existing user applications
+>> which uses "0" as a notify id in vring but expect the id to be
+>> allocated dynamically. With my modification, it means it will try to
+>> use "0" as a predefined id, leading to allocation failure.
+>>=20
+> Yes this could introduce regression for firmware that sets 0 as default v=
+alue.
+> Probably better to introduce this patch with a new version of the resourc=
+e table
+> :)
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 4
-> +    description:
-> +      Handle to "biu" and "ciu" clocks for the bus interface unit clock and
-> +      the card interface unit clock. If "ciu-drive" and "ciu-sample" are
-> +      specified in clock-names, it should also contain
-> +      handles to these clocks.
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:
-> +        - const: biu
-> +        - const: ciu
-> +      - items:
-> +        - const: biu
-> +        - const: ciu
-> +        - const: ciu-drive
-> +        - const: ciu-sample
+Understood ;)
 
-Add 'minItems: 2' and you only need 1 list.
+Regards,
 
-> +    description:
-> +      Apart from the clock-names "biu" and "ciu" two more clocks
-> +      "ciu-drive" and "ciu-sample" are supported. They are used
-> +      to control the clock phases, "ciu-sample" is required for tuning
-> +      high speed modes.
-> +
-> +  rockchip,default-sample-phase:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 360
-> +      - default: 0
+Cl=C3=A9ment
 
-Move these 3 to the same level as 'allOf' (dropping '-').
-
-> +    description:
-> +      The default phase to set "ciu-sample" at probing,
-> +      low speeds or in case where all phases work at tuning time.
-> +      If not specified 0 deg will be used.
-> +
-> +  rockchip,desired-num-phases:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +      - maximum: 360
-> +      - default: 360
-> +    description:
-> +      The desired number of times that the host execute tuning when needed.
-> +      If not specified, the host will do tuning for 360 times,
-> +      namely tuning for each degree.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3288-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    sdmmc: dwmmc@ff0c0000 {
-> +      compatible = "rockchip,rk3288-dw-mshc";
-> +      reg = <0x0 0xff0c0000 0x0 0x4000>;
-> +      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
-> +               <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
-> +      clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +      resets = <&cru SRST_MMC0>;
-> +      reset-names = "reset";
-> +      fifo-depth = <0x100>;
-> +      max-frequency = <150000000>;
-
-Not documented.
-
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d6ad01d71..1b16c0fdf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2240,6 +2240,7 @@ L:        linux-rockchip@lists.infradead.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
->  S:     Maintained
->  F:     Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-> +F:     Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
->  F:     arch/arm/boot/dts/rk3*
->  F:     arch/arm/boot/dts/rv1108*
->  F:     arch/arm/mach-rockchip/
-> --
-> 2.11.0
->
+>=20
+> Regards
+> Arnaud
+>>>
+>>>> =20
+>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>>> index 16ad66683ad0..dcae3394243e 100644
+>>>> --- a/include/linux/remoteproc.h
+>>>> +++ b/include/linux/remoteproc.h
+>>>> @@ -123,6 +123,7 @@ enum fw_resource_type {
+>>>>  };
+>>>> =20
+>>>>  #define FW_RSC_ADDR_ANY (-1)
+>>>> +#define FW_RSC_NOTIFY_ID_ANY (-1)This define can also be used in
+>>>> rproc_free_vring
+>>=20
+>> Indeed.
+>>=20
+>> Thanks for your review.
+>>=20
+>> Regards,
+>>=20
+>> Cl=C3=A9ment
+>>=20
+>>>
+>>> Regards,
+>>> Arnaud
+>>>> =20
+>>>>  /**
+> >>>   * struct fw_rsc_carveout - physically contiguous memory request
