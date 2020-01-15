@@ -2,309 +2,104 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E4CC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E70C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF362468B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E45D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ipkc0c9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgAOLap (ORCPT
+        id S1729947AbgAOLdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:30:45 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:38651 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730009AbgAOLan (ORCPT
+        Wed, 15 Jan 2020 06:33:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56083 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729758AbgAOLdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:30:43 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 15 Jan 2020
- 19:31:03 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v6 3/4] soc: amlogic: Add support for Secure power domains controller
-Date:   Wed, 15 Jan 2020 19:30:30 +0800
-Message-ID: <1579087831-94965-4-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579087831-94965-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1579087831-94965-1-git-send-email-jianxin.pan@amlogic.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+        Wed, 15 Jan 2020 06:33:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so17478649wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 03:33:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bjtZ5eSDKVKPCaPVF0QkrfK9h+NZ0t3IhMm/2SNFSYY=;
+        b=Ipkc0c9TvwHgCZpX171XDuHI2ImOVWFpZtsbC93JtqSRfDcXVUGgkbmufiP1m+wyYj
+         7VGmqsyGr2dLptJC8qPssX4wuvXLiF9WlHY98MUbVf1JjJpPmVuKGAi5ISEqoN9Ln25W
+         +y+y51ISOrXX8TfWGHCOTTlMAeoPMoxFQProTGu261lv+WkKU2PqWRxoZ4iNTO4jZMcl
+         qXHSRnFTQt+NN+t1nPHSRuoMYNZmhI3CmSLdVQFXiVEsyLS0tKtldAa9l//ghx+5vdWU
+         l5cLKPQaXociYaFR4s43AbDnzxq53CSYpPwZaaekRXUCA4P5nwGuBCwMfvz9j5qrDHe4
+         qXxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bjtZ5eSDKVKPCaPVF0QkrfK9h+NZ0t3IhMm/2SNFSYY=;
+        b=gcPpdz0Tiuf1BAd3Eq3Bl4ZelbxJu2/IohvyqY2Ipfzj+MVlF4GZTkNQm60fIYugbR
+         Q4FOgOjmNcNL8js/BXQ5udzzT06TKSDcNhTXvLJZfvIDHdY1YFvYkX8JICC+c5ODTj3n
+         wBlD73Mwq9nB81mJFRzowiRcRiF5cpX8CiYWh1JMqf57R6HuSysBOWwqxw/h9S1ccAoP
+         J28u63dyuliLQs8mU2mljAStFvQnRan085u6po1TdDYqgr39frxdPCmGEvVHoKbG5oEC
+         QzP0hqP/h+02ZGT1hRFWXVturjmfwmDJ9X/nT7kHYRkIm2+LtSYQxqVH1o9lSERL5Tkr
+         YsYQ==
+X-Gm-Message-State: APjAAAXobxaEVifafrnW3A9gXu1ebtOA3S9tR3p/Uv6+F7vepnP3ljeL
+        zkXukgC/Amubmmux8MW2b4Q=
+X-Google-Smtp-Source: APXvYqxam+VTA908+XGqxn+E6SO3/si0ritI029uDRCZAPoh0ozQqwfgoeJc7oTFItean/5norE7hA==
+X-Received: by 2002:a1c:498a:: with SMTP id w132mr30992904wma.10.1579087999863;
+        Wed, 15 Jan 2020 03:33:19 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a58:8166:7500:34f4:3149:a617:3dd])
+        by smtp.gmail.com with ESMTPSA id h17sm24892867wrs.18.2020.01.15.03.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 03:33:19 -0800 (PST)
+From:   Ilie Halip <ilie.halip@gmail.com>
+To:     linux-riscv@lists.infradead.org
+Cc:     Ilie Halip <ilie.halip@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] riscv: delete temporary files
+Date:   Wed, 15 Jan 2020 13:32:42 +0200
+Message-Id: <20200115113243.23096-1-ilie.halip@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the Amlogic Secure Power controller. In A1/C1 series, power
-control registers are in secure domain, and should be accessed by smc.
+Temporary files used in the VDSO build process linger on even after make
+mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Delete them once they're no longer needed.
+
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
 ---
- drivers/soc/amlogic/Kconfig             |  13 ++
- drivers/soc/amlogic/Makefile            |   1 +
- drivers/soc/amlogic/meson-secure-pwrc.c | 204 ++++++++++++++++++++++++++++++++
- 3 files changed, 218 insertions(+)
- create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+ arch/riscv/kernel/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
-index bc2c912..6cb06e7 100644
---- a/drivers/soc/amlogic/Kconfig
-+++ b/drivers/soc/amlogic/Kconfig
-@@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
- 	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
- 	  Generic Power Domains.
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 49a5852fd07d..33b16f4212f7 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -58,7 +58,8 @@ quiet_cmd_vdsold = VDSOLD  $@
+       cmd_vdsold = $(CC) $(KBUILD_CFLAGS) $(call cc-option, -no-pie) -nostdlib -nostartfiles $(SYSCFLAGS_$(@F)) \
+                            -Wl,-T,$(filter-out FORCE,$^) -o $@.tmp && \
+                    $(CROSS_COMPILE)objcopy \
+-                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@
++                           $(patsubst %, -G __vdso_%, $(vdso-syms)) $@.tmp $@ && \
++                   rm $@.tmp
  
-+config MESON_SECURE_PM_DOMAINS
-+	bool "Amlogic Meson Secure Power Domains driver"
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on PM && OF
-+	depends on HAVE_ARM_SMCCC
-+	default ARCH_MESON
-+	select PM_GENERIC_DOMAINS
-+	select PM_GENERIC_DOMAINS_OF
-+	help
-+	  Support for the power controller on Amlogic A1/C1 series.
-+	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
-+	  Power Domains.
-+
- config MESON_MX_SOCINFO
- 	bool "Amlogic Meson MX SoC Information driver"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
-index de79d044..7b8c5d3 100644
---- a/drivers/soc/amlogic/Makefile
-+++ b/drivers/soc/amlogic/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
- obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
- obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
- obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
-+obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
-diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
-new file mode 100644
-index 00000000..5fb29a4
---- /dev/null
-+++ b/drivers/soc/amlogic/meson-secure-pwrc.c
-@@ -0,0 +1,204 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc.
-+ * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <dt-bindings/power/meson-a1-power.h>
-+#include <linux/arm-smccc.h>
-+#include <linux/firmware/meson/meson_sm.h>
-+
-+#define PWRC_ON		1
-+#define PWRC_OFF	0
-+
-+struct meson_secure_pwrc_domain {
-+	struct generic_pm_domain base;
-+	unsigned int index;
-+	struct meson_secure_pwrc *pwrc;
-+};
-+
-+struct meson_secure_pwrc {
-+	struct meson_secure_pwrc_domain *domains;
-+	struct genpd_onecell_data xlate;
-+	struct meson_sm_firmware *fw;
-+};
-+
-+struct meson_secure_pwrc_domain_desc {
-+	unsigned int index;
-+	unsigned int flags;
-+	char *name;
-+	bool (*is_off)(struct meson_secure_pwrc_domain *pwrc_domain);
-+};
-+
-+struct meson_secure_pwrc_domain_data {
-+	unsigned int count;
-+	struct meson_secure_pwrc_domain_desc *domains;
-+};
-+
-+static bool pwrc_secure_is_off(struct meson_secure_pwrc_domain *pwrc_domain)
-+{
-+	int is_off = 1;
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_A1_PWRC_GET, &is_off,
-+			  pwrc_domain->index, 0, 0, 0, 0) < 0)
-+		pr_err("failed to get power domain status\n");
-+
-+	return is_off;
-+}
-+
-+static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
-+{
-+	int ret = 0;
-+	struct meson_secure_pwrc_domain *pwrc_domain =
-+		container_of(domain, struct meson_secure_pwrc_domain, base);
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_A1_PWRC_SET, NULL,
-+			  pwrc_domain->index, PWRC_OFF, 0, 0, 0) < 0) {
-+		pr_err("failed to set power domain off\n");
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int meson_secure_pwrc_on(struct generic_pm_domain *domain)
-+{
-+	int ret = 0;
-+	struct meson_secure_pwrc_domain *pwrc_domain =
-+		container_of(domain, struct meson_secure_pwrc_domain, base);
-+
-+	if (meson_sm_call(pwrc_domain->pwrc->fw, SM_A1_PWRC_SET, NULL,
-+			  pwrc_domain->index, PWRC_ON, 0, 0, 0) < 0) {
-+		pr_err("failed to set power domain on\n");
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+#define SEC_PD(__name, __flag)			\
-+[PWRC_##__name##_ID] =				\
-+{						\
-+	.name = #__name,			\
-+	.index = PWRC_##__name##_ID,		\
-+	.is_off = pwrc_secure_is_off,	\
-+	.flags = __flag,			\
-+}
-+
-+static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
-+	SEC_PD(DSPA,	0),
-+	SEC_PD(DSPB,	0),
-+	/* UART should keep working in ATF after suspend and before resume */
-+	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
-+	/* DMC is for DDR PHY ana/dig and DMC, and should be always on */
-+	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(I2C,	0),
-+	SEC_PD(PSRAM,	0),
-+	SEC_PD(ACODEC,	0),
-+	SEC_PD(AUDIO,	0),
-+	SEC_PD(OTP,	0),
-+	SEC_PD(DMA,	0),
-+	SEC_PD(SD_EMMC,	0),
-+	SEC_PD(RAMA,	0),
-+	/* SRAMB is used as ATF runtime memory, and should be always on */
-+	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(IR,	0),
-+	SEC_PD(SPICC,	0),
-+	SEC_PD(SPIFC,	0),
-+	SEC_PD(USB,	0),
-+	/* NIC is for the Arm NIC-400 interconnect, and should be always on */
-+	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
-+	SEC_PD(PDMIN,	0),
-+	SEC_PD(RSA,	0),
-+};
-+
-+static int meson_secure_pwrc_probe(struct platform_device *pdev)
-+{
-+	int i;
-+	struct device_node *sm_np;
-+	struct meson_secure_pwrc *pwrc;
-+	const struct meson_secure_pwrc_domain_data *match;
-+
-+	match = of_device_get_match_data(&pdev->dev);
-+	if (!match) {
-+		dev_err(&pdev->dev, "failed to get match data\n");
-+		return -ENODEV;
-+	}
-+
-+	sm_np = of_find_compatible_node(NULL, NULL, "amlogic,meson-gxbb-sm");
-+	if (!sm_np) {
-+		dev_err(&pdev->dev, "no secure-monitor node\n");
-+		return -ENODEV;
-+	}
-+
-+	pwrc = devm_kzalloc(&pdev->dev, sizeof(*pwrc), GFP_KERNEL);
-+	if (!pwrc)
-+		return -ENOMEM;
-+
-+	pwrc->fw = meson_sm_get(sm_np);
-+	of_node_put(sm_np);
-+	if (!pwrc->fw)
-+		return -EPROBE_DEFER;
-+
-+	pwrc->xlate.domains = devm_kcalloc(&pdev->dev, match->count,
-+					   sizeof(*pwrc->xlate.domains),
-+					   GFP_KERNEL);
-+	if (!pwrc->xlate.domains)
-+		return -ENOMEM;
-+
-+	pwrc->domains = devm_kcalloc(&pdev->dev, match->count,
-+				     sizeof(*pwrc->domains), GFP_KERNEL);
-+	if (!pwrc->domains)
-+		return -ENOMEM;
-+
-+	pwrc->xlate.num_domains = match->count;
-+	platform_set_drvdata(pdev, pwrc);
-+
-+	for (i = 0 ; i < match->count ; ++i) {
-+		struct meson_secure_pwrc_domain *dom = &pwrc->domains[i];
-+
-+		if (!match->domains[i].index)
-+			continue;
-+
-+		dom->pwrc = pwrc;
-+		dom->index = match->domains[i].index;
-+		dom->base.name = match->domains[i].name;
-+		dom->base.flags = match->domains[i].flags;
-+		dom->base.power_on = meson_secure_pwrc_on;
-+		dom->base.power_off = meson_secure_pwrc_off;
-+
-+		pm_genpd_init(&dom->base, NULL, match->domains[i].is_off(dom));
-+
-+		pwrc->xlate.domains[i] = &dom->base;
-+	}
-+
-+	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
-+}
-+
-+static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
-+	.domains = a1_pwrc_domains,
-+	.count = ARRAY_SIZE(a1_pwrc_domains),
-+};
-+
-+static const struct of_device_id meson_secure_pwrc_match_table[] = {
-+	{
-+		.compatible = "amlogic,meson-a1-pwrc",
-+		.data = &meson_secure_a1_pwrc_data,
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver meson_secure_pwrc_driver = {
-+	.probe = meson_secure_pwrc_probe,
-+	.driver = {
-+		.name		= "meson_secure_pwrc",
-+		.of_match_table	= meson_secure_pwrc_match_table,
-+	},
-+};
-+builtin_platform_driver(meson_secure_pwrc_driver);
+ # install commands for the unstripped file
+ quiet_cmd_vdso_install = INSTALL $@
+
+base-commit: dc6fcba72f0435b7884f2e92fd634bb9f78a2c60
 -- 
-2.7.4
+2.17.1
 
