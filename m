@@ -2,240 +2,146 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113FFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCC2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B722467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3188D2081E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 05:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579065044;
+	bh=C4oxB1KuMssGA4cmBfkzV+QupCkEj6wf0SdPunP6KJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u6Vf2KC6kep1hlf55asn3VWDaAXFHWEXLn05YOGmVS7LO7NJcvekh1YxqhC6goqMU
+	 KT3h44Xt2QkBOR+Q+c9D01EfAwotOo7QGs936ngaCMEs16QgiX/JqRrRQtqPiBhJ6N
+	 TPg7HRT9w1tefV4suPXCozqpUHa9HNjRRF+rWymI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAOFJL (ORCPT
+        id S1729052AbgAOFKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 00:09:11 -0500
-Received: from mail-out.m-online.net ([212.18.0.10]:38902 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgAOFJK (ORCPT
+        Wed, 15 Jan 2020 00:10:43 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36709 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgAOFKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 00:09:10 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 47yFjb18nFz1rVvt;
-        Wed, 15 Jan 2020 06:09:07 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 47yFjb0Rryz1r0GR;
-        Wed, 15 Jan 2020 06:09:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id wv2R1Mb3tDIk; Wed, 15 Jan 2020 06:09:05 +0100 (CET)
-X-Auth-Info: m7VLb3Fv9Vu6GyyKS3Q9hd/0Pv7crRUj+i9rR/1cWSQ=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Wed, 15 Jan 2020 06:09:05 +0100 (CET)
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200115120258.0e535fcb@canb.auug.org.au>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <d9b60770-fa22-deaa-3a80-6dad0fba3aa3@denx.de>
-Date:   Wed, 15 Jan 2020 06:09:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 00:10:43 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n59so7145490pjb.1;
+        Tue, 14 Jan 2020 21:10:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x0sMapq9swaZtL82FLYfnbMqZ10mvQ1x7edYmjwiQss=;
+        b=eBP6mwwAgcu+oMVKVIFyJ0jg/r8ZRafk50xCPKZmxbQNYx6TSiBIyYGjd9PvhbBp5t
+         wP8B2BJtguTYg30y8lqHgDnRu+RhtTQL55JozzxGlgWCkiaukyiOWNRtPQBRZeLPru1/
+         kuiYMyrpnAIOlQSbL+w/Z5aPc8QvVdfZJnGYxMzZABrFGoLoXpXbg80ACMBiHzmAZZkF
+         OIJI1xRwSUhB7VQleR2g3VA4un8XBPEcT3WJjtKfJGfoFM7J+GVD0aIcQxDAQMYaaynN
+         shv7MLLqMHjft3Czbl7BjVpF9l6i+ZO6l1b9/sMjTWbNZElEMLlPvH2Cr1tHx5rOwzjm
+         bszg==
+X-Gm-Message-State: APjAAAUPPsd0qbnPfsgXwvq9vDcCICyqzxBfjvpzqlZsCjqmHvU8G2Ig
+        XkWEVQZmpQ2IfxTpgvaESmx3OTSm
+X-Google-Smtp-Source: APXvYqxt1SeWNnk7qTNMgQIZA/pZ1v2rFLXYg0fUidOnZWCwgde1FjHIARePzC+AO0osv/JmHGQ+3g==
+X-Received: by 2002:a17:902:547:: with SMTP id 65mr28728166plf.50.1579065042411;
+        Tue, 14 Jan 2020 21:10:42 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
+        by smtp.gmail.com with ESMTPSA id c14sm18791959pjr.24.2020.01.14.21.10.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 21:10:41 -0800 (PST)
+Date:   Tue, 14 Jan 2020 21:10:40 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     gregkh@linuxfoundation.org
+Cc:     mdf@kernel.org, Will Deacon <will@kernel.org>,
+        mark.rutland@arm.com, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org, gregkh@linuxfoundation.org, yilun.xu@intel.com
+Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
+ drivers
+Message-ID: <20200115051040.GA1389@epycbox.lan>
+References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
+ <20191125033412.GB890@hao-dev>
+ <20191125080127.GC1809@willie-the-truck>
+ <20191125080839.GA6227@hao-dev>
+ <20191209024527.GA22625@hao-dev>
+ <20191216010104.GA32154@yilunxu-OptiPlex-7050>
+ <20200106023742.GA3980@hao-dev>
+ <20200114055605.GA13574@hao-dev>
 MIME-Version: 1.0
-In-Reply-To: <20200115120258.0e535fcb@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114055605.GA13574@hao-dev>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 2:02 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the sound-asoc tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/phy/phy-core.c:17:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/common/common.c:15:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/phy/of.c:9:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from drivers/usb/host/ohci-hcd.c:37:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from drivers/usb/host/ehci-hub.c:17,
->                  from drivers/usb/host/ehci-hcd.c:305:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/amba/bus.h:19,
->                  from drivers/of/platform.c:14:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> In file included from include/linux/amba/bus.h:19,
->                  from drivers/of/platform.c:14:
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/usb/core/phy.c:12:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/ata/ahci.h:25,
->                  from drivers/ata/ahci.c:35:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/core/usb.c:42:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/core/of.c:12:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/core/of.c:12:
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/ata/ahci.h:25,
->                  from drivers/ata/libahci.c:32:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/usb/core/hcd.c:35:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from drivers/ata/sata_mv.c:50:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from include/linux/usb/of.h:12,
->                  from drivers/usb/core/message.c:21:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> In file included from include/linux/phy/phy.h:17,
->                  from include/linux/usb/otg.h:13,
->                  from drivers/usb/core/hub.c:26:
-> include/linux/regulator/consumer.h:600:1: error: expected identifier or '(' before '{' token
->   600 | {
->       | ^
-> include/linux/regulator/consumer.h:599:1: warning: 'regulator_is_equal' declared 'static' but never defined [-Wunused-function]
->   599 | regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
->       | ^~~~~~~~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   b059b7e0ec32 ("regulator: core: Add regulator_is_equal() helper")
-> 
-> I have added the following fix patch for today.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 15 Jan 2020 11:58:36 +1100
-> Subject: [PATCH] fix for "regulator: core: Add regulator_is_equal() helper"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/linux/regulator/consumer.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-> index 2c89d886595c..6a92fd3105a3 100644
-> --- a/include/linux/regulator/consumer.h
-> +++ b/include/linux/regulator/consumer.h
-> @@ -596,7 +596,7 @@ regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
->  }
->  
->  static inline bool
-> -regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
-> +regulator_is_equal(struct regulator *reg1, struct regulator *reg2)
->  {
->  	return false;
->  }
+Hi Greg,
 
-Sorry for the breakage, thanks for the patch.
+On Tue, Jan 14, 2020 at 01:56:05PM +0800, Wu Hao wrote:
+> On Mon, Jan 06, 2020 at 10:37:42AM +0800, Wu Hao wrote:
+> > On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
+> > > On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
+> > > > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
+> > > > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
+> > > > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
+> > > > > > > Hi Will and Mark,
+> > > > > > > 
+> > > > > > > Could you please help us on review this patchset? as this patchset mainly 
+> > > > > > > introduced a new perf driver following the similar way as drivers/perf/*.
+> > > > > > 
+> > > > > > Why is it not under drivers/perf/, then?
+> > > > > 
+> > > > > Hi Will
+> > > > > 
+> > > > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
+> > > > > and we plan to put this sub feature together with others, including related
+> > > > > documentation. It only registers a standard perf pmu for its userspace
+> > > > > interfaces.
+> > > > > 
+> > > > > > 
+> > > > > > > This patchset has been submitted for a long time but didn't receive any
+> > > > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
+> > > > > > 
+> > > > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
+> > > > > 
+> > > > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
+> > > > 
+> > > > Hi Will
+> > > > 
+> > > > Did you get a chance to look into this patchset?
+> > > > 
+> > > > Thanks
+> > > > Hao
+> > > 
+> > > Hi Will
+> > > 
+> > > Did you have time to look into this patchset? We have done review work
+> > > for FPGA part. And as a perf driver, we appreciate your comments.
+> > > 
+> > > Thanks
+> > > Yilun
+> > 
+> > Hi Will
+> > 
+> > Did you get a chance to look into this patchset these days? 
+> > 
+> > Actually we didn't receive any comments for a long time, if you are busy and
+> > don't have enough time on this, do you know if someone else could help with
+> > review and ack from perf driver point of view, or any other things we can do
+> > to speed up this? Thanks in advance! 
+> 
+> Hi Moritz
+> 
+> Looks like still no response from Will. :(
+> 
+> Do you know someone else could help?
 
-Acked-by: Marek Vasut <marex@denx.de>
+Do you have some feedback? I'm a bit confused on what to do in such a
+situation, do I just take the patch if the maintainer doesn't respond
+for a while?
+
+As always thanks for your help!
+
+Cheers,
+Moritz
