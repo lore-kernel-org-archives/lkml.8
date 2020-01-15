@@ -2,240 +2,117 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3CBC32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E173C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D58E24681
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3Yvbzc2"
+	by mail.kernel.org (Postfix) with ESMTP id 25F702084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 18:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579114699;
+	bh=n9e63zzj12iJP4AsEA5L+UO7C13jvUSNHLs2DJxAHvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G5bh8b/tZw5QUH52Zpobn6vMkbDwnjP2faaGJidqlgOB9wkLePE7+Cz54ErFB9kju
+	 rf8YLH65URBxJJUxHDh9P31ei6PWxOGopdjls3N+njyeqWy/OjLgrHwV0Z7R+FLbJr
+	 HW/qXscMHxYww2dJxeKruBlEMw26gfZlzuY1NY4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgAOSw7 (ORCPT
+        id S1729057AbgAOS6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:52:59 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39428 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgAOSw4 (ORCPT
+        Wed, 15 Jan 2020 13:58:18 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40620 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbgAOS6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 13:52:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so16796594wrt.6;
-        Wed, 15 Jan 2020 10:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fKeq8tFcSLHJkn6QSQqYD/5g8utINbdDLtdwNyNEqW4=;
-        b=g3Yvbzc2/oSJbfhTH6JaJp2Qe9E1DGE7f7QjCd+z+Ij4tcyCxl2FfLxNq2ZV2xJMb/
-         an7c+Akg/FwWYUEcDwDw/vfxSgZkYEB+XRpPDDjkIjuNe8KTJuggT0go8chdesQzK41r
-         ScQiU7ArJmzpm1pobwp2EjOhJRgd6/K5chAGj+FzLtbbHKR0mG4umBN+XrYBkPcD3Vgm
-         Mpj6e/oVvYZjUFwusNQ/0b4oCMDU4EdrfCdcTy+oy1HoJ5ysZUjfghfLg8myoqx6MRm+
-         Dc0BPvdGD7VvS8+mn5tPHWl2E45CBef30B3QEYk8+C7lGCvrqwp1HSYF05PnEdYDBcF4
-         o4sQ==
+        Wed, 15 Jan 2020 13:58:17 -0500
+Received: by mail-pj1-f67.google.com with SMTP id bg7so335660pjb.5;
+        Wed, 15 Jan 2020 10:58:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fKeq8tFcSLHJkn6QSQqYD/5g8utINbdDLtdwNyNEqW4=;
-        b=MIyxSWY/wsTfJxstlidRA8CjHCdnhG/hf06pYRhSzlVwqTzu2GGFnYziFGK/jTyvg6
-         Q1Itc5kypRfUHf5uqD0STj1RbvkKP0D/cryZEHJEx5fjEcyXV6ifZTqaMYc43vtopQJG
-         sRglphW5bO7nGD0rPij33/JJAqN2h9HcnieMKqnq0G6ctKJ5fhRW6WO7FcGqVF9MsKVg
-         GXWFF1rgoangbBkZaVBjZXhtdaJ2cbs62GhH8mnRaTvaC1aCZqS8lSYfav8E3HYGVHHD
-         6ETElIiAjbURMrdgOvvWaeTndhurjWVS4umNEyQk5gHNPlW9TU4dVHqG7TnVQ9q0mXiW
-         24yQ==
-X-Gm-Message-State: APjAAAWXOneELfsMd/ZSDBruxRO7CPN0xRgU8h2bzwDHb7ehh/05T6lP
-        bN6eAplfC66ICi63g9EiaFE=
-X-Google-Smtp-Source: APXvYqzkLZfz2dbHy4Hqedrh3BrPKB+8frv2Otn76ljLVvnsbG51oSX9N6Z8/7bKT/Porz+sJ+Xf4w==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr33079769wrw.31.1579114373365;
-        Wed, 15 Jan 2020 10:52:53 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id i5sm26296759wrv.34.2020.01.15.10.52.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:52:53 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: rename dwmmc node names to mmc
-Date:   Wed, 15 Jan 2020 19:52:44 +0100
-Message-Id: <20200115185244.18149-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200115185244.18149-1-jbx6244@gmail.com>
-References: <20200115185244.18149-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=viW5lUxcta83gnrt+PjYRxoac+oGqhs+xUeSRvnZmTQ=;
+        b=CYSt8+RNsbNv8nhdw2VzG2Im59kpDOIKJlD44SJBT+dIJ/uHz2uOIajgLTzBtm/Ggg
+         zvujyncpq9VAS6w4YTBIwx+olglDb4XAhjs2BVUeYhmctnKl36tPa0UabFy0bCWw0JJM
+         1auljMvtqzovmb0KksdNMNmnEc2CZNzyz5zhGZFuMkCP6s2EqVZUDw7LPBTTO20t2Z1h
+         I4NTVxg35dGwetuVfQxaAZ9JFtgszPLse3P1H6Tyk/HXkeM4vTodCi696JWiSIAnNQA/
+         IZuhoyYwjCSrazHZfFhYdZT3xQbDD51wE3SLyfeJFAb/iDn3TfNswGAtkb0tyiy86G2r
+         7pdQ==
+X-Gm-Message-State: APjAAAX2hMUtwAkQHf8E8Xq13JT17VNqbH383OmOuh4tln77U7lO5/nK
+        IagunJIHGPTCAJHzqTqm/qI=
+X-Google-Smtp-Source: APXvYqyek9crS8Ai2SG0u0WO2iiBAHirV2VbSsqt3LTDaCmmNae9Bi3hRdfGWwno4Yvqe/UlPABj0g==
+X-Received: by 2002:a17:90a:26ab:: with SMTP id m40mr1624578pje.42.1579114696566;
+        Wed, 15 Jan 2020 10:58:16 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id v9sm504680pja.26.2020.01.15.10.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 10:58:14 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7338E40244; Wed, 15 Jan 2020 18:58:12 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 18:58:12 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200115185812.GH11244@42.do-not-panic.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <20200113154739.GB11244@42.do-not-panic.com>
+ <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
+ <20200115021545.GD11244@42.do-not-panic.com>
+ <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'dwmmc' nodes are manually verified.
-In order to automate this process rockchip-dw-mshc.txt
-has to be converted to yaml. In the new setup
-rockchip-dw-mshc.yaml will inherit properties from
-mmc-controller.yaml and synopsys-dw-mshc-common.yaml.
-'dwmmc' will no longer be a valid name for a node,
-so change them all to 'mmc'
+On Wed, Jan 15, 2020 at 08:46:04PM +0200, Jari Ruusu wrote:
+> On 1/15/20, Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > On Mon, Jan 13, 2020 at 09:58:25PM +0200, Jari Ruusu wrote:
+> >> Before that 16-byte alignment patch was applied, my only one
+> >> microcode built-in BLOB was "accidentally" 16-byte aligned.
+> >
+> > How did it accidentially get 16-byte aligned?
+> 
+> Old code aligned it to 8-bytes.
+> There is 50/50-chance of it also being 16-byte aligned.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
- 5 files changed, 14 insertions(+), 14 deletions(-)
+But *how? Why is there a 50/50 chance of it being aligned to
+16 bytes if 8 bytes are currently specified?
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 07fe187cf..32e752312 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -879,7 +879,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@ff370000 {
-+	sdmmc: mmc@ff370000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff370000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-@@ -894,7 +894,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff380000 {
-+	sdio: mmc@ff380000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff380000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-@@ -909,7 +909,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff390000 {
-+	emmc: mmc@ff390000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff390000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index fa0d55f1a..116f1900e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -584,7 +584,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@ff480000 {
-+	sdmmc: mmc@ff480000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff480000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-@@ -599,7 +599,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff490000 {
-+	emmc: mmc@ff490000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff490000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-@@ -612,7 +612,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff4a0000 {
-+	sdio: mmc@ff4a0000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff4a0000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 91306ebed..acfaefdd3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -837,7 +837,7 @@
- 		};
- 	};
- 
--	sdmmc: dwmmc@ff500000 {
-+	sdmmc: mmc@ff500000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff500000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-@@ -849,7 +849,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff510000 {
-+	sdio: mmc@ff510000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff510000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-@@ -861,7 +861,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff520000 {
-+	emmc: mmc@ff520000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff520000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index fd8618801..a0df61c61 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -204,7 +204,7 @@
- 		#clock-cells = <0>;
- 	};
- 
--	sdmmc: dwmmc@ff0c0000 {
-+	sdmmc: mmc@ff0c0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0c0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-@@ -218,7 +218,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio0: dwmmc@ff0d0000 {
-+	sdio0: mmc@ff0d0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0d0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-@@ -232,7 +232,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff0f0000 {
-+	emmc: mmc@ff0f0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0f0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e62ea0e2b..ed654758c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -291,7 +291,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio0: dwmmc@fe310000 {
-+	sdio0: mmc@fe310000 {
- 		compatible = "rockchip,rk3399-dw-mshc",
- 			     "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xfe310000 0x0 0x4000>;
-@@ -307,7 +307,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@fe320000 {
-+	sdmmc: mmc@fe320000 {
- 		compatible = "rockchip,rk3399-dw-mshc",
- 			     "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xfe320000 0x0 0x4000>;
--- 
-2.11.0
+> So it ended up being both 8-byte and 16-byte aligned.
 
+What do you mean both? How can it be aligned to both?
+
+> > Also, how do you *know* something is broken right now?
+> 
+> I haven't spotted brokenness in Linux microcode loader other
+> than that small alignment issue.
+> 
+> However, I can confirm that there are 2 microcode updates newer
+> than what my laptop computer's latest BIOS includes. Both newer
+> ones (20191115 and 20191112) are unstable on my laptop computer
+> i5-7200U (fam 6 model 142 step 9 pf 0x80). Hard lockups with both
+> of them. Back to BIOS microcode for now.
+
+I was more interested in how you are *certain*, other than manualcode
+inspection, and that a spec indicates we should use 16 bytes for Intel
+microcode -- that the 8 byte alignment *does* not allow users to
+currently update their Intel CPU microcode for built-in firmware.                                      
+
+From what I gather so far we have no case yet reported where we know for
+sure it fails right now with the 8 byte alignment on 64-bit.
+										                                                                                
+This information would just be useful for the commit log.
+
+  Luis
