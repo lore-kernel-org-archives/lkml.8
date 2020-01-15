@@ -2,78 +2,134 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36E5C32771
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043D02051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745372077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:19:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RdYPEzcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730418AbgAOXLD (ORCPT
+        id S1730984AbgAOXTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:11:03 -0500
-Received: from mailoutvs55.siol.net ([185.57.226.246]:57398 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729394AbgAOXLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:11:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 7ECF95229C0;
-        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id G8KZ7vYm0PJ9; Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 2E8355229D0;
-        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id C0A525229C0;
-        Thu, 16 Jan 2020 00:10:58 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
-Date:   Thu, 16 Jan 2020 00:10:58 +0100
-Message-ID: <4200557.LvFx2qVVIh@jernej-laptop>
-In-Reply-To: <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
-References: <20200115194216.173117-1-jernej.skrabec@siol.net> <20200115194216.173117-2-jernej.skrabec@siol.net> <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
+        Wed, 15 Jan 2020 18:19:39 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:40196 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgAOXTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 18:19:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=om+XDgmT/HasblOlQJMaFnMBZQDtEHgJob8myvB/iL4=; b=RdYPEzcOaAhRIB+TK9A2lOQjmk
+        6oUBaDFE9kzDiGMQgI/o9m4ZA65U07klDMnyT7c9zckloskpb/daMsn606OTV1wYspOWBo7NY9tx9
+        ZdqXIgWG+ZTVlRupOwQ3myITTPT7l252lStk0Krk/hD33mpxlZ87Lv9eRuU6MSBVoEmI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1irrwa-0002Qm-Ig; Thu, 16 Jan 2020 00:19:24 +0100
+Date:   Thu, 16 Jan 2020 00:19:24 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
+        rmk+kernel@armlinux.org.uk, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] net: phy: Maintain MDIO device and bus
+ statistics
+Message-ID: <20200115231924.GF2475@lunn.ch>
+References: <20200115204228.26094-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115204228.26094-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne sreda, 15. januar 2020 ob 22:57:31 CET je Rob Herring napisal(a):
-> On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol.net> 
-wrote:
-> > OrangePi 3 can optionally have eMMC. Add a compatible for it.
+On Wed, Jan 15, 2020 at 12:42:20PM -0800, Florian Fainelli wrote:
+> We maintain global statistics for an entire MDIO bus, as well as broken
+> down, per MDIO bus address statistics. Given that it is possible for
+> MDIO devices such as switches to access MDIO bus addressies for which
+> there is not a mdio_device instance created (therefore not a a
+> corresponding device directory in sysfs either), we also maintain
+> per-address statistics under the statistics folder. The layout looks
+> like this:
 > 
-> Is this just a population option or a different board layout? If the
-> former, I don't think you need a new compatible, just add/enable a
-> node for the eMMC.
+> /sys/class/mdio_bus/../statistics/
+> 	transfers
+> 	errrors
+> 	writes
+> 	reads
+> 	transfers_<addr>
+> 	errors_<addr>
+> 	writes_<addr>
+> 	reads_<addr>
+> 
+> When a mdio_device instance is registered, a statistics/ folder is
+> created with the tranfers, errors, writes and reads attributes which
+> point to the appropriate MDIO bus statistics structure.
+> 
+> Statistics are 64-bit unsigned quantities and maintained through the
+> u64_stats_sync.h helper functions.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes in v2:
+> 
+> - tracked per MDIO address statististics in separate attributes
 
-I have only board with eMMC but I imagine it's the former. Even so, current 
-approach with Allwinner boards is to have two different board DT files, one for 
-each variant. This can be seen from Documentation/devicetree/bindings/arm/
-sunxi.yaml which has a lot of compatibles ending with "-emmc". I guess reason 
-for that is to avoid having MMC controller being powered on for no reason.
+Hi Florian
 
-Best regards,
-Jernej
+This is much better. Here is an MDIO bus with a Marvel MV88E6390
 
+andrew@zii-devel-c-bidi:/sys/class/mdio_bus/0.1/statistics$ awk ' { print FILENAME " " $0  } ' transfers_? transfers_?? transfers
+transfers_0 93
+transfers_1 80
+transfers_2 80
+transfers_3 80
+transfers_4 102
+transfers_5 18
+transfers_6 7
+transfers_7 7
+transfers_8 7
+transfers_9 7
+transfers_10 82
+transfers_11 0
+transfers_12 0
+transfers_13 0
+transfers_14 0
+transfers_15 0
+transfers_16 0
+transfers_17 0
+transfers_18 0
+transfers_19 0
+transfers_20 0
+transfers_21 0
+transfers_22 0
+transfers_23 0
+transfers_24 0
+transfers_25 0
+transfers_26 0
+transfers_27 288
+transfers_28 3328
+transfers_29 0
+transfers_30 0
+transfers_31 0
+transfers 4179
 
+As you can see, there are transfers on a number of addresses.
 
+I've not looked at the code yet, but i can give:
 
+Tested-by: Andrew Lunn <andrew@lunn.ch>
+
+I will review the code soon.
+
+    Andrew
