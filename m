@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC27DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4115AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9E52467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107992467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 02:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xtitrX16"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aXdtgxRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgAOCIj (ORCPT
+        id S1728939AbgAOCIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 21:08:39 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43177 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728862AbgAOCIj (ORCPT
+        Tue, 14 Jan 2020 21:08:49 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37703 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728834AbgAOCIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 21:08:39 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so14688859oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 18:08:38 -0800 (PST)
+        Tue, 14 Jan 2020 21:08:49 -0500
+Received: by mail-oi1-f193.google.com with SMTP id z64so13970726oia.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 18:08:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GzPKMHc3Op1OEoA3J43WzBLZT6I0/snk0tNLdQMQmYc=;
-        b=xtitrX16rffIlFxYwfbeBb4TQm3WrYatpMRiPvIdHCl+hEcLE5JtO8ohYpnpXRjHNJ
-         r4dyMkVsM91vFg7LYIKfZWxNTzTCYRqzSfVww8dmXGjnUKV7Yplz+f1uRHmG+dyBXNBR
-         lsQhZH7UFrOQJwvOcNd8lDNSI9yKaPV7OOgwWKe7paOqxbrF727sawvXbgquofBbU54O
-         c36TgXyM5UJnfBGJeDl9T816Th/G2vOZbG9vyRlFFdlfkAtGWZvY7ZSlMvwnMlgjBjPH
-         nHMjL8GIuZ/QkQBnxUZoQzfUkKXzwIk0corOqjj7UxpingtpAVnt57pOFiy6vipYa80f
-         K7Lw==
+        bh=jDYx2catry9tBFBvHCgv2zKG9qdzLhJsaTk5RfBCNXI=;
+        b=aXdtgxRttHhAn0O0y4f1jl1quZwJ+kP0CRziEOHCTxzTRHxT0Lm8ZZwwy688KjrmEs
+         U50Yywjt2x+YFaWmJLj/+hhcdQDOb/Hq4Dod8zdHx9VTjeEm5VUS1swK0wEnVmI7jbA7
+         Kyk2mGGREx9qFhq7EtmoL+0t84qlVL+GMeKzYxqlInh58pPhgPz0UnWjA5nCnL9uTX5t
+         nENwgtkVpb2GT6f5avi5/k34qF1WjR76sfU6HRgK5CPtBRBkBoEQqHmxW9gxmidVypuR
+         YWQX4N6z0D3ceEI/6YNhSPcc8llo54lizUi1meqTvNh+lWFlhIVkBS8iZiGYuDqByiJE
+         Vq8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GzPKMHc3Op1OEoA3J43WzBLZT6I0/snk0tNLdQMQmYc=;
-        b=OmI5pVVktLEBE5w2+ZHNYHme8FEwhslKtDzAgkFNhrWMkmJT/GsVzMV2wLybvqTZAu
-         0+46OrioUPNc/VvzEglIBtwcKO2FTmk1mS+t64EUt4pIrkUlBF22bg24+ATHv0lO6KhC
-         GbQzSRM9u5nL3e3CxvHZ7tjz8U+/utfpR8kd1RY8QOdfra2O5JJSM1G6Pej6vd+mtfmE
-         f2Rh1u0jqCisCFuVC9Q4xx4hMX8SLmUYf1YMXmQFzPqKvXViafdIsBCbyoOoJ5Qr+4AG
-         KGeSDXWK5VX5J+PSLaj0J9z51u9V5sZJSja6h5vHs1+RNAl2TPa5q+0xBLT8XWCXQt8q
-         zpLA==
-X-Gm-Message-State: APjAAAVuFtLBjhyXw2aP2jOVLJVwgGPNgtVNroe7VgmmMelnAl1NTxTP
-        z/5F6K2khiEpZPp/AwxWVcZalA==
-X-Google-Smtp-Source: APXvYqxs3KOmVG3b8xPJqEtdVYNAEGQqPTdzo4yoGXPppDbyiU6SOKMfeFnVU20JioYAnANEmymCzA==
-X-Received: by 2002:a05:6830:9a:: with SMTP id a26mr1127235oto.131.1579054118218;
-        Tue, 14 Jan 2020 18:08:38 -0800 (PST)
+        bh=jDYx2catry9tBFBvHCgv2zKG9qdzLhJsaTk5RfBCNXI=;
+        b=nA+KiujtKpQWQH+VcAfauPre4QB8doXRD8dKpmDZgOraGs80yya+DaLzzHU3PIB/Ll
+         TwiyNppJvk3KNMpOyz7/sxdDsQ4dTXlFIOTUED5bEQB+OhOLd4PbmRCdREQdAM/KEa9G
+         w/Kaz3s3Z2NMrtFwZTJEpKf5S7P1Iqagr5n5mvs32WJBSpQxcfLhZLM2bSJyQI9ACRST
+         TroSckaj7ab9x9XnhKHZzKuaj/HmqgWefnpSxQKvZqPoS+0qYyMO4GCtdfXM9yBH3gin
+         e5+wpaDskwJv5uyKDWUaVtXfu/HAGn2MmZA1PnMvAR4/m2XO4kcmOn3XmRO8924n75Lw
+         wSZA==
+X-Gm-Message-State: APjAAAUHueSmFYSr5/3TTj9PJWoShVElI+P2GL6DhpYRbdkXltmEPuQi
+        wAC96KLssw5UqhIvBavfvfkrWw==
+X-Google-Smtp-Source: APXvYqxtJ3Yr3HTNwR7ZmY9xWYqWEOWKDwq0khXd3KuQ6dCEqz6qcLAVcAAVxweGVAENCkJb2OiWGg==
+X-Received: by 2002:aca:4c15:: with SMTP id z21mr18191457oia.8.1579054128044;
+        Tue, 14 Jan 2020 18:08:48 -0800 (PST)
 Received: from [192.168.17.59] ([189.219.74.147])
-        by smtp.gmail.com with ESMTPSA id w201sm5225492oif.29.2020.01.14.18.08.36
+        by smtp.gmail.com with ESMTPSA id i3sm6044584otr.31.2020.01.14.18.08.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jan 2020 18:08:37 -0800 (PST)
-Subject: Re: [PATCH 4.4 00/28] 4.4.210-stable review
+        Tue, 14 Jan 2020 18:08:47 -0800 (PST)
+Subject: Re: [PATCH 4.9 00/31] 4.9.210-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-References: <20200114094336.845958665@linuxfoundation.org>
+References: <20200114094334.725604663@linuxfoundation.org>
 From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Message-ID: <28b6d866-61bb-494b-ca22-3ba5e69305e8@linaro.org>
-Date:   Tue, 14 Jan 2020 20:08:35 -0600
+Message-ID: <59999f8a-e70e-cc5f-e18a-c8f8ab011d2a@linaro.org>
+Date:   Tue, 14 Jan 2020 20:08:44 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200114094336.845958665@linuxfoundation.org>
+In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -82,9 +82,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello!
 
-On 1/14/20 4:02 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.210 release.
-> There are 28 patches in this series, all will be posted as a response
+On 1/14/20 4:01 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.210 release.
+> There are 31 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -92,9 +92,9 @@ On 1/14/20 4:02 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.210-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.210-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
 > and the diffstat can be found below.
 > 
 > thanks,
@@ -107,22 +107,24 @@ No regressions on arm64, arm, x86_64, and i386.
 Summary
 ------------------------------------------------------------------------
 
-kernel: 4.4.210-rc1
+kernel: 4.9.210-rc1
 git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.4.y
-git commit: e249b6762aa64944a407b6e00bb99590fdee9091
-git describe: v4.4.209-29-ge249b6762aa6
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/build/v4.4.209-29-ge249b6762aa6
+git branch: linux-4.9.y
+git commit: c5dc66fe8ddb90fc0eeeeb75880cf7caa26b6cf3
+git describe: v4.9.209-32-gc5dc66fe8ddb
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.209-32-gc5dc66fe8ddb
 
 
-No regressions (compared to build v4.4.209)
+No regressions (compared to build v4.9.209)
 
-No fixes (compared to build v4.4.209)
+No fixes (compared to build v4.9.209)
 
-Ran 19907 total tests in the following environments and test suites.
+Ran 20684 total tests in the following environments and test suites.
 
 Environments
 --------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
 - i386
 - juno-r2 - arm64
 - qemu_arm
@@ -137,6 +139,7 @@ Test Suites
 * build
 * install-android-platform-tools-r2600
 * kselftest
+* kselftest-vsyscall-mode-native
 * kselftest-vsyscall-mode-none
 * kvm-unit-tests
 * libhugetlbfs
