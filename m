@@ -2,128 +2,84 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502DAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54565C33CB2
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4462467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF6B2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EvfFiNYC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oq0/uXf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgAOWFf (ORCPT
+        id S1729777AbgAOWFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:05:35 -0500
-Received: from mail-mw2nam10on2042.outbound.protection.outlook.com ([40.107.94.42]:63041
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729103AbgAOWFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 17:05:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zw7Az5kc20rsrW/b6pTFDktMvy6FWJi3CtzE5ZgiDQujlljlVMH81dRpJ2Z0PGuTfB6FkYbBl6v+zc9/I98KtFwWyj1QHOzESLCir1cfGBbANcHvHSXfCbL1gZ1d/q66bsSF1C/czmBaQ0b81rAKnhfTAUL+Wrj3QoU6qRlxYbivg3S/vuc4Nsj7s5d73fro1496EFGHeGqCqSgXRM/5Kq5EPNRL8Zh8p+A6HprzEo6/Kc4yyhA4WqcDG5NIqzuF4Fy/dkOfZ8PagFxfSFeIdhFlftoqXKLj5EmJ0qwhFsDnt6ZLsdndRya1aUAttGdpmwe6ZpRGM2+iR2TC1r4uug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W+ou289xCuQSX/A+seFHx60Iisn9UY5OjNAxwUOxibU=;
- b=mcnfMNo/8KovLIIq2/1kEwgqA/+UST1jTJlwy8lTl/zBMuoKtvIej2hzRbx1oqwBSHDHjZfD5uOn9Gth3m6SySYG2GTyN7HXf0Db/eGHQr9d1yC/JSiJFgVpBNI0VlV7eXFByGP+9kMJY/eHVQS4Pvcyup35GbnH6g5wN4ZlMNiONxG8K/coYNCzMMEg8Cew1fSXaOCIXlyPfnSii3LYkDyRbObAtx/lEEz1b+EiSP3h37NG7ydN2ek5BNsHXfEXv5EfIJItw78RUT7oZh7ShlNYFTW7arEENtDUgMms2ANgHWc5ZzqrTg4vD9SJ/NYrHj9JM2MwVeXR81bQJmCX8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W+ou289xCuQSX/A+seFHx60Iisn9UY5OjNAxwUOxibU=;
- b=EvfFiNYC0tvWjNHzG2b8PgueiDIzU2X+HGqYWhB6SbptdwAVhRtmKkw4lzuBpjVPzcvdK1sYC03XcGid+lPkPAqESF36StatrbxwJ6H+AONzg8v//xuIpXHtJ/Te6Ob5NvmU/OpkRYGDKn5Y6Nu+ww6noHNjtJaEF7Tss/1Poyo=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Thomas.Lendacky@amd.com; 
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
- DM6PR12MB3945.namprd12.prod.outlook.com (10.255.172.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Wed, 15 Jan 2020 22:05:29 +0000
-Received: from DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
- ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2623.017; Wed, 15 Jan 2020
- 22:05:29 +0000
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>, stable@vger.kernel.org
-Subject: [PATCH] x86/CPU/AMD: Ensure clearing of SME/SEV features is maintained
-Date:   Wed, 15 Jan 2020 16:05:16 -0600
-Message-Id: <226de90a703c3c0be5a49565047905ac4e94e8f3.1579125915.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SN6PR2101CA0005.namprd21.prod.outlook.com
- (2603:10b6:805:106::15) To DM6PR12MB3163.namprd12.prod.outlook.com
- (2603:10b6:5:15e::26)
+        Wed, 15 Jan 2020 17:05:47 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:52918 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729103AbgAOWFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:05:46 -0500
+Received: from zn.tnic (p200300EC2F0C7700F109D32638BACFBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:f109:d326:38ba:cfbd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2E3AA1EC0CD0;
+        Wed, 15 Jan 2020 23:05:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579125945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MmGvXr5GRjkQZp4Iw4Ch9p182qR2k7SqZ2G/xLDXwBo=;
+        b=oq0/uXf2idgYdzfGlQ3KEfTttmSUsgg70GJikYO+uemQKJfXRYhoOnWVeByujf9qGwlCAZ
+        tgwguH61/ogMoYgF2IRzjb6jASPEzF9AsWhaST7AtyNepRInweniwC3oM/xnISYBnNnWO2
+        DpUmsjuLSQ91s7XZ1iBjPcyULlbATvQ=
+Date:   Wed, 15 Jan 2020 23:05:35 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     sashal@kernel.org, James Morse <james.morse@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20200115220436.GP20975@zn.tnic>
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <20200115213848.GO20975@zn.tnic>
+ <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
 MIME-Version: 1.0
-Received: from tlendack-t1.amd.com (165.204.77.1) by SN6PR2101CA0005.namprd21.prod.outlook.com (2603:10b6:805:106::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.6 via Frontend Transport; Wed, 15 Jan 2020 22:05:28 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d334c43a-c0bd-465c-01a9-08d79a070817
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3945:|DM6PR12MB3945:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB39458FEAEBCF5CD1302C2427EC370@DM6PR12MB3945.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 02830F0362
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(199004)(189003)(86362001)(2906002)(316002)(2616005)(6486002)(956004)(81166006)(8676002)(4326008)(81156014)(54906003)(66556008)(186003)(7696005)(66476007)(16526019)(66946007)(52116002)(5660300002)(36756003)(8936002)(26005)(478600001)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3945;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 69tVneRwqbsSID6raxP5YhqJpi1bWim29wRo7OoNxvjRNLbzFJ+BQO/ge9ryb7lRoKJHPm2L28B7BD1wzz9fnuIejcaTTv2gvRTQblaLCd2DUrbH9LCBPkZUJXt6QAuq3VVCiWXAH/N5Ax19BZ63Cs44S6M+FfNDtPRDJysAjR8ZGZWdPQk4LedwZ3lXCGWrO1BUPxriJasnquqLBdt896LxM3dnsczRnvaRbM0bfA/kBNYLMn0QYz4idw/Dlni3XXP2ozh+3fLGAuiRjchQr2H7nlxrTbGc9PrVLO1mf1oooK8GHx+cGoV8j2Qh5AyXtCnV2++rlh/0lLP5/OkQY2wNcbPpRGU/DR1INN9Q43xdBkEYTP59dVjhFPuf/y0okblJ+SBCWtFQ5ZyhD3KXusc+CXXnTKXxYYwmv7ZxndgQDCPN5UOA8zxkDfMuYzQk
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d334c43a-c0bd-465c-01a9-08d79a070817
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2020 22:05:28.9677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G26E0bXE/whmMmrFGwQYlkm6nolMqF2152UAVfAQFgU/3+z4e3kC1+MfKM63PIL5qdnd1CFTpN272EDYRxqCHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3945
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the SME and SEV features are present via CPUID, but memory encryption
-support is not enabled (MSR 0xC001_0010[23]), the features are cleared
-using clear_cpu_cap(). However, if get_cpu_cap() is later called, these
-features will be reset back to present, which is not desired.
+On Wed, Jan 15, 2020 at 01:49:56PM -0800, Shiping Ji wrote:
+> Lei will be the author of this driver in the git history. I could ask
+> her to send the patch again if that's the correct way to go. Please
+> confirm.
 
-Change from using clear_cpu_cap() to setup_clear_cpu_cap() so that the
-clearing of the features is maintained.
+No need - you only have to send the patch with her From: at the
+beginning. Btw, you make her an author in git by doing:
 
-Cc: <stable@vger.kernel.org> # 4.16.x-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/kernel/cpu/amd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+git commit --amend --author="Lei Wang <leiwang_git@outlook.com>"
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 90f75e515876..62c30279be77 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -615,9 +615,9 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 		return;
- 
- clear_all:
--		clear_cpu_cap(c, X86_FEATURE_SME);
-+		setup_clear_cpu_cap(X86_FEATURE_SME);
- clear_sev:
--		clear_cpu_cap(c, X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV);
- 	}
- }
- 
+But before you send again, let me take a look at the rest of the patch
+first, tomorrow most likely.
+
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
