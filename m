@@ -7,92 +7,96 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3D7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB3FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58A824671
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FBF24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 03:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fAd2viFG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CnLgBEiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgAODL3 (ORCPT
+        id S1729014AbgAODOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 22:11:29 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33799 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgAODL2 (ORCPT
+        Tue, 14 Jan 2020 22:14:38 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41288 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgAODOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 22:11:28 -0500
-Received: by mail-vs1-f67.google.com with SMTP id g15so9641685vsf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:11:28 -0800 (PST)
+        Tue, 14 Jan 2020 22:14:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id w62so7757236pfw.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:14:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ztj1hvO+WNVO+LNPV45474E/vfF/Pm9unbmeASb7NPA=;
-        b=fAd2viFGmbBR8ZdFtpgvR+MYV5gshPH+9J4I8bVUF1JSXizaTydbFd3YzCEJG/Uhwm
-         bt5fynuF1MlcRJYnjbuC+1/+Cz2lOaCcPOB05Z/Cm3DK+NnyCS7/OUT+geia3JjtPN8u
-         xya4laWGuWdTzozjuIsMhQ3DFtjoqhCM1CM6A=
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=O3jTDnmwru005Rmfwt1mrDaoL6O6mw5SG6rHGZeKVSY=;
+        b=CnLgBEiDGZrSAAG3xSHFFUBWxQ8iCuMe1rvegmralFbRWQvEMK3aMlu4eLGm96eWrd
+         GFvC+Suc4XwIYMBYZvKevz493ll0wBmoeeSqIwak3qjanRzH+T47QB2PlmoFlyRIMHF8
+         sDXzapZJuU3CKCA5dPtSiek8bRU5lTthQaKDM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ztj1hvO+WNVO+LNPV45474E/vfF/Pm9unbmeASb7NPA=;
-        b=K+KXiic2bQJsKo8V/E3FsIdlumovp7k+ZUykBTyrItTG6BgUFKslDPqwSTFpfbest7
-         l6oAyzOTjgR2eEcT5x/a+4xR5hvpXOnLaFFKkX9/cAQKGt6dnXoO8UgmGGnL7CxcAAJI
-         ovX8Y8qFEj+QVU2XYAh5HqqnM+CTGs6svd2CgLsSL//yacAQiIXx1hgVZKjZUpAbxaCT
-         JrqyAwlHGhXFE7LbmD4XzpbRVWc1I7w90ic+pqMIZP4IW03FkUJwZ9BCUVRhMNDTCi7r
-         /Pn5h1X8W7Yx94b7xF+aziS9Tp7esMuZJkV9eWui1RcKd0WWIurV93AtICy+Bi9z1FgN
-         wkRg==
-X-Gm-Message-State: APjAAAVrM9AkzY+PZmcww4uJuuKanAPKt5r1MDZKTQ+SKRc6k/j5qbJs
-        4fE3S7cZbWxje0lb6hvToVLa96OR5d0=
-X-Google-Smtp-Source: APXvYqxBLAFKB0m1DdIRD5ces71zCy4nwpydo2ls51HtbVrZTuUfUcROssPE4tERWiHYqVNwalCUcA==
-X-Received: by 2002:a05:6102:408:: with SMTP id d8mr3300921vsq.19.1579057887430;
-        Tue, 14 Jan 2020 19:11:27 -0800 (PST)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id j26sm4435948ual.7.2020.01.14.19.11.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 19:11:26 -0800 (PST)
-Received: by mail-vk1-f170.google.com with SMTP id w67so4304368vkf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 19:11:26 -0800 (PST)
-X-Received: by 2002:a1f:c686:: with SMTP id w128mr13064603vkf.34.1579057885834;
- Tue, 14 Jan 2020 19:11:25 -0800 (PST)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=O3jTDnmwru005Rmfwt1mrDaoL6O6mw5SG6rHGZeKVSY=;
+        b=C9LM36yP2Q2JTa+yrJjULdPoOpxPFV57xWswJ6vjGJ5NWEqZgwWoMQIXEEw3gWk0B9
+         TVMTCaX1mVEAsebrVMbAo0gyA9tPrKPt7SLAl3fCeFPvWnAwsrK9Q8anjebdDgQFmyzl
+         MnfbhHElYSI8EojvcOX5Ido6OQkKI43SS9fMJ+AuFvoBkQUwJcAgP79quF4dbFujYkGw
+         RDL9WPPz3XnlT0mxHameX7V3KDjzbqGykubeKJoAXm1Kr+AU2DH29j+KIdwPB2LI751/
+         vRcDX3SXbMr7jriaCaqrl9/GBP3qac3egBcpJiiRSTbnPIcKWIHeePwnkzpK/q17tcr9
+         0U5g==
+X-Gm-Message-State: APjAAAUOiRZ/GpVtOyQfS83Z6jgULW/t0SlPeiIFIC2umtBWo5lcd7AM
+        hEADsvDlR+9Clmn+j6CKojSrcQ==
+X-Google-Smtp-Source: APXvYqzVr+KpYU3PHgwnjSxEm/7uHjy8e95zrZ1QZ7pws0hBP/Tv7PrdWYaxZslZbmgStCQ2NSd2Ag==
+X-Received: by 2002:aa7:8283:: with SMTP id s3mr28715427pfm.106.1579058077486;
+        Tue, 14 Jan 2020 19:14:37 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s26sm19589003pfe.166.2020.01.14.19.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 19:14:36 -0800 (PST)
+Message-ID: <5e1e839c.1c69fb81.1ab3c.06dd@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200115025314.3054-1-swboyd@chromium.org>
-In-Reply-To: <20200115025314.3054-1-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 14 Jan 2020 19:11:31 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=V=Ys+RLHd15+Y9c2Auiytbq821CAXLb-tMe__Rq48uDA@mail.gmail.com>
-Message-ID: <CAD=FV=V=Ys+RLHd15+Y9c2Auiytbq821CAXLb-tMe__Rq48uDA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: pm6150: Add label to pwrkey node
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
+References: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        devicetree@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add iommus property to QUP0 and QUP1
+User-Agent: alot/0.8.1
+Date:   Tue, 14 Jan 2020 19:14:35 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Jan 14, 2020 at 6:53 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Some platforms don't want to use the pmic power key as the power key
-> event. Add a label so platforms can easily reference and mark this node
-> as status = "disabled".
->
-> Cc: Kiran Gunda <kgunda@codeaurora.org>
-> Cc: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Quoting Sai Prakash Ranjan (2020-01-10 02:18:02)
+> Define iommus property for QUP0 and QUP1 with the proper SID
+> and mask. Below SMMU global faults are seen without this during
+> boot and when using i2c touchscreen.
+>=20
+> QUP0:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x0=
+0000043, GFSYNR2 0x00000000
+>=20
+> QUP1:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x0=
+00004c3, GFSYNR2 0x00000000
+>=20
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  arch/arm64/boot/dts/qcom/pm6150.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+
