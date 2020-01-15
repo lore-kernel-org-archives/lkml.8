@@ -2,179 +2,93 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B23C33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C662187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E34C2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 11:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BrpLFWVi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPc7ElSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgAOLDF (ORCPT
+        id S1730108AbgAOLDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:03:05 -0500
-Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:44157 "EHLO
-        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbgAOLDE (ORCPT
+        Wed, 15 Jan 2020 06:03:13 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25814 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727607AbgAOLDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:03:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1579086184;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=dwOZ6NozqgN0X9krzN4lo00Io6+pnMrYZ/gU849OIiA=;
-  b=BrpLFWVi5k4n5dHMwqLkZ9i0zf1noFO5v1MZBFsb6O+sBF/4V0u++uCY
-   FNSWUcJ6gCBM2RrRI1SpTR9Y4LJdlvwjYF4HlFVByfJZIChZI+wzvcORq
-   EMpTCh7uz+zc1ubbarEDnEdW4TWe9EtRDlUen2JVWuDis2lXgmHBf4qze
-   A=;
-Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  sergey.dyasli@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
-  sergey.dyasli@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: +bTwz3rb6Pt3yrpWyywqXjEWMAEX4c/82keB2YSJFPUWl/kcbbp2jzBF6YJLhblAe5aQQSPmR7
- rI7wZtHwQde4uW5qpPSinMb78Ic3EMYVWzAGZnfYTgDu3LiA35p7bGZtADGLRBNrvysnn5FLDj
- qlpRsdr71du8mWbVbsQNBNWiWyWfmWeVK3ke5dyiGb2H/RqHwkPUnYG8gYIJBEwLByUfsCCTqz
- IAV/sJbl6naA1Yddf4fs77C6vBgXR5tCfUWRdJ5i7m0JtnDKiPNqSaEicfs7YcOGgDUfeNGEr2
- J10=
-X-SBRS: 2.7
-X-MesageID: 11527758
-X-Ironport-Server: esa4.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,322,1574139600"; 
-   d="scan'208";a="11527758"
-Subject: Re: [PATCH v1 4/4] xen/netback: Fix grant copy across page boundary
- with KASAN
-To:     Vlastimil Babka <vbabka@suse.cz>, <xen-devel@lists.xen.org>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        George Dunlap <george.dunlap@citrix.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, "Paul Durrant" <paul@xen.org>,
-        "sergey.dyasli@citrix.com >> Sergey Dyasli" 
-        <sergey.dyasli@citrix.com>
-References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
- <20200108152100.7630-5-sergey.dyasli@citrix.com>
- <26c43c43-b303-938c-2f26-8e0144159e29@suse.cz>
-From:   Sergey Dyasli <sergey.dyasli@citrix.com>
-Autocrypt: addr=sergey.dyasli@citrix.com; keydata=
- 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
-Message-ID: <e0663153-35e0-32ef-87a5-39189c440a3d@citrix.com>
-Date:   Wed, 15 Jan 2020 11:02:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 06:03:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579086191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kIPIuogeyAYrg89WQev5yF8VWAACc+O4YaYZpb1gn0E=;
+        b=VPc7ElSLL4HcB9Pn29Pr3LJVX9zddwMexITMD8zR01jDLaPBXsOcREcmkXK4xQWDEz+kDC
+        /7YONRgBJAQ3oCK9AxoScmU8qur18ES+NDKLW4pS59TFz8OW6qovyXM0bOB8BZ8MHhVDsI
+        q8IXmv+nEOLUoRrSRbqT9Ba4Z6/9oo0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-ZgxqKH6bOs2G1of-EpJ_1g-1; Wed, 15 Jan 2020 06:03:10 -0500
+X-MC-Unique: ZgxqKH6bOs2G1of-EpJ_1g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42357107ACE3;
+        Wed, 15 Jan 2020 11:03:09 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1567811E0;
+        Wed, 15 Jan 2020 11:03:02 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 12:03:00 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kevin.tian@intel.com, joro@8bytes.org, peterx@redhat.com,
+        baolu.lu@linux.intel.com
+Subject: Re: [PATCH v4 05/12] vfio_pci: duplicate vfio_pci.c
+Message-ID: <20200115120300.24874a37.cohuck@redhat.com>
+In-Reply-To: <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-6-git-send-email-yi.l.liu@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <26c43c43-b303-938c-2f26-8e0144159e29@suse.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 10:33, Vlastimil Babka wrote:
-> On 1/8/20 4:21 PM, Sergey Dyasli wrote:
->> From: Ross Lagerwall <ross.lagerwall@citrix.com>
->>
->> When KASAN (or SLUB_DEBUG) is turned on, the normal expectation that
->> allocations are aligned to the next power of 2 of the size does not
->> hold.
->
-> Hmm, really? They should after 59bb47985c1d ("mm, sl[aou]b: guarantee
-> natural alignment for kmalloc(power-of-two)"), i.e. since 5.4.
->
-> But actually the guarantee is only for precise power of two sizes given
-> to kmalloc(). Allocations of sizes that end up using the 96 or 192 bytes
-> kmalloc cache have no such guarantee. But those might then cross page
-> boundary also without SLUB_DEBUG.
+On Tue,  7 Jan 2020 20:01:42 +0800
+Liu Yi L <yi.l.liu@intel.com> wrote:
 
-That's interesting to know. It's certainly not the case for 4.19 kernel
-for which PV KASAN was initially developed. But I guess this means that
-only patch description needs updating.
+> This patch has no code change, just a file copy. In following patches,
+> vfio_pci_common.c will be modified to only include the common functions
+> and related static functions in original vfio_pci.c. Meanwhile, vfio_pci.c
+> will be modified to only include vfio-pci module specific codes.
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_common.c | 1708 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 1708 insertions(+)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_common.c
 
->
->> Therefore, handle grant copies that cross page boundaries.
->>
->> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
->> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+This whole procedure of "let's copy the file and rip out unneeded stuff
+later" looks very ugly to me, especially if I'd come across it in the
+future, e.g. during a bisect. This patch only adds a file that is not
+compiled, and later changes will be "rip out unwanted stuff from
+vfio_pci_common.c" instead of the more positive "move common stuff to
+vfio_pci_common.c". I think refactoring/moving interfaces/code that it
+makes sense to share makes this more reviewable, both now and in the
+future.
 
---
-Thanks,
-Sergey
