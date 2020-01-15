@@ -2,318 +2,172 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217BEC33CB2
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE3BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B972084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3CD2084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 13:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuI7sqWf"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="0HYSZjV/";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="0HYSZjV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgAONO7 (ORCPT
+        id S1728921AbgAONPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:14:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41029 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgAONO7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 08:14:59 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so18506129ljc.8;
-        Wed, 15 Jan 2020 05:14:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=We0P8Pq+KXemR/laZ1JLyQrh4KCjCcSAXP2L4Y8y67I=;
-        b=PuI7sqWf0HYkhdy+s8zWqNG3v4bq4Ylmsp5svdRo276MtE18hgWifftzLg9NGBS851
-         9fD8gsx7VJCA/S6RhESxLehsOhKqbEiG75A+zKmcakL8TodmtrT0KnNa6QTvWqpz45CX
-         4KzJLTNx6U1S8z7IXjSD7vuYgMQnvDikMVvslXmcCX6LGU0/9kMLsoiT4m5GcOYNoLah
-         rD1Y4EbDvA+5+2ilYUK7oNINkI/etAcJisI/rYs1c5KkKfV5CE2jHgSzcsCJzL1mUR6d
-         vHg5kdhJQIJxLRWDTWFYFoRgUMp8JNUZe0MVskF9y/R5nubz0YFoqjvgqJg1wUfUUDkW
-         S9mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=We0P8Pq+KXemR/laZ1JLyQrh4KCjCcSAXP2L4Y8y67I=;
-        b=N2UayrsRq1LjXDv+qhu2rGYwfCVN7rl7K6SSdtedZRWKSKMr2LXqYTbufplhLtwAFw
-         1lbuzMJY/oiBp0y2PpPOAFNRFeeXnPrn/4lp7CAHsX0jrRpUG7X4IKNOKpEv2EehcBo8
-         TFLEVJe1l9igyKpOs/3mLnO40xwDkFaxgTjVJeLKXZTBtu8TnkvCR7xYKpcFeWOGEWbt
-         0f1GCnmZRj7Y7v2YBXdQ6gUKeOwTxtcMDIxZjrukn1rWnAV75fHfL57K8UJn4tFfK9az
-         tomu7OGg27Q8KAd9n5Y1sSKbmGVhCOsxUI1YQiH/vTexR+EaE37vaUjSiuCXx2xLKnfV
-         +mzw==
-X-Gm-Message-State: APjAAAUjXnSV77PIvS4NpIoHTe0Gtn1eY/5UHrkI8Uiplmg8yhAxc/Eu
-        7MkHWZg5JAme+yt6ehVItQ0=
-X-Google-Smtp-Source: APXvYqwdwTsWVarBR4K8mtwUBdmdzTPPkx2HeVBnpubnFKG06kLYZBmKObc8TYNAp7mKbfDq67Gp9A==
-X-Received: by 2002:a05:651c:111a:: with SMTP id d26mr1749991ljo.153.1579094096078;
-        Wed, 15 Jan 2020 05:14:56 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id k5sm8909991lfd.86.2020.01.15.05.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 05:14:55 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 15 Jan 2020 14:14:46 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200115131446.GA18417@pc636>
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200113190315.GA12543@paulmck-ThinkPad-P72>
- <20200114164937.GA50403@google.com>
+        Wed, 15 Jan 2020 08:15:54 -0500
+Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:19936
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726220AbgAONPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 08:15:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cBrWXefEToCgbkE5QgnZ/8FmTvZ9miNOxV0D7a/HwI=;
+ b=0HYSZjV/U4vL3/861ljUtbu8h6SsfwPfYVhcI0E6Ivkj4mKlOEvOiFtqZr7AfUlFF0AyvUceUnMblKMwULD3zJFfc6UiKvKUa+qNX7ShfkYGBO69X7xIvTjhXvLYZyQtDG0RVR90Qu1eqYZNsJb9ic2J2r4zaJ0B0s9ZvuBCrwg=
+Received: from VI1PR0801CA0089.eurprd08.prod.outlook.com
+ (2603:10a6:800:7d::33) by DB7PR08MB3146.eurprd08.prod.outlook.com
+ (2603:10a6:5:25::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19; Wed, 15 Jan
+ 2020 13:15:46 +0000
+Received: from DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::200) by VI1PR0801CA0089.outlook.office365.com
+ (2603:10a6:800:7d::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend
+ Transport; Wed, 15 Jan 2020 13:15:46 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT048.mail.protection.outlook.com (10.152.21.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11 via Frontend Transport; Wed, 15 Jan 2020 13:15:46 +0000
+Received: ("Tessian outbound 1da651c29646:v40"); Wed, 15 Jan 2020 13:15:45 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 12d4b22e16357ced
+X-CR-MTA-TID: 64aa7808
+Received: from 0f0f0f739085.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4C85DDFE-62F1-4AEA-9A5B-91436F07B816.1;
+        Wed, 15 Jan 2020 13:15:40 +0000
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0f0f0f739085.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 15 Jan 2020 13:15:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=US4AuBVZfB/1S3Dme0+H4DPu5cY/JRhHMxtV//8CDm+TxAsxSsVJgcwUI3ecIzbG5yzGPt5M3tsvIFMHVFp5XaAkz7r27y+kkpaWuyG3JR2O3lXwN2hZhnq6d/Lpie9EuU/5DU1359GxbJ79KIdtsxat4gieFeoVREgBt0A08Xh/w0s6Jki5bF3wd6XRyw3yRF+OYRPVlPTYCREcpefHUA7oQmD7l0VZP/1FKB4KyWHrR088HzNvARBv6qQ/06jLSRcGqd7awcuBxDo5KkHCRmLdL+mWOjOx6K66IKwxKzu5iKxDnlhEJHYtPFsRSTxfPc5X9xLhJdAHIgaHSSANpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cBrWXefEToCgbkE5QgnZ/8FmTvZ9miNOxV0D7a/HwI=;
+ b=kGSD+bS43Rs2xemOXO01Eh26m21S7lgLYJflKbasCHt+OHXiOquIj/XrfU2GvqFWMeu/9z9aa7KAv1y2/KSzT8xhKst+02eNj1yCoUijOmaM5k5ddUydVhkx9h58gEtRryrVlk/+pFufPqDphkLwzH0vchN5B4YvyA9am6+Zq9JDQCQjSPB9v8o07/C4ALGdX7NtMstJ6vkBp7ZQuPhGnkUfawRscQ78ETCvReLamqf0QYoprcDbX5sb1bpb/5m439+ztOqXwgyOAEVwWopUcFcZK6IQk2GSPHZLoL1NfI8IEWXCIS3AAVUEJ4j4wbaMc+LWIx6iXRZJZOqnHAcl0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cBrWXefEToCgbkE5QgnZ/8FmTvZ9miNOxV0D7a/HwI=;
+ b=0HYSZjV/U4vL3/861ljUtbu8h6SsfwPfYVhcI0E6Ivkj4mKlOEvOiFtqZr7AfUlFF0AyvUceUnMblKMwULD3zJFfc6UiKvKUa+qNX7ShfkYGBO69X7xIvTjhXvLYZyQtDG0RVR90Qu1eqYZNsJb9ic2J2r4zaJ0B0s9ZvuBCrwg=
+Received: from DB6PR0801MB1638.eurprd08.prod.outlook.com (10.169.225.144) by
+ DB6PR0801MB1623.eurprd08.prod.outlook.com (10.169.227.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.14; Wed, 15 Jan 2020 13:15:36 +0000
+Received: from DB6PR0801MB1638.eurprd08.prod.outlook.com
+ ([fe80::f937:8a25:91c6:fe33]) by DB6PR0801MB1638.eurprd08.prod.outlook.com
+ ([fe80::f937:8a25:91c6:fe33%8]) with mapi id 15.20.2623.018; Wed, 15 Jan 2020
+ 13:15:36 +0000
+Received: from [10.32.36.146] (217.140.106.40) by LO2P123CA0058.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Wed, 15 Jan 2020 13:15:35 +0000
+From:   James Clark <James.Clark@arm.com>
+To:     "leo.yan@linaro.org" <leo.yan@linaro.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>
+CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Igor Lubashev <ilubashe@akamai.com>
+Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
+Thread-Topic: [PATCH] perf tools: Fix bug when recording SPE and non SPE
+ events
+Thread-Index: AQHVtyVvIt8qdYS9jk64bAWEtkmeEqfHGX0AgCGR5gCAAB7MgIAACzuAgAMICAA=
+Date:   Wed, 15 Jan 2020 13:15:36 +0000
+Message-ID: <eac2263e-07fb-ecb4-5e9f-3e215f2d4526@arm.com>
+References: <20191220110525.30131-1-james.clark@arm.com>
+ <20191223034852.GB3981@leoy-ThinkPad-X240s>
+ <fd4f4278-fa43-86dc-1f2f-3439f19fea9e@arm.com>
+ <20200113141751.GA10620@leoy-ThinkPad-X240s>
+ <20200113145803.GB10620@leoy-ThinkPad-X240s>
+In-Reply-To: <20200113145803.GB10620@leoy-ThinkPad-X240s>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.40]
+x-clientproxiedby: LO2P123CA0058.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1::22) To DB6PR0801MB1638.eurprd08.prod.outlook.com
+ (2603:10a6:4:38::16)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=James.Clark@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9a8c98a4-bc59-42a2-f863-08d799bd0836
+X-MS-TrafficTypeDiagnostic: DB6PR0801MB1623:|DB6PR0801MB1623:|DB7PR08MB3146:
+x-ld-processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR08MB3146900D9239D2D818649A7AE2370@DB7PR08MB3146.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: True
+x-ms-oob-tlc-oobclassifiers: OLM:4125;OLM:4125;
+x-forefront-prvs: 02830F0362
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(346002)(366004)(189003)(199004)(5660300002)(66476007)(66556008)(44832011)(66946007)(54906003)(71200400001)(4744005)(478600001)(81166006)(81156014)(8936002)(110136005)(8676002)(316002)(16576012)(2906002)(64756008)(2616005)(7416002)(52116002)(6636002)(36756003)(66446008)(6486002)(86362001)(4326008)(956004)(26005)(16526019)(186003)(31696002)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0801MB1623;H:DB6PR0801MB1638.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: pMhpi8ecfCTQL0uDPsOmpuyNa/o7dHEdC8TmA3uw/id0Pd7iTGBk2XioIgYRC5nFzB7FZNFoyUrlQUNTWE2eVLInlz+ibrQ+GZRTa4L8Soar8SXQqEZ/HrkC4XZCimhSJhfOP4B95g0+GofMyyr4nv9b5ca+NKKwpHsmRm9jcW+wts+vNMO2YatrSv4MWMYc0Q2MA54ZXn130j8okEuCfW5NdEMI96fL1HeTwrKLndsPSU+Kag6XFOTRuWFLc1D+ZsBZzMU2qK9ZH1jW8Bfr9j/UVxWN6QI6QJQFnfmvwvLYJJ6w4hE6SEOO5O+RMW4wMZmOQIAzH8LSQtMUhrxtR4N4lHxnrlPLAf2WHf75c2xQcjAphKlJQhrXnYyXmlto141zQ9h2iFA/EVzUdlhGlQQ53LBPMZxia+zgvOAFFtseV65IcXaS7TgLN9EtXp05
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <534E256C26529C419E12813BBB4B0DF5@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114164937.GA50403@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1623
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=James.Clark@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(189003)(199004)(4744005)(6486002)(8676002)(86362001)(478600001)(5660300002)(356004)(81166006)(26005)(186003)(16526019)(70206006)(54906003)(110136005)(316002)(31696002)(8936002)(16576012)(26826003)(36756003)(336012)(31686004)(2616005)(2906002)(956004)(6636002)(4326008)(450100002)(107886003)(81156014)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3146;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 76256454-a637-4588-adc9-08d799bd022f
+X-Forefront-PRVS: 02830F0362
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: psylgTGSHOWSHxpXqZpnCZcACSdInrt3+pIRG2tbCvDL6thIF9gSCzr1fy+1sCYwMFkJQQKRs/M1tX2Ggqf548lsAc566hYebiL7bZlNiEuPyM5/WIGnc8wRez6ldDf96L627lT/pDDzbyBPIesgxGshfGww7BBd/i7mv4On5R1y6mshYZ0GrBgSa0pRN7f1GeAQsmPwA81/pPB9fhY81JIHCc+74l5To9ntJcEO7KlhVmwsbtSLiy8F5OuRhqQlqhTU+Di2g/yFBVDglOHznJJApuIz83mKm2Sylh9cmwQzt/fdeQADTnKp86vR7UwRwMzEOSL/+iAui6H0Sx2SUxL36n7y+oxGtiKEDIwSFAakWpx4j2+2VPOkM89IjYKtHpiHVXpXOh5/YqkmEUEeMRrcn3KOT2v1uIWqF1jBK/ATjZiqYGKjPBbdDNHAH/J0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2020 13:15:46.1242
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a8c98a4-bc59-42a2-f863-08d799bd0836
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Joel, Paul.
-
-Thank you for comments and testing!
-
-> > 
-> > Nice improvement!
-> > 
-> > But rcuperf uses a single block size, which turns into kfree_bulk() using
-> > a single slab, which results in good locality of reference.  So I have to
-> 
-> You meant a "single cache" category when you say "single slab"? Just to
-> mention, the number of slabs (in a single cache) when a large number of
-> objects are allocated is more than 1 (not single). With current rcuperf, I
-> see 100s of slabs (each slab being one page) in the kmalloc-32 cache. Each
-> slab contains around 128 objects of type kfree_rcu (24 byte object aligned to
-> 32-byte slab object).
-> 
-I think that is about using different slab caches to break locality. It
-makes sense, IMHO, because usually the system make use of different slabs,
-because of different object sizes. From the other hand i guess there are
-test cases when only one slab gets used.
-
-> > ask...  Is this performance result representative of production workloads?
-> 
-> I added more variation to allocation sizes to rcuperf (patch below) to distribute
-> allocations across 4 kmalloc slabs (32,64,96 and 128) and I see a signficant
-> improvement with Ulad's patch in SLAB in terms of completion time of the
-> test. Below are the results. With SLUB I see slightly higher memory
-> footprint, I have never used SLUB and not sure who is using it so I am not
-> too concerned since the degradation in memory footprint is only slight with
-> SLAB having the signifcant improvement.
-> 
-Nice patch! I think, it would be useful to have it in "rcuperf" tool with
-extra parameter like "different_obj_sizes".
-
-> with SLAB:
-> 
-> with Ulad's patch:
-> [   19.096052] Total time taken by all kfree'ers: 17519684419 ns, loops: 10000, batches: 3378, memory footprint: 319MB
-> [   18.980837] Total time taken by all kfree'ers: 17460918969 ns, loops: 10000, batches: 3399, memory footprint: 312MB
-> [   18.671535] Total time taken by all kfree'ers: 17116640301 ns, loops: 10000, batches: 3331, memory footprint: 268MB
-> [   18.737601] Total time taken by all kfree'ers: 17227635828 ns, loops: 10000, batches: 3311, memory footprint: 329MB
-> 
-> without Ulad's patch:
-> [   22.679112] Total time taken by all kfree'ers: 21174999896 ns, loops: 10000, batches: 2722, memory footprint: 314MB
-> [   22.099168] Total time taken by all kfree'ers: 20528110989 ns, loops: 10000, batches: 2611, memory footprint: 240MB
-> [   22.477571] Total time taken by all kfree'ers: 20975674614 ns, loops: 10000, batches: 2763, memory footprint: 341MB
-> [   22.772915] Total time taken by all kfree'ers: 21207270347 ns, loops: 10000, batches: 2765, memory footprint: 329MB
-> 
-> with SLUB:
-> 
-> without Ulad's patch:
-> [   10.714471] Total time taken by all kfree'ers: 9216968353 ns, loops: 10000, batches: 1099, memory footprint: 393MB
-> [   11.188174] Total time taken by all kfree'ers: 9613032449 ns, loops: 10000, batches: 1147, memory footprint: 387MB
-> [   11.077431] Total time taken by all kfree'ers: 9547675890 ns, loops: 10000, batches: 1292, memory footprint: 296MB
-> [   11.212767] Total time taken by all kfree'ers: 9712869591 ns, loops: 10000, batches: 1155, memory footprint: 387MB
-> 
-> 
-> with Ulad's patch
-> [   11.241949] Total time taken by all kfree'ers: 9681912225 ns, loops: 10000, batches: 1087, memory footprint: 417MB
-> [   11.651831] Total time taken by all kfree'ers: 10154268745 ns, loops: 10000, batches: 1184, memory footprint: 416MB
-> [   11.342659] Total time taken by all kfree'ers: 9844937317 ns, loops: 10000, batches: 1137, memory footprint: 477MB
-> [   11.718769] Total time taken by all kfree'ers: 10138649532 ns, loops: 10000, batches: 1159, memory footprint: 395MB
-> 
-> Test patch for rcuperf is below. The memory footprint measurement for rcuperf
-> is still under discussion in another thread, but I tested based on that anyway:
-> 
-> ---8<-----------------------
-> 
-> From d44e4c6112c388d39f7c2241e061dd77cca28d9e Mon Sep 17 00:00:00 2001
-> From: Joel Fernandes <joelaf@google.com>
-> Date: Tue, 14 Jan 2020 09:59:23 -0500
-> Subject: [PATCH] rcuperf: Add support to vary the slab object sizes
-> 
-> Signed-off-by: Joel Fernandes <joelaf@google.com>
-> ---
->  kernel/rcu/rcuperf.c | 43 ++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 36 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-> index a4a8d097d84d..216d7c072ca2 100644
-> --- a/kernel/rcu/rcuperf.c
-> +++ b/kernel/rcu/rcuperf.c
-> @@ -600,17 +600,29 @@ static int kfree_nrealthreads;
->  static atomic_t n_kfree_perf_thread_started;
->  static atomic_t n_kfree_perf_thread_ended;
->  
-> -struct kfree_obj {
-> -	char kfree_obj[8];
-> -	struct rcu_head rh;
-> -};
-> +/*
-> + * Define a kfree_obj with size as the @size parameter + the size of rcu_head
-> + * (rcu_head is 16 bytes on 64-bit arch).
-> + */
-> +#define DEFINE_KFREE_OBJ(size)	\
-> +struct kfree_obj_ ## size {	\
-> +	char kfree_obj[size];	\
-> +	struct rcu_head rh;	\
-> +}
-> +
-> +/* This should goto the right sized slabs on both 32-bit and 64-bit arch */
-> +DEFINE_KFREE_OBJ(16); // goes on kmalloc-32 slab
-> +DEFINE_KFREE_OBJ(32); // goes on kmalloc-64 slab
-> +DEFINE_KFREE_OBJ(64); // goes on kmalloc-96 slab
-> +DEFINE_KFREE_OBJ(96); // goes on kmalloc-128 slab
->  
->  static int
->  kfree_perf_thread(void *arg)
->  {
->  	int i, loop = 0;
->  	long me = (long)arg;
-> -	struct kfree_obj *alloc_ptr;
-> +	void *alloc_ptr;
-> +
->  	u64 start_time, end_time;
->  	long long mem_begin, mem_during = 0;
->  
-> @@ -635,11 +647,28 @@ kfree_perf_thread(void *arg)
->  		}
->  
->  		for (i = 0; i < kfree_alloc_num; i++) {
-> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
-> +			int kfree_type = i % 4;
-> +
-> +			if (kfree_type == 0)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_16), GFP_KERNEL);
-> +			else if (kfree_type == 1)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_32), GFP_KERNEL);
-> +			else if (kfree_type == 2)
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_64), GFP_KERNEL);
-> +			else
-> +				alloc_ptr = kmalloc(sizeof(struct kfree_obj_96),  GFP_KERNEL);
-> +
->  			if (!alloc_ptr)
->  				return -ENOMEM;
->  
-> -			kfree_rcu(alloc_ptr, rh);
-> +			if (kfree_type == 0)
-> +				kfree_rcu((struct kfree_obj_16 *)alloc_ptr, rh);
-> +			else if (kfree_type == 1)
-> +				kfree_rcu((struct kfree_obj_32 *)alloc_ptr, rh);
-> +			else if (kfree_type == 2)
-> +				kfree_rcu((struct kfree_obj_64 *)alloc_ptr, rh);
-> +			else
-> +				kfree_rcu((struct kfree_obj_96 *)alloc_ptr, rh);
->  		}
->  
->  		cond_resched();
-> -- 
-> 2.25.0.rc1.283.g88dfdc4193-goog
-I also have done some tests with your patch on my Intel(R) Xeon(R) W-2135 CPU @ 3.70GHz, 12xCPUs
-machine to simulate different slab usage:
-
-dev.2020.01.10a branch
-
-# Default, CONFIG_SLAB, kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1, 16, 32, 64, 96 obj sizes
-[   83.762963] Total time taken by all kfree'ers: 53607352517 ns, loops: 200000, batches: 1885, memory footprint: 1248MB
-[   80.108401] Total time taken by all kfree'ers: 53529637912 ns, loops: 200000, batches: 1921, memory footprint: 1193MB
-[   76.622252] Total time taken by all kfree'ers: 53570175705 ns, loops: 200000, batches: 1929, memory footprint: 1250MB
-
-# With the patch, CONFIG_SLAB, kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1, 16, 32, 64, 96 obj sizes
-[   48.265008] Total time taken by all kfree'ers: 23981587315 ns, loops: 200000, batches: 810, memory footprint: 1219MB
-[   53.263943] Total time taken by all kfree'ers: 23879375281 ns, loops: 200000, batches: 822, memory footprint: 1190MB
-[   50.366440] Total time taken by all kfree'ers: 24086841707 ns, loops: 200000, batches: 794, memory footprint: 1380MB
-
-# Default, CONFIG_SLUB, kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1, 16, 32, 64, 96 obj sizes
-[   81.818576] Total time taken by all kfree'ers: 51291025022 ns, loops: 200000, batches: 1713, memory footprint: 741MB
-[   77.854866] Total time taken by all kfree'ers: 51278911477 ns, loops: 200000, batches: 1671, memory footprint: 719MB
-[   76.329577] Total time taken by all kfree'ers: 51256183045 ns, loops: 200000, batches: 1719, memory footprint: 647MB
-
-# With the patch, CONFIG_SLUB, kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1, 16, 32, 64, 96 obj sizes
-[   76.254485] Total time taken by all kfree'ers: 50709919132 ns, loops: 200000, batches: 1618, memory footprint: 456MB
-[   75.891521] Total time taken by all kfree'ers: 50736297452 ns, loops: 200000, batches: 1633, memory footprint: 507MB
-[   76.172573] Total time taken by all kfree'ers: 50660403893 ns, loops: 200000, batches: 1628, memory footprint: 429MB
-
-in case of CONFIG_SLAB there is double increase in performance but slightly higher memory usage.
-As for CONFIG_SLUB, i still see higher performance figures + lower memory usage with the patch.
-
-Apart of that, I have got the report from the "kernel test robot":
-
-<snip>
-[   13.957168] ------------[ cut here ]------------
-[   13.958256] ODEBUG: free active (active state 1) object type: rcu_head hint: 0x0
-[   13.962148] WARNING: CPU: 0 PID: 212 at lib/debugobjects.c:484 debug_print_object+0x95/0xd0
-[   13.964298] Modules linked in:
-[   13.964960] CPU: 0 PID: 212 Comm: kworker/0:2 Not tainted 5.5.0-rc1-00136-g883a2cefc0684 #1
-[   13.966712] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-[   13.968528] Workqueue: events kfree_rcu_work
-[   13.969466] RIP: 0010:debug_print_object+0x95/0xd0
-[   13.970480] Code: d2 e8 2f 06 d6 ff 8b 43 10 4d 89 f1 4c 89 e6 8b 4b 14 48 c7 c7 88 73 be 82 4d 8b 45 00 48 8b 14 c5 a0 5f 6d 82 e8 7b 65 c6 ff <0f> 0b b9 01 00 00 00 31 d2 be 01 00 00 00 48 c7 c7 98 b8 0c 83 e8
-[   13.974435] RSP: 0000:ffff888231677bf8 EFLAGS: 00010282
-[   13.975531] RAX: 0000000000000000 RBX: ffff88822d4200e0 RCX: 0000000000000000
-[   13.976730] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8306e028
-[   13.977568] RBP: ffff888231677c18 R08: 0000000000000000 R09: ffff888231670790
-[   13.978412] R10: ffff888231670000 R11: 0000000000000003 R12: ffffffff82bc5299
-[   13.979250] R13: ffffffff82e77360 R14: 0000000000000000 R15: dead000000000100
-[   13.980089] FS:  0000000000000000(0000) GS:ffffffff82e4f000(0000) knlGS:0000000000000000
-[   13.981069] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   13.981746] CR2: 00007f1e913fc77c CR3: 0000000225ce9000 CR4: 00000000000006f0
-[   13.982587] Call Trace:
-[   13.982911]  __debug_check_no_obj_freed+0x19a/0x200
-[   13.983494]  debug_check_no_obj_freed+0x14/0x20
-[   13.984036]  free_pcp_prepare+0xee/0x1d0
-[   13.984541]  free_unref_page+0x1b/0x80
-[   13.984994]  __free_pages+0x19/0x20
-[   13.985503]  __free_pages+0x13/0x20
-[   13.985924]  slob_free_pages+0x7d/0x90
-[   13.986373]  slob_free+0x34f/0x530
-[   13.986784]  kfree+0x154/0x210
-[   13.987155]  __kmem_cache_free_bulk+0x44/0x60
-[   13.987673]  kmem_cache_free_bulk+0xe/0x10
-[   13.988163]  kfree_rcu_work+0x95/0x310
-[   13.989010]  ? kfree_rcu_work+0x64/0x310
-[   13.989884]  process_one_work+0x378/0x7c0
-[   13.990770]  worker_thread+0x40/0x600
-[   13.991587]  kthread+0x14e/0x170
-[   13.992344]  ? process_one_work+0x7c0/0x7c0
-[   13.993256]  ? kthread_create_on_node+0x70/0x70
-[   13.994246]  ret_from_fork+0x3a/0x50
-[   13.995039] ---[ end trace cdf242638b0e32a0 ]---
-[child0:632] trace_fd was -1
-<snip>
-
-the trace happens when the kernel is built with CONFIG_DEBUG_OBJECTS_FREE
-and CONFIG_DEBUG_OBJECTS_RCU_HEAD. Basically it is not a problem of the patch
-itself or there is any bug there. It just does not pair with debug_rcu_head_queue(head)
-in the kfree_rcu_work() function, that is why the kernel thinks about freeing
-an active object that is not active in reality.
-
-I will upload a V2 to fix that.
-
---
-Vlad Rezki
+SGkgTGVvLA0KDQo+IFNpbmNlIFNQRSBpcyBkZWZpbmVkIGluIEFSTXY4IGFyY2hpdGVjdHVyZSBy
+ZWZlcmVuY2UgbWFudWFsIChBUk0gRERJDQo+IDA0ODdELmEpOyBzaG91bGQgU1BFIHRyYWNlIGRh
+dGEgZm9ybWF0IGlzIHVuaWZpZWQgYW5kIGRlZmluZWQgaW4gQ2hhcHRlcg0KPiBEOSAiU3RhdGlz
+dGljYWwgUHJvZmlsaW5nIEV4dGVuc2lvbiBTYW1wbGUgUmVjb3JkIFNwZWNpZmljYXRpb24iPw0K
+PiANCkknbSBub3Qgc3VyZSB3aGF0IHlvdSBtZWFuIGV4YWN0bHksIGJ1dCB0aGUgdHJhY2UgZGF0
+YSBmb3JtYXQgaXMgZGVzY3JpYmVkIGluDQpzZWN0aW9uIEQxMC4NCg0KVGhhbmtzDQpKYW1lcw0K
