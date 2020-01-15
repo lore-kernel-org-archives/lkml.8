@@ -2,129 +2,177 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307F8C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C7DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0207E222C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B802084D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 19:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GskzbfQj"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="M2G/cnOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgAOTsD (ORCPT
+        id S1729401AbgAOTsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 14:48:03 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34967 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgAOTsC (ORCPT
+        Wed, 15 Jan 2020 14:48:51 -0500
+Received: from mail-pj1-f51.google.com ([209.85.216.51]:56009 "EHLO
+        mail-pj1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729299AbgAOTst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 14:48:02 -0500
-Received: by mail-vs1-f67.google.com with SMTP id x123so11215094vsc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:48:02 -0800 (PST)
+        Wed, 15 Jan 2020 14:48:49 -0500
+Received: by mail-pj1-f51.google.com with SMTP id d5so382959pjz.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:48:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E2SH49lI+6VFGk5xmCSW6VNj+SBvTiwjLBEhg2VRN1o=;
-        b=GskzbfQjdp7RZo5fTf/SVXFRVlx0m9k0dJmJav/bGrGN6ZKvFs6EAnIculE1JEYJ60
-         s4OzSgXkc+LMifz1FF+HgGcEh87n46k7OTfGe64YrqCmkeikeiYI77/3CN1Rf+n1XWQV
-         DGxe2GWHYIm7PzqKMijuoe4D2DFrVL/sQGswE=
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=mfOcggh9Ij5VrzzcP3dcYGzGv0U+3av4+wN4xCGn2hk=;
+        b=M2G/cnOwd/oFmzBASlg+3RqBtFzOPZybUgUGoE9A1sLNkSCuwWLyFz2lW64IfdFsna
+         9AQlZom4Ba5CyPqMjBQA9C8+RfYOs4T01nBk8B65/Bw+x9sEBjnQ6K0vJV9mxZ9obt45
+         Ne9RJHAP1nLs32+Jb691Ph6cfKzWcmSk+Aa6QPjwHLTNctgothN38yQaunuF4KymMEEf
+         DtYQauwDrpMgfCwd8NNFuICuDQ+/l5cBD996TlyR071ifvOazmG94Wv9lYxbWzb2YNI+
+         VUka4MMOF1pRwsSud1zk7CK7oRnQ801uD42ZPcimYEJn/+pvVwX2TMKJ0gSq72E7NiKn
+         8rMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E2SH49lI+6VFGk5xmCSW6VNj+SBvTiwjLBEhg2VRN1o=;
-        b=CgoT4I07MAB/EtBmQDD0Gie/tP8W4292BrO66PRUkrZhHy20O931YQHANJx9AubCfE
-         ieRR3i02YiDz6VlqVeESV3voDVSITy20HGzubAZqK8I2+P7beo9dUGAT0EY+R0MbbdPu
-         SXetpm+AjkX+dEW3K99/qU/AACi+hdlYR3FwMtbgmw5oo1a0wQWhXH1bDYjMqaw7LYed
-         FiQxAR0X7dcsUuSj5oz5z+EtBgyBrTGJsWX30qpCCTowHHbGA+ke4D2HutUsLqn6wYPi
-         IbGLyJKhLHADbboOhXCqCxZufcdM/teeAVymbvz8gop3FqNzjj1M8hQTYmivIqJ5hYDh
-         4ANw==
-X-Gm-Message-State: APjAAAXKpKH4jQ/uSkQhbx6sJIs62+QwU18djWhDMzlntvEn5UOYa6Yd
-        aEu39gK6QWa4eKCWvYg2/pCe/YNo0C0=
-X-Google-Smtp-Source: APXvYqz4XXl2/VmBaa3FsXtlS6yqt250ahzTDfdOv8gQms+qHNPVUZJPKKrCRQWx4ky63WTqEsnHPw==
-X-Received: by 2002:a67:d986:: with SMTP id u6mr5658010vsj.226.1579117681387;
-        Wed, 15 Jan 2020 11:48:01 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id x22sm4687520vsq.6.2020.01.15.11.48.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 11:48:00 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id g15so11208948vsf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 11:48:00 -0800 (PST)
-X-Received: by 2002:a05:6102:2d8:: with SMTP id h24mr5767789vsh.169.1579117680240;
- Wed, 15 Jan 2020 11:48:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20200109155910.907-1-swboyd@chromium.org> <20200109155910.907-4-swboyd@chromium.org>
-In-Reply-To: <20200109155910.907-4-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 Jan 2020 11:47:49 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Uxw+M-+-P=0z9K558RhzZA+XPA7thVTbcU2z3pL3eU5w@mail.gmail.com>
-Message-ID: <CAD=FV=Uxw+M-+-P=0z9K558RhzZA+XPA7thVTbcU2z3pL3eU5w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] alarmtimer: Use wakeup source from alarmtimer
- platform device
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=mfOcggh9Ij5VrzzcP3dcYGzGv0U+3av4+wN4xCGn2hk=;
+        b=bjYLT5bw+X9sU+nzfAEuxNp3XuC0SJVOpV+3ozmQcw+O9h3yxkAXikOrsVDbXScSdy
+         ozZRBkTdqRySlTfIx8R2FN2umfVo7say5wLHmTt3FtmucfBxgReCvY9NUT2IipAGE75m
+         0IFePIK8+4n0V00xvNisJfZdK06fG/DpIDM2WVYRiIkziOHZepBqa62JRVHCP2nGMxML
+         FCSNgXg7cxt7c0FfmZeaLAtro3XFmzPiVZmX3UIze+poPDy4HwUK5dwUzwScY/FpQjzy
+         PlfVykxWCqvfWt2d1kkgDdnKXuWUcZAJI27xwdm8SsiwOMpgoqxXMzmFK12KekEEcVn8
+         lIjA==
+X-Gm-Message-State: APjAAAWMnxJnPSC1AjHTJ6bIolxXf21idRPDXvRzNKyclrXi6wtd825N
+        ma1aRXdj2OjOq1ovALQxGf9J3hrmneemDQ==
+X-Google-Smtp-Source: APXvYqxP6WhNjxkfuE0g6khT7UyihhalBizsQoBp9O693hV+s+j7MHh19YyDAax8jCcjC9KTJ2bxsQ==
+X-Received: by 2002:a17:90a:b78d:: with SMTP id m13mr1882398pjr.100.1579117728439;
+        Wed, 15 Jan 2020 11:48:48 -0800 (PST)
+Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id g67sm23485209pfb.66.2020.01.15.11.48.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Jan 2020 11:48:47 -0800 (PST)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <C0F67EC5-7B5D-4179-9F28-95B84D9CC326@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_CC498D30-739D-4ED3-A222-2F501C8D578D";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: Problems with determining data presence by examining extents?
+Date:   Wed, 15 Jan 2020 12:48:44 -0700
+In-Reply-To: <20200115133101.GA28583@lst.de>
+Cc:     Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     David Howells <dhowells@redhat.com>, Christoph Hellwig <hch@lst.de>
+References: <4467.1579020509@warthog.procyon.org.uk>
+ <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com>
+ <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca>
+ <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com>
+ <20200115133101.GA28583@lst.de>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, Jan 9, 2020 at 7:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Use the wakeup source that can be associated with the 'alarmtimer'
-> platform device instead of registering another one by hand.
->
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  kernel/time/alarmtimer.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> index ccb6aea4f1d4..be057638e89d 100644
-> --- a/kernel/time/alarmtimer.c
-> +++ b/kernel/time/alarmtimer.c
-> @@ -55,8 +55,6 @@ static DEFINE_SPINLOCK(freezer_delta_lock);
->  #endif
->
->  #ifdef CONFIG_RTC_CLASS
-> -static struct wakeup_source *ws;
-> -
->  /* rtc timer and device for setting alarm wakeups at suspend */
->  static struct rtc_timer                rtctimer;
->  static struct rtc_device       *rtcdev;
-> @@ -87,7 +85,6 @@ static int alarmtimer_rtc_add_device(struct device *dev,
->  {
->         unsigned long flags;
->         struct rtc_device *rtc = to_rtc_device(dev);
-> -       struct wakeup_source *__ws;
->         struct platform_device *pdev;
->         int ret = 0;
->
-> @@ -99,8 +96,9 @@ static int alarmtimer_rtc_add_device(struct device *dev,
->         if (!device_may_wakeup(rtc->dev.parent))
->                 return -1;
->
-> -       __ws = wakeup_source_register(dev, "alarmtimer");
->         pdev = platform_device_register_data(dev, "alarmtimer", -1, NULL, 0);
-> +       if (pdev)
+--Apple-Mail=_CC498D30-739D-4ED3-A222-2F501C8D578D
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
 
-It appears that the error case for platform_device_register_data()
-needs to be checked with by IS_ERR().
+On Jan 15, 2020, at 6:31 AM, Christoph Hellwig <hch@lst.de> wrote:
+> 
+> On Wed, Jan 15, 2020 at 09:10:44PM +0800, Qu Wenruo wrote:
+>>> That allows userspace to distinguish fe_physical addresses that may be
+>>> on different devices.  This isn't in the kernel yet, since it is mostly
+>>> useful only for Btrfs and nobody has implemented it there.  I can give
+>>> you details if working on this for Btrfs is of interest to you.
+>> 
+>> IMHO it's not good enough.
+>> 
+>> The concern is, one extent can exist on multiple devices (mirrors for
+>> RAID1/RAID10/RAID1C2/RAID1C3, or stripes for RAID5/6).
+>> I didn't see how it can be easily implemented even with extra fields.
+>> 
+>> And even we implement it, it can be too complex or bug prune to fill
+>> per-device info.
+> 
+> It's also completely bogus for the use cases to start with.  fiemap
+> is a debug tool reporting the file system layout.  Using it for anything
+> related to actual data storage and data integrity is a receipe for
+> disaster.  As said the right thing for the use case would be something
+> like the NFS READ_PLUS operation.  If we can't get that easily it can
+> be emulated using lseek SEEK_DATA / SEEK_HOLE assuming no other thread
+> could be writing to the file, or the raciness doesn't matter.
 
-Other than that, this seems like a sane idea to me and a nice cleanup.
-With my usual caveat that I'm reviewing code that I'm by no means an
-expert in, feel free to add my Reviewed-by with that change.
+I don't think either of those will be any better than FIEMAP, if the reason
+is that the underlying filesystem is filling in holes with actual data
+blocks to optimize the IO pattern.  SEEK_HOLE would not find a hole in
+the block allocation, and would happily return the block of zeroes to
+the caller.  Also, it isn't clear if SEEK_HOLE considers an allocated but
+unwritten extent to be a hole or a block?
 
--Doug
+I think what is needed here is an fadvise/ioctl that tells the filesystem
+"don't allocate blocks unless actually written" for that file.  Storing
+anything in a separate data structure is a recipe for disaster, since it
+will become inconsistent after a crash, or filesystem corruption+e2fsck,
+and will unnecessarily bloat the on-disk metadata for every file to hold
+redundant information.
+
+I don't see COW/reflink/compression as being a problem in this case, since
+what cachefiles cares about is whether there is _any_ data for a given
+logical offset, not where/how the data is stored.  IF FIEMAP was used for
+a btrfs backing filesystem, it would need the "EXTENT_DATA_COMPRESSED"
+feature to be implemented as well, so that it can distinguish the logical
+vs. physical allocations.  I don't think that would be needed for SEEK_HOLE
+and SEEK_DATA, so long as they handle unwritten extents properly (and are
+correctly implemented in the first place, some filesystems fall back to
+always returning the next block for SEEK_DATA).
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_CC498D30-739D-4ED3-A222-2F501C8D578D
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl4fbJ0ACgkQcqXauRfM
+H+CGqw//clrcdoV9kWx8edXSbVsdv8WiQjBERU0J4tkQgIcsIPB4/w1kWk/qsk56
+Cew1K8m6uWzKmrOb9pOdDUQeSVMiqoCEFJKabnEu17miBjRBeQofftQazJ66VCDt
+jTpqDmTIJlX6GPHmJQf52V+YMzRqdZhWPBwU2DOiLzXktvPt8zLJdUQLhvHv5xom
+rKXBFqi3ZKW8MAtVN4xdwMCpgqzqgwE/ZEciZkIQmkt71eo2+mqg5DxYGDjBbV8r
+u/KQm0mkh1otrCgskTUcb7mhnf52uWkpZQZTtBD246ShTvnuU0MaCSqv3HhLHVo+
+p5/q5S3oFE67Odc/Tj3vFW0N2R5uX0o20tGr4TFoRl5enngiCM2OTg3Pqh2fq8vc
+hrOw8SARGuhCq5QNOyydtpQ1YO1QTT6TTxVJTxXEkkxWyexPBtufupKUCRVhTkC2
+nfh704xUn137Gcr5Rk8p2io54s8kKnLUE5sVGU44TrD0voG6f8OD/eI1vr7XWLIw
+5pNtxLfFLe0LNFX5+5M0FfmJxuXyVqzUT5co79d3AHVwjN0/LYmuN+ICgWomBy34
+fm2S4mdW1SyLCK8T3LVXX5/JFpK+e0jzQ8DFUhumUzES+q0uMRSdDQjxRX5asdX2
+z3CT+qbgnMElZuf+JaARqPC/tV8z+FlawJv/xgVq7eXpmILQjA0=
+=1vdd
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_CC498D30-739D-4ED3-A222-2F501C8D578D--
