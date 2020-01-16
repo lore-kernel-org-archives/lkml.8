@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988A3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D2A2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4EA2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218193;
-	bh=lkSHes5e9d4xcqebKv/yK6/bBAOg+pa91rHSqGY9AQg=;
+	s=default; t=1579218198;
+	bh=lxi8UicBoiMwTp0Kha7H9trLUAbDNsUYIP4CD6rmsPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j/8EMsFOIhPg5UpBMRg+X0lJrbA6zTm/K/Hwrfglz0+BIg1DRzBzWsaDoPtSmZKMq
-	 uFYm6owUP4UXg3+E92B+YvPIZd3XyeeLz1/ZC1h/gDIZlJv12HkhPhWrmZy5Do3+IT
-	 94CjbCkvqF8Bt9Ah9zdOdJl7V7pVPA4JTZM2nhgA=
+	b=xsM1wUyBnql9CxyrRFxx2HgmPumV9rAm/jK7IM4LQd3hHBFYqpP1QzgQgIYtlGvfm
+	 dxIKI3IeM+r3665Uv/V6SMoZ95wVlhXXb53KaIbzLpwgeSQMSx8ZFyhIeZubm+fjX0
+	 HlOvgkqraYUELdUZ+C8RNC0mHT2dl9g1sbSZhQs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391890AbgAPXnM (ORCPT
+        id S2387965AbgAPXZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:43:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:25:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389006AbgAPXZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:47 -0500
+        id S2387467AbgAPXZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7819D20684;
-        Thu, 16 Jan 2020 23:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623B02077C;
+        Thu, 16 Jan 2020 23:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217146;
-        bh=lkSHes5e9d4xcqebKv/yK6/bBAOg+pa91rHSqGY9AQg=;
+        s=default; t=1579217117;
+        bh=lxi8UicBoiMwTp0Kha7H9trLUAbDNsUYIP4CD6rmsPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cIuZ2WKEp/4I8IyB/Dq+AVTsCmMOo8odybWwQIKFqZ4LkKm46Icbq+ZXgyWmP7soc
-         5NsWEEKnvLR4P7nrMmRnK6R78bkp8JsjYLw47Vy4dKLiH555kv0HfIOkrn1QTZKjRo
-         +TYVTrsky9mG/+v3I8oLVY7tGBVP6X+Xcbro+dqo=
+        b=n8dvpa2GydcCB3StGkq1SNO2tJ/G1If8rSSEOngBFiTJ0/4gu2EXr5NSqupJzR6T/
+         PSnebXQcQAUU8fYJhrYxHKzhjGuSUPc7Mx9ajdCKgizEs1+E86PGwG2QakybRFd+Zx
+         lNuw5wJ4sdzI/jaGMRrJVWknD2XLgOg/BVh0X/JM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 5.4 167/203] mtd: spi-nor: fix silent truncation in spi_nor_read_raw()
-Date:   Fri, 17 Jan 2020 00:18:04 +0100
-Message-Id: <20200116231759.221421726@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 5.4 155/203] media: cedrus: Use correct H264 8x8 scaling list
+Date:   Fri, 17 Jan 2020 00:17:52 +0100
+Message-Id: <20200116231758.372108707@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,34 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-commit 3d63ee5deb466fd66ed6ffb164a87ce36425cf36 upstream.
+commit a6b8feae7c88343212686120740cf7551dd16e08 upstream.
 
-spi_nor_read_raw() assigns the result of 'ssize_t spi_nor_read_data()'
-to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
-is a 32-bit type on the 64-bit machines. This silent truncation isn't
-really valid, so fix up the variable's type.
+Documentation now defines the expected order of scaling lists,
+change to use correct indices.
 
-Fixes: f384b352cbf0 ("mtd: spi-nor: parse Serial Flash Discoverable Parameters (SFDP) tables")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Fixes: 6eb9b758e307 ("media: cedrus: Add H264 decoding support")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/spi-nor/spi-nor.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/sunxi/cedrus/cedrus_h264.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2865,7 +2865,7 @@ static int spi_nor_hwcaps_pp2cmd(u32 hwc
-  */
- static int spi_nor_read_raw(struct spi_nor *nor, u32 addr, size_t len, u8 *buf)
- {
--	int ret;
-+	ssize_t ret;
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -244,8 +244,8 @@ static void cedrus_write_scaling_lists(s
+ 			       sizeof(scaling->scaling_list_8x8[0]));
  
- 	while (len) {
- 		ret = spi_nor_read_data(nor, addr, len, buf);
+ 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_1,
+-			       scaling->scaling_list_8x8[3],
+-			       sizeof(scaling->scaling_list_8x8[3]));
++			       scaling->scaling_list_8x8[1],
++			       sizeof(scaling->scaling_list_8x8[1]));
+ 
+ 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_4x4,
+ 			       scaling->scaling_list_4x4,
 
 
