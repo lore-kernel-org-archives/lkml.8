@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D57C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B487C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713712077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F1B24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197109;
-	bh=Qt4jd1fuYQukkTXACstAqazYGh2Nsco3xZj82oL/EFM=;
+	s=default; t=1579197112;
+	bh=Ftt6XCDg9K1tXqPnbjKAce0tpAH6X5cGhHVlNqrU4U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCG06azcJ3wQPzYvvrqblTCAxQAbS17HNt3DWPfA9W2BFfHGrAK58UQuWevzSkOPM
-	 jutBdsL8aEfZcti5LcFTTi8jxk/CK5WtDipPR4T2wYESSnTiCtEYinqQ9VtTylz0GR
-	 IIjUsYd7IEnGqXKMpCfVCAgOZqFYOuEsai7oIHiY=
+	b=1I1xTC8zlfANPilC/ijsdEDP2r4ejXle8Lrb7+9jgS/2Lhllqj+m/uqDztZl/cOUa
+	 x+ggnKCqHWDH6ATDazKm7/XLwPg4Qzko4hbCj6LFQEyeeTruR5DyLz66YvoRK1UK07
+	 3s0EciMVfHk25JcfLNUbECI9X5/WoIYj/RMl5jPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406269AbgAPRpa (ORCPT
+        id S2406478AbgAPRvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:51:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406039AbgAPRpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:01 -0500
+        id S2406250AbgAPRpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3C192475E;
-        Thu, 16 Jan 2020 17:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7772824775;
+        Thu, 16 Jan 2020 17:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196700;
-        bh=Qt4jd1fuYQukkTXACstAqazYGh2Nsco3xZj82oL/EFM=;
+        s=default; t=1579196730;
+        bh=Ftt6XCDg9K1tXqPnbjKAce0tpAH6X5cGhHVlNqrU4U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kvq4MFn8UM2Oi6LD2tWOiQcOLsEX1Ycfit535UrWhYxS1BkXP9n2TmwiUL+qxAKWR
-         4O1EXUcc/mZair9judEyZxowkwgVYTXiFJ4PghZ28jhHI1sQP0ZkLr6tYVi1qlAzIt
-         m2jIMVVgz3fv9QafY+IlUbomCN/4Of6hUd0i6E4U=
+        b=sjgipgEMuSC/gMvx5fdcVt+fKxShvAABmyW4jle/Bg7WQjkbqfAIHBqICjEFKdNaL
+         4P6m77JSwM4iwY296GA4InOFuA6GP48ilb+h25gtNd6jV2agssXhTwtIGAhBjhyERQ
+         mmXQ7f8M20M19foj680lyvTGa4wC4OthBYrsykRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 093/174] thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
-Date:   Thu, 16 Jan 2020 12:41:30 -0500
-Message-Id: <20200116174251.24326-93-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 114/174] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
+Date:   Thu, 16 Jan 2020 12:41:51 -0500
+Message-Id: <20200116174251.24326-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -62,56 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit bf45ac18b78038e43af3c1a273cae4ab5704d2ce ]
+[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
 
-The CPU load values passed to the thermal_power_cpu_get_power
-tracepoint are zero for all CPUs, unless, unless the
-thermal_power_cpu_limit tracepoint is enabled too:
+apic->send_IPI_allbutself() takes a vector number as argument.
 
-  irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
-  cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
+APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
+outside the vector space.
 
-vs
+Use NMI_VECTOR instead as that's what it is intended to be.
 
-  irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
-  cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
-  irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
-  cpus=0000000f freq=408000 cdev_state=10 power=416
-
-There seems to be no good reason for omitting the CPU load information
-depending on another tracepoint. My guess is that the intention was to
-check whether thermal_power_cpu_get_power is (still) enabled, however
-'load_cpu != NULL' already indicates that it was at least enabled when
-cpufreq_get_requested_power() was entered, there seems little gain
-from omitting the assignment if the tracepoint was just disabled, so
-just remove the check.
-
-Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Javi Merino <javi.merino@kernel.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Fixes: 82da3ff89dc2 ("x86: kgdb support")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/cpu_cooling.c | 2 +-
+ arch/x86/kernel/kgdb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index 87d87ac1c8a0..96567b4a4f20 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -607,7 +607,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
- 			load = 0;
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 44256a62702b..4a08fda2b06f 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -437,7 +437,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+  */
+ void kgdb_roundup_cpus(unsigned long flags)
+ {
+-	apic->send_IPI_allbutself(APIC_DM_NMI);
++	apic->send_IPI_allbutself(NMI_VECTOR);
+ }
+ #endif
  
- 		total_load += load;
--		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
-+		if (load_cpu)
- 			load_cpu[i] = load;
- 
- 		i++;
 -- 
 2.20.1
 
