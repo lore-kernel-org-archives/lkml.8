@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4688EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9517C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEDA2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F1B2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200346;
-	bh=UjDRz+2jQ+4DGwwvu1ypOz4jh6xd6EedOG9bfUkItyg=;
+	s=default; t=1579200355;
+	bh=ry5raxMMcK79klLj5ax/ijaAf/pwX8mblkJk85prWNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=keqVa8X3nZKx1QMR8xtjr3M4d5UdLd6uuTQNRI/MNPSIDrk683/ehYRwUrvHjJclO
-	 r0KIoHlU/SCzw2TICLjlz+gF31/MWttTYXOMXxVnfK5AXHbhm/sfU6l5iTf+EcPdkh
-	 3xfH/fT79ZYVjZ8Rkki15fnVFVhp4gVaNeoLikv4=
+	b=mkzSlgk0XtpFMTiuJVFMJgcl0dhCJEoIaqf+4EerfivHeMtYGM75nupuudqYa+8C9
+	 ctVyQDAPASPIe6zCg1qshuYO0ArBw6TsQ4+AI1+kcoRUWTvUn7vGTmfDxk+o1aqFOb
+	 Hurb2Kr2QPNIxoE1YLLuh8nrg9OoOjpzeFx+8VxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389511AbgAPSpn (ORCPT
+        id S2390122AbgAPSpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:45:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:45:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbgAPRKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:37 -0500
+        id S2390029AbgAPRKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CD42468B;
-        Thu, 16 Jan 2020 17:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 423CE2467C;
+        Thu, 16 Jan 2020 17:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194637;
-        bh=UjDRz+2jQ+4DGwwvu1ypOz4jh6xd6EedOG9bfUkItyg=;
+        s=default; t=1579194633;
+        bh=ry5raxMMcK79klLj5ax/ijaAf/pwX8mblkJk85prWNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yECtWdrdobRuWl9m/oCXb3Y8K7z7SQK5FKGcOHjXHOBy35uQ2e8vS6DICpiFp9MZH
-         FSSiGD64YnbtsxIirrHSddkJI5yREx8g7Y/rBROmt76qh6JHPsGqbs6EiMwPItJokd
-         WoCCvtEihKsdmI4ixgEJxTH3lXfKuSRm3EPYqZRs=
+        b=LXEMbRFPyRS9CDT9Z6U2eSmnNb7MMaWrKyQdys4lTvU/44dXDpXVFxauBSqcx30mL
+         YDt8wUQ/fGBwPnesDszuYTMI2uGFmmsCl0U320VRTGqDhm/f+2MSxxDlYFJ59k+Qi/
+         2Tm3nMY54Oula0lN3Fd9x0not8j/C/3CcWmS7Qw4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 495/671] tools: bpftool: fix format strings and arguments for jsonw_printf()
-Date:   Thu, 16 Jan 2020 12:02:13 -0500
-Message-Id: <20200116170509.12787-232-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 492/671] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
+Date:   Thu, 16 Jan 2020 12:02:10 -0500
+Message-Id: <20200116170509.12787-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,58 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 22c349e8db89df86804d3ba23cef037ccd44a8bf ]
+[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
 
-There are some mismatches between format strings and arguments passed to
-jsonw_printf() in the BTF dumper for bpftool, which seems harmless but
-may result in warnings if the "__printf()" attribute is used correctly
-for jsonw_printf(). Let's fix relevant format strings and type cast.
+sound/soc/codecs/wm8737.c:112:29: warning:
+ high_3d defined but not used [-Wunused-const-variable=]
 
-Fixes: b12d6ec09730 ("bpf: btf: add btf print functionality")
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+'high_3d' should be used for 3D High Cut-off.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/btf_dumper.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/soc/codecs/wm8737.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
-index e4e6e2b3fd84..ff0cc3c17141 100644
---- a/tools/bpf/bpftool/btf_dumper.c
-+++ b/tools/bpf/bpftool/btf_dumper.c
-@@ -26,9 +26,9 @@ static void btf_dumper_ptr(const void *data, json_writer_t *jw,
- 			   bool is_plain_text)
- {
- 	if (is_plain_text)
--		jsonw_printf(jw, "%p", *(unsigned long *)data);
-+		jsonw_printf(jw, "%p", data);
- 	else
--		jsonw_printf(jw, "%u", *(unsigned long *)data);
-+		jsonw_printf(jw, "%lu", *(unsigned long *)data);
- }
+diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
+index e9ae821e7609..568b77692f5f 100644
+--- a/sound/soc/codecs/wm8737.c
++++ b/sound/soc/codecs/wm8737.c
+@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
+ SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
+ SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
+ SOC_ENUM("3D Low Cut-off", low_3d),
+-SOC_ENUM("3D High Cut-off", low_3d),
++SOC_ENUM("3D High Cut-off", high_3d),
+ SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
  
- static int btf_dumper_modifier(const struct btf_dumper *d, __u32 type_id,
-@@ -129,7 +129,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
- 	switch (BTF_INT_ENCODING(*int_type)) {
- 	case 0:
- 		if (BTF_INT_BITS(*int_type) == 64)
--			jsonw_printf(jw, "%lu", *(__u64 *)data);
-+			jsonw_printf(jw, "%llu", *(__u64 *)data);
- 		else if (BTF_INT_BITS(*int_type) == 32)
- 			jsonw_printf(jw, "%u", *(__u32 *)data);
- 		else if (BTF_INT_BITS(*int_type) == 16)
-@@ -142,7 +142,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
- 		break;
- 	case BTF_INT_SIGNED:
- 		if (BTF_INT_BITS(*int_type) == 64)
--			jsonw_printf(jw, "%ld", *(long long *)data);
-+			jsonw_printf(jw, "%lld", *(long long *)data);
- 		else if (BTF_INT_BITS(*int_type) == 32)
- 			jsonw_printf(jw, "%d", *(int *)data);
- 		else if (BTF_INT_BITS(*int_type) == 16)
+ SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
 -- 
 2.20.1
 
