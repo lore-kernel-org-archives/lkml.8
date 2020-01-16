@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B455C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86A6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C8D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B522073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200003;
-	bh=82bJvPDnc5G4xgw16Uc87CO0wdYNO9sE+vaqbaDhJas=;
+	s=default; t=1579200009;
+	bh=43bZk1u//lMlRxSTRt9S0p+Aq58XOf+eHUv5B4LBTy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pm1EiKojZZ23ftNu8CFBbwtDC1YEzYfhFY1CSNGgztLCpGBPWB082JxtC2LtTXmL+
-	 SKfOU/PYZtAjZ9q2241MqdN6Ht8SMBgtZi9sArsivOiuUjNk1WsZotR+y5Fjf9JFsl
-	 dQ1OlpkchbB8Jn9+JrNsFfyVj7QvO+bQzy3av/Fk=
+	b=oIkErbzNX6NMfpD5n9wxDwPMSwkH5pAPU0kd5bCvKMxEsMMyeSi0Pse2RBNQVafdY
+	 qLynHVxYWE1bRyAOCr9La4TD9FvLX6qZEvoBI1Q5UVoHChHcEji2Ptn8VU8BArHGTn
+	 jCgTsuG8ljOJ1fxFhHVuGAeux9azcTyh5O7HbZpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389802AbgAPRMJ (ORCPT
+        id S2436947AbgAPSkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:40:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390358AbgAPRL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:58 -0500
+        id S2390397AbgAPRMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5925524696;
-        Thu, 16 Jan 2020 17:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B842469C;
+        Thu, 16 Jan 2020 17:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194718;
-        bh=82bJvPDnc5G4xgw16Uc87CO0wdYNO9sE+vaqbaDhJas=;
+        s=default; t=1579194728;
+        bh=43bZk1u//lMlRxSTRt9S0p+Aq58XOf+eHUv5B4LBTy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pupw2R84sojUTP7T7avYluQoBBQnbTfUyrWIqKu2FWTD4nvP63safLWrdITKm10w3
-         brlbqVY29cX2Pbkc2X+5OYLJWKJ+vY0IcIiuJEm79Ea/qTYbHNhddg5LfY4huaSehD
-         gn6uPjHAaW475k6M/KvoDWf19LGnESgmk8oWqFwY=
+        b=R0Gf76rEfd4ckSjQJDZs/8AWfqMB9KJsYRAK8A3Lgv9SwKi0/40rmVMc+WR93ZJn9
+         hBGrvjV1Y0IQRwtyX+NjcWUA48A6pRhvsqpoo3VF4g+vM0bInFF79cjetoAM5Ua33y
+         UK0q/yrD61ywj0B79IkhuIWjM61UTA3GhNWauYTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 554/671] f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
-Date:   Thu, 16 Jan 2020 12:03:12 -0500
-Message-Id: <20200116170509.12787-291-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 562/671] cxgb4: Signedness bug in init_one()
+Date:   Thu, 16 Jan 2020 12:03:20 -0500
+Message-Id: <20200116170509.12787-299-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,72 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 98194030554cd9b10568a9b58f5a135c7e7cba85 ]
+[ Upstream commit 286183147666fb76c057836c57d86e9e6f508bca ]
 
-If inode is newly created, inode page may not synchronize with inode cache,
-so fields like .i_inline or .i_extra_isize could be wrong, in below call
-path, we may access such wrong fields, result in failing to migrate valid
-target block.
+The "chip" variable is an enum, and it's treated as unsigned int by GCC
+in this context so the error handling isn't triggered.
 
-Thread A				Thread B
-- f2fs_create
- - f2fs_add_link
-  - f2fs_add_dentry
-   - f2fs_init_inode_metadata
-    - f2fs_add_inline_entry
-     - f2fs_new_inode_page
-     - f2fs_put_page
-     : inode page wasn't updated with inode cache
-					- gc_data_segment
-					 - is_alive
-					  - f2fs_get_node_page
-					  - datablock_addr
-					   - offset_in_addr
-					   : access uninitialized fields
-
-Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: e8d452923ae6 ("cxgb4: clean up init_one")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/dir.c    | 5 +++++
- fs/f2fs/inline.c | 5 +++++
- 2 files changed, 10 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index cd611a57d04d..8692cfa89a1c 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -572,6 +572,11 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
- 
- 	if (inode) {
- 		f2fs_i_pino_write(inode, dir->i_ino);
-+
-+		/* synchronize inode page's data from inode cache */
-+		if (is_inode_flag_set(inode, FI_NEW_INODE))
-+			f2fs_update_inode(inode, page);
-+
- 		f2fs_put_page(page, 1);
- 	}
- 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 3fe0dd531390..c1ba29d10789 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -578,6 +578,11 @@ int f2fs_add_inline_entry(struct inode *dir, const struct qstr *new_name,
- 	/* we don't need to mark_inode_dirty now */
- 	if (inode) {
- 		f2fs_i_pino_write(inode, dir->i_ino);
-+
-+		/* synchronize inode page's data from inode cache */
-+		if (is_inode_flag_set(inode, FI_NEW_INODE))
-+			f2fs_update_inode(inode, page);
-+
- 		f2fs_put_page(page, 1);
- 	}
- 
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index bb04c695ab9f..c81d6c330548 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5452,7 +5452,7 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	whoami = t4_read_reg(adapter, PL_WHOAMI_A);
+ 	pci_read_config_word(pdev, PCI_DEVICE_ID, &device_id);
+ 	chip = t4_get_chip_type(adapter, CHELSIO_PCI_ID_VER(device_id));
+-	if (chip < 0) {
++	if ((int)chip < 0) {
+ 		dev_err(&pdev->dev, "Device %d is not supported\n", device_id);
+ 		err = chip;
+ 		goto out_free_adapter;
 -- 
 2.20.1
 
