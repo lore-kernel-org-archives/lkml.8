@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EE3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AAFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B6A2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45352077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216859;
-	bh=ryz0DtnBmWyMSdOhEb/SPsuUY2pi76zfMQQNJdVssdE=;
+	s=default; t=1579216862;
+	bh=yAPaM9nh2E+ncMBbb1bV6ogELDHCPONxBhXptMSGL2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIOS5GiPYb62ao1aTSBhgwQZnX2bT4cX/62+Z4802uRTJXKGnR3qB4DNEu4UtMVs4
-	 rkgDOkwoFfXEokA/NKX+ST5Rlae9m7lMahrQtA60VkRFweZTjyv3RRRi/yUgFSGYmE
-	 irsnme7iHDPHHNu0833yanFQLZf4oeQb9bTXWFJk=
+	b=feU+eXi4SIWJipJ2XWyfHuAvpH7azyQsgRmEaKdxfouMqn+9pO0nimH7Mh7mJWzXI
+	 47rKRM7nQIvF2k3owvOW6Rx4AygCI2IZAfhfdBqi707XJ0F6HVWBGue4gbAQfmW1R3
+	 RvjKXmSS70bO15mFgHkEbcgY1YdPogWIbcQxDLB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388994AbgAPXU6 (ORCPT
+        id S2390759AbgAPXVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47806 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389828AbgAPXU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:56 -0500
+        id S2390744AbgAPXU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 255372072B;
-        Thu, 16 Jan 2020 23:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8671D2072B;
+        Thu, 16 Jan 2020 23:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216855;
-        bh=ryz0DtnBmWyMSdOhEb/SPsuUY2pi76zfMQQNJdVssdE=;
+        s=default; t=1579216858;
+        bh=yAPaM9nh2E+ncMBbb1bV6ogELDHCPONxBhXptMSGL2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqtwex6ERBIWMChA5VA+53H2RzvgyaYIk61/tn3D5i4eynoGyZicSIu8HyRwEItX+
-         gKjlaOlnjTB3mn8ToULGLj1A9oP7adFXHo7itcd76QEpEBVkQEDodV5TMB/0e8k4Up
-         a3zlpPKTZNV6dmg7Zgk8JsTjjJ8LXyVQNEBzpO+o=
+        b=wb/vgdhxp1Nck9vYS3OAcnT/V5x6BghTALBXQP6VCOgPktGUwIXnI+1hXjl37c+bg
+         sBPuOSWRW1tKxS7cEqJPGW4mjts1Y9F4YzUkclWmeD+Wldvxa/inXhHehiqQ+tZ7mb
+         r3PzwSQqOrmUMfByUqwtk78yq2zd0ngjseoL6dnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 031/203] hsr: rename debugfs file when interface name is changed
-Date:   Fri, 17 Jan 2020 00:15:48 +0100
-Message-Id: <20200116231747.003937873@linuxfoundation.org>
+Subject: [PATCH 5.4 032/203] hsr: reset network header when supervision frame is created
+Date:   Fri, 17 Jan 2020 00:15:49 +0100
+Message-Id: <20200116231747.058100854@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,73 +61,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-commit 4c2d5e33dcd3a6333a7895be3b542ff3d373177c upstream.
+commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 upstream.
 
-hsr interface has own debugfs file, which name is same with interface name.
-So, interface name is changed, debugfs file name should be changed too.
+The supervision frame is L2 frame.
+When supervision frame is created, hsr module doesn't set network header.
+If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
+network_header. If network_header pointer wasn't set(or invalid),
+it resets network_header and warns.
+In order to avoid unnecessary warning message, resetting network_header
+is needed.
 
-Fixes: fc4ecaeebd26 ("net: hsr: add debugfs support for display node list")
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    tcpdump -nei veth0
+
+Splat looks like:
+[  175.852292][    C3] protocol 88fb is buggy, dev veth0
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/hsr/hsr_debugfs.c |   13 +++++++++++++
- net/hsr/hsr_main.c    |    3 +++
- net/hsr/hsr_main.h    |    4 ++++
- 3 files changed, 20 insertions(+)
+ net/hsr/hsr_device.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/hsr/hsr_debugfs.c
-+++ b/net/hsr/hsr_debugfs.c
-@@ -65,6 +65,19 @@ hsr_node_table_open(struct inode *inode,
- 	return single_open(filp, hsr_node_table_show, inode->i_private);
- }
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -272,6 +272,8 @@ static void send_hsr_supervision_frame(s
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
+ 	skb_reset_mac_header(skb);
++	skb_reset_network_header(skb);
++	skb_reset_transport_header(skb);
  
-+void hsr_debugfs_rename(struct net_device *dev)
-+{
-+	struct hsr_priv *priv = netdev_priv(dev);
-+	struct dentry *d;
-+
-+	d = debugfs_rename(hsr_debugfs_root_dir, priv->node_tbl_root,
-+			   hsr_debugfs_root_dir, dev->name);
-+	if (IS_ERR(d))
-+		netdev_warn(dev, "failed to rename\n");
-+	else
-+		priv->node_tbl_root = d;
-+}
-+
- static const struct file_operations hsr_fops = {
- 	.open	= hsr_node_table_open,
- 	.read	= seq_read,
---- a/net/hsr/hsr_main.c
-+++ b/net/hsr/hsr_main.c
-@@ -45,6 +45,9 @@ static int hsr_netdev_notify(struct noti
- 	case NETDEV_CHANGE:	/* Link (carrier) state changes */
- 		hsr_check_carrier_and_operstate(hsr);
- 		break;
-+	case NETDEV_CHANGENAME:
-+		hsr_debugfs_rename(dev);
-+		break;
- 	case NETDEV_CHANGEADDR:
- 		if (port->type == HSR_PT_MASTER) {
- 			/* This should not happen since there's no
---- a/net/hsr/hsr_main.h
-+++ b/net/hsr/hsr_main.h
-@@ -185,11 +185,15 @@ static inline u16 hsr_get_skb_sequence_n
- }
- 
- #if IS_ENABLED(CONFIG_DEBUG_FS)
-+void hsr_debugfs_rename(struct net_device *dev);
- void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev);
- void hsr_debugfs_term(struct hsr_priv *priv);
- void hsr_debugfs_create_root(void);
- void hsr_debugfs_remove_root(void);
- #else
-+static inline void void hsr_debugfs_rename(struct net_device *dev)
-+{
-+}
- static inline void hsr_debugfs_init(struct hsr_priv *priv,
- 				    struct net_device *hsr_dev)
- {}
+ 	if (hsr_ver > 0) {
+ 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
 
 
