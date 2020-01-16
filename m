@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51966C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814D42470B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B95124712
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196367;
-	bh=206sE0FgN/guZTm+kxehiEoGAU09Y0UfRM/qPQMxmPE=;
+	s=default; t=1579196374;
+	bh=Co41Z/wBvzHDblLd0WWZn9h+FN45ex3ykUseQ0plszg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K51B/90RSFxchwsIumMmWCPIttFUuKFDdZvESzSnZYi02UIAr6TwiMYGYEOKVpqdc
-	 pyvgiPBL+CuOGVT1EveOLoDkuwhhZpdJioWuehxhrQ/QZTc7XMYuhrrauqIilayAMe
-	 +ULwL4NshOKyu3cTllbpJiJIYirAkCJY2vsiATMk=
+	b=Iezx1NchG5HxrteJyW/QOzafNur+ijpFL2yIAetsPh0jSQ0slO8Um2oOpvFIrTbln
+	 5583nzcg2EGT4HdaTqQFTefafAQ2CPcc1a0dcItey9ng3cgHgBo0EzrPReELWHewlQ
+	 3K0uxNGqJdC34/9evSMNtjnQoflGpjtdqsF4t3vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393473AbgAPRj1 (ORCPT
+        id S2388502AbgAPRjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:39:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405058AbgAPRig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:36 -0500
+        id S1730736AbgAPRij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BDF24700;
-        Thu, 16 Jan 2020 17:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E6724700;
+        Thu, 16 Jan 2020 17:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196315;
-        bh=206sE0FgN/guZTm+kxehiEoGAU09Y0UfRM/qPQMxmPE=;
+        s=default; t=1579196319;
+        bh=Co41Z/wBvzHDblLd0WWZn9h+FN45ex3ykUseQ0plszg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+EfXb8j03j9bO5AhfTzwohUiVkUmb2lQ85aVLkbBp2lZkl7fO+oLxFxV4m74bZvN
-         gvfDYGj6kGM+My9zemR0qRBIu6MVn9yDSetsor4/SCxWJodX3Uw6hSZBdH7kbleVwL
-         KivVUnDQeUp2fwS6HNH5LSbUarTl/J8rTCCrC2JA=
+        b=jDaIfLWveEo9Xbb1ZjBlpJaqXTTvSVB/UBk3a8bYhliMT7l2afwHCtUNfYtvZMLXM
+         kBCBy4BrE1mdanXeO4hCTRZiWmO1okpWaOyhJ0gmcNxaqBkZXTaxuPQS2A74dqP5hK
+         HUhY+rgQyxW5/bs2yllfJZrKw6BYgRMdkAJbD8Y0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 121/251] dmaengine: axi-dmac: Don't check the number of frames for alignment
-Date:   Thu, 16 Jan 2020 12:34:30 -0500
-Message-Id: <20200116173641.22137-81-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 123/251] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Thu, 16 Jan 2020 12:34:32 -0500
+Message-Id: <20200116173641.22137-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,43 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
-Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
-for video transfers where screen resolutions ( X * Y ) are typically
-aligned for X, but not for Y.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-There is no requirement for Y_LENGTH to be aligned to the bus-width (or
-anything), and this is also true for AXI DMAC.
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
 
-Checking the Y_LENGTH for alignment causes false errors when initiating DMA
-transfers. This change fixes this by checking only that the Y_LENGTH is
-non-zero.
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
 
-Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-axi-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 7f0b9aa15867..9887f2a14aa9 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -451,7 +451,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 40cade140222..47a862cc7b34 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3404,20 +3404,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
- 	if (chan->hw_2d) {
- 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
--		    !axi_dmac_check_len(chan, xt->numf))
-+		    xt->numf == 0)
- 			return NULL;
- 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
- 		    xt->sgl[0].size + src_icg > chan->max_length)
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
+ 
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
 2.20.1
 
