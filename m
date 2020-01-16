@@ -2,86 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B37DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E877C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EF92072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579204559;
-	bh=zM7/G9ohZ7x8DUpojw8GrOGYq51OWhRQLpYwpfjjy0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NyCONm44entuCtKLoOfJ8WqPFrRcBd6FMS2Lx1seggEDH8Syl6Kf8ucMWn9Rk0cpP
-	 QqhBc2gb2pg3IowbieaRhgReE0J5haUYzJ1zzhMEMxMiGpK8DE1s06HNgPhluA0flj
-	 Ooz1PmTetQE7B22gUl3TOcz8X9AAZxhG2tgmPv8I=
+	by mail.kernel.org (Postfix) with ESMTP id 163B620730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732908AbgAPTz6 (ORCPT
+        id S1731062AbgAPT4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:55:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50834 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:56:09 -0500
+Received: from mx2.freebsd.org ([96.47.72.81]:49356 "EHLO mx2.freebsd.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbgAPTz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:55:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 621EA2072B;
-        Thu, 16 Jan 2020 19:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579204557;
-        bh=zM7/G9ohZ7x8DUpojw8GrOGYq51OWhRQLpYwpfjjy0w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0u3rY60HIEMozuN0foQT8KUIpmrYCrzo7TtX6Dz4//bc9UoDTlwXD7V1f1zkVreZ2
-         Zy8GNaJnVlI5xVu8DzkZlg9ajwE6vBbN9YJ21kmTw2OvnWv9AcOxxPyWsrQH+FKeSc
-         lCqU6x71qo6drhhU0++qEZwskiHykkdQ7vi5R1MM=
-Date:   Thu, 16 Jan 2020 20:55:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] PHY: For 5.6
-Message-ID: <20200116195524.GA1096827@kroah.com>
-References: <20200116110515.20480-1-kishon@ti.com>
+        id S1726925AbgAPT4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:56:08 -0500
+X-Greylist: delayed 537 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 14:56:08 EST
+Received: from mx1.freebsd.org (mx1.freebsd.org [96.47.72.80])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx2.freebsd.org (Postfix) with ESMTPS id 0976F8BD3A;
+        Thu, 16 Jan 2020 19:47:11 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+Received: from smtp.freebsd.org (smtp.freebsd.org [96.47.72.83])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx1.freebsd.org (Postfix) with ESMTPS id 47zF8G5gxgz4Ty1;
+        Thu, 16 Jan 2020 19:47:10 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+Received: from localhost.localdomain (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: manu)
+        by smtp.freebsd.org (Postfix) with ESMTPSA id D90D249FE;
+        Thu, 16 Jan 2020 19:47:09 +0000 (UTC)
+        (envelope-from manu@freebsd.org)
+From:   Emmanuel Vadot <manu@freebsd.org>
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH] arm64: dts: allwinner: a64: Add gpio bank supply for A64-Olinuxino
+Date:   Thu, 16 Jan 2020 20:46:58 +0100
+Message-Id: <20200116194658.78893-1-manu@freebsd.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116110515.20480-1-kishon@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 04:35:15PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Greg,
-> 
-> Please find the pull request for 5.6 merge window below.
-> 
-> PHY core now creates a device link between PHY consumer and PHY
-> provider required for suspend/resume ordering and also adds support
-> for DisplayPort controller to pass configuration parameters to PHY.
-> 
-> It includes new PHY drivers for TI's J721E SoC (PCIe and USB), eMMC
-> PHY driver for Intel's LGM SoC and USB PHY driver for Broadcom
-> SoC.
-> 
-> For the detailed list of changes, please see the tag message below.
-> All these changes have been in linux -next for a while now.
-> Consider merging this for the next merge window and let me know if I
-> have to change something.
+Add the regulators for each bank on this boards.
 
-I got the following warning, which linux-next should also reported:
-Commit: 56b337ef505d ("phy: ti: j721e-wiz: Fix return value check in wiz_probe()")
-	Fixes tag: Fixes: b46f531313a4 ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-	Has these problem(s):
-	        - Target SHA1 does not exist
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+---
+ .../boot/dts/allwinner/sun50i-a64-olinuxino.dts   | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Maybe I am merging into the wrong tree?
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+index 01a9a52edae4..1a25abf6065c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
+@@ -163,6 +163,17 @@ &ohci1 {
+ 	status = "okay";
+ };
+ 
++&pio {
++	vcc-pa-supply = <&reg_dcdc1>;
++	vcc-pb-supply = <&reg_dcdc1>;
++	vcc-pc-supply = <&reg_dcdc1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_aldo1>;
++	vcc-pf-supply = <&reg_dcdc1>;
++	vcc-pg-supply = <&reg_dldo4>;
++	vcc-ph-supply = <&reg_dcdc1>;
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
+@@ -175,6 +186,10 @@ axp803: pmic@3a3 {
+ 	};
+ };
+ 
++&r_pio {
++	vcc-pl-supply = <&reg_aldo2>;
++};
++
+ #include "axp803.dtsi"
+ 
+ &ac_power_supply {
+-- 
+2.24.1
 
-Anyway, I'll take this, hopefully that id shows up somewhere :)
-
-thanks,
-
-greg k-h
