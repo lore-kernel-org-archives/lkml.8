@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F44AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948172467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 590612467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194599;
-	bh=ndoE0vtiw44UxpP7RJFkZ4ATAyIcKw/7d2h5EyFh7Hk=;
+	s=default; t=1579194601;
+	bh=joScUPhdfCP23b6S5EFY5hYk38+64+HbNEWlfegz5v4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5k5qyogRXmyA80wH+R7TvFAkosfSCtxE3byvmNIVcbC1G9CKjp+4R+3KeO/31eHe
-	 sv2jvFDTtoeBDzBL9oaVWd1vTurkfkbN2FH0IjDdOLB0uYABnMTY2NfILzoCMdhXTU
-	 xZh390tTn4sOgXoIAfqZepyNSEzoWoA9XbMv7l0g=
+	b=Xh5Cxzr0vdU1aGyLHp7vSYHoxdjtrqxKPyRdMl1WiIRBhZUs/ro4rNLwp8F9t9SfW
+	 G6qZ0ffgZO2UOeizjGdl/fwOjNh9B9tSrEhL54Q66Ui0zRNzYQ7urREFEVOPBO5/mT
+	 oly/qfYIkiKBzNQeJgUX9T/C38ozl4DgHg0X9aPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389467AbgAPRJ6 (ORCPT
+        id S2389801AbgAPRKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389743AbgAPRJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:48 -0500
+        id S2389773AbgAPRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DEE024690;
-        Thu, 16 Jan 2020 17:09:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E544217F4;
+        Thu, 16 Jan 2020 17:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194587;
-        bh=ndoE0vtiw44UxpP7RJFkZ4ATAyIcKw/7d2h5EyFh7Hk=;
+        s=default; t=1579194593;
+        bh=joScUPhdfCP23b6S5EFY5hYk38+64+HbNEWlfegz5v4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAfpHZJLL2VfkjU9Xyia7L+Haqvg5YNd9YeuQXEUoVVQcziT9MDnCHwpF7lCS62Ec
-         lVmzQ3lupJyRPIS+yK6HeMNLVkCwL8a9x5nZLXQy1QcpFnofd1DiW+4uAi1Y0G0KXJ
-         d93jfZmspjqS8ZzwoTHPnzKASyH1y1JXcR3u+NxI=
+        b=VNIyg25loR56C6gni90jzFRznZjXzECZI64LY3HHPZ8NzN2AJLhYquA5rPtKf5Iy+
+         d0hQ6a+D5juvUU63l8kjNaxSxd/Ldz3kc/ImHbMwjV2SmVwAofCy/XbOMPsaN7mmXw
+         5tcvG+LMwm1vsz7kWOZySWRJ49iR/g/z4hr2iztQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 459/671] net/tls: fix socket wmem accounting on fallback with netem
-Date:   Thu, 16 Jan 2020 12:01:37 -0500
-Message-Id: <20200116170509.12787-196-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 463/671] scsi: libfc: fix null pointer dereference on a null lport
+Date:   Thu, 16 Jan 2020 12:01:41 -0500
+Message-Id: <20200116170509.12787-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 5c4b4608fe100838c62591877101128467e56c00 ]
+[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
 
-netem runs skb_orphan_partial() which "disconnects" the skb
-from normal TCP write memory accounting.  We should not adjust
-sk->sk_wmem_alloc on the fallback path for such skbs.
+Currently if lport is null then the null lport pointer is dereference when
+printing out debug via the FC_LPORT_DB macro. Fix this by using the more
+generic FC_LIBFC_DBG debug macro instead that does not use lport.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Dereference after null check")
+Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tls/tls_device_fallback.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/libfc/fc_exch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tls/tls_device_fallback.c b/net/tls/tls_device_fallback.c
-index 426dd97725e4..6cf832891b53 100644
---- a/net/tls/tls_device_fallback.c
-+++ b/net/tls/tls_device_fallback.c
-@@ -208,6 +208,10 @@ static void complete_skb(struct sk_buff *nskb, struct sk_buff *skb, int headln)
+diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
+index 42bcf7f3a0f9..6ba257cbc6d9 100644
+--- a/drivers/scsi/libfc/fc_exch.c
++++ b/drivers/scsi/libfc/fc_exch.c
+@@ -2603,7 +2603,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
  
- 	update_chksum(nskb, headln);
- 
-+	/* sock_efree means skb must gone through skb_orphan_partial() */
-+	if (nskb->destructor == sock_efree)
-+		return;
-+
- 	delta = nskb->truesize - skb->truesize;
- 	if (likely(delta < 0))
- 		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
+ 	/* lport lock ? */
+ 	if (!lport || lport->state == LPORT_ST_DISABLED) {
+-		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
++		FC_LIBFC_DBG("Receiving frames for an lport that "
+ 			     "has not been initialized correctly\n");
+ 		fc_frame_free(fp);
+ 		return;
 -- 
 2.20.1
 
