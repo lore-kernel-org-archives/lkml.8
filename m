@@ -2,56 +2,57 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF2EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C25C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88DD20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5ACA20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217766;
-	bh=kAOaVjnWMYC/RpKKbmuTL0WR4dJhxwrxKVKAogktUJ4=;
+	s=default; t=1579217770;
+	bh=hkDV0F8DLyWObmZCImCKkV2o6hcgmEmc5ef/rDnXpIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kUyaOS3Q1WNPk2SWs0hbZpcaXTF7LtNsrY7ZCJvpCZZV3Zpugcz6uTYR/4zvhCorC
-	 ufqa4Zcm5wbEhMC7++SC6t9iigBY5WqJz3wyD43gOC4zCzGowFxDLgz3v3vcW24IVy
-	 koXFkivv3J1nb76kk6ZGJwzXTezEJaP5IAjk3lSM=
+	b=bH9188hGyQPzmywFtxvz5Owb/7Pv/DsdLpX2jK/8gHWBqKvbAGX67HN1Te1Tk2Gl3
+	 6flx7aeuU6Vlyxi5BE2izsD966/p0QBgvDZJS1Ni3owLWC3sJe96hRmhYMRF91vas6
+	 IS/vQTViztZRWCq397H2iAHNs7otkJVC85C+WU3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391548AbgAPXby (ORCPT
+        id S2389019AbgAPXgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:36:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403989AbgAPXaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:30 -0500
+        id S2391534AbgAPXbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C77220684;
-        Thu, 16 Jan 2020 23:30:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF63206D9;
+        Thu, 16 Jan 2020 23:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217429;
-        bh=kAOaVjnWMYC/RpKKbmuTL0WR4dJhxwrxKVKAogktUJ4=;
+        s=default; t=1579217509;
+        bh=hkDV0F8DLyWObmZCImCKkV2o6hcgmEmc5ef/rDnXpIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IWJd1ifoBSXf0XPrptx/XFKOuxAmU4hvVSEtvN9Mie4DYahIgM9shjciwMoy09m/b
-         JU/vBqOK3Mf6K9/EXrFeZE+JWdNwKravHX2q+PW8x8N+jBqpQtx1wesgIkd8ZEXOt2
-         hT8/jiwmOEDTJwgrspagaVraOrtwACpMd5KEHCj4=
+        b=mHhD5IO2Xuis3yl/t3SkluJs/BnUTCKtbZIcCMAHDasZqv54bxv0QBn6EdyZL1QCg
+         +SxTuhx8rWH+bdZkIAZUT0rzzHjLyklDOxWSKjtFrMyOq7ERE4x9vfpkQEcQA3mM6t
+         w2F4h0UCP8ctSp8QjyAamh+pVwu12VqbU82HI5CA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 79/84] drm/arm/mali: make malidp_mw_connector_helper_funcs static
-Date:   Fri, 17 Jan 2020 00:18:53 +0100
-Message-Id: <20200116231722.790733579@linuxfoundation.org>
+        Sanjay Konduri <sanjay.konduri@redpinesignals.com>,
+        Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 06/71] rsi: add fix for crash during assertions
+Date:   Fri, 17 Jan 2020 00:18:04 +0100
+Message-Id: <20200116231710.324691968@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-References: <20200116231713.087649517@linuxfoundation.org>
+In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
+References: <20200116231709.377772748@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+From: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
 
-[ Upstream commit ac2917b01992c098b8d4e6837115e3ca347fdd90 ]
+commit abd39c6ded9db53aa44c2540092bdd5fb6590fa8 upstream.
 
-The malidp_mw_connector_helper_funcs is not referenced by name
-outside of the file it is in, so make it static to avoid the
-following warning:
+Observed crash in some scenarios when assertion has occurred,
+this is because hw structure is freed and is tried to get
+accessed in some functions where null check is already
+present. So, avoided the crash by making the hw to NULL after
+freeing.
 
-drivers/gpu/drm/arm/malidp_mw.c:59:41: warning: symbol 'malidp_mw_connector_helper_funcs' was not declared. Should it be static?
-
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191217115309.2133503-1-ben.dooks@codethink.co.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
+Signed-off-by: Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/arm/malidp_mw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/rsi/rsi_91x_mac80211.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/arm/malidp_mw.c b/drivers/gpu/drm/arm/malidp_mw.c
-index 91472e5e0c8b..7266d3c8b8f4 100644
---- a/drivers/gpu/drm/arm/malidp_mw.c
-+++ b/drivers/gpu/drm/arm/malidp_mw.c
-@@ -55,7 +55,7 @@ malidp_mw_connector_mode_valid(struct drm_connector *connector,
- 	return MODE_OK;
- }
+--- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
+@@ -218,6 +218,7 @@ void rsi_mac80211_detach(struct rsi_hw *
+ 		ieee80211_stop_queues(hw);
+ 		ieee80211_unregister_hw(hw);
+ 		ieee80211_free_hw(hw);
++		adapter->hw = NULL;
+ 	}
  
--const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
-+static const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
- 	.get_modes = malidp_mw_connector_get_modes,
- 	.mode_valid = malidp_mw_connector_mode_valid,
- };
--- 
-2.20.1
-
+ 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
 
 
