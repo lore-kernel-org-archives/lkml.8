@@ -2,86 +2,159 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A9DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEBCC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D03A207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CA120723
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UWtMAmok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgAPED2 (ORCPT
+        id S1730733AbgAPEGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 23:03:28 -0500
-Received: from mga06.intel.com ([134.134.136.31]:37789 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgAPED1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 23:03:27 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 20:03:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,324,1574150400"; 
-   d="scan'208";a="273859959"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Jan 2020 20:03:25 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 08F56301003; Wed, 15 Jan 2020 20:03:25 -0800 (PST)
-Date:   Wed, 15 Jan 2020 20:03:24 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Babu Moger <babu.moger@amd.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Luwei Kang <luwei.kang@intel.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/cpu/amd: Enable the fixed intructions retired
- free counter IRPERF
-Message-ID: <20200116040324.GI302770@tassilo.jf.intel.com>
-References: <20200115205646.10678-1-kim.phillips@amd.com>
- <20200115205646.10678-2-kim.phillips@amd.com>
+        Wed, 15 Jan 2020 23:06:01 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38997 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgAPEGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 23:06:01 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so9553955pfs.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 20:06:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R3OaHJ/NoHo97qXRlJsk6XbKoJmXhoMLhGPLnTVZhRI=;
+        b=UWtMAmokJ/P3d7sD2bmYBARu+1sTAP0qHRJ+jyvjczeS0igyZpJ7Pt1ZW27HzvPEtC
+         Qo4e08NcyYbEKQ1o6NW+RInhKWixcbZ0JWw+ToAOCkjpbsioshu+xNiq3jDCiyc0k+0v
+         V68XXLdKiWKW0S+JUsOTO8tFBazj8S9TUPpkA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R3OaHJ/NoHo97qXRlJsk6XbKoJmXhoMLhGPLnTVZhRI=;
+        b=aiDb8RCO+U94ZX3YzBBDzOq4Ck6c7k5BwhT/dcjxJQ5j/50ahm0eh/rz3TmQyHU9Hy
+         E/eggk5rGz9OtTox5bFgqL6q1ZZpuCEEG2xYv1S7y0jWxUo7iWKoVJhSA4yHVtvh91R5
+         MT1/u3Hw9lCqMKWhaqKZfN61YCcLDHNXetG+Idzn3ZvhCoIZdRzZeY1qKxKf8YTtcLyy
+         x2eFAtwZUozqMrZwrdU5J6t50b0J9ZT6ynwefTrFQhz7blh+p8v3vGpj6KoqY3ujhrHk
+         qMuLz59zRaTPpVPf+4XC3s83iLHE9NuS3rcv7QBYIzb1+gUnPKKhO0fS/XzFUzeND5Ba
+         WTig==
+X-Gm-Message-State: APjAAAW1mIbmHjV8vlWp7lQXzrz3cQY70YVInWnfIJvbOgqfy+la6tcI
+        eYilksPYoInA2/RY5glV4Wy1dw==
+X-Google-Smtp-Source: APXvYqzbpu+zEroh1lCJNK2RswLPoOkrbl0hdO0L1TFDlTlzeRdWYeqQT/qEldakCQJ9/tQN5n8TmA==
+X-Received: by 2002:a63:a555:: with SMTP id r21mr36221700pgu.158.1579147560046;
+        Wed, 15 Jan 2020 20:06:00 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e15sm785798pja.13.2020.01.15.20.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 20:05:59 -0800 (PST)
+Date:   Wed, 15 Jan 2020 23:05:58 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, bristot@redhat.com,
+        frextrite@gmail.com, madhuparnabhowmik04@gmail.com,
+        urezki@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 rcu-dev] rcuperf: Measure memory footprint during
+ kfree_rcu() test
+Message-ID: <20200116040558.GD246464@google.com>
+References: <20191219211349.235877-1-joel@joelfernandes.org>
+ <20191221000729.GH2889@paulmck-ThinkPad-P72>
+ <20191221033714.GB156579@google.com>
+ <20200106195200.GS13449@paulmck-ThinkPad-P72>
+ <20200115220300.GA94036@google.com>
+ <20200115224251.GK2935@paulmck-ThinkPad-P72>
+ <20200115224542.GB94036@google.com>
+ <20200116000104.GO2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115205646.10678-2-kim.phillips@amd.com>
+In-Reply-To: <20200116000104.GO2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	if (cpu_has(c, X86_FEATURE_IRPERF) &&
-> +	    !(c->x86 == 0x17 && c->x86_model <= 0x1f))
-
-Such checks are normally through a x86_pmu lag or possibly a X86_BUG_* flag
-
-> +		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
->  }
->  
->  #ifdef CONFIG_X86_32
-> -- 
-> 2.24.1
+On Wed, Jan 15, 2020 at 04:01:04PM -0800, Paul E. McKenney wrote:
+> On Wed, Jan 15, 2020 at 05:45:42PM -0500, Joel Fernandes wrote:
+> > On Wed, Jan 15, 2020 at 02:42:51PM -0800, Paul E. McKenney wrote:
+> > > > [snip]
+> > > > > > We can certainly refine it further but at this time I am thinking of spending
+> > > > > > my time reviewing Lai's patches and learning some other RCU things I need to
+> > > > > > catch up on. If you hate this patch too much, we can also defer this patch
+> > > > > > review for a bit and I can carry it in my tree for now as it is only a patch
+> > > > > > to test code. But honestly, in its current form I am sort of happy with it.
+> > > > > 
+> > > > > OK, I will keep it as is for now and let's look again later on.  It is not
+> > > > > in the bucket for the upcoming merge window in any case, so we do have
+> > > > > quite a bit of time.
+> > > > > 
+> > > > > It is not that I hate it, but rather that I want to be able to give
+> > > > > good answers to questions that might come up.  And given that I have
+> > > > > occasionally given certain people a hard time about their statistics,
+> > > > > it is only reasonable to expect them to return the favor.  I wouldn't
+> > > > > want you to be caught in the crossfire.  ;-)
+> > > > 
+> > > > Since the weights were concerning, I was thinking of just using a weight of
+> > > > (1 / N) where N is the number of samples. Essentially taking the average.
+> > > > That could be simple enough and does not cause your concerns with weight
+> > > > tuning. I tested it and looks good, I'll post it shortly.
+> > > 
+> > > YES!!!  ;-)
+> > > 
+> > > Snapshot mem_begin before entering the loop.  For the mean value to
+> > > be solid, you need at least 20-30 samples, which might mean upping the
+> > > default for kfree_loops.  Have an "unsigned long long" to accumulate the
+> > > sum, which should avoid any possibility of overflow for current systems
+> > > and for all systems for kfree_loops less than PAGE_SIZE.  At which point,
+> > > forget the "%" stuff and just sum up the si_mem_available() on each pass
+> > > through the loop.
+> > > 
+> > > Do the division on exit from the loop, preferably checking for divide
+> > > by zero.
+> > > 
+> > > Straightforward, fast, reasonably reliable, and easy to defend.
+> > 
+> > I mostly did it along these lines. Hopefully the latest posting is reasonable
+> > enough ;-) I sent it twice because I messed up the authorship (sorry).
 > 
+> No problem with the authorship-fix resend!
+> 
+> But let's get this patch consistent with basic statistics!
+> 
+> You really do need 20-30 samples for an average to mean much.
+> 
+> Of course, right now you default kfree_loops to 10.  You are doing
+> 8000 kmalloc()/kfree_rcu() loops on each pass.  This is large enough
+> that just dropping the "% 4" should be just fine from the viewpoint of
+> si_mem_available() overhead.  But 8000 allocations and frees should get
+> done in way less than one second, so kicking the default kfree_loops up
+> to 30 should be a non-problem.
+> 
+> Then the patch would be both simpler and statistically valid.
+> 
+> So could you please stop using me as the middleman in your fight with
+> the laws of mathematics and get this patch to a defensible state?  ;-)
+
+The thing is the signal doesn't vary much. I could very well just take one
+out of the 4 samples and report that. But I still took the average since
+there are 4 samples. I don't see much point in taking more samples here since
+I am not concerned that the signal will fluctuate much (and if it really
+does, then I can easily catch that kind of variation with multiple rcuperf
+runs).
+
+But if you really want though, I can increase the sampling to 20 samples or a
+number like that and resend it.
+
+thanks,
+
+ - Joel
+
