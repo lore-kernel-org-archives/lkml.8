@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF4FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C836C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937B924739
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4054624724
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195813;
-	bh=GqT+VFCz0fjwLD0nspadbZFk3K0CQrDFdoHxecWoKJY=;
+	s=default; t=1579195817;
+	bh=lyG/hC1sIhm3QEKmu0uFZcRAdLkak4Zq0PP9TrCgYfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GePdKyS3zDXy/B+6H5LOrkADirbk50qXgq41+LYD8EmbikA9rY04KtH/gBtU/LwI5
-	 olwpohcoVrdCorP7mZCcEdb+qvuFm2q1Bqok7eE9sOxbuZis/NYrH7NTzFGrVWcp/d
-	 zlHCzN6sufqq/kjRiJbZGcwHdQz//LHbmeujpzkc=
+	b=B81erpREdbHmRnvcYan8iKxYBclDzFAl4KqomGsaXvWnVwbJlM6awxnece+ex52hb
+	 wQoalGUFWQ7yJGszYCgXyYsBRNkr2schzmLaFr9HgunJgzvg7nc6ygoksTsYfvPN+K
+	 2MXaiS5FOxg+czYvDQ49/iocPs9Tpfpx4ViC5/rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404332AbgAPRaM (ORCPT
+        id S2404363AbgAPRaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42348 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392960AbgAPRaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:06 -0500
+        id S2404330AbgAPRaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D303324721;
-        Thu, 16 Jan 2020 17:30:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011D824718;
+        Thu, 16 Jan 2020 17:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195805;
-        bh=GqT+VFCz0fjwLD0nspadbZFk3K0CQrDFdoHxecWoKJY=;
+        s=default; t=1579195811;
+        bh=lyG/hC1sIhm3QEKmu0uFZcRAdLkak4Zq0PP9TrCgYfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeIDTAum8YvyOGvNSCbuMlKUy5AFa40ICcUYOI67uU4Q84F0BEKzwXfbq9iJoX1jM
-         +Rg78qkTTtdpyKDSG/yy0DL+lJFwR8pdH3f7F40GHXUo4vQgt0DzwDQu/0vk87cQ8S
-         Ob1AtOQcePEfcsb0fc2blqrN8moiXuigs+XD6BGE=
+        b=bu99JjfzJmhN7iYGcEtjCs2JE2e26aGmbsy8Vz+mZYUoJwDBChmN9p7T7j7IpYuKK
+         Fgat20I8S5j1haWl6pyItEdVMRc0n6D9ddd0+kSJ2+yTTuhzKx6v0YDjdv1RZrViU7
+         4yxf1kEQGfubK07k+aF2TdDPG0xT5GVWQ5qSg/n0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 319/371] net: add {READ|WRITE}_ONCE() annotations on ->rskq_accept_head
-Date:   Thu, 16 Jan 2020 12:23:11 -0500
-Message-Id: <20200116172403.18149-262-sashal@kernel.org>
+Cc:     Robin Gong <yibin.gong@nxp.com>, stable@vger.kernel,
+        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 323/371] dmaengine: imx-sdma: fix size check for sdma script_number
+Date:   Thu, 16 Jan 2020 12:23:15 -0500
+Message-Id: <20200116172403.18149-266-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,74 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit 60b173ca3d1cd1782bd0096dc17298ec242f6fb1 ]
+[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
 
-reqsk_queue_empty() is called from inet_csk_listen_poll() while
-other cpus might write ->rskq_accept_head value.
+Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(41) exceed the size of structure sdma_script_start_addrs(40),
+thus cause memory corrupt such as slob block header so that kernel
+trap into while() loop forever in slob_free(). Please refer to below
+code piece in imx-sdma.c:
+for (i = 0; i < sdma->script_number; i++)
+	if (addr_arr[i] > 0)
+		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(38->41 3 scripts added) not align with script number added in
+sdma_script_start_addrs(2 scripts).
 
-Use {READ|WRITE}_ONCE() to avoid compiler tricks
-and potential KCSAN splats.
-
-Fixes: fff1f3001cc5 ("tcp: add a spinlock to protect struct request_sock_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
+Cc: stable@vger.kernel
+Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
+Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
+[vkoul: update the patch title]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/pvcalls-back.c      | 2 +-
- include/net/request_sock.h      | 4 ++--
- net/ipv4/inet_connection_sock.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/imx-sdma.c                     | 8 ++++++++
+ include/linux/platform_data/dma-imx-sdma.h | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
-index abd6dbc29ac2..58be15c27b6d 100644
---- a/drivers/xen/pvcalls-back.c
-+++ b/drivers/xen/pvcalls-back.c
-@@ -792,7 +792,7 @@ static int pvcalls_back_poll(struct xenbus_device *dev,
- 	mappass->reqcopy = *req;
- 	icsk = inet_csk(mappass->sock->sk);
- 	queue = &icsk->icsk_accept_queue;
--	data = queue->rskq_accept_head != NULL;
-+	data = READ_ONCE(queue->rskq_accept_head) != NULL;
- 	if (data) {
- 		mappass->reqcopy.cmd = 0;
- 		ret = 0;
-diff --git a/include/net/request_sock.h b/include/net/request_sock.h
-index 23e22054aa60..04aa2c7d35c4 100644
---- a/include/net/request_sock.h
-+++ b/include/net/request_sock.h
-@@ -181,7 +181,7 @@ void reqsk_fastopen_remove(struct sock *sk, struct request_sock *req,
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 0fc12a8783e3..99f3f22ed647 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1441,6 +1441,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 	if (!sdma->script_number)
+ 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
  
- static inline bool reqsk_queue_empty(const struct request_sock_queue *queue)
- {
--	return queue->rskq_accept_head == NULL;
-+	return READ_ONCE(queue->rskq_accept_head) == NULL;
- }
++	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
++				  / sizeof(s32)) {
++		dev_err(sdma->dev,
++			"SDMA script number %d not match with firmware.\n",
++			sdma->script_number);
++		return;
++	}
++
+ 	for (i = 0; i < sdma->script_number; i++)
+ 		if (addr_arr[i] > 0)
+ 			saddr_arr[i] = addr_arr[i];
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 6eaa53cef0bd..30e676b36b24 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -51,7 +51,10 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
+ };
  
- static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue *queue,
-@@ -193,7 +193,7 @@ static inline struct request_sock *reqsk_queue_remove(struct request_sock_queue
- 	req = queue->rskq_accept_head;
- 	if (req) {
- 		sk_acceptq_removed(parent);
--		queue->rskq_accept_head = req->dl_next;
-+		WRITE_ONCE(queue->rskq_accept_head, req->dl_next);
- 		if (queue->rskq_accept_head == NULL)
- 			queue->rskq_accept_tail = NULL;
- 	}
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index f7224c4fc30f..da55ce62fe50 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -936,7 +936,7 @@ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
- 		req->sk = child;
- 		req->dl_next = NULL;
- 		if (queue->rskq_accept_head == NULL)
--			queue->rskq_accept_head = req;
-+			WRITE_ONCE(queue->rskq_accept_head, req);
- 		else
- 			queue->rskq_accept_tail->dl_next = req;
- 		queue->rskq_accept_tail = req;
+ /**
 -- 
 2.20.1
 
