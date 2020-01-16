@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DA3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC36C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4A424681
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D2122525
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194028;
-	bh=rCcFXbX1Fr/TMqs/7oCPqakVAoglB6X6xmu7kKzP910=;
+	s=default; t=1579194032;
+	bh=eJT0pA3Ews33BGcx/06b3r3W2gLnwH7uKFMyTpIy9kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PKBXXNOm2fw1GsmggERl34kcw/jl44+/R5EyjWAZZ+0utb1/xjfjnmr01OYyUnkvj
-	 KzjYcUXxM4SrM+nRcNT5Guq2jK+G+u5zcfdqKOv/2t+1hVB10VspwoOmA6iqyQTs3m
-	 JEp0nfXCQVu7VtkdnEAkQaz6oyZDuuWe8HzEh0Hg=
+	b=AWIDS8r1dFRVZ3lQSIRuNsiiTCWvcUMsD0SDc91yekdVPqjb95YZLUI1s1Y1Pi3Kn
+	 ehHq954Dt3CfFj3P0pIZ7TfiackZ79Dym1LU+FkhXOHJNng3lD3G/mDP1lu8C4lgPU
+	 qhHAaLO4JZBZLhAaTFD+ON6Zut711rUidQwNs/BM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbgAPRA0 (ORCPT
+        id S2387838AbgAPRAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49922 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387685AbgAPRAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:23 -0500
+        id S2387798AbgAPRA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19C7524681;
-        Thu, 16 Jan 2020 17:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8137A20728;
+        Thu, 16 Jan 2020 17:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194021;
-        bh=rCcFXbX1Fr/TMqs/7oCPqakVAoglB6X6xmu7kKzP910=;
+        s=default; t=1579194026;
+        bh=eJT0pA3Ews33BGcx/06b3r3W2gLnwH7uKFMyTpIy9kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t88Leht+v9R5WLlVtzRcj10uCB0JSkb1lx3vu3JN6XmmDW0Jy/v3EJX8SbBAU2H7Q
-         XW+o8HevN1yYPKKUKKn3NNTbAAQjW+5dyHIc0O4ryDpQ07k0DbA/0GVuKuk1V+MTn+
-         PpAavit0d/5iJ2SVidOlU2N54+RqFXxBQB/vOJgY=
+        b=biDByIzCn/wKohE7kD5jZxsm4CHTDYP9ocWp2ODq3LsEk74QILN0iy7lkuVgiUoDv
+         koi98ydKBohVwoiE37cWo94sPL3muU7AOxGFwF5kUgNG24nLIKVd8R4tq1sN8ggbOt
+         gyOLMWkEaaZDRIAmc/r+2nQRjjCzjluJ8tflzUYU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 142/671] driver core: Fix DL_FLAG_AUTOREMOVE_SUPPLIER device link flag handling
-Date:   Thu, 16 Jan 2020 11:50:51 -0500
-Message-Id: <20200116165940.10720-25-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 146/671] driver core: Do not call rpm_put_suppliers() in pm_runtime_drop_link()
+Date:   Thu, 16 Jan 2020 11:50:55 -0500
+Message-Id: <20200116165940.10720-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,75 +61,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit c8d50986da5d74ddfc233b13b91d0a13369fa164 ]
+[ Upstream commit a1fdbfbb1da2063ba98a12eb6f1bdd07451c7145 ]
 
-Change the list walk in device_links_driver_cleanup() to a safe one
-to avoid use-after-free when dropping a link from the list during the
-walk.
+Calling rpm_put_suppliers() from pm_runtime_drop_link() is excessive
+as it affects all suppliers of the consumer device and not just the
+one pointed to by the device link being dropped.  Worst case it may
+cause the consumer device to stop working unexpectedly.  Moreover, in
+principle it is racy with respect to runtime PM of the consumer
+device.
 
-Also, while at it, fix device_link_add() to refuse to create
-stateless device links with DL_FLAG_AUTOREMOVE_SUPPLIER set, which is
-an invalid combination (setting that flag means that the driver core
-should manage the link, so it cannot be stateless), and extend the
-kerneldoc comment of device_link_add() to cover the
-DL_FLAG_AUTOREMOVE_SUPPLIER flag properly too.
+To avoid these problems drop runtime PM references on the particular
+supplier pointed to by the link in question only and do that after
+the link has been dropped from the consumer device's list of links to
+suppliers, which is in device_link_free().
 
-Fixes: 1689cac5b32a ("driver core: Add flag to autoremove device link on supplier unbind")
+Fixes: a0504aecba76 ("PM / runtime: Drop usage count for suppliers at device link removal")
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/base/core.c          | 3 +++
+ drivers/base/power/runtime.c | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 985ccced33a2..055132f2292a 100644
+index 20ae18f44dcd..7599147d5f83 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -179,10 +179,14 @@ void device_pm_move_to_tail(struct device *dev)
-  * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
-  * ignored.
-  *
-- * If the DL_FLAG_AUTOREMOVE_CONSUMER is set, the link will be removed
-- * automatically when the consumer device driver unbinds from it.
-- * The combination of both DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_STATELESS
-- * set is invalid and will cause NULL to be returned.
-+ * If the DL_FLAG_AUTOREMOVE_CONSUMER flag is set, the link will be removed
-+ * automatically when the consumer device driver unbinds from it.  Analogously,
-+ * if DL_FLAG_AUTOREMOVE_SUPPLIER is set in @flags, the link will be removed
-+ * automatically when the supplier device driver unbinds from it.
-+ *
-+ * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
-+ * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
-+ * will cause NULL to be returned upfront.
-  *
-  * A side effect of the link creation is re-ordering of dpm_list and the
-  * devices_kset list by moving the consumer device and all devices depending
-@@ -199,8 +203,8 @@ struct device_link *device_link_add(struct device *consumer,
- 	struct device_link *link;
+@@ -357,6 +357,9 @@ EXPORT_SYMBOL_GPL(device_link_add);
  
- 	if (!consumer || !supplier ||
--	    ((flags & DL_FLAG_STATELESS) &&
--	     (flags & DL_FLAG_AUTOREMOVE_CONSUMER)))
-+	    (flags & DL_FLAG_STATELESS &&
-+	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER | DL_FLAG_AUTOREMOVE_SUPPLIER)))
- 		return NULL;
- 
- 	device_links_write_lock();
-@@ -539,11 +543,11 @@ void device_links_no_driver(struct device *dev)
-  */
- void device_links_driver_cleanup(struct device *dev)
+ static void device_link_free(struct device_link *link)
  {
--	struct device_link *link;
-+	struct device_link *link, *ln;
++	while (refcount_dec_not_one(&link->rpm_active))
++		pm_runtime_put(link->supplier);
++
+ 	put_device(link->consumer);
+ 	put_device(link->supplier);
+ 	kfree(link);
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index b914932d3ca1..ab454c4533ba 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1603,8 +1603,6 @@ void pm_runtime_new_link(struct device *dev)
  
- 	device_links_write_lock();
- 
--	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+	list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node) {
- 		if (link->flags & DL_FLAG_STATELESS)
- 			continue;
- 
+ void pm_runtime_drop_link(struct device *dev)
+ {
+-	rpm_put_suppliers(dev);
+-
+ 	spin_lock_irq(&dev->power.lock);
+ 	WARN_ON(dev->power.links_count == 0);
+ 	dev->power.links_count--;
 -- 
 2.20.1
 
