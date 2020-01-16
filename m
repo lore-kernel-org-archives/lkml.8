@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BEEC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5609CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CA520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2D520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199374;
-	bh=WCmaEDtXOxvCXlwoVJUqhNOHDoGgqCruE5qN0+T7Gk4=;
+	s=default; t=1579199380;
+	bh=yUHjz8v7EmxVjnEM2/tMfJCWMjVBEjwAlwO/UMnTXH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQgAqjdocNtQrgwMAjRR8VwFR5iYpSxBFAFynNmiKGSR2rA29ue+pPoqG+gqqoTJI
-	 jX1nuwgC4/NOnR24cYEOtPaSf2ZKwy7ewBBl5VEBLHodfNzdRmo51XSodFmOOvX9IZ
-	 4Lk7+GZSnQwdg9B0PXbAS/a7eTm44UqUJEjbgFMg=
+	b=Mw0UrhpYqQSWpHI89GcsKsSPpYai4EH7fKp+B3ov0e31tqNl8ellio09NdNXkk6LI
+	 A9hIB1ytrgOZzKKBlJpB0GYSWGhAvrRKG+wb1V0NZjyv5ymUP9GGo+RpNqyKSiTojj
+	 J3uwpm5KMOsj3wX8JUQpkSaaorCvPcmkph//da+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392064AbgAPRZu (ORCPT
+        id S2394343AbgAPS3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391950AbgAPRZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:27 -0500
+        id S2392032AbgAPRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C9E246D7;
-        Thu, 16 Jan 2020 17:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF7BC2464B;
+        Thu, 16 Jan 2020 17:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195526;
-        bh=WCmaEDtXOxvCXlwoVJUqhNOHDoGgqCruE5qN0+T7Gk4=;
+        s=default; t=1579195547;
+        bh=yUHjz8v7EmxVjnEM2/tMfJCWMjVBEjwAlwO/UMnTXH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdE1EycBPzoit5Q4OhZo5i+3YyHqw4ybMzXHHLF9JTCq/szGLUbjtRrVixIdv+eBc
-         Bp1ATD9CObUF03VZ6rN2bd5p716PAeQmB5eF0RFBu01R2VojY0sBfGg/gu24BCM1Jk
-         s6e5U8kY0ZejcwR9ywKexezued3hf9ZVkGe+suX4=
+        b=ch2s3W0njf021Rpl0z3OAWDkjspSjK3KlFICN16C5AY5Mg9jEFF65OU0Ykf5SCm5C
+         RV+QrtFzZ6wanb8c96cp7Zt8moub8PjAfADT0SzoTtpHkX4hjMFcr5W3MJlFNb1gmI
+         r3Tk2GgC+ANYx4lOxCvZ6SCCt9l339RP2LDjAr7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Anand Moon <linux.amoon@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 123/371] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
-Date:   Thu, 16 Jan 2020 12:19:55 -0500
-Message-Id: <20200116172403.18149-66-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 139/371] media: wl128x: Fix an error code in fm_download_firmware()
+Date:   Thu, 16 Jan 2020 12:20:11 -0500
+Message-Id: <20200116172403.18149-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,95 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
+[ Upstream commit ef4bb63dc1f7213c08e13f6943c69cd27f69e4a3 ]
 
-MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
-perform low-level platform initialization. This results in a try to install
-HYP stubs for the second time for each CPU and results in false HYP/SVC
-mode mismatch detection. The HYP stubs are already installed at the
-beginning of the kernel initialization on the boot CPU (head.S) or in the
-secondary_startup() for other CPUs. To fix this issue MCPM code should use
-a cpu_resume() routine without HYP stubs installation.
+We forgot to set "ret" on this error path.
 
-This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
-XU3/XU4/HC1 boards.
+Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
 
-Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/common/mcpm_entry.c   |  2 +-
- arch/arm/include/asm/suspend.h |  1 +
- arch/arm/kernel/sleep.S        | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/media/radio/wl128x/fmdrv_common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
-index 2b913f17d50f..c24a55b0deac 100644
---- a/arch/arm/common/mcpm_entry.c
-+++ b/arch/arm/common/mcpm_entry.c
-@@ -379,7 +379,7 @@ static int __init nocache_trampoline(unsigned long _arg)
- 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 	phys_reset_t phys_reset;
+diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
+index 26895ae42fcf..2d20d908e280 100644
+--- a/drivers/media/radio/wl128x/fmdrv_common.c
++++ b/drivers/media/radio/wl128x/fmdrv_common.c
+@@ -1271,8 +1271,9 @@ static int fm_download_firmware(struct fmdev *fmdev, const u8 *fw_name)
  
--	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
-+	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
- 	setup_mm_for_reboot();
+ 		switch (action->type) {
+ 		case ACTION_SEND_COMMAND:	/* Send */
+-			if (fmc_send_cmd(fmdev, 0, 0, action->data,
+-						action->size, NULL, NULL))
++			ret = fmc_send_cmd(fmdev, 0, 0, action->data,
++					   action->size, NULL, NULL);
++			if (ret)
+ 				goto rel_fw;
  
- 	__mcpm_cpu_going_down(cpu, cluster);
-diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
-index 452bbdcbcc83..506314265c6f 100644
---- a/arch/arm/include/asm/suspend.h
-+++ b/arch/arm/include/asm/suspend.h
-@@ -10,6 +10,7 @@ struct sleep_save_sp {
- };
- 
- extern void cpu_resume(void);
-+extern void cpu_resume_no_hyp(void);
- extern void cpu_resume_arm(void);
- extern int cpu_suspend(unsigned long, int (*)(unsigned long));
- 
-diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
-index a8257fc9cf2a..5dc8b80bb693 100644
---- a/arch/arm/kernel/sleep.S
-+++ b/arch/arm/kernel/sleep.S
-@@ -120,6 +120,14 @@ ENDPROC(cpu_resume_after_mmu)
- 	.text
- 	.align
- 
-+#ifdef CONFIG_MCPM
-+	.arm
-+THUMB(	.thumb			)
-+ENTRY(cpu_resume_no_hyp)
-+ARM_BE8(setend be)			@ ensure we are in BE mode
-+	b	no_hyp
-+#endif
-+
- #ifdef CONFIG_MMU
- 	.arm
- ENTRY(cpu_resume_arm)
-@@ -135,6 +143,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
- 	bl	__hyp_stub_install_secondary
- #endif
- 	safe_svcmode_maskall r1
-+no_hyp:
- 	mov	r1, #0
- 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
- 	ALT_UP_B(1f)
-@@ -163,6 +172,9 @@ ENDPROC(cpu_resume)
- 
- #ifdef CONFIG_MMU
- ENDPROC(cpu_resume_arm)
-+#endif
-+#ifdef CONFIG_MCPM
-+ENDPROC(cpu_resume_no_hyp)
- #endif
- 
- 	.align 2
+ 			cmd_cnt++;
 -- 
 2.20.1
 
