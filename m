@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD0CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2784124653
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160D52077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194339;
-	bh=9Rn4GRxm6QBiuv9AcsOIb6ehnEHzVQPYhQyM2Vj24mQ=;
+	s=default; t=1579194345;
+	bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ff9If3RSkiLhn6bTygVsdmE+khm5gY3GDuDPkJlb/e7gjTm3julwPO58fcPT2BCgC
-	 gRUEa0Vp8FZKSteGTeX3a8OwyQwYN1XZCMYXlSWNjLLYU35WYji5Uuf51NXVMxaSf1
-	 z/h3bkgR7WxPOluxb/7K37yuU7fsV6R0bure/jSY=
+	b=VBeLugO0ZqstD02T2vIQFE4EpxjjmJGV8mPRUPKYlZFgbp15M73W54/ZNjIm9UZgJ
+	 Q2TaE4FQmMsdikKtPjgUbmkxGAw0g9iHr9vzjvdZ9G6Fa5UcsVk90xMT4VBEu0W1AY
+	 MwuTUcKgBLj7k9FvW/oS1QUlscvspLhWQWuQI5Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbgAPRFi (ORCPT
+        id S2388666AbgAPRFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388656AbgAPRFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:25 -0500
+        id S2388595AbgAPRFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9AC20730;
-        Thu, 16 Jan 2020 17:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659512081E;
+        Thu, 16 Jan 2020 17:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194324;
-        bh=9Rn4GRxm6QBiuv9AcsOIb6ehnEHzVQPYhQyM2Vj24mQ=;
+        s=default; t=1579194323;
+        bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x1rUvPM7F7zTHEUjFprHnEUz+CEpcrsu0TvVtab3+Bi1EO0j5+/VtVE0kAFw2QSHJ
-         ph7Q9WUeZyJHELT3a1j1du7dJHdp9TeFNHfNc0GsHb41JY99FCLUasd8J9teaY/0n5
-         BdZqwqDkjCHfasLBNkz86/YeQnVtMejeT/IzIHsM=
+        b=s+f1/t4j15A6mUfFpPUpjoqkauVsXngnwLsonZ7POkBwc766U4Ne/zTwMGlLPoiXX
+         G0MNSvExTBYABNHJvFKzuIQaIlBl/SHkzWtLvZrkHMPPsZNfdrsh4eKAIsEZ5uRinl
+         bZUaoGzJzvKwJmwKbBdlvx0hi9GAoNYVhP+0Beuo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 273/671] soc/fsl/qe: Fix an error code in qe_pin_request()
-Date:   Thu, 16 Jan 2020 11:58:31 -0500
-Message-Id: <20200116170509.12787-10-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, dccp@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 272/671] dccp: Fix memleak in __feat_register_sp
+Date:   Thu, 16 Jan 2020 11:58:30 -0500
+Message-Id: <20200116170509.12787-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,36 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
+[ Upstream commit 1d3ff0950e2b40dc861b1739029649d03f591820 ]
 
-We forgot to set "err" on this error path.
+If dccp_feat_push_change fails, we forget free the mem
+which is alloced by kmemdup in dccp_feat_clone_sp_val.
 
-Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qe/gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/dccp/feat.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 819bed0f5667..51b3a47b5a55 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -179,8 +179,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	if (err < 0)
- 		goto err0;
- 	gc = gpio_to_chip(err);
--	if (WARN_ON(!gc))
-+	if (WARN_ON(!gc)) {
-+		err = -ENODEV;
- 		goto err0;
-+	}
+diff --git a/net/dccp/feat.c b/net/dccp/feat.c
+index f227f002c73d..db87d9f58019 100644
+--- a/net/dccp/feat.c
++++ b/net/dccp/feat.c
+@@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
+ 	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
+ 		return -ENOMEM;
  
- 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
- 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
+-	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
++	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
++		kfree(fval.sp.vec);
++		return -ENOMEM;
++	}
++
++	return 0;
+ }
+ 
+ /**
 -- 
 2.20.1
 
