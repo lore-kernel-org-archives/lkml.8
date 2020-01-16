@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2C9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79423C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD2420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CEF2081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199186;
-	bh=Uwhu3H/KgmOENkQrg66cChrMMjw4TYatdgwUWm6jwyo=;
+	s=default; t=1579199192;
+	bh=dtlWM/rdlsoDyqcHy5G+UH3OKt7K9e0UJ2kfXsgMzQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FC0IrfdJQ29UjT8iBjFNWJzh89jSUIvf3jssJQeb73aBX6rJgzAEy6wAPUPzELKZq
-	 cx+nLo8mO+dsp3mBzXoxin5/+P3g5U2ePtSnAjl5pGpH5TkU9pSTfCgsmy9xndJSf0
-	 2DF4wFJSNF75ssSoYDS+aTIGlsfLRhYb7zKVYu5E=
+	b=y5Ht0FgJBM6WvblaeEQAV5T9gll/j5cwhrBs/VWE+KDQCcTGSzbp2naOY8dcO/txT
+	 cg3aO5MPOIlQyOJ+1E90J9yveeGYvXaPXoEdRyZYHPvnkZBJE+/klTxnrLvDPYa+nu
+	 0BchowWoLrHKCuQ5zrcT0UCqmtDUxEdgNibIiM3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404005AbgAPR0k (ORCPT
+        id S2436699AbgAPS0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392306AbgAPR0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:30 -0500
+        id S2404007AbgAPR0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E4F246D3;
-        Thu, 16 Jan 2020 17:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E11246CA;
+        Thu, 16 Jan 2020 17:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195590;
-        bh=Uwhu3H/KgmOENkQrg66cChrMMjw4TYatdgwUWm6jwyo=;
+        s=default; t=1579195600;
+        bh=dtlWM/rdlsoDyqcHy5G+UH3OKt7K9e0UJ2kfXsgMzQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvxTwc3/qjxvPIV2ooOxIJuOPVKt1Jw4ykR8GtBoHTMHoGh6fBl9ZADz+xiygGx8U
-         uNvOJ8eK/10DYXoW0dmqBxMRy0MqiLp/Jgi1DNF3QXCb5mrQ8y4XL7/Gc/eJcdKnGh
-         gDGuNnJd1KS0dl+xc9ZqvjGZJTqFSuszTbY6Z4CE=
+        b=jqoCV9roHlXiF/ROxdNUroTdVJonFnJBEvaLbut7N9cWPujE324ytPa7JdiSD+gMW
+         3qFJQP07ieUyEcTTZrIZfrOrf2w3Z3nNydNPvmxJk+X81NxyWOZGD40fTYXnAXDzyH
+         gVFq+xobJ9K4FCdBg7UoReulcugmUU1TStqYjMWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 168/371] media: ov2659: fix unbalanced mutex_lock/unlock
-Date:   Thu, 16 Jan 2020 12:20:40 -0500
-Message-Id: <20200116172403.18149-111-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 176/371] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Thu, 16 Jan 2020 12:20:48 -0500
+Message-Id: <20200116172403.18149-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,37 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 384538bda10913e5c94ec5b5d34bd3075931bcf4 ]
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-Avoid returning with mutex locked.
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-Fixes: fa8cb6444c32 ("[media] ov2659: Don't depend on subdev API")
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
 
-Cc: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
+
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 44b0584eb8a6..e7768ed1ff9c 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1136,7 +1136,7 @@ static int ov2659_set_fmt(struct v4l2_subdev *sd,
- 		mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
- 		*mf = fmt->format;
- #else
--		return -ENOTTY;
-+		ret = -ENOTTY;
- #endif
- 	} else {
- 		s64 val;
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 4e1058159b08..e788f9c7c398 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3407,20 +3407,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
+ 
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
+ 
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
 2.20.1
 
