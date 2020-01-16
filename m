@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9110DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF79C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1C02072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491A42073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216828;
-	bh=qtfZhhH+sbJ6GkfeUQL+nE7qQgjsF8AdwRJb17InM/M=;
+	s=default; t=1579216833;
+	bh=suplol0vP4YqzhZda6o1xonDIcyGXtBFy6UGojJUGDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvixrE4Anqnkp9LW0iwuaZUPcFVuhAHfrElxmMA9T8VLiBK3wyQbVtryB7Z6ZESxU
-	 2J9pBNve4r3zsMnVbJVCssChRj9ESuoSw6TPKvOUQNZ/us/KAMLEfWnlgfGWkWN9Xm
-	 SjRWbmA3nqh0UGOIYccU0M0uz6BpabaNJP+78j9s=
+	b=WOdj68FdN4XNtU/8ehvo9tlu820C+SH14RCkBbgm7QxINVFO8zb7EjDSD/ZW2B8qC
+	 F7EK1+7yDUqflgfeQTKHzeYjC2y2sGW7QqZULsVV79u47mTNI2Xzn4beIG4GobTP05
+	 Afa2stJ9psAOdurz2wbhdAlOFwwgwr6IuXD7CEUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbgAPXU1 (ORCPT
+        id S2390660AbgAPXUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:20:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388224AbgAPXUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:19 -0500
+        id S2390649AbgAPXU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8FFE20684;
-        Thu, 16 Jan 2020 23:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F168B2072B;
+        Thu, 16 Jan 2020 23:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216819;
-        bh=qtfZhhH+sbJ6GkfeUQL+nE7qQgjsF8AdwRJb17InM/M=;
+        s=default; t=1579216826;
+        bh=suplol0vP4YqzhZda6o1xonDIcyGXtBFy6UGojJUGDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8nvwUbJnp0Or7WS6+iaguGioAQ4zUyfETaPRW8Iu5Th0nsO8IsHKZTBvficC4sD6
-         xMnlR+oJKxT61P85wpdnnjTfANQxn0iAhe0pOdU8a2gx9eeS3W1u5ztHGeu47jtGIf
-         xUxOnt4fFrH9eM0IvTvADUwUkv1vENAbCRJYBOgU=
+        b=WM4fRQa4n/QraxVaEQTu+ze/lX3LYYhU98/MF+rX5srj97UvPJQ5U1qAiQqr12Gj+
+         cLZd283eGzGKQu1Gi3O6tcwX3JQR4HtqKqo5LoFftYE5J90rQ4D1EJmkBtS53CBCwq
+         ukXLa5EVdxuo3mtTvZFdukKLq3UOdC4rO9hH7OU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 015/203] netfilter: nft_flow_offload: fix underflow in flowtable reference counter
-Date:   Fri, 17 Jan 2020 00:15:32 +0100
-Message-Id: <20200116231746.109928716@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Swapna Manupati <swapna.manupati@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 018/203] gpio: zynq: Fix for bug in zynq_gpio_restore_context API
+Date:   Fri, 17 Jan 2020 00:15:35 +0100
+Message-Id: <20200116231746.271247986@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,32 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Swapna Manupati <swapna.manupati@xilinx.com>
 
-commit 8ca79606cdfde2e37ee4f0707b9d1874a6f0eb38 upstream.
+commit 36f2e7207f21a83ca0054116191f119ac64583ab upstream.
 
-The .deactivate and .activate interfaces already deal with the reference
-counter. Otherwise, this results in spurious "Device is busy" errors.
+This patch writes the inverse value of Interrupt Mask Status
+register into the Interrupt Enable register in
+zynq_gpio_restore_context API to fix the bug.
 
-Fixes: a3c90f7a2323 ("netfilter: nf_tables: flow offload expression")
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: e11de4de28c0 ("gpio: zynq: Add support for suspend resume")
+Signed-off-by: Swapna Manupati <swapna.manupati@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Link: https://lore.kernel.org/r/1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_flow_offload.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpio/gpio-zynq.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -197,9 +197,6 @@ static void nft_flow_offload_activate(co
- static void nft_flow_offload_destroy(const struct nft_ctx *ctx,
- 				     const struct nft_expr *expr)
- {
--	struct nft_flow_offload *priv = nft_expr_priv(expr);
--
--	priv->flowtable->use--;
- 	nf_ct_netns_put(ctx->net, ctx->family);
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -681,6 +681,8 @@ static void zynq_gpio_restore_context(st
+ 	unsigned int bank_num;
+ 
+ 	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++) {
++		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
++				ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
+ 		writel_relaxed(gpio->context.datalsw[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_DATA_LSW_OFFSET(bank_num));
+@@ -690,9 +692,6 @@ static void zynq_gpio_restore_context(st
+ 		writel_relaxed(gpio->context.dirm[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+-		writel_relaxed(gpio->context.int_en[bank_num],
+-			       gpio->base_addr +
+-			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
+ 		writel_relaxed(gpio->context.int_type[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
+@@ -702,6 +701,9 @@ static void zynq_gpio_restore_context(st
+ 		writel_relaxed(gpio->context.int_any[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_INTANY_OFFSET(bank_num));
++		writel_relaxed(~(gpio->context.int_en[bank_num]),
++			       gpio->base_addr +
++			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
+ 	}
  }
  
 
