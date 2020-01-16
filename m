@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96683C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389C4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA19246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075D5246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196022;
-	bh=w4A9qNS/myZbakXGN5hrowWZ5cS5q88B2sudAPcTRO0=;
+	s=default; t=1579196027;
+	bh=FxsYeHbvVHhXDBAITpUyBvM4jofjFoqztnTRndX9JTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxJCuH196dO/diSCFyxemu4kgvej48RXP2aKh6qsSycjV9WkNVaSXoRdE86BZkMiL
-	 dwcNG+Jp8xBEpzGxZfP3mSIN+mEWIM0+CkOjQXh16Oz1g8e5EZxr0Us/b4RlTC5+5t
-	 pHXFPaED3SksDXxYK9/oT6yT83zcXnejxGbxWClY=
+	b=UAgnN6b/tsgET2aubM59xDjsry7q6/fMtYVMQRuHznRyhAJE6AonImoBFtH9GaXgq
+	 54QC4YwQMwhajeKcrQRmGaGVuZpyneRy9XoFhx0G4GTcTWJrZxTglcB35UoLRlGfwm
+	 Xrt59xpIQkGoPbU0rJNO6O7C/1RpEJeeXc10XsEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392700AbgAPRdl (ORCPT
+        id S2404410AbgAPRaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404418AbgAPRaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:24 -0500
+        id S2404382AbgAPRaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7147E2472B;
-        Thu, 16 Jan 2020 17:30:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB982471F;
+        Thu, 16 Jan 2020 17:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195824;
-        bh=w4A9qNS/myZbakXGN5hrowWZ5cS5q88B2sudAPcTRO0=;
+        s=default; t=1579195819;
+        bh=FxsYeHbvVHhXDBAITpUyBvM4jofjFoqztnTRndX9JTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=If2uRvR/hSK5WDDdLV0Cr9/NYhLVCLJKVzgNQo5EYTN7w9NT9tFWLqd8yOzqQIYV/
-         Pgk49JhgHBPFTSqqFitMzK+ztJyamyoRP9enH4VTHfk0mpklsXRLOKHxrB+LFJTthO
-         dcBN9/PYySPk2VqofKXVXujB7wiIOgySUX3Et73E=
+        b=Vkr6qvkYW9McItShC4l+Y6z43lsq0abaGGAYNlUgLfFzIU5CUyogy6aBtZUJakSC2
+         I1ZK3KkwBMrtjjRHPCtdQdSxi6BejsS1VlXkfd6+ZWKebuvmKIl3wsIos9UOTm7sqR
+         y0cUahP55zkqlUnw6ONNHyKuSvwx037CFFRNVOrk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 332/371] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
-Date:   Thu, 16 Jan 2020 12:23:24 -0500
-Message-Id: <20200116172403.18149-275-sashal@kernel.org>
+Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        Alexander Barabash <alexander.barabash@dell.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 328/371] ioat: ioat_alloc_ring() failure handling.
+Date:   Thu, 16 Jan 2020 12:23:20 -0500
+Message-Id: <20200116172403.18149-271-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,54 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
 
-[ Upstream commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f ]
+[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
 
-Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
-op get_fmt") converted a former ov6650_g_fmt() video operation callback
-to an ov6650_get_fmt() pad operation callback.  However, the converted
-function disregards a format->which flag that pad operations should
-obey and always returns active frame format settings.
+If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
+allocation must not proceed.
 
-That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
--EINVAL, or providing the response from a pad config argument, likely
-updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
-Since implementation of the latter is trivial, go for it.
+Until now, if the first call to dma_alloc_coherent() in
+ioat_alloc_ring() returned NULL, the processing could proceed, failing
+with NULL-pointer dereferencing further down the line.
 
-Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/dma/ioat/dma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 044ede441fd6..4f67a515bdd8 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -531,10 +531,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	*mf = ov6650_def_fmt;
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index f70cc74032ea..e3899ae429e0 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -388,10 +388,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
  
- 	/* update media bus format code and frame size */
--	mf->width	= priv->rect.width >> priv->half_scale;
--	mf->height	= priv->rect.height >> priv->half_scale;
--	mf->code	= priv->code;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
+ 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
+ 						 SZ_2M, &descs->hw, flags);
+-		if (!descs->virt && (i > 0)) {
++		if (!descs->virt) {
+ 			int idx;
  
-+	} else {
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
-+	}
- 	return 0;
- }
- 
+ 			for (idx = 0; idx < i; idx++) {
++				descs = &ioat_chan->descs[idx];
+ 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+ 						  descs->virt, descs->hw);
+ 				descs->virt = NULL;
 -- 
 2.20.1
 
