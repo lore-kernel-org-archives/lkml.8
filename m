@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEB1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D505C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD15214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1940C214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198046;
-	bh=IOHIJn1hd8dW5gzYWJtv3qscA4KIgMUkNnFvO8mwH4M=;
+	s=default; t=1579198051;
+	bh=ft/Gf4e9WeUKeYmGFSjphd1Rd3xP5s4bOnB/kT1kyoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=emyrkE/fe7YtdlpM+Z9Ul1EekdIh3PsTj6oWtsVJM6+k4lXKyXqKLSGwSC5P+DoJM
-	 dGWXsOz+jqRZVDyKP7+3d/VTbzpES8tXgtB2IvrH13/WqGfG3LLJPOCRG26qU+Lihb
-	 NEOshPvxAVEvbOMUVBbPpIzbLyW9cgZgXN1UwmDM=
+	b=kYg/7jKG0bRbUz9lhOidEk4RVQqY6n5HYVKVKSYmQYcttUE1VRBUj7C5JQFdQD3hW
+	 e0daddRZzXQmVXcLD3mUc1OTY+nPBdMkeFetIshPU6UNMrCab2sK8Pq1DjW2XBZ+Kd
+	 H8l5vtAEZkm0u1t7QXkav/K9/FG6tNamLwgSeQoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405120AbgAPRkB (ORCPT
+        id S2394995AbgAPSH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:40:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:07:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393427AbgAPRjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:08 -0500
+        id S2393562AbgAPRj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1482246F7;
-        Thu, 16 Jan 2020 17:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C33C246FC;
+        Thu, 16 Jan 2020 17:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196347;
-        bh=IOHIJn1hd8dW5gzYWJtv3qscA4KIgMUkNnFvO8mwH4M=;
+        s=default; t=1579196399;
+        bh=ft/Gf4e9WeUKeYmGFSjphd1Rd3xP5s4bOnB/kT1kyoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uN7BRFHp3xx0sjxEPF9xvSG4Hz6jchzCHr4uZcQDkOXCyn8lxJ6oK1MztGWo/9bd7
-         eWJJZZvq2zDGohi1VMLoxIRTAqbpUcNq1n5XI+l+0NrgBe7AShUgnPYJEpQ3vhmZ32
-         oZVryFBpD9YDseYEx9oFR3PyS6YeBnQj+h1k6K0Y=
+        b=SZeQ5vU45RjgwdVOjcdQfb/32GbVTZQzXvigkV5fC1IGP/0Hhef4XXjsKuoT4jtQj
+         qE37xe+/b2zCrwdmKUu6fR9uSZtpYAU8peBDBnvu/5X0UU+M3aF2FSL7J/cuj+4qC3
+         glEcOKxQXybWcxiwImlUf+KvbcSvb2xy36kjT4/Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 142/251] thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
-Date:   Thu, 16 Jan 2020 12:34:51 -0500
-Message-Id: <20200116173641.22137-102-sashal@kernel.org>
+Cc:     Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 176/251] net/mlx5: Fix mlx5_ifc_query_lag_out_bits
+Date:   Thu, 16 Jan 2020 12:35:25 -0500
+Message-Id: <20200116173641.22137-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -62,56 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit bf45ac18b78038e43af3c1a273cae4ab5704d2ce ]
+[ Upstream commit ea77388b02270b0af8dc57f668f311235ea068f0 ]
 
-The CPU load values passed to the thermal_power_cpu_get_power
-tracepoint are zero for all CPUs, unless, unless the
-thermal_power_cpu_limit tracepoint is enabled too:
+Remove the "reserved_at_40" field to match the device specification.
 
-  irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
-  cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
-
-vs
-
-  irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
-  cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
-  irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
-  cpus=0000000f freq=408000 cdev_state=10 power=416
-
-There seems to be no good reason for omitting the CPU load information
-depending on another tracepoint. My guess is that the intention was to
-check whether thermal_power_cpu_get_power is (still) enabled, however
-'load_cpu != NULL' already indicates that it was at least enabled when
-cpufreq_get_requested_power() was entered, there seems little gain
-from omitting the assignment if the tracepoint was just disabled, so
-just remove the check.
-
-Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Javi Merino <javi.merino@kernel.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Fixes: 84df61ebc69b ("net/mlx5: Add HW interfaces used by LAG")
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/cpu_cooling.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/mlx5/mlx5_ifc.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index f49d2989d000..984e5f514140 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -607,7 +607,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
- 			load = 0;
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 20ee90c47cd5..6dd276227217 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -7909,8 +7909,6 @@ struct mlx5_ifc_query_lag_out_bits {
  
- 		total_load += load;
--		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
-+		if (load_cpu)
- 			load_cpu[i] = load;
+ 	u8         syndrome[0x20];
  
- 		i++;
+-	u8         reserved_at_40[0x40];
+-
+ 	struct mlx5_ifc_lagc_bits ctx;
+ };
+ 
 -- 
 2.20.1
 
