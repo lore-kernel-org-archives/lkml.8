@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90472C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF20C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6514920684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A93F20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198914;
-	bh=tfIoS93B0aTHiVnB1lKZjdoADg62rCABGH7ZfwMWtz8=;
+	s=default; t=1579198918;
+	bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcey8LLJhUtaCQIHS4LTXpLjCJC8eh4mbAeEh2YgM0TdefJnh0dio8a2c//NYjV1P
-	 jwb+kawJKINGj8G+ou5KcNmz3DrNt209jJ3LflkHq6zOsOapK1MjwU8jm9LHU2OD7W
-	 NxOGXtZpanu6vOG2i9RK63eTlZGVVM/hSB3PkSWo=
+	b=RP+f8cqpbvC8Yk2oNKKoK99RW8hNcwtpV949DBEaWai+XOWWjmOrfUykzzj4iNqKQ
+	 qlCkOxXQ9eyFS7SjYEPPQh8HfU0RlZzqAIys1LAPFn0c8t+KqV+Yvijr10b5+YILIl
+	 IhifJ0rkFNS+POxR3Kik5/1Yz0MV0NaprjQIU4Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404258AbgAPSVw (ORCPT
+        id S2392496AbgAPR1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:21:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392492AbgAPR1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:27:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404052AbgAPR12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 606BF246DD;
-        Thu, 16 Jan 2020 17:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 631E5246D1;
+        Thu, 16 Jan 2020 17:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195662;
-        bh=tfIoS93B0aTHiVnB1lKZjdoADg62rCABGH7ZfwMWtz8=;
+        s=default; t=1579195648;
+        bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hOQNa8JamiWFYvwlcov/24zePh4gXKgJ5rrXMMztGSogD+1AMt5+YKUGVNqiz/haz
-         53A1Bo0DXIdrLHZ+JUif+eWymx0DRMU5T01lusqlM3bH/NCHBvGwDigWz4oTUh8UQs
-         yA1xFBOVIVjGjINhJCiV/STaangR5CNaNEm4jI7s=
+        b=qvhdai3pPUeQZkLpiuKIh8zLFAEuLCtkgin/44YKhetSoXgnSuCmObQNnU1KwlITM
+         mVLB7jDVQXoJPvY5WlHTyZy3+8lxJi8wHixxkYQgWGOnbO3M0QkrOHIGedIRrQnJeL
+         h3URBEr/WOBI9Wi+tiA+9uPmK68jQ91k+PMtfImU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 221/371] netvsc: unshare skb in VF rx handler
-Date:   Thu, 16 Jan 2020 12:21:33 -0500
-Message-Id: <20200116172403.18149-164-sashal@kernel.org>
+Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 211/371] crypto: ccp - Fix 3DES complaint from ccp-crypto module
+Date:   Thu, 16 Jan 2020 12:21:23 -0500
+Message-Id: <20200116172403.18149-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,43 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Hemminger <stephen@networkplumber.org>
+From: "Hook, Gary" <Gary.Hook@amd.com>
 
-[ Upstream commit 996ed04741467f6d1552440c92988b132a9487ec ]
+[ Upstream commit 89646fdda4cae203185444ac7988835f36a21ee1 ]
 
-The netvsc VF skb handler should make sure that skb is not
-shared. Similar logic already exists in bonding and team device
-drivers.
+Crypto self-tests reveal an error:
 
-This is not an issue in practice because the VF devicex
-does not send up shared skb's. But the netvsc driver
-should do the right thing if it did.
+alg: skcipher: cbc-des3-ccp encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
 
-Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
-Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The offset value should not be recomputed when retrieving the context.
+Also, a code path exists which makes decisions based on older (version 3)
+hardware; a v3 device deosn't support 3DES so remove this check.
+
+Fixes: 990672d48515 ('crypto: ccp - Enable 3DES function on v5 CCPs')
+
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/crypto/ccp/ccp-ops.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index a89de5752a8c..9e48855f6407 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1840,6 +1840,12 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
- 	struct netvsc_vf_pcpu_stats *pcpu_stats
- 		 = this_cpu_ptr(ndev_ctx->vf_stats);
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index 1e2e42106dee..4b48b8523a40 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -1293,6 +1293,9 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	int ret;
  
-+	skb = skb_share_check(skb, GFP_ATOMIC);
-+	if (unlikely(!skb))
-+		return RX_HANDLER_CONSUMED;
+ 	/* Error checks */
++	if (cmd_q->ccp->vdata->version < CCP_VERSION(5, 0))
++		return -EINVAL;
 +
-+	*pskb = skb;
-+
- 	skb->dev = ndev;
+ 	if (!cmd_q->ccp->vdata->perform->des3)
+ 		return -EINVAL;
  
- 	u64_stats_update_begin(&pcpu_stats->syncp);
+@@ -1375,8 +1378,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	 * passthru option to convert from big endian to little endian.
+ 	 */
+ 	if (des3->mode != CCP_DES3_MODE_ECB) {
+-		u32 load_mode;
+-
+ 		op.sb_ctx = cmd_q->sb_ctx;
+ 
+ 		ret = ccp_init_dm_workarea(&ctx, cmd_q,
+@@ -1392,12 +1393,8 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 		if (ret)
+ 			goto e_ctx;
+ 
+-		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
+-			load_mode = CCP_PASSTHRU_BYTESWAP_NOOP;
+-		else
+-			load_mode = CCP_PASSTHRU_BYTESWAP_256BIT;
+ 		ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+-				     load_mode);
++				     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 		if (ret) {
+ 			cmd->engine_error = cmd_q->cmd_error;
+ 			goto e_ctx;
+@@ -1459,10 +1456,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 		}
+ 
+ 		/* ...but we only need the last DES3_EDE_BLOCK_SIZE bytes */
+-		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
+-			dm_offset = CCP_SB_BYTES - des3->iv_len;
+-		else
+-			dm_offset = 0;
+ 		ccp_get_dm_area(&ctx, dm_offset, des3->iv, 0,
+ 				DES3_EDE_BLOCK_SIZE);
+ 	}
 -- 
 2.20.1
 
