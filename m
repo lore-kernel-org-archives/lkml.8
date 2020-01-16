@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2EFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A7BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD85246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E055246D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195118;
-	bh=tTXgJ4yQ2CfwceTQzvDnr1V0GRvj/lrJuLv4lsjxcs0=;
+	s=default; t=1579195120;
+	bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBwnksRj9uA6pRpRteNko7vHCMrk/UzPO9I1gYQ8y3lX1nWoe8f2AINXoYRAstTTD
-	 fn4qViSAx80G1UoNNZHYMdbHRAOgNjCUEkyVqjykdwN92KdDA5iu4Wp+EpnEBVvPZ8
-	 dT4ADslZZstJ8GSYmKoo32LzYdDwcgVWL8kozXqE=
+	b=EjLu3PUys14lUW3y8Oe71tlE96YwmoaUm7hRjsL8kW9uKuq1r63AFzCFccEFEd1AA
+	 dSorlk/zItA/zCJkmMDTOtoYtNrnTKbaOib0QtCwjcJ5Ro0+qRaNJfHIOE+is7w6H4
+	 UMW8PgHzfHHosqavHmSBKVPYFerVlwcih1qhhp20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391523AbgAPRSh (ORCPT
+        id S2391532AbgAPRSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391021AbgAPRSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:23 -0500
+        id S2391462AbgAPRSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446F920728;
-        Thu, 16 Jan 2020 17:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80F3F24653;
+        Thu, 16 Jan 2020 17:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195103;
-        bh=tTXgJ4yQ2CfwceTQzvDnr1V0GRvj/lrJuLv4lsjxcs0=;
+        s=default; t=1579195105;
+        bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcyjCOPTyrXxfCdNNo0hoDxrHEOqln+fuZ1/LlxVbwPTVNS55eQiSKVklFmCmqnRg
-         VLsF+vnVhxBznavyMvxyQGDF7HQ6hKgvRkudDvDqWCqLif8qzHpB98nqAOdudfmiPa
-         TsriD6w9icZsBp94eRnw/OXbP9nI5j2GIKX9RiNU=
+        b=Jbkc/0O3MUDPEcbWbHLstUALC/exfc76tGPlLQg7BE9n7JHYYwvce8h2Z2HyLUPBR
+         07W0IzvymIahFHBbOYz7OliJxnWsLl2fp/2/FJDCBcMOKaiVpugmU6xTSIs9CP7/Dg
+         1XT9vhRV9sSPLtKn7fMr9PWmwDk6BdaeHhqGRRDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 047/371] clk: mv98dx3236: fix refcount leak in mv98dx3236_clk_init()
-Date:   Thu, 16 Jan 2020 12:11:55 -0500
-Message-Id: <20200116171719.16965-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 048/371] clk: dove: fix refcount leak in dove_clk_init()
+Date:   Thu, 16 Jan 2020 12:11:56 -0500
+Message-Id: <20200116171719.16965-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 9b4eedf627045ae5ddcff60a484200cdd554c413 ]
+[ Upstream commit 8d726c5128298386b907963033be93407b0c4275 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
@@ -70,28 +70,35 @@ done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 337072604224 ("clk: mvebu: Expand mv98dx3236-core-clock support")
+Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
+Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/mv98dx3236.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/mvebu/dove.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/mvebu/mv98dx3236.c b/drivers/clk/mvebu/mv98dx3236.c
-index 6e203af73cac..c8a0d03d2cd6 100644
---- a/drivers/clk/mvebu/mv98dx3236.c
-+++ b/drivers/clk/mvebu/mv98dx3236.c
-@@ -174,7 +174,9 @@ static void __init mv98dx3236_clk_init(struct device_node *np)
+diff --git a/drivers/clk/mvebu/dove.c b/drivers/clk/mvebu/dove.c
+index 59fad9546c84..5f258c9bb68b 100644
+--- a/drivers/clk/mvebu/dove.c
++++ b/drivers/clk/mvebu/dove.c
+@@ -190,10 +190,14 @@ static void __init dove_clk_init(struct device_node *np)
  
- 	mvebu_coreclk_setup(np, &mv98dx3236_core_clocks);
+ 	mvebu_coreclk_setup(np, &dove_coreclks);
+ 
+-	if (ddnp)
++	if (ddnp) {
+ 		dove_divider_clk_init(ddnp);
++		of_node_put(ddnp);
++	}
  
 -	if (cgnp)
 +	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, mv98dx3236_gating_desc);
+ 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
 +		of_node_put(cgnp);
 +	}
  }
- CLK_OF_DECLARE(mv98dx3236_clk, "marvell,mv98dx3236-core-clock", mv98dx3236_clk_init);
+ CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
 -- 
 2.20.1
 
