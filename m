@@ -2,52 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31CFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9372820748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3782072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217581;
-	bh=lNwvgoE/PBtC0RiZuyLt2rKFKfMXnJYmrTD/qeV7Iio=;
+	s=default; t=1579217584;
+	bh=jEAbR/1ZgIGRRPwckSUIX+BWqvXCJwQeMJLOwfEju6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIT7InqMAbr28XN0peoN1BBv8AJEvf61jWGO/4a1MHeBqYZpKLwRxaOat5JKXqXNH
-	 N9BeDhfnd1DnmRxAlHexJwAboF5cfDjGDCweAtaWvsf96Bssxzh+25hw/aQQ2nrdVZ
-	 Cj3pYOgCzjhHxVR7usZBP1qIhdXzyxOo6mzlkEd4=
+	b=0g3+KSpW+VFVBLAqrYbmCyBdU4tXLF/koZLW+Y0tl8Rd91ujiYMzW3kASdkqqmd+e
+	 ix5D5inMx3x0zg/Zhi8OQvEuBH9nxrUizXhGAqqE05Rks5g04la1YYCh+2QmH8VXby
+	 mwbNSgyreXwH0+WldUdsyGXbInZxTIYtwiHxUb8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404263AbgAPXdA (ORCPT
+        id S2404272AbgAPXdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:33:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42820 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:33:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404235AbgAPXc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:32:56 -0500
+        id S2404242AbgAPXc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2F72072B;
-        Thu, 16 Jan 2020 23:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD42520661;
+        Thu, 16 Jan 2020 23:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217575;
-        bh=lNwvgoE/PBtC0RiZuyLt2rKFKfMXnJYmrTD/qeV7Iio=;
+        s=default; t=1579217578;
+        bh=jEAbR/1ZgIGRRPwckSUIX+BWqvXCJwQeMJLOwfEju6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ns1N//zlAnDtiCXz7zbKDIh/LmzGkoYeNMQ7+Qp0gmUp2BT3y2Wp4xxOZGTFypHWZ
-         2XbA3FHM5wgM6i/7OI4d81+ufFJgLTbCc6WgMKmFF4dQhc1MYesTd1kMe342A3gW7a
-         2QK6QM798BC/tOW4UE96/va6tM7gTHoIROIdOYBE=
+        b=n0JdCNbAF7/dFWajJXcWS3gtAHNwlV+W3cBMxTNSvEnis31zhauKPOlB3sPQnLenC
+         g+z7SGS/Fkd9HQFsl3bkkwbwCV1ZtIOdV9siKRHPmaRrPDGbuayb/l3+mckjXlvQ+L
+         GuHOSpaUad1oiOfUpDocxqF0+m72TN3hLGzLM1wM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.14 28/71] cifs: Adjust indentation in smb2_open_file
-Date:   Fri, 17 Jan 2020 00:18:26 +0100
-Message-Id: <20200116231713.551353359@linuxfoundation.org>
+        stable@vger.kernel.org, Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 29/71] btrfs: simplify inode locking for RWF_NOWAIT
+Date:   Fri, 17 Jan 2020 00:18:27 +0100
+Message-Id: <20200116231713.729416326@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,45 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Goldwyn Rodrigues <rgoldwyn@suse.com>
 
-commit 7935799e041ae10d380d04ea23868240f082bd11 upstream.
+commit 9cf35f673583ccc9f3e2507498b3079d56614ad3 upstream.
 
-Clang warns:
+This is similar to 942491c9e6d6 ("xfs: fix AIM7 regression"). Apparently
+our current rwsem code doesn't like doing the trylock, then lock for
+real scheme. This causes extra contention on the lock and can be
+measured eg. by AIM7 benchmark.  So change our read/write methods to
+just do the trylock for the RWF_NOWAIT case.
 
-../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
-is not part of the previous 'if' [-Wmisleading-indentation]
-         if (oparms->tcon->use_resilient) {
-         ^
-../fs/cifs/smb2file.c:66:2: note: previous statement is here
-        if (rc)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 592fafe644bf ("Add resilienthandles mount parm")
-Link: https://github.com/ClangBuiltLinux/linux/issues/826
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: edf064e7c6fe ("btrfs: nowait aio support")
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/file.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -69,7 +69,7 @@ smb2_open_file(const unsigned int xid, s
- 		goto out;
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1890,9 +1890,10 @@ static ssize_t btrfs_file_write_iter(str
+ 	    (iocb->ki_flags & IOCB_NOWAIT))
+ 		return -EOPNOTSUPP;
  
+-	if (!inode_trylock(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock(inode);
+ 	}
  
--	 if (oparms->tcon->use_resilient) {
-+	if (oparms->tcon->use_resilient) {
- 		nr_ioctl_req.Timeout = 0; /* use server default (120 seconds) */
- 		nr_ioctl_req.Reserved = 0;
- 		rc = SMB2_ioctl(xid, oparms->tcon, fid->persistent_fid,
 
 
