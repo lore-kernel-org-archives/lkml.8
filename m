@@ -2,359 +2,167 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2636CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5610FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB5912176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:47:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v1YrVzVa"
+	by mail.kernel.org (Postfix) with ESMTP id 3731C2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgAPFr0 (ORCPT
+        id S1726935AbgAPFuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:47:26 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42669 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgAPFr0 (ORCPT
+        Thu, 16 Jan 2020 00:50:00 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:10025 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgAPFt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:47:26 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dc14so8538249qvb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:47:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wF6ZZgDVBcb52vVymB/toV0bmt4NnNtZaybtThqWt40=;
-        b=v1YrVzVa4Zzjsgt637Qe0HM6Xn41Q5W2zqxf4mPJEuTp0l1nAvwlKClLpyb5D/CBcA
-         8NCAJE9CN/BSq4o/6otLEVFLNn9Bhn6ahFXO57tw38Yd1Ol85l53AncNwRbWSbKytAC1
-         uxVMWaex3MEIE2fTigcGKmU4OdZdIEhQrQYFxj3cpfHIYfGZzYFF3oGMO4+7NPyjoD67
-         tu+MSoyCGprhj6/AwDcn7g3/d+efCc70b0hW8KULyvS93wdW+fZMerU5Er5tyg7XKZwi
-         n0uTkfRjwjV0ZP9YD0HggMrhXw0By1p7gEzuCBdhjBQK3ulxD5qAqwhjwLq5d4sR1qLt
-         L3Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wF6ZZgDVBcb52vVymB/toV0bmt4NnNtZaybtThqWt40=;
-        b=Aq0v9hDrYixTHHAQlW6wWptQ5xgGRlHxyAc1VegMGKwTWiDetESc9ukwEhHYVxcHs7
-         CuWLcaqRUEzUZVbCh1L6EdKQOhkI9n+zhbIkppno0MJnNSLFb4DIFPKKkhAbKmbwrFBt
-         qhWxWLu3Ip7Fkk4wN9waL4N/CYrcjM/iaPTAHAAxOgbq09qORFp3p1YOBDoCceiO5nYE
-         mbcBrOax1tt70yQqDTGSpi0jklGlzryGNvoqv5n7Vslig935K90AljEV0V4doTo4b1Lb
-         O3ZUMtaHIGgx5LZ9kQjlF/SZ8/+XEsB4rKlAFC4ljjUQC6kUoRUb4CA5CDouMzlXooI+
-         sxzA==
-X-Gm-Message-State: APjAAAXaScv3K11jiaYISsr7EK9AtTLMljd+X7WqFHprgP2jp4c9SSfc
-        vux0IhQpVEaulAZ/7qRI1jFijSMukO7VZkLpwo620w==
-X-Google-Smtp-Source: APXvYqxEwEwdGaOISrJ5MbJbhuMgu3oBOqwYp04LFOpjVtmcydWOGxsmFZzklEs59N7lf80jKFMdYKn24xtY22LLf08=
-X-Received: by 2002:a0c:c351:: with SMTP id j17mr1025368qvi.80.1579153644733;
- Wed, 15 Jan 2020 21:47:24 -0800 (PST)
+        Thu, 16 Jan 2020 00:49:59 -0500
+Received: from [10.28.39.79] (10.28.39.79) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 16 Jan
+ 2020 13:50:25 +0800
+Subject: Re: [PATCH v5 1/5] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191227094606.143637-1-jian.hu@amlogic.com>
+ <20191227094606.143637-2-jian.hu@amlogic.com>
+ <1jftgnz5k5.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <cda0451f-a229-b0c1-ddc8-2a9524d7e135@amlogic.com>
+Date:   Thu, 16 Jan 2020 13:50:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200115063710.15796-1-dja@axtens.net> <20200115063710.15796-3-dja@axtens.net>
- <CACT4Y+bxh1OmV64Z-EZrYk-otW9q_fxiHnvrE_VMYj-=YAk2Bg@mail.gmail.com> <8736cgkndh.fsf@dja-thinkpad.axtens.net>
-In-Reply-To: <8736cgkndh.fsf@dja-thinkpad.axtens.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 06:47:13 +0100
-Message-ID: <CACT4Y+Z7Fs1tzaECX_oT5VX05vPAehnfsR-m6P2uVtDACm7w8w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] string.h: fix incompatibility between FORTIFY_SOURCE
- and KASAN
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1jftgnz5k5.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.79]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 5:59 AM Daniel Axtens <dja@axtens.net> wrote:
->
-> Dmitry Vyukov <dvyukov@google.com> writes:
->
-> > On Wed, Jan 15, 2020 at 7:37 AM Daniel Axtens <dja@axtens.net> wrote:
-> >>
-> >> The memcmp KASAN self-test fails on a kernel with both KASAN and
-> >> FORTIFY_SOURCE.
-> >>
-> >> When FORTIFY_SOURCE is on, a number of functions are replaced with
-> >> fortified versions, which attempt to check the sizes of the operands.
-> >> However, these functions often directly invoke __builtin_foo() once they
-> >> have performed the fortify check. Using __builtins may bypass KASAN
-> >> checks if the compiler decides to inline it's own implementation as
-> >> sequence of instructions, rather than emit a function call that goes out
-> >> to a KASAN-instrumented implementation.
-> >>
-> >> Why is only memcmp affected?
-> >> ============================
-> >>
-> >> Of the string and string-like functions that kasan_test tests, only memcmp
-> >> is replaced by an inline sequence of instructions in my testing on x86 with
-> >> gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2).
-> >>
-> >> I believe this is due to compiler heuristics. For example, if I annotate
-> >> kmalloc calls with the alloc_size annotation (and disable some fortify
-> >> compile-time checking!), the compiler will replace every memset except the
-> >> one in kmalloc_uaf_memset with inline instructions. (I have some WIP
-> >> patches to add this annotation.)
-> >>
-> >> Does this affect other functions in string.h?
-> >> =============================================
-> >>
-> >> Yes. Anything that uses __builtin_* rather than __real_* could be
-> >> affected. This looks like:
-> >>
-> >>  - strncpy
-> >>  - strcat
-> >>  - strlen
-> >>  - strlcpy maybe, under some circumstances?
-> >>  - strncat under some circumstances
-> >>  - memset
-> >>  - memcpy
-> >>  - memmove
-> >>  - memcmp (as noted)
-> >>  - memchr
-> >>  - strcpy
-> >>
-> >> Whether a function call is emitted always depends on the compiler. Most
-> >> bugs should get caught by FORTIFY_SOURCE, but the missed memcmp test shows
-> >> that this is not always the case.
-> >>
-> >> Isn't FORTIFY_SOURCE disabled with KASAN?
-> >> ========================================-
-> >>
-> >> The string headers on all arches supporting KASAN disable fortify with
-> >> kasan, but only when address sanitisation is _also_ disabled. For example
-> >> from x86:
-> >>
-> >>  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-> >>  /*
-> >>   * For files that are not instrumented (e.g. mm/slub.c) we
-> >>   * should use not instrumented version of mem* functions.
-> >>   */
-> >>  #define memcpy(dst, src, len) __memcpy(dst, src, len)
-> >>  #define memmove(dst, src, len) __memmove(dst, src, len)
-> >>  #define memset(s, c, n) __memset(s, c, n)
-> >>
-> >>  #ifndef __NO_FORTIFY
-> >>  #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
-> >>  #endif
-> >>
-> >>  #endif
-> >>
-> >> This comes from commit 6974f0c4555e ("include/linux/string.h: add the
-> >> option of fortified string.h functions"), and doesn't work when KASAN is
-> >> enabled and the file is supposed to be sanitised - as with test_kasan.c
-> >
-> > Hi Daniel,
-> >
-> > Thanks for addressing this. And special kudos for description detail level! :)
-> >
-> > Phew, this layering of checking tools is a bit messy...
-> >
-> >> I'm pretty sure this is backwards: we shouldn't be using __builtin_memcpy
-> >> when we have a KASAN instrumented file, but we can use __builtin_* - and in
-> >> many cases all fortification - in files where we don't have
-> >> instrumentation.
-> >
-> > I think if we use __builtin_* in a non-instrumented file, the compiler
-> > can emit a call to normal mem* function which will be intercepted by
-> > kasan and we will get instrumentation in a file which should not be
-> > instrumented. Moreover this behavior will depend on optimization level
-> > and compiler internals.
-> > But as far as I see this does not affect any of the following and the
-> > code change.
-> >
->
-> mmm OK - you are right, when I consider this and your other point...
->
-> >>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
-> >> +
-> >> +#ifdef CONFIG_KASAN
-> >> +extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
-> >
-> >
-> > arch headers do:
-> >
-> > #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-> > #define memcpy(dst, src, len) __memcpy(dst, src, len)
-> > ...
-> >
-> > to disable instrumentation. Does this still work with this change?
-> > Previously they disabled fortify. What happens now? Will define of
-> > memcpy to __memcpy also affect __RENAME(memcpy), so that
-> > __underlying_memcpy will be an alias to __memcpy?
->
-> This is a good question. It's a really intricate set of interactions!!
->
-> Between these two things, I think I'm going to just drop the removal of
-> architecture changes, which means that fortify will continue to be
-> disabled for files that disable KASAN sanitisation. It's just too
-> complicated to reason through and satisfy myself that we're not going to
-> get weird bugs, and the payoff is really small.
 
-Sounds good to me. We don't need to solve all of the world 's problems
-at once :)
 
-> >> +extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
-> >
-> > All of these macros are leaking from the header file. Tomorrow we will
-> > discover __underlying_memcpy uses somewhere in the wild, which will
-> > not making understanding what actually happens simpler :)
-> > Perhaps undef all of them at the bottom?
->
-> I can't stop the function definitions from leaking, but I can stop the
-> defines from leaking, which means we will catch any uses outside this
-> block in a FORITY_SOURCE && !KASAN build. I've fixed this for v2.
-
-I think it's good enough and a good practice to undef local macros.
-
-> Regards,
-> Daniel
->
-> >> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t size) __RENAME(memcpy);
-> >> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_t size) __RENAME(memmove);
-> >> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) __RENAME(memset);
-> >> +extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat);
-> >> +extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy);
-> >> +extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
-> >> +extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
-> >> +extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
-> >> +#else
-> >> +#define __underlying_memchr    __builtin_memchr
-> >> +#define __underlying_memcmp    __builtin_memcmp
-> >> +#define __underlying_memcpy    __builtin_memcpy
-> >> +#define __underlying_memmove   __builtin_memmove
-> >> +#define __underlying_memset    __builtin_memset
-> >> +#define __underlying_strcat    __builtin_strcat
-> >> +#define __underlying_strcpy    __builtin_strcpy
-> >> +#define __underlying_strlen    __builtin_strlen
-> >> +#define __underlying_strncat   __builtin_strncat
-> >> +#define __underlying_strncpy   __builtin_strncpy
-> >> +#endif
-> >> +
-> >>  __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
-> >>  {
-> >>         size_t p_size = __builtin_object_size(p, 0);
-> >> @@ -324,14 +349,14 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
-> >>                 __write_overflow();
-> >>         if (p_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_strncpy(p, q, size);
-> >> +       return __underlying_strncpy(p, q, size);
-> >>  }
-> >>
-> >>  __FORTIFY_INLINE char *strcat(char *p, const char *q)
-> >>  {
-> >>         size_t p_size = __builtin_object_size(p, 0);
-> >>         if (p_size == (size_t)-1)
-> >> -               return __builtin_strcat(p, q);
-> >> +               return __underlying_strcat(p, q);
-> >>         if (strlcat(p, q, p_size) >= p_size)
-> >>                 fortify_panic(__func__);
-> >>         return p;
-> >> @@ -345,7 +370,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
-> >>         /* Work around gcc excess stack consumption issue */
-> >>         if (p_size == (size_t)-1 ||
-> >>             (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
-> >> -               return __builtin_strlen(p);
-> >> +               return __underlying_strlen(p);
-> >>         ret = strnlen(p, p_size);
-> >>         if (p_size <= ret)
-> >>                 fortify_panic(__func__);
-> >> @@ -378,7 +403,7 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
-> >>                         __write_overflow();
-> >>                 if (len >= p_size)
-> >>                         fortify_panic(__func__);
-> >> -               __builtin_memcpy(p, q, len);
-> >> +               __underlying_memcpy(p, q, len);
-> >>                 p[len] = '\0';
-> >>         }
-> >>         return ret;
-> >> @@ -391,12 +416,12 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
-> >>         size_t p_size = __builtin_object_size(p, 0);
-> >>         size_t q_size = __builtin_object_size(q, 0);
-> >>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
-> >> -               return __builtin_strncat(p, q, count);
-> >> +               return __underlying_strncat(p, q, count);
-> >>         p_len = strlen(p);
-> >>         copy_len = strnlen(q, count);
-> >>         if (p_size < p_len + copy_len + 1)
-> >>                 fortify_panic(__func__);
-> >> -       __builtin_memcpy(p + p_len, q, copy_len);
-> >> +       __underlying_memcpy(p + p_len, q, copy_len);
-> >>         p[p_len + copy_len] = '\0';
-> >>         return p;
-> >>  }
-> >> @@ -408,7 +433,7 @@ __FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
-> >>                 __write_overflow();
-> >>         if (p_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_memset(p, c, size);
-> >> +       return __underlying_memset(p, c, size);
-> >>  }
-> >>
-> >>  __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
-> >> @@ -423,7 +448,7 @@ __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
-> >>         }
-> >>         if (p_size < size || q_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_memcpy(p, q, size);
-> >> +       return __underlying_memcpy(p, q, size);
-> >>  }
-> >>
-> >>  __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
-> >> @@ -438,7 +463,7 @@ __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
-> >>         }
-> >>         if (p_size < size || q_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_memmove(p, q, size);
-> >> +       return __underlying_memmove(p, q, size);
-> >>  }
-> >>
-> >>  extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
-> >> @@ -464,7 +489,7 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
-> >>         }
-> >>         if (p_size < size || q_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_memcmp(p, q, size);
-> >> +       return __underlying_memcmp(p, q, size);
-> >>  }
-> >>
-> >>  __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
-> >> @@ -474,7 +499,7 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
-> >>                 __read_overflow();
-> >>         if (p_size < size)
-> >>                 fortify_panic(__func__);
-> >> -       return __builtin_memchr(p, c, size);
-> >> +       return __underlying_memchr(p, c, size);
-> >>  }
-> >>
-> >>  void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
-> >> @@ -505,7 +530,7 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
-> >>         size_t p_size = __builtin_object_size(p, 0);
-> >>         size_t q_size = __builtin_object_size(q, 0);
-> >>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
-> >> -               return __builtin_strcpy(p, q);
-> >> +               return __underlying_strcpy(p, q);
-> >>         memcpy(p, q, strlen(q) + 1);
-> >>         return p;
-> >>  }
-> >> --
-> >> 2.20.1
-> >>
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/8736cgkndh.fsf%40dja-thinkpad.axtens.net.
+On 2020/1/10 23:36, Jerome Brunet wrote:
+> 
+> On Fri 27 Dec 2019 at 10:46, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+> Please read Documentation/devicetree/writing-schema.rst, run the test and
+> make the necessary correction.
+> 
+Yes, I had run the test before sending the V5.
+>> Add the documentation to support Amlogic A1 PLL clock driver,
+>> and add A1 PLL clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
+>>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
+>>   2 files changed, 70 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..7a327bb174b8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,a1-pll-clkc
+>> +
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +clocks:
+>> +  maxItems: 2
+>> +  items:
+>> +   - description: Input xtal_fixpll
+>> +   - description: Input xtal_hifipll
+>> +
+>> +clock-names:
+>> +  maxItems: 2
+>> +  items:
+>> +     - const: xtal_fixpll
+>> +     - const: xtal_hifipll
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#clock-cells"
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_pll: pll-clock-controller@7c80 {
+>> +                compatible = "amlogic,a1-pll-clkc";
+>> +                reg = <0 0x7c80 0 0x18c>;
+>> +                #clock-cells = <1>;
+>> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
+>> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+>> +                clock-names = "xtal_fixpll", "xtal_hifipll";
+>> +    };
+>> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+>> new file mode 100644
+>> index 000000000000..58eae237e503
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_PLL_CLKC_H
+>> +#define __A1_PLL_CLKC_H
+>> +
+>> +#define CLKID_FIXED_PLL				1
+>> +#define CLKID_FCLK_DIV2				6
+>> +#define CLKID_FCLK_DIV3				7
+>> +#define CLKID_FCLK_DIV5				8
+>> +#define CLKID_FCLK_DIV7				9
+>> +#define CLKID_HIFI_PLL				10
+>> +
+>> +#endif /* __A1_PLL_CLKC_H */
+> 
+> .
+> 
