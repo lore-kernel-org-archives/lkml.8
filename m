@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B328C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93970C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517BD24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6538524685
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194315;
-	bh=NMtzhIfJOHOAtmyYoR7QWOqYodHl2omDYrFFEDvuwAs=;
+	s=default; t=1579194317;
+	bh=5krxYgAKq1c2WAFa6tfchIcxl6hb4JIJxjkgyH6US3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpPxQFTGinPbM6AzgMXPKkY5PCAG8bU98Wmi8Z0EZw5XVx5vc2H7DhY381sEFWwsS
-	 c5O9vTjHHlJRtuksjMenkGkK/Pr/1/OESizrvrKm1ziWOiFcjgp5sdNpi/Hsfy//Z3
-	 IDaiL3w/5hdJtp/s2eqXalb6WekMwZVe/gxbg0zw=
+	b=MBqKptEZaT5B+dJ1Wq0ECNLF3LBGky12eTDmiPe8JyB3UTHmC4LbU+XTxc+bZhzMj
+	 76uXAstu4DjtUZ5v42ouIeU3RsmtFKTWv5m8kP0yApzDh3tbqK+c7E0JuZWA5tRHRH
+	 9evq1hFHbVFwR4cAnH4WVhOXnrk0PJ+1eltL59pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbgAPRFO (ORCPT
+        id S1729862AbgAPRFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388409AbgAPRCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:33 -0500
+        id S2388532AbgAPRFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1342073A;
-        Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D6620730;
+        Thu, 16 Jan 2020 17:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194152;
-        bh=NMtzhIfJOHOAtmyYoR7QWOqYodHl2omDYrFFEDvuwAs=;
+        s=default; t=1579194313;
+        bh=5krxYgAKq1c2WAFa6tfchIcxl6hb4JIJxjkgyH6US3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgPPZVwAfS9d11fp0NkTA/Jgbn0Krawh8k5y2ZBdcxTN4tGBNg2CldsugaXHHCwB+
-         W71uTEhMdEtMnOtIf5+sNay+i19fUER2BngReOmDNz88DnrBKamIppkzAYhE9ODf+c
-         6PLrmjLanKL4aRccmOW2vGiolBEoQoywNfP7CLrs=
+        b=06GQyUsjP8DDy/dEZtX9FtmsSaerQQg+4qArwcjHYFgCWfnLAOOhVgRohFJtljmJH
+         yA4lrbaX1HOCOz1PCupMMjBhe8bgKCH5BvhJvqnZItCaYnua65dyFMSBbqdlQnEEzj
+         gG7sO2lVhRcCw/y23ajhktb1a6Dir9wKayroMFM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 236/671] PCI: Fix "try" semantics of bus and slot reset
-Date:   Thu, 16 Jan 2020 11:52:25 -0500
-Message-Id: <20200116165940.10720-119-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 265/671] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
+Date:   Thu, 16 Jan 2020 11:58:23 -0500
+Message-Id: <20200116170509.12787-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,161 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ddefc033eecf23f1e8b81d0663c5db965adf5516 ]
+[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
 
-The commit referenced below introduced device locking around save and
-restore of state for each device during a PCI bus "try" reset, making it
-decidely non-"try" and prone to deadlock in the event that a device is
-already locked.  Restore __pci_reset_bus() and __pci_reset_slot() to their
-advertised locking semantics by pushing the save and restore functions into
-the branch where the entire tree is already locked.  Extend the helper
-function names with "_locked" and update the comment to reflect this
-calling requirement.
+'vb' null check should be done before dereferencing it in
+tw5864_handle_frame, otherwise a NULL pointer dereference
+may occur.
 
-Fixes: b014e96d1abb ("PCI: Protect pci_error_handlers->reset_notify() usage with device_lock()")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 54 +++++++++++++++++++++++------------------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index c9f51fc24563..57a87a001b4f 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5039,39 +5039,42 @@ static int pci_slot_trylock(struct pci_slot *slot)
- 	return 0;
- }
+diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
+index ff2b7da90c08..6c40e60ac993 100644
+--- a/drivers/media/pci/tw5864/tw5864-video.c
++++ b/drivers/media/pci/tw5864/tw5864-video.c
+@@ -1395,13 +1395,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
+ 	input->vb = NULL;
+ 	spin_unlock_irqrestore(&input->slock, flags);
  
--/* Save and disable devices from the top of the tree down */
--static void pci_bus_save_and_disable(struct pci_bus *bus)
-+/*
-+ * Save and disable devices from the top of the tree down while holding
-+ * the @dev mutex lock for the entire tree.
-+ */
-+static void pci_bus_save_and_disable_locked(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		pci_dev_save_and_disable(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_save_and_disable(dev->subordinate);
-+			pci_bus_save_and_disable_locked(dev->subordinate);
- 	}
- }
- 
- /*
-- * Restore devices from top of the tree down - parent bridges need to be
-- * restored before we can get to subordinate devices.
-+ * Restore devices from top of the tree down while holding @dev mutex lock
-+ * for the entire tree.  Parent bridges need to be restored before we can
-+ * get to subordinate devices.
-  */
--static void pci_bus_restore(struct pci_bus *bus)
-+static void pci_bus_restore_locked(struct pci_bus *bus)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		pci_dev_lock(dev);
- 		pci_dev_restore(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_restore(dev->subordinate);
-+			pci_bus_restore_locked(dev->subordinate);
- 	}
- }
- 
--/* Save and disable devices from the top of the tree down */
--static void pci_slot_save_and_disable(struct pci_slot *slot)
-+/*
-+ * Save and disable devices from the top of the tree down while holding
-+ * the @dev mutex lock for the entire tree.
-+ */
-+static void pci_slot_save_and_disable_locked(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
- 
-@@ -5080,26 +5083,25 @@ static void pci_slot_save_and_disable(struct pci_slot *slot)
- 			continue;
- 		pci_dev_save_and_disable(dev);
- 		if (dev->subordinate)
--			pci_bus_save_and_disable(dev->subordinate);
-+			pci_bus_save_and_disable_locked(dev->subordinate);
- 	}
- }
- 
- /*
-- * Restore devices from top of the tree down - parent bridges need to be
-- * restored before we can get to subordinate devices.
-+ * Restore devices from top of the tree down while holding @dev mutex lock
-+ * for the entire tree.  Parent bridges need to be restored before we can
-+ * get to subordinate devices.
-  */
--static void pci_slot_restore(struct pci_slot *slot)
-+static void pci_slot_restore_locked(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
- 
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		pci_dev_lock(dev);
- 		pci_dev_restore(dev);
--		pci_dev_unlock(dev);
- 		if (dev->subordinate)
--			pci_bus_restore(dev->subordinate);
-+			pci_bus_restore_locked(dev->subordinate);
- 	}
- }
- 
-@@ -5158,17 +5160,15 @@ static int __pci_reset_slot(struct pci_slot *slot)
- 	if (rc)
- 		return rc;
- 
--	pci_slot_save_and_disable(slot);
+-	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
 -
- 	if (pci_slot_trylock(slot)) {
-+		pci_slot_save_and_disable_locked(slot);
- 		might_sleep();
- 		rc = pci_reset_hotplug_slot(slot->hotplug, 0);
-+		pci_slot_restore_locked(slot);
- 		pci_slot_unlock(slot);
- 	} else
- 		rc = -EAGAIN;
+ 	if (!vb) { /* Gone because of disabling */
+ 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
+ 		return;
+ 	}
  
--	pci_slot_restore(slot);
--
- 	return rc;
- }
- 
-@@ -5254,17 +5254,15 @@ static int __pci_reset_bus(struct pci_bus *bus)
- 	if (rc)
- 		return rc;
- 
--	pci_bus_save_and_disable(bus);
--
- 	if (pci_bus_trylock(bus)) {
-+		pci_bus_save_and_disable_locked(bus);
- 		might_sleep();
- 		rc = pci_bridge_secondary_bus_reset(bus->self);
-+		pci_bus_restore_locked(bus);
- 		pci_bus_unlock(bus);
- 	} else
- 		rc = -EAGAIN;
- 
--	pci_bus_restore(bus);
--
- 	return rc;
- }
- 
++	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
++
+ 	/*
+ 	 * Check for space.
+ 	 * Mind the overhead of startcode emulation prevention.
 -- 
 2.20.1
 
