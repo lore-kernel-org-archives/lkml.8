@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC71AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF1AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899C9214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FA1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197886;
-	bh=2cz7rdrQ0iVoEAqo7Qg7xczrfHpYE2OTUaaqrwLkRrI=;
+	s=default; t=1579197891;
+	bh=KPGjdXEAIWa/tzOeY7sU6vy4h8YTgu68F93lD1zPqnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vll/XUqReBCImOtCtmBgDwLexTtPt+NOtdRmEwqLB8Gsuh0P/kXm2hz4GwfiMatoP
-	 nL4pjuqed5YXTeiqg+MQZeMuMfXocWc0tTqET6S89tZpluPi3RvWsikWQsKulOYjbz
-	 HoBkzF7nE8lIbAUvgQvdd78QT0Suhvw9A8UbwFlw=
+	b=vSzPWAJDBLonInBgc8Jwpk2EnY2ftPCGMmoqRJdtm/xwDtojrybe+ZYa9RGOSpXKa
+	 WUzh5QqBmNb5JNrxrq9zjXHh0MJ/OKynS3cT225lI51ZZExPfr48AKYjZPpnnIHjz5
+	 fjwJDGHqH1DBzksRHh+ICKU9AwvmrgwINkxQaABk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406454AbgAPSEp (ORCPT
+        id S2406929AbgAPSEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:04:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:04:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbgAPRkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:21 -0500
+        id S2389695AbgAPRkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17AA2471C;
-        Thu, 16 Jan 2020 17:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B4824731;
+        Thu, 16 Jan 2020 17:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196420;
-        bh=2cz7rdrQ0iVoEAqo7Qg7xczrfHpYE2OTUaaqrwLkRrI=;
+        s=default; t=1579196417;
+        bh=KPGjdXEAIWa/tzOeY7sU6vy4h8YTgu68F93lD1zPqnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2049zDoSrBIZrHGF3wDVVu52CMeXVp0d/GsY/fSUg/WRLgmDsMVExoG2DCL6HaEX
-         db7gAl1V959zPg7YOmDZVg4Uc8wyKuhAlNovmPGKheYlmgQGYYeP9Ag51Lho5AAmkH
-         fUXLNENg3B4lhxCi46MlSZA2VoCuqTMVZa9xH2ww=
+        b=N2GBzKJlOTmSBVYCXrDR4o/bt1fCYTf+oAQAvQTgAlccl2TrPw2ZrvncmcdGFoORI
+         ZZ3rrYQRHTkXV+0pnu8jjs6WB7kDlvEKxKJv/+ajkd4G4AfveZjV3flauSewqd7+e2
+         WE7mlb7TKc/RmN5ovMu6udSPxGZkYprGZ9sVlkIo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Iker Perez del Palomar Sustatxa 
-        <iker.perez@codethink.co.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 190/251] hwmon: (lm75) Fix write operations for negative temperatures
-Date:   Thu, 16 Jan 2020 12:35:39 -0500
-Message-Id: <20200116173641.22137-150-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 188/251] ahci: Do not export local variable ahci_em_messages
+Date:   Thu, 16 Jan 2020 12:35:37 -0500
+Message-Id: <20200116173641.22137-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 7d82fcc9d9e81241778aaa22fda7be753e237d86 ]
+[ Upstream commit 60fc35f327e0a9e60b955c0f3c3ed623608d1baa ]
 
-Writes into limit registers fail if the temperature written is negative.
-The regmap write operation checks the value range, regmap_write accepts
-an unsigned int as parameter, and the temperature value passed to
-regmap_write is kept in a variable declared as long. Negative values
-are converted large unsigned integers, which fails the range check.
-Fix by type casting the temperature to u16 when calling regmap_write().
+The commit ed08d40cdec4
+  ("ahci: Changing two module params with static and __read_mostly")
+moved ahci_em_messages to be static while missing the fact of exporting it.
 
-Cc: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
-Fixes: e65365fed87f ("hwmon: (lm75) Convert to use regmap")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+Drop export for the local variable ahci_em_messages.
+
+Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+Cc: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/lm75.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libahci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index eff3b24d8473..fc31669a86ba 100644
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -164,7 +164,7 @@ static int lm75_write(struct device *dev, enum hwmon_sensor_types type,
- 	temp = DIV_ROUND_CLOSEST(temp  << (resolution - 8),
- 				 1000) << (16 - resolution);
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index f233ce60a678..1610fff19bb3 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -190,7 +190,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
+ EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
  
--	return regmap_write(data->regmap, reg, temp);
-+	return regmap_write(data->regmap, reg, (u16)temp);
- }
- 
- static umode_t lm75_is_visible(const void *data, enum hwmon_sensor_types type,
+ static bool ahci_em_messages __read_mostly = true;
+-EXPORT_SYMBOL_GPL(ahci_em_messages);
+ module_param(ahci_em_messages, bool, 0444);
+ /* add other LED protocol types when they become supported */
+ MODULE_PARM_DESC(ahci_em_messages,
 -- 
 2.20.1
 
