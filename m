@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5749CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B31AA24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B95B24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194723;
-	bh=VMxSnVGIwtCxxKxJeP4Q7uYMqhofEoA/E2CG4sUyupk=;
+	s=default; t=1579194734;
+	bh=kTIb/Y3XzjF2+VFSAC+cj2XncnKLjgkHWIlny1KaSHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ujMh4zY3auhSqaQJLMZXU9VKoHP3Eb79vrqDwvoRhhIFOLnIBhaN5FZawTL//UcMf
-	 UEYXkSVbwQKborojntHl93XmhqPxQfliy222pC0+lTKU1hVdmIw650rhoCK8W9W4NE
-	 1lW7kA3DvETwvtVj2itprb+Qw/Fi3XgEASd0cDm8=
+	b=rncAE7BcPJsTFJPuBic2nS/4lCqdh4YoBiBF/1PnMxVcTM77hWpi7B3gzcAnKxpPm
+	 7i4j3CNpnl7T7JI1n4ovztL9p9ymLY/UwtGASk8do0uKt06CMQoW9HcUAD3a+Q4WYz
+	 R3TwqeJypWDyYjt//X5KyfDpFhKqjUgWuFdqWOD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgAPRMC (ORCPT
+        id S1730216AbgAPRMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389018AbgAPRLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:55 -0500
+        id S2390372AbgAPRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940B7246A0;
-        Thu, 16 Jan 2020 17:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23F422469F;
+        Thu, 16 Jan 2020 17:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194714;
-        bh=VMxSnVGIwtCxxKxJeP4Q7uYMqhofEoA/E2CG4sUyupk=;
+        s=default; t=1579194720;
+        bh=kTIb/Y3XzjF2+VFSAC+cj2XncnKLjgkHWIlny1KaSHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SS3pvIaWr+Qn337e2vDzM/2ty4g/E64EzKklydR6RvACrWTAtwEuS9cVsAj5Y+Ipl
-         8uIOs607aGyzDEVYSpvPQKSZdho6kwbUJR4EG+Rn3DLerDvVDh0+0kkIA/GHrLtDzv
-         yDaLga0PK34QPBFdWhPlCnYkavfcun8F8UvlHUXI=
+        b=N7fgVBB4TvCyDj3tAVaJw0xpWMf1UalDkcTkfz29sq3PcXkPyju2iTIhhDxucr+Gg
+         1jgn0t1we2VzqrJqgHbRQfb1mlwrD5Nj3fTxoFioTEOXhRf2iPpkAeoq1sE0s5Cr3J
+         Xo8YCWr+zvay25H0cgKFdBg6nQCjWxzAxzD4+HMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.19 551/671] net/rds: Fix 'ib_evt_handler_call' element in 'rds_ib_stat_names'
-Date:   Thu, 16 Jan 2020 12:03:09 -0500
-Message-Id: <20200116170509.12787-288-sashal@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 556/671] clk: actions: Fix factor clk struct member access
+Date:   Thu, 16 Jan 2020 12:03:14 -0500
+Message-Id: <20200116170509.12787-293-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,38 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Rausch <gerd.rausch@oracle.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-[ Upstream commit 05a82481a3024b94db00b8c816bb3d526b5209e0 ]
+[ Upstream commit ed309bfb4812e8b31a3eb877e157b8028a49e50c ]
 
-All entries in 'rds_ib_stat_names' are stringified versions
-of the corresponding "struct rds_ib_statistics" element
-without the "s_"-prefix.
+Since the helper "owl_factor_helper_round_rate" is shared between factor
+and composite clocks, using the factor clk specific helper function
+like "hw_to_owl_factor" to access its members will create issues when
+called from composite clk specific code. Hence, pass the "factor_hw"
+struct pointer directly instead of fetching it using factor clk specific
+helpers.
 
-Fix entry 'ib_evt_handler_call' to do the same.
+This issue has been observed when a composite clock like "sd0_clk" tried
+to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
+error.
 
-Fixes: f4f943c958a2 ("RDS: IB: ack more receive completions to improve performance")
-Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While we are at it, let's rename the "clk_val_best" function to
+"owl_clk_val_best" since this is an owl SoCs specific helper.
+
+Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lkml.kernel.org/r/20190916154546.24982-2-manivannan.sadhasivam@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/ib_stats.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/actions/owl-factor.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/rds/ib_stats.c b/net/rds/ib_stats.c
-index 9252ad126335..ac46d8961b61 100644
---- a/net/rds/ib_stats.c
-+++ b/net/rds/ib_stats.c
-@@ -42,7 +42,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rds_ib_statistics, rds_ib_stats);
- static const char *const rds_ib_stat_names[] = {
- 	"ib_connect_raced",
- 	"ib_listen_closed_stale",
--	"s_ib_evt_handler_call",
-+	"ib_evt_handler_call",
- 	"ib_tasklet_call",
- 	"ib_tx_cq_event",
- 	"ib_tx_ring_full",
+diff --git a/drivers/clk/actions/owl-factor.c b/drivers/clk/actions/owl-factor.c
+index 317d4a9e112e..f15e2621fa18 100644
+--- a/drivers/clk/actions/owl-factor.c
++++ b/drivers/clk/actions/owl-factor.c
+@@ -64,11 +64,10 @@ static unsigned int _get_table_val(const struct clk_factor_table *table,
+ 	return val;
+ }
+ 
+-static int clk_val_best(struct clk_hw *hw, unsigned long rate,
++static int owl_clk_val_best(const struct owl_factor_hw *factor_hw,
++			struct clk_hw *hw, unsigned long rate,
+ 			unsigned long *best_parent_rate)
+ {
+-	struct owl_factor *factor = hw_to_owl_factor(hw);
+-	struct owl_factor_hw *factor_hw = &factor->factor_hw;
+ 	const struct clk_factor_table *clkt = factor_hw->table;
+ 	unsigned long parent_rate, try_parent_rate, best = 0, cur_rate;
+ 	unsigned long parent_rate_saved = *best_parent_rate;
+@@ -126,7 +125,7 @@ long owl_factor_helper_round_rate(struct owl_clk_common *common,
+ 	const struct clk_factor_table *clkt = factor_hw->table;
+ 	unsigned int val, mul = 0, div = 1;
+ 
+-	val = clk_val_best(&common->hw, rate, parent_rate);
++	val = owl_clk_val_best(factor_hw, &common->hw, rate, parent_rate);
+ 	_get_table_div_mul(clkt, val, &mul, &div);
+ 
+ 	return *parent_rate * mul / div;
 -- 
 2.20.1
 
