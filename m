@@ -2,316 +2,122 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3466EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AC4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B0720748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EACC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4SxvugD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZH4J0bC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgAPPHT (ORCPT
+        id S1726726AbgAPPJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:07:19 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41656 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgAPPHS (ORCPT
+        Thu, 16 Jan 2020 10:09:38 -0500
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:43965 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAPPJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:07:18 -0500
-Received: by mail-pl1-f196.google.com with SMTP id t14so499864plr.8;
-        Thu, 16 Jan 2020 07:07:18 -0800 (PST)
+        Thu, 16 Jan 2020 10:09:38 -0500
+Received: by mail-lj1-f182.google.com with SMTP id a13so23068840ljm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:09:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vjxcdMtJ7Oexv+w5Dwu8AKI8PT0pyBlB7MnZKY70u2g=;
-        b=l4SxvugDg0fLlOIXOafZ1g4C5s2UV1MESOmBy0guCzBET0HgG/OBkvxLgb66OjpiIa
-         SzS3TyXQE3eC2bqIa1MoE+zD7NPSlm6R38D+oSwG6nWSyJ7lzb46WFcCX4hnAwIpjiHp
-         6iLQFPvz4qMB8DZjaKjhAV+CHsd4M4RpBmioqgI2ZB7mtWlcxa/JQfLCjtNFbfdxbA8/
-         9M/1H/TcyUkH2xObNpLiwbxO3icJIP0XAb6YFCZM8cfzyk7WTGEFd06wsHZsI8TRh9T+
-         hXEPfcyMfACwuVFI00wwn38TNAowkb8DcW16gP/VLAUAaRWEYmq61ZVs1yh5r3veuhUJ
-         9XRQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HkvDWOy71Un4Ejg7NBoHIcDQf5aqCtLjt/UBVhVpHi8=;
+        b=UZH4J0bCrKnCrsAO6plDNw1EmK2V0kEafwxzYnHiQYZ+Jq12m68cqhHFo8lxY4vhIg
+         EuioDNB3JEFkAa8rcy53jocgSYWgm9DxOpXydhrYY/a/RdRrJzl9R+VOzRfiauzOgMXE
+         GUXQuWjYSe1Rh0cT3mMWw7hiItYqCvA766VHT2AJ1IvJGhH0Fh2e7OX5WfsVbY6cwnQO
+         81VLlFlRAcImsl7y7rkBTfTEH4OfkyGybByNF3PcklQiSB+ZAgdcXh7eiaHwwmLmnruQ
+         IBOl8Jeh8SwjzNgVuyzBrHcGDVN4W3QRJ4Luvq3s+GdAqYzNuCMjRbpoEnc3hEHMt53E
+         SBRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vjxcdMtJ7Oexv+w5Dwu8AKI8PT0pyBlB7MnZKY70u2g=;
-        b=QUF9ZQT5A24OV1V8pG5RElEsHtjJK90irBGvrYhnHddMSMF5D7SQFvyWofguv2kNPv
-         vY+o6bMpcRtx+J64zmzrElmt0R0L1fmEFbLr2GofKSARVZ9MbVDPuXwb0/60as2/VcGy
-         VOAYSiTFW0g8AoMvGSrP4V3V0uUeusJT7aToDw/qpk1OL4FKKsFgiBBKdM0vsQ5sByIv
-         OfTZDjdvoTAOP2H9B8afZYxuy0unTw+tTYDghTZx1E+hTSWBAxFfMgLtLYYFqHW9yKfk
-         LCYysdg544pLKbS5kIQsXGG4kb4PPLmpZYa+d4RkKp1BBylzL9ExxdhsCSyJYfvTAWvj
-         0UHQ==
-X-Gm-Message-State: APjAAAXPXrXQRUImfexgTzKQYqJSVlB/t8e3xlbADU/I4auG0ChPSVxm
-        64U32eaN/AQ6aDnb6W8L2eY=
-X-Google-Smtp-Source: APXvYqzFr7XTWY65mFhGJamleS49FRXRWBoQFLo5MgZafwRm4viQsiyF+KrXj0p/XcfgFMlPWIjoQQ==
-X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr37834417plt.26.1579187237843;
-        Thu, 16 Jan 2020 07:07:17 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c68sm26272677pfc.156.2020.01.16.07.07.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 07:07:17 -0800 (PST)
-Subject: Re: [PATCH 7/9] watchdog: of_xilinx_wdt: Add Versal support
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
- <1579181217-31127-8-git-send-email-srinivas.neeli@xilinx.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <55d1e8d6-abed-6d6a-614a-435e84e64f05@roeck-us.net>
-Date:   Thu, 16 Jan 2020 07:07:15 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HkvDWOy71Un4Ejg7NBoHIcDQf5aqCtLjt/UBVhVpHi8=;
+        b=MKUDEXd+mEVCufFzWuGdanVDd3bd+ry2akRsXv7cuLrQv42cGZZWXlQi1mb4ZLqytx
+         fhKuCS7MBIw+0hVw3CgcSlMm19E7c5psMmHFs16u63sIVXnuoLeXkSlB3psjuoLGYs/F
+         aK9RSta7uAMgvfN0KSJ9ivp1D4OGlc7qez8Ldk0xQOQkVvLDEAuyCmuPkf9F83JUrfEo
+         VubEa+c99XtGe7z50PSGVEUWr5tmS2KZpUxbxQW+j1izRH2+sqRVFbLuCfhJUsU1WChN
+         sw9HsjmMORPpJBmBsP8wMKvkAdT/xnzagqbhO0TGK2S9oS50ZZlVUPE/C4q0h1es7DyG
+         WAzA==
+X-Gm-Message-State: APjAAAWl8A5AqY3Z2J/Yf9d3DI7DM+EAwV9itDj7F8cOobijD+usd85S
+        6PUNHXIu5LSWa0p0w42qKlWZVbZK9ckS8rOlbYc=
+X-Google-Smtp-Source: APXvYqxM+7sopMisYJHuyrSdpEeUeoidxWDpIFKdCi1aQ2PjQTOuT/UA2GPgy8IeOIqjNG4mJqphH2ZWLRoXz907QhI=
+X-Received: by 2002:a2e:7009:: with SMTP id l9mr2580636ljc.96.1579187375648;
+ Thu, 16 Jan 2020 07:09:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1579181217-31127-8-git-send-email-srinivas.neeli@xilinx.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
+ <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
+ <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com>
+ <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com> <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
+In-Reply-To: <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Fri, 17 Jan 2020 00:09:24 +0900
+Message-ID: <CAMArcTUJ=Nemq=hsEeOzc-hOU4bPOKq_Xa1ECGDk4ceZHzhGVw@mail.gmail.com>
+Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 5:26 AM, Srinivas Neeli wrote:
-> From: Srinivas Goud <srinivas.goud@xilinx.com>
-> 
-> Versal watchdog driver uses generic watchdog mode.
-> Generic watchdog contains closed and open window of equal timeout.
-> Generic watchdog will generate reset signal if it is not explicitly
-> refreshed in second window.
-> 
+On Thu, 16 Jan 2020 at 06:53, Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
 
-WHy don't you just implement a separate driver for this watchdog ?
-It seems to be completely different. I don't immediately see the
-benefit of having a single driver. If there is one, please explain
-in detail.
+Hi Cong,
 
-Thanks,
-Guenter
+> On Mon, Jan 13, 2020 at 3:11 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > +Taehee, Cong,
+> >
+> > In the other thread Taehee mentioned the creation of dynamic keys for
+> > net devices that was added recently and that they are subject to some
+> > limits.
+> > syzkaller creates lots of net devices for isolation (several dozens
+> > per test process, but then these can be created and destroyed
+> > periodically). I wonder if it's the root cause of the lockdep limits
+> > problems?
+>
+> Very possibly. In current code base, there are 4 lockdep keys
+> per netdev:
+>
+>         struct lock_class_key   qdisc_tx_busylock_key;
+>         struct lock_class_key   qdisc_running_key;
+>         struct lock_class_key   qdisc_xmit_lock_key;
+>         struct lock_class_key   addr_list_lock_key;
+>
+> so the number of lockdep keys is at least 4x number of network
+> devices.
+>
+> I think only addr_list_lock_key is necessary as it has a nested
+> locking use case, all the rest are not. Taehee, do you agree?
+>
+> I plan to remove at least qdisc_xmit_lock_key for net-next
+> after the fix for net gets merged.
+>
 
-> Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-> ---
->   drivers/watchdog/of_xilinx_wdt.c | 150 ++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 149 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-> index 3b93b60f1a00..d2c389d9eaa7 100644
-> --- a/drivers/watchdog/of_xilinx_wdt.c
-> +++ b/drivers/watchdog/of_xilinx_wdt.c
-> @@ -2,7 +2,7 @@
->   /*
->    * Watchdog Device Driver for Xilinx axi/xps_timebase_wdt
->    *
-> - * (C) Copyright 2013 - 2014 Xilinx, Inc.
-> + * (C) Copyright 2013 - 2020 Xilinx, Inc.
->    * (C) Copyright 2011 (Alejandro Cabrera <aldaya@gmail.com>)
->    */
->   
-> @@ -18,10 +18,19 @@
->   #include <linux/of_device.h>
->   #include <linux/of_address.h>
->   
-> +#define XWT_WWDT_MIN_TIMEOUT		1
-> +#define XWT_WWDT_MAX_TIMEOUT		80
-> +
->   /* Register offsets for the Wdt device */
->   #define XWT_TWCSR0_OFFSET   0x0 /* Control/Status Register0 */
->   #define XWT_TWCSR1_OFFSET   0x4 /* Control/Status Register1 */
->   #define XWT_TBR_OFFSET      0x8 /* Timebase Register Offset */
-> +#define XWT_WWREF_OFFSET	0x1000 /* Refresh Register */
-> +#define XWT_WWCSR_OFFSET	0x2000 /* Control/Status Register */
-> +#define XWT_WWOFF_OFFSET	0x2008 /* Offset Register */
-> +#define XWT_WWCMP0_OFFSET	0x2010 /* Compare Value Register0 */
-> +#define XWT_WWCMP1_OFFSET	0x2014 /* Compare Value Register1 */
-> +#define XWT_WWWRST_OFFSET	0x2FD0 /* Warm Reset Register */
->   
->   /* Control/Status Register Masks  */
->   #define XWT_CSR0_WRS_MASK	BIT(3) /* Reset status */
-> @@ -31,6 +40,15 @@
->   /* Control/Status Register 0/1 bits  */
->   #define XWT_CSRX_EWDT2_MASK	BIT(0) /* Enable bit 2 */
->   
-> +/* Refresh Register Masks */
-> +#define XWT_WWREF_GWRR_MASK	BIT(0) /* Refresh and start new period */
-> +
-> +/* Generic Control/Status Register Masks  */
-> +#define XWT_WWCSR_GWEN_MASK	BIT(0) /* Enable Bit */
-> +
-> +/* Warm Reset Register Masks */
-> +#define XWT_WWRST_GWWRR_MASK	BIT(0) /* Warm Reset Register */
-> +
->   /* SelfTest constants */
->   #define XWT_MAX_SELFTEST_LOOP_COUNT 0x00010000
->   #define XWT_TIMER_FAILED            0xFFFFFFFF
-> @@ -41,9 +59,11 @@
->    * enum xwdt_ip_type - WDT IP type.
->    *
->    * @XWDT_WDT: Soft wdt ip.
-> + * @XWDT_WWDT: Window wdt ip.
->    */
->   enum xwdt_ip_type {
->   	XWDT_WDT = 0,
-> +	XWDT_WWDT,
->   };
->   
->   struct xwdt_devtype_data {
-> @@ -145,6 +165,126 @@ static const struct watchdog_ops xilinx_wdt_ops = {
->   	.ping = xilinx_wdt_keepalive,
->   };
->   
-> +static int xilinx_wwdt_start(struct watchdog_device *wdd)
-> +{
-> +	int ret;
-> +	u32 control_status_reg;
-> +	u64 count;
-> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-> +
-> +	unsigned long clock_f = clk_get_rate(xdev->clk);
-> +
-> +	/* Calculate timeout count */
-> +	count = wdd->timeout * clock_f;
-> +	ret  = clk_enable(xdev->clk);
-> +	if (ret) {
-> +		dev_err(wdd->parent, "Failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	spin_lock(&xdev->spinlock);
-> +
-> +	/*
-> +	 * Timeout count is half as there are two windows
-> +	 * first window overflow is ignored (interrupt),
-> +	 * reset is only generated at second window overflow
-> +	 */
-> +	count = count >> 1;
-> +
-> +	/* Disable the generic watchdog timer */
-> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-> +	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
-> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-> +
-> +	/* Set compare and offset registers for generic watchdog timeout */
-> +	iowrite32((u32)count, xdev->base + XWT_WWCMP0_OFFSET);
-> +	iowrite32((u32)0, xdev->base + XWT_WWCMP1_OFFSET);
-> +	iowrite32((u32)count, xdev->base + XWT_WWOFF_OFFSET);
-> +
-> +	/* Enable the generic watchdog timer */
-> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-> +	control_status_reg |= (XWT_WWCSR_GWEN_MASK);
-> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-> +
-> +	spin_unlock(&xdev->spinlock);
-> +
-> +	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Started!\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_wwdt_stop(struct watchdog_device *wdd)
-> +{
-> +	u32 control_status_reg;
-> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-> +
-> +	spin_lock(&xdev->spinlock);
-> +
-> +	/* Disable the generic watchdog timer */
-> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-> +	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
-> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-> +
-> +	spin_unlock(&xdev->spinlock);
-> +
-> +	clk_disable(xdev->clk);
-> +
-> +	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Stopped!\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_wwdt_keepalive(struct watchdog_device *wdd)
-> +{
-> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-> +
-> +	spin_lock(&xdev->spinlock);
-> +
-> +	iowrite32(XWT_WWREF_GWRR_MASK, xdev->base + XWT_WWREF_OFFSET);
-> +
-> +	spin_unlock(&xdev->spinlock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int xilinx_wwdt_set_timeout(struct watchdog_device *wdd,
-> +				   unsigned int new_time)
-> +{
-> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-> +
-> +	if (new_time < XWT_WWDT_MIN_TIMEOUT ||
-> +	    new_time > XWT_WWDT_MAX_TIMEOUT) {
-> +		dev_warn(xilinx_wdt_wdd->parent,
-> +			 "timeout value must be %d<=x<=%d, using %d\n",
-> +				XWT_WWDT_MIN_TIMEOUT,
-> +				XWT_WWDT_MAX_TIMEOUT, new_time);
-> +		return -EINVAL;
-> +	}
-> +
-> +	wdd->timeout = new_time;
-> +
-> +	return xilinx_wwdt_start(wdd);
-> +}
-> +
-> +static const struct watchdog_info xilinx_wwdt_ident = {
-> +	.options =  WDIOF_MAGICCLOSE |
-> +		WDIOF_KEEPALIVEPING |
-> +		WDIOF_SETTIMEOUT,
-> +	.firmware_version =	1,
-> +	.identity = "xlnx_wwdt watchdog",
-> +};
-> +
-> +static const struct watchdog_ops xilinx_wwdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = xilinx_wwdt_start,
-> +	.stop = xilinx_wwdt_stop,
-> +	.ping = xilinx_wwdt_keepalive,
-> +	.set_timeout = xilinx_wwdt_set_timeout,
-> +};
-> +
->   static u32 xwdt_selftest(struct xwdt_device *xdev)
->   {
->   	int i;
-> @@ -181,11 +321,19 @@ static const struct xwdt_devtype_data xwdt_wdt_data = {
->   	.xwdt_ops = &xilinx_wdt_ops,
->   };
->   
-> +static const struct xwdt_devtype_data xwdt_wwdt_data = {
-> +	.wdttype = XWDT_WWDT,
-> +	.xwdt_info = &xilinx_wwdt_ident,
-> +	.xwdt_ops = &xilinx_wwdt_ops,
-> +};
-> +
->   static const struct of_device_id xwdt_of_match[] = {
->   	{ .compatible = "xlnx,xps-timebase-wdt-1.00.a",
->   		.data = &xwdt_wdt_data },
->   	{ .compatible = "xlnx,xps-timebase-wdt-1.01.a",
->   		.data = &xwdt_wdt_data },
-> +	{ .compatible = "xlnx,versal-wwdt-1.0",
-> +		.data = &xwdt_wwdt_data },
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, xwdt_of_match);
-> 
+Yes, I fully agree with this.
+If we calculate the subclass for lock_nested() very well, I think we
+might use static lockdep key for addr_list_lock_key too. I think
+"dev->upper_level" and "dev->lower_level" might be used as subclass.
+These values are updated recursively in master/nomaster operation.
 
+Thank you
+Taehee Yoo
+
+> Thanks!
