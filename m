@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998F1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A31B2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4712073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198408;
-	bh=iXlGhkD+iPp8vh7EEoCYUfHQYjiFUHCq17Z2sMpPylM=;
+	s=default; t=1579198414;
+	bh=tdZMzdbq4gVQ5twnlrKuGhiga9ypKlA/c7vC+XIRG1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nnHnlCh0mm7EaSfd/NrGb1iIYq6fIiQrzCu5Lb7h65dyBoxwyrsZGK3TN46KC2Ryf
-	 oWtN1kId41lOzKSn0DRi+h7Abh21vtuQ/EHctPyU4Gpj97M8XZqiqMasFP5YiCWWnj
-	 20WrP53DfPTxALtH8Uym02P5dFR3PwypfAHAg9Pg=
+	b=QwPcYpkIw2wMrtSr9WdBqFk0hI2/c3PQeDROCpZeF3CdnLei4fNQVzX2s1o9kqnfU
+	 loL/e0CZdyDGWEBykDeuGhM8+OJhSTT6+H9kbTL4fou9zYD8QJ58yUa/PMOKnMtr7Y
+	 5P2SU4vn+W3pjDzbyu0EuB6c9iWr+W4n/5qIO384=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395242AbgAPSN0 (ORCPT
+        id S2405208AbgAPRgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:13:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51850 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:36:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405220AbgAPRgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:36:54 -0500
+        id S2405090AbgAPRgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:36:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365E920730;
-        Thu, 16 Jan 2020 17:36:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8159624694;
+        Thu, 16 Jan 2020 17:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196213;
-        bh=iXlGhkD+iPp8vh7EEoCYUfHQYjiFUHCq17Z2sMpPylM=;
+        s=default; t=1579196204;
+        bh=tdZMzdbq4gVQ5twnlrKuGhiga9ypKlA/c7vC+XIRG1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggnPMsJH7/ur/G73IYSCjISJuaLoh4uk2AW9RtiABEYQ1lg3O8AInl2hI0BwCI2BX
-         Ve+i4lghxps7PZh50YJbY6xStljYK4Ejg37b5aTRrfQ/VuG3yHCz4JZ9d2qbGkN8IS
-         P5CXhKmp0988bE55Y17J4Ml+MBA1ViHi8zyXdVs8=
+        b=PeQ2xsHg0eHr+BVFtzhxG+jy/Ot8uajMi2gHwnANgpA6Fb+Mn5iEXMc8SxiyA07l+
+         Xs5Byk6u95wAOlZpDtVPyE/wVc8NFGx1sk3IP7dQQO82i7Ck9pRLk2bLO5/kGxdRJi
+         2HSrLSIkVHG/1fYrWleQtdavWysgOyDXKBxcOTwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corentin Labbe <clabbe@baylibre.com>,
+Cc:     Eric Biggers <ebiggers@google.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 049/251] crypto: crypto4xx - Fix wrong ppc4xx_trng_probe()/ppc4xx_trng_remove() arguments
-Date:   Thu, 16 Jan 2020 12:33:18 -0500
-Message-Id: <20200116173641.22137-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 042/251] crypto: tgr192 - fix unaligned memory access
+Date:   Thu, 16 Jan 2020 12:33:11 -0500
+Message-Id: <20200116173641.22137-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,46 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 6e88098ca43a3d80ae86908f7badba683c8a0d84 ]
+[ Upstream commit f990f7fb58ac8ac9a43316f09a48cff1a49dda42 ]
 
-When building without CONFIG_HW_RANDOM_PPC4XX, I hit the following build failure:
-drivers/crypto/amcc/crypto4xx_core.c: In function 'crypto4xx_probe':
-drivers/crypto/amcc/crypto4xx_core.c:1407:20: error: passing argument 1 of 'ppc4xx_trng_probe' from incompatible pointer type [-Werror=incompatible-pointer-types]
-In file included from drivers/crypto/amcc/crypto4xx_core.c:50:0:
-drivers/crypto/amcc/crypto4xx_trng.h:28:20: note: expected 'struct crypto4xx_device *' but argument is of type 'struct crypto4xx_core_device *'
-drivers/crypto/amcc/crypto4xx_core.c: In function 'crypto4xx_remove':
-drivers/crypto/amcc/crypto4xx_core.c:1434:21: error: passing argument 1 of 'ppc4xx_trng_remove' from incompatible pointer type [-Werror=incompatible-pointer-types]
-In file included from drivers/crypto/amcc/crypto4xx_core.c:50:0:
-drivers/crypto/amcc/crypto4xx_trng.h:30:20: note: expected 'struct crypto4xx_device *' but argument is of type 'struct crypto4xx_core_device *'
+Fix an unaligned memory access in tgr192_transform() by using the
+unaligned access helpers.
 
-This patch fix the needed argument of ppc4xx_trng_probe()/ppc4xx_trng_remove() in that case.
-
-Fixes: 5343e674f32f ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Fixes: 06ace7a9bafe ("[CRYPTO] Use standard byte order macros wherever possible")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/tgr192.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.h b/drivers/crypto/amcc/crypto4xx_trng.h
-index 931d22531f51..7bbda51b7337 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.h
-+++ b/drivers/crypto/amcc/crypto4xx_trng.h
-@@ -26,9 +26,9 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev);
- void ppc4xx_trng_remove(struct crypto4xx_core_device *core_dev);
- #else
- static inline void ppc4xx_trng_probe(
--	struct crypto4xx_device *dev __maybe_unused) { }
-+	struct crypto4xx_core_device *dev __maybe_unused) { }
- static inline void ppc4xx_trng_remove(
--	struct crypto4xx_device *dev __maybe_unused) { }
-+	struct crypto4xx_core_device *dev __maybe_unused) { }
- #endif
+diff --git a/crypto/tgr192.c b/crypto/tgr192.c
+index 321bc6ff2a9d..904c8444aa0a 100644
+--- a/crypto/tgr192.c
++++ b/crypto/tgr192.c
+@@ -25,8 +25,9 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mm.h>
+-#include <asm/byteorder.h>
+ #include <linux/types.h>
++#include <asm/byteorder.h>
++#include <asm/unaligned.h>
  
- #endif
+ #define TGR192_DIGEST_SIZE 24
+ #define TGR160_DIGEST_SIZE 20
+@@ -468,10 +469,9 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
+ 	u64 a, b, c, aa, bb, cc;
+ 	u64 x[8];
+ 	int i;
+-	const __le64 *ptr = (const __le64 *)data;
+ 
+ 	for (i = 0; i < 8; i++)
+-		x[i] = le64_to_cpu(ptr[i]);
++		x[i] = get_unaligned_le64(data + i * sizeof(__le64));
+ 
+ 	/* save */
+ 	a = aa = tctx->a;
 -- 
 2.20.1
 
