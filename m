@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5D8C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE81C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2CF24684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D6C24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgAPDFV (ORCPT
+        id S1731062AbgAPDFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:05:21 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54977 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730421AbgAPDFT (ORCPT
+        Wed, 15 Jan 2020 22:05:40 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:35125 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730511AbgAPDFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:05:19 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=29;SR=0;TI=SMTPD_---0TnrHs5Q_1579143913;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrHs5Q_1579143913)
+        Wed, 15 Jan 2020 22:05:21 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TnrL8m-_1579143915;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrL8m-_1579143915)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jan 2020 11:05:13 +0800
+          Thu, 16 Jan 2020 11:05:15 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -33,24 +33,10 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
 Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v8 04/10] mm/lru: introduce the relock_page_lruvec function
-Date:   Thu, 16 Jan 2020 11:05:03 +0800
-Message-Id: <1579143909-156105-5-git-send-email-alex.shi@linux.alibaba.com>
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: [PATCH v8 09/10] mm/lru: add debug checking for page memcg moving
+Date:   Thu, 16 Jan 2020 11:05:08 +0800
+Message-Id: <1579143909-156105-10-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -59,114 +45,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the lruvec locking, a new page's lruvec is may same as
-previous one. Thus we could save a re-locking, and only
-change lock iff lruvec is new.
+This debug patch could give some clues if there are sth out of
+consideration.
 
-Function named relock_page_lruvec following Hugh Dickins' patch.
+Hugh Dickins report a bug of this patch, Thanks!
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hugh Dickins <hughd@google.com>
 Cc: Michal Hocko <mhocko@kernel.org>
 Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: swkhack <swkhack@gmail.com>
-Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Nikolay Borisov <nborisov@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
 Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- include/linux/memcontrol.h | 36 ++++++++++++++++++++++++++++++++++++
- mm/vmscan.c                |  8 ++------
- 2 files changed, 38 insertions(+), 6 deletions(-)
+ include/linux/memcontrol.h |  5 +++++
+ mm/compaction.c            |  2 ++
+ mm/memcontrol.c            | 15 +++++++++++++++
+ 3 files changed, 22 insertions(+)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 8389b9b927ef..09e861df48e8 100644
+index 09e861df48e8..ece88bb11d0f 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -1299,6 +1299,42 @@ static inline void dec_lruvec_page_state(struct page *page,
- 	mod_lruvec_page_state(page, idx, -1);
+@@ -421,6 +421,7 @@ static inline struct lruvec *mem_cgroup_lruvec(struct mem_cgroup *memcg,
+ struct lruvec *lock_page_lruvec_irqsave(struct page *, unsigned long*);
+ void unlock_page_lruvec_irq(struct lruvec *);
+ void unlock_page_lruvec_irqrestore(struct lruvec *, unsigned long);
++void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page);
+ 
+ struct mem_cgroup *mem_cgroup_from_task(struct task_struct *p);
+ 
+@@ -1183,6 +1184,10 @@ static inline void count_memcg_page_event(struct page *page,
+ void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
+ {
+ }
++
++static inline void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
++{
++}
+ #endif /* CONFIG_MEMCG */
+ 
+ /* idx can be of type enum memcg_stat_item or node_stat_item */
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 8c0a2da217d8..151242817bf4 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -971,6 +971,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 			compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
+ 			locked_lruvec = lruvec;
+ 
++			lruvec_memcg_debug(lruvec, page);
++
+ 			/* Try get exclusive access under lock */
+ 			if (!skip_updated) {
+ 				skip_updated = true;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 00fef8ddbd08..a567fd868739 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1238,6 +1238,19 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+ 	return lruvec;
  }
  
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irq(struct page *page,
-+		struct lruvec *locked_lruvec)
++void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
 +{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
++#ifdef  CONFIG_DEBUG_VM
++	if (mem_cgroup_disabled())
++		return;
 +
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (likely(locked_lruvec == lruvec))
-+		return lruvec;
-+
-+	if (unlikely(locked_lruvec))
-+		unlock_page_lruvec_irq(locked_lruvec);
-+
-+	return lock_page_lruvec_irq(page);
++	if (!page->mem_cgroup)
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != root_mem_cgroup, page);
++	else
++		VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
++#endif
 +}
 +
-+/* Don't lock again iff page's lruvec locked */
-+static inline struct lruvec *relock_page_lruvec_irqsave(struct page *page,
-+		struct lruvec *locked_lruvec, unsigned long *flags)
-+{
-+	struct pglist_data *pgdat = page_pgdat(page);
-+	struct lruvec *lruvec;
-+
-+	lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+
-+	if (likely(locked_lruvec == lruvec))
-+		return lruvec;
-+
-+	if (unlikely(locked_lruvec))
-+		unlock_page_lruvec_irqrestore(locked_lruvec, *flags);
-+
-+	return lock_page_lruvec_irqsave(page, flags);
-+}
-+
- #ifdef CONFIG_CGROUP_WRITEBACK
+ struct lruvec *lock_page_lruvec_irq(struct page *page)
+ {
+ 	struct lruvec *lruvec;
+@@ -1247,6 +1260,7 @@ struct lruvec *lock_page_lruvec_irq(struct page *page)
+ 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
+ 	spin_lock_irq(&lruvec->lru_lock);
  
- struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 7e1cb41da1fb..ee20a64a7ccc 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -4355,14 +4355,10 @@ void check_move_unevictable_pages(struct pagevec *pvec)
++	lruvec_memcg_debug(lruvec, page);
+ 	return lruvec;
+ }
  
- 	for (i = 0; i < pvec->nr; i++) {
- 		struct page *page = pvec->pages[i];
--		struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+@@ -1259,6 +1273,7 @@ struct lruvec *lock_page_lruvec_irqsave(struct page *page, unsigned long *flags)
+ 	lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
+ 	spin_lock_irqsave(&lruvec->lru_lock, *flags);
  
- 		pgscanned++;
--		if (lruvec != new_lruvec) {
--			if (lruvec)
--				unlock_page_lruvec_irq(lruvec);
--			lruvec = lock_page_lruvec_irq(page);
--		}
-+
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
++	lruvec_memcg_debug(lruvec, page);
+ 	return lruvec;
+ }
  
- 		if (!PageLRU(page) || !PageUnevictable(page))
- 			continue;
 -- 
 1.8.3.1
 
