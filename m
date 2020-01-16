@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF26C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50782C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DD224773
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE882477B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196690;
-	bh=XVeXgXUCIJpS32xus8OojbKyYYJFW7SwX6zT8JBfEtY=;
+	s=default; t=1579196694;
+	bh=JjKzewG3WJ8YyYk2XXWWjPF7f9+Ifwp2QYTgE0cFhk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMQw9IjyejsuPKVqVSFnLCzq2Y4a0+Wz5hla7Y6SfDeNDdAkh9O8VGh/iy9mHqUSV
-	 WPEIbyeS4O1G3IlF4dvy9gbXO14MZ9lilV7n3VIc+IeKqv+3pv/l0T3kDAC5FR312A
-	 48GuGrJfg8M0JS/t7vOAxIFao1rTMafoXqOsCOdE=
+	b=waP9vHXIDgP909eAgafJXVWYMuqGK4wCEScLb//5t119mY65TzH8qi/FGLY39DYiQ
+	 uNE0H4ERLsKuKLKyZpe8d6V+htTt3UkISVGFi1Rqcfd+sof8kU2s7SoEDf65VKPXZF
+	 hFl2OtePz8MVZkNVt5XJaLgQHHAjxlDYWwGcn7a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405973AbgAPRot (ORCPT
+        id S2405993AbgAPRox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394172AbgAPRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:29 -0500
+        id S2394179AbgAPRob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63D3C2475E;
-        Thu, 16 Jan 2020 17:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B8324748;
+        Thu, 16 Jan 2020 17:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196669;
-        bh=XVeXgXUCIJpS32xus8OojbKyYYJFW7SwX6zT8JBfEtY=;
+        s=default; t=1579196670;
+        bh=JjKzewG3WJ8YyYk2XXWWjPF7f9+Ifwp2QYTgE0cFhk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yM8jhYhbddPS7UBKJQZuMs2+DCqss4lNoCXzZ7direrf3OPW2M8vIFJe6yMvDE12w
-         M/AsYQG/R8TzhgITTzSNytx5xdo5Ga1H9Y9koA63ohcQaVLxkIznAoSk1N7gfL6Jxx
-         mP3tjftbdiHdtyw6wwWfLditlvIjby067A+nGWpA=
+        b=ELPkryr8XSZsHWx0EkxisEGKvWIspNl2fEr6H5nTGcLgY0hHECqFlLIuPiVhKSxBd
+         c4eTCwRAqsykijife9Srcgr3wLRJ19akgjRV1kWnnPp0ea/nUn5feK3N+LKxWQZjzc
+         KpndDoIs19llyYxKAf15aJRa8xuWBvyj/0h4Ge+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 070/174] soc/fsl/qe: Fix an error code in qe_pin_request()
-Date:   Thu, 16 Jan 2020 12:41:07 -0500
-Message-Id: <20200116174251.24326-70-sashal@kernel.org>
+Cc:     Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 071/174] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
+Date:   Thu, 16 Jan 2020 12:41:08 -0500
+Message-Id: <20200116174251.24326-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,36 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
+[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
 
-We forgot to set "err" on this error path.
+The original driver by default defines num_chipselects as -1.
+This actually allicates an array of 65535 entries in
+of_spi_register_master.
 
-Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+There is a side-effect for buggy device trees that (contrary to
+dt-binding documentation) have no cs-gpio defined.
+
+This mode was never supported by the driver due to limitations
+of native cs and additional code complexity and is explicitly
+not stated to be implemented.
+
+To keep backwards compatibility with such buggy DTs we limit
+the number of chip_selects to 1, as for all practical purposes
+it is only ever realistic to use a single chip select in
+native cs mode without negative side-effects.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/sysdev/qe_lib/gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/sysdev/qe_lib/gpio.c b/arch/powerpc/sysdev/qe_lib/gpio.c
-index 521e67a49dc4..4052e3d7edbd 100644
---- a/arch/powerpc/sysdev/qe_lib/gpio.c
-+++ b/arch/powerpc/sysdev/qe_lib/gpio.c
-@@ -155,8 +155,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	if (err < 0)
- 		goto err0;
- 	gc = gpio_to_chip(err);
--	if (WARN_ON(!gc))
-+	if (WARN_ON(!gc)) {
-+		err = -ENODEV;
- 		goto err0;
-+	}
- 
- 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
- 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index ca655593c5e0..1cedd640705f 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -390,7 +390,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	master->mode_bits = BCM2835_AUX_SPI_MODE_BITS;
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+-	master->num_chipselect = -1;
++	/* even though the driver never officially supported native CS
++	 * allow a single native CS for legacy DT support purposes when
++	 * no cs-gpio is configured.
++	 * Known limitations for native cs are:
++	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
++	 *     whenever there is a transfer -  this even includes SPI_NO_CS
++	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
++	 * * cs_change: cs is deasserted after each spi_transfer
++	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
++	 *     a spi_transfer
++	 */
++	master->num_chipselect = 1;
+ 	master->transfer_one = bcm2835aux_spi_transfer_one;
+ 	master->handle_err = bcm2835aux_spi_handle_err;
+ 	master->dev.of_node = pdev->dev.of_node;
 -- 
 2.20.1
 
