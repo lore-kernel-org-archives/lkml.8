@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30A9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8272F24718
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED6024718
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196551;
-	bh=mUsGVvXWUExxBpgzFf9xPdpr/JUVswy0UAwmXfmLFk8=;
+	s=default; t=1579196554;
+	bh=yIJkJxmik4IXSliExkB5nxxRKUuXaE04cSZDwEwRw6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uI8Q+8Oz0bc+Kk/OClR8J/ze1U3t7ktiFr5kuHl7iERCvdANsOEee4naX59taPKIz
-	 tTK5VU29mYTZe/PeqThFRjsEBBBgtNxdjgUZoDycGFixArLVKZWVD8ccvcULMtGwse
-	 a+EeQcxdRjgwtidoc71OT0wX3EXtGLb/6kMDcPxQ=
+	b=GvzivM5ybyyKOhD+NQmaNqfdTphcDxHRb+QsO9anz1qRM9GOTHP2aA+uLX7gPmYqu
+	 YQdF/vaVxmSEwMwoeUrlLg55F6Cn9VlF31+MrJ0DeZ8cXGX7wqbuWGK9aJt43TNHmA
+	 XQrmUX3SmqI1ZO/QNOhyhHP9XWGUf7Ygx9jRaTwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393823AbgAPRma (ORCPT
+        id S2393834AbgAPRmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405741AbgAPRlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:37 -0500
+        id S2393681AbgAPRln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9AF424695;
-        Thu, 16 Jan 2020 17:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F170246B5;
+        Thu, 16 Jan 2020 17:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196496;
-        bh=mUsGVvXWUExxBpgzFf9xPdpr/JUVswy0UAwmXfmLFk8=;
+        s=default; t=1579196502;
+        bh=yIJkJxmik4IXSliExkB5nxxRKUuXaE04cSZDwEwRw6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CVxDVAzPLHoQ+sTz3P3kDcC0k7GoY8VsNk4FsKnWXl4uJaEBg3mI0EXHGXCh448ci
-         9DP0GTU+uIXqbHGwjUzuHfO+i3P1stcIiLlYeUocjbzmg1gpuHUkoaJnFWIcNxk55D
-         WSkYltvH2LqycNz//Axq68DfT/+Tff2Ex2w433XY=
+        b=rDbXVS2/0HJ1zQiSm/hu7FxRYeJgDSz6M63tg/2SslcLH7+vJpNd6xonPVsv/641y
+         aQt6ePZA2oRTc8N2RqYT63dumr3WWs8EtUuZzV67ukAwmUgO1V3OFsBl4vxJlQFCNh
+         x7hOnTh88QWSTGZWHNfyXV3PU2DaGUN02EqpqGos=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 239/251] packet: fix data-race in fanout_flow_is_huge()
-Date:   Thu, 16 Jan 2020 12:36:28 -0500
-Message-Id: <20200116173641.22137-199-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 244/251] scsi: bnx2i: fix potential use after free
+Date:   Thu, 16 Jan 2020 12:36:33 -0500
+Message-Id: <20200116173641.22137-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,132 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
+[ Upstream commit 29d28f2b8d3736ac61c28ef7e20fda63795b74d9 ]
 
-KCSAN reported the following data-race [1]
+The member hba->pcidev may be used after its reference is dropped. Move the
+put function to where it is never used to avoid potential use after free
+issues.
 
-Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
-
-Since the report hinted about multiple cpus using the history
-concurrently, I added a test avoiding writing on it if the
-victim slot already contains the desired value.
-
-[1]
-
-BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
-
-read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
- fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
- fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
- fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
- fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
+Link: https://lore.kernel.org/r/1573043541-19126-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/scsi/bnx2i/bnx2i_iscsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 47a862cc7b34..fb643945e424 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1332,15 +1332,21 @@ static void packet_sock_destruct(struct sock *sk)
+diff --git a/drivers/scsi/bnx2i/bnx2i_iscsi.c b/drivers/scsi/bnx2i/bnx2i_iscsi.c
+index 133901fd3e35..6d1f8b22bd83 100644
+--- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
++++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
+@@ -915,12 +915,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hba)
+ 	INIT_LIST_HEAD(&hba->ep_ofld_list);
+ 	INIT_LIST_HEAD(&hba->ep_active_list);
+ 	INIT_LIST_HEAD(&hba->ep_destroy_list);
+-	pci_dev_put(hba->pcidev);
  
- static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
- {
--	u32 rxhash;
-+	u32 *history = po->rollover->history;
-+	u32 victim, rxhash;
- 	int i, count = 0;
- 
- 	rxhash = skb_get_hash(skb);
- 	for (i = 0; i < ROLLOVER_HLEN; i++)
--		if (po->rollover->history[i] == rxhash)
-+		if (READ_ONCE(history[i]) == rxhash)
- 			count++;
- 
--	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
-+	victim = prandom_u32() % ROLLOVER_HLEN;
-+
-+	/* Avoid dirtying the cache line if possible */
-+	if (READ_ONCE(history[victim]) != rxhash)
-+		WRITE_ONCE(history[victim], rxhash);
-+
- 	return count > (ROLLOVER_HLEN >> 1);
- }
- 
+ 	if (hba->regview) {
+ 		pci_iounmap(hba->pcidev, hba->regview);
+ 		hba->regview = NULL;
+ 	}
++	pci_dev_put(hba->pcidev);
+ 	bnx2i_free_mp_bdt(hba);
+ 	bnx2i_release_free_cid_que(hba);
+ 	iscsi_host_free(shost);
 -- 
 2.20.1
 
