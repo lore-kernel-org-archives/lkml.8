@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87A2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6804C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A252072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B8F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217200;
-	bh=rZxzFmoa86ylUJe4TS+EB8Wyx7/hluposH2EB+Imi8s=;
+	s=default; t=1579217204;
+	bh=04qAfMYFUg3t8AAxzMc2ejr9JJEv682j1pDNk6mf4nE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6pP1v4cXrVJgiyn+LZ+OS95Mk1RiVOH5HJ4bgzVzzN1Zk2pZodbr/2c4OtNC1d0m
-	 iEjdlDtmdIR0MHnp9cbw40ky0xjnWkdwHCuHZXQkBCC6TY+e75EndbGPJeJdrl/7b4
-	 cWMIBTgpyT2QF7GMd9W1fk2VXcHIUgGvVNy0VSq4=
+	b=eYw1IVe1f6Ua43rZVjf5zSnHCh36ZVnG2UMlNPcoF7cag0b+vS8SiwXOCsWW5gPrP
+	 frTtgpGk9XAYRpdpyNKyFIHJBff0/iglhUmk/dt7XTa1hbmcYb++hCEtIFfy/8F9C4
+	 m+zss1gjble0Ua4KaIa9TFmmkloiWyBn0hrnJdxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389545AbgAPX0j (ORCPT
+        id S1726936AbgAPX0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388570AbgAPX0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:13 -0500
+        id S2388596AbgAPX0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3A6820684;
-        Thu, 16 Jan 2020 23:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7402E2072B;
+        Thu, 16 Jan 2020 23:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217173;
-        bh=rZxzFmoa86ylUJe4TS+EB8Wyx7/hluposH2EB+Imi8s=;
+        s=default; t=1579217175;
+        bh=04qAfMYFUg3t8AAxzMc2ejr9JJEv682j1pDNk6mf4nE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBSmewAdqMyX1J+/POXglJhtlNR34YfXIqxxGIx498Fa3z9p/7U+JDy+2Ez0jMgfQ
-         zkwtUWofElE1phB9HyYQKBsHI/D7drJZ6tkOblztblykS2H7XaLHj189AM2t7PcrzT
-         tLrtDAzKHxqjiyAhQLQ/c1hzNxf4IP5Yg1pHx88c=
+        b=XGuc1HuIrV9Y0Idnr0Pu/STJINTvBCM9XhGViWwEbloyBUP1soNfKWxEpV/isH0T6
+         5ZzsVh7dR34fuXhngicC7vsvnQmQ+UJdO8tF6YykfZNnG96PMUiZ1Cgi9bGh3zMjmZ
+         l7CVGccc5110jZh/vdw9gHRrflGZLauxfLLHDcjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.4 177/203] NFSD fixing possible null pointer derefering in copy offload
-Date:   Fri, 17 Jan 2020 00:18:14 +0100
-Message-Id: <20200116231759.922172938@linuxfoundation.org>
+        stable@vger.kernel.org, Kars de Jong <jongk@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 5.4 178/203] rtc: msm6242: Fix reading of 10-hour digit
+Date:   Fri, 17 Jan 2020 00:18:15 +0100
+Message-Id: <20200116231759.995926476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,34 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Kars de Jong <jongk@linux-m68k.org>
 
-commit 18f428d4e2f7eff162d80b2b21689496c4e82afd upstream.
+commit e34494c8df0cd96fc432efae121db3212c46ae48 upstream.
 
-Static checker revealed possible error path leading to possible
-NULL pointer dereferencing.
+The driver was reading the wrong register as the 10-hour digit due to
+a misplaced ')'. It was in fact reading the 1-second digit register due
+to this bug.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: e0639dc5805a: ("NFSD introduce async copy feature")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Also remove the use of a magic number for the hour mask and use the define
+for it which was already present.
+
+Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
+Tested-by: Kars de Jong <jongk@linux-m68k.org>
+Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4proc.c |    3 ++-
+ drivers/rtc/rtc-msm6242.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1298,7 +1298,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struc
- out:
- 	return status;
- out_err:
--	cleanup_async_copy(async_copy);
-+	if (async_copy)
-+		cleanup_async_copy(async_copy);
- 	goto out;
- }
- 
+--- a/drivers/rtc/rtc-msm6242.c
++++ b/drivers/rtc/rtc-msm6242.c
+@@ -133,7 +133,8 @@ static int msm6242_read_time(struct devi
+ 		      msm6242_read(priv, MSM6242_SECOND1);
+ 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
+ 		      msm6242_read(priv, MSM6242_MINUTE1);
+-	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
++	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
++		       MSM6242_HOUR10_HR_MASK) * 10 +
+ 		      msm6242_read(priv, MSM6242_HOUR1);
+ 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
+ 		      msm6242_read(priv, MSM6242_DAY1);
 
 
