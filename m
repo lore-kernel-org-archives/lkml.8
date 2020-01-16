@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76C3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF47214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1436206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgAPQVg (ORCPT
+        id S1729148AbgAPQVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:21:36 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:42302 "EHLO inva020.nxp.com"
+        Thu, 16 Jan 2020 11:21:44 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:58034 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgAPQVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:21:14 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 082711A06B0;
-        Thu, 16 Jan 2020 17:21:12 +0100 (CET)
+        id S1726994AbgAPQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:21:11 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A6B742006D8;
+        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE6A51A014B;
-        Thu, 16 Jan 2020 17:21:11 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 98ABF200314;
+        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
 Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 69F8A2047A;
-        Thu, 16 Jan 2020 17:21:11 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 30DB32047A;
+        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
 From:   Iuliana Prodan <iuliana.prodan@nxp.com>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Horia Geanta <horia.geanta@nxp.com>,
@@ -38,9 +38,9 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-imx <linux-imx@nxp.com>,
         Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v3 7/9] crypto: caam - add crypto_engine support for AEAD algorithms
-Date:   Thu, 16 Jan 2020 18:20:51 +0200
-Message-Id: <1579191653-400-8-git-send-email-iuliana.prodan@nxp.com>
+Subject: [PATCH v3 3/9] crypto: caam - refactor ahash_edesc_alloc
+Date:   Thu, 16 Jan 2020 18:20:47 +0200
+Message-Id: <1579191653-400-4-git-send-email-iuliana.prodan@nxp.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1579191653-400-1-git-send-email-iuliana.prodan@nxp.com>
 References: <1579191653-400-1-git-send-email-iuliana.prodan@nxp.com>
@@ -50,249 +50,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add crypto_engine support for AEAD algorithms, to make use of
-the engine queue.
-The requests, with backlog flag, will be listed into crypto-engine
-queue and processed by CAAM when free.
-If sending just the backlog request to crypto-engine, and non-blocking
-directly to CAAM, the latter requests have a better chance to be
-executed since JR has up to 1024 entries, more than the 10 entries
-from crypto-engine.
+Changed parameters for ahash_edesc_alloc function:
+- remove flags since they can be computed in
+ahash_edesc_alloc, the only place they are needed;
+- use ahash_request instead of caam_hash_ctx, to be
+able to compute gfp flags.
 
 Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
 ---
- drivers/crypto/caam/caamalg.c | 108 ++++++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 30 deletions(-)
+ drivers/crypto/caam/caamhash.c | 62 +++++++++++++++---------------------------
+ 1 file changed, 22 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index 292db60..0f20bcf 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -120,6 +120,10 @@ struct caam_skcipher_req_ctx {
- 	struct skcipher_edesc *edesc;
- };
- 
-+struct caam_aead_req_ctx {
-+	struct aead_edesc *edesc;
-+};
-+
- static int aead_null_set_sh_desc(struct crypto_aead *aead)
- {
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
-@@ -865,6 +869,7 @@ static int xts_skcipher_setkey(struct crypto_skcipher *skcipher, const u8 *key,
-  * @mapped_dst_nents: number of segments in output h/w link table
-  * @sec4_sg_bytes: length of dma mapped sec4_sg space
-  * @sec4_sg_dma: bus physical mapped address of h/w link table
-+ * @bklog: stored to determine if the request needs backlog
-  * @sec4_sg: pointer to h/w link table
-  * @hw_desc: the h/w job descriptor followed by any referenced link tables
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index 59881a8..4db8507 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -661,11 +661,14 @@ static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
+  * Allocate an enhanced descriptor, which contains the hardware descriptor
+  * and space for hardware scatter table containing sg_num entries.
   */
-@@ -875,6 +880,7 @@ struct aead_edesc {
- 	int mapped_dst_nents;
- 	int sec4_sg_bytes;
- 	dma_addr_t sec4_sg_dma;
-+	bool bklog;
- 	struct sec4_sg_entry *sec4_sg;
- 	u32 hw_desc[];
- };
-@@ -953,12 +959,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 			    void *context)
+-static struct ahash_edesc *ahash_edesc_alloc(struct caam_hash_ctx *ctx,
++static struct ahash_edesc *ahash_edesc_alloc(struct ahash_request *req,
+ 					     int sg_num, u32 *sh_desc,
+-					     dma_addr_t sh_desc_dma,
+-					     gfp_t flags)
++					     dma_addr_t sh_desc_dma)
  {
- 	struct aead_request *req = context;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct caam_drv_private_jr *jrp = dev_get_drvdata(jrdev);
- 	struct aead_edesc *edesc;
- 	int ecode = 0;
++	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
++	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
++	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
++		       GFP_KERNEL : GFP_ATOMIC;
+ 	struct ahash_edesc *edesc;
+ 	unsigned int sg_size = sg_num * sizeof(struct sec4_sg_entry);
  
- 	dev_dbg(jrdev, "%s %d: err 0x%x\n", __func__, __LINE__, err);
- 
--	edesc = container_of(desc, struct aead_edesc, hw_desc[0]);
-+	edesc = rctx->edesc;
- 
- 	if (err)
- 		ecode = caam_jr_strstatus(jrdev, err);
-@@ -967,7 +975,14 @@ static void aead_crypt_done(struct device *jrdev, u32 *desc, u32 err,
- 
- 	kfree(edesc);
- 
--	aead_request_complete(req, ecode);
-+	/*
-+	 * If no backlog flag, the completion of the request is done
-+	 * by CAAM, not crypto engine.
-+	 */
-+	if (!edesc->bklog)
-+		aead_request_complete(req, ecode);
-+	else
-+		crypto_finalize_aead_request(jrp->engine, req, ecode);
- }
- 
- static void skcipher_crypt_done(struct device *jrdev, u32 *desc, u32 err,
-@@ -1262,6 +1277,7 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	struct crypto_aead *aead = crypto_aead_reqtfm(req);
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
+@@ -724,8 +727,6 @@ static int ahash_update_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
  	struct device *jrdev = ctx->jrdev;
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
- 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
- 		       GFP_KERNEL : GFP_ATOMIC;
- 	int src_nents, mapped_src_nents, dst_nents = 0, mapped_dst_nents = 0;
-@@ -1362,6 +1378,10 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	edesc->mapped_dst_nents = mapped_dst_nents;
- 	edesc->sec4_sg = (void *)edesc + sizeof(struct aead_edesc) +
- 			 desc_bytes;
-+
-+	edesc->bklog = false;
-+	rctx->edesc = edesc;
-+
- 	*all_contig_ptr = !(mapped_src_nents > 1);
- 
- 	sec4_sg_index = 0;
-@@ -1392,6 +1412,33 @@ static struct aead_edesc *aead_edesc_alloc(struct aead_request *req,
- 	return edesc;
- }
- 
-+static int aead_enqueue_req(struct device *jrdev, struct aead_request *req)
-+{
-+	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(jrdev);
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	struct aead_edesc *edesc = rctx->edesc;
-+	u32 *desc = edesc->hw_desc;
-+	int ret;
-+
-+	/*
-+	 * Only the backlog request are sent to crypto-engine since the others
-+	 * can be handled by CAAM, if free, especially since JR has up to 1024
-+	 * entries (more than the 10 entries from crypto-engine).
-+	 */
-+	if (req->base.flags & CRYPTO_TFM_REQ_MAY_BACKLOG)
-+		ret = crypto_transfer_aead_request_to_engine(jrpriv->engine,
-+							     req);
-+	else
-+		ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
-+
-+	if ((ret != -EINPROGRESS) && (ret != -EBUSY)) {
-+		aead_unmap(jrdev, edesc, req);
-+		kfree(rctx->edesc);
-+	}
-+
-+	return ret;
-+}
-+
- static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1400,7 +1447,6 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -779,8 +780,8 @@ static int ahash_update_ctx(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, pad_nents, ctx->sh_desc_update,
+-					  ctx->sh_desc_update_dma, flags);
++		edesc = ahash_edesc_alloc(req, pad_nents, ctx->sh_desc_update,
++					  ctx->sh_desc_update_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
+@@ -854,8 +855,6 @@ static int ahash_final_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
  	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
  	u32 *desc;
--	int ret;
+ 	int sec4_sg_bytes;
+@@ -867,8 +866,8 @@ static int ahash_final_ctx(struct ahash_request *req)
+ 			sizeof(struct sec4_sg_entry);
  
- 	edesc = aead_edesc_alloc(req, CHACHAPOLY_DESC_JOB_IO_LEN, &all_contig,
- 				 encrypt);
-@@ -1414,13 +1460,7 @@ static inline int chachapoly_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),
- 			     1);
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, 4, ctx->sh_desc_fin,
+-				  ctx->sh_desc_fin_dma, flags);
++	edesc = ahash_edesc_alloc(req, 4, ctx->sh_desc_fin,
++				  ctx->sh_desc_fin_dma);
+ 	if (!edesc)
+ 		return -ENOMEM;
  
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int chachapoly_encrypt(struct aead_request *req)
-@@ -1440,8 +1480,6 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
+@@ -920,8 +919,6 @@ static int ahash_finup_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
  	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+ 	int sec4_sg_src_index;
+@@ -950,9 +947,8 @@ static int ahash_finup_ctx(struct ahash_request *req)
+ 	sec4_sg_src_index = 1 + (buflen ? 1 : 0);
  
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, AUTHENC_DESC_JOB_IO_LEN,
-@@ -1456,14 +1494,7 @@ static inline int aead_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
- 
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
- 
- static int aead_encrypt(struct aead_request *req)
-@@ -1476,6 +1507,28 @@ static int aead_decrypt(struct aead_request *req)
- 	return aead_crypt(req, false);
- }
- 
-+static int aead_do_one_req(struct crypto_engine *engine, void *areq)
-+{
-+	struct aead_request *req = aead_request_cast(areq);
-+	struct caam_ctx *ctx = crypto_aead_ctx(crypto_aead_reqtfm(req));
-+	struct caam_aead_req_ctx *rctx = aead_request_ctx(req);
-+	u32 *desc = rctx->edesc->hw_desc;
-+	int ret;
-+
-+	rctx->edesc->bklog = true;
-+
-+	ret = caam_jr_enqueue(ctx->jrdev, desc, aead_crypt_done, req);
-+
-+	if (ret != -EINPROGRESS) {
-+		aead_unmap(ctx->jrdev, rctx->edesc, req);
-+		kfree(rctx->edesc);
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- {
- 	struct aead_edesc *edesc;
-@@ -1483,8 +1536,6 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 	struct caam_ctx *ctx = crypto_aead_ctx(aead);
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
+-				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
++				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1000,8 +996,6 @@ static int ahash_digest(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
  	struct device *jrdev = ctx->jrdev;
- 	bool all_contig;
--	u32 *desc;
--	int ret = 0;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u32 *desc;
+ 	int digestsize = crypto_ahash_digestsize(ahash);
+ 	int src_nents, mapped_nents;
+@@ -1028,9 +1022,8 @@ static int ahash_digest(struct ahash_request *req)
+ 	}
  
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, GCM_DESC_JOB_IO_LEN, &all_contig,
-@@ -1499,14 +1550,7 @@ static inline int gcm_crypt(struct aead_request *req, bool encrypt)
- 			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,
- 			     desc_bytes(edesc->hw_desc), 1);
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ? mapped_nents : 0,
+-				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, mapped_nents > 1 ? mapped_nents : 0,
++				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1077,8 +1070,6 @@ static int ahash_final_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+@@ -1087,8 +1078,8 @@ static int ahash_final_no_ctx(struct ahash_request *req)
+ 	int ret;
  
--	desc = edesc->hw_desc;
--	ret = caam_jr_enqueue(jrdev, desc, aead_crypt_done, req);
--	if (ret != -EINPROGRESS) {
--		aead_unmap(jrdev, edesc, req);
--		kfree(edesc);
--	}
--
--	return ret;
-+	return aead_enqueue_req(jrdev, req);
- }
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, 0, ctx->sh_desc_digest,
+-				  ctx->sh_desc_digest_dma, flags);
++	edesc = ahash_edesc_alloc(req, 0, ctx->sh_desc_digest,
++				  ctx->sh_desc_digest_dma);
+ 	if (!edesc)
+ 		return -ENOMEM;
  
- static int gcm_encrypt(struct aead_request *req)
-@@ -3336,6 +3380,10 @@ static int caam_aead_init(struct crypto_aead *tfm)
- 		 container_of(alg, struct caam_aead_alg, aead);
- 	struct caam_ctx *ctx = crypto_aead_ctx(tfm);
+@@ -1136,8 +1127,6 @@ static int ahash_update_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -1190,10 +1179,9 @@ static int ahash_update_no_ctx(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, pad_nents,
++		edesc = ahash_edesc_alloc(req, pad_nents,
+ 					  ctx->sh_desc_update_first,
+-					  ctx->sh_desc_update_first_dma,
+-					  flags);
++					  ctx->sh_desc_update_first_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
+@@ -1261,8 +1249,6 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	int buflen = state->buflen;
+ 	u32 *desc;
+ 	int sec4_sg_bytes, sec4_sg_src_index, src_nents, mapped_nents;
+@@ -1292,9 +1278,8 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
+ 			 sizeof(struct sec4_sg_entry);
  
-+	crypto_aead_set_reqsize(tfm, sizeof(struct caam_aead_req_ctx));
-+
-+	ctx->enginectx.op.do_one_request = aead_do_one_req;
-+
- 	return caam_init_common(ctx, &caam_alg->caam, !caam_alg->caam.nodkp);
- }
- 
+ 	/* allocate space for base edesc and hw desc commands, link tables */
+-	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
+-				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
+-				  flags);
++	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
++				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
+ 	if (!edesc) {
+ 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 		return -ENOMEM;
+@@ -1347,8 +1332,6 @@ static int ahash_update_first(struct ahash_request *req)
+ 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
+ 	struct caam_hash_state *state = ahash_request_ctx(req);
+ 	struct device *jrdev = ctx->jrdev;
+-	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+-		       GFP_KERNEL : GFP_ATOMIC;
+ 	u8 *buf = state->buf;
+ 	int *buflen = &state->buflen;
+ 	int *next_buflen = &state->next_buflen;
+@@ -1396,11 +1379,10 @@ static int ahash_update_first(struct ahash_request *req)
+ 		 * allocate space for base edesc and hw desc commands,
+ 		 * link tables
+ 		 */
+-		edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ?
++		edesc = ahash_edesc_alloc(req, mapped_nents > 1 ?
+ 					  mapped_nents : 0,
+ 					  ctx->sh_desc_update_first,
+-					  ctx->sh_desc_update_first_dma,
+-					  flags);
++					  ctx->sh_desc_update_first_dma);
+ 		if (!edesc) {
+ 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
+ 			return -ENOMEM;
 -- 
 2.1.0
 
