@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ABCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD8FB24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C7721582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193850;
-	bh=SyzeMevQErGeZucr06G/o6zoqXfNu3lF1/gYb305y0E=;
+	s=default; t=1579193856;
+	bh=HfjzakrVtLjTgqpXPzTXGJej62/144SRDCqaI5/iiDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BUz4p1cQaR7EsSCLz7dBuu12C3PMh2fVz8BmAjzJlXlknEncKq7iz4htLK5z5Ru3f
-	 MBHIhG3+m3ZeXP4a/xquw9nCUXCqzzDr+FLUfC333gxCXzFqxxmOuf5CNKNC3L7kyr
-	 LvhzH4zH2kpqWK0BiLtUgqJW+0JQ2D3q0h9czlSM=
+	b=IG5ioLCgdwCja/hVOnMEoqVx3nWMlTGwhlLUyMlmorVKxt/Z6iFSBnQprXTwPH4kZ
+	 XdyyqfdFWSFPm9fHxVqdFqMWB59rxq1WzzpC/G3FcNQGQRPvKuNnGX0ApPfkrgXPwA
+	 zdlkVYCxR4KFCTwGNtlFR9OCDATaJCwMGwplFSKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgAPQ5a (ORCPT
+        id S1732717AbgAPQ5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44358 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387472AbgAPQ5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:19 -0500
+        id S1730131AbgAPQzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A0F24673;
-        Thu, 16 Jan 2020 16:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E9D024656;
+        Thu, 16 Jan 2020 16:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193839;
-        bh=SyzeMevQErGeZucr06G/o6zoqXfNu3lF1/gYb305y0E=;
+        s=default; t=1579193722;
+        bh=HfjzakrVtLjTgqpXPzTXGJej62/144SRDCqaI5/iiDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwLkfYc9D6hhAzQHtqUEAsAFPWWfrzkG1KHUQj7VaJje4hjCS2PcerBLlNj4suVR+
-         l4SMaYPt4Qs8FAlCKsKrYDBGeBz4IXG6YnCrhY/aUWqe5+pCTwJ34TSsT3gGicPDdR
-         o7SEW6TkJ8DGEObdSIFp4E9Rnea6gUDGvzFIV7Yo=
+        b=TPVN70wSSX1IXum6a59TngPbPrc+XqatkRamkGe3/kQJvshRad4stHM7buktXzc+K
+         WIeE+ZSxcynx94Oqf8wJv2WZ9JsmWwy/SYd3Jd0C696PMazlT3VNa7ZwkhFQH8RTT4
+         HQoizE50l7XWX/7k626B0hhvnE5EjecjwJJme0aw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 094/671] clk: kirkwood: fix refcount leak in kirkwood_clk_init()
-Date:   Thu, 16 Jan 2020 11:45:25 -0500
-Message-Id: <20200116165502.8838-94-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 016/671] signal/ia64: Use the force_sig(SIGSEGV,...) in ia64_rt_sigreturn
+Date:   Thu, 16 Jan 2020 11:44:07 -0500
+Message-Id: <20200116165502.8838-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,36 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit e7beeab9c61591cd0e690d8733d534c3f4278ff8 ]
+[ Upstream commit b92adb74adde62d9a9780ff2977d63dcb21aeaa6 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The ia64 handling of failure to return from a signal frame has been trying
+to set overlapping fields in struct siginfo since 2.3.43.  The si_code
+corresponds to the fields that were stomped (not the field that is
+actually written), so I can not imagine a piece of userspace code
+making sense of the signal frame if it looks closely.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 58d516ae95cb ("clk: mvebu: kirkwood: maintain clock init order")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+In practice failure to return from a signal frame is a rare event that
+almost never happens.  Someone using an alternate signal stack to
+recover and looking in detail is even more rare.  So I presume no one
+has ever noticed and reported this ia64 nonsense.
+
+Sort this out by causing ia64 to use force_sig(SIGSEGV) like other architectures.
+
+Fixes: 2.3.43
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
+Acked-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/kirkwood.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/ia64/kernel/signal.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/clk/mvebu/kirkwood.c b/drivers/clk/mvebu/kirkwood.c
-index a2a8d614039d..890ebf623261 100644
---- a/drivers/clk/mvebu/kirkwood.c
-+++ b/drivers/clk/mvebu/kirkwood.c
-@@ -333,6 +333,8 @@ static void __init kirkwood_clk_init(struct device_node *np)
- 	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, kirkwood_gating_desc);
- 		kirkwood_clk_muxing_setup(cgnp, kirkwood_mux_desc);
-+
-+		of_node_put(cgnp);
- 	}
+diff --git a/arch/ia64/kernel/signal.c b/arch/ia64/kernel/signal.c
+index 01fc133b2e4c..9a960829a01d 100644
+--- a/arch/ia64/kernel/signal.c
++++ b/arch/ia64/kernel/signal.c
+@@ -110,7 +110,6 @@ ia64_rt_sigreturn (struct sigscratch *scr)
+ {
+ 	extern char ia64_strace_leave_kernel, ia64_leave_kernel;
+ 	struct sigcontext __user *sc;
+-	struct siginfo si;
+ 	sigset_t set;
+ 	long retval;
+ 
+@@ -153,14 +152,7 @@ ia64_rt_sigreturn (struct sigscratch *scr)
+ 	return retval;
+ 
+   give_sigsegv:
+-	clear_siginfo(&si);
+-	si.si_signo = SIGSEGV;
+-	si.si_errno = 0;
+-	si.si_code = SI_KERNEL;
+-	si.si_pid = task_pid_vnr(current);
+-	si.si_uid = from_kuid_munged(current_user_ns(), current_uid());
+-	si.si_addr = sc;
+-	force_sig_info(SIGSEGV, &si, current);
++	force_sig(SIGSEGV, current);
+ 	return retval;
  }
- CLK_OF_DECLARE(kirkwood_clk, "marvell,kirkwood-core-clock",
+ 
 -- 
 2.20.1
 
