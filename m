@@ -2,105 +2,128 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE23C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DAEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6652072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201657;
-	bh=VH6Ot6iZUhwLCZjJgw6dRkJxF8WjyXnJUUWjVLlB6WM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFVQ3/L9fGfWIX3SfT8Xx/1JyShwMS6gzZgKHgnzePhJWxyfW7bqiIOSwZ+8Ydc0b
-	 3vGXHoJHGdJYPl9wWo0TxAXlR/HQoiCEUNxrZFRN/en4/2/z+WABMyBnmUg8/p7S5r
-	 RsqBccRYByG8TMjbemwQ8Bcw6JvkuwS9PtivbNWo=
+	by mail.kernel.org (Postfix) with ESMTP id 0754A2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="sq6rBxCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437383AbgAPTHg (ORCPT
+        id S2437348AbgAPTHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:07:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388049AbgAPRBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:15 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C806520730;
-        Thu, 16 Jan 2020 17:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194075;
-        bh=VH6Ot6iZUhwLCZjJgw6dRkJxF8WjyXnJUUWjVLlB6WM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1fG0Y0vF60f94ebjswDzcvAHvcknAN8jiF0vHmCB/Qz6y5w9WpZPi0tLE9GMcj6u
-         40ny+6XWbBIfXDzcZT+aDAi2tICToAltw6xgx/ZeNOzcIE9YDWXnZyw669V9nv77XK
-         N8Xdr+SNe7mlGfzvICElV1jo6wCzr+csG9uZOhyY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 182/671] block: don't use bio->bi_vcnt to figure out segment number
-Date:   Thu, 16 Jan 2020 11:51:31 -0500
-Message-Id: <20200116165940.10720-65-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:07:43 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35486 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388049AbgAPTHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:07:39 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 15so16406547lfr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EmuC4PVZIAqszrVr1XV69xZ8ppUgqhM55b6dhWz3+uk=;
+        b=sq6rBxCBy/CCxrwdHmaue9zJzhbHLCVFuzGNGljHenlF/JLCURJo0cW7HCcIzob853
+         ad8iNOfF7LvsNp4yActpwaksvIR5rR1SdBfmQKDabEl3I/66emZXHFCqfHyOU+Udbi20
+         0tAWoeLngfq3NMIbyFzU+Ex99sYkrcGxIllnCdE+f2SBzpq4080pQlPAJlMoyjZpzPhZ
+         DGGoDvZ48oTt7anYYS1ei29KQbqdWUs3CASJU/SV9rM2iPjwRMmumUYKC1mkFyvnaEte
+         mMCLHi9tI/s+qcIUCXU5476/G0zj8H79xmCp+F5wrCflAzrvYOq2DBF6Ip3cme3OPkbD
+         /K0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EmuC4PVZIAqszrVr1XV69xZ8ppUgqhM55b6dhWz3+uk=;
+        b=CpgJ5ejlhhblqRjuuh47FqWtQQ0VT3+BJ7qLqUEhV5j9Tbe/o6FRalaWmb04t9X5OX
+         FdD//7Xkja9eB/Jx0n5RRtefATlhkhF0FEzCsQvLxJQGNxGyg6TZx3Kfyotm2tUry4Fd
+         HUSFL7GXxOaroXsXkRMXaxYaWObsvuciSzTE1kPbS4PYv61J5Ps9id15MEJPYB1PB6zA
+         G5kKwaMmGaAs/hVzvcXOJXWwDdN72JZ6qd7mdbtteoMheBws6VucD9qHRGpaH48mTWA2
+         7H149crNIDZ19HOOjMLtqnpvbjIhUkFvDXYkTJv3JL+Rw7RO05Cv4TVhsWtgxW3/9++P
+         UP2Q==
+X-Gm-Message-State: APjAAAVpDgeprORavEIaT5UKae7bgo7/MXwattAH7EnXx/nP8QuuznJ2
+        RyxaD1VwnREKGCSjW4vy0eZ/qespjwFlL2mM4mjp
+X-Google-Smtp-Source: APXvYqyjq8pmunQfve4JqN7h2RHW+MxQZLns1p+JMhm7APFS43fUdBdBp+Ertu9yeaZgxNoNEEToXqGpX1HrNrUdodI=
+X-Received: by 2002:a2e:870b:: with SMTP id m11mr3237458lji.93.1579201657915;
+ Thu, 16 Jan 2020 11:07:37 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <cover.1577830902.git.rgb@redhat.com> <20200116150518.gfmzixoqagmk77rw@salvia>
+In-Reply-To: <20200116150518.gfmzixoqagmk77rw@salvia>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 16 Jan 2020 14:07:27 -0500
+Message-ID: <CAHC9VhSowSdhwaGNVfj-Paj7=38z1D-p+=EDQNUAwNJpO_tyXg@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v2 0/9] Address NETFILTER_CFG issues
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+On Thu, Jan 16, 2020 at 10:05 AM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> On Mon, Jan 06, 2020 at 01:54:01PM -0500, Richard Guy Briggs wrote:
+> > There were questions about the presence and cause of unsolicited syscall events
+> > in the logs containing NETFILTER_CFG records and sometimes unaccompanied
+> > NETFILTER_CFG records.
+> >
+> > During testing at least the following list of events trigger NETFILTER_CFG
+> > records and the syscalls related (There may be more events that will trigger
+> > this message type.):
+> >       init_module, finit_module: modprobe
+> >       setsockopt: iptables-restore, ip6tables-restore, ebtables-restore
+> >       unshare: (h?)ostnamed
+> >       clone: libvirtd
+> >
+> > The syscall events unsolicited by any audit rule were found to be caused by a
+> > missing !audit_dummy_context() check before creating a NETFILTER_CFG
+> > record and issuing the record immediately rather than saving the
+> > information to create the record at syscall exit.
+> > Check !audit_dummy_context() before creating the NETFILTER_CFG record.
+> >
+> > The vast majority of unaccompanied records are caused by the fedora default
+> > rule: "-a never,task" and the occasional early startup one is I believe caused
+> > by the iptables filter table module hard linked into the kernel rather than a
+> > loadable module. The !audit_dummy_context() check above should avoid them.
+> >
+> > A couple of other factors should help eliminate unaccompanied records
+> > which include commit cb74ed278f80 ("audit: always enable syscall
+> > auditing when supported and audit is enabled") which makes sure that
+> > when audit is enabled, so automatically is syscall auditing, and ghak66
+> > which addressed initializing audit before PID 1.
+> >
+> > Ebtables module initialization to register tables doesn't generate records
+> > because it was never hooked in to audit.  Recommend adding audit hooks to log
+> > this.
+> >
+> > Table unregistration was never logged, which is now covered.
+> >
+> > Seemingly duplicate records are not actually exact duplicates that are caused
+> > by netfilter table initialization in different network namespaces from the same
+> > syscall.  Recommend adding the network namespace ID (proc inode and dev)
+> > to the record to make this obvious (address later with ghak79 after nsid
+> > patches).
+> >
+> > See: https://github.com/linux-audit/audit-kernel/issues/25
+> > See: https://github.com/linux-audit/audit-kernel/issues/35
+> > See: https://github.com/linux-audit/audit-kernel/issues/43
+> > See: https://github.com/linux-audit/audit-kernel/issues/44
+>
+> What tree is this batch targeted to?
 
-[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
+I believe Richard was targeting this for the audit tree.
 
-It is wrong to use bio->bi_vcnt to figure out how many segments
-there are in the bio even though CLONED flag isn't set on this bio,
-because this bio may be splitted or advanced.
-
-So always use bio_segments() in blk_recount_segments(), and it shouldn't
-cause any performance loss now because the physical segment number is figured
-out in blk_queue_split() and BIO_SEG_VALID is set meantime since
-bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
-
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-merge.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 2776ee6c5c3d..7efa8c3e2b72 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -309,13 +309,7 @@ void blk_recalc_rq_segments(struct request *rq)
- 
- void blk_recount_segments(struct request_queue *q, struct bio *bio)
- {
--	unsigned short seg_cnt;
--
--	/* estimate segment number by bi_vcnt for non-cloned bio */
--	if (bio_flagged(bio, BIO_CLONED))
--		seg_cnt = bio_segments(bio);
--	else
--		seg_cnt = bio->bi_vcnt;
-+	unsigned short seg_cnt = bio_segments(bio);
- 
- 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
- 			(seg_cnt < queue_max_segments(q)))
 -- 
-2.20.1
-
+paul moore
+www.paul-moore.com
