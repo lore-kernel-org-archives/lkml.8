@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB54C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84329C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4FF217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57373217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197841;
-	bh=1WBwtBFd/S4ZThNyRSXh2J58uFNS4zT9LBSOajQ34ak=;
+	s=default; t=1579197850;
+	bh=V+XzVa+AJikBr7Z2GJK4sPMp7Mea5rGKpfqLW5wffig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixS4oFTk4vvrYmj3UKzxoKSFtOD+hn6bHsGuHNwiWtSPeJBIpr6geKNsBw1ukYE5x
-	 pgcPp3YUe1XyZneV9Voci0hxFnrU9D9edOrfqvqC29/OnIx2bb1MVhIPK/9ZtsymBY
-	 UUj7lJwdcnRFVQF0zYo+qaADo7S2iUddKg8xrQvg=
+	b=pWtQFUC0WRD7s9jQwYQHeFOuVtIsXsuXUTuKFfwRO/D604LKYph6AtaKEyWdKHdQJ
+	 UITnaVAkl6SF/QrhsUPTdwb816UMdvcbTV+f8IF4y9WI/rZlB9E+LEaxDmUx3X7VAU
+	 u3nUaMuODmWTi4HBzNMTZNjdvdrFhd+UqgXy758c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394834AbgAPSD7 (ORCPT
+        id S2393648AbgAPRki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:03:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405570AbgAPRkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:42 -0500
+        id S2393490AbgAPRjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E60F24713;
-        Thu, 16 Jan 2020 17:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA3DB246D3;
+        Thu, 16 Jan 2020 17:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196441;
-        bh=1WBwtBFd/S4ZThNyRSXh2J58uFNS4zT9LBSOajQ34ak=;
+        s=default; t=1579196378;
+        bh=V+XzVa+AJikBr7Z2GJK4sPMp7Mea5rGKpfqLW5wffig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIWwam/41KaBySxHjPyGgf80ZlyS/zk25FppkSNHBK3qWuJbsmlFB0qratz8+9BPG
-         no5EqXGhWWVN4fwuyzc+9k591g02oeouvysQpy/+RPWBca8jOhJILlyZETvS7TjSFF
-         Zh9ejVs4TEz6eH7yrSOSLEeOJW14+2qOrvMxJnq4=
+        b=NIt4CQZQUwvPA4CmMMlqzw5ySfSy1ifA5x/0N8BM6odICs+GISaoyTpM4boyXesYx
+         MSJWPDa3Zup3Ste70DXjW4ux5d/1n0YhK8tRpbSebp91a+9hBOchxudNkMkmTVfEI6
+         7e4wybs23wFvSXBVcXoWepDc0FO4ryIs6T5Hh//E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH AUTOSEL 4.9 205/251] net: stmmac: dwmac-meson8b: Fix signedness bug in probe
-Date:   Thu, 16 Jan 2020 12:35:54 -0500
-Message-Id: <20200116173641.22137-165-sashal@kernel.org>
+Cc:     Kevin Mitchell <kevmitch@arista.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.9 162/251] iommu/amd: Make iommu_disable safer
+Date:   Thu, 16 Jan 2020 12:35:11 -0500
+Message-Id: <20200116173641.22137-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,35 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kevin Mitchell <kevmitch@arista.com>
 
-[ Upstream commit f10210517a2f37feea2edf85eb34c98977265c16 ]
+[ Upstream commit 3ddbe913e55516d3e2165d43d4d5570761769878 ]
 
-The "dwmac->phy_mode" is an enum and in this context GCC treats it as
-an unsigned int so the error handling is never triggered.
+Make it safe to call iommu_disable during early init error conditions
+before mmio_base is set, but after the struct amd_iommu has been added
+to the amd_iommu_list. For example, this happens if firmware fails to
+fill in mmio_phys in the ACPI table leading to a NULL pointer
+dereference in iommu_feature_disable.
 
-Fixes: 566e82516253 ("net: stmmac: add a glue driver for the Amlogic Meson 8b / GXBB DWMAC")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2c0ae1720c09c ('iommu/amd: Convert iommu initialization to state machine')
+Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/amd_iommu_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index f356a44bcb81..6704d3e0392d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -280,7 +280,7 @@ static int meson8b_dwmac_probe(struct platform_device *pdev)
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 9bb8d64b6f94..c113e46fdc3a 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -383,6 +383,9 @@ static void iommu_enable(struct amd_iommu *iommu)
  
- 	dwmac->pdev = pdev;
- 	dwmac->phy_mode = of_get_phy_mode(pdev->dev.of_node);
--	if (dwmac->phy_mode < 0) {
-+	if ((int)dwmac->phy_mode < 0) {
- 		dev_err(&pdev->dev, "missing phy-mode property\n");
- 		ret = -EINVAL;
- 		goto err_remove_config_dt;
+ static void iommu_disable(struct amd_iommu *iommu)
+ {
++	if (!iommu->mmio_base)
++		return;
++
+ 	/* Disable command buffer */
+ 	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
+ 
 -- 
 2.20.1
 
