@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB44C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8136CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0066D24725
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508432471A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195766;
-	bh=hGXAPjRYX+PfQxxPC5AnpLhJyztc0IJVCL33HvY/ugE=;
+	s=default; t=1579195767;
+	bh=lgZgMlXtwFFHVqMaSvAnHftx83JTossrBK2S+3ZHrFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xr20mzv9zG+dwAEGX+a4w6LMoDZjfoK3UC9y/dWdxTZ3hUU1/wOZvbZJ+lvGoOz/t
-	 PvdJn2pjujkBrQa83PFnnY6gB29Cv1uBoqiWbxumJDD+DeyE6/itB3fkNe+A8tIWQE
-	 GmvwuDbE5hs/bcwpEu8GL1IUosqVcjVkdc4zx5aY=
+	b=X+h++zzTeBjhR8t2rVr+XRN501h9/TcPmldCEN65mpWJSR/ZWgsfxk2hQSxOypEM3
+	 J86D10uZ/7QJJWHriw+0SsBoTFOYIO+M15YXYwRJmeNKtZiqnmobkysR2xMhu0rZft
+	 1ktaUEhwlzUVDkxDoLCTcMVKJkph/krVM4Sob9ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392705AbgAPR3Y (ORCPT
+        id S2392716AbgAPR30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:29:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41084 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392096AbgAPR3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:19 -0500
+        id S2392694AbgAPR3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1719724717;
-        Thu, 16 Jan 2020 17:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8F124709;
+        Thu, 16 Jan 2020 17:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195758;
-        bh=hGXAPjRYX+PfQxxPC5AnpLhJyztc0IJVCL33HvY/ugE=;
+        s=default; t=1579195762;
+        bh=lgZgMlXtwFFHVqMaSvAnHftx83JTossrBK2S+3ZHrFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Eq6oLKM7i+DS3Wbg4bc//YasSgBZZCJBUGVaLYM7t53al+rGg1H9nRkAERAeLJq4
-         gpSU8Dei1NmzsnghMEUI2j9bvQa+qs2hAaw7Oz05g6Hte4YTN4j2r5RcFhWITLvKRE
-         iXQJnOWTIjZc+WV/jieV8JCxCjbSoVslybeAt7RA=
+        b=Eh5F56RBb3nkUwH8Lpsjp3de2Trw++wtLSj8gEbikHPrl/lT93nhrGim2xwddhG+s
+         QMzFxtsxZUQd/SYgcEYU4aR1C30lG3wr/9oARaQldyE9eZaVXihZZ2sI8RltR3nNG5
+         K8QVHSs47K3usNF+kabbh/RA4/vTLE3tH0ciYdPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 288/371] tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
-Date:   Thu, 16 Jan 2020 12:22:40 -0500
-Message-Id: <20200116172403.18149-231-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 291/371] Btrfs: fix hang when loading existing inode cache off disk
+Date:   Thu, 16 Jan 2020 12:22:43 -0500
+Message-Id: <20200116172403.18149-234-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -65,97 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 1da17d7cf8e2c4b60163d54300f72c02f510327c ]
+[ Upstream commit 7764d56baa844d7f6206394f21a0e8c1f303c476 ]
 
-When dealing with 32-bit variant of LPUART IP block appropriate I/O
-helpers have to be used to properly deal with endianness
-differences. Change all of the offending code to do that.
+If we are able to load an existing inode cache off disk, we set the state
+of the cache to BTRFS_CACHE_FINISHED, but we don't wake up any one waiting
+for the cache to be available. This means that anyone waiting for the
+cache to be available, waiting on the condition that either its state is
+BTRFS_CACHE_FINISHED or its available free space is greather than zero,
+can hang forever.
 
-Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
-for lpuart32.")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20190729195226.8862-14-andrew.smirnov@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This could be observed running fstests with MOUNT_OPTIONS="-o inode_cache",
+in particular test case generic/161 triggered it very frequently for me,
+producing a trace like the following:
+
+  [63795.739712] BTRFS info (device sdc): enabling inode map caching
+  [63795.739714] BTRFS info (device sdc): disk space caching is enabled
+  [63795.739716] BTRFS info (device sdc): has skinny extents
+  [64036.653886] INFO: task btrfs-transacti:3917 blocked for more than 120 seconds.
+  [64036.654079]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
+  [64036.654143] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [64036.654232] btrfs-transacti D    0  3917      2 0x80004000
+  [64036.654239] Call Trace:
+  [64036.654258]  ? __schedule+0x3ae/0x7b0
+  [64036.654271]  schedule+0x3a/0xb0
+  [64036.654325]  btrfs_commit_transaction+0x978/0xae0 [btrfs]
+  [64036.654339]  ? remove_wait_queue+0x60/0x60
+  [64036.654395]  transaction_kthread+0x146/0x180 [btrfs]
+  [64036.654450]  ? btrfs_cleanup_transaction+0x620/0x620 [btrfs]
+  [64036.654456]  kthread+0x103/0x140
+  [64036.654464]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [64036.654476]  ret_from_fork+0x3a/0x50
+  [64036.654504] INFO: task xfs_io:3919 blocked for more than 120 seconds.
+  [64036.654568]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
+  [64036.654617] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [64036.654685] xfs_io          D    0  3919   3633 0x00000000
+  [64036.654691] Call Trace:
+  [64036.654703]  ? __schedule+0x3ae/0x7b0
+  [64036.654716]  schedule+0x3a/0xb0
+  [64036.654756]  btrfs_find_free_ino+0xa9/0x120 [btrfs]
+  [64036.654764]  ? remove_wait_queue+0x60/0x60
+  [64036.654809]  btrfs_create+0x72/0x1f0 [btrfs]
+  [64036.654822]  lookup_open+0x6bc/0x790
+  [64036.654849]  path_openat+0x3bc/0xc00
+  [64036.654854]  ? __lock_acquire+0x331/0x1cb0
+  [64036.654869]  do_filp_open+0x99/0x110
+  [64036.654884]  ? __alloc_fd+0xee/0x200
+  [64036.654895]  ? do_raw_spin_unlock+0x49/0xc0
+  [64036.654909]  ? do_sys_open+0x132/0x220
+  [64036.654913]  do_sys_open+0x132/0x220
+  [64036.654926]  do_syscall_64+0x60/0x1d0
+  [64036.654933]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix this by adding a wake_up() call right after setting the cache state to
+BTRFS_CACHE_FINISHED, at start_caching(), when we are able to load the
+cache from disk.
+
+Fixes: 82d5902d9c681b ("Btrfs: Support reading/writing on disk free ino cache")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/fsl_lpuart.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ fs/btrfs/inode-map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index fb2dcb3f8591..16422987ab0f 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -532,26 +532,26 @@ static int lpuart32_poll_init(struct uart_port *port)
- 	spin_lock_irqsave(&sport->port.lock, flags);
- 
- 	/* Disable Rx & Tx */
--	writel(0, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, 0);
- 
--	temp = readl(sport->port.membase + UARTFIFO);
-+	temp = lpuart32_read(&sport->port, UARTFIFO);
- 
- 	/* Enable Rx and Tx FIFO */
--	writel(temp | UARTFIFO_RXFE | UARTFIFO_TXFE,
--		   sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       temp | UARTFIFO_RXFE | UARTFIFO_TXFE);
- 
- 	/* flush Tx and Rx FIFO */
--	writel(UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH,
--			sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH);
- 
- 	/* explicitly clear RDRF */
--	if (readl(sport->port.membase + UARTSTAT) & UARTSTAT_RDRF) {
--		readl(sport->port.membase + UARTDATA);
--		writel(UARTFIFO_RXUF, sport->port.membase + UARTFIFO);
-+	if (lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_RDRF) {
-+		lpuart32_read(&sport->port, UARTDATA);
-+		lpuart32_write(&sport->port, UARTFIFO, UARTFIFO_RXUF);
+diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
+index d02019747d00..7dc2923655d9 100644
+--- a/fs/btrfs/inode-map.c
++++ b/fs/btrfs/inode-map.c
+@@ -159,6 +159,7 @@ static void start_caching(struct btrfs_root *root)
+ 		spin_lock(&root->ino_cache_lock);
+ 		root->ino_cache_state = BTRFS_CACHE_FINISHED;
+ 		spin_unlock(&root->ino_cache_lock);
++		wake_up(&root->ino_cache_wait);
+ 		return;
  	}
- 
- 	/* Enable Rx and Tx */
--	writel(UARTCTRL_RE | UARTCTRL_TE, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, UARTCTRL_RE | UARTCTRL_TE);
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 
- 	return 0;
-@@ -559,18 +559,18 @@ static int lpuart32_poll_init(struct uart_port *port)
- 
- static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	while (!(readl(port->membase + UARTSTAT) & UARTSTAT_TDRE))
-+	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
- 		barrier();
- 
--	writel(c, port->membase + UARTDATA);
-+	lpuart32_write(port, UARTDATA, c);
- }
- 
- static int lpuart32_poll_get_char(struct uart_port *port)
- {
--	if (!(readl(port->membase + UARTSTAT) & UARTSTAT_RDRF))
-+	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
- 		return NO_POLL_CHAR;
- 
--	return readl(port->membase + UARTDATA);
-+	return lpuart32_read(port, UARTDATA);
- }
- #endif
  
 -- 
 2.20.1
