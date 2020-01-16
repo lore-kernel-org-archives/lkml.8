@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4491CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B6A24718
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADC524730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195819;
-	bh=y4H8w1sQ1rzdjJIcSge6scSlXF12nl0/DecHmZsq0b8=;
+	s=default; t=1579195826;
+	bh=onNKvePQ5dSjlq0g96r5jBlvfg1PIt+O8/+H0jBtY4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcMJrJORpbgKYsx4kueMMFLNPUHTUZ+IUwwOEUhbZz/N5+9Lv4sdy6FBI/MZIkNkC
-	 0TvEVr2pnishmIfDG53WzbeefiTcUucnx9oVHAUmvDjJKSakgRyoUzMY2BAtuD0ilq
-	 67R6kFO4JlOHb0M6ZnZVieDqpR1XvTYa9RLMu51k=
+	b=UNeW22AqdLysbwiHKbqDz+pqada/ebCWKakUy8xv8UcqC7UwHJj3RVkDHFU1Z4Ial
+	 nx5P0cD8s/ex5f0X/qHBT2YB3Gg2i4RLYEIvmLQ0wQ3uKaG7YTiHnDDTjRSg+vmgu4
+	 4rv3Rp4WwkIeKc6K718syJDkRz7UjpvxRIUBrmLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404378AbgAPRaS (ORCPT
+        id S2404432AbgAPRaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404339AbgAPRaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:13 -0500
+        id S2404414AbgAPRaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F30D224714;
-        Thu, 16 Jan 2020 17:30:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 370DF24724;
+        Thu, 16 Jan 2020 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195813;
-        bh=y4H8w1sQ1rzdjJIcSge6scSlXF12nl0/DecHmZsq0b8=;
+        s=default; t=1579195823;
+        bh=onNKvePQ5dSjlq0g96r5jBlvfg1PIt+O8/+H0jBtY4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jB9R5GfxHI+GGjRlrZNGLPwXWIraY1WkjW2rPaXlHgzP4c7vdtqlyfjDggNc3/bpL
-         vwk+6yLF+tywjbtXhPhST6r9CqtarnkAz9QD8ous17V5G2j3ZMQaplHJoucSWksJmp
-         Mun3we2ude402T/EqFTFU9tiTGvf4SxV6kTlFLzc=
+        b=uq3i1se6vsvc7KnCZ3Uta2w23Cf0peyh99ho+fr0kexnvChScSfpVszZzzdx0o8v0
+         csSKbpas7wV6WoVSGyyDPXbuMFT+ncghK3ck+urQ9qmnb+0Z+9+fBHK+WUw2yOlPHw
+         dpFsUPvSqmq3rQVfzSSueiAEw7KJRZXVuVEJsBLQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        netem@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 324/371] net: netem: fix error path for corrupted GSO frames
-Date:   Thu, 16 Jan 2020 12:23:16 -0500
-Message-Id: <20200116172403.18149-267-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 331/371] media: ov6650: Fix some format attributes not under control
+Date:   Thu, 16 Jan 2020 12:23:23 -0500
+Message-Id: <20200116172403.18149-274-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -64,72 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit a7fa12d15855904aff1716e1fc723c03ba38c5cc ]
+[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
 
-To corrupt a GSO frame we first perform segmentation.  We then
-proceed using the first segment instead of the full GSO skb and
-requeue the rest of the segments as separate packets.
+User arguments passed to .get/set_fmt() pad operation callbacks may
+contain unsupported values.  The driver takes control over frame size
+and pixel code as well as colorspace and field attributes but has never
+cared for remainig format attributes, i.e., ycbcr_enc, quantization
+and xfer_func, introduced by commit 11ff030c7365 ("[media]
+v4l2-mediabus: improve colorspace support").  Fix it.
 
-If there are any issues with processing the first segment we
-still want to process the rest, therefore we jump to the
-finish_segs label.
+Set up a static v4l2_mbus_framefmt structure with attributes
+initialized to reasonable defaults and use it for updating content of
+user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
+postpone frame size update, now performed from inside ov6650_s_fmt()
+helper, util the user argument is first updated in ov6650_set_fmt() with
+default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
+all attributes to pad config, only those handled by the driver, then
+fill the response with the default frame format updated with resulting
+pad config format code and frame size.
 
-Commit 177b8007463c ("net: netem: fix backlog accounting for
-corrupted GSO frames") started using the pointer to the first
-segment in the "rest of segments processing", but as mentioned
-above the first segment may had already been freed at this point.
-
-Backlog corrections for parent qdiscs have to be adjusted.
-
-Fixes: 177b8007463c ("net: netem: fix backlog accounting for corrupted GSO frames")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov6650.c | 51 +++++++++++++++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index ede0a24e67eb..64c3cfa35736 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -504,6 +504,7 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 		if (skb->ip_summed == CHECKSUM_PARTIAL &&
- 		    skb_checksum_help(skb)) {
- 			qdisc_drop(skb, sch, to_free);
-+			skb = NULL;
- 			goto finish_segs;
- 		}
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 5d6a231a4163..044ede441fd6 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_Y8_1X8,
+ };
  
-@@ -580,9 +581,10 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- finish_segs:
- 	if (segs) {
- 		unsigned int len, last_len;
--		int nb = 0;
-+		int nb;
++static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
++	.width		= W_CIF,
++	.height		= H_CIF,
++	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
++	.colorspace	= V4L2_COLORSPACE_SRGB,
++	.field		= V4L2_FIELD_NONE,
++	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
++	.quantization	= V4L2_QUANTIZATION_DEFAULT,
++	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
++};
++
+ /* read a register */
+ static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
+ {
+@@ -516,11 +527,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
+ 		return -EINVAL;
  
--		len = skb->len;
-+		len = skb ? skb->len : 0;
-+		nb = skb ? 1 : 0;
++	/* initialize response with default media bus frame format */
++	*mf = ov6650_def_fmt;
++
++	/* update media bus format code and frame size */
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-	mf->field	= V4L2_FIELD_NONE;
  
- 		while (segs) {
- 			skb2 = segs->next;
-@@ -599,7 +601,8 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
- 			}
- 			segs = skb2;
- 		}
--		qdisc_tree_reduce_backlog(sch, -nb, prev_len - len);
-+		/* Parent qdiscs accounted for 1 skb of size @prev_len */
-+		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
- 	}
- 	return NET_XMIT_SUCCESS;
+ 	return 0;
  }
+@@ -659,10 +672,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 	if (!ret)
+ 		priv->code = code;
+ 
+-	if (!ret) {
+-		mf->width = priv->rect.width >> half_scale;
+-		mf->height = priv->rect.height >> half_scale;
+-	}
+ 	return ret;
+ }
+ 
+@@ -681,9 +690,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+-	mf->field = V4L2_FIELD_NONE;
+-	mf->colorspace = V4L2_COLORSPACE_SRGB;
+-
+ 	switch (mf->code) {
+ 	case MEDIA_BUS_FMT_Y10_1X10:
+ 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
+@@ -701,10 +707,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		break;
+ 	}
+ 
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		return ov6650_s_fmt(sd, mf);
+-	cfg->try_fmt = *mf;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		/* store media bus format code and frame size in pad config */
++		cfg->try_fmt.width = mf->width;
++		cfg->try_fmt.height = mf->height;
++		cfg->try_fmt.code = mf->code;
+ 
++		/* return default mbus frame format updated with pad config */
++		*mf = ov6650_def_fmt;
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
++
++	} else {
++		/* apply new media bus format code and frame size */
++		int ret = ov6650_s_fmt(sd, mf);
++
++		if (ret)
++			return ret;
++
++		/* return default format updated with active size and code */
++		*mf = ov6650_def_fmt;
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
