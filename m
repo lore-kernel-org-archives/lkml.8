@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF74AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF6E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23362073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199914;
-	bh=zC4D4MYBaF72dGuCGXktAmFfdxLO8JRLMOOUy13Gxfc=;
+	s=default; t=1579199924;
+	bh=c1D1iGIjeLhNUfMz4vz3Tua57s9QBcimf8YHK9cDP+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKZPlQ5NaIRrqGME8p8Yd/R0VeFfLaLmnINlCu9w30pRiWcrMpnSd2M69984Qkl7E
-	 2XTGkMweV+Y6KOczXMf1xbed2XxsrLCrUCuRf7SDExYlVZ0OhTr/TLULpZwh/CXtkL
-	 3a0i1weLlfLau8ZP46gPwJrydTeLM5OUtjAN8h+s=
+	b=dtXWMstNbGSqlEinj5x2FQQ5LS016i45uY+L3trQQeve8x8+4TzR4FBdtR5sQ31w8
+	 1e0r0O+URYM2lvQQFgSrAR6iowceGSyJGqeeaXbHkXs+/QA5Mf1TAItm9BKI7sdAxQ
+	 XnTabaTk9NCHrrvXboKjQJ3C5m0tAtzYo/EiWPRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436871AbgAPSid (ORCPT
+        id S2436906AbgAPSio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:38:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390482AbgAPRM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:28 -0500
+        id S2390460AbgAPRMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E87C324696;
-        Thu, 16 Jan 2020 17:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8542324696;
+        Thu, 16 Jan 2020 17:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194747;
-        bh=zC4D4MYBaF72dGuCGXktAmFfdxLO8JRLMOOUy13Gxfc=;
+        s=default; t=1579194743;
+        bh=c1D1iGIjeLhNUfMz4vz3Tua57s9QBcimf8YHK9cDP+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zy1tBCr/sw95Cj9boHnC8dpeHEKKB47+3Bfu69d4pYBL5w6zN1IkFXoDFo91G7WvH
-         sBsxFmzFW096lXF4IxoBJR904GsG1UdE3oJTmTN1FNwvBK3B7KXJGGwMe+8qbR0fl7
-         MHdjtD36VPmG7+NV4QptEtKpL+gaLhufuv68wIDQ=
+        b=j9Lh7PD6LeuxS7M/Ml9qQtHPGTspIz/PIWlbRjTdUF0AOSy+TUdaJentK2iWFwGGU
+         XNM0w142cm8Vz4XAmsCnRG0RzBaprMPOgRNZkNdgwqOAj2eNetJOBxMgmngHUvtqcO
+         8P/dX3ULvDEn3ZJVHt65taJ7Z/vnszkh/iprUCVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 576/671] rxrpc: Fix trace-after-put looking at the put connection record
-Date:   Thu, 16 Jan 2020 12:03:34 -0500
-Message-Id: <20200116170509.12787-313-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 573/671] ipv6: Handle race in addrconf_dad_work
+Date:   Thu, 16 Jan 2020 12:03:31 -0500
+Message-Id: <20200116170509.12787-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,172 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 4c1295dccc0afe0905b6ca4c62ade7f2406f2cfb ]
+[ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
 
-rxrpc_put_*conn() calls trace_rxrpc_conn() after they have done the
-decrement of the refcount - which looks at the debug_id in the connection
-record.  But unless the refcount was reduced to zero, we no longer have the
-right to look in the record and, indeed, it may be deleted by some other
-thread.
+Rajendra reported a kernel panic when a link was taken down:
 
-Fix this by getting the debug_id out before decrementing the refcount and
-then passing that into the tracepoint.
+[ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+[ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
 
-Fixes: 363deeab6d0f ("rxrpc: Add connection tracepoint and client conn state tracepoint")
-Signed-off-by: David Howells <dhowells@redhat.com>
+<snip>
+
+[ 6870.570501] Call Trace:
+[ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
+[ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
+[ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
+[ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
+[ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
+[ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
+[ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
+[ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
+[ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
+[ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
+[ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
+
+addrconf_dad_work is kicked to be scheduled when a device is brought
+up. There is a race between addrcond_dad_work getting scheduled and
+taking the rtnl lock and a process taking the link down (under rtnl).
+The latter removes the host route from the inet6_addr as part of
+addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
+to use the host route in ipv6_ifa_notify. If the down event removes
+the host route due to the race to the rtnl, then the BUG listed above
+occurs.
+
+This scenario does not occur when the ipv6 address is not kept
+(net.ipv6.conf.all.keep_addr_on_down = 0) as addrconf_ifdown sets the
+state of the ifp to DEAD. Handle when the addresses are kept by checking
+IF_READY which is reset by addrconf_ifdown.
+
+The 'dead' flag for an inet6_addr is set only under rtnl, in
+addrconf_ifdown and it means the device is getting removed (or IPv6 is
+disabled). The interesting cases for changing the idev flag are
+addrconf_notify (NETDEV_UP and NETDEV_CHANGE) and addrconf_ifdown
+(reset the flag). The former does not have the idev lock - only rtnl;
+the latter has both. Based on that the existing dead + IF_READY check
+can be moved to right after the rtnl_lock in addrconf_dad_work.
+
+Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
+Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h |  6 +++---
- net/rxrpc/call_accept.c      |  2 +-
- net/rxrpc/conn_client.c      |  6 ++++--
- net/rxrpc/conn_object.c      | 13 +++++++------
- net/rxrpc/conn_service.c     |  2 +-
- 5 files changed, 16 insertions(+), 13 deletions(-)
+ net/ipv6/addrconf.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index a08916eb7615..0924119bcfa4 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -554,10 +554,10 @@ TRACE_EVENT(rxrpc_peer,
- 	    );
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index ef309a26aba0..4cb94b5a9d39 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3978,6 +3978,12 @@ static void addrconf_dad_work(struct work_struct *w)
  
- TRACE_EVENT(rxrpc_conn,
--	    TP_PROTO(struct rxrpc_connection *conn, enum rxrpc_conn_trace op,
-+	    TP_PROTO(unsigned int conn_debug_id, enum rxrpc_conn_trace op,
- 		     int usage, const void *where),
+ 	rtnl_lock();
  
--	    TP_ARGS(conn, op, usage, where),
-+	    TP_ARGS(conn_debug_id, op, usage, where),
++	/* check if device was taken down before this delayed work
++	 * function could be canceled
++	 */
++	if (idev->dead || !(idev->if_flags & IF_READY))
++		goto out;
++
+ 	spin_lock_bh(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_PREDAD) {
+ 		action = DAD_BEGIN;
+@@ -4023,11 +4029,6 @@ static void addrconf_dad_work(struct work_struct *w)
+ 		goto out;
  
- 	    TP_STRUCT__entry(
- 		    __field(unsigned int,	conn		)
-@@ -567,7 +567,7 @@ TRACE_EVENT(rxrpc_conn,
- 			     ),
- 
- 	    TP_fast_assign(
--		    __entry->conn = conn->debug_id;
-+		    __entry->conn = conn_debug_id;
- 		    __entry->op = op;
- 		    __entry->usage = usage;
- 		    __entry->where = where;
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 8079aacaecac..c5566bc4aaca 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -88,7 +88,7 @@ static int rxrpc_service_prealloc_one(struct rxrpc_sock *rx,
- 		smp_store_release(&b->conn_backlog_head,
- 				  (head + 1) & (size - 1));
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
- 				 atomic_read(&conn->usage), here);
- 	}
- 
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index 3dbb126e6060..38d548532024 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -217,7 +217,8 @@ rxrpc_alloc_client_connection(struct rxrpc_conn_parameters *cp, gfp_t gfp)
- 	rxrpc_get_local(conn->params.local);
- 	key_get(conn->params.key);
- 
--	trace_rxrpc_conn(conn, rxrpc_conn_new_client, atomic_read(&conn->usage),
-+	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_client,
-+			 atomic_read(&conn->usage),
- 			 __builtin_return_address(0));
- 	trace_rxrpc_client(conn, -1, rxrpc_client_alloc);
- 	_leave(" = %p", conn);
-@@ -989,11 +990,12 @@ rxrpc_put_one_client_conn(struct rxrpc_connection *conn)
- void rxrpc_put_client_conn(struct rxrpc_connection *conn)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = conn->debug_id;
- 	int n;
- 
- 	do {
- 		n = atomic_dec_return(&conn->usage);
--		trace_rxrpc_conn(conn, rxrpc_conn_put_client, n, here);
-+		trace_rxrpc_conn(debug_id, rxrpc_conn_put_client, n, here);
- 		if (n > 0)
- 			return;
- 		ASSERTCMP(n, >=, 0);
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 004a6eb529bc..f338efd2880a 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -272,7 +272,7 @@ bool rxrpc_queue_conn(struct rxrpc_connection *conn)
- 	if (n == 0)
- 		return false;
- 	if (rxrpc_queue_work(&conn->processor))
--		trace_rxrpc_conn(conn, rxrpc_conn_queued, n + 1, here);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_queued, n + 1, here);
- 	else
- 		rxrpc_put_connection(conn);
- 	return true;
-@@ -287,7 +287,7 @@ void rxrpc_see_connection(struct rxrpc_connection *conn)
- 	if (conn) {
- 		int n = atomic_read(&conn->usage);
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_seen, n, here);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_seen, n, here);
- 	}
- }
- 
-@@ -299,7 +299,7 @@ void rxrpc_get_connection(struct rxrpc_connection *conn)
- 	const void *here = __builtin_return_address(0);
- 	int n = atomic_inc_return(&conn->usage);
- 
--	trace_rxrpc_conn(conn, rxrpc_conn_got, n, here);
-+	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n, here);
- }
- 
- /*
-@@ -313,7 +313,7 @@ rxrpc_get_connection_maybe(struct rxrpc_connection *conn)
- 	if (conn) {
- 		int n = atomic_fetch_add_unless(&conn->usage, 1, 0);
- 		if (n > 0)
--			trace_rxrpc_conn(conn, rxrpc_conn_got, n + 1, here);
-+			trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n + 1, here);
- 		else
- 			conn = NULL;
- 	}
-@@ -336,10 +336,11 @@ static void rxrpc_set_service_reap_timer(struct rxrpc_net *rxnet,
- void rxrpc_put_service_conn(struct rxrpc_connection *conn)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id = conn->debug_id;
- 	int n;
- 
- 	n = atomic_dec_return(&conn->usage);
--	trace_rxrpc_conn(conn, rxrpc_conn_put_service, n, here);
-+	trace_rxrpc_conn(debug_id, rxrpc_conn_put_service, n, here);
- 	ASSERTCMP(n, >=, 0);
- 	if (n == 1)
- 		rxrpc_set_service_reap_timer(conn->params.local->rxnet,
-@@ -423,7 +424,7 @@ void rxrpc_service_connection_reaper(struct work_struct *work)
- 		 */
- 		if (atomic_cmpxchg(&conn->usage, 1, 0) != 1)
- 			continue;
--		trace_rxrpc_conn(conn, rxrpc_conn_reap_service, 0, NULL);
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_reap_service, 0, NULL);
- 
- 		if (rxrpc_conn_is_client(conn))
- 			BUG();
-diff --git a/net/rxrpc/conn_service.c b/net/rxrpc/conn_service.c
-index 80773a50c755..6da7c4bf15e8 100644
---- a/net/rxrpc/conn_service.c
-+++ b/net/rxrpc/conn_service.c
-@@ -138,7 +138,7 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
- 		list_add_tail(&conn->proc_link, &rxnet->conn_proc_list);
- 		write_unlock(&rxnet->conn_lock);
- 
--		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
-+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
- 				 atomic_read(&conn->usage),
- 				 __builtin_return_address(0));
- 	}
+ 	write_lock_bh(&idev->lock);
+-	if (idev->dead || !(idev->if_flags & IF_READY)) {
+-		write_unlock_bh(&idev->lock);
+-		goto out;
+-	}
+-
+ 	spin_lock(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_DEAD) {
+ 		spin_unlock(&ifp->lock);
 -- 
 2.20.1
 
