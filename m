@@ -2,160 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE81FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A02A20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E37620728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gbaHBSoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgAPGOD (ORCPT
+        id S1730470AbgAPGSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:14:03 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41028 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726513AbgAPGOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:14:03 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 02DAF9C7ADC8FB4C99BB;
-        Thu, 16 Jan 2020 14:14:00 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 Jan 2020
- 14:13:53 +0800
-Subject: Re: [PATCH v3 29/32] KVM: arm64: GICv4.1: Allow SGIs to switch
- between HW and SW interrupts
-To:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-30-maz@kernel.org>
- <cc5fe20c-7a0c-c266-e78a-2a85963ab20f@hisilicon.com>
- <6e24d53e-64d9-a682-6753-9e16155c7fde@huawei.com>
- <c30b23cf220a4b2965a42ea87b27285f@kernel.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <081e74f7-5f0a-bdab-fd67-a3ed79a42e63@hisilicon.com>
-Date:   Thu, 16 Jan 2020 14:13:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Thu, 16 Jan 2020 01:18:20 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:44390 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgAPGSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:18:20 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6Df5J006639;
+        Thu, 16 Jan 2020 06:18:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=thM1DU+ci72geM1S8as2qtc2X97JclnuS2KhKwDxVtM=;
+ b=gbaHBSoUq9DJ0mkHpuVLRvItOlqO/0ixqhK7g0BIV5DtMWrLd0FBvD2AWyggbML1zx/s
+ 0/z5qydhFCw1y5nBlNLXx/5zy9ofMSb0MC5MVSvRHK0/34x9CtJTmbUwxyxuxqqG2+Fo
+ JeAEKnd/nTvY5uGY5vYQNRI6yP9Dl42jo4X4Owgl+x5+G1LjsRjAlRet8eCkRUH4ubrC
+ guvKTJrwjYBSGn2Jj7Jz8fUNWFCAPFiIPj1a3Z5JZlyUHxM4M+RwuSpQ94fe6iXJvfH2
+ coalhiFLT9w8AjtlIeSDWK6+xN4+Eg2DOnnBGPbZRXISjcL/tcocRw4O9eTHHolbpaC8 3g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73u0d6f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 06:18:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6DdfK038228;
+        Thu, 16 Jan 2020 06:18:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2xhy22qh0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 06:18:07 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G6I62l027636;
+        Thu, 16 Jan 2020 06:18:06 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 22:18:06 -0800
+Date:   Wed, 15 Jan 2020 22:18:04 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
+Message-ID: <20200116061804.GI8257@magnolia>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-2-ira.weiny@intel.com>
+ <20200115113715.GB2595@quack2.suse.cz>
+ <20200115173834.GD8247@magnolia>
+ <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
+ <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
+ <20200116053935.GB8235@magnolia>
+ <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c30b23cf220a4b2965a42ea87b27285f@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/1/15 21:32, Marc Zyngier wrote:
-> On 2020-01-15 03:49, Zenghui Yu wrote:
->> Hi,
->>
->> On 2020/1/15 10:49, Shaokun Zhang wrote:
->>> Hi Marc, [This is from Nianyao]
->>>
->>> On 2019/12/24 19:10, Marc Zyngier wrote:
->>>> In order to let a guest buy in the new, active-less SGIs, we
->>>> need to be able to switch between the two modes.
->>>>
->>>> Handle this by stopping all guest activity, transfer the state
->>>> from one mode to the other, and resume the guest.
->>>>
->>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>> ---
->>
->> [...]
->>
->>>> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
->>>> index c2fcde104ea2..063785fd2dc7 100644
->>>> --- a/virt/kvm/arm/vgic/vgic-v4.c
->>>> +++ b/virt/kvm/arm/vgic/vgic-v4.c
->>>> @@ -97,6 +97,102 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
->>>>       return IRQ_HANDLED;
->>>>   }
->>>>   +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
->>>> +{
->>>> +    vpe->sgi_config[irq->intid].enabled    = irq->enabled;
->>>> +    vpe->sgi_config[irq->intid].group     = irq->group;
->>>> +    vpe->sgi_config[irq->intid].priority    = irq->priority;
->>>> +}
->>>> +
->>>> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +    struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
->>>> +    int i;
->>>> +
->>>> +    /*
->>>> +     * With GICv4.1, every virtual SGI can be directly injected. So
->>>> +     * let's pretend that they are HW interrupts, tied to a host
->>>> +     * IRQ. The SGI code will do its magic.
->>>> +     */
->>>> +    for (i = 0; i < VGIC_NR_SGIS; i++) {
->>>> +        struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
->>>> +        struct irq_desc *desc;
->>>> +        int ret;
->>>> +
->>>> +        if (irq->hw) {
->>>> +            vgic_put_irq(vcpu->kvm, irq);
->>>> +            continue;
->>>> +        }
->>>> +
->>>> +        irq->hw = true;
->>>> +        irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
->>>
->>> I think we need to check whether irq_find_mapping returns 0.
->>>
->>>> +        vgic_v4_sync_sgi_config(vpe, irq);
->>>> +        /*
->>>> +         * SGIs are initialised as disabled. Enable them if
->>>> +         * required by the rest of the VGIC init code.
->>>> +         */
->>>> +        desc = irq_to_desc(irq->host_irq);
->>>> +        ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
->>>> +                          false);
->>>
->>> If irq->host_irq is not valid , in irq_domain_activate_irq, it will trigger NULL pointer
->>> dereference in host kernel.
->>> I meet a problem here. When hw support GIC4.1, and host kernel is started with
->>> kvm-arm.vgic_v4_enable=0, starting a virtual machine will trigger NULL pointer
->>> dereference in host.
->>
->> I think the thing is that we should _not_ try to configure vSGIs at all
->> if kvm-arm.vgic_v4_enable=0 (which indicates we don't allow use of the
->> GICv4 of direct injection).
->>
->> We currently set kvm_vgic_global_state.has_gicv4_1 to true if HW support
->> GICv4.1, regardless whatever the gicv4_enable is (see patch#23 -
->> vgic_v3_probe).  I think this is what actually needs fixing.
+On Wed, Jan 15, 2020 at 10:05:00PM -0800, Dan Williams wrote:
+> On Wed, Jan 15, 2020 at 9:39 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> [..]
+> > >         attempts to minimize software cache effects for both I/O and
+> > >         memory mappings of this file.  It requires a file system which
+> > >         has been configured to support DAX.
+> > >
+> > >         DAX generally assumes all accesses are via cpu load / store
+> > >         instructions which can minimize overhead for small accesses, but
+> > >         may adversely affect cpu utilization for large transfers.
+> > >
+> > >         File I/O is done directly to/from user-space buffers and memory
+> > >         mapped I/O may be performed with direct memory mappings that
+> > >         bypass kernel page cache.
+> > >
+> > >         While the DAX property tends to result in data being transferred
+> > >         synchronously, it does not give the same guarantees of
+> > >         synchronous I/O where data and the necessary metadata are
+> > >         transferred together.
+> >
+> > (I'm frankly not sure that synchronous I/O actually guarantees that the
+> > metadata has hit stable storage...)
 > 
-> Yes, my point exactly. I've pushed out a potential fix [1], and I'd be
-> grateful if you could let me know whether that fixes it for you.
-> 
+> Oh? That text was motivated by the open(2) man page description of O_SYNC.
 
-Nianyao has tested the patch, it works.
+Eh, that's just me being cynical about software.  Yes, the O_SYNC docs
+say that data+metadata are supposed to happen; that's good enough for
+another section in the man pages. :)
 
-Thanks for your quick reply.
-
-
-> Thanks,
-> 
->         M.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/gic-v4.1-devel&id=b82c2ee1d3fef66fb85793965c344260f618219d
-
+--D
