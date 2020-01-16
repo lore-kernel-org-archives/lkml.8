@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61720C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7916FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B7524699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE8E24699
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195458;
-	bh=tdZMzdbq4gVQ5twnlrKuGhiga9ypKlA/c7vC+XIRG1s=;
+	s=default; t=1579195460;
+	bh=OvR6d+GuurWj3pV1jLo6SNT47v2bz6Kyw8Ptl/ssFBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ol+wY1T89qYZhZ3vqd+NY7736i6ZpY3dD01LtPmAk86Ukz4mI3C3plz3ZyMZrTSa2
-	 u640AtEWSiWem2IiI3bmaCobgV0QtDglG2ubG6tGHWTbdZDakc5rVc+mdyjk3gockG
-	 7Rn/BUk8lV6MJLJEBtLpgHJv7SqhwzXsyg9UO4pM=
+	b=IBPxJ/dYNHSfikogsElQQ4wXyD4n1STIjtlSCfpBnSZ/2vOVbe5eFAk37Egl6uV7u
+	 s5mvYwxM/AmCh2+dkuvmU1/GilIx1jF6895t9Xp2q+qIg62QuPbLz3j97gl3DxdbaZ
+	 gvQUQeUjH3yRzKLa6iUDDXBdFe6Dy+UcfArNRr6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390396AbgAPRYR (ORCPT
+        id S2391720AbgAPRYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58220 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:24:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391682AbgAPRYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:10 -0500
+        id S2391693AbgAPRYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46F1124688;
-        Thu, 16 Jan 2020 17:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8599E2468E;
+        Thu, 16 Jan 2020 17:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195450;
-        bh=tdZMzdbq4gVQ5twnlrKuGhiga9ypKlA/c7vC+XIRG1s=;
+        s=default; t=1579195453;
+        bh=OvR6d+GuurWj3pV1jLo6SNT47v2bz6Kyw8Ptl/ssFBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+4fsOLzYRPeRL2inLGArit2Tlhsrgjp5dCj1R+81zlOj2iV+2y/4/GN73OQWW0Wk
-         R+8O3xX/AT56SvjznkAMczOKOK5/YnopW1IyVxHz9EuDOQtaSll0rM1OEuEguHtPl+
-         1+Qguq4Gwg+c3QAOzm6cF4e3MQ3IGHQQPcVEqlq8=
+        b=ZlMex3M1vYNkcbd5Y5tA4vIlW6w1K52Ud0pYUr7azPzgjIUjX3npzCg+Xubx/ZMv5
+         F+ZyzuMG59TpFJdYFFtOHUBaYOVT7WoE64a5REZC1GaOJ47CrO0qi5mBgIwNdbCf2P
+         JlyRzg+HR608yxui7JPB7b465w0nL02zJcfCJbN0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 061/371] crypto: tgr192 - fix unaligned memory access
-Date:   Thu, 16 Jan 2020 12:18:53 -0500
-Message-Id: <20200116172403.18149-4-sashal@kernel.org>
+Cc:     Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 063/371] IB/iser: Pass the correct number of entries for dma mapped SGL
+Date:   Thu, 16 Jan 2020 12:18:55 -0500
+Message-Id: <20200116172403.18149-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,48 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-[ Upstream commit f990f7fb58ac8ac9a43316f09a48cff1a49dda42 ]
+[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
 
-Fix an unaligned memory access in tgr192_transform() by using the
-unaligned access helpers.
+ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
+change the number of entries and the lengths of each entry.
 
-Fixes: 06ace7a9bafe ("[CRYPTO] Use standard byte order macros wherever possible")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Code that touches dma_address is iterating over the 'dma mapped SGL' and
+must use dma_nents which returned from ib_dma_map_sg().
+
+ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
+dma_nents.
+
+Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
+Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/tgr192.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/crypto/tgr192.c b/crypto/tgr192.c
-index 321bc6ff2a9d..904c8444aa0a 100644
---- a/crypto/tgr192.c
-+++ b/crypto/tgr192.c
-@@ -25,8 +25,9 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/mm.h>
--#include <asm/byteorder.h>
- #include <linux/types.h>
-+#include <asm/byteorder.h>
-+#include <asm/unaligned.h>
+diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
+index 322209d5ff58..19883169e7b7 100644
+--- a/drivers/infiniband/ulp/iser/iser_memory.c
++++ b/drivers/infiniband/ulp/iser/iser_memory.c
+@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
+ 	page_vec->npages = 0;
+ 	page_vec->fake_mr.page_size = SIZE_4K;
+ 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
+-			      mem->size, NULL, iser_set_page);
+-	if (unlikely(plen < mem->size)) {
++			      mem->dma_nents, NULL, iser_set_page);
++	if (unlikely(plen < mem->dma_nents)) {
+ 		iser_err("page vec too short to hold this SG\n");
+ 		iser_data_buf_dump(mem, device->ib_device);
+ 		iser_dump_page_vec(page_vec);
+@@ -450,10 +450,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
  
- #define TGR192_DIGEST_SIZE 24
- #define TGR160_DIGEST_SIZE 20
-@@ -468,10 +469,9 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
- 	u64 a, b, c, aa, bb, cc;
- 	u64 x[8];
- 	int i;
--	const __le64 *ptr = (const __le64 *)data;
+ 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
  
- 	for (i = 0; i < 8; i++)
--		x[i] = le64_to_cpu(ptr[i]);
-+		x[i] = get_unaligned_le64(data + i * sizeof(__le64));
+-	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
+-	if (unlikely(n != mem->size)) {
++	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
++	if (unlikely(n != mem->dma_nents)) {
+ 		iser_err("failed to map sg (%d/%d)\n",
+-			 n, mem->size);
++			 n, mem->dma_nents);
+ 		return n < 0 ? n : -EINVAL;
+ 	}
  
- 	/* save */
- 	a = aa = tctx->a;
 -- 
 2.20.1
 
