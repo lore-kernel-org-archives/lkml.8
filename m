@@ -2,112 +2,240 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75321C47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3604AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D25C2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0868F2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgAPKiX (ORCPT
+        id S1726553AbgAPKid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:38:23 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:35416 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbgAPKiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:38:23 -0500
-Received: from [109.168.11.45] (port=50858 helo=[192.168.101.73])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1is2Xb-00053Y-OV; Thu, 16 Jan 2020 11:38:20 +0100
-Subject: Re: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200106074905.14438-1-luca@lucaceresoli.net>
- <20200116104907.3f2de4d0@endymion>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <7809c0c2-1d83-cc95-b258-644ea8315f86@lucaceresoli.net>
-Date:   Thu, 16 Jan 2020 11:38:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 05:38:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42464 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbgAPKic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:38:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 59757AF0D;
+        Thu, 16 Jan 2020 10:38:29 +0000 (UTC)
+References: <0000000000002b81b70590a83ad7@google.com> <20200114143244.20739-1-rpalethorpe@suse.com> <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Richard Palethorpe <rpalethorpe@suse.de>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
+        linux-can@vger.kernel.org,
+        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tyler Hall <tylerwhall@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller@googlegroups.com
+Subject: Re: [PATCH] can, slip: Protect tty->disc_data access with RCU
+Reply-To: rpalethorpe@suse.de
+In-reply-to: <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
+Date:   Thu, 16 Jan 2020 11:38:28 +0100
+Message-ID: <87v9pbit3v.fsf@our.domain.is.not.set>
 MIME-Version: 1.0
-In-Reply-To: <20200116104907.3f2de4d0@endymion>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean, Peter,
 
-thanks both for your reviews.
+Eric Dumazet <eric.dumazet@gmail.com> writes:
 
-On 16/01/20 10:49, Jean Delvare wrote:
-> On Mon,  6 Jan 2020 08:49:05 +0100, Luca Ceresoli wrote:
->> Some of the section names are not very clear. Reading those names in the
->> index.rst page does not help much in grasping what the content is supposed
->> to be.
+> On 1/14/20 6:32 AM, Richard Palethorpe wrote:
+>> write_wakeup can happen in parallel with close where tty->disc_data is set
+>> to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
+>> is an atomic operation. Otherwise accessing tty->disc_data could result in
+>> a NULL pointer deref or access to some random location.
 >>
->> Rename those sections to clarify their content, especially when reading
->> the index page.
+>> This problem was found by Syzkaller on slcan, but the same issue appears to
+>> exist in slip where slcan was copied from.
 >>
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> Acked-by: Peter Rosin <peda@axentia.se>
+>> A fix which didn't use RCU was posted by Hillf Danton.
+>>
+>> Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
+>> Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
+>> Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
+>> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+>> Cc: Wolfgang Grandegger <wg@grandegger.com>
+>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: Tyler Hall <tylerwhall@gmail.com>
+>> Cc: netdev@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: syzkaller@googlegroups.com
 >> ---
 >>
->> Note: here checkpatch complains:
+>> Note, that mabye RCU should also applied to receive_buf as that also happens
+>> in interrupt context. So if the pointer assignment is split by the compiler
+>> then sl may point somewhere unexpected?
 >>
->>   WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+>>  drivers/net/can/slcan.c | 11 +++++++++--
+>>  drivers/net/slip/slip.c | 11 +++++++++--
+>>  2 files changed, 18 insertions(+), 4 deletions(-)
 >>
->> Thas's because those files have no license line. I would gladly add a
->> proper license line, but what it the correct license here? Should I ask the
->> authors? GPLv2-only as the kernel default?
+>> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+>> index 2e57122f02fb..ee029aae69d4 100644
+>> --- a/drivers/net/can/slcan.c
+>> +++ b/drivers/net/can/slcan.c
+>> @@ -344,7 +344,14 @@ static void slcan_transmit(struct work_struct *work)
+>>   */
+>>  static void slcan_write_wakeup(struct tty_struct *tty)
+>>  {
+>> -	struct slcan *sl = tty->disc_data;
+>> +	struct slcan *sl;
+>> +
+>> +	rcu_read_lock();
+>> +	sl = rcu_dereference(tty->disc_data);
+>> +	rcu_read_unlock();
+>
+> This rcu_read_lock()/rcu_read_unlock() pair is not protecting anything.
+>
+> Right after rcu_read_unlock(), sl validity can not be guaranteed.
+>
+>> +
+>> +	if (!sl)
+>> +		return;
 >>
->> I'd appreciate a guidance here, thanks in advance.
-> 
-> I don't think we need a license for such documentation files, so I
-> would just ignore checkpatch.
+>>  	schedule_work(&sl->tx_work);
+>>  }
+>> @@ -644,7 +651,7 @@ static void slcan_close(struct tty_struct *tty)
+>>  		return;
+>>
+>>  	spin_lock_bh(&sl->lock);
+>> -	tty->disc_data = NULL;
+>> +	rcu_assign_pointer(tty->disc_data, NULL);
+>>  	sl->tty = NULL;
+>>  	spin_unlock_bh(&sl->lock);
+>
+>
+>
+> Where is the rcu grace period before freeing enforced ?
+>
 
-That's OK for me.
+Sorry that was dumb.
 
->> diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
->> index fc69d9567d9d..ae3bbb9fd8f1 100644
->> --- a/Documentation/i2c/summary.rst
->> +++ b/Documentation/i2c/summary.rst
->> @@ -1,6 +1,6 @@
->> -=============
->> -I2C and SMBus
->> -=============
->> +==============================
->> +Introductions to I2C and SMBus
->> +==============================
-> 
-> I would use "Introduction", singular.
+I have respun the patch so it now schedules the work inside the RCU read
+lock and it synchronises before freeing the netdev.
 
-Me too! Fix queued for v2.
+However sparse complains about the address space of the pointer. I guess
+if disc_data is to be protected by RCU then it should be marked as
+such...
 
-Peter, I assume I can keep your Acked-by in v2 with this small change.
+I suppose that at least the access in slip/slcan_receive_buf should also
+be protected by RCU? It seems like disc_data could be freed from
+underneath it by close.
 
--- 
-Luca
+At any rate below is the updated patch FYI.
+
+-- >8 --
+
+Subject: [PATCH v2] can, slip: Protect tty->disc_data access with RCU
+
+write_wakeup can happen in parallel with close where tty->disc_data is set
+to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
+is an atomic operation. Otherwise accessing tty->disc_data could result in a
+NULL pointer deref or access to some random location.
+
+This problem was found by Syzkaller on slcan, but the same issue appears to
+exist in slip where slcan was copied from.
+
+A fix which didn't use RCU was posted by Hillf Danton.
+
+Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
+Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
+Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
+Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Tyler Hall <tylerwhall@gmail.com>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: syzkaller@googlegroups.com
+---
+ drivers/net/can/slcan.c | 12 ++++++++++--
+ drivers/net/slip/slip.c | 12 ++++++++++--
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
+index 2e57122f02fb..2f5c287eac95 100644
+--- a/drivers/net/can/slcan.c
++++ b/drivers/net/can/slcan.c
+@@ -344,9 +344,16 @@ static void slcan_transmit(struct work_struct *work)
+  */
+ static void slcan_write_wakeup(struct tty_struct *tty)
+ {
+-	struct slcan *sl = tty->disc_data;
++	struct slcan *sl;
++
++	rcu_read_lock();
++	sl = rcu_dereference(tty->disc_data);
++	if (!sl)
++		goto out;
+
+ 	schedule_work(&sl->tx_work);
++out:
++	rcu_read_unlock();
+ }
+
+ /* Send a can_frame to a TTY queue. */
+@@ -644,10 +651,11 @@ static void slcan_close(struct tty_struct *tty)
+ 		return;
+
+ 	spin_lock_bh(&sl->lock);
+-	tty->disc_data = NULL;
++	rcu_assign_pointer(tty->disc_data, NULL);
+ 	sl->tty = NULL;
+ 	spin_unlock_bh(&sl->lock);
+
++	synchronize_rcu();
+ 	flush_work(&sl->tx_work);
+
+ 	/* Flush network side */
+diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+index 2a91c192659f..61d7e0d1d77d 100644
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -452,9 +452,16 @@ static void slip_transmit(struct work_struct *work)
+  */
+ static void slip_write_wakeup(struct tty_struct *tty)
+ {
+-	struct slip *sl = tty->disc_data;
++	struct slip *sl;
++
++	rcu_read_lock();
++	sl = rcu_dereference(tty->disc_data);
++	if (!sl)
++		goto out;
+
+ 	schedule_work(&sl->tx_work);
++out:
++	rcu_read_unlock();
+ }
+
+ static void sl_tx_timeout(struct net_device *dev)
+@@ -882,10 +889,11 @@ static void slip_close(struct tty_struct *tty)
+ 		return;
+
+ 	spin_lock_bh(&sl->lock);
+-	tty->disc_data = NULL;
++	rcu_assign_pointer(tty->disc_data, NULL);
+ 	sl->tty = NULL;
+ 	spin_unlock_bh(&sl->lock);
+
++	synchronize_rcu();
+ 	flush_work(&sl->tx_work);
+
+ 	/* VSV = very important to remove timers */
+--
+2.24.0
