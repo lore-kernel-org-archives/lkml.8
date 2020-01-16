@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FABC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7D82467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0A62467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194580;
-	bh=aFuI9s9qrYGvRS3aJIBpExQNugQRFOhhIn8THPtBKoo=;
+	s=default; t=1579194584;
+	bh=LRE46spzsK1yi2Y1AgFPyTpW5VLwK4ZFCsLOMK/Y3gY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTU1NdD+Q5BIwycp5maUQUFxfw0YUjRIyyr21BRVrIcIaidGoLURF4uOc+QSyKHAc
-	 MwEZe3dg+l/suOXBVAKPYWTJNy8XacyYnPEp54QBa26TfsioKtcneATyiFwH5BG9Gy
-	 rNBkrYnl3EPH4Yo2xKq27abLFwk8hTDWKQ/hTbUg=
+	b=rfkQoohIUtRe3M1MeLyy/zAmfZupzCOB6EOTIRwZhIT0FoZqxOs0MGFo3uLyj//t2
+	 RGCItTThptUyHii0ALEYlTx8CxWjTFBQ7cVcqLUBAZmVx1kZcRluMHcEu9xgWMwlOY
+	 C9tXh1B4In+3w2gI/A1rZBlWkkNfexqN+rbJQddA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389724AbgAPRJj (ORCPT
+        id S2389731AbgAPRJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389689AbgAPRJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:29 -0500
+        id S2389385AbgAPRJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C19B24686;
-        Thu, 16 Jan 2020 17:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BFFC21D56;
+        Thu, 16 Jan 2020 17:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194569;
-        bh=aFuI9s9qrYGvRS3aJIBpExQNugQRFOhhIn8THPtBKoo=;
+        s=default; t=1579194574;
+        bh=LRE46spzsK1yi2Y1AgFPyTpW5VLwK4ZFCsLOMK/Y3gY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6Wwm9cfTpwTEcc321Q2yGt7PJg9zR1zcxvro7wJCQCwpbYJ9CN3zB5HSdZb2u03A
-         FjsznxaEvP+2INjOWgjUZb7H7HqUPAFVtDiEYrtxyFUUUa9f9L6qXOIbwsr/ukV//t
-         ZYcIlPFZoU66wqlVewQfSOGqZG1krmDDSHk4ydcg=
+        b=A5glCQDZbUWFc0bC+2n1ezx0QLFlU2Ogva5eUPFawCGs3sNOLXrIeTAZxayA3gcxb
+         mQgICiYLkE9kPMl7G3nfreGM/RmWqbchmQOc4DBK8H6737ddxkayM/gmUZx2C67Sy6
+         d+UfD1tAh+ovxmR2KusB6xPlHas5Qei7zcDniOGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Robert R . Howell" <RHowell@uwyo.edu>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 447/671] PM: ACPI/PCI: Resume all devices during hibernation
-Date:   Thu, 16 Jan 2020 12:01:25 -0500
-Message-Id: <20200116170509.12787-184-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Lei YU <mine260309@gmail.com>,
+        John Wang <wangzqbj@inspur.com>, Joel Stanley <joel@jms.id.au>,
+        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 450/671] fsi/core: Fix error paths on CFAM init
+Date:   Thu, 16 Jan 2020 12:01:28 -0500
+Message-Id: <20200116170509.12787-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,87 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 501debd4aa5edc755037c39ea5a8fba23b41e580 ]
+[ Upstream commit 371975b0b07520c85098652d561639837a60a905 ]
 
-Both the PCI bus type and the ACPI PM domain avoid resuming
-runtime-suspended devices with DPM_FLAG_SMART_SUSPEND set during
-hibernation (before creating the snapshot image of system memory),
-but that turns out to be a mistake.  It leads to functional issues
-and adds complexity that's hard to justify.
+Change d1dcd67825 re-worked the struct fsi_slave initialisation in
+fsi_slave_init, but introduced a few inconsitencies: the slave->dev is
+now registered through cdev_device_add, but we may kfree() the device
+out from underneath the cdev registration. We may also leave an IDA
+allocated.
 
-For this reason, resume all runtime-suspended PCI devices and all
-devices in the ACPI PM domains before creating a snapshot image of
-system memory during hibernation.
+This change fixes the error paths, so that we kfree() only before the
+device is registered with the core code. We also move the smode write to
+before we start creating proper devices, as it's the most likely to
+fail. We also remove the IDA-allocated minor on error, and properly
+clean up the of_node.
 
-Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
-Fixes: c4b65157aeef (PCI / PM: Take SMART_SUSPEND driver flag into account)
-Link: https://lore.kernel.org/linux-acpi/917d4399-2e22-67b1-9d54-808561f9083f@uwyo.edu/T/#maf065fe6e4974f2a9d79f332ab99dfaba635f64c
-Reported-by: Robert R. Howell <RHowell@uwyo.edu>
-Tested-by: Robert R. Howell <RHowell@uwyo.edu>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: d1dcd6782576 ("fsi: Add cfam char devices")
+Reported-by: Lei YU <mine260309@gmail.com>
+Tested-by: John Wang <wangzqbj@inspur.com>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/device_pm.c | 13 +++++++------
- drivers/pci/pci-driver.c | 16 ++++++++--------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ drivers/fsi/fsi-core.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index e0927c5fd282..11b7a1632e5a 100644
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1116,13 +1116,14 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
- int acpi_subsys_freeze(struct device *dev)
- {
- 	/*
--	 * This used to be done in acpi_subsys_prepare() for all devices and
--	 * some drivers may depend on it, so do it here.  Ideally, however,
--	 * runtime-suspended devices should not be touched during freeze/thaw
--	 * transitions.
-+	 * Resume all runtime-suspended devices before creating a snapshot
-+	 * image of system memory, because the restore kernel generally cannot
-+	 * be expected to always handle them consistently and they need to be
-+	 * put into the runtime-active metastate during system resume anyway,
-+	 * so it is better to ensure that the state saved in the image will be
-+	 * always consistent with that.
- 	 */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
--		pm_runtime_resume(dev);
-+	pm_runtime_resume(dev);
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index c6fa9b393e84..bd62236d3f97 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1060,6 +1060,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
  
- 	return pm_generic_freeze(dev);
- }
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index e69af9b8361d..5def4b74d54a 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -996,15 +996,15 @@ static int pci_pm_freeze(struct device *dev)
  	}
  
- 	/*
--	 * This used to be done in pci_pm_prepare() for all devices and some
--	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
--	 * devices should not be touched during freeze/thaw transitions,
--	 * however.
-+	 * Resume all runtime-suspended devices before creating a snapshot
-+	 * image of system memory, because the restore kernel generally cannot
-+	 * be expected to always handle them consistently and they need to be
-+	 * put into the runtime-active metastate during system resume anyway,
-+	 * so it is better to ensure that the state saved in the image will be
-+	 * always consistent with that.
- 	 */
--	if (!dev_pm_smart_suspend_and_suspended(dev)) {
--		pm_runtime_resume(dev);
--		pci_dev->state_saved = false;
--	}
-+	pm_runtime_resume(dev);
-+	pci_dev->state_saved = false;
++	rc = fsi_slave_set_smode(slave);
++	if (rc) {
++		dev_warn(&master->dev,
++				"can't set smode on slave:%02x:%02x %d\n",
++				link, id, rc);
++		goto err_free;
++	}
++
+ 	/* Allocate a minor in the FSI space */
+ 	rc = __fsi_get_new_minor(slave, fsi_dev_cfam, &slave->dev.devt,
+ 				 &slave->cdev_idx);
+@@ -1071,17 +1079,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	rc = cdev_device_add(&slave->cdev, &slave->dev);
+ 	if (rc) {
+ 		dev_err(&slave->dev, "Error %d creating slave device\n", rc);
+-		goto err_free;
++		goto err_free_ida;
+ 	}
  
- 	if (pm->freeze) {
- 		int error;
+-	rc = fsi_slave_set_smode(slave);
+-	if (rc) {
+-		dev_warn(&master->dev,
+-				"can't set smode on slave:%02x:%02x %d\n",
+-				link, id, rc);
+-		kfree(slave);
+-		return -ENODEV;
+-	}
++	/* Now that we have the cdev registered with the core, any fatal
++	 * failures beyond this point will need to clean up through
++	 * cdev_device_del(). Fortunately though, nothing past here is fatal.
++	 */
++
+ 	if (master->link_config)
+ 		master->link_config(master, link,
+ 				    slave->t_send_delay,
+@@ -1098,10 +1103,13 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
+ 				rc);
+ 
+-	return rc;
++	return 0;
+ 
+- err_free:
+-	put_device(&slave->dev);
++err_free_ida:
++	fsi_free_minor(slave->dev.devt);
++err_free:
++	of_node_put(slave->dev.of_node);
++	kfree(slave);
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
