@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A21BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B829C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D8F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C722073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199972;
-	bh=sfpKkZFrh5g6jwVycqE/JJD+LVoEXASUDwo3JwoTaeI=;
+	s=default; t=1579199982;
+	bh=Jkk9BBeYQ0OeLiIG3SfJOj/YsdJw4csXiPp2Uzx5mcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CWbHoB/LG2fvV6xEGAgZxSPlZuh1eai3tZ8L8vX8gCmJbpQPo7oz6gQUjanL9FJkC
-	 4SPrCZDV90/KwVAaLjQPB0ClhEzQya0crbEhPhmmkqWebtC3gBcvnG2PRJf7WHIa9x
-	 J0mieEaFmQAHpxl4EcTVWF0zlo2aLI9FH70li+0w=
+	b=G98hMXOIqiRr71bkJmgz9Dt+1wDLDelZTMQMNotykC7hHdQ6lbH2FLJ5BK1d+wwVx
+	 Cinf5n9UaTcXC0VpmNAhCDoUl10JCjsMNFkgUk2TfKdbYGEKwXuG+0F7RLrHbwFwHn
+	 0R9YZ4sBjozrQUe+WCkU33yGABKfPVdMvgNHaa/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390423AbgAPRMP (ORCPT
+        id S2407208AbgAPSjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:39:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgAPRME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:04 -0500
+        id S2390410AbgAPRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765CB24697;
-        Thu, 16 Jan 2020 17:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A494B24698;
+        Thu, 16 Jan 2020 17:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194723;
-        bh=sfpKkZFrh5g6jwVycqE/JJD+LVoEXASUDwo3JwoTaeI=;
+        s=default; t=1579194732;
+        bh=Jkk9BBeYQ0OeLiIG3SfJOj/YsdJw4csXiPp2Uzx5mcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F4eAo4DEa6gUIpzoWju3qxy3c2sInn8N+ichoQ6Oln9SN1EpJ5citd/k9orGnrsy0
-         EfC+M0V9Ef1DEpWtUF41jFG5lD7FipyGSUWnx5scMohyYsGhpPVHXu5fkKjhwUEu4I
-         oceOu1E0DP6foJi+XTNVI4ilLxvZyltegHwVPEfY=
+        b=kgXVZyjEzVdTCWsK8WZi99dALXIzM4oB/raqCNJhNREjDk+Okkim627hL+Ucyq+V2
+         zuUMIaANXg+qz54IQ6M47N9FS6xEfWG4a035r+4U5W6VqVVQsleUMFM6YT+W46omnS
+         fFEKPVrWyL1a4/DCwHKItt2nNERrHZaoSrhVpKGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 558/671] bpf: fix BTF limits
-Date:   Thu, 16 Jan 2020 12:03:16 -0500
-Message-Id: <20200116170509.12787-295-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 565/671] net: netsec: Fix signedness bug in netsec_probe()
+Date:   Thu, 16 Jan 2020 12:03:23 -0500
+Message-Id: <20200116170509.12787-302-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,39 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit a0791f0df7d212c245761538b17a9ea93607b667 ]
+[ Upstream commit bd55f8ddbc437c225391ca8f487e7ec10243c4cc ]
 
-vmlinux BTF has more than 64k types.
-Its string section is also at the offset larger than 64k.
-Adjust both limits to make in-kernel BTF verifier successfully parse in-kernel BTF.
+The "priv->phy_interface" variable is an enum and in this context GCC
+will treat it as an unsigned int so the error handling is never
+triggered.
 
-Fixes: 69b693f0aefa ("bpf: btf: Introduce BPF Type Format (BTF)")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 533dd11a12f6 ("net: socionext: Add Synquacer NetSec driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/btf.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/btf.h b/include/uapi/linux/btf.h
-index 972265f32871..1e2662ff0529 100644
---- a/include/uapi/linux/btf.h
-+++ b/include/uapi/linux/btf.h
-@@ -22,9 +22,9 @@ struct btf_header {
- };
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index d9d0d03e4ce7..027367b9cc48 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -1604,7 +1604,7 @@ static int netsec_probe(struct platform_device *pdev)
+ 			   NETIF_MSG_LINK | NETIF_MSG_PROBE;
  
- /* Max # of type identifier */
--#define BTF_MAX_TYPE	0x0000ffff
-+#define BTF_MAX_TYPE	0x000fffff
- /* Max offset into the string section */
--#define BTF_MAX_NAME_OFFSET	0x0000ffff
-+#define BTF_MAX_NAME_OFFSET	0x00ffffff
- /* Max # of struct/union/enum members or func args */
- #define BTF_MAX_VLEN	0xffff
- 
+ 	priv->phy_interface = device_get_phy_mode(&pdev->dev);
+-	if (priv->phy_interface < 0) {
++	if ((int)priv->phy_interface < 0) {
+ 		dev_err(&pdev->dev, "missing required property 'phy-mode'\n");
+ 		ret = -ENODEV;
+ 		goto free_ndev;
 -- 
 2.20.1
 
