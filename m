@@ -2,53 +2,54 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECE1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C4CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450C82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D5E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218176;
-	bh=VlQKu8ffHZFqvPusbZ7M08UcsU6jDfW/QHF1Vj/QBxg=;
+	s=default; t=1579218183;
+	bh=hkqpsqSBLywGL/7OMIIJ7C1ZmHjgpKxuUaaDc0LFdT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fyArw0DBRVkyCjgFwFbnuMc36aXldrlosye660GCk17gbaN8U1MjRNCThU+fvXhBo
-	 11/5kpRbe7cPx4Y+LJCSrlO77Lkhw9oy4an2tqZOJt8OSmuAoFVHaREcTkmwvtrrQn
-	 tcIpJRGrH2RFdyDR4l46bCRP3Iywozu632De6FMc=
+	b=AOQfaNH856V2dJBPWOMYxeEa1xhJw5FKXA3Ta1BxuDp0x5Sufg/ff34M5SNN6VeJG
+	 wRbRqx1fdLTPGdzrpa/veo8E+SMP0gIs3hj7tlVEDylo+GMA9S0g+7lvBc3+0ceA3F
+	 yqM0kBBlfU70cNjPhPvhQVkOR6qVK3NJwxHUl+x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391772AbgAPXmz (ORCPT
+        id S2389289AbgAPXZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:42:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56172 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730225AbgAPX0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:01 -0500
+        id S2387457AbgAPXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E042072B;
-        Thu, 16 Jan 2020 23:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6006E2075B;
+        Thu, 16 Jan 2020 23:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217161;
-        bh=VlQKu8ffHZFqvPusbZ7M08UcsU6jDfW/QHF1Vj/QBxg=;
+        s=default; t=1579217134;
+        bh=hkqpsqSBLywGL/7OMIIJ7C1ZmHjgpKxuUaaDc0LFdT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFEK5igxvrRAA2ppCfEb+bDJ0xIwKVejefnV/6rHY/uBGlM78WWKBf4SVRXDEs5RI
-         2e7/89NvqVyYtTMLo/oaKLWrW8wxg8CRZ/VI3GPQsHtjsI+SiCTNaVwnfdd8e01S6i
-         S1qwbtgVZFc/CKVeJffvkJYE7NffiBlntIgkTTt8=
+        b=xIirf1F6lTAlVSv3alz/s5pncjlCqX8CIsn6XS29/qa3TZDXYCSFAMI79pllYeb/G
+         8yWdVb3SF2njsI0OmPdKMI7tAA0MhgSdUv//ichH6hBxIpnUlkoTShDIImoUZm0oen
+         dj66K16PaL8ngo/Uoq10vQ3CNFPp1t7ASzIN0sbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 173/203] rtlwifi: Remove unnecessary NULL check in rtl_regd_init
-Date:   Fri, 17 Jan 2020 00:18:10 +0100
-Message-Id: <20200116231759.638842211@linuxfoundation.org>
+        stable@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.4 145/203] ARM: 8943/1: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC
+Date:   Fri, 17 Jan 2020 00:17:42 +0100
+Message-Id: <20200116231757.610546114@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,51 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-commit 091c6e9c083f7ebaff00b37ad13562d51464d175 upstream.
+commit ff98a5f624d2910de050f1fc7f2a32769da86b51 upstream.
 
-When building with Clang + -Wtautological-pointer-compare:
+Commit ca74b316df96 ("arm: Use common cpu_topology structure and
+functions.") changed cpu_coregroup_mask() from the ARM32 specific
+implementation in arch/arm/include/asm/topology.h to the one shared
+with ARM64 and RISCV in drivers/base/arch_topology.c.
 
-drivers/net/wireless/realtek/rtlwifi/regd.c:389:33: warning: comparison
-of address of 'rtlpriv->regd' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (wiphy == NULL || &rtlpriv->regd == NULL)
-                              ~~~~~~~~~^~~~    ~~~~
-1 warning generated.
+Currently on ARM32 (TC2 w/ CONFIG_SCHED_MC) the task scheduler setup
+code (w/ CONFIG_SCHED_DEBUG) shows this during CPU hotplug:
 
-The address of an array member is never NULL unless it is the first
-struct member so remove the unnecessary check. This was addressed in
-the staging version of the driver in commit f986978b32b3 ("Staging:
-rtlwifi: remove unnecessary NULL check").
+  ERROR: groups don't span domain->span
 
-While we are here, fix the following checkpatch warning:
+It happens to CPUs of the cluster of the CPU which gets hot-plugged
+out on scheduler domain MC.
 
-CHECK: Comparison to NULL could be written "!wiphy"
-35: FILE: drivers/net/wireless/realtek/rtlwifi/regd.c:389:
-+       if (wiphy == NULL)
+Turns out that the shared cpu_coregroup_mask() requires that the
+hot-plugged CPU is removed from the core_sibling mask via
+remove_cpu_topology(). Otherwise the 'is core_sibling subset of
+cpumask_of_node()' doesn't work. In this case the task scheduler has to
+deal with cpumask_of_node instead of core_sibling which is wrong on
+scheduler domain MC.
 
-Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-Link:https://github.com/ClangBuiltLinux/linux/issues/750
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+e.g. CPU3 hot-plugged out on TC2 [cluster0: 0,3-4 cluster1: 1-2]:
+
+  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,3-4
+                                                                  ^
+should be:
+
+  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,4
+
+Add remove_cpu_topology() to __cpu_disable() to remove the CPU from the
+topology masks in case of a CPU hotplug out operation.
+
+At the same time tweak store_cpu_topology() slightly so it will call
+update_siblings_masks() in case of CPU hotplug in operation via
+secondary_start_kernel()->smp_store_cpu_info().
+
+This aligns the ARM32 implementation with the ARM64 one.
+
+Guarding remove_cpu_topology() with CONFIG_GENERIC_ARCH_TOPOLOGY is
+necessary since some Arm32 defconfigs (aspeed_g5_defconfig,
+milbeaut_m10v_defconfig, spear13xx_defconfig) specify an explicit
+
+ # CONFIG_ARM_CPU_TOPOLOGY is not set
+
+w/ ./arch/arm/Kconfig: select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+
+Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+Tested-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/regd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/smp.c      |    4 ++++
+ arch/arm/kernel/topology.c |   10 +++++-----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/regd.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
-@@ -386,7 +386,7 @@ int rtl_regd_init(struct ieee80211_hw *h
- 	struct wiphy *wiphy = hw->wiphy;
- 	struct country_code_to_enum_rd *country = NULL;
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -240,6 +240,10 @@ int __cpu_disable(void)
+ 	if (ret)
+ 		return ret;
  
--	if (wiphy == NULL || &rtlpriv->regd == NULL)
-+	if (!wiphy)
- 		return -EINVAL;
++#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
++	remove_cpu_topology(cpu);
++#endif
++
+ 	/*
+ 	 * Take this CPU offline.  Once we clear this, we can't return,
+ 	 * and we must not schedule until we're ready to give up the cpu.
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -196,9 +196,8 @@ void store_cpu_topology(unsigned int cpu
+ 	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+ 	unsigned int mpidr;
  
- 	/* init country_code from efuse channel plan */
+-	/* If the cpu topology has been already set, just return */
+-	if (cpuid_topo->core_id != -1)
+-		return;
++	if (cpuid_topo->package_id != -1)
++		goto topology_populated;
+ 
+ 	mpidr = read_cpuid_mpidr();
+ 
+@@ -231,14 +230,15 @@ void store_cpu_topology(unsigned int cpu
+ 		cpuid_topo->package_id = -1;
+ 	}
+ 
+-	update_siblings_masks(cpuid);
+-
+ 	update_cpu_capacity(cpuid);
+ 
+ 	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
+ 		cpuid, cpu_topology[cpuid].thread_id,
+ 		cpu_topology[cpuid].core_id,
+ 		cpu_topology[cpuid].package_id, mpidr);
++
++topology_populated:
++	update_siblings_masks(cpuid);
+ }
+ 
+ static inline int cpu_corepower_flags(void)
 
 
