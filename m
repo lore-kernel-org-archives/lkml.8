@@ -2,59 +2,50 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B260C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AE2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2EB2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBF920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217878;
-	bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
+	s=default; t=1579217883;
+	bh=VohqL72ye30HD11diAwJbn0CodlwueOSD4EQKGbCZt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkVx19nQo0NT15tgGMUaFZlo7s6OgECPhqg0LPSwqiq11m+PORi6Wq9e5ACxIR6E+
-	 iKxnw4T9Xmiw7Be5Eo1LdIBISA1HyMgg8KMVdwGd9kMKSXmH7tIWLvIM2Zi37RRFib
-	 SGqcO4Goq/OXKgGJXCMAcaLSGq5KOdZICOqCMFvo=
+	b=jDm7+AUVWtot/TxnZzMXHHuIzT828w4wlhqLLMs6m/4HDvQ6vViO6UfTot6baPq2b
+	 mWRlfaOQGIVw4Z4y2AxImhcT4t25acWi/qv0vc/sj9YryhDhQ0MIYF8EW5LbsP5+2A
+	 ot52OpZGOUPMoD01U316kael3YVXqTjwIYkAZ8vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391107AbgAPXhy (ORCPT
+        id S2391749AbgAPXiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:37:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37800 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:38:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404139AbgAPXaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:39 -0500
+        id S2391379AbgAPX34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E874C22525;
-        Thu, 16 Jan 2020 23:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE4C206D9;
+        Thu, 16 Jan 2020 23:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217439;
-        bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
+        s=default; t=1579217396;
+        bh=VohqL72ye30HD11diAwJbn0CodlwueOSD4EQKGbCZt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBMf6fgSvrcdbccDekcnmplXmqaQrDuXiMd+NIfKqT7F/ajAyj0ZjOI8hCaOGGq0T
-         zffxIdTm6dSGPvEF2yzkRysy5AfXdZWzJHwo2nCkJiDdb4AJ+dGRF4WU5lQQkaUB/g
-         Y/yfMhCGvB3eHFbnFyiS1jgNLcoRCXPHuDSvLNj8=
+        b=EdHk33mU+W7BJ2CdRB0/XE6AjucQ1u2FBnZHwv69svGxgYdwKc66skLwPh3tKF8tS
+         HE2toVdxDH04IUhyFAoclG5namI838Q5YUeyeYV3n15zIzS1tA3YLI1rneQP2VciRD
+         tp7TtdXTwioEvHL33BCo0FCz+553mCuLWLGDk+xA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Sid Manning <sidneym@quicinc.com>,
-        Brian Cain <bcain@codeaurora.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 83/84] hexagon: work around compiler crash
-Date:   Fri, 17 Jan 2020 00:18:57 +0100
-Message-Id: <20200116231723.169650677@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 4.19 58/84] tty: serial: pch_uart: correct usage of dma_unmap_sg
+Date:   Fri, 17 Jan 2020 00:18:32 +0100
+Message-Id: <20200116231720.590211332@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -67,52 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 63e80314ab7cf4783526d2e44ee57a90514911c9 ]
+commit 74887542fdcc92ad06a48c0cca17cdf09fc8aa00 upstream.
 
-Clang cannot translate the string "r30" into a valid register yet.
+Per Documentation/DMA-API-HOWTO.txt,
+To unmap a scatterlist, just call:
+	dma_unmap_sg(dev, sglist, nents, direction);
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/755
-Link: http://lkml.kernel.org/r/20191028155722.23419-1-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Sid Manning <sidneym@quicinc.com>
-Reviewed-by: Brian Cain <bcain@codeaurora.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Fontana <rfontana@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+.. note::
+
+	The 'nents' argument to the dma_unmap_sg call must be
+	the _same_ one you passed into the dma_map_sg call,
+	it should _NOT_ be the 'count' value _returned_ from the
+	dma_map_sg call.
+
+However in the driver, priv->nent is directly assigned with value
+returned from dma_map_sg, and dma_unmap_sg use priv->nent for unmap,
+this breaks the API usage.
+
+So introduce a new entry orig_nent to remember 'nents'.
+
+Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1573623259-6339-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/hexagon/kernel/stacktrace.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/tty/serial/pch_uart.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/hexagon/kernel/stacktrace.c b/arch/hexagon/kernel/stacktrace.c
-index 41866a06adf7..ec4ef682923d 100644
---- a/arch/hexagon/kernel/stacktrace.c
-+++ b/arch/hexagon/kernel/stacktrace.c
-@@ -24,8 +24,6 @@
- #include <linux/thread_info.h>
- #include <linux/module.h>
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -235,6 +235,7 @@ struct eg20t_port {
+ 	struct dma_chan			*chan_rx;
+ 	struct scatterlist		*sg_tx_p;
+ 	int				nent;
++	int				orig_nent;
+ 	struct scatterlist		sg_rx;
+ 	int				tx_dma_use;
+ 	void				*rx_buf_virt;
+@@ -789,9 +790,10 @@ static void pch_dma_tx_complete(void *ar
+ 	}
+ 	xmit->tail &= UART_XMIT_SIZE - 1;
+ 	async_tx_ack(priv->desc_tx);
+-	dma_unmap_sg(port->dev, sg, priv->nent, DMA_TO_DEVICE);
++	dma_unmap_sg(port->dev, sg, priv->orig_nent, DMA_TO_DEVICE);
+ 	priv->tx_dma_use = 0;
+ 	priv->nent = 0;
++	priv->orig_nent = 0;
+ 	kfree(priv->sg_tx_p);
+ 	pch_uart_hal_enable_interrupt(priv, PCH_UART_HAL_TX_INT);
+ }
+@@ -1015,6 +1017,7 @@ static unsigned int dma_handle_tx(struct
+ 		dev_err(priv->port.dev, "%s:dma_map_sg Failed\n", __func__);
+ 		return 0;
+ 	}
++	priv->orig_nent = num;
+ 	priv->nent = nent;
  
--register unsigned long current_frame_pointer asm("r30");
--
- struct stackframe {
- 	unsigned long fp;
- 	unsigned long rets;
-@@ -43,7 +41,7 @@ void save_stack_trace(struct stack_trace *trace)
- 
- 	low = (unsigned long)task_stack_page(current);
- 	high = low + THREAD_SIZE;
--	fp = current_frame_pointer;
-+	fp = (unsigned long)__builtin_frame_address(0);
- 
- 	while (fp >= low && fp <= (high - sizeof(*frame))) {
- 		frame = (struct stackframe *)fp;
--- 
-2.20.1
-
+ 	for (i = 0; i < nent; i++, sg++) {
 
 
