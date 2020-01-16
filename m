@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89EEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8733DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919EC246AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B235246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194834;
-	bh=L/KSiELxp369zGbGPtlCYt4xEKWsCEJceCqSHQySHVI=;
+	s=default; t=1579194839;
+	bh=uygpqcRBzydA8O8gxzqnmROM4ngHd0GFslMkdbAREWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DAU/Ufx1+VpIQiQx8YWU21RCxhWDfls08eStUyQ7zUvAdfG/0oSqPzBf5ek1T120U
-	 hZAMouDDLpKwoLwQNMEsI1rg3/Z6IzbHi7u9N1OAtQT92kj/zWXU3fTsjT/M0Z6uX5
-	 jGCfpcWaFEEgDY9LCbulRh3Otvv8+LQnsu1IgHUk=
+	b=bqpfpuEhJK5stmdabAa2Z7axHv51mwd6lGft3f4kQQGUvBCQRvoa4iJqIPffJ582K
+	 NOXQmkmcUMs9BpKH+ncpu93oYyYqIvlEvQviIq5WINnp+l+hsE27fxbSx3f1X+wslL
+	 W/G7fwK6pAX2lXfVc87k5LkFaKEcLO/1zlAFYBA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390858AbgAPRNx (ORCPT
+        id S2390448AbgAPRN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:13:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59426 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729010AbgAPRNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:43 -0500
+        id S2390825AbgAPRNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE07F246A3;
-        Thu, 16 Jan 2020 17:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268BD2469E;
+        Thu, 16 Jan 2020 17:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194822;
-        bh=L/KSiELxp369zGbGPtlCYt4xEKWsCEJceCqSHQySHVI=;
+        s=default; t=1579194826;
+        bh=uygpqcRBzydA8O8gxzqnmROM4ngHd0GFslMkdbAREWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FRzgi9ubCQRV+EzmkN2WYEVK5uh5EryC1lZzxaIsjuVqST7v04WehDNCVU1PJc7e
-         uPeTewY+AViOuo7+6R766lGX2EHpUUFiTpWogVeGHkwBGnMi+zONEDrMB6Tg7KMIMZ
-         shqOZ6ZeI5I1cC1gWRWDgpmxEyoyUShkJJ6jJTfE=
+        b=nta3C+zP1PaEkSFcIyg6w3PfcCKRMzvPhb0kRHf5ArFBFoYLGN+31Jr1RsxOZR/D4
+         RfD/mmKeCUy/9erNwNeL3iJ0hfFPRBbRYuUqsygY5W2X01pnn1cMUUtQd/qPwJbQsR
+         D27PV0kCx/3gvVF8IKWRLjRrYR/BfpOU+hN77w+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marian Mihailescu <mihailescu2m@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 627/671] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
-Date:   Thu, 16 Jan 2020 12:04:25 -0500
-Message-Id: <20200116170509.12787-364-sashal@kernel.org>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 630/671] dpaa_eth: perform DMA unmapping before read
+Date:   Thu, 16 Jan 2020 12:04:28 -0500
+Message-Id: <20200116170509.12787-367-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,36 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marian Mihailescu <mihailescu2m@gmail.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 ]
+[ Upstream commit c70fd3182caef014e6c628b412f81aa57a3ef9e4 ]
 
-Save and restore top PLL related configuration registers for big (APLL)
-and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
-were reset to default values after suspend/resume cycle and performance
-after system resume was affected when performance governor has been selected.
+DMA unmapping is required before accessing the HW provided timestamping
+information.
 
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 32 ++++++++++---------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index d5af93721299..6473af8903c5 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -171,6 +171,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	APLL_CON0,
-+	KPLL_CON0,
- 	CPLL_CON0,
- 	DPLL_CON0,
- 	EPLL_CON0,
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 462bb8c4f80c..3cd62a71ddea 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1620,18 +1620,6 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 	skbh = (struct sk_buff **)phys_to_virt(addr);
+ 	skb = *skbh;
+ 
+-	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
+-		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+-
+-		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
+-					  &ns)) {
+-			shhwtstamps.hwtstamp = ns_to_ktime(ns);
+-			skb_tstamp_tx(skb, &shhwtstamps);
+-		} else {
+-			dev_warn(dev, "fman_port_get_tstamp failed!\n");
+-		}
+-	}
+-
+ 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
+ 		nr_frags = skb_shinfo(skb)->nr_frags;
+ 		dma_unmap_single(dev, addr,
+@@ -1654,14 +1642,28 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
+ 				       qm_sg_entry_get_len(&sgt[i]), dma_dir);
+ 		}
+-
+-		/* Free the page frag that we allocated on Tx */
+-		skb_free_frag(phys_to_virt(addr));
+ 	} else {
+ 		dma_unmap_single(dev, addr,
+ 				 skb_tail_pointer(skb) - (u8 *)skbh, dma_dir);
+ 	}
+ 
++	/* DMA unmapping is required before accessing the HW provided info */
++	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
++		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
++
++		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
++					  &ns)) {
++			shhwtstamps.hwtstamp = ns_to_ktime(ns);
++			skb_tstamp_tx(skb, &shhwtstamps);
++		} else {
++			dev_warn(dev, "fman_port_get_tstamp failed!\n");
++		}
++	}
++
++	if (qm_fd_get_format(fd) == qm_fd_sg)
++		/* Free the page frag that we allocated on Tx */
++		skb_free_frag(phys_to_virt(addr));
++
+ 	return skb;
+ }
+ 
 -- 
 2.20.1
 
