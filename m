@@ -2,102 +2,107 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714F9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4E62073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6557C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579168965;
+	bh=b84RQj8x0DMKLMv9t2vscFneZeX2tkylffgXrZRESgw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=otvsoxRaONfY9Kmj40lBHV5DJ2xaKOrXfscb2mSYOfaia9G3iW4snCQan1gNpjffJ
+	 htLDqhY5tO9WTPnC1t3A/sv34QGJFd2tDdXKq5geNeUakjxNTZ5wHKTkakumqTWxO0
+	 WTmlNvNOObQgrXcbjkS3kDEDwKehsy3CbhegCawU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbgAPKCI (ORCPT
+        id S1730599AbgAPKCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:02:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51044 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732419AbgAPKCD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:02:03 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1is1yK-0003KK-V9; Thu, 16 Jan 2020 11:01:53 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6AE3E100C1E; Thu, 16 Jan 2020 11:01:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>,
-        Gratian Crisan <gratian.crisan@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: RE: RE: Re: "oneshot" interrupt causes another interrupt to be fired erroneously in Haswell system
-In-Reply-To: <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-References: <20191031230532.GA170712@google.com> <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de> <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com> <87a76oxqv1.fsf@nanos.tec.linutronix.de> <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-Date:   Thu, 16 Jan 2020 11:01:52 +0100
-Message-ID: <87muanwwhb.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 16 Jan 2020 05:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgAPKCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:02:44 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C802073A;
+        Thu, 16 Jan 2020 10:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579168963;
+        bh=b84RQj8x0DMKLMv9t2vscFneZeX2tkylffgXrZRESgw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=py5Mo5TaXZBuACmO7OjggDYQGWBN+amS7dJwyYwl1W2Vx7lEcg72timSbJ0DJdFCi
+         5hPi7joemJJ907Jo5KdN1g4BZLgNv8rxp4QGGF0/1wGVWQQwV5TyoTJaQ9paDZtRxb
+         HpwvoDS3mYwOh0k0mxFrm/CkedZVamBCth2EA+wI=
+Date:   Thu, 16 Jan 2020 19:02:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] tools: bootconfig: fix spelling mistake "faile"
+ -> "failed"
+Message-Id: <20200116190239.9b318b2faa14465ece414f16@kernel.org>
+In-Reply-To: <20200116092206.52192-1-colin.king@canonical.com>
+References: <20200116092206.52192-1-colin.king@canonical.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kar Hin Ong <kar.hin.ong@ni.com> writes:
->> I don't have access to the document you mentioned, but I know that chipsets
->> have a knob to control that behaviour. Just checked a few chipset docs and they
->> contain the same sentence, but then in the next paragraph they say:
->> 
->>  "If the I/OxAPIC entry is masked (via the mask bit in the corresponding
->>   Redirection Table Entry), then the corresponding PCI Express
->>   interrupt(s) is forwarded to the legacy ICH, provided the Disable PCI
->>   INTx Routing to ICH bit is clear, Section 19.10.2.27, QPIPINTRC: Intel
->>   QuickPath Interconnect Protocol Interrupt Control."
->> 
->> That control bit is 0 after reset, so the legacy forwarding works.
->
-> Intel support engineer do provide similar advice to us as a workaround
-> to the CPU behaviour.  They said we could enable the "Don'tRouteToPCH"
-> bit in the BIOS to block the interrupt from propagating to PCH.  This
-> bit is located at "Coherent Interface Protocol Interrupt Control
-> (cipintrc)" register of "Virtualization" device (Bus 0, Device 5,
-> Function 0, Offset 0x14C).
->
-> With the help of our BIOS engineer, after setting this bit in BIOS
-> does prevent the interrupt forwarding.
->
-> However, Intel told us that this workaround is not validated, i.e. the
-> side effect of setting this bit is unknown.
+Hi Colin,
 
-What? That's ridiculous.
+On Thu, 16 Jan 2020 09:22:06 +0000
+Colin King <colin.king@canonical.com> wrote:
 
-That bit is documented in various chipset documents and that legacy
-rerouting is really just there to support OSes which do not support
-multiple IO-APICs properly.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are two spelling mistakes in printf statements, fix these.
 
-If setting this bit has unknown side effects then someone at Intel
-should have a close look and fix their documentation.
+Good catch!
 
-Can the Intel people on Cc please take care of this?
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-As we have already quirks in drivers/pci/quirks.c which handle the same
-issue on older chipsets, we really should add one for these kind of
-systems to avoid fiddling with the BIOS (which you can, but most people
-cannot).
+Thanks!
 
-Thanks,
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  tools/bootconfig/main.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> index b8f174fd2a0a..91c9a5c0c499 100644
+> --- a/tools/bootconfig/main.c
+> +++ b/tools/bootconfig/main.c
+> @@ -140,7 +140,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+>  		return 0;
+>  
+>  	if (lseek(fd, -8, SEEK_END) < 0) {
+> -		printf("Faile to lseek: %d\n", -errno);
+> +		printf("Failed to lseek: %d\n", -errno);
+>  		return -errno;
+>  	}
+>  
+> @@ -155,7 +155,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+>  		return 0;
+>  
+>  	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
+> -		printf("Faile to lseek: %d\n", -errno);
+> +		printf("Failed to lseek: %d\n", -errno);
+>  		return -errno;
+>  	}
+>  
+> -- 
+> 2.24.0
+> 
 
-        tglx
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
