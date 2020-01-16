@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14BBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE69C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73E824683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC2724683
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195966;
-	bh=CSkdNF/deogjL89jxc7ztAoDXHOfZMqATHjBuZshi94=;
+	s=default; t=1579195970;
+	bh=6ToXo0U8rBrgbvu3xP30vvqRqWu7VCADypBze9Uf9o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1Ofetk9vyf6AT+HwTyjwbQucMEX9aoheQo9r3LXeH4DZzB+bEVja+WEWFuhrkgRU
-	 sg4LJ1N9NvtioVNgdqVMrIGohFTDqFP7K4Wjyfbx+QAiqe5uKu2QeVuIDS16qXmK6g
-	 DGrFrXnmpbairsa38DaiK5GBWYsfPoTA1BNi7R1U=
+	b=0f1F9bM2F0XRobqzpLqEuN4sRPegMZZX/uL3kbv0qGDZ28TH7sML5Oi416FkhE/Nf
+	 fr6no2cdbN5URyjd9cfItV0RtUhuzQApe5GWe/VF24xNzYuHjZkZrtS1KlnC9/lc1i
+	 YSlOnwZPdMWFe1kAHThuhz3JMzBb4zQG8UZcM9sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404632AbgAPRcp (ORCPT
+        id S2404479AbgAPRav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:32:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404477AbgAPRav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404491AbgAPRas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 932542469B;
-        Thu, 16 Jan 2020 17:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD87E20728;
+        Thu, 16 Jan 2020 17:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195850;
-        bh=CSkdNF/deogjL89jxc7ztAoDXHOfZMqATHjBuZshi94=;
+        s=default; t=1579195847;
+        bh=6ToXo0U8rBrgbvu3xP30vvqRqWu7VCADypBze9Uf9o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ElX16u1wr85LujUyXvg7aeHeuMC3MpVuEsnrF76nQItG03+EUVJ+BnvpwIPuaYRTV
-         rImwJCaDFu7Ws9XSfFVLXVZNQwpZpDmgxEKbBjRKpRgllhF8TKKgTsCVDT5nAr+GSQ
-         4Xezd15qJr9F2VwF4LWqQGdLRbI2vbh6jCrvJ4hc=
+        b=sbjsbkn6enfDlNX+M1NIt8dyCvcIgvwun4qoGkDzlOVpHoVCMVc/RcaR13eU5G1cQ
+         X34giu429kOKqnDkrLr1TcO0ZHjNVYljaVAAT3EJHizJkSKEWNfL2sjiAH6g2v8PpO
+         QVN8Up9Iy3i8m5FLIc5iFUlYyQvWOCXnOT1Fvnk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 350/371] mfd: intel-lpss: Add default I2C device properties for Gemini Lake
-Date:   Thu, 16 Jan 2020 12:23:42 -0500
-Message-Id: <20200116172403.18149-293-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 348/371] f2fs: fix potential overflow
+Date:   Thu, 16 Jan 2020 12:23:40 -0500
+Message-Id: <20200116172403.18149-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,73 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 3f31bc67e4dc6a555341dffefe328ddd58e8b431 ]
+[ Upstream commit a9af3fdcc4258af406879eca63d82e9d6baa892e ]
 
-It turned out Intel Gemini Lake doesn't use the same I2C timing
-parameters as Broxton.
+In build_sit_entries(), if valid_blocks in SIT block is smaller than
+valid_blocks in journal, for below calculation:
 
-I got confirmation from the Windows team that Gemini Lake systems should
-use updated timing parameters that differ from those used in Broxton
-based systems.
+sbi->discard_blks += old_valid_blocks - se->valid_blocks;
 
-Fixes: f80e78aa11ad ("mfd: intel-lpss: Add Intel Gemini Lake PCI IDs")
-Tested-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+There will be two times potential overflow:
+- old_valid_blocks - se->valid_blocks will overflow, and be a very
+large number.
+- sbi->discard_blks += result will overflow again, comes out a correct
+result accidently.
+
+Anyway, it should be fixed.
+
+Fixes: d600af236da5 ("f2fs: avoid unneeded loop in build_sit_entries")
+Fixes: 1f43e2ad7bff ("f2fs: introduce CP_TRIMMED_FLAG to avoid unneeded discard")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ fs/f2fs/data.c | 2 +-
+ fs/f2fs/file.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 2b7e8eeaa59e..0504761516f7 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -126,6 +126,18 @@ static const struct intel_lpss_platform_info apl_i2c_info = {
- 	.properties = apl_i2c_properties,
- };
- 
-+static struct property_entry glk_i2c_properties[] = {
-+	PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 313),
-+	PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-+	PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 290),
-+	{ },
-+};
-+
-+static const struct intel_lpss_platform_info glk_i2c_info = {
-+	.clk_rate = 133000000,
-+	.properties = glk_i2c_properties,
-+};
-+
- static const struct intel_lpss_platform_info cnl_i2c_info = {
- 	.clk_rate = 216000000,
- 	.properties = spt_i2c_properties,
-@@ -165,14 +177,14 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
--	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index ac3fa4bbed2d..afe7dcfff036 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1512,7 +1512,7 @@ static int __write_data_page(struct page *page, bool *submitted,
+ 	loff_t i_size = i_size_read(inode);
+ 	const pgoff_t end_index = ((unsigned long long) i_size)
+ 							>> PAGE_SHIFT;
+-	loff_t psize = (page->index + 1) << PAGE_SHIFT;
++	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
+ 	unsigned offset = 0;
+ 	bool need_balance_fs = false;
+ 	int err = 0;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index a90173b856f6..d98acc20a38a 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1059,7 +1059,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+ 				}
+ 				dn.ofs_in_node++;
+ 				i++;
+-				new_size = (dst + i) << PAGE_SHIFT;
++				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
+ 				if (dst_inode->i_size < new_size)
+ 					f2fs_i_size_write(dst_inode, new_size);
+ 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
 -- 
 2.20.1
 
