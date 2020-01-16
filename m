@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96527C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1772C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B8720748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9059F20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgAPIEv (ORCPT
+        id S1730779AbgAPIEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:04:51 -0500
+        Thu, 16 Jan 2020 03:04:54 -0500
 Received: from mail-sz.amlogic.com ([211.162.65.117]:32981 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730627AbgAPIEr (ORCPT
+        with ESMTP id S1730724AbgAPIEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:04:47 -0500
+        Thu, 16 Jan 2020 03:04:52 -0500
 Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 16 Jan 2020
- 16:05:11 +0800
+ 16:05:12 +0800
 From:   Jian Hu <jian.hu@amlogic.com>
 To:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>
@@ -37,10 +37,10 @@ CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
         Chandle Zou <chandle.zou@amlogic.com>,
         <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v6 2/5] clk: meson: add support for A1 PLL clock ops
-Date:   Thu, 16 Jan 2020 16:04:37 +0800
-Message-ID: <20200116080440.118679-3-jian.hu@amlogic.com>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 4/5] dt-bindings: clock: meson: add A1 peripheral clock controller bindings
+Date:   Thu, 16 Jan 2020 16:04:39 +0800
+Message-ID: <20200116080440.118679-5-jian.hu@amlogic.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200116080440.118679-1-jian.hu@amlogic.com>
 References: <20200116080440.118679-1-jian.hu@amlogic.com>
@@ -53,119 +53,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compared with the previous SoCs, self-adaption current module
-is newly added for A1, and there is no reset parm except the
-fixed pll. In A1 PLL, the PLL enable sequence is different, using
-the new power-on sequence to enable the PLL.
+Add the documentation to support Amlogic A1 peripheral clock driver,
+and add A1 peripheral clock controller bindings.
 
 Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 ---
- drivers/clk/meson/clk-pll.c | 47 +++++++++++++++++++++++++++++++------
- drivers/clk/meson/clk-pll.h |  2 ++
- 2 files changed, 42 insertions(+), 7 deletions(-)
+ .../bindings/clock/amlogic,a1-clkc.yaml       | 64 ++++++++++++
+ include/dt-bindings/clock/a1-clkc.h           | 98 +++++++++++++++++++
+ 2 files changed, 162 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+ create mode 100644 include/dt-bindings/clock/a1-clkc.h
 
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e5634739..10926291440f 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
- 	if (pll->init_count) {
--		meson_parm_write(clk->map, &pll->rst, 1);
-+		if (MESON_PARM_APPLICABLE(&pll->rst))
-+			meson_parm_write(clk->map, &pll->rst, 1);
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+new file mode 100644
+index 000000000000..b865394c730a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+@@ -0,0 +1,64 @@
++#SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/amlogic,a1-clkc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 		regmap_multi_reg_write(clk->map, pll->init_regs,
- 				       pll->init_count);
--		meson_parm_write(clk->map, &pll->rst, 0);
++title: Amlogic Meson A/C serials Peripheral Clock Control Unit Device Tree Bindings
 +
-+		if (MESON_PARM_APPLICABLE(&pll->rst))
-+			meson_parm_write(clk->map, &pll->rst, 0);
- 	}
- }
- 
-@@ -295,8 +299,11 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
- 	struct clk_regmap *clk = to_clk_regmap(hw);
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
--	if (meson_parm_read(clk->map, &pll->rst) ||
--	    !meson_parm_read(clk->map, &pll->en) ||
-+	if (MESON_PARM_APPLICABLE(&pll->rst) &&
-+	    meson_parm_read(clk->map, &pll->rst))
-+		return 0;
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++  - Jerome Brunet <jbrunet@baylibre.com>
++  - Jian Hu <jian.hu@jian.hu.com>
 +
-+	if (!meson_parm_read(clk->map, &pll->en) ||
- 	    !meson_parm_read(clk->map, &pll->l))
- 		return 0;
- 
-@@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
- 		return 0;
- 
- 	/* Make sure the pll is in reset */
--	meson_parm_write(clk->map, &pll->rst, 1);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 1);
- 
- 	/* Enable the pll */
- 	meson_parm_write(clk->map, &pll->en, 1);
- 
- 	/* Take the pll out reset */
--	meson_parm_write(clk->map, &pll->rst, 0);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 0);
++properties:
++  "#clock-cells":
++    const: 1
++  compatible:
++    const: amlogic,a1-periphs-clkc
 +
-+	/*
-+	 * Compared with the previous SoCs, self-adaption current module
-+	 * is newly added for A1, keep the new power-on sequence to enable the
-+	 * PLL. The sequence is:
-+	 * 1. enable the pll, delay for 10us
-+	 * 2. enable the pll self-adaption current module, delay for 40us
-+	 * 3. enable the lock detect module
-+	 */
-+	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-+		udelay(10);
-+		meson_parm_write(clk->map, &pll->current_en, 1);
-+		udelay(40);
-+	};
++  reg:
++    maxItems: 1
 +
-+	if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
-+		meson_parm_write(clk->map, &pll->l_detect, 1);
-+		meson_parm_write(clk->map, &pll->l_detect, 0);
-+	}
- 
- 	if (meson_clk_pll_wait_lock(hw))
- 		return -EIO;
-@@ -343,10 +371,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
- 	/* Put the pll is in reset */
--	meson_parm_write(clk->map, &pll->rst, 1);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 1);
- 
- 	/* Disable the pll */
- 	meson_parm_write(clk->map, &pll->en, 0);
++  clocks:
++    maxItems: 6
++    items:
++      - description: input fixed pll div2
++      - description: input fixed pll div3
++      - description: input fixed pll div5
++      - description: input fixed pll div7
++      - description: input hifi pll
++      - description: input oscillator (usually at 24MHz)
 +
-+	/* Disable PLL internal self-adaption current module */
-+	if (MESON_PARM_APPLICABLE(&pll->current_en))
-+		meson_parm_write(clk->map, &pll->current_en, 0);
- }
- 
- static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
-index 367efd0f6410..a2228c0fdce5 100644
---- a/drivers/clk/meson/clk-pll.h
-+++ b/drivers/clk/meson/clk-pll.h
-@@ -36,6 +36,8 @@ struct meson_clk_pll_data {
- 	struct parm frac;
- 	struct parm l;
- 	struct parm rst;
-+	struct parm current_en;
-+	struct parm l_detect;
- 	const struct reg_sequence *init_regs;
- 	unsigned int init_count;
- 	const struct pll_params_table *table;
++  clock-names:
++    maxItems: 6
++    items:
++      - const: fclk_div2
++      - const: fclk_div3
++      - const: fclk_div5
++      - const: fclk_div7
++      - const: hifi_pll
++      - const: xtal
++
++required:
++  - "#clock-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    clkc_periphs: periphs-clock-controller {
++        compatible = "amlogic,a1-periphs-clkc";
++        reg = <0 0x800 0 0x104>;
++        #clock-cells = <1>;
++        clocks = <&clkc_pll CLKID_FCLK_DIV2>,
++                <&clkc_pll CLKID_FCLK_DIV3>,
++                <&clkc_pll CLKID_FCLK_DIV5>,
++                <&clkc_pll CLKID_FCLK_DIV7>,
++                <&clkc_pll CLKID_HIFI_PLL>,
++                <&xtal>;
++        clock-names = "fclk_div2", "fclk_div3", "fclk_div5",
++                      "fclk_div7", "hifi_pll", "xtal";
++    };
+diff --git a/include/dt-bindings/clock/a1-clkc.h b/include/dt-bindings/clock/a1-clkc.h
+new file mode 100644
+index 000000000000..9bb36fca86dd
+--- /dev/null
++++ b/include/dt-bindings/clock/a1-clkc.h
+@@ -0,0 +1,98 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
++/*
++ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
++ */
++
++#ifndef __A1_CLKC_H
++#define __A1_CLKC_H
++
++#define CLKID_XTAL_FIXPLL			1
++#define CLKID_XTAL_USB_PHY			2
++#define CLKID_XTAL_USB_CTRL			3
++#define CLKID_XTAL_HIFIPLL			4
++#define CLKID_XTAL_SYSPLL			5
++#define CLKID_XTAL_DDS				6
++#define CLKID_SYS_CLK				7
++#define CLKID_CLKTREE				8
++#define CLKID_RESET_CTRL			9
++#define CLKID_ANALOG_CTRL			10
++#define CLKID_PWR_CTRL				11
++#define CLKID_PAD_CTRL				12
++#define CLKID_SYS_CTRL				13
++#define CLKID_TEMP_SENSOR			14
++#define CLKID_AM2AXI_DIV			15
++#define CLKID_SPICC_B				16
++#define CLKID_SPICC_A				17
++#define CLKID_CLK_MSR				18
++#define CLKID_AUDIO				19
++#define CLKID_JTAG_CTRL				20
++#define CLKID_SARADC				21
++#define CLKID_PWM_EF				22
++#define CLKID_PWM_CD				23
++#define CLKID_PWM_AB				24
++#define CLKID_CEC				25
++#define CLKID_I2C_S				26
++#define CLKID_IR_CTRL				27
++#define CLKID_I2C_M_D				28
++#define CLKID_I2C_M_C				29
++#define CLKID_I2C_M_B				30
++#define CLKID_I2C_M_A				31
++#define CLKID_ACODEC				32
++#define CLKID_OTP				33
++#define CLKID_SD_EMMC_A				34
++#define CLKID_USB_PHY				35
++#define CLKID_USB_CTRL				36
++#define CLKID_SYS_DSPB				37
++#define CLKID_SYS_DSPA				38
++#define CLKID_DMA				39
++#define CLKID_IRQ_CTRL				40
++#define CLKID_NIC				41
++#define CLKID_GIC				42
++#define CLKID_UART_C				43
++#define CLKID_UART_B				44
++#define CLKID_UART_A				45
++#define CLKID_SYS_PSRAM				46
++#define CLKID_RSA				47
++#define CLKID_CORESIGHT				48
++#define CLKID_AM2AXI_VAD			49
++#define CLKID_AUDIO_VAD				50
++#define CLKID_AXI_DMC				51
++#define CLKID_AXI_PSRAM				52
++#define CLKID_RAMB				53
++#define CLKID_RAMA				54
++#define CLKID_AXI_SPIFC				55
++#define CLKID_AXI_NIC				56
++#define CLKID_AXI_DMA				57
++#define CLKID_CPU_CTRL				58
++#define CLKID_ROM				59
++#define CLKID_PROC_I2C				60
++#define CLKID_DSPA_SEL				61
++#define CLKID_DSPB_SEL				62
++#define CLKID_DSPA_EN				63
++#define CLKID_DSPA_EN_NIC			64
++#define CLKID_DSPB_EN				65
++#define CLKID_DSPB_EN_NIC			66
++#define CLKID_RTC_CLK				67
++#define CLKID_CECA_32K				68
++#define CLKID_CECB_32K				69
++#define CLKID_24M				70
++#define CLKID_12M				71
++#define CLKID_FCLK_DIV2_DIVN			72
++#define CLKID_GEN				73
++#define CLKID_SARADC_SEL			74
++#define CLKID_SARADC_CLK			75
++#define CLKID_PWM_A				76
++#define CLKID_PWM_B				77
++#define CLKID_PWM_C				78
++#define CLKID_PWM_D				79
++#define CLKID_PWM_E				80
++#define CLKID_PWM_F				81
++#define CLKID_SPICC				82
++#define CLKID_TS				83
++#define CLKID_SPIFC				84
++#define CLKID_USB_BUS				85
++#define CLKID_SD_EMMC				86
++#define CLKID_PSRAM				87
++#define CLKID_DMC				88
++
++#endif /* __A1_CLKC_H */
 -- 
 2.24.0
 
