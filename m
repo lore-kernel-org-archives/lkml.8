@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE445C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CA4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0EA246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF41246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196004;
-	bh=3bs2tt+BQ2aDv4/lJ7CKnWz3MwHNBltAwpNAaDCYLDw=;
+	s=default; t=1579196006;
+	bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CwYRJgeQALenUsXWrAYaxDm6TlSaM0kVpWOGQWwyv/hodosa7bQ+J+uS0q+sB23oK
-	 kFpWkJNBX0sPieqe+aIrii7IYuHCOkZVuMRCGX07hHVq85mHwC3o4mG9wuEEVQ/K+E
-	 wDy60m1Yub3hcOt+X0+kfnaOQSv0I0/h5HcP8WC4=
+	b=MgyD8zhuKFxNlVlyfSdsOBNwJLLCvAYUgM2h4xDtAjap9TUgHwFM0fhjy4WR2LdHp
+	 pyWPQLd14IY0F0HGATIpgb5hu6pv+kn2LX/y4eaLn5FejHxdihmOVEej/73R+lOsP+
+	 NfBUUlEy5rfGJ8iNi/BiggQb1KtPIGCp1V7hxKs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404819AbgAPRdX (ORCPT
+        id S2404451AbgAPRa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:33:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404589AbgAPRag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:36 -0500
+        id S2404414AbgAPRa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CC02472C;
-        Thu, 16 Jan 2020 17:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6BD2472D;
+        Thu, 16 Jan 2020 17:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195835;
-        bh=3bs2tt+BQ2aDv4/lJ7CKnWz3MwHNBltAwpNAaDCYLDw=;
+        s=default; t=1579195825;
+        bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPZ8F3cS7N738lJD/6eWbG0Uhba+5z3HRZD6gLSa5wqHuehvPGtyAvbG3rSujufwN
-         PRJ5FwVIjWtjpSHuCqb4t0RqFAY9+ShJmvKz136O9EGDI8eOBFFEHCuzn8fK1TET5m
-         nyhV3dHFKXpuc1GB7pandRuHKTy/JkO2Y7afjfjg=
+        b=nwp/dXbrLosm3iLipfo4OPv7FCLs2vkmCFbvioVQeg5bTE550NYFjh/jr/+iSFg9G
+         qSKqUaj2V7shTE8GjVyndjCd4o4GBmVaoiKqwNRpQJpRKJIpEtBXV+N7VLnEfVB10e
+         yMB/mTnb8j9r8T+HOjoFBVT4UJqTdqIbxop4P620=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marian Mihailescu <mihailescu2m@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 340/371] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
-Date:   Thu, 16 Jan 2020 12:23:32 -0500
-Message-Id: <20200116172403.18149-283-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 333/371] cw1200: Fix a signedness bug in cw1200_load_firmware()
+Date:   Thu, 16 Jan 2020 12:23:25 -0500
+Message-Id: <20200116172403.18149-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marian Mihailescu <mihailescu2m@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 ]
+[ Upstream commit 4a50d454502f1401171ff061a5424583f91266db ]
 
-Save and restore top PLL related configuration registers for big (APLL)
-and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
-were reset to default values after suspend/resume cycle and performance
-after system resume was affected when performance governor has been selected.
+The "priv->hw_type" is an enum and in this context GCC will treat it
+as an unsigned int so the error handling will never trigger.
 
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: a910e4a94f69 ("cw1200: add driver for the ST-E CW1100 & CW1200 WLAN chipsets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/st/cw1200/fwio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 47a14f93f869..2f54df5bef8e 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -170,6 +170,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	APLL_CON0,
-+	KPLL_CON0,
- 	CPLL_CON0,
- 	DPLL_CON0,
- 	EPLL_CON0,
+diff --git a/drivers/net/wireless/st/cw1200/fwio.c b/drivers/net/wireless/st/cw1200/fwio.c
+index 30e7646d04af..16be7fa82a23 100644
+--- a/drivers/net/wireless/st/cw1200/fwio.c
++++ b/drivers/net/wireless/st/cw1200/fwio.c
+@@ -323,12 +323,12 @@ int cw1200_load_firmware(struct cw1200_common *priv)
+ 		goto out;
+ 	}
+ 
+-	priv->hw_type = cw1200_get_hw_type(val32, &major_revision);
+-	if (priv->hw_type < 0) {
++	ret = cw1200_get_hw_type(val32, &major_revision);
++	if (ret < 0) {
+ 		pr_err("Can't deduce hardware type.\n");
+-		ret = -ENOTSUPP;
+ 		goto out;
+ 	}
++	priv->hw_type = ret;
+ 
+ 	/* Set DPLL Reg value, and read back to confirm writes work */
+ 	ret = cw1200_reg_write_32(priv, ST90TDS_TSET_GEN_R_W_REG_ID,
 -- 
 2.20.1
 
