@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7242DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E69C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7192087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3192077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194063;
-	bh=BIVeDkCcdsPl+1TKDpBlMJpU4E/TGWeqRij21fRbRCo=;
+	s=default; t=1579194070;
+	bh=cIPEba41vQU7K3z8IlNqQquXjet5Msndflxao2tfQ4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=06G2QjepPwPEpPqzzh5v5eCa4AdR0tKuVfLKCnZ09P5y4c0KFkVo+9C4LXVUEpM4L
-	 BsYmZQ8EbOOlODMd2tNWSHijeAPxN3rQs6jzVY0jNZdOVHEeZgblK1cfqVYyuou5ZR
-	 wIoNbtPWzNCYVOGQoO3of65272rYVzPNheg8pACY=
+	b=XFMM0TEpVLE5BEB0HdFioaEOEcHxtLUsZNneEngBH4GI3xyu+uuFXFB+UMuUbLyf1
+	 Srfq1eTNPe8KpyX20FISgaQSQK9ZEEye/U0le9B8vbErTB4jM6ik0Qnwrzjjenn2en
+	 bMyRuUPxysz/Yfcn3ieauIW42EJgj99Kvfg2AoYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387980AbgAPRBC (ORCPT
+        id S2388018AbgAPRBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51434 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:01:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387963AbgAPRA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:59 -0500
+        id S2387981AbgAPRBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9377A2081E;
-        Thu, 16 Jan 2020 17:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8DAC20728;
+        Thu, 16 Jan 2020 17:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194058;
-        bh=BIVeDkCcdsPl+1TKDpBlMJpU4E/TGWeqRij21fRbRCo=;
+        s=default; t=1579194062;
+        bh=cIPEba41vQU7K3z8IlNqQquXjet5Msndflxao2tfQ4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPfux9AE1B9PWKB5ichcKafeFIwjHFvP27QLeg2YCV/HzyBlRPIDcz0U3L0FSLLae
-         OooTHWYZjUh7AlFLwGjsOV2L6QWVth8/v0TfzDvBn9biU9MIGxTW971tXZIru7whh0
-         h8dCKd/WFLYjJ/oEDMd14WRVeBTUi8I+6dBkR0cU=
+        b=Rhn7f5d7BK9xyxAuDI38B20k/1+fVbw3LWM+nrnTv3J58nqMb6iizwQTCkHoxoVJP
+         jqXqJGDkQleRD8cTpmZHCemqF0oqY4bHzsY2/WmOBZ0X9d8OI7hII65ftTgCGJUMME
+         dN4AWSYn10YXEN4+JMB5VN9xXW0yCoglTNTkiyIE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 4.19 171/671] drm/etnaviv: potential NULL dereference
-Date:   Thu, 16 Jan 2020 11:51:20 -0500
-Message-Id: <20200116165940.10720-54-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 174/671] pinctrl: sh-pfc: emev2: Add missing pinmux functions
+Date:   Thu, 16 Jan 2020 11:51:23 -0500
+Message-Id: <20200116165940.10720-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -62,36 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9e05352340d3a3e68c144136db9810b26ebb88c3 ]
+[ Upstream commit 1ecd8c9cb899ae277e6986ae134635cb1a50f5de ]
 
-The etnaviv_gem_prime_get_sg_table() is supposed to return error
-pointers.  Otherwise it can lead to a NULL dereference when it's called
-from drm_gem_map_dma_buf().
+The err_rst_reqb, ext_clki, lowpwr, and ref_clko pin groups are present,
+but no pinmux functions refer to them, hence they can not be selected.
 
-Fixes: 5f4a4a73f437 ("drm/etnaviv: fix gem_prime_get_sg_table to return new SG table")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Fixes: 1e7d5d849cf4f0c5 ("sh-pfc: Add emev2 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-emev2.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index 0566171f8df2..f21529e635e3 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -15,7 +15,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	int npages = obj->size >> PAGE_SHIFT;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c b/drivers/pinctrl/sh-pfc/pfc-emev2.c
+index 1cbbe04d7df6..eafd8edbcbe9 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-emev2.c
++++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
+@@ -1263,6 +1263,14 @@ static const char * const dtv_groups[] = {
+ 	"dtv_b",
+ };
  
- 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
--		return NULL;
-+		return ERR_PTR(-EINVAL);
++static const char * const err_rst_reqb_groups[] = {
++	"err_rst_reqb",
++};
++
++static const char * const ext_clki_groups[] = {
++	"ext_clki",
++};
++
+ static const char * const iic0_groups[] = {
+ 	"iic0",
+ };
+@@ -1285,6 +1293,10 @@ static const char * const lcd_groups[] = {
+ 	"yuv3",
+ };
  
- 	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
- }
++static const char * const lowpwr_groups[] = {
++	"lowpwr",
++};
++
+ static const char * const ntsc_groups[] = {
+ 	"ntsc_clk",
+ 	"ntsc_data",
+@@ -1298,6 +1310,10 @@ static const char * const pwm1_groups[] = {
+ 	"pwm1",
+ };
+ 
++static const char * const ref_clko_groups[] = {
++	"ref_clko",
++};
++
+ static const char * const sd_groups[] = {
+ 	"sd_cki",
+ };
+@@ -1391,13 +1407,17 @@ static const struct sh_pfc_function pinmux_functions[] = {
+ 	SH_PFC_FUNCTION(cam),
+ 	SH_PFC_FUNCTION(cf),
+ 	SH_PFC_FUNCTION(dtv),
++	SH_PFC_FUNCTION(err_rst_reqb),
++	SH_PFC_FUNCTION(ext_clki),
+ 	SH_PFC_FUNCTION(iic0),
+ 	SH_PFC_FUNCTION(iic1),
+ 	SH_PFC_FUNCTION(jtag),
+ 	SH_PFC_FUNCTION(lcd),
++	SH_PFC_FUNCTION(lowpwr),
+ 	SH_PFC_FUNCTION(ntsc),
+ 	SH_PFC_FUNCTION(pwm0),
+ 	SH_PFC_FUNCTION(pwm1),
++	SH_PFC_FUNCTION(ref_clko),
+ 	SH_PFC_FUNCTION(sd),
+ 	SH_PFC_FUNCTION(sdi0),
+ 	SH_PFC_FUNCTION(sdi1),
 -- 
 2.20.1
 
