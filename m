@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AA6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56663C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC8E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242A82073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197422;
-	bh=0rB/DCX0/vZqshYz2euc0r2r572R1otNYKQa2llh8N0=;
+	s=default; t=1579197431;
+	bh=wktD1BteLyPPyytIdN3IcJavNeMlILjGaeCO9Oss1nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hyz/joLdlE4nDmnsvdCvMm9fCJESSxWXePmAJX23gKIfuMDAgOLnIIME3MEnGO6cv
-	 X+mMNSRHA5Nsqs3qSIgolyUrmK0pgGPveG+vX5ArSoEDcylgWJFOgMU9PJGvo31Owk
-	 xSdHDwcdyOg2cwidE88hyKCF3bsI6sqGLNUx9Z1w=
+	b=BLSHvB16yQ3WryfyXFRfNtMvyrHDARjVIOhHjGZ6KInEv/CpbLvXQEkEOTU/Uo31l
+	 hm3cmBDAk19qSv4yGdwC2blwUsjGUymGsNXZznRgLRoD5yF0Na1zy/WmBAVuSkfAMm
+	 Ums3ec5K0NDJlA0pD9eBbl8nuuXwAr203ZEjto/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394563AbgAPR5C (ORCPT
+        id S2394566AbgAPR5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:57:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:57:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393978AbgAPRno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:44 -0500
+        id S2393971AbgAPRnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4812C24743;
-        Thu, 16 Jan 2020 17:43:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5394424748;
+        Thu, 16 Jan 2020 17:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196623;
-        bh=0rB/DCX0/vZqshYz2euc0r2r572R1otNYKQa2llh8N0=;
+        s=default; t=1579196621;
+        bh=wktD1BteLyPPyytIdN3IcJavNeMlILjGaeCO9Oss1nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwJOC8oXusxTagsftZKDutBGnILjhR+C2F0Xmh8/xu77i+8RLj1tuiZwyXeEn6+eT
-         3cJCXFqzysxw7a95gxPxfjs8h5UgTcMkCjHk1m1eTS8gtpjbS5HI/fHzVaahdOE/o5
-         kCQWNUZkl4NfcaM9wqrbeKOK0cWAp9xLOvWHrG+Y=
+        b=p/iF/GoXI6Hk2YslHdzWWQCB+52mQ+KzqaTDfiy30km0LAFuqhMImRLlKt0Pf+FzZ
+         NHYV4Z4SywYffFCmHOLKBMAl/8L6fzNz+9eba96UehRNAgNaoH2vvbTZU2hN8z1UB9
+         H4/zBZcTQfhiAPNAcxcQ4NjJtrnNOWHJ/A7D+J+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Colin Ian King <colin.king@canonical.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 039/174] rtc: 88pm80x: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 12:40:36 -0500
-Message-Id: <20200116174251.24326-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 037/174] rtc: ds1672: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 12:40:34 -0500
+Message-Id: <20200116174251.24326-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fb0b322537a831b5b0cb948c56f8f958ce493d3a ]
+[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
 
 Shifting a u8 by 24 will cause the value to be promoted to an integer. If
 the top bit of the u8 is set then the following conversion to an unsigned
@@ -70,80 +70,30 @@ the result.
 
 Fix this by casting the u8 value to an unsigned long before the shift.
 
-Detected by CoverityScan, CID#714646-714649 ("Unintended sign extension")
+Detected by CoverityScan, CID#138801 ("Unintended sign extension")
 
-Fixes: 2985c29c1964 ("rtc: Add rtc support to 88PM80X PMIC")
+Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm80x.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-ds1672.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-88pm80x.c b/drivers/rtc/rtc-88pm80x.c
-index 466bf7f9a285..7da2a1fb50f8 100644
---- a/drivers/rtc/rtc-88pm80x.c
-+++ b/drivers/rtc/rtc-88pm80x.c
-@@ -116,12 +116,14 @@ static int pm80x_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	unsigned char buf[4];
- 	unsigned long ticks, base, data;
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
+diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
+index 92b1cbf2c4a7..2bea733b1589 100644
+--- a/drivers/rtc/rtc-ds1672.c
++++ b/drivers/rtc/rtc-ds1672.c
+@@ -60,7 +60,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
+ 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
+ 		__func__, buf[0], buf[1], buf[2], buf[3]);
  
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -144,7 +146,8 @@ static int pm80x_rtc_set_time(struct device *dev, struct rtc_time *tm)
+-	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++	       (buf[1] << 8) | buf[0];
  
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	base = ticks - data;
- 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -165,11 +168,13 @@ static int pm80x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	int ret;
+ 	rtc_time_to_tm(time, tm);
  
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
- 
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE1_1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -192,12 +197,14 @@ static int pm80x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	regmap_update_bits(info->map, PM800_RTC_CONTROL, PM800_ALARM1_EN, 0);
- 
- 	regmap_raw_read(info->map, PM800_RTC_EXPIRE2_1, buf, 4);
--	base = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	base = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	dev_dbg(info->dev, "%x-%x-%x-%x\n", buf[0], buf[1], buf[2], buf[3]);
- 
- 	/* load 32-bit read-only counter */
- 	regmap_raw_read(info->map, PM800_RTC_COUNTER1, buf, 4);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
 -- 
 2.20.1
 
