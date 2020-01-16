@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD462C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE94C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DBB246B9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF51246CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196754;
-	bh=Far1l6FBcITxkqYTiN4udmvQ1ScXJJri15fuO7+3QN8=;
+	s=default; t=1579196760;
+	bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOcEDraNOPKHubxs1tvlGiNX4byFyidyowMgXpo1lHFCeglIBzEY6+Q6oTWPzZtc9
-	 0rBfUOl1ASYloB4HQP7ZmmKMgLL8NIonFOoULQEG9maBjGSdTaHBVNoRO6HPqTT6UK
-	 InWDWYSp6mI0LYjMDrIdscABg7vKPWzDwlsMRHBg=
+	b=Df7TZQ5V4ZeaT7mxVfrcN6eNkkwD/WMgKm6LXFe3G9F6frCt/O6+GhlQkq86189Ox
+	 kJnY/BJdeugu54RNTw/8lIKuZ5erjKuGb0oulflkw3J8anDya+Wch1h2GfexN0S/Iq
+	 RxI+yDl4rU0Ub/m+1I3Up40PIwfbH7j/Q+bltG3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406544AbgAPRpx (ORCPT
+        id S2406583AbgAPRp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37972 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406499AbgAPRpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:46 -0500
+        id S2406558AbgAPRp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92E6246B4;
-        Thu, 16 Jan 2020 17:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83147246B9;
+        Thu, 16 Jan 2020 17:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196745;
-        bh=Far1l6FBcITxkqYTiN4udmvQ1ScXJJri15fuO7+3QN8=;
+        s=default; t=1579196756;
+        bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JitKB3SqnFqU42Au+gTAPbUWpKdmFhI0Je9X4LI4iTYn1P0yhZHIKkuaFZYaZdczZ
-         KybJ+qHa8K7yPDJXNDZn+11NNUW4s+yi2CyqC3neb5B6jozpp4E8gqoAdnmOsxMRtY
-         LqaQEevtCnaJiNNqomudVx1VrfHRdsD4rbJvqJs4=
+        b=FcZZKOAmn2QhOAkbRTas0K1XfUQkyADmngnefqoG54B9mAPg7ox2EsbEUjCYSvxjZ
+         meSP+YXAlLTX4KLJB5woVh4o8ao+LQLy4SOaRxMefJVYTRPlZajlzswa2TthZv3HJH
+         u/aEtLf6UXCYhyV/6XCTZsPQeUNoBZXeW7lMwiCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 124/174] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
-Date:   Thu, 16 Jan 2020 12:42:01 -0500
-Message-Id: <20200116174251.24326-124-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 131/174] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+Date:   Thu, 16 Jan 2020 12:42:08 -0500
+Message-Id: <20200116174251.24326-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,62 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
+[ Upstream commit 420c20be08a4597404d272ae9793b642401146eb ]
 
-There is a possibility to have registered ACPI DMA controller
-while it has been gone already.
+An earlier commit re-worked the setting of the bitmask and is now
+assigning v with some bit flags rather than bitwise or-ing them
+into v, consequently the earlier bit-settings of v are being lost.
+Fix this by replacing an assignment with the bitwise or instead.
 
-To avoid the potential crash, move to non-managed
-acpi_dma_controller_register().
-
-Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Addresses-Coverity: ("Unused value")
+Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw/platform.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/bcma/driver_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 68a4815750b5..22d0cc1855b5 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
- 	dma_cap_set(DMA_SLAVE, info->dma_cap);
- 	info->filter_fn = dw_dma_acpi_filter;
+diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
+index f499a469e66d..12b2cc9a3fbe 100644
+--- a/drivers/bcma/driver_pci.c
++++ b/drivers/bcma/driver_pci.c
+@@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+ 	}
  
--	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
--						info);
-+	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
- 	if (ret)
- 		dev_err(dev, "could not register acpi_dma_controller\n");
- }
-+
-+static void dw_dma_acpi_controller_free(struct dw_dma *dw)
-+{
-+	struct device *dev = dw->dma.dev;
-+
-+	acpi_dma_controller_free(dev);
-+}
- #else /* !CONFIG_ACPI */
- static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
-+static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
- #endif /* !CONFIG_ACPI */
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_READ;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
  
- #ifdef CONFIG_OF
-@@ -225,6 +232,9 @@ static int dw_remove(struct platform_device *pdev)
- {
- 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
+@@ -121,7 +121,7 @@ static void bcma_pcie_mdio_write(struct bcma_drv_pci *pc, u16 device,
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+ 	}
  
-+	if (ACPI_HANDLE(&pdev->dev))
-+		dw_dma_acpi_controller_free(chip->dw);
-+
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
- 
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_WRITE;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
+ 	v |= data;
 -- 
 2.20.1
 
