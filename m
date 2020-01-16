@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28193C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C053CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38DA20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6D5206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201037;
-	bh=bogbFyIWYY0db2aF3q1qJ65vkmKxitFEOw8bigE2K2Y=;
+	s=default; t=1579201040;
+	bh=9LdsUBp7qfC8M7hIx4I1cjSoYSEPj8Dn1kYaez5MelE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avGWhTTyPOsPiIDbFamXns4ywnLNeHJWjY4xGBcrhJhDltzo7Do8NGiMENhy/TA/7
-	 cTlPIJbELGyagoiH30tB268g/2bcLr/yNQoQeyikmUIE2XHEyI5H2Q2hiDNaOtw5Qy
-	 ROV6bGG6COOs5f1dkHHeg2wRvzBRpDXkVaYtP62U=
+	b=oiLWMD2Nk7JaHFeB82L+F8Uulgl1sEO/kZFLZ4SuQpr54AtxMXdI8zMCOhpelktj/
+	 YMtbGgKxDpsu6umQxcr8/rJad402tOfelS0+MSQFr6n3tnKqYBToye79mJZQoDREAP
+	 KirKmYxEqhzNdJR+725/AW4qtD4Rn+e5R4ejUY+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437118AbgAPS5Q (ORCPT
+        id S1729922AbgAPRHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:57:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389080AbgAPRHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:07 -0500
+        id S2389044AbgAPRG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D1A205F4;
-        Thu, 16 Jan 2020 17:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6650A2081E;
+        Thu, 16 Jan 2020 17:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194427;
-        bh=bogbFyIWYY0db2aF3q1qJ65vkmKxitFEOw8bigE2K2Y=;
+        s=default; t=1579194417;
+        bh=9LdsUBp7qfC8M7hIx4I1cjSoYSEPj8Dn1kYaez5MelE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tuGnI9+czYv1YxtcZIhxBfWZ7DHtTrQ9ehTc9NPg7xsXjqBqz7gloCuDHCPjX0MUT
-         C7zqO37tfqZmZfeFGszhapJhCVtKTwiEWZyTIdTr2sWI47jewm76XTHd163+mAz4oV
-         Zu/2iIFcb5j9nCg1+iEFbMTKolUOu5F/SSAGmXic=
+        b=Yu2aVTu9KuYd2slD/1/jbgFdFzLhTrdsN9MQpu6gcYsu8orlCjCMjbQ1gmOobxPgI
+         +BAe2Tap+ksQqFkB38jazEBg2kidEtJ8Sl/4207Vuh3kAt4hOzlC0tjbJEEINR5dn7
+         G4lIKUX7pzp2hoIxUoXMem+C/CPdv1g+YkhCSBvw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 344/671] ALSA: aica: Fix a long-time build breakage
-Date:   Thu, 16 Jan 2020 11:59:42 -0500
-Message-Id: <20200116170509.12787-81-sashal@kernel.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 338/671] ath10k: Fix encoding for protected management frames
+Date:   Thu, 16 Jan 2020 11:59:36 -0500
+Message-Id: <20200116170509.12787-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -58,68 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit 534420c6ff87d3052540f1fd346e0adcff440819 ]
+[ Upstream commit 42f1bc43e6a97b9ddbe976eba9bd05306c990c75 ]
 
-The build of aica sound driver has been broken since the timer API
-conversion and some code rewrite.  This patch fixes the breakage by
-using the common substream field, as well as a bit cleaning up wrt the
-timer handling in the code.
+Currently the protected management frames are
+not appended with the MIC_LEN which results in
+the protected management frames being encoded
+incorrectly.
 
-Fixes: d522bb6a105f ("ALSA: sh: aica: Convert timers to use timer_setup()")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Add the extra space at the end of the protected
+management frames to fix this encoding error for
+the protected management frames.
+
+Tested HW: WCN3990
+Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
+
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/aica.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/sh/aica.c b/sound/sh/aica.c
-index 2b26311405a4..ad3f71358486 100644
---- a/sound/sh/aica.c
-+++ b/sound/sh/aica.c
-@@ -303,7 +303,7 @@ static void aica_period_elapsed(struct timer_list *t)
- {
- 	struct snd_card_aica *dreamcastcard = from_timer(dreamcastcard,
- 							      t, timer);
--	struct snd_pcm_substream *substream = dreamcastcard->timer_substream;
-+	struct snd_pcm_substream *substream = dreamcastcard->substream;
- 	/*timer function - so cannot sleep */
- 	int play_period;
- 	struct snd_pcm_runtime *runtime;
-@@ -335,13 +335,6 @@ static void spu_begin_dma(struct snd_pcm_substream *substream)
- 	dreamcastcard = substream->pcm->private_data;
- 	/*get the queue to do the work */
- 	schedule_work(&(dreamcastcard->spu_dma_work));
--	/* Timer may already be running */
--	if (unlikely(dreamcastcard->timer_substream)) {
--		mod_timer(&dreamcastcard->timer, jiffies + 4);
--		return;
--	}
--	timer_setup(&dreamcastcard->timer, aica_period_elapsed, 0);
--	dreamcastcard->timer_substream = substream;
- 	mod_timer(&dreamcastcard->timer, jiffies + 4);
- }
+diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+index a90990b8008d..248decb494c2 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
++++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
+@@ -2692,8 +2692,10 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
+ 	if ((ieee80211_is_action(hdr->frame_control) ||
+ 	     ieee80211_is_deauth(hdr->frame_control) ||
+ 	     ieee80211_is_disassoc(hdr->frame_control)) &&
+-	     ieee80211_has_protected(hdr->frame_control))
++	     ieee80211_has_protected(hdr->frame_control)) {
++		skb_put(msdu, IEEE80211_CCMP_MIC_LEN);
+ 		buf_len += IEEE80211_CCMP_MIC_LEN;
++	}
  
-@@ -379,8 +372,8 @@ static int snd_aicapcm_pcm_close(struct snd_pcm_substream
- {
- 	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
- 	flush_work(&(dreamcastcard->spu_dma_work));
--	if (dreamcastcard->timer_substream)
--		del_timer(&dreamcastcard->timer);
-+	del_timer(&dreamcastcard->timer);
-+	dreamcastcard->substream = NULL;
- 	kfree(dreamcastcard->channel);
- 	spu_disable();
- 	return 0;
-@@ -615,6 +608,7 @@ static int snd_aica_probe(struct platform_device *devptr)
- 	       "Yamaha AICA Super Intelligent Sound Processor for SEGA Dreamcast");
- 	/* Prepare to use the queue */
- 	INIT_WORK(&(dreamcastcard->spu_dma_work), run_spu_dma);
-+	timer_setup(&dreamcastcard->timer, aica_period_elapsed, 0);
- 	/* Load the PCM 'chip' */
- 	err = snd_aicapcmchip(dreamcastcard, 0);
- 	if (unlikely(err < 0))
+ 	buf_len = min_t(u32, buf_len, WMI_TLV_MGMT_TX_FRAME_MAX_LEN);
+ 	buf_len = round_up(buf_len, 4);
 -- 
 2.20.1
 
