@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D56C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E03CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA7020730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7285320730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194320;
-	bh=aaiAing3n5kCaciPCBMEpNxh5HMv1XnDrzTj/LLN8to=;
+	s=default; t=1579194323;
+	bh=84OlOLfE4jhGSJWYJf5Hy8cZmKh85ZH/LklvJoXsNqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otAYTGmyA1jJZb4GV6obQ+n5tHqesO3rc+4vSxXg9c8RraLN6xmjPPTy5jVP5xHJP
-	 +JKpKAPCBeWPCs9lr81csvBL3+1XYOKftlMSF40SKzut2Deky+Qaq/iQgtIk7FIDnd
-	 FlIXbaYeRDK7rn2M+gCJfyTFIwhZMFuPlQVciij8=
+	b=iSgJ4YSO1M2CPdppH6aaJtd5TOGu8iuMrWu0BCPRMhwRrrfiyeiCfvcoWKMZwYeY8
+	 gP3kV8tXn+ifbs/1vNNi2V6sn4sd1OUvcII9gh28a6amh4shvtSqyZ1VK58RmOza6t
+	 A4/C9FMWVEegs7GUlPoalXXUTB8IRFo5v6K655zA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbgAPRFS (ORCPT
+        id S2388649AbgAPRFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388554AbgAPRFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:15 -0500
+        id S2388566AbgAPRFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8AD224653;
-        Thu, 16 Jan 2020 17:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A9B22467E;
+        Thu, 16 Jan 2020 17:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194314;
-        bh=aaiAing3n5kCaciPCBMEpNxh5HMv1XnDrzTj/LLN8to=;
+        s=default; t=1579194316;
+        bh=84OlOLfE4jhGSJWYJf5Hy8cZmKh85ZH/LklvJoXsNqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCnzUGshN/u3e0jHqMCdoxxx/76gtuwgc8VMUZQj7mRm28IFJEwRWNdWDoOxtWX1m
-         mAGdATsYyMKR2F2k05QMhbWOvFl3vXA7m0/hGst1+abUQuQkoiazZGQ2v2SGaV/tOp
-         r6iIqF+cdsaafatveq9J5O0SKOD71g6w3vDBykiY=
+        b=gYseUw/iXNDbCFlcK+HP7liKWaYC70o3qt5ShyehStOUc4k+HcWC+kjeSKlXKp6Da
+         e+OD8M0WYdacGwXK2X/Qq3NFhpbUz7O8suuEu0AmrTjZIIrI12nc5lmdpXOlRfSM9n
+         MkcTYCFeBEitJM/H6zQk5Cznks1+5x7QyZMhXVPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 266/671] spi: tegra114: clear packed bit for unpacked mode
-Date:   Thu, 16 Jan 2020 11:58:24 -0500
-Message-Id: <20200116170509.12787-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 267/671] spi: tegra114: fix for unpacked mode transfers
+Date:   Thu, 16 Jan 2020 11:58:25 -0500
+Message-Id: <20200116170509.12787-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,34 +62,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 ]
+[ Upstream commit 1a89ac5b91895127f7c586ec5075c3753ca25501 ]
 
-Fixes: Clear packed bit when not using packed mode.
+Fixes: computation of actual bytes to fill/receive in/from FIFO in unpacked
+mode when transfer length is not a multiple of requested bits per word.
 
-Packed bit is not cleared when not using packed mode. This results
-in transfer timeouts for the unpacked mode transfers followed by the
-packed mode transfers.
+unpacked mode transfers fails when the transfer includes partial bytes in
+the last word.
+
+Total words to be written/read to/from FIFO is computed based on transfer
+length and bits per word. Unpacked mode includes 0 padding bytes for partial
+words to align with bits per word and these extra bytes are also accounted
+for calculating bytes left to transfer in the current driver.
+
+This causes extra bytes access of tx/rx buffers along with buffer index
+position crossing actual length where remain_len becomes negative and due to
+unsigned type, negative value is a 32 bit representation of signed value
+and transferred bytes never meets the actual transfer length resulting in
+transfer timeout and a hang.
+
+This patch fixes this with proper computation of the actual bytes to fill in
+FIFO during transmit and the actual bytes to read from FIFO during receive
+ignoring 0 padded bytes.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-tegra114.c | 43 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 36 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index a1888dc6a938..fd039cab768a 100644
+index fd039cab768a..17c2c78318f7 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
+@@ -307,10 +307,16 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
+ 		}
++
++		tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
+ 	} else {
++		unsigned int write_bytes;
+ 		max_n_32bit = min(tspi->curr_dma_words,  tx_empty_count);
+ 		written_words = max_n_32bit;
+ 		nbytes = written_words * tspi->bytes_per_word;
++		if (nbytes > t->len - tspi->cur_pos)
++			nbytes = t->len - tspi->cur_pos;
++		write_bytes = nbytes;
+ 		for (count = 0; count < max_n_32bit; count++) {
+ 			u32 x = 0;
  
- 	if (tspi->is_packed)
- 		command1 |= SPI_PACKED;
-+	else
-+		command1 &= ~SPI_PACKED;
+@@ -319,8 +325,10 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
+ 		}
++
++		tspi->cur_tx_pos += write_bytes;
+ 	}
+-	tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
++
+ 	return written_words;
+ }
  
- 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
- 	tspi->cur_direction = 0;
+@@ -344,20 +352,27 @@ static unsigned int tegra_spi_read_rx_fifo_to_client_rxbuf(
+ 			for (i = 0; len && (i < 4); i++, len--)
+ 				*rx_buf++ = (x >> i*8) & 0xFF;
+ 		}
+-		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 		read_words += tspi->curr_dma_words;
++		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
++		u8 bytes_per_word = tspi->bytes_per_word;
++		unsigned int read_bytes;
+ 
++		len = rx_full_count * bytes_per_word;
++		if (len > t->len - tspi->cur_pos)
++			len = t->len - tspi->cur_pos;
++		read_bytes = len;
+ 		for (count = 0; count < rx_full_count; count++) {
+ 			u32 x = tegra_spi_readl(tspi, SPI_RX_FIFO) & rx_mask;
+ 
+-			for (i = 0; (i < tspi->bytes_per_word); i++)
++			for (i = 0; len && (i < bytes_per_word); i++, len--)
+ 				*rx_buf++ = (x >> (i*8)) & 0xFF;
+ 		}
+-		tspi->cur_rx_pos += rx_full_count * tspi->bytes_per_word;
+ 		read_words += rx_full_count;
++		tspi->cur_rx_pos += read_bytes;
+ 	}
++
+ 	return read_words;
+ }
+ 
+@@ -372,12 +387,17 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
+ 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 		memcpy(tspi->tx_dma_buf, t->tx_buf + tspi->cur_pos, len);
++		tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		unsigned int i;
+ 		unsigned int count;
+ 		u8 *tx_buf = (u8 *)t->tx_buf + tspi->cur_tx_pos;
+ 		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
++		unsigned int write_bytes;
+ 
++		if (consume > t->len - tspi->cur_pos)
++			consume = t->len - tspi->cur_pos;
++		write_bytes = consume;
+ 		for (count = 0; count < tspi->curr_dma_words; count++) {
+ 			u32 x = 0;
+ 
+@@ -386,8 +406,9 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tspi->tx_dma_buf[count] = x;
+ 		}
++
++		tspi->cur_tx_pos += write_bytes;
+ 	}
+-	tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 	/* Make the dma buffer to read by dma */
+ 	dma_sync_single_for_device(tspi->dev, tspi->tx_dma_phys,
+@@ -405,20 +426,28 @@ static void tegra_spi_copy_spi_rxbuf_to_client_rxbuf(
+ 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 		memcpy(t->rx_buf + tspi->cur_rx_pos, tspi->rx_dma_buf, len);
++		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		unsigned int i;
+ 		unsigned int count;
+ 		unsigned char *rx_buf = t->rx_buf + tspi->cur_rx_pos;
+ 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
++		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
++		unsigned int read_bytes;
+ 
++		if (consume > t->len - tspi->cur_pos)
++			consume = t->len - tspi->cur_pos;
++		read_bytes = consume;
+ 		for (count = 0; count < tspi->curr_dma_words; count++) {
+ 			u32 x = tspi->rx_dma_buf[count] & rx_mask;
+ 
+-			for (i = 0; (i < tspi->bytes_per_word); i++)
++			for (i = 0; consume && (i < tspi->bytes_per_word);
++							i++, consume--)
+ 				*rx_buf++ = (x >> (i*8)) & 0xFF;
+ 		}
++
++		tspi->cur_rx_pos += read_bytes;
+ 	}
+-	tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 	/* Make the dma buffer to read by dma */
+ 	dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
 -- 
 2.20.1
 
