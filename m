@@ -2,60 +2,52 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCA7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF00C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CFD24696
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AA424681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197092;
-	bh=UmBk+mZmpi0cYAh8SHhB6gsxmSvcERTPwFGHLYBE+Ss=;
+	s=default; t=1579197098;
+	bh=YLZdc2UqRoOMt0oa38NEZj96bJP/9FVIzfbPmOQjxfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YSmzuICvF0tZsCoWp+mg78AN1TDoJFwc1O0V4w+F/9Qa5t1aFeplZ5MBnbklbyc4c
-	 JT87dgbhqn+UV25PJCJKaHtSI7KcIVaYR9GtjqHIFA/kEIQBdFiD0Qq1/1QplmK/Wn
-	 bsmbjQiaSr/XoMuUVUcqodO9j7jqZKMzIJGO0rPI=
+	b=BnMWG6t7xmrYCdMSUTfBXuafxHG5OSszefagMtwepH2HNJJTRbWxLJApWwU9ErMri
+	 iGjRypTWPNH5NFdbxqPV9q44v06LoCZAr4R95X2Fu4clURdEXWfIeSfTlAN30MemRX
+	 RNWmXnnmAQ8LmE1l2RyTGu7cTxTBK8vI/oSDoJ1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394458AbgAPRvb (ORCPT
+        id S2406336AbgAPRpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38064 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406509AbgAPRpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:50 -0500
+        id S2406060AbgAPRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE5A2081E;
-        Thu, 16 Jan 2020 17:45:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EAC2475B;
+        Thu, 16 Jan 2020 17:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196749;
-        bh=UmBk+mZmpi0cYAh8SHhB6gsxmSvcERTPwFGHLYBE+Ss=;
+        s=default; t=1579196704;
+        bh=YLZdc2UqRoOMt0oa38NEZj96bJP/9FVIzfbPmOQjxfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zagp9LxltWXhrdzGe3+I8mErXnqBNNmPHFfFr8xg4izvIXj801cdgHV6MlLSLqo75
-         jF+fi6QQra7yK9xM+GoIrpqnd6Lz5kdLQpG7mNyMJ4r4R4semogoH0MNRvvOjXFcru
-         WTsNM2MNlzWjcJVqmNOa7OXUbYhPXMY22UK+19PI=
+        b=AZnTlRvpXCh0Uorfxp2qlzxl/mHOvHcS2sv38/YCwYVUkY1VHYptnGFSXfFqv23L1
+         363uDw4nDRZIInL6eyKFDAZ3PH01l9M8z4mCouC00uE5NwOcEObQ3wdWH9rPE9f67C
+         KRQOfvZXU2Em+LZ28djanKN+kI3upV3oq07s1uR4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 126/174] mips: avoid explicit UB in assignment of mips_io_port_base
-Date:   Thu, 16 Jan 2020 12:42:03 -0500
-Message-Id: <20200116174251.24326-126-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 096/174] iommu: Use right function to get group for device
+Date:   Thu, 16 Jan 2020 12:41:33 -0500
+Message-Id: <20200116174251.24326-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -68,101 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
+[ Upstream commit 57274ea25736496ee019a5c40479855b21888839 ]
 
-The code in question is modifying a variable declared const through
-pointer manipulation.  Such code is explicitly undefined behavior, and
-is the lone issue preventing malta_defconfig from booting when built
-with Clang:
+The iommu_group_get_for_dev() will allocate a group for a
+device if it isn't in any group. This isn't the use case
+in iommu_request_dm_for_dev(). Let's use iommu_group_get()
+instead.
 
-If an attempt is made to modify an object defined with a const-qualified
-type through use of an lvalue with non-const-qualified type, the
-behavior is undefined.
-
-LLVM is removing such assignments. A simple fix is to not declare
-variables const that you plan on modifying.  Limiting the scope would be
-a better method of preventing unwanted writes to such a variable.
-
-Further, the code in question mentions "compiler bugs" without any links
-to bug reports, so it is difficult to know if the issue is resolved in
-GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
-4.1.1. The minimal supported version of GCC in the Linux kernel is
-currently 4.6.
-
-For what its worth, there was UB before the commit in question, it just
-added a barrier and got lucky IRT codegen. I don't think there's any
-actual compiler bugs related, just runtime bugs due to UB.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/610
-Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Eli Friedman <efriedma@quicinc.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Cc: Hassan Naveed <hnaveed@wavecomp.com>
-Cc: Stephen Kitt <steve@sk2.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
+Fixes: d290f1e70d85a ("iommu: Introduce iommu_request_dm_for_dev()")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/io.h | 14 ++------------
- arch/mips/kernel/setup.c   |  2 +-
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ drivers/iommu/iommu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index ab1df19b0957..60604b26fa72 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -60,21 +60,11 @@
-  * instruction, so the lower 16 bits must be zero.  Should be true on
-  * on any sane architecture; generic code does not use this assumption.
-  */
--extern const unsigned long mips_io_port_base;
-+extern unsigned long mips_io_port_base;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index a070fa39521a..2fddea9e2965 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1593,9 +1593,9 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	int ret;
  
--/*
-- * Gcc will generate code to load the value of mips_io_port_base after each
-- * function call which may be fairly wasteful in some cases.  So we don't
-- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
-- * which solves the code generation issue.  Now we need to violate the
-- * aliasing rules a little to make initialization possible and finally we
-- * will need the barrier() to fight side effects of the aliasing chat.
-- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
-- */
- static inline void set_io_port_base(unsigned long base)
- {
--	* (unsigned long *) &mips_io_port_base = base;
--	barrier();
-+	mips_io_port_base = base;
- }
+ 	/* Device must already be in a group before calling this function */
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
++	group = iommu_group_get(dev);
++	if (!group)
++		return -EINVAL;
  
- /*
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 4f9f1ae49213..fadc946b306d 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -80,7 +80,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
-  * mips_io_port_base is the begin of the address space to which x86 style
-  * I/O ports are mapped.
-  */
--const unsigned long mips_io_port_base = -1;
-+unsigned long mips_io_port_base = -1;
- EXPORT_SYMBOL(mips_io_port_base);
+ 	mutex_lock(&group->mutex);
  
- static struct resource code_resource = { .name = "Kernel code", };
 -- 
 2.20.1
 
