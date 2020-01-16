@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D42C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C96C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FD8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977DB20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193408;
-	bh=kUaCFWyhzUJmucYI60/CvzTz0wLDT+2Y6FB3J2Mcixc=;
+	s=default; t=1579193411;
+	bh=3jsVj/McEaAvS2LkEimj1NvVy+s2I+eLlxgU0gAOrLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VySmk6XPZ9uhz5GdG9xX6fW1z7AVwnoP5JjrLXqAN1ISfi1Vky5n7/PdQrYfwgOI9
-	 2ObQ1i5nVYNx8gLvcB+MaVknvCttME0P9MUCrBzI8tzcDDzxcj/8llGOzDMncmfFA0
-	 ZdMpvMCbx91RL3NZtOsPimVq8vOkgPpql7xHk1kU=
+	b=g3SZSna3PUaOrM775oofJBz0+9CZQ2zsX1qdx3jSkv8G05CId9OSmUArCVZ6OqVeK
+	 K+f82yzBUJSs62NJgj+xkWiUkytTOPAQqX0onAj8nEFJ3nBuAgZIRChh81SzGjcPOf
+	 WPLTeSpfQku15usWqiZnMmwqeH8A5g4C89p+owKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgAPQsA (ORCPT
+        id S1729593AbgAPQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:48:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729325AbgAPQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 11:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729406AbgAPQrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD2602081E;
-        Thu, 16 Jan 2020 16:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A7382073A;
+        Thu, 16 Jan 2020 16:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193275;
-        bh=kUaCFWyhzUJmucYI60/CvzTz0wLDT+2Y6FB3J2Mcixc=;
+        s=default; t=1579193273;
+        bh=3jsVj/McEaAvS2LkEimj1NvVy+s2I+eLlxgU0gAOrLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B2eFYHLiMk+1NoTC6CXbYeE8WNzWEecmdpHc2Yvg0L3vNVyEAcQgoYCmgZpUCT8TH
-         1go/WbxnFdpFO6HksyR7bWc9Cw9ZRGKWb1obM0QC51FTizVy2F193CCFR3qiC5UND3
-         +0I3HTTOCBrcQ0TcvjdHtGtrP+aehxNt+0sVBU5Y=
+        b=Q2BIQR026hRGjHkfnNRVVMbVm58nLqeUxTHvyBW+mV8worC92PfOzdm+UPW/pVrvi
+         QxcR9JmCUbgyaeLuSL9dDnFjuwzOMdeBmjSXfIcsS879miwHtlDPPLEBRvvJT1EAPo
+         5mzJBAwCpWXBclhBU42n7IzaZzfcUlBQqg7Yebqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
         John Garry <john.garry@huawei.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 063/205] scsi: hisi_sas: Set the BIST init value before enabling BIST
-Date:   Thu, 16 Jan 2020 11:40:38 -0500
-Message-Id: <20200116164300.6705-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 062/205] scsi: hisi_sas: Don't create debugfs dump folder twice
+Date:   Thu, 16 Jan 2020 11:40:37 -0500
+Message-Id: <20200116164300.6705-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,50 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 65a3b8bd56942dc988b8c05615bd3f510a10012b ]
+[ Upstream commit 35160421b63d4753a72e9f72ebcdd9d6f88f84b9 ]
 
-If set the BIST init value after enabling BIST, there may be still some few
-error bits. According to the process, need to set the BIST init value
-before enabling BIST.
+Due to a merge error, we attempt to create 2x debugfs dump folders, which
+fails:
+[  861.101914] debugfs: Directory 'dump' with parent '0000:74:02.0'
+already present!
 
-Fixes: 97b151e75861 ("scsi: hisi_sas: Add BIST support for phy loopback")
-Link: https://lore.kernel.org/r/1571926105-74636-3-git-send-email-john.garry@huawei.com
+This breaks the dump function.
+
+To fix, remove the superfluous attempt to create the folder.
+
+Fixes: 7ec7082c57ec ("scsi: hisi_sas: Add hisi_sas_debugfs_alloc() to centralise allocation")
+Link: https://lore.kernel.org/r/1571926105-74636-2-git-send-email-john.garry@huawei.com
 Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
 Signed-off-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index ef32ee12f606..c4f76d7c29db 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3022,11 +3022,6 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 		hisi_sas_phy_write32(hisi_hba, phy_id,
- 				     SAS_PHY_BIST_CTRL, reg_val);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 633effb09c9c..849335d76cf6 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -3719,9 +3719,6 @@ static int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
+ 	int p, c, d;
+ 	size_t sz;
  
--		mdelay(100);
--		reg_val |= (CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK);
--		hisi_sas_phy_write32(hisi_hba, phy_id,
--				     SAS_PHY_BIST_CTRL, reg_val);
+-	hisi_hba->debugfs_dump_dentry =
+-			debugfs_create_dir("dump", hisi_hba->debugfs_dir);
 -
- 		/* set the bist init value */
- 		hisi_sas_phy_write32(hisi_hba, phy_id,
- 				     SAS_PHY_BIST_CODE,
-@@ -3035,6 +3030,11 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 				     SAS_PHY_BIST_CODE1,
- 				     SAS_PHY_BIST_CODE1_INIT);
- 
-+		mdelay(100);
-+		reg_val |= (CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK);
-+		hisi_sas_phy_write32(hisi_hba, phy_id,
-+				     SAS_PHY_BIST_CTRL, reg_val);
-+
- 		/* clear error bit */
- 		mdelay(100);
- 		hisi_sas_phy_read32(hisi_hba, phy_id, SAS_BIST_ERR_CNT);
+ 	sz = hw->debugfs_reg_array[DEBUGFS_GLOBAL]->count * 4;
+ 	hisi_hba->debugfs_regs[DEBUGFS_GLOBAL] =
+ 				devm_kmalloc(dev, sz, GFP_KERNEL);
 -- 
 2.20.1
 
