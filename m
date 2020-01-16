@@ -2,190 +2,99 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB00C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B8FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C02081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4B52081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2BXAPLH"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NDcmPLeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbgAPCMC (ORCPT
+        id S1730710AbgAPCPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:12:02 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46662 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730397AbgAPCMB (ORCPT
+        Wed, 15 Jan 2020 21:15:20 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:40560 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729598AbgAPCPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:12:01 -0500
-Received: by mail-pl1-f195.google.com with SMTP id y8so7640045pll.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 18:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ISxVLQvK8s5nY6LD7WJ8K+q3IuJWjWSPNsTVjYjwR80=;
-        b=i2BXAPLH47Eap5rnuaSk8R3uM2RBSpnlp2GmGBNYBu9aWN7QmFKWYXXjSZ0zO2NJ5l
-         TtgRXB620x7o7cZqjHRAu5vtlw8XUy026f4IXofijWYbgiqL6OZkmTv0LALmnqLA3GI0
-         apyz/E6RIb6mnB31hZ5IWR9SRCdBnv3ROCv4zfnvf7ABKpOha1w44MuNGwgY5aDHoGfy
-         dZNbKRKgKfaNxkoOSGBRVZPlGyIOAkWZEpoZY0gUle3V95e44IgMYbrwbTbw+qWnwwFc
-         tMqnci8VTrjsBHDFf1sunwD9DjGW33qVtO23fpOgUW05G3QsHLKwN/RpRkVszP7ZITFN
-         QhbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ISxVLQvK8s5nY6LD7WJ8K+q3IuJWjWSPNsTVjYjwR80=;
-        b=CZSu3/4c/7tAxfZFS3FCsBphG2KvgpAqTSINPx/ekIRtUpg1xxPg1E4qJk2J0oC0xx
-         o5aYW2+A2h79Xgr40VBboMFCXaL1F9jQ8GIoyT8tpGOK6kn5nGF3QnlMG7mJYvvyWTjZ
-         BocUbUc/ZDpVW+RFRo2i+nDeGcm2GNIgGnwGMi3M7U+xcaA7pKtSLqv1xQndFmsfNXc3
-         waOU5WucldLZgjYtDuXWlJc8yG3cZEKIjN0UAruOHLnyiembhm7yQpqstNEuyEQBes1H
-         HZNT665EyFyvJSoiUzSbdjddJx5sgsRbFGI2uGV49XYA1nHXYcPVDn/0Bf9zN5uhKY0Y
-         gamA==
-X-Gm-Message-State: APjAAAVDinjkoDekZhaHgHyZjQp0nQbm+HX0YvJJYnLzOi6x4Q+hDhdA
-        7jRwiblD8rjNJdydGR+t5UQxZQ==
-X-Google-Smtp-Source: APXvYqwPtaRpD5q+1zpA9jWTonAeFglbEPocCdD4h8NzV1Oc8GcurWseUbRfe1v2M61Rtj3lXNrDwA==
-X-Received: by 2002:a17:902:462:: with SMTP id 89mr29644947ple.270.1579140720839;
-        Wed, 15 Jan 2020 18:12:00 -0800 (PST)
-Received: from ?IPv6:240e:362:43d:200:56f:3d32:378b:3366? ([240e:362:43d:200:56f:3d32:378b:3366])
-        by smtp.gmail.com with ESMTPSA id g11sm22149064pgd.26.2020.01.15.18.11.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 18:12:00 -0800 (PST)
-Subject: Re: [PATCH v11 2/4] uacce: add uacce driver
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-References: <1578710919-12141-1-git-send-email-zhangfei.gao@linaro.org>
- <1578710919-12141-3-git-send-email-zhangfei.gao@linaro.org>
- <20200111194006.GD435222@kroah.com>
- <053ccd05-4f11-5be6-47c2-eee5c2f1fdc4@linaro.org>
- <20200114145934.GA1960403@kroah.com>
- <c71b402c-a185-50a7-2827-c1836cc6c237@linaro.org>
- <9454d674-85db-32ba-4f28-eb732777d59d@intel.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <6c08d1ad-53a5-0238-3767-c40d7b10df3c@linaro.org>
-Date:   Thu, 16 Jan 2020 10:11:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 21:15:19 -0500
+X-UUID: 28bcea15ec5743cebd1b0ef9dc5f3cc6-20200116
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=itebPIuvSzJr5GaEJLbLuiRcsXbtJlr3jeWCPIKouLg=;
+        b=NDcmPLeS4vxiBV+bNnaiIBLIyDooLmRfENmSdE0L2PHK0a66PMABxDUrq4ZcBMEaD2oaFT4G0uUfsIHmoomZn50LLzxikwL3l8zWBJkNYU6YWs9LBljXXT77VkJFvhtJWQomm1h2+L7cRhrzSX1a4i48B0TENV9x0C1VI5BzMbk=;
+X-UUID: 28bcea15ec5743cebd1b0ef9dc5f3cc6-20200116
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 387514652; Thu, 16 Jan 2020 10:15:13 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 16 Jan
+ 2020 10:14:05 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Thu, 16 Jan 2020 10:14:17 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v9 0/5] add driver for "boe, tv101wum-nl6", "boe, tv101wum-n53", "auo, kd101n80-45na" and "auo, b101uan08.3" panels
+Date:   Thu, 16 Jan 2020 10:15:06 +0800
+Message-ID: <20200116021511.22675-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <9454d674-85db-32ba-4f28-eb732777d59d@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A0E5360FFACF32C65E5C1E5739A8C19C64DF2CF0A8C3537E6D2C6A9245318FA22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dave
-
-On 2020/1/16 上午12:43, Dave Jiang wrote:
->
->
-> On 1/15/20 4:18 AM, zhangfei wrote:
->> Hi, Greg
->>
->> On 2020/1/14 下午10:59, Greg Kroah-Hartman wrote:
->>> On Mon, Jan 13, 2020 at 11:34:55AM +0800, zhangfei wrote:
->>>> Hi, Greg
->>>>
->>>> Thanks for the review.
->>>>
->>>> On 2020/1/12 上午3:40, Greg Kroah-Hartman wrote:
->>>>> On Sat, Jan 11, 2020 at 10:48:37AM +0800, Zhangfei Gao wrote:
->>>>>> +static int uacce_fops_open(struct inode *inode, struct file *filep)
->>>>>> +{
->>>>>> +    struct uacce_mm *uacce_mm = NULL;
->>>>>> +    struct uacce_device *uacce;
->>>>>> +    struct uacce_queue *q;
->>>>>> +    int ret = 0;
->>>>>> +
->>>>>> +    uacce = xa_load(&uacce_xa, iminor(inode));
->>>>>> +    if (!uacce)
->>>>>> +        return -ENODEV;
->>>>>> +
->>>>>> +    if (!try_module_get(uacce->parent->driver->owner))
->>>>>> +        return -ENODEV;
->>>>> Why are you trying to grab the module reference of the parent device?
->>>>> Why is that needed and what is that going to help with here?
->>>>>
->>>>> This shouldn't be needed as the module reference of the owner of the
->>>>> fileops for this module is incremented, and the "parent" module 
->>>>> depends
->>>>> on this module, so how could it be unloaded without this code being
->>>>> unloaded?
->>>>>
->>>>> Yes, if you build this code into the kernel and the "parent" 
->>>>> driver is a
->>>>> module, then you will not have a reference, but when you remove that
->>>>> parent driver the device will be removed as it has to be unregistered
->>>>> before that parent driver can be removed from the system, right?
->>>>>
->>>>> Or what am I missing here?
->>>> The refcount here is preventing rmmod "parent" module after fd is 
->>>> opened,
->>>> since user driver has mmap kernel memory to user space, like mmio, 
->>>> which may
->>>> still in-use.
->>>>
->>>> With the refcount protection, rmmod "parent" module will fail until
->>>> application free the fd.
->>>> log like: rmmod: ERROR: Module hisi_zip is in use
->>> But if the "parent" module is to be unloaded, it has to unregister the
->>> "child" device and that will call the destructor in here and then you
->>> will tear everything down and all should be good.
->>>
->>> There's no need to "forbid" a module from being unloaded, even if it is
->>> being used.  Look at all networking drivers, they work that way, right?
->> Thanks Greg for the kind suggestion.
->>
->> I still have one uncertainty.
->> Does uacce has to block process continue accessing the mmapped area 
->> when remove "parent" module?
->> Uacce can block device access the physical memory when parent module 
->> call uacce_remove.
->> But application is still running, and suppose it is not the kernel 
->> driver's responsibility to call unmap.
->>
->> I am looking for some examples in kernel,
->> looks vfio does not block process continue accessing when 
->> vfio_unregister_iommu_driver either.
->>
->> In my test, application will keep waiting after rmmod parent, until 
->> ctrl+c, when unmap is called.
->> During the process, kernel does not report any error.
->>
->> Do you have any advice?
->
-> Would it work to call unmap_mapping_range() on the char dev 
-> inode->i_mappings? I think you need to set the vma->fault function ptr 
-> for the vm_operations_struct in the original mmap(). After the 
-> mappings are unmapped, you can set a state variable to trigger the 
-> return of VM_FAULT_SIGBUS in the ->fault function when the user app 
-> accesses the mmap region again and triggers a page fault. The user app 
-> needs to be programmed to catch exceptions to deal with that.
-
-Thanks Dave for the advice.
-Will look into it, may need some time to investigate.
-I would like to make an additional patch for this issue, since it does 
-not impact the main function.
-
-Thanks
+Q2hhbmdlcyBzaW5jZSB2ODoNCiAtIG1lcmdlIHRoZSBwYW5lbCBkb2N1bWVudHMgdG8gb25lLg0K
+IC0gZGVsYXkgbW92ZSB0aGUgZHJtX3BhbmVsX29mX2JhY2tsaWdodCBhZnRlciBkcm1fcGFuZWxf
+aW5pdA0KDQpDaGFuZ2VzIHNpbmNlIHY3Og0KIC0gYmFzZSBkcm0tbWlzYy1uZXh0IGJyYW5jaA0K
+IC0gZml4IGRvY3VtZW50IHBhc3MgZHRfYmluZGluZ19jaGVjaw0KIC0gcmVtb3ZlIGJhY2tsaWdo
+dCBmcm9tIHBhbmVsIGRyaXZlcg0KDQpDaGFuZ2VzIHNpbmNlIHY2Og0KIC0gZml4IGJvZV9wYW5l
+bF9pbml0IGVyciB1bmluaXQuDQogLSBhZGp1c3QgdGhlIGRlbGF5IG9mIGJhY2tsaWdodCBvbi4N
+Cg0KQ2hhbmdlcyBzaW5jZSB2NToNCiAtIGNvdmVydCB0aGUgZG9jdW1lbnRzIHRvIHlhbWwNCiAt
+IGZpbmUgdHVuZSBib2UsIHR2MTAxd3VtLW41MyBwYW5lbCB2aWRlbyB0aW1pbmUNCg0KQ2hhbmdl
+cyBzaW5jZSB2NDoNCiAtIGFkZCBhdW8sYjEwMXVhbjA4LjMgcGFuZWwgZm9yIHRoaXMgZHJpdmVy
+Lg0KIC0gYWRkIGJvZSx0djEwMXd1bS1uNTMgcGFuZWwgZm9yIHRoaXMgZHJpdmVyLg0KDQpDaGFu
+Z2VzIHNpbmNlIHYzOg0KIC0gcmVtb3ZlIGNoZWNrIGVuYWJsZV9ncGlvLg0KIC0gZmluZSB0dW5l
+IHRoZSBhdW8sa2QxMDFuODAtNDVuYSBwYW5lbCdzIHBvd2VyIG9uIHRpbWluZy4NCg0KQ2hhbmdl
+cyBzaW5jZSB2MjoNCiAtIGNvcnJlY3QgdGhlIHBhbmVsIHNpemUNCiAtIHJlbW92ZSBibGFuayBs
+aW5lIGluIEtjb25maWcNCiAtIG1vdmUgYXVvLGtkMTAxbjgwLTQ1bmEgcGFuZWwgZHJpdmVyIGlu
+IHRoaXMgc2VyaWVzLg0KDQpDaGFuZ2VzIHNpbmNlIHYxOg0KIC0gdXBkYXRlIHR5cG8gbmw2IC0+
+IG4xNi4NCiAtIHVwZGF0ZSBuZXcgcGFuZWwgY29uZmlnIGFuZCBtYWtlZmlsZSBhcmUgYWRkZWQg
+aW4gYWxwaGFiZXRpY2FsbHkgb3JkZXIuDQogLSBhZGQgdGhlIHBhbmVsIG1vZGUgYW5kIHBhbmVs
+IGluZm8gaW4gZHJpdmVyIGRhdGEuDQogLSBtZXJnZSBhdW8sa2QxMDFuODAtNDVhIGFuZCBib2Us
+dHYxMDF3dW0tbmw2IGluIG9uZSBkcml2ZXINCg0KSml0YW8gU2hpICg1KToNCiAgZHQtYmluZGlu
+Z3M6IGRpc3BsYXk6IHBhbmVsOiBBZGQgYm9lIHR2MTAxd3VtLW4xNiBwYW5lbCBiaW5kaW5ncw0K
+ICBkcm0vcGFuZWw6IHN1cHBvcnQgZm9yIGJvZSB0djEwMXd1bS1ubDYgd3V4Z2EgZHNpIHZpZGVv
+IG1vZGUgcGFuZWwNCiAgZHJtL3BhbmVsOiBzdXBwb3J0IGZvciBhdW8sa2QxMDFuODAtNDVuYSB3
+dXhnYSBkc2kgdmlkZW8gbW9kZSBwYW5lbA0KICBkcm0vcGFuZWw6IHN1cHBvcnQgZm9yIGJvZSx0
+djEwMXd1bS1uNTMgd3V4Z2EgZHNpIHZpZGVvIG1vZGUgcGFuZWwNCiAgZHJtL3BhbmVsOiBzdXBw
+b3J0IGZvciBhdW8sYjEwMXVhbjA4LjMgd3V4Z2EgZHNpIHZpZGVvIG1vZGUgcGFuZWwNCg0KIC4u
+Li9kaXNwbGF5L3BhbmVsL2JvZSx0djEwMXd1bS1ubDYueWFtbCAgICAgICB8ICA4MSArKw0KIGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgOSArDQogZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAxICsNCiAuLi4v
+Z3B1L2RybS9wYW5lbC9wYW5lbC1ib2UtdHYxMDF3dW0tbmw2LmMgICAgfCA4NTQgKysrKysrKysr
+KysrKysrKysrDQogNCBmaWxlcyBjaGFuZ2VkLCA5NDUgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9ib2UsdHYxMDF3dW0tbmw2LnlhbWwNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYw0KDQotLSANCjIuMjEuMA0K
 
