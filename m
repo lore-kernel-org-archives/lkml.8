@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11EAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF89DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D11206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2A9206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201248;
-	bh=DQevq35eZcY/6uKjVTxzSch3yt1tNIAU/7C1wfdh/+U=;
+	s=default; t=1579201252;
+	bh=F4cwf9f0yORGBvxuj54EAFRFgYgXoEyXBQKX2FzdycU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnO36BksYEtr9fNPUfdomzPj8Qp5vCnnHH9eFRlN0AmnV2O3H9YcseXuMwHHaj27U
-	 pomEGbR/FN0zADCjxBigTvUGowfRxwo7xPhaTR0sBsFILkNp4jbavKQZzCCi3SYHjT
-	 oxtIcxd1sYFAd7K0DCR/+zc623yM57WM+XV8aSIY=
+	b=wouT2YGO4ryxG0G58vjiMEnvbIxBuhJSYyIW0I5f0vA76F5U9XvWuN8fohGQ5oIcA
+	 b3+jPR+8J5E0Lp/cmsBkSr9q5WXWFIaugaKELwF5PdjdrMI+ohc/t6xh8YcUwEf3My
+	 eTBYkwG/YsnBCv3bcxzV2aCkFu9CnPwFZk61FfdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388366AbgAPRGM (ORCPT
+        id S2388852AbgAPRGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388468AbgAPRGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:03 -0500
+        id S2388818AbgAPRGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5963A214AF;
-        Thu, 16 Jan 2020 17:06:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 966D421D56;
+        Thu, 16 Jan 2020 17:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194362;
-        bh=DQevq35eZcY/6uKjVTxzSch3yt1tNIAU/7C1wfdh/+U=;
+        s=default; t=1579194360;
+        bh=F4cwf9f0yORGBvxuj54EAFRFgYgXoEyXBQKX2FzdycU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cON38ipauTLCTmc2xZEMaltTsXTg3bJgY2IrFdMHUlONEEUxdnF41imTwiYM/R9ud
-         rjjLMzPYWLe6aJsk52XsQdppn41nq1tSDToooM3Jfvd62Ls49QW5rGAlSxEQGfvJRj
-         sGYR8Mch6w8HsuuDFV+/dyuXsarLU3EkquGlcMm4=
+        b=S0zu3jqfVExMDvv5rWgMb1TfCUeSI+1RVPIHl6hojkNIdV1z4Tl8qTPeSv+HWsCZ8
+         zUTAX94kX4NagCUDAaguYPoGBnN83dArmf6gsRhnARCOKEsNJA0wdmJ0oH1BGeAYjb
+         r2yOsdKV3tNV+W+E6YWE3PDq6VYKE/ZrfZBiF4jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 298/671] soc: amlogic: meson-gx-pwrc-vpu: Fix power on/off register bitmask
-Date:   Thu, 16 Jan 2020 11:58:56 -0500
-Message-Id: <20200116170509.12787-35-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 297/671] PCI: dwc: Fix dw_pcie_ep_find_capability() to return correct capability offset
+Date:   Thu, 16 Jan 2020 11:58:55 -0500
+Message-Id: <20200116170509.12787-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,56 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 2fe3b4bbc93ec30a173ebae7d2b8c530416df3af ]
+[ Upstream commit 421db1ab287eebe80fd203eb009ae92836c586ad ]
 
-The register bitmask to power on/off the VPU memories was incorectly set
-to 0x2 instead of 0x3. While still working, let's use the recommended
-vendor value instead.
+commit beb4641a787d ("PCI: dwc: Add MSI-X callbacks handler") while
+adding MSI-X callback handler, introduced dw_pcie_ep_find_capability()
+and __dw_pcie_ep_find_next_cap() for finding the MSI and MSIX capability.
 
-Fixes: 75fcb5ca4b46 ("soc: amlogic: add Meson GX VPU Domains driver")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+However if MSI or MSIX capability is the last capability (i.e there are
+no additional items in the capabilities list and the Next Capability
+Pointer is set to '0'), __dw_pcie_ep_find_next_cap will return '0'
+even though MSI or MSIX capability may be present because of
+incorrect ordering of the "next_cap_ptr" check. Fix it.
+
+Fixes: beb4641a787d ("PCI: dwc: Add MSI-X callbacks handler")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-gx-pwrc-vpu.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-gx-pwrc-vpu.c b/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
-index 6289965c42e9..05421d029dff 100644
---- a/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
-+++ b/drivers/soc/amlogic/meson-gx-pwrc-vpu.c
-@@ -54,12 +54,12 @@ static int meson_gx_pwrc_vpu_power_off(struct generic_pm_domain *genpd)
- 	/* Power Down Memories */
- 	for (i = 0; i < 32; i += 2) {
- 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
--				   0x2 << i, 0x3 << i);
-+				   0x3 << i, 0x3 << i);
- 		udelay(5);
- 	}
- 	for (i = 0; i < 32; i += 2) {
- 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
--				   0x2 << i, 0x3 << i);
-+				   0x3 << i, 0x3 << i);
- 		udelay(5);
- 	}
- 	for (i = 8; i < 16; i++) {
-@@ -108,13 +108,13 @@ static int meson_gx_pwrc_vpu_power_on(struct generic_pm_domain *genpd)
- 	/* Power Up Memories */
- 	for (i = 0; i < 32; i += 2) {
- 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
--				   0x2 << i, 0);
-+				   0x3 << i, 0);
- 		udelay(5);
- 	}
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 739d97080d3b..a3d07d9c598b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -46,16 +46,19 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+ 	u8 cap_id, next_cap_ptr;
+ 	u16 reg;
  
- 	for (i = 0; i < 32; i += 2) {
- 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
--				   0x2 << i, 0);
-+				   0x3 << i, 0);
- 		udelay(5);
- 	}
++	if (!cap_ptr)
++		return 0;
++
+ 	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+ 	cap_id = (reg & 0x00ff);
+ 
+-	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
++	if (cap_id > PCI_CAP_ID_MAX)
+ 		return 0;
+ 
+ 	if (cap_id == cap)
+ 		return cap_ptr;
+ 
++	next_cap_ptr = (reg & 0xff00) >> 8;
+ 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+ }
+ 
+@@ -67,9 +70,6 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+ 	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+ 	next_cap_ptr = (reg & 0x00ff);
+ 
+-	if (!next_cap_ptr)
+-		return 0;
+-
+ 	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+ }
  
 -- 
 2.20.1
