@@ -2,139 +2,310 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55896C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B9F2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157BE20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j9Wbs+23"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0cAJfcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390053AbgAPW2f (ORCPT
+        id S2387640AbgAPWlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:28:35 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47066 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390021AbgAPW2e (ORCPT
+        Thu, 16 Jan 2020 17:41:42 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:44699 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730154AbgAPWlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:28:34 -0500
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 61EE72D2;
-        Thu, 16 Jan 2020 23:28:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1579213712;
-        bh=Z3nvz5BqJDqGaz8CPa474wKdYxW6vuAy7SgmFGcOwxs=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=j9Wbs+23H/bPYgNSm28T9ZcDxqq7WAOaoq6XZaT+yJGllNbSmM2zVYsi+XQIUJetj
-         SZjRc+uNZPUSxTqRvlimCnrq2JV0py40M/OwE9JobiMn/whCQA4Oq2W3tp2E0cVyaM
-         YxiK3IcRlTMIc67TmBxmzMFonXjfB1fcvRKvSJpo=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH] media: i2c: adv748x: Fix unsafe macros
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20191022132522.GA12072@embeddedor>
- <20200113231413.GA23583@ubuntu-x2-xlarge-x86>
- <20200116154503.Horde.MnWaeq-f0qzzp8gx01ERP2p@embeddedor.com>
- <CAKwvOd=cA7E0MOtFfaQ5-+-v=+YNHYQPgMq6yS517PLLKn=Qpw@mail.gmail.com>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <c11f86b7-f304-2667-0d2a-3d30a965b700@ideasonboard.com>
-Date:   Thu, 16 Jan 2020 22:28:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Jan 2020 17:41:42 -0500
+Received: by mail-qv1-f68.google.com with SMTP id n8so9870548qvg.11;
+        Thu, 16 Jan 2020 14:41:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CvIccACVJOu+2bdMdFsFdYMzg33aY8K8AC76wN0kDto=;
+        b=O0cAJfcHYGCgIA8WbapvXW9IDV+kbyROt5CNbPSoThZuz9xqGvQ4Oss6M18/EmLTIc
+         dTpCi9AY79w9SfhUyf9VVclC0wN3NEzcEFjLnQ517nzFc6KCuxcnGoq2IjR+5IytfGZN
+         uAzQymNA3Geb/hbdYmJxWsLeashTbh2oZVJ0tKcEJVLmdAXr2yDLTSSVo05e6sx1n5HJ
+         YB3StCybbRAQDJ9hNqEw8X7zb0P3ZVU4+2HGG8BG4FBhorbGhfPAbgYkUTwk3df0DFT5
+         69oW98/w7JuZX8s2WgLeYQ7kD3vfv28nwfZzEDODSZ3FWFhRUtrkQvKwWi7hAeOENp2d
+         edbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CvIccACVJOu+2bdMdFsFdYMzg33aY8K8AC76wN0kDto=;
+        b=WkeMuTFdX2S9suHcgb5R5+kxRE6ltfbbxuCSvGVoIX2mQ6R942WnJNlZf3hN5KAW5O
+         dy4xDzdhqba32PWcYiVXz29x2c9r0WBBKZK+YmL6id/d0WmKGAbSD2Uw5/U+sovBwRSM
+         C4n8OVUZ3LEVCMejO08H9NlEPqKevIlFIQAhQqS1zLotVl7YEcV8kVeOyx9fgB3QAb3Q
+         aLmrSWgoR286MZvjbZtj7ERaIn0QIVDV/CO71X8k7ksn/ccMpffjFCVPnD2hHSTJf4aP
+         EdxGWmqSfr0P0tSrgvxaErvpSyTnMbmjK6KgTK3imrPnRjd71fSnebNZvGavElja6fq0
+         /BBg==
+X-Gm-Message-State: APjAAAUJd5bqDwauuiBJMGYJWtYKX8ZTaTcb9aKgrPtHigKxQhoaH32a
+        mvcATIqqTqYyqn/QsLhpqDJ2dpMM8cGPyFAvbrk=
+X-Google-Smtp-Source: APXvYqxG7IhaZye7iAhvt7VSksxRKKAizWjY1gJRJNlU7eKDQJUQYQ4bNcAdA2ftB2AQOKtlxIFGvajndcNjgrCkFmU=
+X-Received: by 2002:ad4:54d3:: with SMTP id j19mr4814230qvx.247.1579214500294;
+ Thu, 16 Jan 2020 14:41:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOd=cA7E0MOtFfaQ5-+-v=+YNHYQPgMq6yS517PLLKn=Qpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918094179.1357254.14428494370073273452.stgit@toke.dk>
+In-Reply-To: <157918094179.1357254.14428494370073273452.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 16 Jan 2020 14:41:29 -0800
+Message-ID: <CAEf4Bzba5FHN_iN52qRiGisRcauur1FqDY545EwE+RVR-nFvQA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 09/11] selftests: Remove tools/lib/bpf from
+ include path
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick
+On Thu, Jan 16, 2020 at 5:28 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>
+> To make sure no new files are introduced that doesn't include the bpf/
+> prefix in its #include, remove tools/lib/bpf from the include path
+> entirely.
+>
+> Instead, we introduce a new header files directory under the scratch tool=
+s/
+> dir, and add a rule to run the 'install_headers' rule from libbpf to have=
+ a
+> full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
+> then use $(OUTPUT)/tools/include as the include path for selftests.
+>
+> For consistency we also make sure we put all the scratch build files from
+> other bpftool and libbpf into tools/build/, so everything stays within
+> selftests/.
+>
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> ---
+>  tools/testing/selftests/bpf/.gitignore |    1 +
+>  tools/testing/selftests/bpf/Makefile   |   50 +++++++++++++++++++-------=
+------
+>  2 files changed, 31 insertions(+), 20 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selft=
+ests/bpf/.gitignore
+> index 1d14e3ab70be..849be9990ad2 100644
+> --- a/tools/testing/selftests/bpf/.gitignore
+> +++ b/tools/testing/selftests/bpf/.gitignore
+> @@ -40,3 +40,4 @@ test_cpp
+>  /bpf_gcc
+>  /tools
+>  bpf_helper_defs.h
+> +/include/bpf
 
-On 16/01/2020 21:51, Nick Desaulniers wrote:
-> On Thu, Jan 16, 2020 at 1:45 PM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> Hi!
->> Friendly ping:
->>
->> Who can take this?
->>
->> It's been almost three months now since I first sent this patch out.
-> 
-> Kieran is listed as maintainer of:
->   998 F:  drivers/media/i2c/adv748x/*
-> 
-> but I'm guessing the tree would be Mauro's.  It would be good if
-> Kieran can review, then Mauro can pick up?
+Isn't the real path (within selftests/bpf) a tools/include/bpf, which
+is already ignored through /tools rule?
 
-Already done on the 22nd October 2019:
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
+ts/bpf/Makefile
+> index 1fd7da49bd56..c3fa695bb028 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -20,8 +20,8 @@ CLANG         ?=3D clang
+>  LLC            ?=3D llc
+>  LLVM_OBJCOPY   ?=3D llvm-objcopy
+>  BPF_GCC                ?=3D $(shell command -v bpf-gcc;)
+> -CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR)=
+  \
+> -         -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)                      \
+> +CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)            =
+  \
+> +         -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)     \
+>           -Dbpf_prog_load=3Dbpf_prog_test_load                           =
+ \
+>           -Dbpf_load_program=3Dbpf_test_load_program
+>  LDLIBS +=3D -lcap -lelf -lz -lrt -lpthread
+> @@ -97,11 +97,15 @@ OVERRIDE_TARGETS :=3D 1
+>  override define CLEAN
+>         $(call msg,CLEAN)
+>         $(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_=
+FILES) $(EXTRA_CLEAN)
+> -       $(MAKE) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/ clean
+>  endef
+>
+>  include ../lib.mk
+>
+> +SCRATCH_DIR :=3D $(OUTPUT)/tools
+> +BUILD_DIR :=3D $(SCRATCH_DIR)/build
+> +INCLUDE_DIR :=3D $(SCRATCH_DIR)/include
+> +INCLUDE_BPF :=3D $(INCLUDE_DIR)/bpf/bpf.h
+> +
+>  # Define simple and short `make test_progs`, `make test_sysctl`, etc tar=
+gets
+>  # to build individual tests.
+>  # NOTE: Semicolon at the end is critical to override lib.mk's default st=
+atic
+> @@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
+>         $(call msg,BINARY,,$@)
+>         $(CC) -o $@ $< -Wl,--build-id
+>
+> -$(OUTPUT)/test_stub.o: test_stub.c
+> +$(OUTPUT)/test_stub.o: test_stub.c $(INCLUDE_BPF)
+>         $(call msg,CC,,$@)
+>         $(CC) -c $(CFLAGS) -o $@ $<
+>
+> @@ -129,7 +133,7 @@ $(OUTPUT)/runqslower: force
+>         $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower      =
+     \
+>                     OUTPUT=3D$(CURDIR)/tools/ VMLINUX_BTF=3D$(abspath ../=
+../../../vmlinux)
+>
+> -BPFOBJ :=3D $(OUTPUT)/libbpf.a
+> +BPFOBJ :=3D $(BUILD_DIR)/libbpf/libbpf.a
+>
+>  $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BP=
+FOBJ)
+>
+> @@ -155,17 +159,23 @@ force:
+>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/tools/sbin/bpftool
+>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
+>
+> -$(DEFAULT_BPFTOOL): force
+> -       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)                  =
+     \
+> +$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
+> +       $(call msg,MKDIR,,$@)
+> +       mkdir -p $@
+> +
+> +$(DEFAULT_BPFTOOL): force $(BUILD_DIR)/bpftool
 
-https://lore.kernel.org/linux-media/22780ef3-514e-d013-1da8-9576780fde1c@ideasonboard.com/
+directories should be included as order-only dependencies (after | )
 
-Hans, Should this go through you?
+> +       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)         \
+> +                   OUTPUT=3D$(BUILD_DIR)/bpftool/                       =
+ \
+>                     prefix=3D DESTDIR=3D$(OUTPUT)/tools/ install
+>
+> -$(BPFOBJ): force
+> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/
+> +$(BPFOBJ): force $(BUILD_DIR)/libbpf
 
-Or are we just waiting for Mauro to pick it up?
+same
 
--- 
-Regards
---
-Kieran
+> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) \
+> +               OUTPUT=3D$(BUILD_DIR)/libbpf/
+>
+> -BPF_HELPERS :=3D $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.=
+h)
+> -$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
+> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)                       =
+     \
+> -                   OUTPUT=3D$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
+> +BPF_HELPERS :=3D $(wildcard $(BPFDIR)/bpf_*.h) $(INCLUDE_BPF)
+
+Shouldn't all BPF_HELPERS come from $(INCLUDE_DIR)/bpf now?
+
+> +$(INCLUDE_BPF): force $(BPFOBJ)
+
+And this can be more properly a $(BPF_HELPERS): force $(BPFOBJ)?
+
+> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) install_headers \
+> +               OUTPUT=3D$(BUILD_DIR)/libbpf/ DESTDIR=3D$(SCRATCH_DIR) pr=
+efix=3D
+>
+>  # Get Clang's default includes on this system, as opposed to those seen =
+by
+>  # '-target bpf'. This fixes "missing" files on some architectures/distro=
+s,
+> @@ -185,8 +195,8 @@ MENDIAN=3D$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-m=
+big-endian)
+>
+>  CLANG_SYS_INCLUDES =3D $(call get_sys_includes,$(CLANG))
+>  BPF_CFLAGS =3D -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN)                 =
+ \
+> -            -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi           \
+> -            -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/..=
+/usr/include)
+> +            -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi      \
+> +            -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
+>
+>  CLANG_CFLAGS =3D $(CLANG_SYS_INCLUDES) \
+>                -Wno-compare-distinct-pointer-types
+> @@ -306,7 +316,7 @@ $(TRUNNER_TEST_OBJS): $(TRUNNER_OUTPUT)/%.test.o:    =
+               \
+>                       $(TRUNNER_EXTRA_HDRS)                             \
+>                       $(TRUNNER_BPF_OBJS)                               \
+>                       $(TRUNNER_BPF_SKELS)                              \
+> -                     $$(BPFOBJ) | $(TRUNNER_OUTPUT)
+> +                     $$(BPFOBJ) $$(INCLUDE_BPF) | $(TRUNNER_OUTPUT)
+
+singling out $(INCLUDE_BPF) looks weird? But I think $(BPFOBJ)
+achieves the same effect, so this change can be probably dropped? Same
+below.
+
+>         $$(call msg,TEST-OBJ,$(TRUNNER_BINARY),$$@)
+>         cd $$(@D) && $$(CC) $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(=
+@F)
+>
+> @@ -314,7 +324,7 @@ $(TRUNNER_EXTRA_OBJS): $(TRUNNER_OUTPUT)/%.o:        =
+                       \
+>                        %.c                                              \
+>                        $(TRUNNER_EXTRA_HDRS)                            \
+>                        $(TRUNNER_TESTS_HDR)                             \
+> -                      $$(BPFOBJ) | $(TRUNNER_OUTPUT)
+> +                      $$(BPFOBJ) $$(INCLUDE_BPF) | $(TRUNNER_OUTPUT)
+>         $$(call msg,EXT-OBJ,$(TRUNNER_BINARY),$$@)
+>         $$(CC) $$(CFLAGS) -c $$< $$(LDLIBS) -o $$@
+>
+> @@ -326,7 +336,7 @@ ifneq ($2,)
+>  endif
+>
+>  $(OUTPUT)/$(TRUNNER_BINARY): $(TRUNNER_TEST_OBJS)                      \
+> -                            $(TRUNNER_EXTRA_OBJS) $$(BPFOBJ)           \
+> +                            $(TRUNNER_EXTRA_OBJS) $$(BPFOBJ) $$(INCLUDE_=
+BPF)           \
+>                              | $(TRUNNER_BINARY)-extras
+>         $$(call msg,BINARY,,$$@)
+>         $$(CC) $$(CFLAGS) $$(filter %.a %.o,$$^) $$(LDLIBS) -o $$@
+> @@ -388,7 +398,7 @@ $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_=
+extern.skel.h $(BPFOBJ)
+>         $(call msg,CXX,,$@)
+>         $(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
+>
+> -EXTRA_CLEAN :=3D $(TEST_CUSTOM_PROGS)                                   =
+ \
+> +EXTRA_CLEAN :=3D $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)                    =
+ \
+>         prog_tests/tests.h map_tests/tests.h verifier/tests.h           \
+>         feature                                                         \
+> -       $(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc tools)
+> +       $(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc)
+>
