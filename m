@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B6AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77686C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C812464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B692469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197606;
-	bh=SHRQrnJKDSOOsQpXFHmVHP/r6ZAAF9ckpFPKx8D5VNU=;
+	s=default; t=1579197615;
+	bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwvn3Y7Kj/lZe4i2kobnuiVPQS/HWqdcWF9p3NzdeFUHRR2qBx5koyufGQnDqiy/c
-	 zyIRe6+VtXxIxvxkFCnar41OeWnvUWk+duwzNxrB8Nrw1zsI/I+b16amUx/sdWWQGs
-	 JWQrZC5RoMD7YSIAsdwdrA5RuF09MbMEAU2dvr48=
+	b=y9QMogCgXtSArBejbFF4P3qtaIxzYv3M+TPC7ncDEp1HeuEfdhSwcq41E/yaB/qZy
+	 2GFYiuj3cm0DYGm7YaLbnIP6WeQVMXjFDVlV2e6kGN0OVyn7NFlDFJlUnXainQs3uR
+	 eKF08cNHLh3o4RfPlfKYLNp7aMjEBpwF1yHzhKvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405512AbgAPRmT (ORCPT
+        id S2393807AbgAPRmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390521AbgAPRkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:25 -0500
+        id S2405649AbgAPRlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C5C2470F;
-        Thu, 16 Jan 2020 17:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E6C24695;
+        Thu, 16 Jan 2020 17:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196424;
-        bh=SHRQrnJKDSOOsQpXFHmVHP/r6ZAAF9ckpFPKx8D5VNU=;
+        s=default; t=1579196481;
+        bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=neFmv6hVu/rTSu7ErUgDwzOCU7RLfsMibd5Vme86SqsK7+iHvBK4X894m6n9Rt5HD
-         ScVNcvatJmYGvnIKX20avpRiSl8v+WcTWCb+8ZA7u8IlFMp+MrpC3nPnEwnAzhJUPl
-         309Yyf4GGzFSpLzMgm1fDYS/WvEsMDXufMDDuBlc=
+        b=tct32E98bDL0uUIjnDyhM1LSIyUzcaoTrbAX7KVWaW2C1Th47quMA2bK2N403Kxgw
+         mhlNhJ4ti03zvioLoCtrboC1Muj1EN+5gsazk61IuNY1Pm/0hx7/CaD3pzKiDfDtTz
+         Z3ulfiv7Ium5VfaRrrxIBM0au1S3QQnu6T1GuVEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.9 193/251] staging: greybus: light: fix a couple double frees
-Date:   Thu, 16 Jan 2020 12:35:42 -0500
-Message-Id: <20200116173641.22137-153-sashal@kernel.org>
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 228/251] cw1200: Fix a signedness bug in cw1200_load_firmware()
+Date:   Thu, 16 Jan 2020 12:36:17 -0500
+Message-Id: <20200116173641.22137-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,65 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
+[ Upstream commit 4a50d454502f1401171ff061a5424583f91266db ]
 
-The problem is in gb_lights_request_handler().  If we get a request to
-change the config then we release the light with gb_lights_light_release()
-and re-allocated it.  However, if the allocation fails part way through
-then we call gb_lights_light_release() again.  This can lead to a couple
-different double frees where we haven't cleared out the original values:
+The "priv->hw_type" is an enum and in this context GCC will treat it
+as an unsigned int so the error handling will never trigger.
 
-	gb_lights_light_v4l2_unregister(light);
-	...
-	kfree(light->channels);
-	kfree(light->name);
-
-I also made a small change to how we set "light->channels_count = 0;".
-The original code handled this part fine and did not cause a use after
-free but it was sort of complicated to read.
-
-Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Fixes: a910e4a94f69 ("cw1200: add driver for the ST-E CW1100 & CW1200 WLAN chipsets")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/st/cw1200/fwio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index 9f01427f35f9..1cb82cc28aa7 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -1102,21 +1102,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
- static void gb_lights_light_release(struct gb_light *light)
- {
- 	int i;
--	int count;
+diff --git a/drivers/net/wireless/st/cw1200/fwio.c b/drivers/net/wireless/st/cw1200/fwio.c
+index 30e7646d04af..16be7fa82a23 100644
+--- a/drivers/net/wireless/st/cw1200/fwio.c
++++ b/drivers/net/wireless/st/cw1200/fwio.c
+@@ -323,12 +323,12 @@ int cw1200_load_firmware(struct cw1200_common *priv)
+ 		goto out;
+ 	}
  
- 	light->ready = false;
+-	priv->hw_type = cw1200_get_hw_type(val32, &major_revision);
+-	if (priv->hw_type < 0) {
++	ret = cw1200_get_hw_type(val32, &major_revision);
++	if (ret < 0) {
+ 		pr_err("Can't deduce hardware type.\n");
+-		ret = -ENOTSUPP;
+ 		goto out;
+ 	}
++	priv->hw_type = ret;
  
--	count = light->channels_count;
--
- 	if (light->has_flash)
- 		gb_lights_light_v4l2_unregister(light);
-+	light->has_flash = false;
- 
--	for (i = 0; i < count; i++) {
-+	for (i = 0; i < light->channels_count; i++)
- 		gb_lights_channel_release(&light->channels[i]);
--		light->channels_count--;
--	}
-+	light->channels_count = 0;
-+
- 	kfree(light->channels);
-+	light->channels = NULL;
- 	kfree(light->name);
-+	light->name = NULL;
- }
- 
- static void gb_lights_release(struct gb_lights *glights)
+ 	/* Set DPLL Reg value, and read back to confirm writes work */
+ 	ret = cw1200_reg_write_32(priv, ST90TDS_TSET_GEN_R_W_REG_ID,
 -- 
 2.20.1
 
