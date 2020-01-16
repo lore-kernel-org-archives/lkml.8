@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D86C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D251FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820AD20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E71320730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194139;
-	bh=K01wSvsQAwkygxhcrxNqXKveyTlHnvIRavqzWTKFLLE=;
+	s=default; t=1579194151;
+	bh=Vu2GNXNXW2Lq/MQh8E+8TwQcdIpv8XQTS4u624FWLZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RZ6D4coq9PoLk2AYeVfnmhtdKA3PdJrgfxXAfTdkJLKIgqgYKsz8QeiXpHqb0xPPk
-	 6Z0dQ2DjqfbhG598cQpfGbmYTsrWl12W+Vj/0Ma3trbXv+RDhgtDU7kyhgtTKmjfux
-	 vQHY47qZICVMFtre/OjIzm9QEewp/+YqkCRQudHI=
+	b=IOA2Wijr2t0NKR6L0iKsC9q+jwq7HIUJizNOyAL0keGhQLJIxc5KO23qa12iRvr7z
+	 1wCPVCeeEOCPlz0m+fQPJC4aFwBW2WbPNq54DdVmK7/C3D91YFtA+vOxFz1t9Zmi0z
+	 FfZ9oWk8HOjSqzNVwJPykUHWqdmTfdcG+5dWPNUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388326AbgAPRCR (ORCPT
+        id S2388398AbgAPRCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388252AbgAPRCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:04 -0500
+        id S2387586AbgAPRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9FBC2467E;
-        Thu, 16 Jan 2020 17:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58602207FF;
+        Thu, 16 Jan 2020 17:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194124;
-        bh=K01wSvsQAwkygxhcrxNqXKveyTlHnvIRavqzWTKFLLE=;
+        s=default; t=1579194138;
+        bh=Vu2GNXNXW2Lq/MQh8E+8TwQcdIpv8XQTS4u624FWLZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jl/Bw9+vL8elnCP4O5OG1mSDqjKqp1PLoC5sf9lt6PSPVSy6CyNMT9iQPKenM+l7C
-         C4w012RWUDoJw66+d3/k1JM+9Ws1+5xVc0/PVoZ7xmYCIFq10rzuJfDTgzASC6/qje
-         /jcGiXNyUPd3tKUxieHiEcg7Jmr2i79SNtHZGp2g=
+        b=FxBSnMVbvfzR5aZU1SCkSeKgHAXr3o858HbgnA9z7RXBur/p5TPGlAklUqoj2aZni
+         xA4qZGpX+DSJQHyIzJ3Q83Q1IBUTASqib4tLb1aWuYvMwzOEDmr8aqqaQ3LDHrWfWY
+         uknYH1I3kzcw4YZzUkyKaNTL5RGc845aZ+Dsvj1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mattias Jacobsson <2pi@mok.nu>, Darren Hart <dvhart@infradead.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 216/671] platform/x86: wmi: fix potential null pointer dereference
-Date:   Thu, 16 Jan 2020 11:52:05 -0500
-Message-Id: <20200116165940.10720-99-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 226/671] netfilter: nft_set_hash: bogus element self comparison from deactivation path
+Date:   Thu, 16 Jan 2020 11:52:15 -0500
+Message-Id: <20200116165940.10720-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,40 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattias Jacobsson <2pi@mok.nu>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit c355ec651a8941864549f2586f969d0eb7bf499a ]
+[ Upstream commit a01cbae57ec29b161d42ee1caa4ffffda5d519c2 ]
 
-In the function wmi_dev_match() the variable id is dereferenced without
-first performing a NULL check. The variable can for example be NULL if
-a WMI driver is registered without specifying the id_table field in
-struct wmi_driver.
+Use the element from the loop iteration, not the same element we want to
+deactivate otherwise this branch always evaluates true.
 
-Add a NULL check and return that the driver can't handle the device if
-the variable is NULL.
-
-Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Fixes: 6c03ae210ce3 ("netfilter: nft_set_hash: add non-resizable hashtable implementation")
+Reported-by: Florian Westphal <fw@strlen.de>
+Tested-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/wmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/netfilter/nft_set_hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 04791ea5d97b..35cdc3998eb5 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -768,6 +768,9 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	struct wmi_block *wblock = dev_to_wblock(dev);
- 	const struct wmi_device_id *id = wmi_driver->id_table;
+diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
+index 8dde4bfe8b8a..05118e03c3e4 100644
+--- a/net/netfilter/nft_set_hash.c
++++ b/net/netfilter/nft_set_hash.c
+@@ -555,7 +555,7 @@ static void *nft_hash_deactivate(const struct net *net,
  
-+	if (id == NULL)
-+		return 0;
-+
- 	while (id->guid_string) {
- 		uuid_le driver_guid;
- 
+ 	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+-		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
++		if (!memcmp(nft_set_ext_key(&he->ext), &elem->key.val,
+ 			    set->klen) &&
+ 		    nft_set_elem_active(&he->ext, genmask)) {
+ 			nft_set_elem_change_active(net, set, &he->ext);
 -- 
 2.20.1
 
