@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFCCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EB4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835862464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44B52464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197622;
-	bh=WA3U/r//9cm2sKTS9jnpmWEUYRRJqifW3XA904FrhdE=;
+	s=default; t=1579197634;
+	bh=vDh1zh2NXIVh0tH7uGbKC5ZjFd32+DbtXkYJo7HcdK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xIFmqlWUl0kMidZuJDGEwIGrtMbJYNn3uql/X9Hh1aPnxz/S/oSpwGJjztoWLlqb
-	 gXAgB9xQ24+PYnnt8HhvmRXq+QPvZQJbket+BEHgNGsPfuJWtgtv8BrPSL1r2Fz/y5
-	 yd7R0uVKlO98/+kiWCkEXGZsz8Ry8pv2KtjxXPuM=
+	b=QUpHNYMM4zv8yCnsx3xJCj6pVZPeCOmRqQIlzwXEo5EodyVVz1nUYIuYPvDMM8My0
+	 ARzp5jNG5hS8jNWDOyHMypU2SP3Em/4mvEc9F/tvrMUhpR6fuhqFWiOaPwrkoHVKa5
+	 VifGa6xN60UvpLBiFyvixhHqQBT9CG6NrtfM1BDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405803AbgAPRlv (ORCPT
+        id S2390433AbgAPSAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:00:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388445AbgAPRlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:11 -0500
+        id S2405781AbgAPRlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1080246A1;
-        Thu, 16 Jan 2020 17:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0819624718;
+        Thu, 16 Jan 2020 17:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196470;
-        bh=WA3U/r//9cm2sKTS9jnpmWEUYRRJqifW3XA904FrhdE=;
+        s=default; t=1579196506;
+        bh=vDh1zh2NXIVh0tH7uGbKC5ZjFd32+DbtXkYJo7HcdK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aE75OCrjbD57022aqdVTD+EXT9PDIAX/paHSg17Dqun3eNZk7+dK2dHBkgcBs9mh
-         pwoWEaTlznjn5fnlLbD01KHiBLfpMQ0FZFw6ctNbjChGpz/zntEQhSDv1iOpRy/JIg
-         dR5rC0GlyND6S6T5IKkIMOHIOe6WBT0+TASGxciA=
+        b=H333YmT/XW5BFMByVvMfCgUpCqrnFsBWfeUrsrdvW86XmA/FOjxyrrbAhjru1D+rL
+         oouaBhP0uSJIQd3epXnogaIaVHLjS8j5a/0Q9rzfBm8/J5Mje84AxEBOMzx42lyzSb
+         Jzmp3rS23Xq/4QQxDBrmBIWbRq4rhcrDUCy46hPs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@in-tech.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 221/251] net: qca_spi: Move reset_count to struct qcaspi
-Date:   Thu, 16 Jan 2020 12:36:10 -0500
-Message-Id: <20200116173641.22137-181-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 246/251] powerpc/powernv: Disable native PCIe port management
+Date:   Thu, 16 Jan 2020 12:36:35 -0500
+Message-Id: <20200116173641.22137-206-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,66 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@in-tech.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit bc19c32904e36548335b35fdce6ce734e20afc0a ]
+[ Upstream commit 9d72dcef891030545f39ad386a30cf91df517fb2 ]
 
-The reset counter is specific for every QCA700x chip. So move this
-into the private driver struct. Otherwise we get unpredictable reset
-behavior in setups with multiple QCA700x chips.
+On PowerNV the PCIe topology is (currently) managed by the powernv platform
+code in Linux in cooperation with the platform firmware. Linux's native
+PCIe port service drivers operate independently of both and this can cause
+problems.
 
-Fixes: 291ab06ecf67 (net: qualcomm: new Ethernet over SPI driver for QCA7000)
-Signed-off-by: Stefan Wahren <stefan.wahren@in-tech.com>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The main issue is that the portbus driver will conflict with the platform
+specific hotplug driver (pnv_php) over ownership of the MSI used to notify
+the host when a hotplug event occurs. The portbus driver claims this MSI on
+behalf of the individual port services because the same interrupt is used
+for hotplug events, PMEs (on root ports), and link bandwidth change
+notifications. The portbus driver will always claim the interrupt even if
+the individual port service drivers, such as pciehp, are compiled out.
+
+The second, bigger, problem is that the hotplug port service driver
+fundamentally does not work on PowerNV. The platform assumes that all
+PCI devices have a corresponding arch-specific handle derived from the DT
+node for the device (pci_dn) and without one the platform will not allow
+a PCI device to be enabled. This problem is largely due to historical
+baggage, but it can't be resolved without significant re-factoring of the
+platform PCI support.
+
+We can fix these problems in the interim by setting the
+"pcie_ports_disabled" flag during platform initialisation. The flag
+indicates the platform owns the PCIe ports which stops the portbus driver
+from being registered.
+
+This does have the side effect of disabling all port services drivers
+that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
+not a huge disadvantage on PowerNV since these services are either unused
+or handled through other means.
+
+Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191118065553.30362-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/qca_spi.c | 9 ++++-----
- drivers/net/ethernet/qualcomm/qca_spi.h | 1 +
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ arch/powerpc/platforms/powernv/pci.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
-index 21f546587e3d..31583d6f044f 100644
---- a/drivers/net/ethernet/qualcomm/qca_spi.c
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -438,7 +438,6 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
- 	u16 signature = 0;
- 	u16 spi_config;
- 	u16 wrbuf_space = 0;
--	static u16 reset_count;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index 98cc8ba07c23..00dbf1e895a9 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -923,6 +923,23 @@ void __init pnv_pci_init(void)
+ 	if (!firmware_has_feature(FW_FEATURE_OPAL))
+ 		return;
  
- 	if (event == QCASPI_EVENT_CPUON) {
- 		/* Read signature twice, if not valid
-@@ -491,13 +490,13 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
- 
- 		qca->sync = QCASPI_SYNC_RESET;
- 		qca->stats.trig_reset++;
--		reset_count = 0;
-+		qca->reset_count = 0;
- 		break;
- 	case QCASPI_SYNC_RESET:
--		reset_count++;
-+		qca->reset_count++;
- 		netdev_dbg(qca->net_dev, "sync: waiting for CPU on, count %u.\n",
--			   reset_count);
--		if (reset_count >= QCASPI_RESET_TIMEOUT) {
-+			   qca->reset_count);
-+		if (qca->reset_count >= QCASPI_RESET_TIMEOUT) {
- 			/* reset did not seem to take place, try again */
- 			qca->sync = QCASPI_SYNC_UNKNOWN;
- 			qca->stats.reset_timeout++;
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/ethernet/qualcomm/qca_spi.h
-index 6e31a0e744a4..c48c314ca4df 100644
---- a/drivers/net/ethernet/qualcomm/qca_spi.h
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.h
-@@ -97,6 +97,7 @@ struct qcaspi {
- 
- 	unsigned int intr_req;
- 	unsigned int intr_svc;
-+	u16 reset_count;
- 
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *device_root;
++#ifdef CONFIG_PCIEPORTBUS
++	/*
++	 * On PowerNV PCIe devices are (currently) managed in cooperation
++	 * with firmware. This isn't *strictly* required, but there's enough
++	 * assumptions baked into both firmware and the platform code that
++	 * it's unwise to allow the portbus services to be used.
++	 *
++	 * We need to fix this eventually, but for now set this flag to disable
++	 * the portbus driver. The AER service isn't required since that AER
++	 * events are handled via EEH. The pciehp hotplug driver can't work
++	 * without kernel changes (and portbus binding breaks pnv_php). The
++	 * other services also require some thinking about how we're going
++	 * to integrate them.
++	 */
++	pcie_ports_disabled = true;
++#endif
++
+ 	/* Look for IODA IO-Hubs. */
+ 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
+ 		pnv_pci_init_ioda_hub(np);
 -- 
 2.20.1
 
