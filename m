@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEDCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DB62469D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F46324687
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194931;
-	bh=CZoEm34k2yxC/ZLFQYNkpC/eieyvEaKqF77ghZX9gVg=;
+	s=default; t=1579194936;
+	bh=P4JS33lPfd5CksSa+DV0l9XssAnGxxCSrEewU7X7u24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ckgOfx3zqeNqAMKOO7hmcwaTnfajFJzmZqLAWVMWIoxBCkXT1r+ODusATcjteCkqx
-	 ApLUw2aELFCK/iBQ1P+48WIke7QhsJZYFVBFVDTHlmsgA0OqVMdHRzlfViUj+uMnrX
-	 JU1T5hrDLS4g9X334fhZOHGgcOSrQIZ4rbJFA++M=
+	b=JzgjuQ+tNU3nRG7FKNmG+nNhk9MvRoLhaKFEvp0Ud+m2pU35ZXNFvY9YuR86HFobS
+	 lyz9MVs1rwi5NxPCOh/Q2TWaKYPNeEmh2o2nDsDdasXv6zTqJRJmGtczFy6L+Kje2d
+	 jPY5RwDA+5Pl0AAvfjf4RJFFUccrkYSvLKESU0NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391039AbgAPROh (ORCPT
+        id S2390580AbgAPRPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33294 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:15:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390974AbgAPROW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:22 -0500
+        id S2390246AbgAPROi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 112A12469C;
-        Thu, 16 Jan 2020 17:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB28246A0;
+        Thu, 16 Jan 2020 17:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194861;
-        bh=CZoEm34k2yxC/ZLFQYNkpC/eieyvEaKqF77ghZX9gVg=;
+        s=default; t=1579194878;
+        bh=P4JS33lPfd5CksSa+DV0l9XssAnGxxCSrEewU7X7u24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fs26R41MoQh2V8sSsDVW+GEJaDDWdXLYrlmxFjc9zvqoOZia4SUEe8c7a3fLLPYx1
-         RqnwwzO3tNHRjFkCA62n64gXDbnxg7m2xi62kml3bQdhnrlopqPcmxFBfqwje/PZr0
-         ltIBYUfuaIFdTJ+2QkK8KkexqAAbzJz6Avp8zoSQ=
+        b=zvOCsLo0W1tG7EA5E9DeS4bKV1Xh3i2RwDQjV4HEOfaE3zuGOw6J/D/tcB/9v/H9B
+         MtsQ9eENvmTR0hDySd6+3vODzO/nTkQYjEYGcf7S9uzQYvXBqwSJEIKpZoX8bIIPes
+         bcmn77XRd/kfwEVztUin1Qy9OXTWOf2naH6YpkwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 656/671] afs: Remove set but not used variables 'before', 'after'
-Date:   Thu, 16 Jan 2020 12:04:54 -0500
-Message-Id: <20200116170509.12787-393-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 667/671] soc: aspeed: Fix snoop_file_poll()'s return type
+Date:   Thu, 16 Jan 2020 12:05:05 -0500
+Message-Id: <20200116170509.12787-404-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,84 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 51590df4f3306cb1f43dca54e3ccdd121ab89594 ]
+[ Upstream commit a4e55ccd4392e70f296d12e81b93c6ca96ee21d5 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+snoop_file_poll() is defined as returning 'unsigned int' but the
+.poll method is declared as returning '__poll_t', a bitwise type.
 
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_set_contig_bits:
-fs/afs/dir_edit.c:75:12: warning: variable before set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:20: warning: variable after set but not used [-Wunused-but-set-variable]
-fs/afs/dir_edit.c: In function afs_clear_contig_bits:
-fs/afs/dir_edit.c:100:12: warning: variable before set but not used [-Wunused-but-set-variable]
+Fix this by using the proper return type and using the EPOLL
+constants instead of the POLL ones, as required for __poll_t.
 
-They are never used since commit 63a4681ff39c.
-
-Fixes: 63a4681ff39c ("afs: Locally edit directory data for mkdir/create/unlink/...")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/20191121051851.268726-1-joel@jms.id.au
+Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc chardev")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir_edit.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/misc/aspeed-lpc-snoop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index 8b400f5aead5..0e7162527db8 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -72,13 +72,11 @@ static int afs_find_contig_bits(union afs_xdr_dir_block *block, unsigned int nr_
- static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 				int bit, unsigned int nr_slots)
- {
--	u64 mask, before, after;
-+	u64 mask;
- 
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] |= (u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] |= (u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] |= (u8)(mask >> 2 * 8);
-@@ -87,8 +85,6 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] |= (u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] |= (u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] |= (u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
+diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/misc/aspeed-lpc-snoop.c
+index 2feb4347d67f..c10be21a1663 100644
+--- a/drivers/misc/aspeed-lpc-snoop.c
++++ b/drivers/misc/aspeed-lpc-snoop.c
+@@ -101,13 +101,13 @@ static ssize_t snoop_file_read(struct file *file, char __user *buffer,
+ 	return ret ? ret : copied;
  }
  
- /*
-@@ -97,13 +93,11 @@ static void afs_set_contig_bits(union afs_xdr_dir_block *block,
- static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 				  int bit, unsigned int nr_slots)
+-static unsigned int snoop_file_poll(struct file *file,
++static __poll_t snoop_file_poll(struct file *file,
+ 				    struct poll_table_struct *pt)
  {
--	u64 mask, before, after;
-+	u64 mask;
+ 	struct aspeed_lpc_snoop_channel *chan = snoop_file_to_chan(file);
  
- 	mask = (1 << nr_slots) - 1;
- 	mask <<= bit;
- 
--	before = *(u64 *)block->hdr.bitmap;
--
- 	block->hdr.bitmap[0] &= ~(u8)(mask >> 0 * 8);
- 	block->hdr.bitmap[1] &= ~(u8)(mask >> 1 * 8);
- 	block->hdr.bitmap[2] &= ~(u8)(mask >> 2 * 8);
-@@ -112,8 +106,6 @@ static void afs_clear_contig_bits(union afs_xdr_dir_block *block,
- 	block->hdr.bitmap[5] &= ~(u8)(mask >> 5 * 8);
- 	block->hdr.bitmap[6] &= ~(u8)(mask >> 6 * 8);
- 	block->hdr.bitmap[7] &= ~(u8)(mask >> 7 * 8);
--
--	after = *(u64 *)block->hdr.bitmap;
+ 	poll_wait(file, &chan->wq, pt);
+-	return !kfifo_is_empty(&chan->fifo) ? POLLIN : 0;
++	return !kfifo_is_empty(&chan->fifo) ? EPOLLIN : 0;
  }
  
- /*
+ static const struct file_operations snoop_fops = {
 -- 
 2.20.1
 
