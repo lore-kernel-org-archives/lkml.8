@@ -2,98 +2,91 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51163C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1DAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EDA22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195233;
-	bh=rTDm/veJoLoQMJHrPCBBDxWNnrNUsb4DdzTNHkeOL3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BX+EKXkXlCG9+x+bmHZAB9Qft5ngjTYA6uh48txuFW+LlzDwA76rBUb7cPJCAKBqF
-	 xldrQJIifeORwoccU2OmN//6VjE/I/BXOtPoS4w7ABa1otl38AP/+/zIHzM81ySD/C
-	 fLZgrG+mD6/JlWHsU+z7cvvloQ2DmSVQondAAKak=
+	by mail.kernel.org (Postfix) with ESMTP id 1275E22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uKE/aGAq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391621AbgAPRU2 (ORCPT
+        id S2403755AbgAPRUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:20:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391363AbgAPRSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:20:35 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38026 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391362AbgAPRSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:18:05 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565B1246B2;
-        Thu, 16 Jan 2020 17:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195085;
-        bh=rTDm/veJoLoQMJHrPCBBDxWNnrNUsb4DdzTNHkeOL3g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVRClOPcQHMt8Dyg1DiWX6kGuwy9GGk6FQJjOUjN25Qo/W6yovcaV01+NNTE/9LCR
-         n7ejbXyu073z5C3BAqdauc9yXSF5wvMhYZG7CiguBG9Yl6GpSLI2zdZjRK67phkXuA
-         ptqwuIhyU0IObiehjCZNhg5UpA2XOUgoLcniCgrY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 033/371] pinctrl: sh-pfc: sh7734: Remove bogus IPSR10 value
-Date:   Thu, 16 Jan 2020 12:11:41 -0500
-Message-Id: <20200116171719.16965-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
-References: <20200116171719.16965-1-sashal@kernel.org>
+Received: by mail-qk1-f194.google.com with SMTP id k6so19822239qki.5;
+        Thu, 16 Jan 2020 09:18:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZHJNJzAFrt0uyyRdNsMrWMrSY7FsAQZj36UJfWF2nQU=;
+        b=uKE/aGAqqXGSN8s+eDE4CAzAzR2AtXW9tzd+k5XeRXKQcW+eaNJZvBZZwrFIGWJRyu
+         3hjiIr8ru5Dlc1QYU2Z0YYBb7lAlosZetIUrC/lFZQzqKja0FGSUxSI1QRBUUeczFPfh
+         nPPW1XUE4qVgUcvYBpN8380/wdXR+xV1BA29a9I+JfXI0H0Hbw5HoJGuSuHrq/FZ2+Or
+         ue7zj0GyFEKbPP/vbtcGVCwc0lanVffQuHrz8j+0NLBH9kKuK9Qsomi0Gn/Y/to+lHAx
+         4CBLsBM5pmJ85IL5FstHN1P+pJSfJw4DWdfTGTHgQFcAmk+5ONRgSjJfkEuNahVYuhbZ
+         EoLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZHJNJzAFrt0uyyRdNsMrWMrSY7FsAQZj36UJfWF2nQU=;
+        b=FshGpK11LIM1rgRINmc3mIT0JQRzeZVaeUaGAn5mcLgYKeiig/FGNQnn/AuSxRMSl2
+         DO3GVYHWXRvcTZKKwkkhE9h8LjNfyObuUhua2PKpyq7BemzvMJAIkwJq3cmpUTKuKStQ
+         xXmdOA6P0GE0vXcsyjyKFMaR4o9hpIDKRuHFbxlQi7voD3JzmujP1FLnA0sk7f8l1nk8
+         /vqwy0sHBZGJlnVb36LoGHgAG4PQSPdQ1AgxSk05vvJplxNT/tRKTTZhqTsDkvSMo0cu
+         px4NDhH2qNgT311MASkoRIx1Hfz3EcJ1CLSe2nfAK89uwwt/RQcdeF66Pjw6xCQYe4gu
+         6Zrg==
+X-Gm-Message-State: APjAAAXJrnPNQbBO1s47xP+wuf1hpH9/rWb01/bD6zw0Yko/Fdv9d3xj
+        atAsCRuSsWqt3RkLN6nmfBoZbnZw
+X-Google-Smtp-Source: APXvYqx54nLoADteH2t6RZa5CCoOO72147cgZHbEE1AaCvcvNwAK60FdkbLOD0YenTbu7JF5eOMQeQ==
+X-Received: by 2002:a37:684a:: with SMTP id d71mr31325170qkc.201.1579195084165;
+        Thu, 16 Jan 2020 09:18:04 -0800 (PST)
+Received: from ?IPv6:2601:282:803:7700:5c84:fd9a:6187:58f5? ([2601:282:803:7700:5c84:fd9a:6187:58f5])
+        by smtp.googlemail.com with ESMTPSA id 68sm10567325qkj.102.2020.01.16.09.18.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 09:18:03 -0800 (PST)
+Subject: Re: [PATCH AUTOSEL 4.19 573/671] ipv6: Handle race in
+ addrconf_dad_work
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20200116170509.12787-1-sashal@kernel.org>
+ <20200116170509.12787-310-sashal@kernel.org>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <fc012e53-ccdf-5ac5-6f3f-a2ecdf25bc39@gmail.com>
+Date:   Thu, 16 Jan 2020 10:18:00 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116170509.12787-310-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On 1/16/20 10:03 AM, Sasha Levin wrote:
+> From: David Ahern <dsahern@gmail.com>
+> 
+> [ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
+> 
 
-[ Upstream commit 4d374bacd7c9665179f9752a52d5d602c45d8190 ]
-
-The IP10[5:3] field in Peripheral Function Select Register 10 has a
-width of 3 bits, i.e. it allows programming one out of 8 different
-configurations.
-However, 9 values are provided instead of 8, overflowing into the
-subsequent field in the register, and thus breaking the configuration of
-the latter.
-
-Fix this by dropping a bogus zero value.
-
-Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 05ccb27f7781..c691e5e9d9de 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2231,7 +2231,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_CL1_B, 0, 0,
- 	    /* IP10_5_3 [3] */
- 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
--		FN_LCD_DON_B, 0, 0, 0,
-+		FN_LCD_DON_B, 0, 0,
- 	    /* IP10_2_0 [3] */
- 		FN_SSI_SCK23, FN_VI1_4_B, FN_RX1_D, FN_FCLE_B,
- 		FN_LCD_DATA15_B, 0, 0, 0 }
--- 
-2.20.1
+That commit was reverted by 8ae72cbf62d2c1879456c0c5872f958e18f53711 and
+then replaced by 2d819d250a1393a3e725715425ab70a0e0772a71
 
