@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F48CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CCAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD8F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33AE20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202688;
-	bh=6L36wDLqi7f4RDjvHJuzkxVG81vOLAgZTMzqyjsy0yc=;
+	s=default; t=1579202700;
+	bh=JgnKv5qtm9Jl4MrO1BVLyEM5NkFXfJa8YpVsvA5uuds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OV8ip01n79s1IWrkzMa9vp8GqprKX3CIufo8riU2AW+UyHEI8LgB+bd+hYhRdYxfA
-	 9+5PsrstsVIh8S+6qe1AyqS382afhX/57sxgKx/cVv1XRUz2KqMFczjrmzl0QEnuU8
-	 aK/z8P+6lzFrApvxIt7H0G6tEnthSwggiZ24E3F0=
+	b=F6BKBoYXtQaTjvN8QZ9eLziUG/bVvL72efdLq9E+tpYVlseRoYoRG6xGjqlemBvO3
+	 MKP0pYtjhlmoFigcGOMYksZeVmxKo9gTfKVHLCcaKvxXliXgGC6tmXmUaqHJxWEMge
+	 qUiHwTwlMzwnCdUI4XtYZK4+du9CDP120/kYr1N4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407415AbgAPTYr (ORCPT
+        id S2389296AbgAPTZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35958 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:25:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbgAPQwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:44 -0500
+        id S1728898AbgAPQwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A4621582;
-        Thu, 16 Jan 2020 16:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0184205F4;
+        Thu, 16 Jan 2020 16:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193563;
-        bh=6L36wDLqi7f4RDjvHJuzkxVG81vOLAgZTMzqyjsy0yc=;
+        s=default; t=1579193560;
+        bh=JgnKv5qtm9Jl4MrO1BVLyEM5NkFXfJa8YpVsvA5uuds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXMQDTuIsaOvMdVYL9jvznZ9IYpNazq0OGgK+GAgyetwrTeAjtj24XnlBIa+5+A/f
-         gBUqnWyu06Obg3+aRLXTJq4jj4ftRR3ii0PQlTRz3KTGwSDjut58tV/6dEbMC8jQR9
-         xfswbuJsNj8erqsu0w6cj3oOJYDczSlLRBwAj9aY=
+        b=mOCgmMUXdAmM4/ll+uhZuV2uPEc7Fa71OquQlPLVvK8NlJ5L/dUwAF440Dz1kr26R
+         3XqJlIZBin0yPxC3y+rVPGWgkT7b2ADjWSncWTbfUSR73QCM6rE0Xe6/8+Qu2LmEX4
+         9PveBegS8ifok+N2TgYOs4pbSHXNtG6BUE89WZEs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 108/205] tipc: reduce sensitive to retransmit failures
-Date:   Thu, 16 Jan 2020 11:41:23 -0500
-Message-Id: <20200116164300.6705-108-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 105/205] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
+Date:   Thu, 16 Jan 2020 11:41:20 -0500
+Message-Id: <20200116164300.6705-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,42 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoang Le <hoang.h.le@dektech.com.au>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit 426071f1f3995d7e9603246bffdcbf344cd31719 ]
+[ Upstream commit 9861ff954c7e83e2f738ce16fbe15f8a1e121771 ]
 
-With huge cluster (e.g >200nodes), the amount of that flow:
-gap -> retransmit packet -> acked will take time in case of STATE_MSG
-dropped/delayed because a lot of traffic. This lead to 1.5 sec tolerance
-value criteria made link easy failure around 2nd, 3rd of failed
-retransmission attempts.
+Since i2c_smbus functions can sleep, the brightness setting function
+for this driver must be the blocking version to avoid scheduling while
+atomic.
 
-Instead of re-introduced criteria of 99 faled retransmissions to fix the
-issue, we increase failure detection timer to ten times tolerance value.
-
-Fixes: 77cf8edbc0e7 ("tipc: simplify stale link failure criteria")
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
-Acked-by: Jon
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lore.kernel.org/r/20191106200106.29519-2-eajames@linux.ibm.com
+Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/link.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/ibm-cffps.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/tipc/link.c b/net/tipc/link.c
-index 999eab592de8..a9d8a81e80cf 100644
---- a/net/tipc/link.c
-+++ b/net/tipc/link.c
-@@ -1084,7 +1084,7 @@ static bool link_retransmit_failure(struct tipc_link *l, struct tipc_link *r,
- 		return false;
+diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+index d44745e498e7..aa4cdbbb100a 100644
+--- a/drivers/hwmon/pmbus/ibm-cffps.c
++++ b/drivers/hwmon/pmbus/ibm-cffps.c
+@@ -292,8 +292,8 @@ static int ibm_cffps_read_word_data(struct i2c_client *client, int page,
+ 	return rc;
+ }
  
- 	if (!time_after(jiffies, TIPC_SKB_CB(skb)->retr_stamp +
--			msecs_to_jiffies(r->tolerance)))
-+			msecs_to_jiffies(r->tolerance * 10)))
- 		return false;
+-static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+-					 enum led_brightness brightness)
++static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
++					enum led_brightness brightness)
+ {
+ 	int rc;
+ 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+@@ -311,9 +311,11 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+ 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+ 				       psu->led_state);
+ 	if (rc < 0)
+-		return;
++		return rc;
  
- 	hdr = buf_msg(skb);
+ 	led_cdev->brightness = brightness;
++
++	return 0;
+ }
+ 
+ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+@@ -351,7 +353,7 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+ 		 client->addr);
+ 	psu->led.name = psu->led_name;
+ 	psu->led.max_brightness = LED_FULL;
+-	psu->led.brightness_set = ibm_cffps_led_brightness_set;
++	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
+ 	psu->led.blink_set = ibm_cffps_led_blink_set;
+ 
+ 	rc = devm_led_classdev_register(dev, &psu->led);
 -- 
 2.20.1
 
