@@ -2,122 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56ADC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD0BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5E1207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579182547;
-	bh=gVEym5ChMLGuNJn/GMGLtZ5ZZEdpQSUgpatWS1nHA7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbB7LdXUSButTJjhWnUW4AbEIKZ2dv9+RRf6vrW1543aEKIwAHSVIlooSrPI9y+2I
-	 ZhzkP1JWLXyNElWLq9fw5LNI3JGHf4sozBkhpOREExw2YreLKuwnMUVXdoYJpTzk71
-	 +smMqg6Blc1TsMovqfKCe8UiItGQ1zrL8Wfp5/9g=
+	by mail.kernel.org (Postfix) with ESMTP id B0AA620748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kat1ueh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgAPNtG (ORCPT
+        id S1726689AbgAPNty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:49:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbgAPNtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:49:05 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Jan 2020 08:49:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25122 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726366AbgAPNty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:49:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579182593;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tW8QepJVzZQv/Ygdvwl07xvaRaFmGC5EBwa4NFuhNeM=;
+        b=Kat1ueh6URun3U1Gioba4aadsYehGLOvYzefcLU/PleyAhq0GxYRr0wxXuA0gW3XcuLotu
+        lcnOsJJFdykht33mkCXt3DG4OVLYPmjbzFPbZjajdVuWleJCKWVj5KKmc20fZ24TVCGOJP
+        ao8oC9G68RrktlFxypXayENsI2GhwK0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-jzdK0iVEON-09vfB4a5Ciw-1; Thu, 16 Jan 2020 08:49:50 -0500
+X-MC-Unique: jzdK0iVEON-09vfB4a5Ciw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E90D207FF;
-        Thu, 16 Jan 2020 13:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579182544;
-        bh=gVEym5ChMLGuNJn/GMGLtZ5ZZEdpQSUgpatWS1nHA7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvDggVD+xCQEbe4ee8I0hNAWvwBKPN3BcfwYa6GnYREl75z39ChmFc+7jL+mpGy7w
-         zLxdyCQoHueARZ0xO068fBVUgzTePkyMNIJrd30a+qZTMul6gouUQmAwMt14G5mqeH
-         lBzTnT16UryzZoFIEmCFITNHOPN29KmbJSyxAuMs=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Michael Petlan <mpetlan@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 12/12] perf header: Use last modification time for timestamp
-Date:   Thu, 16 Jan 2020 10:48:14 -0300
-Message-Id: <20200116134814.8811-13-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200116134814.8811-1-acme@kernel.org>
-References: <20200116134814.8811-1-acme@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E9EC8DF704;
+        Thu, 16 Jan 2020 13:49:49 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-242.ams2.redhat.com [10.36.117.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF7AA860DA;
+        Thu, 16 Jan 2020 13:49:47 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+Date:   Thu, 16 Jan 2020 14:49:46 +0100
+Message-Id: <20200116134946.184711-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+io_uring_poll() sets EPOLLOUT flag if there is space in the
+SQ ring, then we should wakeup threads waiting for EPOLLOUT
+events when we expose the new SQ head to the userspace.
 
-Using .st_ctime clobbers the timestamp information in perf report header
-whenever any operation is done with the file. Even tar-ing and untar-ing
-the perf.data file (which preserves the file last modification timestamp)
-doesn't prevent that:
-
-    [Michael@Diego tmp]$ ls -l perf.data
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
-
-	[Michael@Diego tmp]$ perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
-
-	[Michael@Diego tmp]$ tar c perf.data | xz > perf.data.tar.xz
-	[Michael@Diego tmp]$ mkdir aaa
-	[Michael@Diego tmp]$ cd aaa
-	[Michael@Diego aaa]$ xzcat ../perf.data.tar.xz | tar x
-	[Michael@Diego aaa]$ ls -l -a
-	total 172
-	drwxrwxr-x. 2 Michael Michael     23 Jan 14 11:26 .
-	drwxrwxr-x. 6 Michael Michael   4096 Jan 14 11:26 ..
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
-
-	[Michael@Diego aaa]$ perf report --header-only
-	# ========
-->	# captured on    : Tue Jan 14 11:26:16 2020
-	 [...]
-
-When using .st_mtime instead, correct information is printed:
-
-	[Michael@Diego aaa]$ ~/acme/tools/perf/perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 20200114104236.31555-1-mpetlan@redhat.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 93ad27830e2b..4246e7447e54 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2922,7 +2922,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	if (ret == -1)
- 		return -1;
- 
--	stctime = st.st_ctime;
-+	stctime = st.st_mtime;
- 	fprintf(fp, "# captured on    : %s", ctime(&stctime));
- 
- 	fprintf(fp, "# header version : %u\n", header->version);
--- 
-2.21.1
+Do you think is better to change the name of 'cq_wait' and 'cq_fasync'?
+
+Thanks,
+Stefano
+---
+ fs/io_uring.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 38b54051facd..5c6ff5f9e741 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3687,6 +3687,11 @@ static void io_commit_sqring(struct io_ring_ctx *c=
+tx)
+ 		 * write new data to them.
+ 		 */
+ 		smp_store_release(&rings->sq.head, ctx->cached_sq_head);
++
++		if (wq_has_sleeper(&ctx->cq_wait)) {
++			wake_up_interruptible(&ctx->cq_wait);
++			kill_fasync(&ctx->cq_fasync, SIGIO, POLL_OUT);
++		}
+ 	}
+ }
+=20
+--=20
+2.24.1
 
