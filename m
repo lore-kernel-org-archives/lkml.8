@@ -2,128 +2,782 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB0C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DF8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11296207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6822081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sj3sxrLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgAPFpL (ORCPT
+        id S1726933AbgAPFqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:45:11 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:52333 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgAPFpK (ORCPT
+        Thu, 16 Jan 2020 00:46:45 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38856 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgAPFqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:45:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id d10so12035099iod.19
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:45:10 -0800 (PST)
+        Thu, 16 Jan 2020 00:46:44 -0500
+Received: by mail-pg1-f196.google.com with SMTP id a33so9327411pgm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:46:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lw8L9cyK+5YydSgWCB88DiA0pS8ghO6UdLDzTrQjL94=;
+        b=sj3sxrLYXU6Byh8WoHoW1qfk482ADlqMzcpaJagwduSYnPcEVn0DAZyioYVTJwf6Db
+         JMWodHVPYkHi6CMAqH941IuZPeU6L+TGvT2w0ZMy0vIWRbGVaPwFSGGXpD4PzBVrVYZd
+         hNaarxaNzyGJGSllOW0m5vqrOSgW/Enq93VflhiDuf4qi2/utmCsLxcVclTIcA+9wMqh
+         C1K8fBmtlNBhexVwBPPrm8zVU74Pf2EDRJwjwGuTSAkkytIrABNsYLStpeolTIMjB5IB
+         4wEjQSS7dT+p8M+l9PkMARgI4wpNvGm1fgXtrX6cDeODycy2BP6llRsRvZwv6iMrfU2w
+         mLDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nUWpGQHDm6wJiD+qGbWs1eyfWOotGc7QheWrkXQpqSQ=;
-        b=ffSc6DcGcoP3gT86Jzk1M7ZpgveMdYHAW5e/yqu9ebWu0SJEWegRpB9dTTRLSoW/qD
-         iNJ3M1scu1lAb5YMENp9RKOsf92fmZbSVrCDGp9E6k/mX7rGKOSau4dQs0wUE8DevSJ0
-         wnqBvDx74vZFzEkMAngmXVF7hwZEyIKnp3+sbVUGXWcGoWzWO2iq1+gpwQq0aDf0Sl6s
-         Be7r3ijwRuvGC7VIO6z89RGo8In3kmUOhOS7ECmVPDHe5wDJWFMlehR5XFYSyA3ts+Cy
-         2vkdClGborOg0pBWqKzJMfZKGX4FzCMibgD5YoZ/qK89L1SCWCHqEG7g8KSQBlQH5cua
-         VAwg==
-X-Gm-Message-State: APjAAAW1GDjPifA34guvb0L7Kun++hqUZ8b90s025j0IW0re2lFKKJIx
-        5iNJc+sKQbPsWV3BsPP7DSbyCr1a1egz259Vx/deZGViBKsB
-X-Google-Smtp-Source: APXvYqznDF+aM84QyTizrFIO8KZi8H/MFev1nBzqXonXTHvbm2J4DzLdm1SGD2N9D+X+vxWOXkMpmQTCf0sxOzC8QpNV9zylYUar
-MIME-Version: 1.0
-X-Received: by 2002:a5e:8516:: with SMTP id i22mr25910766ioj.130.1579153509823;
- Wed, 15 Jan 2020 21:45:09 -0800 (PST)
-Date:   Wed, 15 Jan 2020 21:45:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ffbba3059c3b5352@google.com>
-Subject: memory leak in nf_tables_parse_netdev_hooks
-From:   syzbot <syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lw8L9cyK+5YydSgWCB88DiA0pS8ghO6UdLDzTrQjL94=;
+        b=YZCFCSNfODo+j6rCDZo52yBt7EZhLLojPNvnrkMQuRTW1xhiK3ErVXd8SSl8cYiRIM
+         ULv6KBOp5XglwMQswa6WIkIHYKVrfR9ueKAE3c6KnvIbeaHlux25Fx3U9llJPkewhY9p
+         1Q2HyS6UIHZz7ktXwN2/e64Mn1XQQaqg2GV0rWxyVRbY4zGSsZmkb7UIcZa2ReYSBv4w
+         6sbg7yMyQK8VPsfUmVe6lq8x/HaSKIm4vbnvoLC3RPtPAsTeBlZIPwCsaPHrVP+VlMF3
+         Yk1pdyIr6+itE3FJSvpbsEr+/fwCQfQGyEkkNo1JJCr/jI2Y6OkWq98RWvtcgkj0Hs+w
+         uMDA==
+X-Gm-Message-State: APjAAAVa5sXuMcBe7kSaDqjrVyXlyzpW6HO5p2JKLOcFKbJZQKmN8fK2
+        Xa7/OXyHJAQgFE6Rxt+izGI=
+X-Google-Smtp-Source: APXvYqyPJTiQjkqb6V+qtRsA3IQ5fO6Ob61jwDK9uKLNbqGJbQqefsurvwjz9S7AdGaWx9CFnA/qTA==
+X-Received: by 2002:a63:5114:: with SMTP id f20mr36749350pgb.321.1579153603499;
+        Wed, 15 Jan 2020 21:46:43 -0800 (PST)
+Received: from localhost.localdomain ([101.12.40.97])
+        by smtp.gmail.com with ESMTPSA id 68sm22490276pge.14.2020.01.15.21.46.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 15 Jan 2020 21:46:43 -0800 (PST)
+From:   Jeff Chang <richtek.jeff.chang@gmail.com>
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        matthias.bgg@gmail.com, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jeff_chang@richtek.com, richtek.jeff.chang@gmail.com
+Subject: [PATCH v7] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+Date:   Thu, 16 Jan 2020 13:46:37 +0800
+Message-Id: <1579153597-23286-1-git-send-email-richtek.jeff.chang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Jeff Chang <jeff_chang@richtek.com>
 
-syzbot found the following crash on:
+The MT6660 is a boosted BTL class-D amplifier with V/I sensing.
+A built-in DC-DC step-up converter is used to provide efficient
+power for class-D amplifier with multi-level class-G operation.
+The digital audio interface supports I2S, left-justified,
+right-justified, TDM and DSP A/B format for audio in with a data
+out used for chip information like voltage sense and current
+sense, which are able to be monitored via DATAO through proper
 
-HEAD commit:    51d69817 Merge tag 'platform-drivers-x86-v5.5-3' of git://..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e32659e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0eee3ce463efd
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9d4095107fc8749c69c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fae421e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e41c76e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com
-
-executing program
-BUG: memory leak
-unreferenced object 0xffff8881292d4580 (size 96):
-   comm "syz-executor052", pid 7129, jiffies 4294942632 (age 13.530s)
-   hex dump (first 32 bytes):
-     40 d2 15 1c 81 88 ff ff 40 d2 15 1c 81 88 ff ff  @.......@.......
-     60 53 c3 82 ff ff ff ff 00 a0 2c 2a 81 88 ff ff  `S........,*....
-   backtrace:
-     [<0000000059912bf5>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000059912bf5>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<0000000059912bf5>] slab_alloc mm/slab.c:3320 [inline]
-     [<0000000059912bf5>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-     [<00000000ab9f7d85>] kmalloc include/linux/slab.h:556 [inline]
-     [<00000000ab9f7d85>] nft_netdev_hook_alloc+0x3f/0xd0  
-net/netfilter/nf_tables_api.c:1624
-     [<0000000074e6bb65>] nf_tables_parse_netdev_hooks+0xac/0x230  
-net/netfilter/nf_tables_api.c:1673
-     [<00000000cd387efd>] nf_tables_flowtable_parse_hook  
-net/netfilter/nf_tables_api.c:5936 [inline]
-     [<00000000cd387efd>] nf_tables_newflowtable+0x41e/0x930  
-net/netfilter/nf_tables_api.c:6137
-     [<00000000526e3994>] nfnetlink_rcv_batch+0x662/0x8c0  
-net/netfilter/nfnetlink.c:433
-     [<000000006c5402bf>] nfnetlink_rcv_skb_batch  
-net/netfilter/nfnetlink.c:543 [inline]
-     [<000000006c5402bf>] nfnetlink_rcv+0x189/0x1c0  
-net/netfilter/nfnetlink.c:561
-     [<00000000b752f9f7>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1302 [inline]
-     [<00000000b752f9f7>] netlink_unicast+0x223/0x310  
-net/netlink/af_netlink.c:1328
-     [<00000000a0e23793>] netlink_sendmsg+0x2c0/0x570  
-net/netlink/af_netlink.c:1917
-     [<000000006e0aea94>] sock_sendmsg_nosec net/socket.c:639 [inline]
-     [<000000006e0aea94>] sock_sendmsg+0x54/0x70 net/socket.c:659
-     [<00000000a60c26dd>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-     [<00000000d412f616>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-     [<000000001179a6b0>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-     [<000000004a6699d1>] __do_sys_sendmsg net/socket.c:2426 [inline]
-     [<000000004a6699d1>] __se_sys_sendmsg net/socket.c:2424 [inline]
-     [<000000004a6699d1>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-     [<00000000a05aa7d1>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000bad17b52>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
+Signed-off-by: Jeff Chang <jeff_chang@richtek.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ sound/soc/codecs/Kconfig  |  10 +
+ sound/soc/codecs/Makefile |   2 +
+ sound/soc/codecs/mt6660.c | 509 ++++++++++++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/mt6660.h |  77 +++++++
+ 4 files changed, 598 insertions(+)
+ create mode 100644 sound/soc/codecs/mt6660.c
+ create mode 100644 sound/soc/codecs/mt6660.h
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+
+changelogs between v7 & v6
+	- remove blank line.
+	- remove unused structure
+	- use regmap instead of raw access.
+
+changelogs between v6 & v5
+        - remove parse DT and apply function about Chip INIT SETTING.
+        - remove DT binding Documentation.
+
+changelogs between v5 & v4
+        - remove redundant initialization.
+        - use packed structures.
+        - remove useless switch case.
+        - take care of memory allocation failures.
+
+changelogs between v4 & v3
+        - remove unnecessary kcontrols.
+        - modify copy right header.
+        - use dev_dbg instead of dev_info.
+        - add necessary debug message.
+        - add DT binding documentation.
+        - add space before } at every table.
+
+changelogs between v3 & v2
+
+        - modify MT6660 Kconfig, remove unnecessary selection.
+        - remove my own debug io interface. use standard regmap for debugging.
+        - remove regmap volatile ops, we do not use cache.
+        - remove component io read/write function, use snd_soc_component_init_regmap.
+        - remove init setting write code. Using parsing dts to set them.
+        - remove unnecessary pr_info log message.
+        - remove mt6660_component_put_volsw. Using snd_soc_get_volsw.
+
+
+
+
+
+
+
+
+
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 229cc89..2f627cf 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -122,6 +122,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_ML26124 if I2C
+ 	select SND_SOC_MT6351 if MTK_PMIC_WRAP
+ 	select SND_SOC_MT6358 if MTK_PMIC_WRAP
++	select SND_SOC_MT6660 if I2C
+ 	select SND_SOC_NAU8540 if I2C
+ 	select SND_SOC_NAU8810 if I2C
+ 	select SND_SOC_NAU8822 if I2C
+@@ -1465,6 +1466,15 @@ config SND_SOC_MT6358
+ 	  Enable support for the platform which uses MT6358 as
+ 	  external codec device.
+ 
++config SND_SOC_MT6660
++	tristate "Mediatek MT6660 Speaker Amplifier"
++	depends on I2C
++	help
++	  MediaTek MT6660 is a smart power amplifier which contain
++	  speaker protection, multi-band DRC, equalizer functions.
++	  Select N if you don't have MT6660 on board.
++	  Select M to build this as module.
++
+ config SND_SOC_NAU8540
+        tristate "Nuvoton Technology Corporation NAU85L40 CODEC"
+        depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index c498373..2b6814c 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -119,6 +119,7 @@ snd-soc-msm8916-analog-objs := msm8916-wcd-analog.o
+ snd-soc-msm8916-digital-objs := msm8916-wcd-digital.o
+ snd-soc-mt6351-objs := mt6351.o
+ snd-soc-mt6358-objs := mt6358.o
++snd-soc-mt6660-objs := mt6660.o
+ snd-soc-nau8540-objs := nau8540.o
+ snd-soc-nau8810-objs := nau8810.o
+ snd-soc-nau8822-objs := nau8822.o
+@@ -403,6 +404,7 @@ obj-$(CONFIG_SND_SOC_MSM8916_WCD_ANALOG) +=snd-soc-msm8916-analog.o
+ obj-$(CONFIG_SND_SOC_MSM8916_WCD_DIGITAL) +=snd-soc-msm8916-digital.o
+ obj-$(CONFIG_SND_SOC_MT6351)	+= snd-soc-mt6351.o
+ obj-$(CONFIG_SND_SOC_MT6358)	+= snd-soc-mt6358.o
++obj-$(CONFIG_SND_SOC_MT6660)	+= snd-soc-mt6660.o
+ obj-$(CONFIG_SND_SOC_NAU8540)   += snd-soc-nau8540.o
+ obj-$(CONFIG_SND_SOC_NAU8810)   += snd-soc-nau8810.o
+ obj-$(CONFIG_SND_SOC_NAU8822)   += snd-soc-nau8822.o
+diff --git a/sound/soc/codecs/mt6660.c b/sound/soc/codecs/mt6660.c
+new file mode 100644
+index 0000000..a36c416
+--- /dev/null
++++ b/sound/soc/codecs/mt6660.c
+@@ -0,0 +1,509 @@
++// SPDX-License-Identifier: GPL-2.0 //
++
++// Copyright (c) 2019 MediaTek Inc.
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/version.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/pm_runtime.h>
++#include <linux/delay.h>
++#include <linux/debugfs.h>
++#include <sound/soc.h>
++#include <sound/tlv.h>
++#include <sound/pcm_params.h>
++
++#include "mt6660.h"
++
++struct reg_size_table {
++	u32 addr;
++	u8 size;
++};
++
++static const struct reg_size_table mt6660_reg_size_table[] = {
++	{ MT6660_REG_HPF1_COEF, 4 },
++	{ MT6660_REG_HPF2_COEF, 4 },
++	{ MT6660_REG_TDM_CFG3, 2 },
++	{ MT6660_REG_RESV17, 2 },
++	{ MT6660_REG_RESV23, 2 },
++	{ MT6660_REG_SIGMAX, 2 },
++	{ MT6660_REG_DEVID, 2 },
++	{ MT6660_REG_HCLIP_CTRL, 2 },
++	{ MT6660_REG_DA_GAIN, 2 },
++};
++
++static int mt6660_get_reg_size(uint32_t addr)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(mt6660_reg_size_table); i++) {
++		if (mt6660_reg_size_table[i].addr == addr)
++			return mt6660_reg_size_table[i].size;
++	}
++	return 1;
++}
++
++static int mt6660_reg_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct mt6660_chip *chip = context;
++	int size = mt6660_get_reg_size(reg);
++	u8 reg_data[4];
++	int i, ret;
++
++	for (i = 0; i < size; i++)
++		reg_data[size - i - 1] = (val >> (8 * i)) & 0xff;
++
++	ret = i2c_smbus_write_i2c_block_data(chip->i2c, reg, size, reg_data);
++	return ret;
++}
++
++static int mt6660_reg_read(void *context, unsigned int reg, unsigned int *val)
++{
++	struct mt6660_chip *chip = context;
++	int size = mt6660_get_reg_size(reg);
++	int i, ret;
++	u8 data[4];
++	u32 reg_data = 0;
++
++	ret = i2c_smbus_read_i2c_block_data(chip->i2c, reg, size, data);
++	if (ret < 0)
++		return ret;
++	for (i = 0; i < size; i++) {
++		reg_data <<= 8;
++		reg_data |= data[i];
++	}
++	*val = reg_data;
++	return 0;
++}
++
++static const struct regmap_config mt6660_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 32,
++	.reg_write = mt6660_reg_write,
++	.reg_read = mt6660_reg_read,
++};
++
++static int mt6660_codec_dac_event(struct snd_soc_dapm_widget *w,
++	struct snd_kcontrol *kcontrol, int event)
++{
++	if (event == SND_SOC_DAPM_POST_PMU)
++		usleep_range(1000, 1100);
++	return 0;
++}
++
++static int mt6660_codec_classd_event(struct snd_soc_dapm_widget *w,
++	struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component =
++		snd_soc_dapm_to_component(w->dapm);
++	int ret;
++
++	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		dev_dbg(component->dev,
++			"%s: before classd turn on\n", __func__);
++		/* config to adaptive mode */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_BST_CTRL, 0x03, 0x03);
++		if (ret < 0) {
++			dev_err(component->dev, "config mode adaptive fail\n");
++			return ret;
++		}
++		break;
++	case SND_SOC_DAPM_POST_PMU:
++		/* voltage sensing enable */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV7, 0x04, 0x04);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"enable voltage sensing fail\n");
++			return ret;
++		}
++		dev_dbg(component->dev, "Amp on\n");
++		break;
++	case SND_SOC_DAPM_PRE_PMD:
++		dev_dbg(component->dev, "Amp off\n");
++		/* voltage sensing disable */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV7, 0x04, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"disable voltage sensing fail\n");
++			return ret;
++		}
++		/* pop-noise improvement 1 */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV10, 0x10, 0x10);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"pop-noise improvement 1 fail\n");
++			return ret;
++		}
++		break;
++	case SND_SOC_DAPM_POST_PMD:
++		dev_dbg(component->dev,
++			"%s: after classd turn off\n", __func__);
++		/* pop-noise improvement 2 */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV10, 0x10, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"pop-noise improvement 2 fail\n");
++			return ret;
++		}
++		/* config to off mode */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_BST_CTRL, 0x03, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev, "config mode off fail\n");
++			return ret;
++		}
++		break;
++	}
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget mt6660_component_dapm_widgets[] = {
++	SND_SOC_DAPM_DAC_E("DAC", NULL, MT6660_REG_PLL_CFG1,
++		0, 1, mt6660_codec_dac_event, SND_SOC_DAPM_POST_PMU),
++	SND_SOC_DAPM_ADC("VI ADC", NULL, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_PGA("PGA", SND_SOC_NOPM, 0, 0, NULL, 0),
++	SND_SOC_DAPM_OUT_DRV_E("ClassD", MT6660_REG_SYSTEM_CTRL, 2, 0,
++			       NULL, 0, mt6660_codec_classd_event,
++			       SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
++			       SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
++	SND_SOC_DAPM_OUTPUT("OUTP"),
++	SND_SOC_DAPM_OUTPUT("OUTN"),
++};
++
++static const struct snd_soc_dapm_route mt6660_component_dapm_routes[] = {
++	{ "DAC", NULL, "aif_playback" },
++	{ "PGA", NULL, "DAC" },
++	{ "ClassD", NULL, "PGA" },
++	{ "OUTP", NULL, "ClassD" },
++	{ "OUTN", NULL, "ClassD" },
++	{ "VI ADC", NULL, "ClassD" },
++	{ "aif_capture", NULL, "VI ADC" },
++};
++
++static int mt6660_component_get_volsw(struct snd_kcontrol *kcontrol,
++				  struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct mt6660_chip *chip = (struct mt6660_chip *)
++		snd_soc_component_get_drvdata(component);
++
++	ucontrol->value.integer.value[0] = chip->chip_rev & 0x0f;
++	return 0;
++}
++
++static const DECLARE_TLV_DB_SCALE(vol_ctl_tlv, -1155, 5, 0);
++
++static const struct snd_kcontrol_new mt6660_component_snd_controls[] = {
++	SOC_SINGLE_TLV("Digital Volume", MT6660_REG_VOL_CTRL, 0, 255,
++			   1, vol_ctl_tlv),
++	SOC_SINGLE("Hard Clip Switch", MT6660_REG_HCLIP_CTRL, 8, 1, 0),
++	SOC_SINGLE("Clip Switch", MT6660_REG_SPS_CTRL, 0, 1, 0),
++	SOC_SINGLE("Boost Mode", MT6660_REG_BST_CTRL, 0, 3, 0),
++	SOC_SINGLE("DRE Switch", MT6660_REG_DRE_CTRL, 0, 1, 0),
++	SOC_SINGLE("DC Protect Switch",	MT6660_REG_DC_PROTECT_CTRL, 3, 1, 0),
++	SOC_SINGLE("Data Output Left Channel Selection",
++		   MT6660_REG_DATAO_SEL, 3, 7, 0),
++	SOC_SINGLE("Data Output Right Channel Selection",
++		   MT6660_REG_DATAO_SEL, 0, 7, 0),
++	SOC_SINGLE_EXT("T0 SEL", MT6660_REG_CALI_T0, 0, 7, 0,
++		       snd_soc_get_volsw, NULL),
++	SOC_SINGLE_EXT("Chip Rev", MT6660_REG_DEVID, 8, 15, 0,
++		       mt6660_component_get_volsw, NULL),
++};
++
++static int _mt6660_chip_power_on(struct mt6660_chip *chip, int on_off)
++{
++	return regmap_write_bits(chip->regmap, MT6660_REG_SYSTEM_CTRL,
++				 0x01, on_off ? 0x00 : 0x01);
++}
++
++static int mt6660_component_probe(struct snd_soc_component *component)
++{
++	struct mt6660_chip *chip = snd_soc_component_get_drvdata(component);
++
++	dev_dbg(component->dev, "%s\n", __func__);
++	snd_soc_component_init_regmap(component, chip->regmap);
++
++	return 0;
++}
++
++static void mt6660_component_remove(struct snd_soc_component *component)
++{
++	dev_dbg(component->dev, "%s\n", __func__);
++	snd_soc_component_exit_regmap(component);
++}
++
++static const struct snd_soc_component_driver mt6660_component_driver = {
++	.probe = mt6660_component_probe,
++	.remove = mt6660_component_remove,
++
++	.controls = mt6660_component_snd_controls,
++	.num_controls = ARRAY_SIZE(mt6660_component_snd_controls),
++	.dapm_widgets = mt6660_component_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(mt6660_component_dapm_widgets),
++	.dapm_routes = mt6660_component_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(mt6660_component_dapm_routes),
++
++	.idle_bias_on = false, /* idle_bias_off = true */
++};
++
++static int mt6660_component_aif_hw_params(struct snd_pcm_substream *substream,
++	struct snd_pcm_hw_params *hw_params, struct snd_soc_dai *dai)
++{
++	int word_len = params_physical_width(hw_params);
++	int aud_bit = params_width(hw_params);
++	u16 reg_data = 0;
++	int ret;
++
++	dev_dbg(dai->dev, "%s: ++\n", __func__);
++	dev_dbg(dai->dev, "format: 0x%08x\n", params_format(hw_params));
++	dev_dbg(dai->dev, "rate: 0x%08x\n", params_rate(hw_params));
++	dev_dbg(dai->dev, "word_len: %d, aud_bit: %d\n", word_len, aud_bit);
++	if (word_len > 32 || word_len < 16) {
++		dev_err(dai->dev, "not supported word length\n");
++		return -ENOTSUPP;
++	}
++	switch (aud_bit) {
++	case 16:
++		reg_data = 3;
++		break;
++	case 18:
++		reg_data = 2;
++		break;
++	case 20:
++		reg_data = 1;
++		break;
++	case 24:
++	case 32:
++		reg_data = 0;
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++	ret = snd_soc_component_update_bits(dai->component,
++		MT6660_REG_SERIAL_CFG1, 0xc0, (reg_data << 6));
++	if (ret < 0) {
++		dev_err(dai->dev, "config aud bit fail\n");
++		return ret;
++	}
++	ret = snd_soc_component_update_bits(dai->component,
++		MT6660_REG_TDM_CFG3, 0x3f0, word_len << 4);
++	if (ret < 0) {
++		dev_err(dai->dev, "config word len fail\n");
++		return ret;
++	}
++	dev_dbg(dai->dev, "%s: --\n", __func__);
++	return 0;
++}
++
++static const struct snd_soc_dai_ops mt6660_component_aif_ops = {
++	.hw_params = mt6660_component_aif_hw_params,
++};
++
++#define STUB_RATES	SNDRV_PCM_RATE_8000_192000
++#define STUB_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
++			SNDRV_PCM_FMTBIT_U16_LE | \
++			SNDRV_PCM_FMTBIT_S24_LE | \
++			SNDRV_PCM_FMTBIT_U24_LE | \
++			SNDRV_PCM_FMTBIT_S32_LE | \
++			SNDRV_PCM_FMTBIT_U32_LE)
++
++static struct snd_soc_dai_driver mt6660_codec_dai = {
++	.name = "mt6660-aif",
++	.playback = {
++		.stream_name	= "aif_playback",
++		.channels_min	= 1,
++		.channels_max	= 2,
++		.rates		= STUB_RATES,
++		.formats	= STUB_FORMATS,
++	},
++	.capture = {
++		.stream_name	= "aif_capture",
++		.channels_min	= 1,
++		.channels_max	= 2,
++		.rates = STUB_RATES,
++		.formats = STUB_FORMATS,
++	},
++	/* dai properties */
++	.symmetric_rates = 1,
++	.symmetric_channels = 1,
++	.symmetric_samplebits = 1,
++	/* dai operations */
++	.ops = &mt6660_component_aif_ops,
++};
++
++static int _mt6660_chip_id_check(struct mt6660_chip *chip)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(chip->regmap, MT6660_REG_DEVID, &val);
++	if (ret < 0)
++		return ret;
++	val &= 0x0ff0;
++	if (val != 0x00e0 && val != 0x01e0) {
++		dev_err(chip->dev, "%s id(%x) not match\n", __func__, val);
++		return -ENODEV;
++	}
++	return 0;
++}
++
++static int _mt6660_chip_sw_reset(struct mt6660_chip *chip)
++{
++	int ret;
++
++	/* turn on main pll first, then trigger reset */
++	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x00);
++	if (ret < 0)
++		return ret;
++	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x80);
++	if (ret < 0)
++		return ret;
++	msleep(30);
++	return 0;
++}
++
++static int _mt6660_read_chip_revision(struct mt6660_chip *chip)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(chip->regmap, MT6660_REG_DEVID, &val);
++	if (ret < 0) {
++		dev_err(chip->dev, "get chip revision fail\n");
++		return ret;
++	}
++	chip->chip_rev = val&0xff;
++	dev_info(chip->dev, "%s chip_rev = %x\n", __func__, chip->chip_rev);
++	return 0;
++}
++
++static int mt6660_i2c_probe(struct i2c_client *client,
++			    const struct i2c_device_id *id)
++{
++	struct mt6660_chip *chip = NULL;
++	int ret;
++
++	dev_dbg(&client->dev, "%s\n", __func__);
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++	chip->i2c = client;
++	chip->dev = &client->dev;
++	mutex_init(&chip->io_lock);
++	i2c_set_clientdata(client, chip);
++
++	chip->regmap = devm_regmap_init(&client->dev,
++		NULL, chip, &mt6660_regmap_config);
++	if (IS_ERR(chip->regmap)) {
++		ret = PTR_ERR(chip->regmap);
++		dev_err(&client->dev, "failed to initialise regmap: %d\n", ret);
++		return ret;
++	}
++
++	/* chip reset first */
++	ret = _mt6660_chip_sw_reset(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip reset fail\n");
++		goto probe_fail;
++	}
++	/* chip power on */
++	ret = _mt6660_chip_power_on(chip, 1);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip power on 2 fail\n");
++		goto probe_fail;
++	}
++	/* chip devid check */
++	ret = _mt6660_chip_id_check(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip id check fail\n");
++		goto probe_fail;
++	}
++	/* chip revision get */
++	ret = _mt6660_read_chip_revision(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "read chip revision fail\n");
++		goto probe_fail;
++	}
++	pm_runtime_set_active(chip->dev);
++	pm_runtime_enable(chip->dev);
++
++	ret = devm_snd_soc_register_component(chip->dev,
++					       &mt6660_component_driver,
++					       &mt6660_codec_dai, 1);
++	return ret;
++probe_fail:
++	_mt6660_chip_power_on(chip, 0);
++	mutex_destroy(&chip->io_lock);
++	return ret;
++}
++
++static int mt6660_i2c_remove(struct i2c_client *client)
++{
++	struct mt6660_chip *chip = i2c_get_clientdata(client);
++
++	pm_runtime_disable(chip->dev);
++	pm_runtime_set_suspended(chip->dev);
++	mutex_destroy(&chip->io_lock);
++	return 0;
++}
++
++static int __maybe_unused mt6660_i2c_runtime_suspend(struct device *dev)
++{
++	struct mt6660_chip *chip = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "enter low power mode\n");
++	return regmap_update_bits(chip->regmap,
++		MT6660_REG_SYSTEM_CTRL, 0x01, 0x01);
++}
++
++static int __maybe_unused mt6660_i2c_runtime_resume(struct device *dev)
++{
++	struct mt6660_chip *chip = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "exit low power mode\n");
++	return regmap_update_bits(chip->regmap,
++		MT6660_REG_SYSTEM_CTRL, 0x01, 0x00);
++}
++
++static const struct dev_pm_ops mt6660_dev_pm_ops = {
++	SET_RUNTIME_PM_OPS(mt6660_i2c_runtime_suspend,
++			   mt6660_i2c_runtime_resume, NULL)
++};
++
++static const struct of_device_id __maybe_unused mt6660_of_id[] = {
++	{ .compatible = "mediatek,mt6660",},
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6660_of_id);
++
++static const struct i2c_device_id mt6660_i2c_id[] = {
++	{"mt6660", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, mt6660_i2c_id);
++
++static struct i2c_driver mt6660_i2c_driver = {
++	.driver = {
++		.name = "mt6660",
++		.of_match_table = of_match_ptr(mt6660_of_id),
++		.pm = &mt6660_dev_pm_ops,
++	},
++	.probe = mt6660_i2c_probe,
++	.remove = mt6660_i2c_remove,
++	.id_table = mt6660_i2c_id,
++};
++module_i2c_driver(mt6660_i2c_driver);
++
++MODULE_AUTHOR("Jeff Chang <jeff_chang@richtek.com>");
++MODULE_DESCRIPTION("MT6660 SPKAMP Driver");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.0.7_G");
+diff --git a/sound/soc/codecs/mt6660.h b/sound/soc/codecs/mt6660.h
+new file mode 100644
+index 0000000..054a3c5
+--- /dev/null
++++ b/sound/soc/codecs/mt6660.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#ifndef __SND_SOC_MT6660_H
++#define __SND_SOC_MT6660_H
++
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++
++#pragma pack(push, 1)
++struct mt6660_platform_data {
++	u8 init_setting_num;
++	u32 *init_setting_addr;
++	u32 *init_setting_mask;
++	u32 *init_setting_val;
++};
++
++struct mt6660_chip {
++	struct i2c_client *i2c;
++	struct device *dev;
++	struct platform_device *param_dev;
++	struct mt6660_platform_data plat_data;
++	struct mutex io_lock;
++	struct regmap *regmap;
++	u16 chip_rev;
++};
++#pragma pack(pop)
++
++#define MT6660_REG_DEVID		(0x00)
++#define MT6660_REG_SYSTEM_CTRL		(0x03)
++#define MT6660_REG_IRQ_STATUS1		(0x05)
++#define MT6660_REG_ADDA_CLOCK		(0x07)
++#define MT6660_REG_SERIAL_CFG1		(0x10)
++#define MT6660_REG_DATAO_SEL		(0x12)
++#define MT6660_REG_TDM_CFG3		(0x15)
++#define MT6660_REG_HPF_CTRL		(0x18)
++#define MT6660_REG_HPF1_COEF		(0x1A)
++#define MT6660_REG_HPF2_COEF		(0x1B)
++#define MT6660_REG_PATH_BYPASS		(0x1E)
++#define MT6660_REG_WDT_CTRL		(0x20)
++#define MT6660_REG_HCLIP_CTRL		(0x24)
++#define MT6660_REG_VOL_CTRL		(0x29)
++#define MT6660_REG_SPS_CTRL		(0x30)
++#define MT6660_REG_SIGMAX		(0x33)
++#define MT6660_REG_CALI_T0		(0x3F)
++#define MT6660_REG_BST_CTRL		(0x40)
++#define MT6660_REG_PROTECTION_CFG	(0x46)
++#define MT6660_REG_DA_GAIN		(0x4c)
++#define MT6660_REG_AUDIO_IN2_SEL	(0x50)
++#define MT6660_REG_SIG_GAIN		(0x51)
++#define MT6660_REG_PLL_CFG1		(0x60)
++#define MT6660_REG_DRE_CTRL		(0x68)
++#define MT6660_REG_DRE_THDMODE		(0x69)
++#define MT6660_REG_DRE_CORASE		(0x6B)
++#define MT6660_REG_PWM_CTRL		(0x70)
++#define MT6660_REG_DC_PROTECT_CTRL	(0x74)
++#define MT6660_REG_ADC_USB_MODE		(0x7c)
++#define MT6660_REG_INTERNAL_CFG		(0x88)
++#define MT6660_REG_RESV0		(0x98)
++#define MT6660_REG_RESV1		(0x99)
++#define MT6660_REG_RESV2		(0x9A)
++#define MT6660_REG_RESV3		(0x9B)
++#define MT6660_REG_RESV6		(0xA2)
++#define MT6660_REG_RESV7		(0xA3)
++#define MT6660_REG_RESV10		(0xB0)
++#define MT6660_REG_RESV11		(0xB1)
++#define MT6660_REG_RESV16		(0xB6)
++#define MT6660_REG_RESV17		(0xB7)
++#define MT6660_REG_RESV19		(0xB9)
++#define MT6660_REG_RESV21		(0xBB)
++#define MT6660_REG_RESV23		(0xBD)
++#define MT6660_REG_RESV31		(0xD3)
++#define MT6660_REG_RESV40		(0xE0)
++
++#endif /* __SND_SOC_MT6660_H */
+-- 
+2.7.4
+
