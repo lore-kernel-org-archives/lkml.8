@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB9BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64382053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5461E20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200979;
-	bh=UIxcUvduVdcP4qofQbk8fqLg1lEDIcWViqbTbAe5F+A=;
+	s=default; t=1579200983;
+	bh=Fdu8TQpO1tEs/+OcMpBLTyKdUUXXKVkzyXLjzKgtZ2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjiH1nfW6TfEHRN5i3IsCMCwZ+v79fiMv+SdGJ7sEGjq4DEcUnMrCngle1eWFYCM4
-	 qIeeLbJr9mXhY+NOtVRvbCGWBtk9pOXLC/yUU+T6Jx1fERRORvLxbJ/LPNhw6jyTPB
-	 WYJ2uvCbMBCbb9BF/KoM8AHl9RdZZ7e8cgnS5PBs=
+	b=L5Rm6Wt5ODJIFqnvVd245mYKnnF51b19bwKVsQjuf0q8YUY6BiiJkPuNtkySSA2Ef
+	 o3QmfZQv/PfesHq57me7az7KDwN45D1LWWzeYLVhj1KImvkV10K9IhuZrzHE9ucMAV
+	 Yw2HxxxKJNNCN35OF1qtcEvAZ31jBBjR2ZPeIX10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437189AbgAPS4S (ORCPT
+        id S2437193AbgAPS4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:56:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:56:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389163AbgAPRHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:25 -0500
+        id S2389160AbgAPRHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9006B205F4;
-        Thu, 16 Jan 2020 17:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DE822522;
+        Thu, 16 Jan 2020 17:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194444;
-        bh=UIxcUvduVdcP4qofQbk8fqLg1lEDIcWViqbTbAe5F+A=;
+        s=default; t=1579194443;
+        bh=Fdu8TQpO1tEs/+OcMpBLTyKdUUXXKVkzyXLjzKgtZ2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wDYJktr/6HHC70m4STDVIJ41gO7EzOKo/Tui48k/rhbO5vCbkqoU43oSxUaiOb3u
-         fsRL/D9wCVh7eCqmIP/qT9GJRF45cazTmN7Z+rqVvRt49t6ASTMUfxHyEt/6HGYmvh
-         QhK4S9IqexB35wY+yTqe8F8jSfp7sJF6MPGjdJ94=
+        b=P+rbqetvGz0SwJKdjHoB8BIl1y4v2rW9MwMZb9DiHwTmKOXOKrttaA0U+bnlMP/GX
+         tKDcBQJ/UKdTW5n7SVv6yJ4JbwS+hqAyE0W3+pDDQAOfmh9EEpMwF/DfuLjQRoXGPU
+         SQqJM37xj7roM9QGBMLQ5PVr1W7U+wIWIYRAh3r0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>, Pavel Machek <pavel@ucw.cz>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 356/671] backlight: lm3630a: Return 0 on success in update_status functions
-Date:   Thu, 16 Jan 2020 11:59:54 -0500
-Message-Id: <20200116170509.12787-93-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH AUTOSEL 4.19 355/671] netfilter: nf_tables: correct NFT_LOGLEVEL_MAX value
+Date:   Thu, 16 Jan 2020 11:59:53 -0500
+Message-Id: <20200116170509.12787-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,48 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit d3f48ec0954c6aac736ab21c34a35d7554409112 ]
+[ Upstream commit 92285a079eedfe104a773a7c4293f77a01f456fb ]
 
-lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-both return the brightness value if the brightness was successfully
-updated. Writing to these attributes via sysfs would cause a 'Bad
-address' error to be returned. These functions should return 0 on
-success, so let's change it to correct that error.
+should be same as NFT_LOGLEVEL_AUDIT, so use -, not +.
 
-Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 7eced5ab5a73 ("netfilter: nf_tables: add NFT_LOGLEVEL_* enumeration and use it")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/linux/netfilter/nf_tables.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 2030a6b77a09..ef2553f452ca 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -201,7 +201,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index 325ec6ef0a76..5eac62e1b68d 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -1128,7 +1128,7 @@ enum nft_log_level {
+ 	NFT_LOGLEVEL_AUDIT,
+ 	__NFT_LOGLEVEL_MAX
+ };
+-#define NFT_LOGLEVEL_MAX	(__NFT_LOGLEVEL_MAX + 1)
++#define NFT_LOGLEVEL_MAX	(__NFT_LOGLEVEL_MAX - 1)
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access\n");
-@@ -278,7 +278,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
- 
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
+ /**
+  * enum nft_queue_attributes - nf_tables queue expression netlink attributes
 -- 
 2.20.1
 
