@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CCAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33AE20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E16E20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202700;
-	bh=JgnKv5qtm9Jl4MrO1BVLyEM5NkFXfJa8YpVsvA5uuds=;
+	s=default; t=1579202705;
+	bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6BKBoYXtQaTjvN8QZ9eLziUG/bVvL72efdLq9E+tpYVlseRoYoRG6xGjqlemBvO3
-	 MKP0pYtjhlmoFigcGOMYksZeVmxKo9gTfKVHLCcaKvxXliXgGC6tmXmUaqHJxWEMge
-	 qUiHwTwlMzwnCdUI4XtYZK4+du9CDP120/kYr1N4=
+	b=vhihfktWy4PkWSqOj5yqhBGSazh9dI9dgjpsn2IdH+XAjletu5LthxfD6Bqr8TeeD
+	 7YorfjzMwxBN18G9FfKo/CECQ138YJVCgUdw4r9dCUqtqkM9MaoD+bfS0U6IklREse
+	 orWuTw4qkzAQ5b6G9+skE+qShU9gRL55pdAqSwag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389296AbgAPTZA (ORCPT
+        id S2437701AbgAPTZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:25:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35864 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:25:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbgAPQwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:41 -0500
+        id S1730101AbgAPQwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0184205F4;
-        Thu, 16 Jan 2020 16:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D7E2073A;
+        Thu, 16 Jan 2020 16:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193560;
-        bh=JgnKv5qtm9Jl4MrO1BVLyEM5NkFXfJa8YpVsvA5uuds=;
+        s=default; t=1579193557;
+        bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOCgmMUXdAmM4/ll+uhZuV2uPEc7Fa71OquQlPLVvK8NlJ5L/dUwAF440Dz1kr26R
-         3XqJlIZBin0yPxC3y+rVPGWgkT7b2ADjWSncWTbfUSR73QCM6rE0Xe6/8+Qu2LmEX4
-         9PveBegS8ifok+N2TgYOs4pbSHXNtG6BUE89WZEs=
+        b=nB22gdPyqHxHYRqkwwRIuOmfi9ATMWO0XJZ4d2KcQI+tDdXkO2CmRGlO46ZllRY0W
+         bsUPGuFc16YKEBUIXxMiaKf0sLiQpvAjh9GhBVRIhkR9Ig5Irhi1EDE+lx/eibMmZg
+         eGuYVCt52363fRo9bkJ95xPzkVUIjOhANCvLuFaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 105/205] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
-Date:   Thu, 16 Jan 2020 11:41:20 -0500
-Message-Id: <20200116164300.6705-105-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 103/205] arm64: dts: allwinner: a64: Re-add PMU node
+Date:   Thu, 16 Jan 2020 11:41:18 -0500
+Message-Id: <20200116164300.6705-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,60 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 9861ff954c7e83e2f738ce16fbe15f8a1e121771 ]
+[ Upstream commit 6b832a148717f1718f57805a9a4aa7f092582d15 ]
 
-Since i2c_smbus functions can sleep, the brightness setting function
-for this driver must be the blocking version to avoid scheduling while
-atomic.
+As it was found recently, the Performance Monitoring Unit (PMU) on the
+Allwinner A64 SoC was not generating (the right) interrupts. With the
+SPI numbers from the manual the kernel did not receive any overflow
+interrupts, so perf was not happy at all.
+It turns out that the numbers were just off by 4, so the PMU interrupts
+are from 148 to 151, not from 152 to 155 as the manual describes.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20191106200106.29519-2-eajames@linux.ibm.com
-Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+This was found by playing around with U-Boot, which typically does not
+use interrupts, so the GIC is fully available for experimentation:
+With *every* PPI and SPI enabled, an overflowing PMU cycle counter was
+found to set a bit in one of the GICD_ISPENDR registers, with careful
+counting this was determined to be number 148.
+
+Tested with perf record and perf top on a Pine64-LTS. Also tested with
+tasksetting to every core to confirm the assignment between IRQs and
+cores.
+
+This somewhat "revert-fixes" commit ed3e9406bcbc ("arm64: dts: allwinner:
+a64: Drop PMU node").
+
+Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
+Fixes: ed3e9406bcbc ("arm64: dts: allwinner: a64: Drop PMU node")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/ibm-cffps.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-index d44745e498e7..aa4cdbbb100a 100644
---- a/drivers/hwmon/pmbus/ibm-cffps.c
-+++ b/drivers/hwmon/pmbus/ibm-cffps.c
-@@ -292,8 +292,8 @@ static int ibm_cffps_read_word_data(struct i2c_client *client, int page,
- 	return rc;
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 70f4cce6be43..ba41c1b85887 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -142,6 +142,15 @@
+ 		clock-output-names = "ext-osc32k";
+ 	};
  
--static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
--					 enum led_brightness brightness)
-+static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
-+					enum led_brightness brightness)
- {
- 	int rc;
- 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
-@@ -311,9 +311,11 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
- 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
- 				       psu->led_state);
- 	if (rc < 0)
--		return;
-+		return rc;
- 
- 	led_cdev->brightness = brightness;
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
 +
-+	return 0;
- }
- 
- static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
-@@ -351,7 +353,7 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
- 		 client->addr);
- 	psu->led.name = psu->led_name;
- 	psu->led.max_brightness = LED_FULL;
--	psu->led.brightness_set = ibm_cffps_led_brightness_set;
-+	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
- 	psu->led.blink_set = ibm_cffps_led_blink_set;
- 
- 	rc = devm_led_classdev_register(dev, &psu->led);
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
