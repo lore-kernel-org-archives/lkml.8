@@ -2,129 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F519C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDA4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F86222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928A92081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hQg5p9/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgAPBbQ (ORCPT
+        id S1729777AbgAPBdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:31:16 -0500
-Received: from mga03.intel.com ([134.134.136.65]:37250 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgAPBbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:31:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 17:31:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,323,1574150400"; 
-   d="scan'208";a="213906940"
-Received: from unknown (HELO localhost) ([10.239.159.54])
-  by orsmga007.jf.intel.com with ESMTP; 15 Jan 2020 17:31:13 -0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        rientjes@google.com, Wei Yang <richardw.yang@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [Patch v3] mm: thp: grab the lock before manipulation defer list
-Date:   Thu, 16 Jan 2020 09:31:00 +0800
-Message-Id: <20200116013100.7679-1-richardw.yang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 Jan 2020 20:33:05 -0500
+Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:6222
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729195AbgAPBdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:33:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H6zQ33Rg6Rv3ayYWidfNJU45xlkVy4icJa0Msc+sFyQoWmCttuVDsTLfSnrAnlKWrfAWIByTaujeoL1zGxCY0ZOY7TOsUqt0m9Dv0SIOUE8QryuUNa71d0Wk2UJ5/8h3TGJvOkSUSjhM4Y6ujHU+dF0QGCPMkb/1e/4TKbOKZiYwOjdcGRoQFmh//erbl052I+ZfeKeo4d2nn2Ce/Y7yYn4k/5TE1Qus2/1zA7UnKABCOYoYHs4jflFYCGzsQZ7qEbmTUknuL2byu7PZYgD+QtGtZNgRVbyqIyd8ndG/XsF6vQM1rQeZGs6SG99O+1osdgYQVE1H9egFU94q9NZOeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMSBFlOH0fsUfj7zAMm0D7mMUFuSTeHL2UwKWlhtTfA=;
+ b=nmd97X9zXEzfgtHfObuqYjeiGnhFAgkKXyF0x7jmHqBedCnq8Lbo98lB7IS296Gye7d8Mx5mNn29lETtJUqi6Rrl2TwjKmT803SXK2b8QFKR7wieEcKWVoXALqBSPBZF0bPbJnMULbOU2xwdhwlaNQLMQcAJ1NsAP0PuS1ikNQEg8miyq1qz6ZiG3aqKbPl90UWPjldPDRFNTIHb9ZquvV9nyPSU/amVY1YSmkMycMLsvyqojeHQgiCBjidWh3wc+MJ+//4yFVaY/SmFVUQPjcSZ6FkuhrY9U83xjK/O6hTwd/L3RjfhSICWwVLIM4vodvzI0YtSL2H0KznrR7O6zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMSBFlOH0fsUfj7zAMm0D7mMUFuSTeHL2UwKWlhtTfA=;
+ b=hQg5p9/2lneadGpfXluhO3oZJ7OnQ5RM8/cmW28buxH7ncrEi8mxXou5ikcIfckIGhVgWlzHS6WZTg5eudBO3wOInNQ+5ORBt1Yp8SYJo3LLRsWyu/NAYLQUXmJYyIRCcj010Fkq28KxFV0mbDDwQv3NwgBHUwnuv1LpbdgSMH8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3868.eurprd04.prod.outlook.com (52.134.71.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Thu, 16 Jan 2020 01:33:00 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 01:33:00 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver
+ support
+Thread-Topic: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver
+ support
+Thread-Index: AQHVy0Ux+F+v2aX9K0CMnw3y4zKppKfrt2AAgADLt/A=
+Date:   Thu, 16 Jan 2020 01:33:00 +0000
+Message-ID: <DB3PR0402MB3916602246D133980D508DBCF5360@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+ <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYakDK0Zp_StJ+J5UV7PRjHEnWPmZGpGpeXMZyPtUmv1g@mail.gmail.com>
+In-Reply-To: <CACRpkdYakDK0Zp_StJ+J5UV7PRjHEnWPmZGpGpeXMZyPtUmv1g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6d940190-46c6-49a3-825b-08d79a2405df
+x-ms-traffictypediagnostic: DB3PR0402MB3868:|DB3PR0402MB3868:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38682FE6AAE02E0C4A67B058F5360@DB3PR0402MB3868.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(199004)(189003)(33656002)(7416002)(186003)(4326008)(478600001)(76116006)(81166006)(66946007)(66446008)(8676002)(6506007)(81156014)(4744005)(26005)(53546011)(66476007)(64756008)(71200400001)(66556008)(6916009)(86362001)(55016002)(2906002)(7696005)(5660300002)(316002)(44832011)(54906003)(8936002)(52536014)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3868;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vP0tgw8ADr48z3YvpbTzrxzXehYie7E/yshKabtkvDFeH6E1d92FTzsUv5egA5IN4AVgovlBxrb+UGUzwTsbOIx7XJ+jyg7l+Pg6v1EvMdn2gF5ETwxI4uTR3tBenqMIjiLAFWUEf3dJk5yAMoXt5fxtXImAwKJ8pzbuicQtW+bYcqEybek4XMyvijT7Ib38AcddFUFuDVXblb+SNPDo/MV/ckTLtIGxqN3lRLMV/ABWHTh2/VQtL53WvcDTHYTLg9SWXA1GEM4RR8v1KhLPXqQB+DW2tGotaal8rSZ8S6HZWiPB6R4GRnN4IGzqU8XFQEuZa1IlleXWSF7j559uNfvqh2xoCz0lRg8qZOVdgeWChlRWD7DubLtGQ9S9gqhRXb8b5IoMLzHnjNiWFfI+njqJYWm58zlRc1IrbLwuiWjLIO3Dgq1pJzQBFvDbUWSc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d940190-46c6-49a3-825b-08d79a2405df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 01:33:00.2969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hr4ru+UJHELNhHgVLbKL0IEHgWTjksRcjWFAud6MulvOOybGYdy9Hnqn+9PjSroVl9V4lwGfHjybLtKSspD2QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3868
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As all the other places, we grab the lock before manipulate the defer list.
-Current implementation may face a race condition.
-
-For example, the potential race would be:
-
-    CPU1                      CPU2
-    mem_cgroup_move_account   deferred_split_huge_page
-      list_empty
-                                lock
-                                list_empty
-                                list_add_tail
-                                unlock
-      lock
-      # list_empty might not hold anymore
-      list_add_tail
-      unlock
-
-When this sequence happens, the list_add_tail() in
-mem_cgroup_move_account() corrupt the list since which is already been
-added to some split_queue in split_huge_page_to_list().
-
-Besides this, David Rientjes points out the split_queue_len would be in
-a wrong state, which would be a significant issue for shrinkers.
-
-Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
-
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [5.4+]
-
----
-v3:
-  * remove all review/ack tag since rewrite the changelog
-  * use deferred_split_huge_page as the example of race
-  * add cc stable 5.4+ tag as suggested by David Rientjes
-
-v2:
-  * move check on compound outside suggested by Alexander
-  * an example of the race condition, suggested by Michal
----
- mm/memcontrol.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c5b5f74cfd4d..6450bbe394e2 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
- 	}
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && !list_empty(page_deferred_list(page))) {
-+	if (compound) {
- 		spin_lock(&from->deferred_split_queue.split_queue_lock);
--		list_del_init(page_deferred_list(page));
--		from->deferred_split_queue.split_queue_len--;
-+		if (!list_empty(page_deferred_list(page))) {
-+			list_del_init(page_deferred_list(page));
-+			from->deferred_split_queue.split_queue_len--;
-+		}
- 		spin_unlock(&from->deferred_split_queue.split_queue_lock);
- 	}
- #endif
-@@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
- 	page->mem_cgroup = to;
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && list_empty(page_deferred_list(page))) {
-+	if (compound) {
- 		spin_lock(&to->deferred_split_queue.split_queue_lock);
--		list_add_tail(page_deferred_list(page),
--			      &to->deferred_split_queue.split_queue);
--		to->deferred_split_queue.split_queue_len++;
-+		if (list_empty(page_deferred_list(page))) {
-+			list_add_tail(page_deferred_list(page),
-+				      &to->deferred_split_queue.split_queue);
-+			to->deferred_split_queue.split_queue_len++;
-+		}
- 		spin_unlock(&to->deferred_split_queue.split_queue_lock);
- 	}
- #endif
--- 
-2.17.1
-
+SGksIExpbnVzDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWOSAyLzNdIHBpbmN0cmw6IGZyZWVz
+Y2FsZTogQWRkIGkuTVg4TVAgcGluY3RybCBkcml2ZXINCj4gc3VwcG9ydA0KPiANCj4gSGkgQW5z
+b24sDQo+IA0KPiBPbiBXZWQsIEphbiAxNSwgMjAyMCBhdCAyOjQzIEFNIEFuc29uIEh1YW5nIDxB
+bnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IEFkZCB0aGUgcGluY3RybCBk
+cml2ZXIgc3VwcG9ydCBmb3IgaS5NWDhNUC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29u
+IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBBYmVsIFZlc2Eg
+PGFiZWwudmVzYUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IE5vIGNoYW5nZS4NCj4gDQo+IENhbiB0
+aGlzIHBhdGNoIGJlIGFwcGxpZWQgaW5kZXBlbmRlbnRseSBvZiB0aGUgcmVzdCBvZiB0aGUgcGF0
+Y2hlcz8NCg0KSSB0aGluayBzby4NCg0KVGhhbmtzLA0KQW5zb24NCg0K
