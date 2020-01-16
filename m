@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095BDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2009DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CD52077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0D3207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202304;
-	bh=XQKsPWErsPgbw5v5Rfqyy6rs8flD5VJUc1xLev5jRyE=;
+	s=default; t=1579202314;
+	bh=bmRdvpHD39WBfm6lyhHhVIBGEfuGksgspOgTMV/qZjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2R3RbBZNWn4sHnyce7UDwaVwsszh4fz1aB7ba1tFbwTv0YI7kPb1yc71d2D+hOSz
-	 ioRju+FvQB/j6sSyLRiZwUzhSirEkSSSdjjB+w8umNGeXAvcGr5/BR/L9D8v82LAIT
-	 iyufQv4/QXcG1ohREbiEJ6hocsSwZEUbtt4Iz8ck=
+	b=TrW16ijT88Oa+l3aUhO/QqtxTVSteBNNE0oXeS53d9LZXgxxUni0GKZM2wYbq8DMI
+	 6gZ3ABnDVVc82Ul3pRfQExOkOzDmgIqRKxkMQmQdRBVErtFNG2oRbkjix/tIPftNVi
+	 h5cRIZ4Hm9QMef3aOUDBC0R0gWMHsewgq8kf0g1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394390AbgAPTSY (ORCPT
+        id S1732285AbgAPQyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:18:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729903AbgAPQyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:39 -0500
+        id S1731727AbgAPQyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 696D220730;
-        Thu, 16 Jan 2020 16:54:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4C9205F4;
+        Thu, 16 Jan 2020 16:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193678;
-        bh=XQKsPWErsPgbw5v5Rfqyy6rs8flD5VJUc1xLev5jRyE=;
+        s=default; t=1579193660;
+        bh=bmRdvpHD39WBfm6lyhHhVIBGEfuGksgspOgTMV/qZjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPPiu1fopwVhd3gvBYMlc1XvcK9J0TjuRsv6Q0tJOFPqTe0T26chZ4Abg7F3Rnj90
-         9cNc2SkkkY6Y8ejhdwEGHQ/5p1hTNyxdYXaNgB8U9fcWIPEB9RwNJD4YDlJGmhNFzR
-         q2Uuy2NDU8MdntCzUpVCViK57/ibrUQHbV0JPzRU=
+        b=i/oXsbNinds7DSo4J5C7vSQMg8GB/TGVYrtbnw6yjuyNZO21BnSfgnGc7xgaZKBE0
+         LcTvxoluul+X5BeaKI5K61RBHHq/1+qW63EtrHxQWbXif3q4QOpeEH1zRlXms5gaO9
+         OBKS1YiRm8+qh7AON7mOCF26Sp7WyWeWfnQGJd/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tuong Lien <tuong.t.lien@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
+Cc:     Victorien Molle <victorien.molle@wifirst.fr>,
+        Florent Fourcot <florent.fourcot@wifirst.fr>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 202/205] tipc: fix retrans failure due to wrong destination
-Date:   Thu, 16 Jan 2020 11:42:57 -0500
-Message-Id: <20200116164300.6705-202-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, cake@lists.bufferbloat.net,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 188/205] sch_cake: Add missing NLA policy entry TCA_CAKE_SPLIT_GSO
+Date:   Thu, 16 Jan 2020 11:42:43 -0500
+Message-Id: <20200116164300.6705-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,102 +63,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: Victorien Molle <victorien.molle@wifirst.fr>
 
-[ Upstream commit abc9b4e0549b93fdaff56e9532bc49a2d7b04955 ]
+[ Upstream commit b3c424eb6a1a3c485de64619418a471dee6ce849 ]
 
-When a user message is sent, TIPC will check if the socket has faced a
-congestion at link layer. If that happens, it will make a sleep to wait
-for the congestion to disappear. This leaves a gap for other users to
-take over the socket (e.g. multi threads) since the socket is released
-as well. Also, in case of connectionless (e.g. SOCK_RDM), user is free
-to send messages to various destinations (e.g. via 'sendto()'), then
-the socket's preformatted header has to be updated correspondingly
-prior to the actual payload message building.
+This field has never been checked since introduction in mainline kernel
 
-Unfortunately, the latter action is done before the first action which
-causes a condition issue that the destination of a certain message can
-be modified incorrectly in the middle, leading to wrong destination
-when that message is built. Consequently, when the message is sent to
-the link layer, it gets stuck there forever because the peer node will
-simply reject it. After a number of retransmission attempts, the link
-is eventually taken down and the retransmission failure is reported.
-
-This commit fixes the problem by rearranging the order of actions to
-prevent the race condition from occurring, so the message building is
-'atomic' and its header will not be modified by anyone.
-
-Fixes: 365ad353c256 ("tipc: reduce risk of user starvation during link congestion")
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: Victorien Molle <victorien.molle@wifirst.fr>
+Signed-off-by: Florent Fourcot <florent.fourcot@wifirst.fr>
+Fixes: 2db6dc2662ba "sch_cake: Make gso-splitting configurable from userspace"
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/socket.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ net/sched/sch_cake.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/tipc/socket.c b/net/tipc/socket.c
-index 90ace35dbf0f..aea951a1f805 100644
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -1306,8 +1306,8 @@ static int __tipc_sendmsg(struct socket *sock, struct msghdr *m, size_t dlen)
- 	struct tipc_msg *hdr = &tsk->phdr;
- 	struct tipc_name_seq *seq;
- 	struct sk_buff_head pkts;
--	u32 dport, dnode = 0;
--	u32 type, inst;
-+	u32 dport = 0, dnode = 0;
-+	u32 type = 0, inst = 0;
- 	int mtu, rc;
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index dd0e8680b030..2277369feae5 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -2184,6 +2184,7 @@ static const struct nla_policy cake_policy[TCA_CAKE_MAX + 1] = {
+ 	[TCA_CAKE_MPU]		 = { .type = NLA_U32 },
+ 	[TCA_CAKE_INGRESS]	 = { .type = NLA_U32 },
+ 	[TCA_CAKE_ACK_FILTER]	 = { .type = NLA_U32 },
++	[TCA_CAKE_SPLIT_GSO]	 = { .type = NLA_U32 },
+ 	[TCA_CAKE_FWMARK]	 = { .type = NLA_U32 },
+ };
  
- 	if (unlikely(dlen > TIPC_MAX_USER_MSG_SIZE))
-@@ -1360,23 +1360,11 @@ static int __tipc_sendmsg(struct socket *sock, struct msghdr *m, size_t dlen)
- 		type = dest->addr.name.name.type;
- 		inst = dest->addr.name.name.instance;
- 		dnode = dest->addr.name.domain;
--		msg_set_type(hdr, TIPC_NAMED_MSG);
--		msg_set_hdr_sz(hdr, NAMED_H_SIZE);
--		msg_set_nametype(hdr, type);
--		msg_set_nameinst(hdr, inst);
--		msg_set_lookup_scope(hdr, tipc_node2scope(dnode));
- 		dport = tipc_nametbl_translate(net, type, inst, &dnode);
--		msg_set_destnode(hdr, dnode);
--		msg_set_destport(hdr, dport);
- 		if (unlikely(!dport && !dnode))
- 			return -EHOSTUNREACH;
- 	} else if (dest->addrtype == TIPC_ADDR_ID) {
- 		dnode = dest->addr.id.node;
--		msg_set_type(hdr, TIPC_DIRECT_MSG);
--		msg_set_lookup_scope(hdr, 0);
--		msg_set_destnode(hdr, dnode);
--		msg_set_destport(hdr, dest->addr.id.ref);
--		msg_set_hdr_sz(hdr, BASIC_H_SIZE);
- 	} else {
- 		return -EINVAL;
- 	}
-@@ -1387,6 +1375,22 @@ static int __tipc_sendmsg(struct socket *sock, struct msghdr *m, size_t dlen)
- 	if (unlikely(rc))
- 		return rc;
- 
-+	if (dest->addrtype == TIPC_ADDR_NAME) {
-+		msg_set_type(hdr, TIPC_NAMED_MSG);
-+		msg_set_hdr_sz(hdr, NAMED_H_SIZE);
-+		msg_set_nametype(hdr, type);
-+		msg_set_nameinst(hdr, inst);
-+		msg_set_lookup_scope(hdr, tipc_node2scope(dnode));
-+		msg_set_destnode(hdr, dnode);
-+		msg_set_destport(hdr, dport);
-+	} else { /* TIPC_ADDR_ID */
-+		msg_set_type(hdr, TIPC_DIRECT_MSG);
-+		msg_set_lookup_scope(hdr, 0);
-+		msg_set_destnode(hdr, dnode);
-+		msg_set_destport(hdr, dest->addr.id.ref);
-+		msg_set_hdr_sz(hdr, BASIC_H_SIZE);
-+	}
-+
- 	__skb_queue_head_init(&pkts);
- 	mtu = tipc_node_get_mtu(net, dnode, tsk->portid);
- 	rc = tipc_msg_build(hdr, m, 0, dlen, mtu, &pkts);
 -- 
 2.20.1
 
