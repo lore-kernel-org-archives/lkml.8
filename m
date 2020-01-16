@@ -2,93 +2,93 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DACCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12A1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAAF2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B46720661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200519;
+	bh=2dxMZ0XX0ymzZ5ZeO57n1kVvU7HDxLY2QeDz4UF2+DY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l1xydbjdhaMvwD9zaXQ5YfJwd6YvoweKShVqx7d0rgfPYAdVr5WgtLgm1kLhaD3B2
+	 m49u2ITRpS2GnwxNGP13OuO+Fvs+uAZ2Yc5aNjSegJsylKNYxCqKGdtuMka7XGoYII
+	 G0W/9Xu1s00aONxoYuAHFW2yQKzlESuTPgex+268=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388946AbgAPSse (ORCPT
+        id S2436974AbgAPSsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52606 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389726AbgAPRJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:45 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1is8e8-0006kl-62; Thu, 16 Jan 2020 18:09:28 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 9EA5C101226; Thu, 16 Jan 2020 18:09:27 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, luto@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, peterz@infradead.org,
-        fenghua.yu@intel.com, vineela.tummalapalli@intel.com,
-        linux-kernel@vger.kernel.org
-Cc:     DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
-        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
-Subject: Re: [PATCH] x86/speculation/spectre_v2: Exclude Zhaoxin CPUs from SPECTRE_V2
-In-Reply-To: <1579146434-2668-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-References: <1579146434-2668-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-Date:   Thu, 16 Jan 2020 18:09:27 +0100
-Message-ID: <87r1zzuy48.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jan 2020 13:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389735AbgAPRJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:44 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88C0B2468D;
+        Thu, 16 Jan 2020 17:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194584;
+        bh=2dxMZ0XX0ymzZ5ZeO57n1kVvU7HDxLY2QeDz4UF2+DY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1bI8rzPfR7afFsmovSB974vyQWrF9q3hTaiU/PYdPxWY5YjFKwHyUhCBRyHA/IVyx
+         wafS1u18xADnsPCKCN5x/biCU0xT3LisHEvSTkKQc/A7opUtOpDHzUcmJc95p/DDWr
+         RBd5Zj1BW6yJu8gcaOk/bu1yBFOkSt4MFre4iCVs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Disseldorp <ddiss@suse.de>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 457/671] ceph: fix "ceph.dir.rctime" vxattr value
+Date:   Thu, 16 Jan 2020 12:01:35 -0500
+Message-Id: <20200116170509.12787-194-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony,
+From: David Disseldorp <ddiss@suse.de>
 
-Tony W Wang-oc <TonyWWang-oc@zhaoxin.com> writes:
+[ Upstream commit 718807289d4130be1fe13f24f018733116958070 ]
 
-> @@ -1023,6 +1023,7 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
->  #define MSBDS_ONLY		BIT(5)
->  #define NO_SWAPGS		BIT(6)
->  #define NO_ITLB_MULTIHIT	BIT(7)
-> +#define NO_SPECTRE_V2		BIT(8)
->  
->  #define VULNWL(_vendor, _family, _model, _whitelist)	\
->  	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-> @@ -1084,6 +1085,10 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
->  	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
->  	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
->  	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
-> +
-> +	/* Zhaoxin Family 7 */
-> +	VULNWL(CENTAUR,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
-> +	VULNWL(ZHAOXIN,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
->  	{}
->  };
->  
-> @@ -1116,7 +1121,9 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
->  		return;
->  
->  	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
-> -	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
-> +
-> +	if (!cpu_matches(NO_SPECTRE_V2))
-> +		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+The vxattr value incorrectly places a "09" prefix to the nanoseconds
+field, instead of providing it as a zero-pad width specifier after '%'.
 
-That's way better. But as you might have noticed yourself this conflicts
-with the other patch which excludes these machines from the SWAPGS bug.
+Fixes: 3489b42a72a4 ("ceph: fix three bugs, two in ceph_vxattrcb_file_layout()")
+Link: https://tracker.ceph.com/issues/39943
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ceph/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Granted it's a trivial conflict, but maintainers are not there to mop up
-the mess others create. So the right thing here is to resend both
-patches as a patch series with the conflict properly resolved.
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 5e4f3f833e85..a09ce27ab220 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -221,7 +221,7 @@ static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
+ static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
+ 				       size_t size)
+ {
+-	return snprintf(val, size, "%lld.09%ld", ci->i_rctime.tv_sec,
++	return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
+ 			ci->i_rctime.tv_nsec);
+ }
+ 
+-- 
+2.20.1
 
-Thanks,
-
-        tglx
