@@ -7,55 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDBAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11597C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318B8206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFFD20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200944;
-	bh=P6tLADLspSSeMaFKOgqI3Hqx8n+Ij3phNyn87HCQQao=;
+	s=default; t=1579200948;
+	bh=9ffIg72vfAL9XOeRGbQvUSJeUprb7SNydkmcRf2SO2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+SmA2Eny/QWzkgAOTmFsdK80HAcMkRI0Tk/aBXIxfXifX/Z8Jfects/JahbEz6L2
-	 PT2W2QyimcFkLYtOnKH7ZQc/1cNFFCtzBWVJ38Q0A+2YHL0rgXdNM72/cOFFaBjDW5
-	 LGWJ3RUAHaBD28T5555nTQ5OlLiJzjDTnWuCezzg=
+	b=v+qWwpzThABMp4g4lQPjVW+Ar9EdJJwMeJxsXoyGGrf1ss9Uw5R5vsSYnafTxcnOw
+	 0E4PpbuIy0AIuVR7GudRPZDE6vQbnF1ldR4BB/aGmMqbQhhKZ9qvgWeb95uRB5yggh
+	 pTFiAGPNzZLY+q0Hjlk2KoFMJB1EX0sk7feVI2mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388701AbgAPRHd (ORCPT
+        id S2389594AbgAPSzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39006 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389109AbgAPRHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:21 -0500
+        id S1729950AbgAPRHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44BF921D56;
-        Thu, 16 Jan 2020 17:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8897821582;
+        Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194440;
-        bh=P6tLADLspSSeMaFKOgqI3Hqx8n+Ij3phNyn87HCQQao=;
+        s=default; t=1579194452;
+        bh=9ffIg72vfAL9XOeRGbQvUSJeUprb7SNydkmcRf2SO2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2YRz/gR7h2547YagzxoOavDCvZrB9jcY9L/uK8YIYVF/mYR56ENf9yrRet1EQUwlq
-         liyy+9sf1VOIEp70+nfOVsJWXbx23DqcmnNPn249eZDAtvY6RgA7ccTY2Xpo+swcsv
-         4UBV8DTt/d1+YGCi5li2XqAZgONoxBt6ywrkPIfg=
+        b=0XcO2XazkZ77b+AhN+4jzVvtfR5ZJ4h3cWJh9X/76aBXYTLBtCfQgGb50/lHAgomB
+         vyRVb24VOqQtTSGa+uRFDyrXjJ6BhlNrHslsjHE0NaK0G07r9MeyB9r/uuB+YrUFPF
+         HywCBsxzMjrk4YJMFUKqJQJlLV+UDpPcj+S492LA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiong Wang <jiong.wang@netronome.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: [PATCH AUTOSEL 4.19 353/671] nfp: bpf: fix static check error through tightening shift amount adjustment
-Date:   Thu, 16 Jan 2020 11:59:51 -0500
-Message-Id: <20200116170509.12787-90-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 362/671] afs: Fix lock-wait/callback-break double locking
+Date:   Thu, 16 Jan 2020 12:00:00 -0500
+Message-Id: <20200116170509.12787-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,60 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiong Wang <jiong.wang@netronome.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 69e168ebdcfcb87ce7252d4857d570f99996fa27 ]
+[ Upstream commit c7226e407b6065d3bda8bd9dc627663d2c505ea3 ]
 
-NFP shift instruction has something special. If shift direction is left
-then shift amount of 1 to 31 is specified as 32 minus the amount to shift.
+__afs_break_callback() holds vnode->lock around its call of
+afs_lock_may_be_available() - which also takes that lock.
 
-But no need to do this for indirect shift which has shift amount be 0. Even
-after we do this subtraction, shift amount 0 will be turned into 32 which
-will eventually be encoded the same as 0 because only low 5 bits are
-encoded, but shift amount be 32 will fail the FIELD_PREP check done later
-on shift mask (0x1f), due to 32 is out of mask range. Such error has been
-observed when compiling nfp/bpf/jit.c using gcc 8.3 + O3.
+Fix this by not taking the lock in __afs_break_callback().
 
-This issue has started when indirect shift support added after which the
-incoming shift amount to __emit_shf could be 0, therefore it is at that
-time shift amount adjustment inside __emit_shf should have been tightened.
+Also, there's no point checking the granted_locks and pending_locks queues;
+it's sufficient to check lock_state, so move that check out of
+afs_lock_may_be_available() into __afs_break_callback() to replace the
+queue checks.
 
-Fixes: 991f5b3651f6 ("nfp: bpf: support logic indirect shifts (BPF_[L|R]SH | BPF_X)")
-Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Reported-by: Pablo Cascón <pablo.cascon@netronome.com
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: e8d6c554126b ("AFS: implement file locking")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/bpf/jit.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ fs/afs/callback.c | 8 +-------
+ fs/afs/flock.c    | 3 ---
+ 2 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/bpf/jit.c b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-index 4e18d95e548f..c3ce0fb47a0f 100644
---- a/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-+++ b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
-@@ -326,7 +326,18 @@ __emit_shf(struct nfp_prog *nfp_prog, u16 dst, enum alu_dst_ab dst_ab,
- 		return;
+diff --git a/fs/afs/callback.c b/fs/afs/callback.c
+index 4ad701250299..97283b04fa6f 100644
+--- a/fs/afs/callback.c
++++ b/fs/afs/callback.c
+@@ -221,14 +221,8 @@ void afs_break_callback(struct afs_vnode *vnode)
+ 		vnode->cb_break++;
+ 		afs_clear_permits(vnode);
+ 
+-		spin_lock(&vnode->lock);
+-
+-		_debug("break callback");
+-
+-		if (list_empty(&vnode->granted_locks) &&
+-		    !list_empty(&vnode->pending_locks))
++		if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
+ 			afs_lock_may_be_available(vnode);
+-		spin_unlock(&vnode->lock);
  	}
  
--	if (sc == SHF_SC_L_SHF)
-+	/* NFP shift instruction has something special. If shift direction is
-+	 * left then shift amount of 1 to 31 is specified as 32 minus the amount
-+	 * to shift.
-+	 *
-+	 * But no need to do this for indirect shift which has shift amount be
-+	 * 0. Even after we do this subtraction, shift amount 0 will be turned
-+	 * into 32 which will eventually be encoded the same as 0 because only
-+	 * low 5 bits are encoded, but shift amount be 32 will fail the
-+	 * FIELD_PREP check done later on shift mask (0x1f), due to 32 is out of
-+	 * mask range.
-+	 */
-+	if (sc == SHF_SC_L_SHF && shift)
- 		shift = 32 - shift;
+ 	write_sequnlock(&vnode->cb_lock);
+diff --git a/fs/afs/flock.c b/fs/afs/flock.c
+index 075fe7f94810..457ce62e5c0f 100644
+--- a/fs/afs/flock.c
++++ b/fs/afs/flock.c
+@@ -39,9 +39,6 @@ void afs_lock_may_be_available(struct afs_vnode *vnode)
+ {
+ 	_enter("{%x:%u}", vnode->fid.vid, vnode->fid.vnode);
  
- 	insn = OP_SHF_BASE |
+-	if (vnode->lock_state != AFS_VNODE_LOCK_WAITING_FOR_CB)
+-		return;
+-
+ 	spin_lock(&vnode->lock);
+ 	if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
+ 		afs_next_locker(vnode, 0);
 -- 
 2.20.1
 
