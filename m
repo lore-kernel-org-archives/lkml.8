@@ -2,196 +2,118 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B0BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4A7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD6E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E4C2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YbYZf2iM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrLfshsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389933AbgAPWTZ (ORCPT
+        id S2388884AbgAPWVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:19:25 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34262 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730287AbgAPWTZ (ORCPT
+        Thu, 16 Jan 2020 17:21:23 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36377 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730287AbgAPWVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:19:25 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GMIZCT028592;
-        Thu, 16 Jan 2020 22:19:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=pSB2tRyVqfE4FbpMpFBrw+fyJNwr6cCK25cTALnwLyY=;
- b=YbYZf2iMfQ0oj9lrYrWplU6V4r8tHTIrX/m9H9tXvHV/66K6hi2SGUvyAM05LrDCFWUu
- jzKFCvl/TB48hwPfkgXfinfnVhElpNyOyKFsYelrNrI18fAaDmsT0K2W8WqsTRix/JRH
- aNxXEsfDC9MFjmOgVtKE0P5raFrIUwDkrjbdKFpxsKzmtR6f/kN8q2HBt2T1aMEFjDpp
- qbcdqyswojJCf5dRQTJdrmDZemzilSdTTl582qj9Sa8VcOX3KLMaE7Q7EaI/+8HBj1xG
- XnkPHCHqfNqJcdsJ5hSVqGmvV2s0UzWJTJmivkOVaoWxNVQRpgKUswIyZzHRrQ5sSq9b eg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xf73u5bwf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 22:19:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GMIbpT174550;
-        Thu, 16 Jan 2020 22:19:11 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2xjxp3w3bf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 22:19:11 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00GMJ9Xq003562;
-        Thu, 16 Jan 2020 22:19:09 GMT
-Received: from localhost (/10.145.179.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 14:19:09 -0800
-Date:   Thu, 16 Jan 2020 14:19:06 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200116221906.GF8247@magnolia>
-References: <20200110192942.25021-2-ira.weiny@intel.com>
- <20200115113715.GB2595@quack2.suse.cz>
- <20200115173834.GD8247@magnolia>
- <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
- <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
- <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
- <20200116053935.GB8235@magnolia>
- <20200116175501.GC24522@iweiny-DESK2.sc.intel.com>
- <20200116180421.GD8235@magnolia>
- <20200116185235.GE24522@iweiny-DESK2.sc.intel.com>
+        Thu, 16 Jan 2020 17:21:22 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a203so20846246qkc.3;
+        Thu, 16 Jan 2020 14:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vpbQOrapjlYcWs3bkrcm05Gp66rOZ9x8yOYklUO+LHY=;
+        b=YrLfshsTZMEaoaurtJbcwzSaoRcapaMk5aQ6Vcf1sdNXNja9QAeeNF8VJykNeVUgZo
+         xlwzKaZakSt5Y9bZy4IKR7MGJ/wOLaZ3+2QmM0lNILTzox9tYpZfca9fg0+M+HlevJFX
+         xzgPEils0QPrNad+MFBheww0mG7T12Yqk0h4nTkLYPtMRRRDQjXS0mJVrw3a9j43ReCZ
+         L92rwv39vWk3qhIze8qmfWjrg5jwEWQuAIftG3eCuafKT9/GgqAiwkQBO0GVo8PkMwVZ
+         NTU9QcrL4KkQEUIYYs960+BeIsImrg+fed1Srq8py9vwMf2x3KljpdXshqJdeSZ7aMYN
+         haTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vpbQOrapjlYcWs3bkrcm05Gp66rOZ9x8yOYklUO+LHY=;
+        b=BD6WgfC4q0UKEpuPlbiSSR6XRBH4sW833wWLL5jdACUtHXh2B3aZZWtnf1xNTGbAw6
+         /qbT8wNCFZbti0CTf5RYGLjNiSPUyvjzZXo/shRRZnaeHGa/gc4hdJin6OThcn9m8yaG
+         aIr3YWg+nWt++JncIfIO+0KzcdHhwxnujezKjvX716mbeC2WZzA9sE/abgVVO6yCIMJA
+         y+0o03rBxPobhwndrfPuk3795WRoeSgtezlxF/R8Z0g6cKy1o7M3nGKLyIsCapwveW/J
+         6/6+HOQNczCDNhC7U2ku26XrU13nYj6xvRJefkJGYLEyjj7cbnJFpguc5r5NKWvyXpvg
+         wqmA==
+X-Gm-Message-State: APjAAAV/CpXdbkZGZc8SkYIHHVHsGwJzaGtCT79JfHHE7pShRvnxxFdY
+        J3JBxx8RmyiL6+0+P/vHL2PV7WK7NjoVCshdzT8=
+X-Google-Smtp-Source: APXvYqz1i/WEP6x/rLAeNoVBbsK0G1LZrffElunve4gOl5pxTl+wMdcs1VSidF8QuuZXFAgkfUU7ExMVAZrIPvhsrL8=
+X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr31315590qkq.437.1579213281433;
+ Thu, 16 Jan 2020 14:21:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116185235.GE24522@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160178
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918093839.1357254.16574794899249700991.stgit@toke.dk>
+In-Reply-To: <157918093839.1357254.16574794899249700991.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 16 Jan 2020 14:21:10 -0800
+Message-ID: <CAEf4BzZep26Y50ER5x9FLsxu0_yW-sG5abxE2RZLBT-JhRnqbg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 06/11] bpftool: Use consistent include paths
+ for libbpf
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 10:52:36AM -0800, Ira Weiny wrote:
-> On Thu, Jan 16, 2020 at 10:04:21AM -0800, Darrick J. Wong wrote:
-> > On Thu, Jan 16, 2020 at 09:55:02AM -0800, Ira Weiny wrote:
-> > > On Wed, Jan 15, 2020 at 09:39:35PM -0800, Darrick J. Wong wrote:
-> > > > On Wed, Jan 15, 2020 at 02:38:21PM -0800, Ira Weiny wrote:
-> > > > > On Wed, Jan 15, 2020 at 12:10:50PM -0800, Dan Williams wrote:
-> > > > > > On Wed, Jan 15, 2020 at 11:45 AM Ira Weiny <ira.weiny@intel.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, Jan 15, 2020 at 09:38:34AM -0800, Darrick J. Wong wrote:
-> > > > > > > > On Wed, Jan 15, 2020 at 12:37:15PM +0100, Jan Kara wrote:
-> > > > > > > > > On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
-> > > > > > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > > > > > >
-> > > > > 
-> > > 
-> > > [snip]
-> > > 
-> > > > > 
-> > > > > Sure, but for now I think referencing mmap for details on MAP_SYNC works.
-> > > > > 
-> > > > > I suspect that we may have some word smithing once I get this series in and we
-> > > > > submit a change to the statx man page itself.  Can I move forward with the
-> > > > > following for this patch?
-> > > > > 
-> > > > > <quote>
-> > > > > STATX_ATTR_DAX
-> > > > > 
-> > > > >         The file is in the DAX (cpu direct access) state.  DAX state
-> > > > 
-> > > > Hmm, now that I see it written out, I <cough> kind of like "DAX mode"
-> > > > better now. :/
-> > > > 
-> > > > "The file is in DAX (CPU direct access) mode.  DAX mode attempts..."
-> > > 
-> > > Sure...  now you tell me...  ;-)
-> > > 
-> > > Seriously, we could use mode here in the man page as this is less confusing to
-> > > say "DAX mode".
-> > > 
-> > > But I think the code should still use 'state' because mode is just too
-> > > overloaded.  You were not the only one who was thrown by my use of mode and I
-> > > don't want that confusion when we look at this code 2 weeks from now...
-> > > 
-> > > https://www.reddit.com/r/ProgrammerHumor/comments/852og2/only_god_knows/
-> > > 
-> > > ;-)
-> > 
-> > Ok, let's leave it alone for now then.
-> 
-> Cool could I get a reviewed by?
+On Thu, Jan 16, 2020 at 5:23 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
+>
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>
+> Fix bpftool to include libbpf header files with the bpf/ prefix, to be
+> consistent with external users of the library. Also ensure that all
+> includes of exported libbpf header files (those that are exported on 'mak=
+e
+> install' of the library) use bracketed includes instead of quoted.
+>
+> To make sure no new files are introduced that doesn't include the bpf/
+> prefix in its include, remove tools/lib/bpf from the include path entirel=
+y,
+> and use tools/lib instead.
+>
+> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
+rom selftests dir")
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> ---
 
-My bike shed is painted green with purple polka dots,
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> And Jan is this reword of the man page/commit ok to keep your reviewed by?
-> 
-> > 
-> > I'm not even sure what 'DAX' stands for.  Direct Access to ...
-> > Professor Xavier? 8-)
-> 
-> That is pronounced 'Direct A'Xes'  you know, for chopping wood!
-> 
-> Thanks everyone,
-> Ira
-> 
-> > 
-> > > > 
-> > > > >         attempts to minimize software cache effects for both I/O and
-> > > > >         memory mappings of this file.  It requires a file system which
-> > > > >         has been configured to support DAX.
-> > > > > 
-> > > > >         DAX generally assumes all accesses are via cpu load / store
-> > > > >         instructions which can minimize overhead for small accesses, but
-> > > > >         may adversely affect cpu utilization for large transfers.
-> > > > > 
-> > > > >         File I/O is done directly to/from user-space buffers and memory
-> > > > >         mapped I/O may be performed with direct memory mappings that
-> > > > >         bypass kernel page cache.
-> > > > > 
-> > > > >         While the DAX property tends to result in data being transferred
-> > > > >         synchronously, it does not give the same guarantees of
-> > > > >         synchronous I/O where data and the necessary metadata are
-> > > > >         transferred together.
-> > > > 
-> > > > (I'm frankly not sure that synchronous I/O actually guarantees that the
-> > > > metadata has hit stable storage...)
-> > > 
-> > > I'll let you and Dan work this one out...  ;-)
-> > 
-> > Hehe.  I think the wording here is fine.
-> > 
-> > --D
-> > 
-> > > Ira
-> > > 
+[...]
