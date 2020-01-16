@@ -2,323 +2,559 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D63AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BADDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECB52073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RsTWMnLj"
+	by mail.kernel.org (Postfix) with ESMTP id 66F582073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgAPKAM (ORCPT
+        id S1731107AbgAPKBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:00:12 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:63322 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgAPKAL (ORCPT
+        Thu, 16 Jan 2020 05:01:23 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:55378 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730518AbgAPKBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:00:11 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200116100008epoutp02b1f21112a0ef69f3f959655110ced6e2~qVaoFTIcE0295402954epoutp02C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:00:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200116100008epoutp02b1f21112a0ef69f3f959655110ced6e2~qVaoFTIcE0295402954epoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579168808;
-        bh=MEoghVumURoxUB00h51rzO4YEcv5WlLCayoXPMnB0HA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=RsTWMnLj/dHRxfTCqPmamAXVp9vnvEjqkNrBZQDagZ2csxr97uA9ahptY8Ah99EKe
-         TYJ7oS5fEbEVYhVS70N3ybauZ5OVK+uTCLnDl2AAJOEcdLflq9oYNfLJ1SKT0J5Chy
-         i7xZf/+i7dIfLyoyyMf7VoEHQJ1EzDDcyqHy3nMM=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200116100007epcas1p2450126eb14072af0ed6ae6545ae4148c~qVanlh8tn0690106901epcas1p2Z;
-        Thu, 16 Jan 2020 10:00:07 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47z06s2XnCzMqYm0; Thu, 16 Jan
-        2020 10:00:05 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8C.05.48498.524302E5; Thu, 16 Jan 2020 19:00:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200116100004epcas1p4efae9ceadaa5261ad8729e76409c5484~qValGqGk31863218632epcas1p4s;
-        Thu, 16 Jan 2020 10:00:04 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200116100004epsmtrp14ba7c6c9c6cd3e18705f0dd376ed2aa5~qValF2UwI1337313373epsmtrp1B;
-        Thu, 16 Jan 2020 10:00:04 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-60-5e20342522e7
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EC.58.10238.424302E5; Thu, 16 Jan 2020 19:00:04 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116100004epsmtip2f9be879c908a0652d2278e5e26874dbf~qVak1_asA1026610266epsmtip2A;
-        Thu, 16 Jan 2020 10:00:04 +0000 (GMT)
-Subject: Re: [PATCH v4] PM / devfreq: Add debugfs support with
- devfreq_summary file
-To:     Kamil Konieczny <k.konieczny@samsung.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <fa6c9b94-2708-ff37-89ac-7071a5af4d7c@samsung.com>
-Date:   Thu, 16 Jan 2020 19:07:26 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <50b2f033-779c-63b7-f1f0-1af730237925@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGJsWRmVeSWpSXmKPExsWy7bCmga6qiUKcwfYOEYv781oZLU7vf8di
-        MfHGFRaL1R8fM1qsuX2I0eLHhlPMFhsXZFss+DSD1eJs0xt2ixV3P7JaXN41h83ic+8RRouF
-        TS3sFmuP3GW3uN24gs2B32PNvDWMHpf7epk8dtxdwuixc9Zddo9NqzrZPO5c28PmsfHdDiaP
-        v7P2s3j0bVnF6PF5k1wAV1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5i
-        bqqtkotPgK5bZg7QG0oKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScAssCveLE3OLS
-        vHS95PxcK0MDAyNToMKE7IwNLWcYC+baV+xYXdvAeE6vi5GTQ0LARGJWVxtjFyMXh5DADkaJ
-        vf+3sUM4nxglFk7+yQbhfGOUeL3vLytMy/J351kgEnsZJS7P3Q1V9Z5R4lX/ShaQKmGBUIlH
-        l84zgdgiAukSE3+9BCtiFljGJHHy2Q2wIjYBLYn9L26wgdj8AooSV388ZgSxeQXsJN59OQ62
-        jkVAVWL/0+9gNaICYRInt7VA1QhKnJz5BGwOp4C9xJypc9hBbGYBcYlbT+YzQdjyEtvfzmEG
-        WSwhcI5d4u7qJ2wQP7hILNr5gwnCFpZ4dXwLO4QtJfGyvw3KrpZYefIIG0RzB6PElv0XoAFg
-        LLF/6WSgZg6gDZoS63fpQ4QVJXb+nssIsZhP4t3XHlaQEgkBXomONiGIEmWJyw/uQq2VlFjc
-        3sk2gVFpFpJ3ZiF5YRaSF2YhLFvAyLKKUSy1oDg3PbXYsMAIObo3MYLTuJbZDsZF53wOMQpw
-        MCrx8B74JxcnxJpYVlyZe4hRgoNZSYT35AzZOCHelMTKqtSi/Pii0pzU4kOMpsDQnsgsJZqc
-        D8wxeSXxhqZGxsbGFiaGZqaGhkrivC4LgOYIpCeWpGanphakFsH0MXFwSjUw6t/YkpO/t26i
-        oZ1aTVD8mVVGiiZVs/xPfjAvuXqzeqZPzeqsVxbLBSdejK2qcu+teteZe3DmMbHAqVniHCy8
-        pfYyi+rkZp/rY1/+cfNdnqLKxqhFe3Wmzjg1Vcw7NXqOvOKkA1EyNXW6vjP/R627FLOScesK
-        jpjuYIOCves7jz9NenRA/qO7EktxRqKhFnNRcSIAA7lAP/kDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRiA+3bOzo6z5WkafippjkoS0haSH1Gu6M+hXxYUXWg29DDN3djx
-        DuE9UFIqUdZhTQNL2SaoaM0MppuXVmnWLCwd/dgEiRyYllZauY1g/x54n+d7+XhJTDyDx5MF
-        miJGr1GoJIQQf+KUJB3en7FPfqTBm44+m+oBemX34+ju3CyOLCtegKzzDoA2el9iqK+jEHV8
-        M/DRVM1XAer2rPCR+5mRQKtNYwA9rKkToJ4xjwDNV3cTp6Joq8kKaHdzE4+2eToBPcR5BHS/
-        uYGgFz48J+g+v41Hb3F2nG4eMAN6tT8xW3hFeCKPURWUMPr0rOvC/N6610D3QFZms9ysAtNp
-        jSCChFQG7PK/wRuBkBRTwwB+cbYQoUEcbHs7jjUCcpujodPJhpxlAOurNvgBJ5q6AB3Vs3iA
-        YygldNZyICBh1GMefOG7hYUKB4CWWiMWsAgqFdqX5oIboqhk+H7DCwIsorKgf20y+CpOHYD2
-        xfWgs4e6CIc6vbyQsxu67vuC2yIoGTS2GgUBxqgUuGl6h4U4Fn7ytfNCnASfLhuxOyCaC8u5
-        sIQLS7iwpAPgZhDH6Fi1Us1KdVINU5rGKtRssUaZlqtV94PgnVMP2YC7M8cBKBJIdoryNxPl
-        Yr6ihC1Xb/+YxCQxIpdhr1wsylOUVzB6bY6+WMWwDpBA4pJY0aJm4rKYUiqKmEKG0TH6/1Me
-        GRFfBcyRY9pFl71QzByt9FlP9t1Yl136+b1n9hgubz6+pjo/elWWlUn8KaM/Tpz5ZUyoHJyG
-        fM29CvfSjt8tydJryQXApaU1oGHV4J08W2od6Gon4kexEeFCyrkR3BL5Y5wZyTMNSAziqYPD
-        9tMZmY9y/6Lb2fVt/l3E1sxga4kEZ/MV0lRMzyr+AbArfanjAgAA
-X-CMS-MailID: 20200116100004epcas1p4efae9ceadaa5261ad8729e76409c5484
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200116045558epcas1p2801d3b213c0993a7a56f8317b5bd1074
-References: <CGME20200116045558epcas1p2801d3b213c0993a7a56f8317b5bd1074@epcas1p2.samsung.com>
-        <20200116050313.3564-1-cw00.choi@samsung.com>
-        <50b2f033-779c-63b7-f1f0-1af730237925@samsung.com>
+        Thu, 16 Jan 2020 05:01:22 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06712966|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.36261-0.0247078-0.612682;DS=CONTINUE|ham_system_inform|0.202572-0.00191631-0.795511;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03305;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gd3Kgdg_1579168866;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Gd3Kgdg_1579168866)
+          by smtp.aliyun-inc.com(10.147.42.241);
+          Thu, 16 Jan 2020 18:01:15 +0800
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH 03/11] pstore/blk: support pmsg recorder
+Date:   Thu, 16 Jan 2020 18:00:23 +0800
+Message-Id: <1579168831-16399-4-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579168831-16399-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1579168831-16399-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 6:53 PM, Kamil Konieczny wrote:
-> Hi Chanwoo,
-> 
-> On 16.01.2020 06:03, Chanwoo Choi wrote:
->> Add debugfs interface to provide debugging information of devfreq device.
->> It contains 'devfreq_summary' entry to show the summary of registered
->> devfreq devices as following and the additional debugfs file will be added.
->> - /sys/kernel/debug/devfreq/devfreq_summary
->>
->> [Detailed description of each field of 'devfreq_summary' debugfs file]
->> - dev_name	: Device name of h/w.
->> - dev		: Device name made by devfreq core.
->> - parent_dev	: If devfreq device uses the passive governor,
->> 		  show parent devfreq device name. Otherwise, show 'null'.
->> - governor	: Devfreq governor.
->> - polling_ms	: If devfreq device uses the simple_ondemand governor,
->> 		  polling_ms is necessary for the period. (unit: millisecond)
->> - cur_freq_Hz	: Current Frequency (unit: Hz)
-> 
-> s/Frequency/frequency/
-> 
->> - old_freq_Hz	: Frequency before changing. (unit: Hz)
-> 
-> min_freq_Hz : Minimum frequency (unit Hz)
-> 
->> - new_freq_Hz	: Frequency after changed. (unit: Hz)
-> 
-> max_freq_Hz : Maximum frequency (unit Hz)
+pmsg support recorder for userspace. To enable pmsg, just make pmsg_size
+be greater than 0 and a multiple of 4096.
 
-Right. Thanks for pointing out.
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+---
+ fs/pstore/Kconfig          |  12 +++
+ fs/pstore/blkoops.c        |  11 +++
+ fs/pstore/blkzone.c        | 229 +++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/pstore_blk.h |   4 +
+ 4 files changed, 246 insertions(+), 10 deletions(-)
 
-> 
->>
->> [For example on Exynos5422-based Odroid-XU3 board]
->> $ cat /sys/kernel/debug/devfreq/devfreq_summary
->> dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
->> ------------------------------ ---------- ---------- --------------- ---------- ------------ ------------ ------------
->> 10c20000.memory-controller     devfreq0   null       simple_ondemand          0    165000000    165000000    825000000
->> soc:bus_wcore                  devfreq1   null       simple_ondemand         50    532000000     88700000    532000000
->> soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
->> soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
->> soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
->> soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
->> soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
->> soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
->> soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
->> soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
->> soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
->> soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
->> soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
->> soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
->> soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
->> soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
->> soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
->>
->> [lkp: Reported the build error]
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->> Changes from v3:
->> - Remove the unneeded checking of return value when calling debugfs_create_dir
->> - Add missing IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE) condition
->> Changes from v2:
->> - Show 'null' at 'parent_dev' field when governor of devfreq device
->>   is not passive
->> Changes from v1:
->> - Drop the patch about 'devfreq_transitions' debugfs file
->> - Modify from 'hz' to 'Hz'
->> - Edit the indentation of 'devfreq_summary' when show summary
->> - Exchange sequence between PTR_ERR and IS_ERR when debugfs_create_dir
->>
->>
->>  drivers/devfreq/devfreq.c | 82 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 82 insertions(+)
->>
->> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
->> index 89260b17598f..cceee8bc3c2f 100644
->> --- a/drivers/devfreq/devfreq.c
->> +++ b/drivers/devfreq/devfreq.c
->> @@ -10,6 +10,7 @@
->>  #include <linux/kernel.h>
->>  #include <linux/kmod.h>
->>  #include <linux/sched.h>
->> +#include <linux/debugfs.h>
->>  #include <linux/errno.h>
->>  #include <linux/err.h>
->>  #include <linux/init.h>
->> @@ -33,6 +34,7 @@
->>  #define HZ_PER_KHZ	1000
->>  
->>  static struct class *devfreq_class;
->> +static struct dentry *devfreq_debugfs;
->>  
->>  /*
->>   * devfreq core provides delayed work based load monitoring helper
->> @@ -1643,6 +1645,81 @@ static struct attribute *devfreq_attrs[] = {
->>  };
->>  ATTRIBUTE_GROUPS(devfreq);
->>  
->> +/**
->> + * devfreq_summary_show() - Show the summary of the devfreq devices
->> + * @s:		seq_file instance to show the summary of devfreq devices
->> + * @data:	not used
->> + *
->> + * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
->> + * It helps that user can know the detailed information of the devfreq devices.
->> + *
->> + * Return 0 always because it shows the information without any data change.
->> + */
->> +static int devfreq_summary_show(struct seq_file *s, void *data)
->> +{
->> +	struct devfreq *devfreq;
->> +	struct devfreq *p_devfreq = NULL;
->> +	unsigned long cur_freq, min_freq, max_freq;
->> +	unsigned int polling_ms;
->> +
->> +	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
->> +			"dev_name",
->> +			"dev",
->> +			"parent_dev",
->> +			"governor",
->> +			"polling_ms",
->> +			"cur_freq_Hz",
->> +			"min_freq_Hz",
->> +			"max_freq_Hz");
->> +	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
->> +			"------------------------------",
->> +			"----------",
->> +			"----------",
->> +			"---------------",
->> +			"----------",
->> +			"------------",
->> +			"------------",
->> +			"------------");
->> +
->> +	mutex_lock(&devfreq_list_lock);
->> +
->> +	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
->> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
->> +		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
->> +							DEVFREQ_NAME_LEN)) {
->> +			struct devfreq_passive_data *data = devfreq->data;
->> +
->> +			if (data)
->> +				p_devfreq = data->parent;
->> +		} else {
->> +			p_devfreq = NULL;
->> +		}
->> +#endif
->> +
->> +		mutex_lock(&devfreq->lock);
->> +		cur_freq = devfreq->previous_freq,
->> +		get_freq_range(devfreq, &min_freq, &max_freq);
->> +		polling_ms = devfreq->profile->polling_ms,
->> +		mutex_unlock(&devfreq->lock);
->> +
->> +		seq_printf(s,
->> +			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
->> +			dev_name(devfreq->dev.parent),
->> +			dev_name(&devfreq->dev),
->> +			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
->> +			devfreq->governor_name,
->> +			polling_ms,
->> +			cur_freq,
->> +			min_freq,
->> +			max_freq);
->> +	}
->> +
->> +	mutex_unlock(&devfreq_list_lock);
->> +
->> +	return 0;
->> +}
->> +DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
->> +
->>  static int __init devfreq_init(void)
->>  {
->>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
->> @@ -1659,6 +1736,11 @@ static int __init devfreq_init(void)
->>  	}
->>  	devfreq_class->dev_groups = devfreq_groups;
->>  
->> +	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
->> +	debugfs_create_file("devfreq_summary", 0444,
->> +				devfreq_debugfs, NULL,
->> +				&devfreq_summary_fops);
->> +
->>  	return 0;
->>  }
->>  subsys_initcall(devfreq_init);
->>
-> 
-
-
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index cd15f9322acd..656d63dc3f01 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -186,6 +186,18 @@ config PSTORE_BLKOOPS_DMESG_SIZE
+ 	  NOTE that, both kconfig and module parameters can configure blkoops,
+ 	  but module parameters have priority over kconfig.
+ 
++config PSTORE_BLKOOPS_PMSG_SIZE
++	int "pmsg size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	depends on PSTORE_PMSG
++	default 64
++	help
++	  This just sets size of pmsg (pmsg_size) for pstore/blk. The value must
++	  be a multiple of 4096.
++
++	  NOTE that, both kconfig and module parameters can configure blkoops,
++	  but module parameters have priority over kconfig.
++
+ config PSTORE_BLKOOPS_BLKDEV
+ 	string "block device for blkoops"
+ 	depends on PSTORE_BLKOOPS
+diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
+index 69904fdeab6b..846ba8bc930f 100644
+--- a/fs/pstore/blkoops.c
++++ b/fs/pstore/blkoops.c
+@@ -31,6 +31,10 @@
+ module_param(dmesg_size, long, 0400);
+ MODULE_PARM_DESC(dmesg_size, "demsg size in kbytes");
+ 
++static long pmsg_size = -1;
++module_param(pmsg_size, long, 0400);
++MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
++
+ static int dump_oops = -1;
+ module_param(dump_oops, int, 0400);
+ MODULE_PARM_DESC(total_size, "whether dump oops");
+@@ -75,6 +79,12 @@
+ #define DEFAULT_DMESG_SIZE 0
+ #endif
+ 
++#ifdef CONFIG_PSTORE_BLKOOPS_PMSG_SIZE
++#define DEFAULT_PMSG_SIZE CONFIG_PSTORE_BLKOOPS_PMSG_SIZE
++#else
++#define DEFAULT_PMSG_SIZE 0
++#endif
++
+ #ifdef CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
+ #define DEFAULT_DUMP_OOPS CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
+ #else
+@@ -128,6 +138,7 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
+ 	}
+ 
+ 	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096);
++	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
+ #undef verify_size
+ 	dump_oops = !!(dump_oops < 0 ? DEFAULT_DUMP_OOPS : dump_oops);
+ 
+diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
+index 1eb681350612..8716c51d7f98 100644
+--- a/fs/pstore/blkzone.c
++++ b/fs/pstore/blkzone.c
+@@ -40,12 +40,14 @@
+  *
+  * @sig: signature to indicate header (BLK_SIG xor BLKZONE-type value)
+  * @datalen: length of data in @data
++ * @start: offset into @data where the beginning of the stored bytes begin
+  * @data: zone data.
+  */
+ struct blkz_buffer {
+ #define BLK_SIG (0x43474244) /* DBGC */
+ 	uint32_t sig;
+ 	atomic_t datalen;
++	atomic_t start;
+ 	uint8_t data[];
+ };
+ 
+@@ -101,8 +103,10 @@ struct blkz_zone {
+ 
+ struct blkz_context {
+ 	struct blkz_zone **dbzs;	/* dmesg block zones */
++	struct blkz_zone *pbz;		/* Pmsg block zone */
+ 	unsigned int dmesg_max_cnt;
+ 	unsigned int dmesg_read_cnt;
++	unsigned int pmsg_read_cnt;
+ 	unsigned int dmesg_write_cnt;
+ 	/*
+ 	 * the counter should be recovered when recover.
+@@ -135,6 +139,11 @@ static inline int buffer_datalen(struct blkz_zone *zone)
+ 	return atomic_read(&zone->buffer->datalen);
+ }
+ 
++static inline int buffer_start(struct blkz_zone *zone)
++{
++	return atomic_read(&zone->buffer->start);
++}
++
+ static inline bool is_on_panic(void)
+ {
+ 	struct blkz_context *cxt = &blkz_cxt;
+@@ -425,6 +434,69 @@ static int blkz_recover_dmesg(struct blkz_context *cxt)
+ 	return ret;
+ }
+ 
++static int blkz_recover_pmsg(struct blkz_context *cxt)
++{
++	struct blkz_info *info = cxt->bzinfo;
++	struct blkz_buffer *oldbuf;
++	struct blkz_zone *zone = NULL;
++	int ret = 0;
++	ssize_t rcnt, len;
++
++	zone = cxt->pbz;
++	if (!zone || zone->oldbuf)
++		return 0;
++
++	if (is_on_panic())
++		goto out;
++
++	if (unlikely(!info->read))
++		return -EINVAL;
++
++	len = zone->buffer_size + sizeof(*oldbuf);
++	oldbuf = kzalloc(len, GFP_KERNEL);
++	if (!oldbuf)
++		return -ENOMEM;
++
++	rcnt = info->read((char *)oldbuf, len, zone->off);
++	if (rcnt != len) {
++		pr_debug("recover pmsg failed\n");
++		ret = (int)rcnt < 0 ? (int)rcnt : -EIO;
++		goto free_oldbuf;
++	}
++
++	if (oldbuf->sig != zone->buffer->sig) {
++		pr_debug("no valid data in zone %s\n", zone->name);
++		goto free_oldbuf;
++	}
++
++	if (zone->buffer_size < atomic_read(&oldbuf->datalen) ||
++		zone->buffer_size < atomic_read(&oldbuf->start)) {
++		pr_info("found overtop zone: %s: off %lu, size %zu\n",
++				zone->name, zone->off, zone->buffer_size);
++		goto free_oldbuf;
++	}
++
++	if (!atomic_read(&oldbuf->datalen)) {
++		pr_debug("found erased zone: %s: id 0, off %lu, size %zu, datalen %d\n",
++				zone->name, zone->off, zone->buffer_size,
++				atomic_read(&oldbuf->datalen));
++		kfree(oldbuf);
++		goto out;
++	}
++
++	pr_debug("found nice zone: %s: id 0, off %lu, size %zu, datalen %d\n",
++			zone->name, zone->off, zone->buffer_size,
++			atomic_read(&oldbuf->datalen));
++	zone->oldbuf = oldbuf;
++out:
++	blkz_flush_dirty_zone(zone);
++	return 0;
++
++free_oldbuf:
++	kfree(oldbuf);
++	return ret;
++}
++
+ static inline int blkz_recovery(struct blkz_context *cxt)
+ {
+ 	int ret = -EBUSY;
+@@ -436,6 +508,10 @@ static inline int blkz_recovery(struct blkz_context *cxt)
+ 	if (ret)
+ 		goto recover_fail;
+ 
++	ret = blkz_recover_pmsg(cxt);
++	if (ret)
++		goto recover_fail;
++
+ 	pr_debug("recover end!\n");
+ 	atomic_set(&cxt->recovered, 1);
+ 	return 0;
+@@ -450,9 +526,17 @@ static int blkz_pstore_open(struct pstore_info *psi)
+ 	struct blkz_context *cxt = psi->data;
+ 
+ 	cxt->dmesg_read_cnt = 0;
++	cxt->pmsg_read_cnt = 0;
+ 	return 0;
+ }
+ 
++static inline bool blkz_old_ok(struct blkz_zone *zone)
++{
++	if (zone && zone->oldbuf && atomic_read(&zone->oldbuf->datalen))
++		return true;
++	return false;
++}
++
+ static inline bool blkz_ok(struct blkz_zone *zone)
+ {
+ 	if (zone && zone->buffer && buffer_datalen(zone))
+@@ -470,6 +554,25 @@ static inline int blkz_dmesg_erase(struct blkz_context *cxt,
+ 	return blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
+ }
+ 
++static inline int blkz_pmsg_erase(struct blkz_context *cxt,
++		struct blkz_zone *zone)
++{
++	if (unlikely(!blkz_old_ok(zone)))
++		return 0;
++
++	kfree(zone->oldbuf);
++	zone->oldbuf = NULL;
++	/*
++	 * if there are new data in zone buffer, that means the old data
++	 * are already invalid. It is no need to flush 0 (erase) to
++	 * block device.
++	 */
++	if (!buffer_datalen(zone))
++		return blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
++	blkz_flush_dirty_zone(zone);
++	return 0;
++}
++
+ static int blkz_pstore_erase(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -477,6 +580,8 @@ static int blkz_pstore_erase(struct pstore_record *record)
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return blkz_dmesg_erase(cxt, cxt->dbzs[record->id]);
++	case PSTORE_TYPE_PMSG:
++		return blkz_pmsg_erase(cxt, cxt->pbz);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -497,8 +602,10 @@ static void blkz_write_kmsg_hdr(struct blkz_zone *zone,
+ 	hdr->reason = record->reason;
+ 	if (hdr->reason == KMSG_DUMP_OOPS)
+ 		hdr->counter = ++cxt->oops_counter;
+-	else
++	else if (hdr->reason == KMSG_DUMP_PANIC)
+ 		hdr->counter = ++cxt->panic_counter;
++	else
++		hdr->counter = 0;
+ }
+ 
+ static inline int notrace blkz_dmesg_write_do(struct blkz_context *cxt,
+@@ -561,6 +668,55 @@ static int notrace blkz_dmesg_write(struct blkz_context *cxt,
+ 	return 0;
+ }
+ 
++static int notrace blkz_pmsg_write(struct blkz_context *cxt,
++		struct pstore_record *record)
++{
++	struct blkz_zone *zone;
++	size_t start, rem;
++	int cnt = record->size;
++	bool is_full_data = false;
++	char *buf = record->buf;
++
++	zone = cxt->pbz;
++	if (!zone)
++		return -ENOSPC;
++
++	if (atomic_read(&zone->buffer->datalen) >= zone->buffer_size)
++		is_full_data = true;
++
++	if (unlikely(cnt > zone->buffer_size)) {
++		buf += cnt - zone->buffer_size;
++		cnt = zone->buffer_size;
++	}
++
++	start = buffer_start(zone);
++	rem = zone->buffer_size - start;
++	if (unlikely(rem < cnt)) {
++		blkz_zone_write(zone, FLUSH_PART, buf, rem, start);
++		buf += rem;
++		cnt -= rem;
++		start = 0;
++		is_full_data = true;
++	}
++
++	atomic_set(&zone->buffer->start, cnt + start);
++	blkz_zone_write(zone, FLUSH_PART, buf, cnt, start);
++
++	/**
++	 * blkz_zone_write will set datalen as start + cnt.
++	 * It work if actual data length lesser than buffer size.
++	 * If data length greater than buffer size, pmsg will rewrite to
++	 * beginning of zone, which make buffer->datalen wrongly.
++	 * So we should reset datalen as buffer size once actual data length
++	 * greater than buffer size.
++	 */
++	if (is_full_data) {
++		atomic_set(&zone->buffer->datalen, zone->buffer_size);
++		blkz_zone_write(zone, FLUSH_META, NULL, 0, 0);
++	}
++	return 0;
++}
++
+ static int notrace blkz_pstore_write(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -572,6 +728,8 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return blkz_dmesg_write(cxt, record);
++	case PSTORE_TYPE_PMSG:
++		return blkz_pmsg_write(cxt, record);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -588,6 +746,13 @@ static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
+ 			return zone;
+ 	}
+ 
++	if (cxt->pmsg_read_cnt == 0) {
++		cxt->pmsg_read_cnt++;
++		zone = cxt->pbz;
++		if (blkz_old_ok(zone))
++			return zone;
++	}
++
+ 	return NULL;
+ }
+ 
+@@ -626,7 +791,8 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+ 		char *buf = kasprintf(GFP_KERNEL,
+ 				"%s: Total %d times\n",
+ 				record->reason == KMSG_DUMP_OOPS ? "Oops" :
+-				"Panic", record->count);
++				record->reason == KMSG_DUMP_PANIC ? "Panic" :
++				"Unknown", record->count);
+ 		hlen = strlen(buf);
+ 		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
+ 		if (!record->buf) {
+@@ -648,6 +814,29 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
+ 	return size + hlen;
+ }
+ 
++static ssize_t blkz_pmsg_read(struct blkz_zone *zone,
++		struct pstore_record *record)
++{
++	size_t size, start;
++	struct blkz_buffer *buf;
++
++	buf = (struct blkz_buffer *)zone->oldbuf;
++	if (!buf)
++		return READ_NEXT_ZONE;
++
++	size = atomic_read(&buf->datalen);
++	start = atomic_read(&buf->start);
++
++	record->buf = kmalloc(size, GFP_KERNEL);
++	if (!record->buf)
++		return -ENOMEM;
++
++	memcpy(record->buf, buf->data + start, size - start);
++	memcpy(record->buf + size - start, buf->data, start);
++
++	return size;
++}
++
+ static ssize_t blkz_pstore_read(struct pstore_record *record)
+ {
+ 	struct blkz_context *cxt = record->psi->data;
+@@ -672,6 +861,9 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
+ 		blkz_read = blkz_dmesg_read;
+ 		record->id = cxt->dmesg_read_cnt - 1;
+ 		break;
++	case PSTORE_TYPE_PMSG:
++		blkz_read = blkz_pmsg_read;
++		break;
+ 	default:
+ 		goto next_zone;
+ 	}
+@@ -727,8 +919,10 @@ static struct blkz_zone *blkz_init_zone(enum pstore_type_id type,
+ 	zone->type = type;
+ 	zone->buffer_size = size - sizeof(struct blkz_buffer);
+ 	zone->buffer->sig = type ^ BLK_SIG;
++	zone->oldbuf = NULL;
+ 	atomic_set(&zone->dirty, 0);
+ 	atomic_set(&zone->buffer->datalen, 0);
++	atomic_set(&zone->buffer->start, 0);
+ 
+ 	*off += size;
+ 
+@@ -813,17 +1007,26 @@ static int blkz_cut_zones(struct blkz_context *cxt)
+ 	struct blkz_info *info = cxt->bzinfo;
+ 	unsigned long off = 0;
+ 	int err;
+-	size_t size;
++	size_t off_size = 0;
+ 
+-	size = info->total_size;
+-	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off, size,
++	off_size += info->pmsg_size;
++	cxt->pbz = blkz_init_zone(PSTORE_TYPE_PMSG, &off, info->pmsg_size);
++	if (IS_ERR(cxt->pbz)) {
++		err = PTR_ERR(cxt->pbz);
++		goto fail_out;
++	}
++
++	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off,
++			info->total_size - off_size,
+ 			info->dmesg_size, &cxt->dmesg_max_cnt);
+ 	if (IS_ERR(cxt->dbzs)) {
+ 		err = PTR_ERR(cxt->dbzs);
+-		goto fail_out;
++		goto free_pmsg;
+ 	}
+ 
+ 	return 0;
++free_pmsg:
++	blkz_free_zone(&cxt->pbz);
+ fail_out:
+ 	return err;
+ }
+@@ -839,7 +1042,7 @@ int blkz_register(struct blkz_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!info->dmesg_size) {
++	if (!info->dmesg_size && !info->pmsg_size) {
+ 		pr_warn("at least one of the records be non-zero\n");
+ 		return -EINVAL;
+ 	}
+@@ -866,6 +1069,7 @@ int blkz_register(struct blkz_info *info)
+ 
+ 	check_size(total_size, 4096);
+ 	check_size(dmesg_size, SECTOR_SIZE);
++	check_size(pmsg_size, SECTOR_SIZE);
+ 
+ #undef check_size
+ 
+@@ -897,6 +1101,7 @@ int blkz_register(struct blkz_info *info)
+ 	pr_debug("register %s with properties:\n", info->name);
+ 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
+ 	pr_debug("\tdmesg size : %ld Bytes\n", info->dmesg_size);
++	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
+ 
+ 	err = blkz_cut_zones(cxt);
+ 	if (err) {
+@@ -915,11 +1120,14 @@ int blkz_register(struct blkz_info *info)
+ 	}
+ 	cxt->pstore.data = cxt;
+ 	if (info->dmesg_size)
+-		cxt->pstore.flags = PSTORE_FLAGS_DMESG;
++		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
++	if (info->pmsg_size)
++		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
+ 
+-	pr_info("Registered %s as blkzone backend for %s%s\n", info->name,
++	pr_info("Registered %s as blkzone backend for %s%s%s\n", info->name,
+ 			cxt->dbzs && cxt->bzinfo->dump_oops ? "Oops " : "",
+-			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "");
++			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "",
++			cxt->pbz ? "Pmsg" : "");
+ 
+ 	err = pstore_register(&cxt->pstore);
+ 	if (err) {
+@@ -955,6 +1163,7 @@ void blkz_unregister(struct blkz_info *info)
+ 	spin_unlock(&cxt->bzinfo_lock);
+ 
+ 	blkz_free_zones(&cxt->dbzs, &cxt->dmesg_max_cnt);
++	blkz_free_zone(&cxt->pbz);
+ }
+ EXPORT_SYMBOL_GPL(blkz_unregister);
+ 
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index 589d276fa4e4..af06be25bd01 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -19,6 +19,9 @@
+  * @dmesg_size:
+  *	The size of each zones for dmesg (oops & panic). Zero means disabled,
+  *	otherwise, it must be multiple of SECTOR_SIZE(512 Bytes).
++ * @pmsg_size:
++ *	The size of zone for pmsg. Zero means disabled, othewise, it must be
++ *	multiple of SECTOR_SIZE(512).
+  * @dump_oops:
+  *	Dump oops and panic log or only panic.
+  * @read, @write:
+@@ -50,6 +53,7 @@ struct blkz_info {
+ 
+ 	unsigned long total_size;
+ 	unsigned long dmesg_size;
++	unsigned long pmsg_size;
+ 	int dump_oops;
+ 	blkz_read_op read;
+ 	blkz_write_op write;
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+1.9.1
+
