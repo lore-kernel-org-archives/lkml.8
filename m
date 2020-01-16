@@ -2,174 +2,113 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07447C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84D4207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE94208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="nEBNDEmL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eBfQSPTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgAPQAO (ORCPT
+        id S1726994AbgAPQA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:00:14 -0500
-Received: from mail-eopbgr20079.outbound.protection.outlook.com ([40.107.2.79]:20230
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726410AbgAPQAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:00:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H7iuwfJMW/KTuiV1yeKh2Z7kplBtIe4fTUSSO0HHsRPCkOzA/xkGYD4Rr/ahoEj9Yfx9sI5Nliyc3OQB4DGkImx19cBH/X91jNllo+bhbPclMH5hsmEAxxOoYw5KxMjRyjEjdDXHlzM6/xrF7IIfJiCO+Ku20X1XzmEFHn0qwazJjWm5Yo2ai7sTKxuUlvn0NXPHY+ekScVkDC6CrfPh53OmNknhJKcGcLoJqyU39v6ESd0fHeQ8Y2+o+6o4SSdSqMuhBGGEWkFqzRqa41NvCqAkikNEniNmFFDz7/R5DHSa2hkVbgW1k+3m+05ZJEdoiamdS8stWUpGb+TjibKMSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3tizVRyq4GUFAfNZmbiLXUnh733M/F+zveIQUtZh9o=;
- b=LQBA1LGzHXUtAs7ZH8Y0iLJY047XHSXtqpQLfl+s+16nvh0BFhG8IifrDzzEj1Tbv4iKgcT6XS7FICPTFcosbXjOOcVnOYHPklcr6QIiAKlnA10M4jqXJy39Z3U23F3EioOr2eqqj9c5mWc2MzLDDHbW/x//8Ztluej/y1rGx9kduJ921+2KAH4V3meaM1f0E3gDKpL424/1MGu7pEz5KDLxqmZK0IWVM5VnvqFpx0+zyfhDH9kJVwKN1mqYpeDQzkzqGzaADVUt7I4TmFAc0hIU5fZ6eFz9z580ExHWyfas0kzrdJfaLOtGgKM/l6BLXCkohyHbNjSQfMmuIgRQ9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3tizVRyq4GUFAfNZmbiLXUnh733M/F+zveIQUtZh9o=;
- b=nEBNDEmLL4utovFupHHfBAyxNQTrdAFDVy+U7z2HSF31naKLiUROZGEqgH2AlU0Lkqo+BvnBHf9M9639SZLNXxYLq+0nWNJjTlu7iTXE5ahSdSQJMAwLbaKSUri6Xp2GjTdVHoU0ySntb38+qmVt5l1QPENVFfxoXBVsjlLK7Gw=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6768.eurprd05.prod.outlook.com (10.186.162.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Thu, 16 Jan 2020 16:00:07 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
- 16:00:07 +0000
-Received: from mlx.ziepe.ca (142.68.57.212) by BN6PR14CA0029.namprd14.prod.outlook.com (2603:10b6:404:13f::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Thu, 16 Jan 2020 16:00:06 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1is7Yw-0006Jf-JR; Thu, 16 Jan 2020 12:00:02 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-Thread-Topic: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-Thread-Index: AQHVymNqjXzbt52uukWssUL4CQa1/qfqIESAgAIr9ICAASsGAA==
-Date:   Thu, 16 Jan 2020 16:00:06 +0000
-Message-ID: <20200116160002.GL20978@mellanox.com>
-References: <20200113224703.5917-1-rcampbell@nvidia.com>
- <20200113224703.5917-6-rcampbell@nvidia.com>
- <20200114125957.GO20978@mellanox.com>
- <5845f50e-8bc0-8068-ee21-4f910beb1255@nvidia.com>
-In-Reply-To: <5845f50e-8bc0-8068-ee21-4f910beb1255@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR14CA0029.namprd14.prod.outlook.com
- (2603:10b6:404:13f::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.68.57.212]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7e34af3e-9c2a-4b8f-7dfa-08d79a9d2809
-x-ms-traffictypediagnostic: VI1PR05MB6768:
-x-microsoft-antispam-prvs: <VI1PR05MB6768856DE0040FF47E7CC132CF360@VI1PR05MB6768.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(199004)(189003)(2616005)(2906002)(1076003)(52116002)(86362001)(33656002)(316002)(36756003)(26005)(81166006)(5660300002)(8676002)(186003)(4326008)(81156014)(66946007)(9786002)(6916009)(66476007)(66556008)(64756008)(66446008)(54906003)(71200400001)(7416002)(8936002)(9746002)(478600001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6768;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iDLgVCiLs+MqFDOwVfDiBXIGC09Ym7bo5DZw3ENsAUQfm5JiV+JBCqp+UiUAG2i+8lgizT8mVQlKOLGC/AmEUL2PI38NHdpGIOYuPYmp7Etins/V/J+GswH//CGYxspz/vRt65BgsPVfhCVzuuYiNZEf3ZvdG9nXATpbRouoOaUrM2mnEceSKq32krSDQwTnTdtxX5NudpsiOkFf77319St+1E0KYuBxawAJLmLBD2HJlM99YUu/gQS0IYAFBiHK78j4a4tB2kh3FmoI2g8QNQC2pGSTI138IekihHc3txY+qzuDuCnRpkAu2oShRkWXPmnavqNnr+UF66rYRuOP729Ixx3XkXFBcu5dZrAuOO6bcKft0blNeEl+l3uQzSQXZiVjtsyMfAEDNvbkTRKKbJME6eBZX/2LjIvMr4u3pN7QhZTNwPS7ENFhcfpdDy8EziM//Naws42hbdRkSRwxulCyfOposaeqGYuboL/sR0fuZV6RLCjOwz71mMu4V71J
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <ECF78F37AB44F842AECF3474CA80857C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 Jan 2020 11:00:27 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40062 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgAPQA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:00:27 -0500
+Received: by mail-io1-f66.google.com with SMTP id x1so22330434iop.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9JA64lSSGZhM2+AlaRyGX22gJ8cKrvAPGqj8KNteWAA=;
+        b=eBfQSPTl2scwswbOFhSakwoAF8PgLkNlYnC3C6QeLqCeox/H7wcY+SIlR+lNSUw42o
+         WOIT5oBuVgYd+Y1OGGrbGJNKNmktZTmNXZ16cIQuyAPm4YWbbgoXZnpe06HrfjhZe4wh
+         Jvjp4VXvd7d0e1EMKTINBcMvDAv1ptgp5VdEi5x2MQSm3xy5BAWpnG4nDc8SWGvlFXF0
+         09mWFcUSVHjoTgkHypCGBi7RfnLUUYN7U9ZoE3UVeSBmMhUBAUqOMOwjHSseREsHpuz5
+         yEpQvoDQq9aZOqAgUm/bE5JmNmhYThEmhhBzTgBD2xFEjKfYh2Rhaz0m+v9VGIkXZF7p
+         qPRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9JA64lSSGZhM2+AlaRyGX22gJ8cKrvAPGqj8KNteWAA=;
+        b=KdQp+0q/3+IfSCpEbp+qT0pLFN9Yoik9KMIk92o4x4YVYtxEWDjUbJZ8V8WcAcihs8
+         l1PTdue4XwGueJcy1MYz4sjbjmJS0MzvuBM4/N26LzRt3nJNmHCpCzLRvuSmjN7psa9w
+         DfD7B3THBRWaC8sJWOa7/ovWHL0RELJQ5QcqqaauAn+dpVSfLq3I6zUnRv/FXvqO3kea
+         q7M9pRzIvUp33sWHcXeATEPsrCtDUjxUXOr82a0c2vdvvBBPSWLoL0mbaFp+dTSBgjC7
+         fOwHBF/mfRSN/0SQcaiyIhjv5pRnVo9JFgPdrFk95DTSDMPbLvAq0IePgsas461ZYR4n
+         KRPA==
+X-Gm-Message-State: APjAAAW8Frlp32ZD56JZeer36tR85MZEa9dXOVLzLVdO44/OjYw/zplK
+        PnJYwtaNGsGCDMwGjvK51Wgh8A==
+X-Google-Smtp-Source: APXvYqyeh93woLPz87vdCJmNQys9BCZFkfr63nCTiExdwxydYs0bn+NUXt5EfOG2vH3juJG/+gxrNQ==
+X-Received: by 2002:a6b:740c:: with SMTP id s12mr28568449iog.108.1579190425642;
+        Thu, 16 Jan 2020 08:00:25 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id y14sm2002012ioa.12.2020.01.16.08.00.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 08:00:25 -0800 (PST)
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
+Date:   Thu, 16 Jan 2020 09:00:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e34af3e-9c2a-4b8f-7dfa-08d79a9d2809
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 16:00:07.0367
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RFDusbytEkvVty7t1+keIrbzmOcOzhKbDwfejR/hlCLC6PyH+WGWJgHbxr+RmU/pLu0YlJki9Yd14H8BJm6XhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6768
+In-Reply-To: <20200116155557.mwjc7vu33xespiag@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:09:47PM -0800, Ralph Campbell wrote:
+On 1/16/20 8:55 AM, Stefano Garzarella wrote:
+> On Thu, Jan 16, 2020 at 08:29:07AM -0700, Jens Axboe wrote:
+>> On 1/16/20 6:49 AM, Stefano Garzarella wrote:
+>>> io_uring_poll() sets EPOLLOUT flag if there is space in the
+>>> SQ ring, then we should wakeup threads waiting for EPOLLOUT
+>>> events when we expose the new SQ head to the userspace.
+>>>
+>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>> ---
+>>>
+>>> Do you think is better to change the name of 'cq_wait' and 'cq_fasync'?
+>>
+>> I honestly think it'd be better to have separate waits for in/out poll,
+>> the below patch will introduce some unfortunate cacheline traffic
+>> between the submitter and completer side.
+> 
+> Agree, make sense. I'll send a v2 with a new 'sq_wait'.
+> 
+> About fasync, do you think could be useful the POLL_OUT support?
+> In this case, maybe is not simple to have two separate fasync_struct,
+> do you have any advice?
 
-> I don't understand the lifetime/membership issue. The driver is the only =
-thing
-> that allocates, inserts, or removes struct mmu_interval_notifier and thus
-> completely controls the lifetime.
+The fasync should not matter, it's all in the checking of whether the sq
+side has any sleepers. This is rarely going to be the case, so as long
+as we can keep the check cheap, then I think we're fine.
 
-If the returned value is on the defered list it could be freed at any
-moment. The existing locks do not prevent it.
+Since the use case is mostly single submitter, unless you're doing
+something funky or unusual, you're not going to be needing POLLOUT ever.
+Hence I don't want to add any cost for it, I'd even advocate just doing
+waitqueue_active() perhaps, if we can safely pull it off.
 
-> > > +		ret =3D nouveau_svmm_interval_find(svmm, &range);
-> > > +		if (ret) {
-> > > +			up_read(&mm->mmap_sem);
-> > > +			return ret;
-> > > +		}
-> > > +		range.notifier_seq =3D mmu_interval_read_begin(range.notifier);
-> > >   		ret =3D hmm_range_fault(&range, 0);
-> > >   		up_read(&mm->mmap_sem);
-> > >   		if (ret <=3D 0) {
-> >=20
-> > I'm still not sure this is a better approach than what ODP does. It
-> > looks very expensive on the fault path..
-> >=20
-> > Jason
-> >=20
->=20
-> ODP doesn't have this problem because users have to call ib_reg_mr()
-> before any I/O can happen to the process address space.
+-- 
+Jens Axboe
 
-ODP supports a single 'full VA' call at process startup, just like
-these cases.
-
-> That is when mmu_interval_notifier_insert() /
-> mmu_interval_notifier_remove() can be called and the driver doesn't
-> have to worry about the interval changing sizes or being removed
-> while I/O is happening. =20
-
-No, for the 'ODP full process VA' (aka implicit ODP) mode it
-dynamically maintains a list of intervals. ODP chooses the align the
-dynamic intervals to it's HW page table levels, and not to SW VMAs.
-This is much simpler to manage and faster to fault, at the cost of
-capturing more VA for invalidations which have to be probed against
-the HW shadow PTEs.
-
-> It isn't that expensive, there is an extra driver lock/unlock as
-> part of the lookup and possibly a find_vma() and kmalloc(GFP_ATOMIC)
-> for new intervals. Also, the deferred interval updates for munmap().
-> Compared to the cost of updating PTEs in the device and GPU fault
-> handling, this is minimal overhead.
-
-Well, compared to ODP which does a single xa lookup with no lock to
-find its interval, this looks very expensive and not parallel.
-
-I think if there is merit in having ranges cover the vmas and track
-changes then there is probably merit in having the core code provide
-much of that logic, not the driver.
-
-But it would be interesting to see some kind of analysis on the two
-methods to decide if the complexity is worthwhile.
-
-Jason
