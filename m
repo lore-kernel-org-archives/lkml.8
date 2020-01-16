@@ -2,70 +2,137 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECD7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EBCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C0920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8032073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200703;
+	bh=WI1HRNwC+S8LZwMMoMbdsvOEmQ+jtENgPVAfkgO1+rw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gIc6Gb+NYE7l964cI4m3MWvK4hyK2bME0q+Gh5u2WbA6RroNMjrvgayvsGrFzlssH
+	 mQObnKztbnI+PxUaHNStcas0NsU5HdAX8XhDWEsOIUNmC8Mz77qGLEdpXUp+RmCssD
+	 ZtH8XN0zc4C9DWt8idBujclJSMGXtQKsvwxNKrC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437075AbgAPSve (ORCPT
+        id S2407187AbgAPSvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:51:34 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:45870 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389571AbgAPRJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:03 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1is8dh-0001uN-1q; Thu, 16 Jan 2020 17:09:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>, linux-pm@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] power: supply: bq25890_charger: fix incorrect error return when bq25890_field_read fails
-Date:   Thu, 16 Jan 2020 17:09:00 +0000
-Message-Id: <20200116170900.86548-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 16 Jan 2020 13:51:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389486AbgAPRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:47 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B021B217F4;
+        Thu, 16 Jan 2020 17:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194526;
+        bh=WI1HRNwC+S8LZwMMoMbdsvOEmQ+jtENgPVAfkgO1+rw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LMF1jXVFPNeHpVrazMLDh1u9G8aDAl+P8C5ecNVj7ppUpr2B4FrQKRcVGhLlbxCFD
+         UMqSuwlNjdlcbTlV+da0T+sCE+lfJFzfHm7xLy6r3kQuDeB0Zu/fs7cYtGLWKLcMpb
+         MpNguiXV5SRn8H5G2M2TfV4bnBLb/4jTz6Em9LU8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 416/671] powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
+Date:   Thu, 16 Jan 2020 12:00:54 -0500
+Message-Id: <20200116170509.12787-153-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-Currently a read failure by bq25890_field_read on F_DEV_REV is returning
-an error in id instead of rev. Fix this by returning the value in rev.
+[ Upstream commit e610a466d16a086e321f0bd421e2fc75cff28605 ]
 
-Addresses-Coverity: ("Copy-paste error")
-Fixes: d20267c9a98e ("power: supply: bq25890_charger: Add support of BQ25892 and BQ25896 chips")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+It's common for the platform to replace the cache device nodes after a
+migration. Since the cacheinfo code is never informed about this, it
+never drops its references to the source system's cache nodes, causing
+it to wind up in an inconsistent state resulting in warnings and oopses
+as soon as CPU online/offline occurs after the migration, e.g.
+
+  cache for /cpus/l3-cache@3113(Unified) refers to cache for /cpus/l2-cache@200d(Unified)
+  WARNING: CPU: 15 PID: 86 at arch/powerpc/kernel/cacheinfo.c:176 release_cache+0x1bc/0x1d0
+  [...]
+  NIP release_cache+0x1bc/0x1d0
+  LR  release_cache+0x1b8/0x1d0
+  Call Trace:
+    release_cache+0x1b8/0x1d0 (unreliable)
+    cacheinfo_cpu_offline+0x1c4/0x2c0
+    unregister_cpu_online+0x1b8/0x260
+    cpuhp_invoke_callback+0x114/0xf40
+    cpuhp_thread_fun+0x270/0x310
+    smpboot_thread_fn+0x2c8/0x390
+    kthread+0x1b8/0x1c0
+    ret_from_kernel_thread+0x5c/0x68
+
+Using device tree notifiers won't work since we want to rebuild the
+hierarchy only after all the removals and additions have occurred and
+the device tree is in a consistent state. Call cacheinfo_teardown()
+before processing device tree updates, and rebuild the hierarchy
+afterward.
+
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/bq25890_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/mobility.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 785dbc6307b0..aebd1253dbc9 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -765,7 +765,7 @@ static int bq25890_get_chip_version(struct bq25890_device *bq)
- 	rev = bq25890_field_read(bq, F_DEV_REV);
- 	if (rev < 0) {
- 		dev_err(bq->dev, "Cannot read chip revision.\n");
--		return id;
-+		return rev;
- 	}
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index e4ea71383383..70744b4fbd9e 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -24,6 +24,7 @@
+ #include <asm/machdep.h>
+ #include <asm/rtas.h>
+ #include "pseries.h"
++#include "../../kernel/cacheinfo.h"
  
- 	switch (id) {
+ static struct kobject *mobility_kobj;
+ 
+@@ -360,11 +361,20 @@ void post_mobility_fixup(void)
+ 	 */
+ 	cpus_read_lock();
+ 
++	/*
++	 * It's common for the destination firmware to replace cache
++	 * nodes.  Release all of the cacheinfo hierarchy's references
++	 * before updating the device tree.
++	 */
++	cacheinfo_teardown();
++
+ 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
+ 	if (rc)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
+ 
++	cacheinfo_rebuild();
++
+ 	cpus_read_unlock();
+ 
+ 	/* Possibly switch to a new RFI flush type */
 -- 
-2.24.0
+2.20.1
 
