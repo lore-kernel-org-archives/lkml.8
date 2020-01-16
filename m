@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65341C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D71C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB0D2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E51246B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196928;
-	bh=YRMHKI9DxXsZxyQa/S5HR4EOV7JoY6AVotvoAjzyXCs=;
+	s=default; t=1579196937;
+	bh=LLu+27JEDkz1TvGeqZ6ndsNzJYWwzbFUYnBW19zcqiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMXdINwHD4/vnfggOkK0k6wSLx7WuIOsgdf6q1qVtRCStrAWO7H6PYFsoXnMYOjmV
-	 jYTiFwv8XK/VU9sAP23H2cBbJysCAw+wsxBTnPRRR83PvrjZKnenaaXV4xsu1kiPJ/
-	 YG8H9QaeKq5D3ak6tyG3V48G4tSPQG2aGgz4Q2wk=
+	b=QKoko2N7P/iSXMlfRhSfDW5NMgldF9h/PSpjvXyhhy+yTDEwzxz0DyFsttYMj6t3A
+	 jMTLMeFyNAmLi8K0r+FX5zykPMBKEWJl4LBtWNq7bqMvSNacffuOxigx2SAVrRICuw
+	 tubqAKL7oeQUkvRdPAUoLQLWm/gWAVDZl5//guNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394370AbgAPRsr (ORCPT
+        id S2394380AbgAPRs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:48:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:48:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406679AbgAPRqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:30 -0500
+        id S2406651AbgAPRqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6BE2246B8;
-        Thu, 16 Jan 2020 17:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D07024679;
+        Thu, 16 Jan 2020 17:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196789;
-        bh=YRMHKI9DxXsZxyQa/S5HR4EOV7JoY6AVotvoAjzyXCs=;
+        s=default; t=1579196785;
+        bh=LLu+27JEDkz1TvGeqZ6ndsNzJYWwzbFUYnBW19zcqiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZjfycREZ3GGolp3EtGaYmXVYPo+Upzz2SpCw6EsdSyi+/PfepBi6JLeW7MUBR6Uo
-         VKcvWseLCz3jbo4+Uw97CZqYQ+P3HwUIfnfR8xyRrZQi2tosqWdQM0YXYAZ9oM5dFn
-         /mL0gyBukO7DBIHlrebb3Ern940F13fZmRb2VC7U=
+        b=fT9ciOOMFTzM4/DXpu/TX+Y2q5LkTia/FDZkJ4gLqUiEXF9PDomw76d9EwaXN8vzh
+         QAPo9yWgr2BAYjCkMdYoDQz+YSda0U1yU4qSgko3YTQjxECz4CWSX8P98iX+Gcpfj5
+         tYCHTk7aDFR2z5L94JcNOmAFdCtmm++UGxiB+NZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 152/174] media: ov6650: Fix incorrect use of JPEG colorspace
-Date:   Thu, 16 Jan 2020 12:42:29 -0500
-Message-Id: <20200116174251.24326-152-sashal@kernel.org>
+Cc:     Robin Gong <yibin.gong@nxp.com>, stable@vger.kernel,
+        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 149/174] dmaengine: imx-sdma: fix size check for sdma script_number
+Date:   Thu, 16 Jan 2020 12:42:26 -0500
+Message-Id: <20200116174251.24326-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,95 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit 12500731895ef09afc5b66b86b76c0884fb9c7bf ]
+[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
 
-Since its initial submission, the driver selects V4L2_COLORSPACE_JPEG
-for supported formats other than V4L2_MBUS_FMT_SBGGR8_1X8.  According
-to v4l2-compliance test program, V4L2_COLORSPACE_JPEG applies
-exclusively to V4L2_PIX_FMT_JPEG.  Since the sensor does not support
-JPEG format, fix it to always select V4L2_COLORSPACE_SRGB.
+Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(41) exceed the size of structure sdma_script_start_addrs(40),
+thus cause memory corrupt such as slob block header so that kernel
+trap into while() loop forever in slob_free(). Please refer to below
+code piece in imx-sdma.c:
+for (i = 0; i < sdma->script_number; i++)
+	if (addr_arr[i] > 0)
+		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(38->41 3 scripts added) not align with script number added in
+sdma_script_start_addrs(2 scripts).
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
+Cc: stable@vger.kernel
+Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
+Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
+[vkoul: update the patch title]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/dma/imx-sdma.c                     | 8 ++++++++
+ include/linux/platform_data/dma-imx-sdma.h | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index bb55ddfbf733..7adbfc57cffa 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -203,7 +203,6 @@ struct ov6650 {
- 	unsigned long		pclk_max;	/* from resolution and format */
- 	struct v4l2_fract	tpf;		/* as requested with s_parm */
- 	u32 code;
--	enum v4l2_colorspace	colorspace;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index dd97dbf6618c..1dc06e0e890f 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1411,6 +1411,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 	if (!sdma->script_number)
+ 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
+ 
++	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
++				  / sizeof(s32)) {
++		dev_err(sdma->dev,
++			"SDMA script number %d not match with firmware.\n",
++			sdma->script_number);
++		return;
++	}
++
+ 	for (i = 0; i < sdma->script_number; i++)
+ 		if (addr_arr[i] > 0)
+ 			saddr_arr[i] = addr_arr[i];
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 2d08816720f6..5bb0a119f39a 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -50,7 +50,10 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
  };
  
- 
-@@ -513,7 +512,7 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	mf->width	= priv->rect.width >> priv->half_scale;
- 	mf->height	= priv->rect.height >> priv->half_scale;
- 	mf->code	= priv->code;
--	mf->colorspace	= priv->colorspace;
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
- 	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
-@@ -623,11 +622,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		priv->pclk_max = 8000000;
- 	}
- 
--	if (code == MEDIA_BUS_FMT_SBGGR8_1X8)
--		priv->colorspace = V4L2_COLORSPACE_SRGB;
--	else if (code != 0)
--		priv->colorspace = V4L2_COLORSPACE_JPEG;
--
- 	if (half_scale) {
- 		dev_dbg(&client->dev, "max resolution: QCIF\n");
- 		coma_set |= COMA_QCIF;
-@@ -684,7 +678,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		priv->code = code;
- 
- 	if (!ret) {
--		mf->colorspace	= priv->colorspace;
- 		mf->width = priv->rect.width >> half_scale;
- 		mf->height = priv->rect.height >> half_scale;
- 	}
-@@ -707,6 +700,7 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 				&mf->height, 2, H_CIF, 1, 0);
- 
- 	mf->field = V4L2_FIELD_NONE;
-+	mf->colorspace = V4L2_COLORSPACE_SRGB;
- 
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_Y10_1X10:
-@@ -716,12 +710,10 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 	case MEDIA_BUS_FMT_YUYV8_2X8:
- 	case MEDIA_BUS_FMT_VYUY8_2X8:
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
- 		break;
- 	default:
- 		mf->code = MEDIA_BUS_FMT_SBGGR8_1X8;
- 	case MEDIA_BUS_FMT_SBGGR8_1X8:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
- 		break;
- 	}
- 
-@@ -1048,7 +1040,6 @@ static int ov6650_probe(struct i2c_client *client,
- 	priv->rect.height = H_CIF;
- 	priv->half_scale  = false;
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
--	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
- 	ret = ov6650_video_probe(client);
- 	if (ret)
+ /**
 -- 
 2.20.1
 
