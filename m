@@ -6,69 +6,81 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F91C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084652077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1763A2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgAPN7h (ORCPT
+        id S1728928AbgAPOAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:59:37 -0500
-Received: from correo.us.es ([193.147.175.20]:60964 "EHLO mail.us.es"
+        Thu, 16 Jan 2020 09:00:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42742 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgAPN7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:59:36 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id EE8E52A2BBE
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E0A97DA710
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id CD07EDA70E; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id C8B9EDA707;
-        Thu, 16 Jan 2020 14:59:32 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Thu, 16 Jan 2020 14:59:32 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id A603342EF9E1;
-        Thu, 16 Jan 2020 14:59:32 +0100 (CET)
-Date:   Thu, 16 Jan 2020 14:59:32 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     coreteam@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot <syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] netfilter: nf_tables: fix memory leak in
- nf_tables_parse_netdev_hooks()
-Message-ID: <20200116135932.64pqshxvvvpoqawo@salvia>
-References: <000000000000ffbba3059c3b5352@google.com>
- <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
+        id S1726189AbgAPOAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 09:00:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1341EAD5E;
+        Thu, 16 Jan 2020 14:00:04 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 62CD91E06F1; Thu, 16 Jan 2020 15:00:04 +0100 (CET)
+Date:   Thu, 16 Jan 2020 15:00:04 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200116140004.GE8446@quack2.suse.cz>
+References: <20200114161225.309792-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200114161225.309792-1-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 01:09:31PM +0300, Dan Carpenter wrote:
-> Syzbot detected a leak in nf_tables_parse_netdev_hooks().  If the hook
-> already exists, then the error handling doesn't free the newest "hook".
+Hello!
 
-Applied, thanks.
+On Tue 14-01-20 17:12:13, Christoph Hellwig wrote:
+> Asynchronous read/write operations currently use a rather magic locking
+> scheme, were access to file data is normally protected using a rw_semaphore,
+> but if we are doing aio where the syscall returns to userspace before the
+> I/O has completed we also use an atomic_t to track the outstanding aio
+> ops.  This scheme has lead to lots of subtle bugs in file systems where
+> didn't wait to the count to reach zero, and due to its adhoc nature also
+> means we have to serialize direct I/O writes that are smaller than the
+> file system block size.
+> 
+> All this is solved by releasing i_rwsem only when the I/O has actually
+> completed, but doings so is against to mantras of Linux locking primites:
+> 
+>  (1) no unlocking by another process than the one that acquired it
+>  (2) no return to userspace with locks held
+
+I'd like to note that using i_dio_count has also one advantage you didn't
+mention. For AIO case, if you need to hold i_rwsem in exclusive mode,
+holding the i_rwsem just for submission part is a significant performance
+advantage (shorter lock hold times allow for higher IO parallelism). I
+guess this could be mitigated by downgrading the lock to shared mode
+once the IO is submitted. But there will be still some degradation visible
+for the cases of mixed exclusive and shared acquisitions because shared
+holders will be blocking exclusive ones for longer time.
+
+This may be especially painful for filesystems that don't implement DIO
+overwrites with i_rwsem in shared mode...
+
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
