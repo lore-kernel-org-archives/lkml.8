@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B45C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F883C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43022073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D6F2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202564;
-	bh=F9CnNPMiYGhc4/q6hw9QUNtDZtY/v7pM+nnOx9qb4BY=;
+	s=default; t=1579202571;
+	bh=s7LTG2wB0wzmYFRwfx/x9FXxgBvnEO74YT1d8UFo9bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rpntjLHse20ImY+M2picFEiqz1Z83rnRyoYiD6saKh4/PqLg+Q10fpyqbMcIl+QaQ
-	 2v1jwXWdMpN4PBLfZubXm2ZZjP5p58zRXpTNO5uwNrez7uAkerfFj8ODM4TBHl/NNt
-	 UYqgsfztSweYPabWu8Cu8elYlfrjqKxQk0vS6h8s=
+	b=fC+OoWYXe+/pIBw9U9F/ia7Plft3y7o08t42e+B9Vgfde7XA8Hz0M+4b570pIPFON
+	 Ktqvdke4pQLEwIeiXK5h56cHKerwKXEmJYnxzRrjbAtzqmvKJCnjAZ/eOTB/4nheoJ
+	 UKa2Cyxp2R3YGIZ92Rp1g/TqJDZlXmjdkhYMFics=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404884AbgAPTWn (ORCPT
+        id S1729359AbgAPQxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbgAPQxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:24 -0500
+        id S1729830AbgAPQxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343BC2176D;
-        Thu, 16 Jan 2020 16:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E855021D56;
+        Thu, 16 Jan 2020 16:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193603;
-        bh=F9CnNPMiYGhc4/q6hw9QUNtDZtY/v7pM+nnOx9qb4BY=;
+        s=default; t=1579193593;
+        bh=s7LTG2wB0wzmYFRwfx/x9FXxgBvnEO74YT1d8UFo9bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VGAK2YEjv7J6ltKm/5XP1QQDEMUhU1/Zxg4EhcAxi9HWMZfZ/9efR5JrOP9vSnzJx
-         36NK2tHMFxE5ZIrm6Q7zkNXGaGqIcxq8OvG7b24J8S+yaoMybjXsySPzWg7ptJ6jXg
-         uXRZjN1HrPQLR1NI/YR38UdVedUwlE1SFkMVa5e8=
+        b=j6IF1mqxZ4hfQw7AgoNlDBAGHlnz2MQAKyX9oKfso/HGATIGJsQoOpjb6cFwdRHYy
+         tLrrHCjRQyAWX08oCyogjewU1AVBafF0U2zyxC3FFO6mA0Tn5OAQDAic6KDBR5tHnd
+         w5+RVEDWHJG1JbxiyczL22zOlpG82dqZVzMcQuE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 142/205] iwlwifi: mvm: fix support for single antenna diversity
-Date:   Thu, 16 Jan 2020 11:41:57 -0500
-Message-Id: <20200116164300.6705-142-sashal@kernel.org>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        Jamie Heilman <jamie@audible.transient.net>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 133/205] nfsd: Fix cld_net->cn_tfm initialization
+Date:   Thu, 16 Jan 2020 11:41:48 -0500
+Message-Id: <20200116164300.6705-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,63 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit bb99ff9baa02beb9216c86678999342197c849cc ]
+[ Upstream commit 18b9a895e652979b70f9c20565394a69354dfebc ]
 
-When the single antenna diversity support was sent upstream, only some
-definitions were sent, due to a bad revert.
+Don't assign an error pointer to cld_net->cn_tfm, otherwise an oops will
+occur in nfsd4_remove_cld_pipe().
 
-Fix this by adding the actual code.
+Also, move the initialization of cld_net->cn_tfm so that it occurs after
+the check to see if nfsdcld is running.  This is necessary because
+nfsd4_client_tracking_init() looks for -ETIMEDOUT to determine whether
+to use the "old" nfsdcld tracking ops.
 
-Fixes: 5952e0ec3f05 ("iwlwifi: mvm: add support for single antenna diversity")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
+Reported-by: Jamie Heilman <jamie@audible.transient.net>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4recover.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index d9eb2b286438..c59cbb8cbdd7 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -514,6 +514,18 @@ static int iwl_send_phy_cfg_cmd(struct iwl_mvm *mvm)
- 	struct iwl_phy_cfg_cmd phy_cfg_cmd;
- 	enum iwl_ucode_type ucode_type = mvm->fwrt.cur_fw_img;
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index cdc75ad4438b..c35c0ebaf722 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1578,6 +1578,7 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	bool running;
+ 	int retries = 10;
++	struct crypto_shash *tfm;
  
-+	if (iwl_mvm_has_unified_ucode(mvm) &&
-+	    !mvm->trans->cfg->tx_with_siso_diversity) {
-+		return 0;
-+	} else if (mvm->trans->cfg->tx_with_siso_diversity) {
-+		/*
-+		 * TODO: currently we don't set the antenna but letting the NIC
-+		 * to decide which antenna to use. This should come from BIOS.
-+		 */
-+		phy_cfg_cmd.phy_cfg =
-+			cpu_to_le32(FW_PHY_CFG_CHAIN_SAD_ENABLED);
-+	}
-+
- 	/* Set parameters */
- 	phy_cfg_cmd.phy_cfg = cpu_to_le32(iwl_mvm_get_phy_config(mvm));
+ 	status = nfs4_cld_state_init(net);
+ 	if (status)
+@@ -1586,11 +1587,6 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	status = __nfsd4_init_cld_pipe(net);
+ 	if (status)
+ 		goto err_shutdown;
+-	nn->cld_net->cn_tfm = crypto_alloc_shash("sha256", 0, 0);
+-	if (IS_ERR(nn->cld_net->cn_tfm)) {
+-		status = PTR_ERR(nn->cld_net->cn_tfm);
+-		goto err_remove;
+-	}
  
-@@ -1344,12 +1356,12 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
- 		ret = iwl_send_phy_db_data(mvm->phy_db);
- 		if (ret)
- 			goto error;
--
--		ret = iwl_send_phy_cfg_cmd(mvm);
--		if (ret)
--			goto error;
+ 	/*
+ 	 * rpc pipe upcalls take 30 seconds to time out, so we don't want to
+@@ -1607,6 +1603,12 @@ nfsd4_cld_tracking_init(struct net *net)
+ 		status = -ETIMEDOUT;
+ 		goto err_remove;
  	}
++	tfm = crypto_alloc_shash("sha256", 0, 0);
++	if (IS_ERR(tfm)) {
++		status = PTR_ERR(tfm);
++		goto err_remove;
++	}
++	nn->cld_net->cn_tfm = tfm;
  
-+	ret = iwl_send_phy_cfg_cmd(mvm);
-+	if (ret)
-+		goto error;
-+
- 	ret = iwl_mvm_send_bt_init_conf(mvm);
- 	if (ret)
- 		goto error;
+ 	status = nfsd4_cld_get_version(nn);
+ 	if (status == -EOPNOTSUPP)
 -- 
 2.20.1
 
