@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D6FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB716C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED05024767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0A324766
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196667;
-	bh=uyJKMUQqyJ4b69Aj8EYY+SypBHOwemN3SEOUIXlwb5o=;
+	s=default; t=1579196673;
+	bh=2IwF142lJfl9HQGmkHpdxUMrDqxjO0dBTOpvzePVuTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEA8N/keOyKOAVDtQAoczct7jh+10CECYoylDlw+3NrS9WAUkAEgxZJyzmM0cZgfq
-	 FOA+7cGVV8yodorgxW0Mbd5kyWk6XfROyip60YEsvs+wIPkZPmRuQDZpPtfsJa/7/q
-	 hNT5x4LdI2I95ewciVWul12jUZqEzG9l2bbz4VFI=
+	b=F+c50P8+JNOCWBYgXs6DgsPtHl+gkS+ssSparrmFX2aM0ykqSSQI2E0oJzooRPm0D
+	 zmuhOwq0IHJtSRGGjsCatcCN8Hrf8gS4S3e4ldmu15qca6ryOVU0DSDhAnO7C65Dwi
+	 iMGKKIZfbGKJcOkXAuXGoNJXKZ6K0zea48n7bisw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393819AbgAPRo0 (ORCPT
+        id S2394189AbgAPRoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394043AbgAPRoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:04 -0500
+        id S2394101AbgAPRoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B976D24754;
-        Thu, 16 Jan 2020 17:44:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0AB02475C;
+        Thu, 16 Jan 2020 17:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196643;
-        bh=uyJKMUQqyJ4b69Aj8EYY+SypBHOwemN3SEOUIXlwb5o=;
+        s=default; t=1579196653;
+        bh=2IwF142lJfl9HQGmkHpdxUMrDqxjO0dBTOpvzePVuTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ap13is7MXV1lK2J/hne8Lari/H1jgNOj5PnVAm97Ba/ZDebqtkhafypdI5V5962ed
-         6IbRcuWvrAQ30qKIzFfmH6ZhKiZIQEriFz2X2ko1qEyQEBpZfQiVUrdZ8rBhU+Msye
-         GqpDVfeGNX9nAvfV7rw9WY2xRf1k5ftzyOf5qt6o=
+        b=tof8k+4kiLMK5ZnZwT+i4uyNS5ZI9s1punaR2vHy2S/yt342W28Ph8Hb2iRCO/sJN
+         v6bhmOBIiEScgTGgQGF1CsQ50h5zsxqPhOnI70Hf9qKS2GiaE6+EkviV4muTG+oKVg
+         Dqp0bP9nyx8h1sW+myVqlgg0z67W3PjFphzsrqwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.4 054/174] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
-Date:   Thu, 16 Jan 2020 12:40:51 -0500
-Message-Id: <20200116174251.24326-54-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 061/174] media: wl128x: Fix an error code in fm_download_firmware()
+Date:   Thu, 16 Jan 2020 12:40:58 -0500
+Message-Id: <20200116174251.24326-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,38 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
+[ Upstream commit ef4bb63dc1f7213c08e13f6943c69cd27f69e4a3 ]
 
-The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
-with min_uA and max_uA.
-While at it also make the array const and change to use unsigned int.
+We forgot to set "ret" on this error path.
 
-Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/wm831x-dcdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/radio/wl128x/fmdrv_common.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
-index 8cbb82ceec40..fad424e20bd5 100644
---- a/drivers/regulator/wm831x-dcdc.c
-+++ b/drivers/regulator/wm831x-dcdc.c
-@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
- }
+diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
+index 51639a3f7abe..0cee10cca0e5 100644
+--- a/drivers/media/radio/wl128x/fmdrv_common.c
++++ b/drivers/media/radio/wl128x/fmdrv_common.c
+@@ -1278,8 +1278,9 @@ static int fm_download_firmware(struct fmdev *fmdev, const u8 *fw_name)
  
- /* Current limit options */
--static u16 wm831x_dcdc_ilim[] = {
--	125, 250, 375, 500, 625, 750, 875, 1000
-+static const unsigned int wm831x_dcdc_ilim[] = {
-+	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
- };
+ 		switch (action->type) {
+ 		case ACTION_SEND_COMMAND:	/* Send */
+-			if (fmc_send_cmd(fmdev, 0, 0, action->data,
+-						action->size, NULL, NULL))
++			ret = fmc_send_cmd(fmdev, 0, 0, action->data,
++					   action->size, NULL, NULL);
++			if (ret)
+ 				goto rel_fw;
  
- static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
+ 			cmd_cnt++;
 -- 
 2.20.1
 
