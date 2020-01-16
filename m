@@ -2,175 +2,141 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345B9C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF47EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBA5207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199244;
-	bh=oZge8qcjmLHr1FyJzPzSH7Q+rLT/brvpKPHpjdJPLY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/b6c4r0SIHfi8lydMs5V6hLpCxB9088/NAyt4lC2mlnkJZVewrvTY2UWeEv5Co/e
-	 LUUk6w8jpw2PBGqJgYF0yhT+Eol5MQvqTBldmRke3c/hj+5ZpY96aWHh7nj/dAaxG9
-	 z2K+ccyFoqMk5kUJqNvp59QFW69/dtL6fTGtcCok=
+	by mail.kernel.org (Postfix) with ESMTP id 879282073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dWRsDztq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392276AbgAPR02 (ORCPT
+        id S2436715AbgAPS13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403906AbgAPR0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:21 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 704E5246C8;
-        Thu, 16 Jan 2020 17:26:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195581;
-        bh=oZge8qcjmLHr1FyJzPzSH7Q+rLT/brvpKPHpjdJPLY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbCxzbLMc/3cLD44HFNeGODjFZIxqPbVWq2zMtkTsWP4t16pgllRc+qyKNXKABpve
-         wVd8qZcaxuL0rHLpt0SFHp1Sy33PXHPe3+vBLE8RsvJBRRWfAlpkWQjd0GH1DyXoMo
-         7stxqKXCLX+ytrwo0i94gsVRYrDJvYIvqRh8vI7g=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 162/371] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
-Date:   Thu, 16 Jan 2020 12:20:34 -0500
-Message-Id: <20200116172403.18149-105-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:27:29 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45639 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731036AbgAPS1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:27:24 -0500
+Received: by mail-il1-f195.google.com with SMTP id p8so19061772iln.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:27:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hze97wcopQXdVE5g921uVOJcVOqpEK/vGURcI64jlVE=;
+        b=dWRsDztqB3VhgUV55hSNrdtZyGqpnJOyocUQd0cwoEdRKhentt/e+E4mCtGbVO+/2D
+         YhDXs80IIYc1xT6ywCoJ0c/UXvcO7Dw29JcMGHzPiGk+vI72vYp4XtjkJAe1VVztnOIc
+         HI7AOIlFAsMUIHj+htofFGj8RpLb62HYqqgqo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hze97wcopQXdVE5g921uVOJcVOqpEK/vGURcI64jlVE=;
+        b=eveRQDF9sd8C7rKeURDC/xAeIsLy4xX1ZRsbwWFF9pyMX9V9Ox9rgG+qcO/vpPaK49
+         3fefU7gm27ME6po2pjxXe3kdWZEIk1AywFR4baofdQJvgr1MmqJ8IyZZV0YIsCFobwiw
+         OW1ZKHU5g1/342499QIy0TnaQU89XZ7K+oSzQcseIMelD1AviTAAT6RJT1oAoiQJ73p/
+         CyqYIcWXJyCh3KalYmPhcOsqjqyV74yKAXO/vWWL3TgNM+NPtKvm3CWz8ED86swNRmXl
+         TmGaswpnsCCoPClpOKPr1HBVh3aUm7Si1B3Ctmkl/I+KlkDpS5IgpM31jflcsy3RZQRl
+         d41g==
+X-Gm-Message-State: APjAAAXSpSkNCuAllrNvNvkzpf4WPwgTCF5P7IyC1IWN1aF4OdRAU/3h
+        iMFHEA/5dlFS2COEoDjhSnYqvQTGnwI=
+X-Google-Smtp-Source: APXvYqwwT8Bfe6+sxZ3K9yxbGry27d7vjUgiQIZfKRyEwJTh8JnEtuTUldMsHr5wNHGM2OyqMmgddQ==
+X-Received: by 2002:a92:4818:: with SMTP id v24mr4351970ila.96.1579199243449;
+        Thu, 16 Jan 2020 10:27:23 -0800 (PST)
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com. [209.85.166.176])
+        by smtp.gmail.com with ESMTPSA id w15sm3867573iol.86.2020.01.16.10.27.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 10:27:22 -0800 (PST)
+Received: by mail-il1-f176.google.com with SMTP id v15so19123467iln.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:27:22 -0800 (PST)
+X-Received: by 2002:a92:8d8e:: with SMTP id w14mr4672100ill.187.1579199241984;
+ Thu, 16 Jan 2020 10:27:21 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
+ <20200116153235.GA18909@willie-the-truck> <1a3f9557fa52ce2528630434e9a49d98@codeaurora.org>
+In-Reply-To: <1a3f9557fa52ce2528630434e9a49d98@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 16 Jan 2020 10:27:08 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WP1T7gGC=m5FOwuLvZdwrg5f7K6tDuYFT=0BgCQMZf7A@mail.gmail.com>
+Message-ID: <CAD=FV=WP1T7gGC=m5FOwuLvZdwrg5f7K6tDuYFT=0BgCQMZf7A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        James Morse <james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+Hi,
 
-[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
+On Thu, Jan 16, 2020 at 8:11 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Will,
+>
+> On 2020-01-16 21:02, Will Deacon wrote:
+> > [+Jeffrey]
+> >
+> > On Thu, Jan 16, 2020 at 07:49:12PM +0530, Sai Prakash Ranjan wrote:
+> >> KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
+> >> are not affected by Spectre variant 2. Add them to spectre_v2
+> >> safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
+> >> vulnerability sysfs value.
+> >>
+> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> >> ---
+> >>  arch/arm64/include/asm/cputype.h | 6 ++++++
+> >>  arch/arm64/kernel/cpu_errata.c   | 3 +++
+> >>  2 files changed, 9 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/include/asm/cputype.h
+> >> b/arch/arm64/include/asm/cputype.h
+> >> index aca07c2f6e6e..7219cddeba66 100644
+> >> --- a/arch/arm64/include/asm/cputype.h
+> >> +++ b/arch/arm64/include/asm/cputype.h
+> >> @@ -85,6 +85,9 @@
+> >>  #define QCOM_CPU_PART_FALKOR_V1             0x800
+> >>  #define QCOM_CPU_PART_FALKOR                0xC00
+> >>  #define QCOM_CPU_PART_KRYO          0x200
+> >> +#define QCOM_CPU_PART_KRYO_3XX_SILVER       0x803
+> >> +#define QCOM_CPU_PART_KRYO_4XX_GOLD 0x804
+> >> +#define QCOM_CPU_PART_KRYO_4XX_SILVER       0x805
+> >
+> > Jeffrey is the only person I know who understands the CPU naming here,
+> > so
+> > I've added him in case this needs either renaming or extending to cover
+> > other CPUs. I wouldn't be at all surprised if we need a function call
+> > rather than a bunch of table entries...
+> >
+> > That said, the internet claims that KRYO4XX gold is based on
+> > Cortex-A76,
+> > and so CSV2 should be set...
+> >
+>
+> Yes the internet claims are true and CSV2 is set. SANITY check logs in
+> here show ID_PFR0_EL1 - https://lore.kernel.org/patchwork/patch/1138457/
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+I'm probably just being a noob here and am confused, but if CSV2 is
+set then why do you need your patch at all?  The code I see says that
+if CSV2 is set then we don't even check the spectre_v2_safe_list().
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
-
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
-
-Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
-index 8ac89d0781cc..a575e1cdb81a 100644
---- a/drivers/hwmon/w83627hf.c
-+++ b/drivers/hwmon/w83627hf.c
-@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
- 	outb(ld,  sio->sioaddr + 1);
- }
- 
--static inline void
-+static inline int
- superio_enter(struct w83627hf_sio_data *sio)
- {
-+	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
-+		return -EBUSY;
-+
- 	outb(0x87, sio->sioaddr);
- 	outb(0x87, sio->sioaddr);
-+
-+	return 0;
- }
- 
- static inline void
- superio_exit(struct w83627hf_sio_data *sio)
- {
- 	outb(0xAA, sio->sioaddr);
-+	release_region(sio->sioaddr, 2);
- }
- 
- #define W627_DEVID 0x52
-@@ -1278,7 +1284,7 @@ static DEVICE_ATTR_RO(name);
- static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 				struct w83627hf_sio_data *sio_data)
- {
--	int err = -ENODEV;
-+	int err;
- 	u16 val;
- 
- 	static __initconst char *const names[] = {
-@@ -1290,7 +1296,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 	};
- 
- 	sio_data->sioaddr = sioaddr;
--	superio_enter(sio_data);
-+	err = superio_enter(sio_data);
-+	if (err)
-+		return err;
-+
-+	err = -ENODEV;
- 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
- 	switch (val) {
- 	case W627_DEVID:
-@@ -1644,9 +1654,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff, sel;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_GPIO5);
- 
-+	res = 0xff;
-+
- 	/* Make sure these GPIO pins are enabled */
- 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
- 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
-@@ -1677,7 +1699,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_HWM);
- 
- 	/* Make sure these GPIO pins are enabled */
--- 
-2.20.1
-
+-Doug
