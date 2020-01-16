@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87464C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25AAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506C82075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EF720730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194985;
-	bh=zPm3rMc6kTYxFq53Hy+TK42EjY/2/sZs7TOmw6+t2Ak=;
+	s=default; t=1579194991;
+	bh=jqkd9CEtE5Z2F84odOJ6zX5sxDrEAVpb22A8buy7Ug8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WyMgwU24Dj25FM+tLafhrajb7VeoGHeTj3Ry6TvkQnPr+1jV83gIwLde11T+HX89X
-	 jslFZ4NfG0JxcAZpJK5YC5FXaahZBnbN00wgVqpUw39M6vmLB3y8aMFJec5806QbTK
-	 IINjYV7xPUaFlAsAM3tmxCCyoJA+SNP6S6UhC4/E=
+	b=UXhxHuvKARH2H22JnqXnLUUEKMIiGJebsIQqvtwTsBL7JjfaY/psezahkULDbERFI
+	 leYa0EFPzdE1oPR2rVqUTxJuoIy3xI/VuysvGhEw7iLYJvMp5DwcR819ZfUfNXTxsM
+	 PzFF5YaS0dQyVft2+PPpIjFMv0rfgZEoU65dDP8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390992AbgAPRQY (ORCPT
+        id S2391067AbgAPRQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:16:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:16:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390887AbgAPROM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:12 -0500
+        id S2390925AbgAPROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F5B246BB;
-        Thu, 16 Jan 2020 17:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D81246A7;
+        Thu, 16 Jan 2020 17:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194852;
-        bh=zPm3rMc6kTYxFq53Hy+TK42EjY/2/sZs7TOmw6+t2Ak=;
+        s=default; t=1579194847;
+        bh=jqkd9CEtE5Z2F84odOJ6zX5sxDrEAVpb22A8buy7Ug8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSffbajkJOx4IyEDxt3rZbmWPsKLZ+uKdvslTNWHqDIpPaGW+z5ApSCIqcq1NKG26
-         //ZWCtc+5yAifCfgvDv2CZ0EANqpyCeoBZP1TfsMZXgM/CeIk4vTYQKwCa+MlV7rsr
-         XQQIbekFLJq5KDKHztBBj3ywDsEGE7/uD/yYw4IA=
+        b=dt0x3q46x6TWjp882qAqHdKTYBJfvRBezTJDppz1FbpEXSz40MYxNl7Wd8gj/KmLR
+         WB4Ef1lR5UaBGvE7abe4an08di9o4US8t5US+8bCVdsdNuk5ExarjZ/DsjHHChsIam
+         90KjkLiwE/vqB7ulI5CyjGGxdT/LFQmJ5feLOt1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 648/671] mmc: core: fix wl1251 sdio quirks
-Date:   Thu, 16 Jan 2020 12:04:46 -0500
-Message-Id: <20200116170509.12787-385-sashal@kernel.org>
+Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 644/671] tipc: update mon's self addr when node addr generated
+Date:   Thu, 16 Jan 2020 12:04:42 -0500
+Message-Id: <20200116170509.12787-381-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,41 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 16568b4a4f0c34bd35cfadac63303c7af7812764 ]
+[ Upstream commit 46cb01eeeb86fca6afe24dda1167b0cb95424e29 ]
 
-wl1251 and wl1271 have different vendor id and device id.
-So we need to handle both with sdio quirks.
+In commit 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address
+hash values"), the 32-bit node address only generated after one second
+trial period expired. However the self's addr in struct tipc_monitor do
+not update according to node address generated. This lead to it is
+always zero as initial value. As result, sorting algorithm using this
+value does not work as expected, neither neighbor monitoring framework.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+In this commit, we add a fix to update self's addr when 32-bit node
+address generated.
+
+Fixes: 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address hash values")
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/quirks.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/tipc/monitor.c | 15 +++++++++++++++
+ net/tipc/monitor.h |  1 +
+ net/tipc/net.c     |  2 ++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
-index dd2f73af8f2c..d5bbe8e544de 100644
---- a/drivers/mmc/core/quirks.h
-+++ b/drivers/mmc/core/quirks.h
-@@ -119,7 +119,14 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
- 	END_FIXUP
- };
+diff --git a/net/tipc/monitor.c b/net/tipc/monitor.c
+index 67f69389ec17..23706ee16607 100644
+--- a/net/tipc/monitor.c
++++ b/net/tipc/monitor.c
+@@ -665,6 +665,21 @@ void tipc_mon_delete(struct net *net, int bearer_id)
+ 	kfree(mon);
+ }
  
++void tipc_mon_reinit_self(struct net *net)
++{
++	struct tipc_monitor *mon;
++	int bearer_id;
 +
- static const struct mmc_fixup sdio_fixup_methods[] = {
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
++	for (bearer_id = 0; bearer_id < MAX_BEARERS; bearer_id++) {
++		mon = tipc_monitor(net, bearer_id);
++		if (!mon)
++			continue;
++		write_lock_bh(&mon->lock);
++		mon->self->addr = tipc_own_addr(net);
++		write_unlock_bh(&mon->lock);
++	}
++}
 +
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_DISABLE_CD),
-+
- 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
- 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
+ int tipc_nl_monitor_set_threshold(struct net *net, u32 cluster_size)
+ {
+ 	struct tipc_net *tn = tipc_net(net);
+diff --git a/net/tipc/monitor.h b/net/tipc/monitor.h
+index 2a21b93e0d04..ed63d2e650b0 100644
+--- a/net/tipc/monitor.h
++++ b/net/tipc/monitor.h
+@@ -77,6 +77,7 @@ int __tipc_nl_add_monitor(struct net *net, struct tipc_nl_msg *msg,
+ 			  u32 bearer_id);
+ int tipc_nl_add_monitor_peer(struct net *net, struct tipc_nl_msg *msg,
+ 			     u32 bearer_id, u32 *prev_node);
++void tipc_mon_reinit_self(struct net *net);
  
+ extern const int tipc_max_domain_size;
+ #endif
+diff --git a/net/tipc/net.c b/net/tipc/net.c
+index 7ce1e86b024f..2e2e938fe4b7 100644
+--- a/net/tipc/net.c
++++ b/net/tipc/net.c
+@@ -42,6 +42,7 @@
+ #include "node.h"
+ #include "bcast.h"
+ #include "netlink.h"
++#include "monitor.h"
+ 
+ /*
+  * The TIPC locking policy is designed to ensure a very fine locking
+@@ -136,6 +137,7 @@ static void tipc_net_finalize(struct net *net, u32 addr)
+ 	tipc_set_node_addr(net, addr);
+ 	tipc_named_reinit(net);
+ 	tipc_sk_reinit(net);
++	tipc_mon_reinit_self(net);
+ 	tipc_nametbl_publish(net, TIPC_CFG_SRV, addr, addr,
+ 			     TIPC_CLUSTER_SCOPE, 0, addr);
+ }
 -- 
 2.20.1
 
