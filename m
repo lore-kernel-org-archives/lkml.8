@@ -2,97 +2,90 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC7EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D3FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AF02073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201832;
-	bh=hk8o/o0ui0DzOrPfJB1gueCoIZSQPLdBBKU4xXydY30=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TVC3/y1qOysUqTdD+cb0MwkRtnqBziqYSxWBNoJ3bRnxyPPXdGPQ0p6lQU2XMT+g6
-	 B3Manlo5eqcTfMEp1X33+jv2QaABl6ldsFhTIwdhqhkp5MJTYclSFvTE/I7Zd3xks1
-	 UvnjHd8hltd7ZnGAosi8gf720Ga2aheBddMYKgZo=
+	by mail.kernel.org (Postfix) with ESMTP id 110E5206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387960AbgAPTKX (ORCPT
+        id S2437537AbgAPTKg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387833AbgAPRA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B992620728;
-        Thu, 16 Jan 2020 17:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194028;
-        bh=hk8o/o0ui0DzOrPfJB1gueCoIZSQPLdBBKU4xXydY30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JRlJmRMdNioYLTy4t+nvPWnItAAsOZ7h61N4YmBEu50ZWZbFpP8SjhzMUD13fFQYA
-         xGd4cgJADAy073HRVrvDay064rL8eYlOR7oCY/vq+xnWqEQ64TjQ20tVHp5OoZFhlu
-         y6zY0q8apakiwB16dit83nA7zQkkx9bhRy03fgAI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 148/671] ARM: dts: lpc32xx: reparent keypad controller to SIC1
-Date:   Thu, 16 Jan 2020 11:50:57 -0500
-Message-Id: <20200116165940.10720-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:10:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53049 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437450AbgAPTK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:10:28 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isAX2-0007HG-TQ; Thu, 16 Jan 2020 20:10:17 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5F3FB101226; Thu, 16 Jan 2020 20:10:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Waiman Long <longman@redhat.com>,
+        Robert Richter <rrichter@marvell.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2] watchdog: Fix possible soft lockup warning at bootup
+In-Reply-To: <9ae2ee4d-7b67-50ff-e736-1d51753c5ccd@redhat.com>
+Date:   Thu, 16 Jan 2020 20:10:16 +0100
+Message-ID: <87ftgffc9z.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+Waiman Long <longman@redhat.com> writes:
 
-[ Upstream commit 489261c45f0ebbc1c2813f337bbdf858267f5033 ]
+> On 1/16/20 11:57 AM, Thomas Gleixner wrote:
+>>> So your theory the MONOTONIC clock runs differently/wrongly could
+>>> explain that (assuming this drives the sched clock). Though, I am
+>> No. sched_clock() is separate. It uses a raw timestamp (in your case
+>> from the ARM arch timer) and converts it to something which is close to
+>> proper time. So my assumption was based on the printout Waiman had:
+>>
+>>  [ 1... ] CPU.... watchdog_fn now  170000000
+>>  [ 25.. ] CPU.... watchdog_fn now 4170000000
+>>
+>> I assumed that now comes from ktime_get() or something like
+>> that. Waiman?
+>
+> I printed out the now parameter of the  __hrtimer_run_queues() call.
 
-After switching to a new interrupt controller scheme by separating SIC1
-and SIC2 from MIC interrupt controller just one SoC keypad controller
-was not taken into account, fix it now:
+Yes. That's clock MONOTONIC.
 
-  WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:524 irq_domain_associate+0x50/0x1b0
-  error: hwirq 0x36 is too large for interrupt-controller@40008000
-  ...
-  lpc32xx_keys 40050000.key: failed to get platform irq
-  lpc32xx_keys: probe of 40050000.key failed with error -22
+> So from the timer perspective, it is losing time. For watchdog, the soft
+> expiry time is 4s. The watchdog function won't be called until the
+> timer's time advances 4s or more. That corresponds to about 24s in
+> timestamp time for that particular class of systems.
 
-Fixes: 9b8ad3fb81ae ("ARM: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/lpc32xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Right. And assumed that the firmware call is the culprit this has an
+explanation.
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index d4368eeff1b9..4f8f671c3343 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -463,7 +463,8 @@
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_KEY>;
--				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
--- 
-2.20.1
+Could you please take sched_clock() timestamps before and after the
+firmware call which kicks the secondary CPUs into life to verify that?
 
+They should sum up to the amount of time which gets lost accross
+smp_init().
+
+Thanks,
+
+        tglx
