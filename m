@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A094C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0763C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371882464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27E720728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194977;
-	bh=NnkXc8tGaRoFiHxEw95AwiPZ4oJfjR1x1ZE+tmEwVCg=;
+	s=default; t=1579194979;
+	bh=912VyeyXGgAbeCx4tEz5pHFeizG+cjTvFyy0Pv9bch0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iG4LS/FXKWhCC7OGdtwvlcb9C/FaiujfE5mfaVGrgWZvHUBVppq41554QRAGszPBO
-	 w704cmj3whKdu6eDOP+hDeWm2pSip+CEnuGQ1A+LfzRGSqeIcQk+xamJewBpjSy8po
-	 wO40VGO6RV5oHsKlqaWvlPa5g8PAinkosqSSkyv4=
+	b=wFD+gtqpzclWUqujwS3GB9r+NKntdLo4TXdzxaDwm+2BSE9Vi4yKxYWfFSznmuAHL
+	 YV3rod/q953qiBPlbClPuGKcZUazw2zr/1SY1BZhXiOdOl7GlD1908W6/NyQYf/INT
+	 0qDw4yZPaGUg1ENB/IzJ8W8u+7Toe2kim8vsZlfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390543AbgAPROQ (ORCPT
+        id S2390968AbgAPRQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60368 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:16:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390897AbgAPROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:00 -0500
+        id S2390013AbgAPROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BC7D246AF;
-        Thu, 16 Jan 2020 17:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF96246A7;
+        Thu, 16 Jan 2020 17:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194840;
-        bh=NnkXc8tGaRoFiHxEw95AwiPZ4oJfjR1x1ZE+tmEwVCg=;
+        s=default; t=1579194855;
+        bh=912VyeyXGgAbeCx4tEz5pHFeizG+cjTvFyy0Pv9bch0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=viGfBus8Oj3T27qbkr7M90YE4XC3EXWJdV3zsqxg+LRq1dCbcJKcKtiCl+OPi52Ax
-         6iEZHc3jVYK2C8IfIL4BqdcmYaf7NsskLYP04/7XXFHOGwKpcKx8hzFSOATlVfuhWf
-         HcIx8ZKKOXR923Ww63bijrxT9UQ3JiJm5emisb3Q=
+        b=DIABhtMCloQLHIe7fZJ1ZbsXR3tu0zEOBYdqlqmlXoas2kSVN+enblA8Nn8KvwZDO
+         9/UVNA99lkOMrMN/YVu12iTFSDYPxs1PkNBVBW3Zm7jq+vT/LDpFM2oJrje+jaes5u
+         SxM7fUaslQrZvXrZqDsAw7glbIvfm3t+kZ117l3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 639/671] f2fs: fix potential overflow
-Date:   Thu, 16 Jan 2020 12:04:37 -0500
-Message-Id: <20200116170509.12787-376-sashal@kernel.org>
+Cc:     Shuiqing Li <shuiqing.li@unisoc.com>,
+        Dongwei Wang <dongwei.wang@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 651/671] watchdog: sprd: Fix the incorrect pointer getting from driver data
+Date:   Thu, 16 Jan 2020 12:04:49 -0500
+Message-Id: <20200116170509.12787-388-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,52 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Shuiqing Li <shuiqing.li@unisoc.com>
 
-[ Upstream commit 1f0d5c911b64165c9754139a26c8c2fad352c132 ]
+[ Upstream commit 39e68d9e7ab276880980ee5386301fb218202192 ]
 
-We expect 64-bit calculation result from below statement, however
-in 32-bit machine, looped left shift operation on pgoff_t type
-variable may cause overflow issue, fix it by forcing type cast.
+The device driver data saved the 'struct sprd_wdt' object, it is
+incorrect to get 'struct watchdog_device' object from the driver
+data, thus fix it.
 
-page->index << PAGE_SHIFT;
-
-Fixes: 26de9b117130 ("f2fs: avoid unnecessary updating inode during fsync")
-Fixes: 0a2aa8fbb969 ("f2fs: refactor __exchange_data_block for speed up")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 477603467009 ("watchdog: Add Spreadtrum watchdog driver")
+Reported-by: Dongwei Wang <dongwei.wang@unisoc.com>
+Signed-off-by: Shuiqing Li <shuiqing.li@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 2 +-
- fs/f2fs/file.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/watchdog/sprd_wdt.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index a7436ad19458..c81a1f3f0a10 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1857,7 +1857,7 @@ static int __write_data_page(struct page *page, bool *submitted,
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 5eef2a8b29ab..59b5c0b032bb 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1101,7 +1101,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
+index ff9397d9638a..b6c65afd3677 100644
+--- a/drivers/watchdog/sprd_wdt.c
++++ b/drivers/watchdog/sprd_wdt.c
+@@ -342,10 +342,9 @@ static int sprd_wdt_probe(struct platform_device *pdev)
+ 
+ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+ 
+-	if (watchdog_active(wdd))
++	if (watchdog_active(&wdt->wdd))
+ 		sprd_wdt_stop(&wdt->wdd);
+ 	sprd_wdt_disable(wdt);
+ 
+@@ -354,7 +353,6 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ 
+ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+ 	int ret;
+ 
+@@ -362,7 +360,7 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (watchdog_active(wdd)) {
++	if (watchdog_active(&wdt->wdd)) {
+ 		ret = sprd_wdt_start(&wdt->wdd);
+ 		if (ret) {
+ 			sprd_wdt_disable(wdt);
 -- 
 2.20.1
 
