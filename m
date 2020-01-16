@@ -2,160 +2,128 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343BBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEB0C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04C28208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NZk42z7a"
+	by mail.kernel.org (Postfix) with ESMTP id 11296207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgAPFl7 (ORCPT
+        id S1726890AbgAPFpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:41:59 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37842 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgAPFl7 (ORCPT
+        Thu, 16 Jan 2020 00:45:11 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:52333 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgAPFpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:41:59 -0500
-Received: by mail-qv1-f68.google.com with SMTP id f16so8554370qvi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:41:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EMwt4Kf+lwn4jbueLKy88cnlrJ7dUdn8dfwXc0Z+Ehw=;
-        b=NZk42z7aa263+BZfJm1pHilO6y1pR/qzdi+cyOYjOjOhSpPO9jm4n2LfRQjz829ilN
-         E1vBqGi4dYo8BDgwZzTJ093qLODB/4LTdnKNFpzsCglf7E5hhaosdgNjyfIIzohsKrch
-         Z5Vhds+CuGj3xQ+6Wmk2vIDR0iVoJ9SnpUKTtLVZJh40mek1xNPnnRi5CvG6l4nOIinQ
-         UicHiwqwysj/fjhV/ZrZ2mGF5wemdUhPU8xOR//DNisfUOYSXPkFiBqB9snHoFOBskDe
-         ocnYOopmNQeqCk7lZGpAqqOXLNNagr9V9WNgXVyQkx3yxYpkp5GglPEmY3uX3ZD3lWq5
-         x2Qg==
+        Thu, 16 Jan 2020 00:45:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id d10so12035099iod.19
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:45:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EMwt4Kf+lwn4jbueLKy88cnlrJ7dUdn8dfwXc0Z+Ehw=;
-        b=e4gAuGlFv0WrqJcq6qwurNdwaV3WzOIi1jjIy5qe+kmlp3eJ3CvWC5dSWMChpZGdd1
-         yBxcfhpDToiolqDc4kYCWMQvup0LZ42/guAXeJOaBj1uZbSP0EiJDDGM8/GUuiONvfex
-         gaqp/+3hxsU8Y5rEVWmFPYYsV2ockYCylSeV1J//JVD0jci57zDILr8wuTuE7ASjhcmu
-         nE2yiiH6OJOm9TBksndSSlqJ6Zh+qovjzrAB143xuNhE0R49eUL+CkDEOEu4tpMAC2mo
-         wEl47WZ7GPyACi9f+R7S4fAKcLMZt7WyMRYqh+LQbL5rCd+EiXU8dk23zk5naXzAAUNs
-         kgNQ==
-X-Gm-Message-State: APjAAAWj7qMB0wVXzDx0s5VQl1jkshJFHmrEhKYu1q0ekweh5M3DlVv6
-        RNE5/uYvLcbWDRaPuH8FZ1VTCYVM/LzwBTWYrTxvUg==
-X-Google-Smtp-Source: APXvYqx5s6/wkJ/FCVo+bP1iquEi9GKltLpGTyiysYaPoc5DHaKUBWWZeqt+2WlUo+U6YcGp9qDyOdT2twEugQ0RQuw=
-X-Received: by 2002:a0c:c351:: with SMTP id j17mr1008167qvi.80.1579153318184;
- Wed, 15 Jan 2020 21:41:58 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nUWpGQHDm6wJiD+qGbWs1eyfWOotGc7QheWrkXQpqSQ=;
+        b=ffSc6DcGcoP3gT86Jzk1M7ZpgveMdYHAW5e/yqu9ebWu0SJEWegRpB9dTTRLSoW/qD
+         iNJ3M1scu1lAb5YMENp9RKOsf92fmZbSVrCDGp9E6k/mX7rGKOSau4dQs0wUE8DevSJ0
+         wnqBvDx74vZFzEkMAngmXVF7hwZEyIKnp3+sbVUGXWcGoWzWO2iq1+gpwQq0aDf0Sl6s
+         Be7r3ijwRuvGC7VIO6z89RGo8In3kmUOhOS7ECmVPDHe5wDJWFMlehR5XFYSyA3ts+Cy
+         2vkdClGborOg0pBWqKzJMfZKGX4FzCMibgD5YoZ/qK89L1SCWCHqEG7g8KSQBlQH5cua
+         VAwg==
+X-Gm-Message-State: APjAAAW1GDjPifA34guvb0L7Kun++hqUZ8b90s025j0IW0re2lFKKJIx
+        5iNJc+sKQbPsWV3BsPP7DSbyCr1a1egz259Vx/deZGViBKsB
+X-Google-Smtp-Source: APXvYqznDF+aM84QyTizrFIO8KZi8H/MFev1nBzqXonXTHvbm2J4DzLdm1SGD2N9D+X+vxWOXkMpmQTCf0sxOzC8QpNV9zylYUar
 MIME-Version: 1.0
-References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
- <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz> <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
- <20200115150315.GH19428@dhcp22.suse.cz> <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
- <20200115190528.GJ19428@dhcp22.suse.cz>
-In-Reply-To: <20200115190528.GJ19428@dhcp22.suse.cz>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 06:41:46 +0100
-Message-ID: <CACT4Y+b5HJW9PhjkSZ+L09YqQt08ALCtudHV4m5x5qv+xH-2Yg@mail.gmail.com>
-Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in mpol_parse_str()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a5e:8516:: with SMTP id i22mr25910766ioj.130.1579153509823;
+ Wed, 15 Jan 2020 21:45:09 -0800 (PST)
+Date:   Wed, 15 Jan 2020 21:45:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ffbba3059c3b5352@google.com>
+Subject: memory leak in nf_tables_parse_netdev_hooks
+From:   syzbot <syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 8:05 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > On Wed, Jan 15, 2020 at 1:54 PM Vlastimil Babka <vbabka@suse.cz> wrote:
-> > > > >
-> > > > > On 1/15/20 6:54 AM, Dan Carpenter wrote:
-> > > > > > What we are trying to do is change the '=' character to a NUL terminator
-> > > > > > and then at the end of the function we restore it back to an '='.  The
-> > > > > > problem is there are two error paths where we jump to the end of the
-> > > > > > function before we have replaced the '=' with NUL.  We end up putting
-> > > > > > the '=' in the wrong place (possibly one element before the start of
-> > > > > > the buffer).
-> > > > >
-> > > > > Bleh.
-> > > > >
-> > > > > > Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
-> > > > > > Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
-> > > > > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > >
-> > > > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> > > > >
-> > > > > CC stable perhaps? Can this (tmpfs mount options parsing AFAICS?) become
-> > > > > part of unprivileged operation in some scenarios?
-> > > >
-> > > > Yes, tmpfs can be mounted by any user inside of a user namespace.
-> > >
-> > > Huh, is there any restriction though? It is certainly not nice to have
-> > > an arbitrary memory allocated without a way of reclaiming it and OOM
-> > > killer wouldn't help for shmem.
-> >
-> > The last time I checked there were hundreds of ways to allocate
-> > arbitrary amounts of memory without any restrictions by any user. The
-> > example at hand was setting up GB-sized netfilter tables in netns
-> > under userns. It's not subject to ulimit/memcg.
->
-> That's bad!
->
-> > Most kmalloc/vmalloc's are not accounted and can be abused.
->
-> Many of those should be bound to some objects and if those are directly
-> controllable by userspace then we should account at least. And if they
-> are not bound to a process life time then restricted.
+Hello,
 
-I see you actually added one GFP_ACCOUNT in netfilter in "netfilter:
-x_tables: do not fail xt_alloc_table_info too easilly". But it seems
-there are more:
+syzbot found the following crash on:
 
-$ grep vmalloc\( net/netfilter/*.c
-net/netfilter/nf_tables_api.c: return kvmalloc(alloc, GFP_KERNEL);
-net/netfilter/x_tables.c: xt[af].compat_tab = vmalloc(mem);
-net/netfilter/x_tables.c: mem = vmalloc(len);
-net/netfilter/x_tables.c: info = kvmalloc(sz, GFP_KERNEL_ACCOUNT);
-net/netfilter/xt_hashlimit.c: /* FIXME: don't use vmalloc() here or
-anywhere else -HW */
-net/netfilter/xt_hashlimit.c: hinfo = vmalloc(struct_size(hinfo, hash, size));
+HEAD commit:    51d69817 Merge tag 'platform-drivers-x86-v5.5-3' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e32659e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a0eee3ce463efd
+dashboard link: https://syzkaller.appspot.com/bug?extid=f9d4095107fc8749c69c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fae421e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e41c76e00000
 
-These are not bound to processes/threads as namespaces are orthogonal to tasks.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com
 
-Somebody told me that it's not good to use GFP_ACCOUNT if the
-allocation is not tied to the lifetime of the process. Is it still
-true?
-
-In the end if user controls either size or number allocations, they
-should be accounted, and it seems we still have thousands of
-unaccounted ones. There are dozens of kmalloc's in netfilter code and
-none of them use GFP_ACCOUNT...
+executing program
+BUG: memory leak
+unreferenced object 0xffff8881292d4580 (size 96):
+   comm "syz-executor052", pid 7129, jiffies 4294942632 (age 13.530s)
+   hex dump (first 32 bytes):
+     40 d2 15 1c 81 88 ff ff 40 d2 15 1c 81 88 ff ff  @.......@.......
+     60 53 c3 82 ff ff ff ff 00 a0 2c 2a 81 88 ff ff  `S........,*....
+   backtrace:
+     [<0000000059912bf5>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<0000000059912bf5>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<0000000059912bf5>] slab_alloc mm/slab.c:3320 [inline]
+     [<0000000059912bf5>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
+     [<00000000ab9f7d85>] kmalloc include/linux/slab.h:556 [inline]
+     [<00000000ab9f7d85>] nft_netdev_hook_alloc+0x3f/0xd0  
+net/netfilter/nf_tables_api.c:1624
+     [<0000000074e6bb65>] nf_tables_parse_netdev_hooks+0xac/0x230  
+net/netfilter/nf_tables_api.c:1673
+     [<00000000cd387efd>] nf_tables_flowtable_parse_hook  
+net/netfilter/nf_tables_api.c:5936 [inline]
+     [<00000000cd387efd>] nf_tables_newflowtable+0x41e/0x930  
+net/netfilter/nf_tables_api.c:6137
+     [<00000000526e3994>] nfnetlink_rcv_batch+0x662/0x8c0  
+net/netfilter/nfnetlink.c:433
+     [<000000006c5402bf>] nfnetlink_rcv_skb_batch  
+net/netfilter/nfnetlink.c:543 [inline]
+     [<000000006c5402bf>] nfnetlink_rcv+0x189/0x1c0  
+net/netfilter/nfnetlink.c:561
+     [<00000000b752f9f7>] netlink_unicast_kernel  
+net/netlink/af_netlink.c:1302 [inline]
+     [<00000000b752f9f7>] netlink_unicast+0x223/0x310  
+net/netlink/af_netlink.c:1328
+     [<00000000a0e23793>] netlink_sendmsg+0x2c0/0x570  
+net/netlink/af_netlink.c:1917
+     [<000000006e0aea94>] sock_sendmsg_nosec net/socket.c:639 [inline]
+     [<000000006e0aea94>] sock_sendmsg+0x54/0x70 net/socket.c:659
+     [<00000000a60c26dd>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
+     [<00000000d412f616>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
+     [<000000001179a6b0>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
+     [<000000004a6699d1>] __do_sys_sendmsg net/socket.c:2426 [inline]
+     [<000000004a6699d1>] __se_sys_sendmsg net/socket.c:2424 [inline]
+     [<000000004a6699d1>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
+     [<00000000a05aa7d1>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<00000000bad17b52>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
 
-> > Is tmpfs even worse than these?
->
-> Well, tmpfs is accounted and restricted by memcg at least. The problem
-> is that it the memory is not really bound to a process life time which
-> makes it effectively unreclaimable once the swap space is depleted.
-> Still bad.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I see. If I understand it correctly, this one is actually better than
-all these non-GFP_ACCOUNT allocations.
-If I would DoS a box (intentionally or unintentionally, just a bug in
-my program) I would probably go for one of these easier ones without
-GFP_ACCOUNT.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
