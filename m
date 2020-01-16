@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E01C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D53EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E4120661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7111320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217931;
-	bh=fsw8lL1IWuKn/0gDMrgvzCHQn0ImuNeGrwCeqmtVuMQ=;
+	s=default; t=1579217935;
+	bh=PoxcrDcGEQmUeQXGusjb3WsOfqsZeYJY0WnI1BoaYy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/2s1VwLIlYYMVCxnvN/aO5mCECVHb9P4+DAjYEKYugDrhkw+Lpxlr11thzW4H8ii
-	 aqoM5oaAsVY/9n4vxexhh94/KkG3szLAsFSd91tJUf5ibYnFHJ3HizqNVgDPTpTxex
-	 8LZG0MK/tbBowZGYI+0k3dsxpZAWtOxDYSgkpUhY=
+	b=gCYG17MNHWukp4s38v4w7tV0KNPArQG8pBpnh0VMN60W2z77L4DvdbcfK8HRCu7R1
+	 ipWyfmK6emnR0APtl4eALhmgXfvkaBc8TomNTgpH7CAho5u+jR5QeQLJlqnHd9nJD6
+	 ggcbrpHafVDV9ElT9c5+9vhJP1c2LFd4/mql6mZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbgAPXiu (ORCPT
+        id S2391188AbgAPX2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:38:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388441AbgAPX3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:00 -0500
+        id S1729762AbgAPX2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F651206D9;
-        Thu, 16 Jan 2020 23:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C95B20684;
+        Thu, 16 Jan 2020 23:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217340;
-        bh=fsw8lL1IWuKn/0gDMrgvzCHQn0ImuNeGrwCeqmtVuMQ=;
+        s=default; t=1579217332;
+        bh=PoxcrDcGEQmUeQXGusjb3WsOfqsZeYJY0WnI1BoaYy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkSP8SgmgGRzSSi+nyvnofnQA7TPY9AfkfJQnNAIokIujH9kEPOhzTR3w45vzSBVG
-         aVp81uNPlz7DNMXS/zBeG/ZVNJ/7zixpja+T0Az0VS+0na21Hn+g3tafAN3IMgnfy7
-         RqdHyngmB1N66sO3YaG+DSy/tTfkRf/bB2YOb4m4=
+        b=eGYqx+BMwIdxFNjrgFRn8bhUoAFWf2RhwEsHwtSqno/XfBo8Iky2CLR45jt1MQYc6
+         rg2tYp81lg9w7ogLbHdy/QBND9UvDKhKoO2QrmvdMIOKLCYvvi8TYIJjPTX/58yhjy
+         2NJvRI/PThOVYs9EjeVqNj2uHSuk75IrOClBI73E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 43/84] NFSv2: Fix a typo in encode_sattr()
-Date:   Fri, 17 Jan 2020 00:18:17 +0100
-Message-Id: <20200116231718.855004434@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Anderson <jasona.594@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 40/84] platform/x86: GPD pocket fan: Use default values when wrong modparams are given
+Date:   Fri, 17 Jan 2020 00:18:14 +0100
+Message-Id: <20200116231718.472607590@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,30 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit ad97a995d8edff820d4238bd0dfc69f440031ae6 upstream.
+commit 6ae01050e49f0080ae30575d9b45a6d4a3d7ee23 upstream.
 
-Encode the mtime correctly.
+Use our default values when wrong module-parameters are given, instead of
+refusing to load. Refusing to load leaves the fan at the BIOS default
+setting, which is "Off". The CPU's thermal throttling should protect the
+system from damage, but not-loading is really not the best fallback in this
+case.
 
-Fixes: 95582b0083883 ("vfs: change inode times to use struct timespec64")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This commit fixes this by re-setting module-parameter values to their
+defaults if they are out of range, instead of failing the probe with
+-EINVAL.
+
+Cc: stable@vger.kernel.org
+Cc: Jason Anderson <jasona.594@gmail.com>
+Reported-by: Jason Anderson <jasona.594@gmail.com>
+Fixes: 594ce6db326e ("platform/x86: GPD pocket fan: Use a min-speed of 2 while charging")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs2xdr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/gpd-pocket-fan.c |   25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
---- a/fs/nfs/nfs2xdr.c
-+++ b/fs/nfs/nfs2xdr.c
-@@ -385,7 +385,7 @@ static void encode_sattr(struct xdr_stre
- 	} else
- 		p = xdr_time_not_set(p);
- 	if (attr->ia_valid & ATTR_MTIME_SET) {
--		ts = timespec64_to_timespec(attr->ia_atime);
-+		ts = timespec64_to_timespec(attr->ia_mtime);
- 		xdr_encode_time(p, &ts);
- 	} else if (attr->ia_valid & ATTR_MTIME) {
- 		ts = timespec64_to_timespec(attr->ia_mtime);
+--- a/drivers/platform/x86/gpd-pocket-fan.c
++++ b/drivers/platform/x86/gpd-pocket-fan.c
+@@ -16,17 +16,27 @@
+ 
+ #define MAX_SPEED 3
+ 
+-static int temp_limits[3] = { 55000, 60000, 65000 };
++#define TEMP_LIMIT0_DEFAULT	55000
++#define TEMP_LIMIT1_DEFAULT	60000
++#define TEMP_LIMIT2_DEFAULT	65000
++
++#define HYSTERESIS_DEFAULT	3000
++
++#define SPEED_ON_AC_DEFAULT	2
++
++static int temp_limits[3] = {
++	TEMP_LIMIT0_DEFAULT, TEMP_LIMIT1_DEFAULT, TEMP_LIMIT2_DEFAULT,
++};
+ module_param_array(temp_limits, int, NULL, 0444);
+ MODULE_PARM_DESC(temp_limits,
+ 		 "Millicelsius values above which the fan speed increases");
+ 
+-static int hysteresis = 3000;
++static int hysteresis = HYSTERESIS_DEFAULT;
+ module_param(hysteresis, int, 0444);
+ MODULE_PARM_DESC(hysteresis,
+ 		 "Hysteresis in millicelsius before lowering the fan speed");
+ 
+-static int speed_on_ac = 2;
++static int speed_on_ac = SPEED_ON_AC_DEFAULT;
+ module_param(speed_on_ac, int, 0444);
+ MODULE_PARM_DESC(speed_on_ac,
+ 		 "minimum fan speed to allow when system is powered by AC");
+@@ -120,18 +130,21 @@ static int gpd_pocket_fan_probe(struct p
+ 		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
+ 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
+ 				temp_limits[i]);
+-			return -EINVAL;
++			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
++			temp_limits[1] = TEMP_LIMIT1_DEFAULT;
++			temp_limits[2] = TEMP_LIMIT2_DEFAULT;
++			break;
+ 		}
+ 	}
+ 	if (hysteresis < 1000 || hysteresis > 10000) {
+ 		dev_err(&pdev->dev, "Invalid hysteresis %d (must be between 1000 and 10000)\n",
+ 			hysteresis);
+-		return -EINVAL;
++		hysteresis = HYSTERESIS_DEFAULT;
+ 	}
+ 	if (speed_on_ac < 0 || speed_on_ac > MAX_SPEED) {
+ 		dev_err(&pdev->dev, "Invalid speed_on_ac %d (must be between 0 and 3)\n",
+ 			speed_on_ac);
+-		return -EINVAL;
++		speed_on_ac = SPEED_ON_AC_DEFAULT;
+ 	}
+ 
+ 	fan = devm_kzalloc(&pdev->dev, sizeof(*fan), GFP_KERNEL);
 
 
