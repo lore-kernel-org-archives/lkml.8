@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB53EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06886C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03EE206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D145B2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202103;
-	bh=eky8Oyc/mlnYyqa/Tz56oCTMeM3MztfP4EsUzaVbnpU=;
+	s=default; t=1579202104;
+	bh=/LFljjM9wXtT7AF1NZ86AQkwrJppmbCRjR8pgtvV8dQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1XrN+vMJ7n3Pz0LEmylRSzYHXdlu6dw8qEzPBEKsNSqo6nAyaoIZXMvQcs8CTD+C
-	 iIiXJa0GYNUOVmadWDBW7dqsYYcKIKwVJjc6wCutZ9AMfGFFZi6gdUjRqyRMvhZEiX
-	 I5qSwaS3jYXwZsuTqwFI7nMYQIMt5zop5L/z8DWw=
+	b=0iz/7/jHbkuKRowj/cs8at8ZbdRyGAuyLelzVzx8o+JidtWI83dPyxg9jS73X/zKO
+	 082viwVnOavgbp1wRqsXoHRVPpdZqUIiWh8n1dq1dT8jWAdR2fUJKAmhjyP/Idhx/p
+	 /rieULKHgaZNTiFLV0UX7groLZEQMz/OnXI/oz+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437552AbgAPTPD (ORCPT
+        id S1733196AbgAPQ4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:15:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732570AbgAPQ4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:14 -0500
+        id S1732570AbgAPQ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89CB821D56;
-        Thu, 16 Jan 2020 16:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5F524680;
+        Thu, 16 Jan 2020 16:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193773;
-        bh=eky8Oyc/mlnYyqa/Tz56oCTMeM3MztfP4EsUzaVbnpU=;
+        s=default; t=1579193763;
+        bh=/LFljjM9wXtT7AF1NZ86AQkwrJppmbCRjR8pgtvV8dQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cE2qgul8QaG2PQn+2SbeZqifJX3E7XyTSFAmEy89wEKqBmZl1gxYkQrsSr24NV6TJ
-         03IA5ft1ltEmL6ArVV1kOmzQkGYNr640wd5NJe+52a3AyMPfQSlCT2QUJZxYemXkVF
-         clLjh2P1foDTlhoaisLcemoxo4F/u54c0pgUGtZE=
+        b=DlOjce5YaXePq/0zafStpmO7pqnn1E7wWIejS4TeHwUsSj/rBw1y3OWYgdNKEp7/w
+         wEmuKEsQYdWvnIQ0zS3Df5zXR9mNcdIRUzI94e43ihN5aLMMqrQS4CS08aHT1B/ss2
+         gdfVI66jGK/+3RePGintiwcKFs7nx+GZuPuBlixs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>, Jerry Zuo <Jerry.Zuo@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 056/671] drm/dp_mst: Skip validating ports during destruction, just ref
-Date:   Thu, 16 Jan 2020 11:44:47 -0500
-Message-Id: <20200116165502.8838-56-sashal@kernel.org>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 049/671] ASoC: sun8i-codec: add missing route for ADC
+Date:   Thu, 16 Jan 2020 11:44:40 -0500
+Message-Id: <20200116165502.8838-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,88 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
 
-[ Upstream commit c54c7374ff44de5e609506aca7c0deae4703b6d1 ]
+[ Upstream commit 9ee325d029c4abb75716851ce38863845911d605 ]
 
-Jerry Zuo pointed out a rather obscure hotplugging issue that it seems I
-accidentally introduced into DRM two years ago.
+sun8i-codec misses a route from ADC to AIF1 Slot 0 ADC. Add it
+to the driver to avoid adding it to every dts.
 
-Pretend we have a topology like this:
-
-|- DP-1: mst_primary
-   |- DP-4: active display
-   |- DP-5: disconnected
-   |- DP-6: active hub
-      |- DP-7: active display
-      |- DP-8: disconnected
-      |- DP-9: disconnected
-
-If we unplug DP-6, the topology starting at DP-7 will be destroyed but
-it's payloads will live on in DP-1's VCPI allocations and thus require
-removal. However, this removal currently fails because
-drm_dp_update_payload_part1() will (rightly so) try to validate the port
-before accessing it, fail then abort. If we keep going, eventually we
-run the MST hub out of bandwidth and all new allocations will start to
-fail (or in my case; all new displays just start flickering a ton).
-
-We could just teach drm_dp_update_payload_part1() not to drop the port
-ref in this case, but then we also need to teach
-drm_dp_destroy_payload_step1() to do the same thing, then hope no one
-ever adds anything to the that requires a validated port reference in
-drm_dp_destroy_connector_work(). Kind of sketchy.
-
-So let's go with a more clever solution: any port that
-drm_dp_destroy_connector_work() interacts with is guaranteed to still
-exist in memory until we say so. While said port might not be valid we
-don't really care: that's the whole reason we're destroying it in the
-first place! So, teach drm_dp_get_validated_port_ref() to use the all
-mighty current_work() function to avoid attempting to validate ports
-from the context of mgr->destroy_connector_work. I can't see any
-situation where this wouldn't be safe, and this avoids having to play
-whack-a-mole in the future of trying to work around port validation.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 263efde31f97 ("drm/dp/mst: Get validated port ref in drm_dp_update_payload_part1()")
-Reported-by: Jerry Zuo <Jerry.Zuo@amd.com>
-Cc: Jerry Zuo <Jerry.Zuo@amd.com>
-Cc: Harry Wentland <Harry.Wentland@amd.com>
-Cc: <stable@vger.kernel.org> # v4.6+
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181113224613.28809-1-lyude@redhat.com
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Fixes: eda85d1fee05d ("ASoC: sun8i-codec: Add ADC support for a33")
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 4d7715845306..58fe3945494c 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -1022,9 +1022,20 @@ static struct drm_dp_mst_port *drm_dp_mst_get_port_ref_locked(struct drm_dp_mst_
- static struct drm_dp_mst_port *drm_dp_get_validated_port_ref(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port)
- {
- 	struct drm_dp_mst_port *rport = NULL;
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index bf615fa16dc8..a3db6a68dfe6 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -465,7 +465,11 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
+ 	  "AIF1 Slot 0 Right"},
+ 
+-	/* ADC routes */
++	/* ADC Routes */
++	{ "AIF1 Slot 0 Right ADC", NULL, "ADC" },
++	{ "AIF1 Slot 0 Left ADC", NULL, "ADC" },
 +
- 	mutex_lock(&mgr->lock);
--	if (mgr->mst_primary)
--		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary, port);
-+	/*
-+	 * Port may or may not be 'valid' but we don't care about that when
-+	 * destroying the port and we are guaranteed that the port pointer
-+	 * will be valid until we've finished
-+	 */
-+	if (current_work() == &mgr->destroy_connector_work) {
-+		kref_get(&port->kref);
-+		rport = port;
-+	} else if (mgr->mst_primary) {
-+		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary,
-+						       port);
-+	}
- 	mutex_unlock(&mgr->lock);
- 	return rport;
- }
++	/* ADC Mixer Routes */
+ 	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+ 	  "AIF1 Slot 0 Left ADC" },
+ 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
 -- 
 2.20.1
 
