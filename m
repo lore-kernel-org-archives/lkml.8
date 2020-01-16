@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77F1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED2CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2F324684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2F62467C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193881;
-	bh=fwthBG7OPOBCy/tV4b+0DKeAil7BDEj8I5zpXVs/SZM=;
+	s=default; t=1579193885;
+	bh=Kfq7vR1aY0nNg82frCd7ANsw/ZvrzG9h0pRt5rTHc9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYFcYl+CMJ6cIR0hUCEdQzL41N3fbbCv/ale9k/LFrXe7PJnAP9WoBfHg8L/gVoep
-	 Ac3xm+yDl6Cdxe/hFsw3RkTzkQrYNs2zzPZBYFcj1NYsGWVMqOAb+mFSCRULLq8vE+
-	 loNsmpoEs0FrxHSlY/F3rsCIni0zfd1OpMVg/Yoo=
+	b=vbKw8xub7EzulJKlv9ctIRoZvjC4MbUr3IUczyX7LUYYcl5j86smbE0RFLH4zIq3e
+	 M6F4dv5vEN8OJawXVsPOog7brRu5aHsql5XTyBWg9r1huXw5J/FMgGCgQikXKXoYKK
+	 jTQPhn5Z3ZqYbsCYYstJ7jOWQA0ovLOspYb8/mVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387607AbgAPQ54 (ORCPT
+        id S1729659AbgAPQ5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387544AbgAPQ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:47 -0500
+        id S2387540AbgAPQ5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7113121D56;
-        Thu, 16 Jan 2020 16:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC72022525;
+        Thu, 16 Jan 2020 16:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193866;
-        bh=fwthBG7OPOBCy/tV4b+0DKeAil7BDEj8I5zpXVs/SZM=;
+        s=default; t=1579193865;
+        bh=Kfq7vR1aY0nNg82frCd7ANsw/ZvrzG9h0pRt5rTHc9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2dgpnEv0B8LZ+htCJjmls5koZV/N+3kVf3mgVajhcXwOkR00ELgSzZnFyNzdSBFYp
-         /Anl0MSOj0mii4TMLg+QEkszIXW5JTbo8q3CNsUS+2k9sgzY483+WKuJzQCvxwFOV5
-         oaCbB1EbRttQZxgr4NAUcThcqNkQJr4cFyO1LDbM=
+        b=IICYjNyzZD1dRsRCNhd1DMpfglOOX0DJexhAufyaeDik+jBpb5bOdZBTilsi0o9vE
+         L3q8KY3zYGkOpdrMjWDRxdUvyN7DRHCRd+GJfMVh2TqcDQfN98z7QMDvKjYhkUf0fs
+         umZkqccuUkzYJ4csxZOfOZtWB844KHaepd5QAimc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Manabu Igusa <migusa@arrowjapan.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 112/671] arm64: dts: apq8016-sbc: Increase load on l11 for SDCARD
-Date:   Thu, 16 Jan 2020 11:45:43 -0500
-Message-Id: <20200116165502.8838-112-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 111/671] drm/shmob: Fix return value check in shmob_drm_probe
+Date:   Thu, 16 Jan 2020 11:45:42 -0500
+Message-Id: <20200116165502.8838-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,40 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit af61bef513ba179559e56908b8c465e587bc3890 ]
+[ Upstream commit 06c3bbd3c12737a50c2e981821b5585e1786e73d ]
 
-In the same way as for msm8974-hammerhead, l11 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+In case of error, the function devm_ioremap_resource() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value check should
+be replaced with IS_ERR().
 
-Tested on Dragonboard-410c and DART-SD410 boards.
-
-Fixes: 4c7d53d16d77 (arm64: dts: apq8016-sbc: add regulators support)
-Reported-by: Manabu Igusa <migusa@arrowjapan.com>
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Fixes: 8f1597c8f1a5 ("drm: shmobile: Perform initialization/cleanup at probe/remove time")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/shmobile/shmob_drm_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 78ce3979ef09..f38b815e696d 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -630,6 +630,8 @@
- 	l11 {
- 		regulator-min-microvolt = <1750000>;
- 		regulator-max-microvolt = <3337000>;
-+		regulator-allow-set-load;
-+		regulator-system-load = <200000>;
- 	};
+diff --git a/drivers/gpu/drm/shmobile/shmob_drm_drv.c b/drivers/gpu/drm/shmobile/shmob_drm_drv.c
+index 592572554eb0..58d8a98c749b 100644
+--- a/drivers/gpu/drm/shmobile/shmob_drm_drv.c
++++ b/drivers/gpu/drm/shmobile/shmob_drm_drv.c
+@@ -233,8 +233,8 @@ static int shmob_drm_probe(struct platform_device *pdev)
  
- 	l12 {
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	sdev->mmio = devm_ioremap_resource(&pdev->dev, res);
+-	if (sdev->mmio == NULL)
+-		return -ENOMEM;
++	if (IS_ERR(sdev->mmio))
++		return PTR_ERR(sdev->mmio);
+ 
+ 	ret = shmob_drm_setup_clocks(sdev, pdata->clk_source);
+ 	if (ret < 0)
 -- 
 2.20.1
 
