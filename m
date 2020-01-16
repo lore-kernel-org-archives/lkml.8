@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A725FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0875C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80BD02073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B1292073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202404;
-	bh=NGeX31yHaJjulEnEI8CSs+W7be4cul/wAnLxIUgPJuw=;
+	s=default; t=1579202409;
+	bh=u9JD3C4YLpxJEKI/OEJ1TDTW/fEAkI4JriQ09cx7GO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vn/fs97GWCMR/AwiaaqgnbvVS52Hv65emPTL+WuGa00pbH3JV5/CBqn5bKs9Us7RI
-	 qEv6jmuK98FJMTjLvMJKXBReX1j5zyD6etJYqb/XsBfaLlKf+z3U9xivt4chVYR9ij
-	 stqjZIphImpOcKl167PLuC/d2W4mhpKQ5HHTfAqg=
+	b=OBQZCU24ZtiUx7oXeVyxLuct/1tPWZoE/tUAY2HUzEIRZzlDYc3A9pJ51/1QjOaqn
+	 HbrBaQZGECdgb4lNo9E0KgBh5hvSH6eCOA1gH8R5gG33Px94SwWAhzoHAPyZXzQsLv
+	 2IBUQarg7lxXLDro4kkYMiskNsEw1xT18L90Lzrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgAPQyI (ORCPT
+        id S2437607AbgAPTUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:20:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731318AbgAPQx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:57 -0500
+        id S1731498AbgAPQyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9F5F2176D;
-        Thu, 16 Jan 2020 16:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF286214AF;
+        Thu, 16 Jan 2020 16:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193636;
-        bh=NGeX31yHaJjulEnEI8CSs+W7be4cul/wAnLxIUgPJuw=;
+        s=default; t=1579193645;
+        bh=u9JD3C4YLpxJEKI/OEJ1TDTW/fEAkI4JriQ09cx7GO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiFyTes2Xy07hYbwxjsXWocdL9h2nTu+tlK9EI6o1RWAjgPxg4D2T3FZ1O9M1HKYm
-         RbdlSp6flDNSuQp3WNGqQQuGGcVYfCwbih4/lXr856WQVvBoIw9qtWAa22UWffnmuX
-         83+UTp59GVX+v1EPjGejWhLsY3r4UEIHYjzWnuL4=
+        b=yRFkAxh1nRu99Tgg8wN2y7HgkY9U8bRTAMQCR7FjuROljy9EeeWSo0JtyzEDChhGT
+         gna4Jrom3c2SmFzuF9jN25nE5LQD5FWJJCD10SrgDnwk25p+L4tMOjaHn2Abi2eEKg
+         Ah6lZ+8ir9OfQ94gajIxOLnntY7LIzKRKeivauKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 169/205] drm/radeon: fix bad DMA from INTERRUPT_CNTL2
-Date:   Thu, 16 Jan 2020 11:42:24 -0500
-Message-Id: <20200116164300.6705-169-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 176/205] um: virtio_uml: Disallow modular build
+Date:   Thu, 16 Jan 2020 11:42:31 -0500
+Message-Id: <20200116164300.6705-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,75 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 62d91dd2851e8ae2ca552f1b090a3575a4edf759 ]
+[ Upstream commit bf9f80cf0ccab5f346f7d3cdc445da8fcfe6ce34 ]
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+This driver *can* be a module, but then its parameters (socket path)
+are untrusted data from inside the VM, and that isn't allowed. Allow
+the code to only be built-in to avoid that.
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
-
-Fixes: d8f60cfc9345 ("drm/radeon/kms: Add support for interrupts on r6xx/r7xx chips (v3)")
-Fixes: 25a857fbe973 ("drm/radeon/kms: add support for interrupts on SI")
-Fixes: a59781bbe528 ("drm/radeon: add support for interrupts on CIK (v5)")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 5d38f324993f ("um: drivers: Add virtio vhost-user driver")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/cik.c  | 4 ++--
- drivers/gpu/drm/radeon/r600.c | 4 ++--
- drivers/gpu/drm/radeon/si.c   | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/um/drivers/Kconfig      | 2 +-
+ arch/um/drivers/virtio_uml.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index 62eab82a64f9..897442754fd0 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -6969,8 +6969,8 @@ static int cik_irq_init(struct radeon_device *rdev)
- 	}
+diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+index fea5a0d522dc..388096fb45a2 100644
+--- a/arch/um/drivers/Kconfig
++++ b/arch/um/drivers/Kconfig
+@@ -337,7 +337,7 @@ config UML_NET_SLIRP
+ endmenu
  
- 	/* setup interrupt control */
--	/* XXX this should actually be a bus address, not an MC address. same on older asics */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/r600.c b/drivers/gpu/drm/radeon/r600.c
-index e937cc01910d..033bc466a862 100644
---- a/drivers/gpu/drm/radeon/r600.c
-+++ b/drivers/gpu/drm/radeon/r600.c
-@@ -3696,8 +3696,8 @@ int r600_irq_init(struct radeon_device *rdev)
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index 05894d198a79..1d8efb0eefdb 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -5997,8 +5997,8 @@ static int si_irq_init(struct radeon_device *rdev)
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+ config VIRTIO_UML
+-	tristate "UML driver for virtio devices"
++	bool "UML driver for virtio devices"
+ 	select VIRTIO
+ 	help
+ 	  This driver provides support for virtio based paravirtual device
+diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+index c5643a59a8c7..179b41ad63ba 100644
+--- a/arch/um/drivers/virtio_uml.c
++++ b/arch/um/drivers/virtio_uml.c
+@@ -4,12 +4,12 @@
+  *
+  * Copyright(c) 2019 Intel Corporation
+  *
+- * This module allows virtio devices to be used over a vhost-user socket.
++ * This driver allows virtio devices to be used over a vhost-user socket.
+  *
+  * Guest devices can be instantiated by kernel module or command line
+  * parameters. One device will be created for each parameter. Syntax:
+  *
+- *		[virtio_uml.]device=<socket>:<virtio_id>[:<platform_id>]
++ *		virtio_uml.device=<socket>:<virtio_id>[:<platform_id>]
+  * where:
+  *		<socket>	:= vhost-user socket path to connect
+  *		<virtio_id>	:= virtio device id (as in virtio_ids.h)
 -- 
 2.20.1
 
