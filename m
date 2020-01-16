@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B7EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F47C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F8B246B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64448246C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196848;
-	bh=r2LL/2/2lUsullAeDJ8187zMNzBeZGcVFifgpmuK+S8=;
+	s=default; t=1579196851;
+	bh=KANMXqY2ympshQ9I2mDY5g00urWBmk6k715DSTjsi58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G+PMp24HEH5YZE+SVq96sHZ0aOlvlGuyjBByH/E6HPuBoV5EfsgHOoODRNfuEolsP
-	 tnDMmb0nCKRk8WlY1sYlqid31UIzDFYJb8T5SF30iJsYtuqEjtq4qnsD778a/3f7K1
-	 Y1XCOs1B42k+Ya5pw7cZHAs4sMONaoDgQ6M6o7us=
+	b=ev+LjU9bgFsYdepHJN3wucmL//zWLbyZlgyPN8ICALhQ2M8RDNDJC8g1YIhVG6vKq
+	 jK9vr7/fcVJPyYqm4EcYRiPsJp4jNUjWsEhIYcVAIpjIbxd8na0WtDMz60rtzb1U83
+	 AuDQ/V1QbOlpxjMLqMwQJWmKvIEMwBFfQlOhHSR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406813AbgAPRqv (ORCPT
+        id S2394256AbgAPRra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39884 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:47:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406792AbgAPRqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:48 -0500
+        id S2406178AbgAPRqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D4E246D3;
-        Thu, 16 Jan 2020 17:46:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 347B0246DE;
+        Thu, 16 Jan 2020 17:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196807;
-        bh=r2LL/2/2lUsullAeDJ8187zMNzBeZGcVFifgpmuK+S8=;
+        s=default; t=1579196811;
+        bh=KANMXqY2ympshQ9I2mDY5g00urWBmk6k715DSTjsi58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmIlgMsN2+cAKHzFPeKG6Opk8RHvQ3k18dVHxFNGVUAESBRqtIMvauWm+8L/bVuZ5
-         qd19DPnA8WKMVbjQyIhb6ji2gV+PAGsDiWeWbkRHGuc4OHYooZ/MBr1T/RbUXhJZlw
-         rGlAC9LNGfnSzBAmoE0msozW73Z66AUUHUc7CWR0=
+        b=axfrGClkIcbB8RbFX2jVK5oQrfKRaQ+ql04AW+8iQyT21xYhRTxNZQP0iQ9r3B7eB
+         1Ul90iO63MzB3sdlMvnNNOOzogOqWxs1LCVoIi+myDTEZt7WIcSB94uSevKe+I8vmt
+         L359TE0S7RrNreT6niYYPvUGhQCbKrwmhDoT6sZo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 165/174] tty: serial: imx: use the sg count from dma_map_sg
-Date:   Thu, 16 Jan 2020 12:42:42 -0500
-Message-Id: <20200116174251.24326-165-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 168/174] scsi: qla4xxx: fix double free bug
+Date:   Thu, 16 Jan 2020 12:42:45 -0500
+Message-Id: <20200116174251.24326-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 596fd8dffb745afcebc0ec6968e17fe29f02044c ]
+[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+The variable init_fw_cb is released twice, resulting in a double free
+bug. The call to the function dma_free_coherent() before goto is removed to
+get rid of potential double free.
 
-Fixes: b4cdc8f61beb ("serial: imx: add DMA support for imx6q")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1573108875-26530-1-git-send-email-peng.fan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
+Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index d607cb2eb64e..b59d0dafefab 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -545,7 +545,7 @@ static void imx_dma_tx(struct imx_port *sport)
- 		dev_err(dev, "DMA mapping error for TX.\n");
- 		return;
+diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
+index c291fdff1b33..ea3b77ba12a2 100644
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -641,9 +641,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
+ 
+ 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
+ 	    QLA_SUCCESS) {
+-		dma_free_coherent(&ha->pdev->dev,
+-				  sizeof(struct addr_ctrl_blk),
+-				  init_fw_cb, init_fw_cb_dma);
+ 		goto exit_init_fw_cb;
  	}
--	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
-+	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
- 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
- 	if (!desc) {
- 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
+ 
 -- 
 2.20.1
 
