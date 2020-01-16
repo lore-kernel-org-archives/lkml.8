@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE83C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F43C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1681322522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674BC2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197822;
-	bh=/gTnbs5dM7uA8O+BlS4BLa17DHcgz+gruW6s5dE6BkU=;
+	s=default; t=1579197825;
+	bh=1L+Uh7jj68z+yjjo5rQZ/oiCiuQZRMJEugTJpqgN8wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIkqoqDlZQwT10UgyVtxONQD90mkZ+HemvsVEpG5Z3WXTdxFKd5CTdBVrxvGChEPU
-	 SUe63Gwck4SeWE/HMcWdzfBhh65yHHCRtL7h3Gny0TygM47NUii/qQGZRxGZRAnZIn
-	 3/+UXw7Q7upLkZShKPgvLqa/c7uxRvm1Ggavc02o=
+	b=12B0bxYpZ8eWrWXLQFFLlfdjCQRU5yPk08j0J8y42xATQP8zLr8/udGiq3StLXQLm
+	 cBXyLeZ6g0reMs6smTcNBW5VC4FT9UTYyvluBMIbdnR+v3fxBxlw1HzjpRatRT75X+
+	 LebNXXrAa+ZvLEAr56Mwai8BZV7JBQOIzxQ3rHdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394143AbgAPSDf (ORCPT
+        id S2393682AbgAPRkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:03:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393686AbgAPRks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:48 -0500
+        id S2393519AbgAPRjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF5C217F4;
-        Thu, 16 Jan 2020 17:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50D812470D;
+        Thu, 16 Jan 2020 17:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196447;
-        bh=/gTnbs5dM7uA8O+BlS4BLa17DHcgz+gruW6s5dE6BkU=;
+        s=default; t=1579196384;
+        bh=1L+Uh7jj68z+yjjo5rQZ/oiCiuQZRMJEugTJpqgN8wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvQ/IypKtdf15fJuVu7BM6327RwEbdW7bnmpwTRbpdgHP5Z62Fh08CPNmoJH5htBV
-         jf7oi2F3V0mC0R4iq4o1/znWS9m5/sTaelIek212y1YPXN+xrIXk/0DZTnR8YJ5x6y
-         IKTKrScW1PlC7FiiuouRCx2boi6TuCLiiSrK7tS4=
+        b=EuDO5KvHfsdMP2hEmBHrcrnJWClJIFMoxgGoAcsXgCmJ+cxEhIngioPL0VDKyYE3T
+         MuHWzNr1CbI9K5+1nieZFaTjg7NQY315A2TALarX+lpeLSMk9i2LdGnsmP+328nb4a
+         fyu84xA/GSlc5wRFcdvNGSogCaJfrVgsuacV23kQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 209/251] nvme: retain split access workaround for capability reads
-Date:   Thu, 16 Jan 2020 12:35:58 -0500
-Message-Id: <20200116173641.22137-169-sashal@kernel.org>
+Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 166/251] RDMA/hns: Fixs hw access invalid dma memory error
+Date:   Thu, 16 Jan 2020 12:35:15 -0500
+Message-Id: <20200116173641.22137-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,53 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
+[ Upstream commit ec5bc2cc69b4fc494e04d10fc5226f6f9cf67c56 ]
 
-Commit 7fd8930f26be4
+When smmu is enable, if execute the perftest command and then use 'kill
+-9' to exit, follow this operation repeatedly, the kernel will have a high
+probability to print the following smmu event:
 
-  "nvme: add a common helper to read Identify Controller data"
+  arm-smmu-v3 arm-smmu-v3.1.auto: event 0x10 received:
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0000000010
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x0000020900000080
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
 
-has re-introduced an issue that we have attempted to work around in the
-past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
+This is because the hw will periodically refresh the qpc cache until the
+next reset.
 
-The problem is that some PCIe NVMe controllers do not implement 64-bit
-outbound accesses correctly, which is why the commit above switched
-to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
-the code.
+This patch fixed it by removing the action that release qpc memory in the
+'hns_roce_qp_free' function.
 
-In the mean time, the NVMe subsystem has been refactored, and now calls
-into the PCIe support layer for NVMe via a .reg_read64() method, which
-fails to use lo_hi_readq(), and thus reintroduces the problem that the
-workaround above aimed to address.
-
-Given that, at the moment, .reg_read64() is only used to read the
-capability register [which is known to tolerate split reads], let's
-switch .reg_read64() to lo_hi_readq() as well.
-
-This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
-DesignWare PCIe host controller.
-
-Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 1ac4cec5f4f7..e2bce9385eda 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -1863,7 +1863,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index 33cf1035030b..6f3c0ea99dd0 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -241,7 +241,6 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
  
- static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
- {
--	*val = readq(to_nvme_dev(ctrl)->bar + off);
-+	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
- 	return 0;
+ 	if ((hr_qp->ibqp.qp_type) != IB_QPT_GSI) {
+ 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
+-		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
+ 	}
  }
  
 -- 
