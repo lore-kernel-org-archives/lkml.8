@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6ABC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA69C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A846B206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8B92053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200908;
-	bh=37O7uWLDFvAE5++PkVmEHgXh1ac3gvvlzmtoew19/60=;
+	s=default; t=1579200915;
+	bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fr2sdrTzzfR5wQr4dnBPylAtkaL8rZ0odXAQPLYD5DOMCXzYfAMsOf79+GsLT4gUy
-	 lW7V4l+rynlG9Va0SYwv0lx3Yam2rzCy+PlN7TO5lzuAXYx8/7FETjyFMJO0jlPhO3
-	 +HkTU1PPuauU+yB8+k0b4wvMw0Az8qPiLkUiLlxo=
+	b=nJK0CKF5Y4GHmKC7xZK+FsNvJk2zZ/i9IdmGeJwQl2qHKa30PvWybMjojtCbn8GMY
+	 uYT7NAt5FvlvBz1FXBjHaL2oe00cTbE2CJlicSNvjwxFZ2oEUuPNIscsPHemVQ8Jo9
+	 OoCU9FiAigGReBGSoUYxDZi0WU/ubzc1s3jZcmqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388842AbgAPRHq (ORCPT
+        id S2389424AbgAPSzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:55:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgAPRHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:35 -0500
+        id S1729370AbgAPRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF27217F4;
-        Thu, 16 Jan 2020 17:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1374205F4;
+        Thu, 16 Jan 2020 17:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194454;
-        bh=37O7uWLDFvAE5++PkVmEHgXh1ac3gvvlzmtoew19/60=;
+        s=default; t=1579194463;
+        bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CS5oH4vWe4+2eAOlkS8wVdKig6N0ZLSFHUo2MO6HpU1ZnL1zbssORWkcN/BBGfgRT
-         93I5LvfFHmVFywHKbyUhG5vCRp/4UygPn8Q3w0U1j4nbKv6LoViH9izuiCLRk7op1A
-         NoJm8yVWVAjidPE+fcn2GdTV2Yc0ueJniJ2fXlkI=
+        b=x7hzQEg58aqyNnOl5EIlKVHTWlZDjJcfRJ3XnCmgcsA8E7Jl2YY/aGNjGkwATK5VR
+         A9f1FN57kz9/1H2huHIMyTSnOFNeGcOLoCZ5mzO9Ck4YW57piLX61gGlW01xUwZsbM
+         HqB8578wGrc9ROrKHLU0TNQDaD98vHaw9+yJJyak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 364/671] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date:   Thu, 16 Jan 2020 12:00:02 -0500
-Message-Id: <20200116170509.12787-101-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 370/671] spi: spi-fsl-spi: call spi_finalize_current_message() at the end
+Date:   Thu, 16 Jan 2020 12:00:08 -0500
+Message-Id: <20200116170509.12787-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,48 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
+[ Upstream commit 44a042182cb1e9f7916e015c836967bf638b33c4 ]
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
+spi_finalize_current_message() shall be called once all
+actions are finished, otherwise the last actions might
+step over a newly started transfer.
 
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
-
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/spi/spi-fsl-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 25540b7694d5..6523d81dd9c4 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -90,6 +90,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 8b79e36fab21..cd784552de7f 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -407,7 +407,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
  
- 	sound_spdif {
-@@ -155,6 +157,8 @@
+ 	m->status = status;
+-	spi_finalize_current_message(master);
  
- &mmc1 {
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
+ 	if (status || !cs_change) {
+ 		ndelay(nsecs);
+@@ -415,6 +414,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	fsl_spi_setup_transfer(spi, NULL);
++	spi_finalize_current_message(master);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
