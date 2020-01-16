@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A769CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BDD20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B6A20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198604;
-	bh=6E0aL007KUO2++/022Cemxn4jgbFOFs5qPY3sv9tjLk=;
+	s=default; t=1579198607;
+	bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7C/AiRa8mPgiidPMZWreoyrzdJDHdhibwXdL1W1SC2WlDdalEx2dbtbVshxjn0uM
-	 Q+1QQSX3Gy3N9xez7eQh8MwJTiP5z9H+eqeaHI2gyQaSQ+DecnPcNWoP+r8daZ+i7N
-	 zvJmTIqhnfnL+ZAHA3QacZWxMhHPn+dbPCTHY7fU=
+	b=x7+QE5Do+OM4qek4lEzqzAANIvMCiThutE5719KMfg+J+9nfmDCs2QCdymXw3oxtP
+	 XKgfsdbirv36oKrD8g9Bu3TQQldRkh5EPYbTHBZ4He/afhF5TJh2jqH0Xux85hgjbU
+	 HuVDzytXIGBDMBkAAsvIOOY/kejXeRztwZBJu4hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406098AbgAPSQn (ORCPT
+        id S2406630AbgAPSQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:16:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:16:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732131AbgAPR3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:24 -0500
+        id S2392687AbgAPR3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79BD246F8;
-        Thu, 16 Jan 2020 17:29:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB112470E;
+        Thu, 16 Jan 2020 17:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195763;
-        bh=6E0aL007KUO2++/022Cemxn4jgbFOFs5qPY3sv9tjLk=;
+        s=default; t=1579195760;
+        bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRFkwl4NxDzCmwpL0CEFJWEQv42AL/OG4U2sWTA0RtXUUrGfB7mH5C93T1rsOm658
-         Orf0K2VfMrDedScCXNz5t1lV5HlYMrhRq3XJwUMabMSsOKJGMZv1K11xN+BbVLCjjv
-         dXgbHkcXX1I/R8VJ7qo2g/JzddqOKDoGQesIIUQM=
+        b=uSo1EzGEPetx0BoLUc0rQ6HgUaiXthN/MCsMQ5guZTyniPOyFgvUhTliEGLRDEv54
+         2Jnp5FFHP6xV5QOwS525lr0+Z45cSoucwWiWua5OGdJXFhoZL/7e6HikjKSEvXncvk
+         oQCWMT178Ngj9k1SZLC7bwCokazcu7tJqoEftxkA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 292/371] Btrfs: fix inode cache waiters hanging on failure to start caching thread
-Date:   Thu, 16 Jan 2020 12:22:44 -0500
-Message-Id: <20200116172403.18149-235-sashal@kernel.org>
+Cc:     Govindarajulu Varadarajan <gvaradar@cisco.com>,
+        Satish Kharat <satishkh@cisco.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 290/371] scsi: fnic: fix msix interrupt allocation
+Date:   Thu, 16 Jan 2020 12:22:42 -0500
+Message-Id: <20200116172403.18149-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,77 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Govindarajulu Varadarajan <gvaradar@cisco.com>
 
-[ Upstream commit a68ebe0790fc88b4314d17984a2cf99ce2361901 ]
+[ Upstream commit 3ec24fb4c035e9cbb2f02a48640a09aa913442a2 ]
 
-If we fail to start the inode caching thread, we print an error message
-and disable the inode cache, however we never wake up any waiters, so they
-hang forever waiting for the caching to finish. Fix this by waking them
-up and have them fallback to a call to btrfs_find_free_objectid().
+pci_alloc_irq_vectors() returns number of vectors allocated.  Fix the check
+for error condition.
 
-Fixes: e60efa84252c05 ("Btrfs: avoid triggering bug_on() when we fail to start inode caching task")
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: cca678dfbad49 ("scsi: fnic: switch to pci_alloc_irq_vectors")
+Link: https://lore.kernel.org/r/20190827211340.1095-1-gvaradar@cisco.com
+Signed-off-by: Govindarajulu Varadarajan <gvaradar@cisco.com>
+Acked-by: Satish Kharat <satishkh@cisco.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/scsi/fnic/fnic_isr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index 7dc2923655d9..b1c3a4ec76c8 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -26,6 +26,19 @@
- #include "inode-map.h"
- #include "transaction.h"
+diff --git a/drivers/scsi/fnic/fnic_isr.c b/drivers/scsi/fnic/fnic_isr.c
+index 4e3a50202e8c..d28088218c36 100644
+--- a/drivers/scsi/fnic/fnic_isr.c
++++ b/drivers/scsi/fnic/fnic_isr.c
+@@ -254,7 +254,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 		int vecs = n + m + o + 1;
  
-+static void fail_caching_thread(struct btrfs_root *root)
-+{
-+	struct btrfs_fs_info *fs_info = root->fs_info;
-+
-+	btrfs_warn(fs_info, "failed to start inode caching task");
-+	btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
-+				     "disabling inode map caching");
-+	spin_lock(&root->ino_cache_lock);
-+	root->ino_cache_state = BTRFS_CACHE_ERROR;
-+	spin_unlock(&root->ino_cache_lock);
-+	wake_up(&root->ino_cache_wait);
-+}
-+
- static int caching_kthread(void *data)
- {
- 	struct btrfs_root *root = data;
-@@ -178,11 +191,8 @@ static void start_caching(struct btrfs_root *root)
- 
- 	tsk = kthread_run(caching_kthread, root, "btrfs-ino-cache-%llu",
- 			  root->root_key.objectid);
--	if (IS_ERR(tsk)) {
--		btrfs_warn(fs_info, "failed to start inode caching task");
--		btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
--					     "disabling inode map caching");
--	}
-+	if (IS_ERR(tsk))
-+		fail_caching_thread(root);
- }
- 
- int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
-@@ -200,11 +210,14 @@ int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
- 
- 	wait_event(root->ino_cache_wait,
- 		   root->ino_cache_state == BTRFS_CACHE_FINISHED ||
-+		   root->ino_cache_state == BTRFS_CACHE_ERROR ||
- 		   root->free_ino_ctl->free_space > 0);
- 
- 	if (root->ino_cache_state == BTRFS_CACHE_FINISHED &&
- 	    root->free_ino_ctl->free_space == 0)
- 		return -ENOSPC;
-+	else if (root->ino_cache_state == BTRFS_CACHE_ERROR)
-+		return btrfs_find_free_objectid(root, objectid);
- 	else
- 		goto again;
- }
+ 		if (pci_alloc_irq_vectors(fnic->pdev, vecs, vecs,
+-				PCI_IRQ_MSIX) < 0) {
++				PCI_IRQ_MSIX) == vecs) {
+ 			fnic->rq_count = n;
+ 			fnic->raw_wq_count = m;
+ 			fnic->wq_copy_count = o;
+@@ -280,7 +280,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 	    fnic->wq_copy_count >= 1 &&
+ 	    fnic->cq_count >= 3 &&
+ 	    fnic->intr_count >= 1 &&
+-	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) < 0) {
++	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) == 1) {
+ 		fnic->rq_count = 1;
+ 		fnic->raw_wq_count = 1;
+ 		fnic->wq_copy_count = 1;
 -- 
 2.20.1
 
