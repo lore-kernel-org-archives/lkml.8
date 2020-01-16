@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01AEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8331DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB08206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C5E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201325;
-	bh=IRmLSqE83uCsKnjCWPMxfFgshRxKOTa8eJMPacvSZ0g=;
+	s=default; t=1579201333;
+	bh=e/9Z3XcsxP40y7lkufZoExY3PVKO3rkQTP7TqxKknR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TbZVi8O+J79LhyLL17+gnjXPQaCVS90c9mnGzNK1AHxpWgtEXorhYQNo+6x9SmeqX
-	 m+fEwKWrBQ1O+zUhQHyVxf1nf2Dw0glrEVGUCDX6Dmv5T4RF8aHQmWH6pok1X4KcJu
-	 gTna97691axQJCAwB6NHpcQdTo0JlNgWjBw1AY9s=
+	b=i4CIfHW/QVmNpIiur2v1TP5i79cEK2rwf617MTMhg0WL7plGr8r+sUcch73HUTlHT
+	 CcFpwcNHsI9YXC7lIHdYPIR6bTxJTKLIC1Opfy4bg0r02HEqEIUuPlRdJGW4ancALK
+	 2k5YIq5rBgvxd7KZDOKlCHiRCEdh5fP2cQ8hx9k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437301AbgAPTCA (ORCPT
+        id S2437267AbgAPTCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:02:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35074 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:02:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388714AbgAPRFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:46 -0500
+        id S2388687AbgAPRFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D612051A;
-        Thu, 16 Jan 2020 17:05:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2DC24653;
+        Thu, 16 Jan 2020 17:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194345;
-        bh=IRmLSqE83uCsKnjCWPMxfFgshRxKOTa8eJMPacvSZ0g=;
+        s=default; t=1579194341;
+        bh=e/9Z3XcsxP40y7lkufZoExY3PVKO3rkQTP7TqxKknR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRyE3qE9XkPxfH2+JyxOs2H2/N76aN3XOgSIi0EkJrgm99r1hIb+DmswKB8rjJ1yG
-         GZ9JA6u52W8Wbtwln2NB70OXXycuIj3fQFlvKEuiU8nD4XsWhUjNcdMe1GUk8u7Kxy
-         nK0CBxwg507SCqC0VUh9EZiaFL9Ra1fzH+M9cizk=
+        b=t2vd60uSVs2suaqcBHY0TGtKsswcWQp/8qeHS5uN4GNQRnj1Kz2rVUlbR8T0e0FuA
+         NdlywprSF0Ynpie+IU2P1CGlgX6ZuRm3ZSWvtOim2cpezS1Pl5ZEX62qs5pRe2k84k
+         W7hMNFoSPi3cvm2i4jL+VjM7aNdIlm8Vg3MS5JgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 287/671] firmware: arm_scmi: fix of_node leak in scmi_mailbox_check
-Date:   Thu, 16 Jan 2020 11:58:45 -0500
-Message-Id: <20200116170509.12787-24-sashal@kernel.org>
+Cc:     Leandro Dorileo <leandro.maciel.dorileo@intel.com>,
+        Vedang Patel <vedang.patel@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 284/671] net/sched: cbs: fix port_rate miscalculation
+Date:   Thu, 16 Jan 2020 11:58:42 -0500
+Message-Id: <20200116170509.12787-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,40 +60,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+From: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
 
-[ Upstream commit fa7fe29a645b4da08efe8ff2392898b88f9ded9f ]
+[ Upstream commit e0a7683d30e91e30ee6cf96314ae58a0314a095e ]
 
-of_parse_phandle_with_args() requires the caller to call of_node_put() on
-the returned args->np pointer. Otherwise the reference count will remain
-incremented.
+The Credit Based Shaper heavily depends on link speed to calculate
+the scheduling credits, we can't properly calculate the credits if the
+device has failed to report the link speed.
 
-However, in this case, since we don't actually use the returned pointer,
-we can simply pass in NULL.
+In that case we can't dequeue packets assuming a wrong port rate that will
+result into an inconsistent credit distribution.
 
-Fixes: aa4f886f3893f ("firmware: arm_scmi: add basic driver infrastructure for SCMI")
-Signed-off-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+This patch makes sure we fail to dequeue case:
+
+1) __ethtool_get_link_ksettings() reports error or 2) the ethernet driver
+failed to set the ksettings' speed value (setting link speed to
+SPEED_UNKNOWN).
+
+Additionally we properly re calculate the port rate whenever the link speed
+is changed.
+
+Fixes: 3d0bd028ffb4a ("net/sched: Add support for HW offloading for CBS")
+Signed-off-by: Leandro Dorileo <leandro.maciel.dorileo@intel.com>
+Reviewed-by: Vedang Patel <vedang.patel@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/driver.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/sched/sch_cbs.c | 98 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 84 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 09119e3f5c01..effc4c17e0fb 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -662,9 +662,7 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
+diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
+index e26a24017faa..81f84cb5dd23 100644
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -61,16 +61,20 @@
+ #include <linux/string.h>
+ #include <linux/errno.h>
+ #include <linux/skbuff.h>
++#include <net/netevent.h>
+ #include <net/netlink.h>
+ #include <net/sch_generic.h>
+ #include <net/pkt_sched.h>
  
- static int scmi_mailbox_check(struct device_node *np)
- {
--	struct of_phandle_args arg;
--
--	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
-+	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
++static LIST_HEAD(cbs_list);
++static DEFINE_SPINLOCK(cbs_list_lock);
++
+ #define BYTES_PER_KBIT (1000LL / 8)
+ 
+ struct cbs_sched_data {
+ 	bool offload;
+ 	int queue;
+-	s64 port_rate; /* in bytes/s */
++	atomic64_t port_rate; /* in bytes/s */
+ 	s64 last; /* timestamp in ns */
+ 	s64 credits; /* in bytes */
+ 	s32 locredit; /* in bytes */
+@@ -82,6 +86,7 @@ struct cbs_sched_data {
+ 		       struct sk_buff **to_free);
+ 	struct sk_buff *(*dequeue)(struct Qdisc *sch);
+ 	struct Qdisc *qdisc;
++	struct list_head cbs_list;
+ };
+ 
+ static int cbs_child_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+@@ -180,6 +185,11 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
+ 	s64 credits;
+ 	int len;
+ 
++	if (atomic64_read(&q->port_rate) == -1) {
++		WARN_ONCE(1, "cbs: dequeue() called with unknown port rate.");
++		return NULL;
++	}
++
+ 	if (q->credits < 0) {
+ 		credits = timediff_to_credits(now - q->last, q->idleslope);
+ 
+@@ -206,7 +216,8 @@ static struct sk_buff *cbs_dequeue_soft(struct Qdisc *sch)
+ 	/* As sendslope is a negative number, this will decrease the
+ 	 * amount of q->credits.
+ 	 */
+-	credits = credits_from_len(len, q->sendslope, q->port_rate);
++	credits = credits_from_len(len, q->sendslope,
++				   atomic64_read(&q->port_rate));
+ 	credits += q->credits;
+ 
+ 	q->credits = max_t(s64, credits, q->locredit);
+@@ -293,6 +304,50 @@ static int cbs_enable_offload(struct net_device *dev, struct cbs_sched_data *q,
+ 	return 0;
  }
  
- static int scmi_mbox_free_channel(int id, void *p, void *data)
++static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
++{
++	struct ethtool_link_ksettings ecmd;
++	int port_rate = -1;
++
++	if (!__ethtool_get_link_ksettings(dev, &ecmd) &&
++	    ecmd.base.speed != SPEED_UNKNOWN)
++		port_rate = ecmd.base.speed * 1000 * BYTES_PER_KBIT;
++
++	atomic64_set(&q->port_rate, port_rate);
++	netdev_dbg(dev, "cbs: set %s's port_rate to: %lld, linkspeed: %d\n",
++		   dev->name, (long long)atomic64_read(&q->port_rate),
++		   ecmd.base.speed);
++}
++
++static int cbs_dev_notifier(struct notifier_block *nb, unsigned long event,
++			    void *ptr)
++{
++	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
++	struct cbs_sched_data *q;
++	struct net_device *qdev;
++	bool found = false;
++
++	ASSERT_RTNL();
++
++	if (event != NETDEV_UP && event != NETDEV_CHANGE)
++		return NOTIFY_DONE;
++
++	spin_lock(&cbs_list_lock);
++	list_for_each_entry(q, &cbs_list, cbs_list) {
++		qdev = qdisc_dev(q->qdisc);
++		if (qdev == dev) {
++			found = true;
++			break;
++		}
++	}
++	spin_unlock(&cbs_list_lock);
++
++	if (found)
++		cbs_set_port_rate(dev, q);
++
++	return NOTIFY_DONE;
++}
++
+ static int cbs_change(struct Qdisc *sch, struct nlattr *opt,
+ 		      struct netlink_ext_ack *extack)
+ {
+@@ -314,16 +369,7 @@ static int cbs_change(struct Qdisc *sch, struct nlattr *opt,
+ 	qopt = nla_data(tb[TCA_CBS_PARMS]);
+ 
+ 	if (!qopt->offload) {
+-		struct ethtool_link_ksettings ecmd;
+-		s64 link_speed;
+-
+-		if (!__ethtool_get_link_ksettings(dev, &ecmd))
+-			link_speed = ecmd.base.speed;
+-		else
+-			link_speed = SPEED_1000;
+-
+-		q->port_rate = link_speed * 1000 * BYTES_PER_KBIT;
+-
++		cbs_set_port_rate(dev, q);
+ 		cbs_disable_offload(dev, q);
+ 	} else {
+ 		err = cbs_enable_offload(dev, q, qopt, extack);
+@@ -346,6 +392,7 @@ static int cbs_init(struct Qdisc *sch, struct nlattr *opt,
+ {
+ 	struct cbs_sched_data *q = qdisc_priv(sch);
+ 	struct net_device *dev = qdisc_dev(sch);
++	int err;
+ 
+ 	if (!opt) {
+ 		NL_SET_ERR_MSG(extack, "Missing CBS qdisc options  which are mandatory");
+@@ -366,7 +413,17 @@ static int cbs_init(struct Qdisc *sch, struct nlattr *opt,
+ 
+ 	qdisc_watchdog_init(&q->watchdog, sch);
+ 
+-	return cbs_change(sch, opt, extack);
++	err = cbs_change(sch, opt, extack);
++	if (err)
++		return err;
++
++	if (!q->offload) {
++		spin_lock(&cbs_list_lock);
++		list_add(&q->cbs_list, &cbs_list);
++		spin_unlock(&cbs_list_lock);
++	}
++
++	return 0;
+ }
+ 
+ static void cbs_destroy(struct Qdisc *sch)
+@@ -374,8 +431,11 @@ static void cbs_destroy(struct Qdisc *sch)
+ 	struct cbs_sched_data *q = qdisc_priv(sch);
+ 	struct net_device *dev = qdisc_dev(sch);
+ 
+-	qdisc_watchdog_cancel(&q->watchdog);
++	spin_lock(&cbs_list_lock);
++	list_del(&q->cbs_list);
++	spin_unlock(&cbs_list_lock);
+ 
++	qdisc_watchdog_cancel(&q->watchdog);
+ 	cbs_disable_offload(dev, q);
+ 
+ 	if (q->qdisc)
+@@ -486,14 +546,24 @@ static struct Qdisc_ops cbs_qdisc_ops __read_mostly = {
+ 	.owner		=	THIS_MODULE,
+ };
+ 
++static struct notifier_block cbs_device_notifier = {
++	.notifier_call = cbs_dev_notifier,
++};
++
+ static int __init cbs_module_init(void)
+ {
++	int err = register_netdevice_notifier(&cbs_device_notifier);
++
++	if (err)
++		return err;
++
+ 	return register_qdisc(&cbs_qdisc_ops);
+ }
+ 
+ static void __exit cbs_module_exit(void)
+ {
+ 	unregister_qdisc(&cbs_qdisc_ops);
++	unregister_netdevice_notifier(&cbs_device_notifier);
+ }
+ module_init(cbs_module_init)
+ module_exit(cbs_module_exit)
 -- 
 2.20.1
 
