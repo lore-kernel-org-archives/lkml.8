@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E937C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E5224690
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C0B24693
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194898;
-	bh=TbGXhwCyiiSgzBOyD8VskMJHmRt2e+werhnVDQj3bmQ=;
+	s=default; t=1579194908;
+	bh=xHcOnfwwM0uHhVJFzTJSecvsmr1mhXGmkpIu8atzssE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xnCLfE3xA/KabrNOQSYnKSe8ZrXgQ3riwjpifj9QNS9o67lo+hsubnkMlgRAsqfID
-	 0FcwUGxvZQiC6RGWxyA/LBa1dRHwWiSHB5bpVPCG6r4Vx2HtO68ga6703ezIGIZAEv
-	 827xHm6WNBOgUaI+4vKVp/Fq8ueikZGy//0Q+hew=
+	b=Qc3nCuuhsFGQoEh9veqkwpbT+PKxBO8OsdFuQgihTRSey48T2wtD+1HXhoFtjdZb6
+	 SDbqZdq3qgivi7s7yTssQJW2BP6Wk3gn3TNwHH1ile9QOPG8WJ2Xoo/5rryOov/u7F
+	 b7RuGJSEEW8y/DncCaQPSv/V0Bf7Qtt1Wsdwh84s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391098AbgAPRO5 (ORCPT
+        id S2391132AbgAPRPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34086 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:15:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391036AbgAPROh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:37 -0500
+        id S2391073AbgAPROn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 588912469D;
-        Thu, 16 Jan 2020 17:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341F22469D;
+        Thu, 16 Jan 2020 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194876;
-        bh=TbGXhwCyiiSgzBOyD8VskMJHmRt2e+werhnVDQj3bmQ=;
+        s=default; t=1579194883;
+        bh=xHcOnfwwM0uHhVJFzTJSecvsmr1mhXGmkpIu8atzssE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLR3WgDlUvBp8AxdEfOT9XiKpcDyUVbdqDK3h6YMYOrH26Ngka2R/o52dWuI/wh35
-         HjxGCe9eLSWqu3d1NN8CcR/H+feSWIDc8BmeAtEQ/pwcHjt5xjOg2ZzBO8MI4QfPP8
-         oqdEr450/zlvBP9ZjC2FW1CmX/Pj3qUGKIqRaA7g=
+        b=EGW2+6BaTMt9whcz48HDii99ywcxvHt/xu5ciqQpnfeZx0rHKH9eRS0SxynaDzk1K
+         WspeyjfQ2Mtq4DU/f56EYDhuPJHsXIpFM3xJFbH3FIP64qH17t9UesyJoZMprQihfd
+         +rv3JDav/RkVHjqNF2tojTIyEzeRAWLdT011D/aE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 666/671] samples/bpf: Fix broken xdp_rxq_info due to map order assumptions
-Date:   Thu, 16 Jan 2020 12:05:04 -0500
-Message-Id: <20200116170509.12787-403-sashal@kernel.org>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 671/671] arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
+Date:   Thu, 16 Jan 2020 12:05:09 -0500
+Message-Id: <20200116170509.12787-408-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,61 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit edbca120a8cdfa5a5793707e33497aa5185875ca ]
+[ Upstream commit 388a2772979b625042524d8b91280616ab4ff5ee ]
 
-In the days of using bpf_load.c the order in which the 'maps' sections
-were defines in BPF side (*_kern.c) file, were used by userspace side
-to identify the map via using the map order as an index. In effect the
-order-index is created based on the order the maps sections are stored
-in the ELF-object file, by the LLVM compiler.
-
-This have also carried over in libbpf via API bpf_map__next(NULL, obj)
-to extract maps in the order libbpf parsed the ELF-object file.
-
-When BTF based maps were introduced a new section type ".maps" were
-created. I found that the LLVM compiler doesn't create the ".maps"
-sections in the order they are defined in the C-file. The order in the
-ELF file is based on the order the map pointer is referenced in the code.
-
-This combination of changes lead to xdp_rxq_info mixing up the map
-file-descriptors in userspace, resulting in very broken behaviour, but
-without warning the user.
-
-This patch fix issue by instead using bpf_object__find_map_by_name()
-to find maps via their names. (Note, this is the ELF name, which can
-be longer than the name the kernel retains).
-
-Fixes: be5bca44aa6b ("samples: bpf: convert some XDP samples from bpf_load to libbpf")
-Fixes: 451d1dc886b5 ("samples: bpf: update map definition to new syntax BTF-defined map")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/157529025128.29832.5953245340679936909.stgit@firesoul
+Fixes: 33344e2111a3 ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/xdp_rxq_info_user.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-index ef26f882f92f..a55c81301c1a 100644
---- a/samples/bpf/xdp_rxq_info_user.c
-+++ b/samples/bpf/xdp_rxq_info_user.c
-@@ -472,9 +472,9 @@ int main(int argc, char **argv)
- 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
- 		return EXIT_FAIL;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index 785240733d94..bdf7c6c5983c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -413,6 +413,9 @@
+ 	bluetooth {
+ 		compatible = "brcm,bcm43438-bt";
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
+ 	};
+ };
  
--	map = bpf_map__next(NULL, obj);
--	stats_global_map = bpf_map__next(map, obj);
--	rx_queue_index_map = bpf_map__next(stats_global_map, obj);
-+	map =  bpf_object__find_map_by_name(obj, "config_map");
-+	stats_global_map = bpf_object__find_map_by_name(obj, "stats_global_map");
-+	rx_queue_index_map = bpf_object__find_map_by_name(obj, "rx_queue_index_map");
- 	if (!map || !stats_global_map || !rx_queue_index_map) {
- 		printf("finding a map in obj file failed\n");
- 		return EXIT_FAIL;
 -- 
 2.20.1
 
