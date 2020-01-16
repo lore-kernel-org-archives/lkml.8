@@ -2,261 +2,103 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566FAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30A3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D86F2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B9320748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579188765;
+	bh=2KRjK1V41mmh2xoe9yYAj/6+Sq91KlveZCbfKn1X4x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iJq56zgQD3aQwawW+AuFDWDXyjxipc9QxRalYtTFOVJfG2UOtxFl/xI7dcBgsWpiU
+	 7neSUrmlpAlJay7SVe8OC3gf4kTaWUX7j0UYWcG7U9Rfu8B4mYjFDzH5Hd+4UxvqEu
+	 I3kOTQ8KtorQIyMW8eEUvqICqOA2XwWl+aXhxgOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgAPPca (ORCPT
+        id S1728921AbgAPPco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:32:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53756 "EHLO mx2.suse.de"
+        Thu, 16 Jan 2020 10:32:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgAPPcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:32:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 289C86A2E5;
-        Thu, 16 Jan 2020 15:32:13 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 2/4] livepatch/selftest: Clean up shadow variable names and type
-Date:   Thu, 16 Jan 2020 16:31:43 +0100
-Message-Id: <20200116153145.2392-3-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200116153145.2392-1-pmladek@suse.com>
-References: <20200116153145.2392-1-pmladek@suse.com>
+        id S1726151AbgAPPco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 10:32:44 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 557F42081E;
+        Thu, 16 Jan 2020 15:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579188763;
+        bh=2KRjK1V41mmh2xoe9yYAj/6+Sq91KlveZCbfKn1X4x0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SldGcIE8mha8oKPdrIJb8hthCy0q6gcgCf67U/lpFtQ/XcsdwrAw3YY2m97nPOltB
+         FkCxoc/5h7MIqK71DwsGfEgIyrYs6sWdsl2zuc/d8GPBOM+D8muFITxxgPfy62MAfT
+         HCM5EYBCOfA46QiSbtnvOL1lIN51VTMvF2KX2IDM=
+Date:   Thu, 16 Jan 2020 15:32:38 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        jhugo@codeaurora.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
+Message-ID: <20200116153235.GA18909@willie-the-truck>
+References: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The shadow variable selftest is quite tricky. Especially it is problematic
-to understand what values are stored, returned, and printed.
+[+Jeffrey]
 
-Make it easier to understand by using "int *var, **sv" variables
-consistently everywhere instead of the generic "void *", "ret",
-and "ctor_data".
+On Thu, Jan 16, 2020 at 07:49:12PM +0530, Sai Prakash Ranjan wrote:
+> KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
+> are not affected by Spectre variant 2. Add them to spectre_v2
+> safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
+> vulnerability sysfs value.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  arch/arm64/include/asm/cputype.h | 6 ++++++
+>  arch/arm64/kernel/cpu_errata.c   | 3 +++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+> index aca07c2f6e6e..7219cddeba66 100644
+> --- a/arch/arm64/include/asm/cputype.h
+> +++ b/arch/arm64/include/asm/cputype.h
+> @@ -85,6 +85,9 @@
+>  #define QCOM_CPU_PART_FALKOR_V1		0x800
+>  #define QCOM_CPU_PART_FALKOR		0xC00
+>  #define QCOM_CPU_PART_KRYO		0x200
+> +#define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
+> +#define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
+> +#define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- lib/livepatch/test_klp_shadow_vars.c | 93 ++++++++++++++++++++----------------
- 1 file changed, 52 insertions(+), 41 deletions(-)
+Jeffrey is the only person I know who understands the CPU naming here, so
+I've added him in case this needs either renaming or extending to cover
+other CPUs. I wouldn't be at all surprised if we need a function call
+rather than a bunch of table entries...
 
-diff --git a/lib/livepatch/test_klp_shadow_vars.c b/lib/livepatch/test_klp_shadow_vars.c
-index fe5c413efe96..4e94f46234e8 100644
---- a/lib/livepatch/test_klp_shadow_vars.c
-+++ b/lib/livepatch/test_klp_shadow_vars.c
-@@ -60,36 +60,43 @@ static int ptr_id(void *ptr)
-  */
- static void *shadow_get(void *obj, unsigned long id)
- {
--	void *ret = klp_shadow_get(obj, id);
-+	int **sv;
- 
-+	sv = klp_shadow_get(obj, id);
- 	pr_info("klp_%s(obj=PTR%d, id=0x%lx) = PTR%d\n",
--		__func__, ptr_id(obj), id, ptr_id(ret));
-+		__func__, ptr_id(obj), id, ptr_id(sv));
- 
--	return ret;
-+	return sv;
- }
- 
- static void *shadow_alloc(void *obj, unsigned long id, size_t size,
- 			  gfp_t gfp_flags, klp_shadow_ctor_t ctor,
- 			  void *ctor_data)
- {
--	void *ret = klp_shadow_alloc(obj, id, size, gfp_flags, ctor,
--				     ctor_data);
-+	int *var = ctor_data;
-+	int **sv;
-+
-+	sv = klp_shadow_alloc(obj, id, size, gfp_flags, ctor, var);
- 	pr_info("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
- 		__func__, ptr_id(obj), id, size, &gfp_flags, ptr_id(ctor),
--		ptr_id(ctor_data), ptr_id(ret));
--	return ret;
-+		ptr_id(var), ptr_id(sv));
-+
-+	return sv;
- }
- 
- static void *shadow_get_or_alloc(void *obj, unsigned long id, size_t size,
- 				 gfp_t gfp_flags, klp_shadow_ctor_t ctor,
- 				 void *ctor_data)
- {
--	void *ret = klp_shadow_get_or_alloc(obj, id, size, gfp_flags, ctor,
--					    ctor_data);
-+	int *var = ctor_data;
-+	int **sv;
-+
-+	sv = klp_shadow_get_or_alloc(obj, id, size, gfp_flags, ctor, var);
- 	pr_info("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
- 		__func__, ptr_id(obj), id, size, &gfp_flags, ptr_id(ctor),
--		ptr_id(ctor_data), ptr_id(ret));
--	return ret;
-+		ptr_id(var), ptr_id(sv));
-+
-+	return sv;
- }
- 
- static void shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor)
-@@ -110,18 +117,22 @@ static void shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor)
- /* Shadow variable constructor - remember simple pointer data */
- static int shadow_ctor(void *obj, void *shadow_data, void *ctor_data)
- {
--	int **shadow_int = shadow_data;
--	*shadow_int = ctor_data;
-+	int **sv = shadow_data;
-+	int *var = ctor_data;
-+
-+	*sv = var;
- 	pr_info("%s: PTR%d -> PTR%d\n",
--		__func__, ptr_id(shadow_int), ptr_id(ctor_data));
-+		__func__, ptr_id(sv), ptr_id(var));
- 
- 	return 0;
- }
- 
- static void shadow_dtor(void *obj, void *shadow_data)
- {
-+	int **sv = shadow_data;
-+
- 	pr_info("%s(obj=PTR%d, shadow_data=PTR%d)\n",
--		__func__, ptr_id(obj), ptr_id(shadow_data));
-+		__func__, ptr_id(obj), ptr_id(sv));
- }
- 
- static int test_klp_shadow_vars_init(void)
-@@ -134,7 +145,7 @@ static int test_klp_shadow_vars_init(void)
- 	int var1, var2, var3, var4;
- 	int **sv1, **sv2, **sv3, **sv4;
- 
--	void *ret;
-+	int **sv;
- 
- 	ptr_id(NULL);
- 	ptr_id(&var1);
-@@ -146,8 +157,8 @@ static int test_klp_shadow_vars_init(void)
- 	 * With an empty shadow variable hash table, expect not to find
- 	 * any matches.
- 	 */
--	ret = shadow_get(obj, id);
--	if (!ret)
-+	sv = shadow_get(obj, id);
-+	if (!sv)
- 		pr_info("  got expected NULL result\n");
- 
- 	/*
-@@ -169,23 +180,23 @@ static int test_klp_shadow_vars_init(void)
- 	 * Verify we can find our new shadow variables and that they point
- 	 * to expected data.
- 	 */
--	ret = shadow_get(obj, id);
--	if (!ret)
-+	sv = shadow_get(obj, id);
-+	if (!sv)
- 		return -EINVAL;
--	if (ret == sv1 && *sv1 == &var1)
-+	if (sv == sv1 && *sv1 == &var1)
- 		pr_info("  got expected PTR%d -> PTR%d result\n",
- 			ptr_id(sv1), ptr_id(*sv1));
- 
--	ret = shadow_get(obj + 1, id);
--	if (!ret)
-+	sv = shadow_get(obj + 1, id);
-+	if (!sv)
- 		return -EINVAL;
--	if (ret == sv2 && *sv2 == &var2)
-+	if (sv == sv2 && *sv2 == &var2)
- 		pr_info("  got expected PTR%d -> PTR%d result\n",
- 			ptr_id(sv2), ptr_id(*sv2));
--	ret = shadow_get(obj, id + 1);
--	if (!ret)
-+	sv = shadow_get(obj, id + 1);
-+	if (!sv)
- 		return -EINVAL;
--	if (ret == sv3 && *sv3 == &var3)
-+	if (sv == sv3 && *sv3 == &var3)
- 		pr_info("  got expected PTR%d -> PTR%d result\n",
- 			ptr_id(sv3), ptr_id(*sv3));
- 
-@@ -197,10 +208,10 @@ static int test_klp_shadow_vars_init(void)
- 	if (!sv4)
- 		return -ENOMEM;
- 
--	ret = shadow_get_or_alloc(obj + 2, id, size, gfp_flags, shadow_ctor, &var4);
--	if (!ret)
-+	sv = shadow_get_or_alloc(obj + 2, id, size, gfp_flags, shadow_ctor, &var4);
-+	if (!sv)
- 		return -EINVAL;
--	if (ret == sv4 && *sv4 == &var4)
-+	if (sv == sv4 && *sv4 == &var4)
- 		pr_info("  got expected PTR%d -> PTR%d result\n",
- 			ptr_id(sv4), ptr_id(*sv4));
- 
-@@ -209,27 +220,27 @@ static int test_klp_shadow_vars_init(void)
- 	 * longer find them.
- 	 */
- 	shadow_free(obj, id, shadow_dtor);			/* sv1 */
--	ret = shadow_get(obj, id);
--	if (!ret)
-+	sv = shadow_get(obj, id);
-+	if (!sv)
- 		pr_info("  got expected NULL result\n");
- 
- 	shadow_free(obj + 1, id, shadow_dtor);			/* sv2 */
--	ret = shadow_get(obj + 1, id);
--	if (!ret)
-+	sv = shadow_get(obj + 1, id);
-+	if (!sv)
- 		pr_info("  got expected NULL result\n");
- 
- 	shadow_free(obj + 2, id, shadow_dtor);			/* sv4 */
--	ret = shadow_get(obj + 2, id);
--	if (!ret)
-+	sv = shadow_get(obj + 2, id);
-+	if (!sv)
- 		pr_info("  got expected NULL result\n");
- 
- 	/*
- 	 * We should still find an <id+1> variable.
- 	 */
--	ret = shadow_get(obj, id + 1);
--	if (!ret)
-+	sv = shadow_get(obj, id + 1);
-+	if (!sv)
- 		return -EINVAL;
--	if (ret == sv3 && *sv3 == &var3)
-+	if (sv == sv3 && *sv3 == &var3)
- 		pr_info("  got expected PTR%d -> PTR%d result\n",
- 			ptr_id(sv3), ptr_id(*sv3));
- 
-@@ -237,8 +248,8 @@ static int test_klp_shadow_vars_init(void)
- 	 * Free all the <id+1> variables, too.
- 	 */
- 	shadow_free_all(id + 1, shadow_dtor);			/* sv3 */
--	ret = shadow_get(obj, id);
--	if (!ret)
-+	sv = shadow_get(obj, id);
-+	if (!sv)
- 		pr_info("  shadow_get() got expected NULL result\n");
- 
- 
--- 
-2.16.4
+That said, the internet claims that KRYO4XX gold is based on Cortex-A76,
+and so CSV2 should be set...
 
+Will
