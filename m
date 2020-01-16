@@ -2,237 +2,258 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA5DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5582CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E742072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NR8T0dXf"
+	by mail.kernel.org (Postfix) with ESMTP id 18B812072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579216686;
+	bh=sRgzjZ104YRB9uSBtj2YBeetB98wSDi6XX2e4P7sNt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HfJciAa4WwKr8NrTm4H8GC/FgpfhtZDJsKHYi606AkRfcvDkfB8D15VpwH4eIrBVD
+	 dOQHnxWTh5fm0lbyqAJ/vYf5gQuXDSzlHAVBM5DR0fZJcsRXUBrudgb6s4OWRxPK1U
+	 l0SsFmEVrJRvbbQtEE7ElnXTZBlZbJIepVazzmB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390104AbgAPXM2 (ORCPT
+        id S2389749AbgAPXSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:12:28 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36778 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgAPXM2 (ORCPT
+        Thu, 16 Jan 2020 18:18:04 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42300 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729300AbgAPXSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:12:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so9030335plm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 15:12:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrsnGmD7k4euNniLrflPRPNagVyaAgLcBWPJAW+V44Q=;
-        b=NR8T0dXfdUVUwJqxHxbpqe7dQKDKAShl/Nx238yaSB4fITUPrX/k99w+/SNTUaIEMZ
-         FK6mraGxEGM5MyNmYP+JWWWAHC+1S8s2Up9ze9xrgNw6StM1OwjyB/bO0vDX+LimAZEt
-         Y8nJvJpRQVwb02vL6LBCZ8HsywXP0tuzgdA6A=
+        Thu, 16 Jan 2020 18:18:04 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 18so20514355oin.9;
+        Thu, 16 Jan 2020 15:18:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jrsnGmD7k4euNniLrflPRPNagVyaAgLcBWPJAW+V44Q=;
-        b=Jl0M+6+R08K21qBccdFfB17eBLFiPPP5QSqlFzskwDL2BlwebOb6/jfjiY24zgiK5y
-         yWiTk0lbOwyGn5bZwc5Tqf5/IqhXG3vp9vTtcM1Gtqk/GzHicmQJ+3d9x7bvnKk26IzT
-         8U2fc2Esw4SzexL86Alb2FupHrt1yAEh1z0OUclay1HdIcz7gU/MHyGAZWR6trGpwRuF
-         FxbzPifKP0rrd8Lwuo+RuPKi2l3Sh6IEYjlvbAW9b/X8WT8A05K5yyiTzKLfOO0z7U9Q
-         YP0fxVP5YWKgQP+T66x0rlHQKl98ymBGdjuj7AV2TRGFsI2gt8sRmDqzanGRyDK/OPro
-         oh8A==
-X-Gm-Message-State: APjAAAUnKaKcQfnI7/td0YHuWqWMBRMmYskl9erXt837UvYHsmCPyy8U
-        Ca4rgVnxZzkWayiQ4ANQbc24SQ==
-X-Google-Smtp-Source: APXvYqx22R84RCDJhB84vPYmaLLC1U7qP0HpuXKmLONtNcIIEF1ZBkCOu85pu3TTuNkcH+psBHl6TA==
-X-Received: by 2002:a17:90a:b318:: with SMTP id d24mr2165967pjr.142.1579216347569;
-        Thu, 16 Jan 2020 15:12:27 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b15sm26703081pft.58.2020.01.16.15.12.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 15:12:26 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Eduardo Valentin <edubezval@gmail.com>
-Subject: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency limits
-Date:   Thu, 16 Jan 2020 15:12:23 -0800
-Message-Id: <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AxYTHo1xbvVXlE9BL422q+BMWDP33NtgDNx+D8mvMAI=;
+        b=O91BqJMeQT3mV6q10+/UUIWBGYsyiwRTXSaQHGeXSy3uoBIy0f2+f4mtV7/iwy9h6O
+         kN16XniGJ2Wh1nYDmLN2ywBZdLRw7vSOeX5Gm8giQk0FU9Hai7YfCTbv6drNXtW7dE31
+         S/aruiY1VPxC/B8tH/TFw4aOP9m/aT+03MY+FkMF4+YZEiVjC1I9BiVE4vJWWRtlDXfL
+         yvoaZUSk7T+EodgUV6lMP/pFQK8BEL4VVHeOLpmT7J3MqWj02XLbPRcp85ebywYzPOOI
+         ti6dCcdJxVvYMxuL0E/vuMd/bcxjkBfjuNuWELjdngM5hjL6if5Z55CjdeIXa/jB7ieB
+         4Z8g==
+X-Gm-Message-State: APjAAAUHLcUUxk5kAX1+gqUdkk7dko+LFs0we4M7DCSJtscw7Nb1jJB+
+        vsfd6OwaRZ/bJE8XpP/gTw==
+X-Google-Smtp-Source: APXvYqzZJygX0GSguvTQM81bKzfOop6LBjuapSvKPn1gt2ZgNjWt9VE/fJhIO05KbnfYneSZhP3g+A==
+X-Received: by 2002:aca:c386:: with SMTP id t128mr1347117oif.32.1579216683166;
+        Thu, 16 Jan 2020 15:18:03 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e21sm7211797oib.16.2020.01.16.15.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 15:18:02 -0800 (PST)
+Received: (nullmailer pid 30679 invoked by uid 1000);
+        Thu, 16 Jan 2020 23:18:01 -0000
+Date:   Thu, 16 Jan 2020 17:18:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: dt-bindings: stm32: convert spdfirx to
+ json-schema
+Message-ID: <20200116231801.GA18958@bogus>
+References: <20200116105244.13485-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116105244.13485-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that devfreq supports limiting the frequency range of a device
-through PM QoS make use of it instead of disabling OPPs that should
-not be used.
+On Thu, Jan 16, 2020 at 11:52:44AM +0100, Olivier Moysan wrote:
+> Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+> Changes in v2:
+> - Add "additionalProperties: false"
+> - Also change minItems to 2 for dmas property, as both DMAs are required.
+> ---
+>  .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+>  .../bindings/sound/st,stm32-spdifrx.yaml      | 84 +++++++++++++++++++
+>  2 files changed, 84 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> deleted file mode 100644
+> index 33826f2459fa..000000000000
+> --- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+> -
+> -The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+> -IEC-60958 and IEC-61937.
+> -
+> -Required properties:
+> -  - compatible: should be "st,stm32h7-spdifrx"
+> -  - reg: cpu DAI IP base address and size
+> -  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+> -  - clock-names: must contain "kclk"
+> -  - interrupts: cpu DAI interrupt line
+> -  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+> -    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+> -  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+> -
+> -Optional properties:
+> -  - resets: Reference to a reset controller asserting the SPDIFRX
+> -
+> -The device node should contain one 'port' child node with one child 'endpoint'
+> -node, according to the bindings defined in Documentation/devicetree/bindings/
+> -graph.txt.
+> -
+> -Example:
+> -spdifrx: spdifrx@40004000 {
+> -	compatible = "st,stm32h7-spdifrx";
+> -	reg = <0x40004000 0x400>;
+> -	clocks = <&rcc SPDIFRX_CK>;
+> -	clock-names = "kclk";
+> -	interrupts = <97>;
+> -	dmas = <&dmamux1 2 93 0x400 0x0>,
+> -	       <&dmamux1 3 94 0x400 0x0>;
+> -	dma-names = "rx", "rx-ctrl";
+> -	pinctrl-0 = <&spdifrx_pins>;
+> -	pinctrl-names = "default";
+> -
+> -	spdifrx_port: port {
+> -		cpu_endpoint: endpoint {
+> -			remote-endpoint = <&codec_endpoint>;
+> -		};
+> -	};
+> -};
+> -
+> -spdif_in: spdif-in {
+> -	compatible = "linux,spdif-dir";
+> -
+> -	codec_port: port {
+> -		codec_endpoint: endpoint {
+> -			remote-endpoint = <&cpu_endpoint>;
+> -		};
+> -	};
+> -};
+> -
+> -soundcard {
+> -	compatible = "audio-graph-card";
+> -	dais = <&spdifrx_port>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> new file mode 100644
+> index 000000000000..e19313e7a552
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
+> +
+> +maintainers:
+> +  - Olivier Moysan <olivier.moysan@st.com>
+> +
+> +description: |
+> +  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+> +  IEC-60958 and IEC-61937.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32h7-spdifrx
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: kclk
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    description: |
+> +      Two DMA channel specifiers are requested:
+> +      - audio data capture DMA
+> +      - IEC status bits capture DMA
+> +      See STM32 DMA bindings /bindings/dma/stm32-dma.txt.
+> +    minItems: 2
+> +    maxItems: 2
 
-The switch from disabling OPPs to PM QoS introduces a subtle behavioral
-change in case of conflicting requests (min > max): PM QoS gives
-precedence to the MIN_FREQUENCY request, while higher OPPs disabled
-with dev_pm_opp_disable() would override MIN_FREQUENCY.
+dmas:
+  items:
+    - description: audio data capture DMA
+    - description: IEC status bits capture DMA
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
+And minItems/maxItems aren't necessary.
 
-Changes in v2:
-- added documentation for 'req_max_freq'
-- fixed jumps in of_devfreq_cooling_register_power() unwind
-- added comment about behavioral change to the commit message
+I'd probably just drop 'See STM32 DMA bindings 
+/bindings/dma/stm32-dma.txt' too, so we don't have to update this when 
+that file is converted to schema.
 
- drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
- 1 file changed, 23 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index ef59256887ff63..cbbaf5bc425d1a 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -24,11 +24,13 @@
- #include <linux/idr.h>
- #include <linux/slab.h>
- #include <linux/pm_opp.h>
-+#include <linux/pm_qos.h>
- #include <linux/thermal.h>
- 
- #include <trace/events/thermal.h>
- 
--#define SCALE_ERROR_MITIGATION 100
-+#define HZ_PER_KHZ		1000
-+#define SCALE_ERROR_MITIGATION	100
- 
- static DEFINE_IDA(devfreq_ida);
- 
-@@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
-  *		'utilization' (which is	'busy_time / 'total_time').
-  *		The 'res_util' range is from 100 to (power_table[state] * 100)
-  *		for the corresponding 'state'.
-+ * @req_max_freq:	PM QoS request for limiting the maximum frequency
-+ *			of the devfreq device.
-  */
- struct devfreq_cooling_device {
- 	int id;
-@@ -65,49 +69,9 @@ struct devfreq_cooling_device {
- 	struct devfreq_cooling_power *power_ops;
- 	u32 res_util;
- 	int capped_state;
-+	struct dev_pm_qos_request req_max_freq;
- };
- 
--/**
-- * partition_enable_opps() - disable all opps above a given state
-- * @dfc:	Pointer to devfreq we are operating on
-- * @cdev_state:	cooling device state we're setting
-- *
-- * Go through the OPPs of the device, enabling all OPPs until
-- * @cdev_state and disabling those frequencies above it.
-- */
--static int partition_enable_opps(struct devfreq_cooling_device *dfc,
--				 unsigned long cdev_state)
--{
--	int i;
--	struct device *dev = dfc->devfreq->dev.parent;
--
--	for (i = 0; i < dfc->freq_table_size; i++) {
--		struct dev_pm_opp *opp;
--		int ret = 0;
--		unsigned int freq = dfc->freq_table[i];
--		bool want_enable = i >= cdev_state ? true : false;
--
--		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
--
--		if (PTR_ERR(opp) == -ERANGE)
--			continue;
--		else if (IS_ERR(opp))
--			return PTR_ERR(opp);
--
--		dev_pm_opp_put(opp);
--
--		if (want_enable)
--			ret = dev_pm_opp_enable(dev, freq);
--		else
--			ret = dev_pm_opp_disable(dev, freq);
--
--		if (ret)
--			return ret;
--	}
--
--	return 0;
--}
--
- static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
- 					 unsigned long *state)
- {
-@@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
- 	struct devfreq *df = dfc->devfreq;
- 	struct device *dev = df->dev.parent;
--	int ret;
-+	unsigned long freq;
- 
- 	if (state == dfc->cooling_state)
- 		return 0;
-@@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- 	if (state >= dfc->freq_table_size)
- 		return -EINVAL;
- 
--	ret = partition_enable_opps(dfc, state);
--	if (ret)
--		return ret;
-+	freq = dfc->freq_table[state];
-+
-+	dev_pm_qos_update_request(&dfc->req_max_freq,
-+				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
- 
- 	dfc->cooling_state = state;
- 
-@@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 	if (err)
- 		goto free_dfc;
- 
--	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-+	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
-+				     DEV_PM_QOS_MAX_FREQUENCY,
-+				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
- 	if (err < 0)
- 		goto free_tables;
-+
-+	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
-+	if (err < 0)
-+		goto remove_qos_req;
- 	dfc->id = err;
- 
- 	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
-@@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 
- release_ida:
- 	ida_simple_remove(&devfreq_ida, dfc->id);
-+
-+remove_qos_req:
-+	dev_pm_qos_remove_request(&dfc->req_max_freq);
-+
- free_tables:
- 	kfree(dfc->power_table);
- 	kfree(dfc->freq_table);
-@@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
- 
- 	thermal_cooling_device_unregister(dfc->cdev);
- 	ida_simple_remove(&devfreq_ida, dfc->id);
-+	dev_pm_qos_remove_request(&dfc->req_max_freq);
- 	kfree(dfc->power_table);
- 	kfree(dfc->freq_table);
- 
--- 
-2.25.0.341.g760bfbb309-goog
-
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: rx-ctrl
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#sound-dai-cells"
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - dmas
+> +  - dma-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    spdifrx: spdifrx@40004000 {
+> +        compatible = "st,stm32h7-spdifrx";
+> +        #sound-dai-cells = <0>;
+> +        reg = <0x40004000 0x400>;
+> +        clocks = <&rcc SPDIF_K>;
+> +        clock-names = "kclk";
+> +        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> +        dmas = <&dmamux1 2 93 0x400 0x0>,
+> +               <&dmamux1 3 94 0x400 0x0>;
+> +        dma-names = "rx", "rx-ctrl";
+> +        pinctrl-0 = <&spdifrx_pins>;
+> +        pinctrl-names = "default";
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
