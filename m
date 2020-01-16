@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4A7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EDFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31BE2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D47206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201856;
-	bh=LyAd5DpyHj1XRDmuD4E3Uim2Q2Y30JGK/Z/7Gwdy5po=;
+	s=default; t=1579201859;
+	bh=CFG0zw8xGFG5ueKpnGzhAA1T+6jpreofWYPOdc1r7rI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGmi44uUwxtDyaiY0akUkFyqxSPdoNoz1/qYOwLX3nkt6vBGzL+9ZrmQRNRdEXfkq
-	 +DusWxHLICwTjdAKt6AlXrgsIornHpA98BnylfBKo/a8yZU/Lg3rbbA0SS9XZs0kah
-	 b7dLUZMVyVByozjyzyqiZu6kjyDj/KvlnBOmTnik=
+	b=KQfegU0FdBcvRZAYgh3AOvRwCcXQG2u+9wwfDFL67KXwazXHzLJc9FHT3VCyiAQAQ
+	 Z42hC/tlrz5dq3DMIu5xaW7Ih2JBilju63lqdtM2mr13sMxxqi+cPBaTGKUVAvi0Xr
+	 r5e0Lzgje7zYxHuixWQ9RHn0T0VDS28+TF9rnZbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389968AbgAPTKz (ORCPT
+        id S2387744AbgAPRAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:10:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49966 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387748AbgAPRAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:24 -0500
+        id S2387702AbgAPRAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26C3820728;
-        Thu, 16 Jan 2020 17:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A455F22525;
+        Thu, 16 Jan 2020 17:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194023;
-        bh=LyAd5DpyHj1XRDmuD4E3Uim2Q2Y30JGK/Z/7Gwdy5po=;
+        s=default; t=1579194012;
+        bh=CFG0zw8xGFG5ueKpnGzhAA1T+6jpreofWYPOdc1r7rI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0e5ajOOp7YYgQKT2WzTU4oyyCmterh+lbxtrOWD/lN4AvNoa+0Urcv/PmkgTzuxu
-         zO9KSHllbnfsfRViKJ/a17+tw1jwC9MC1199/P3pnNUEJxcmF0a5fOuTTayiPr9jb1
-         qb4ikZ41ZwC1AOKgqMPZmiGq7WSCeBxOf8UCq/SI=
+        b=Co6IPM50TBIo6LPt5479+u7+ySRP9LRatGghBWrgDJ7CgX1aTu6LFNTQf4VRVhYrA
+         XNnPoLDZHcz4gAtBCBeheyo4THVJz9Jph/w/hmAZube8Fng+j6QjtJtNdrB4efYVuI
+         mJqy6OEFj1c3Zpx6VPzHF1otkkmd0c3NDmMAUYOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 144/671] driver core: Do not resume suppliers under device_links_write_lock()
-Date:   Thu, 16 Jan 2020 11:50:53 -0500
-Message-Id: <20200116165940.10720-27-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Danny Alexander <danny.alexander@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 136/671] iwlwifi: mvm: fix A-MPDU reference assignment
+Date:   Thu, 16 Jan 2020 11:50:45 -0500
+Message-Id: <20200116165940.10720-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,78 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 5db25c9eb893df8f6b93c1d97b8006d768e1b6f5 ]
+[ Upstream commit 1f7698abedeeb3fef3cbcf78e16f925df675a179 ]
 
-It is incorrect to call pm_runtime_get_sync() under
-device_links_write_lock(), because it may end up trying to take
-device_links_read_lock() while resuming the target device and that
-will deadlock in the non-SRCU case, so avoid that by resuming the
-supplier device in device_link_add() before calling
-device_links_write_lock().
+The current code assigns the reference, and then goes to increment
+it if the toggle bit has changed. That way, we get
 
-Fixes: 21d5c57b3726 ("PM / runtime: Use device links")
-Fixes: baa8809f6097 ("PM / runtime: Optimize the use of device links")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Toggle  0  0  0  0  1  1  1  1
+ID      1  1  1  1  1  2  2  2
+
+Fix that by assigning the post-toggle ID to get
+
+Toggle  0  0  0  0  1  1  1  1
+ID      1  1  1  1  2  2  2  2
+
+Reported-by: Danny Alexander <danny.alexander@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: fbe4112791b8 ("iwlwifi: mvm: update mpdu metadata API")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 562385c47fa4..c228b4ebf554 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -201,12 +201,21 @@ struct device_link *device_link_add(struct device *consumer,
- 				    struct device *supplier, u32 flags)
- {
- 	struct device_link *link;
-+	bool rpm_put_supplier = false;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index 036d1d82d93e..77e369453642 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -1077,7 +1077,6 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 			he_phy_data = le64_to_cpu(desc->v1.he_phy_data);
  
- 	if (!consumer || !supplier ||
- 	    (flags & DL_FLAG_STATELESS &&
- 	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER | DL_FLAG_AUTOREMOVE_SUPPLIER)))
- 		return NULL;
- 
-+	if (flags & DL_FLAG_PM_RUNTIME && flags & DL_FLAG_RPM_ACTIVE) {
-+		if (pm_runtime_get_sync(supplier) < 0) {
-+			pm_runtime_put_noidle(supplier);
-+			return NULL;
-+		}
-+		rpm_put_supplier = true;
-+	}
-+
- 	device_links_write_lock();
- 	device_pm_lock();
- 
-@@ -250,13 +259,8 @@ struct device_link *device_link_add(struct device *consumer,
- 
- 	if (flags & DL_FLAG_PM_RUNTIME) {
- 		if (flags & DL_FLAG_RPM_ACTIVE) {
--			if (pm_runtime_get_sync(supplier) < 0) {
--				pm_runtime_put_noidle(supplier);
--				kfree(link);
--				link = NULL;
--				goto out;
--			}
- 			link->rpm_active = true;
-+			rpm_put_supplier = false;
+ 		rx_status->flag |= RX_FLAG_AMPDU_DETAILS;
+-		rx_status->ampdu_reference = mvm->ampdu_ref;
+ 		/* toggle is switched whenever new aggregation starts */
+ 		if (toggle_bit != mvm->ampdu_toggle) {
+ 			mvm->ampdu_ref++;
+@@ -1092,6 +1091,7 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 						RX_FLAG_AMPDU_EOF_BIT;
+ 			}
  		}
- 		pm_runtime_new_link(consumer);
- 		/*
-@@ -328,6 +332,10 @@ struct device_link *device_link_add(struct device *consumer,
-  out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
-+
-+	if (rpm_put_supplier)
-+		pm_runtime_put(supplier);
-+
- 	return link;
- }
- EXPORT_SYMBOL_GPL(device_link_add);
++		rx_status->ampdu_reference = mvm->ampdu_ref;
+ 	}
+ 
+ 	rcu_read_lock();
 -- 
 2.20.1
 
