@@ -2,99 +2,204 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8677CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB25FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AB32192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197808;
-	bh=vF+m8hLWBYBYcX86G22Uo9puk7KaPTDLePvT7xAYpJk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMLg3AOLE8V0wKa9GAzk7gKp4nx2/vIUCReWVtqlYngRwa9gWhptxUJAuT7prs/O0
-	 p6idTp5x1hCC4cAkrI+zO5aT5eSZdVvB7U126bfFD+HTqOuTTx1A4HtRcyAROKNvim
-	 dSqlBM/3BsMZbuV0Xu9Yi8SpAxHr7dOqmZLgkDx8=
+	by mail.kernel.org (Postfix) with ESMTP id 939DF2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393712AbgAPRkv (ORCPT
+        id S2406907AbgAPSDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:03:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:56900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393556AbgAPRj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A24524710;
-        Thu, 16 Jan 2020 17:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196395;
-        bh=vF+m8hLWBYBYcX86G22Uo9puk7KaPTDLePvT7xAYpJk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R01jFIGb0WxH+xGSZ+9xQy2HmiACQS+SpxIQ2I73//4w2fViwozpy9dkKIl7TtjW8
-         EWfQf0CWvYFmCoMD6HwR4zQpEXKdxYOfLzPR1DMkUhK4nBv51gkXTh8faM0msoZnR0
-         KCtdZ++nnjojnztLKqWUFOag6xF4XxPm6FbhD0hw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 174/251] ALSA: aoa: onyx: always initialize register read value
-Date:   Thu, 16 Jan 2020 12:35:23 -0500
-Message-Id: <20200116173641.22137-134-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
-References: <20200116173641.22137-1-sashal@kernel.org>
+        id S2393641AbgAPSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:03:34 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF3BD31B;
+        Thu, 16 Jan 2020 10:03:33 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE2C73F534;
+        Thu, 16 Jan 2020 10:03:32 -0800 (PST)
+Date:   Thu, 16 Jan 2020 18:03:26 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+Message-ID: <20200116180326.47c93ce2@donnerap.cambridge.arm.com>
+In-Reply-To: <CH2PR02MB70008D24DA7D1426E8A71013C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-4-andre.przywara@arm.com>
+        <CH2PR02MB7000F64AB27D352E00DC77A7C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+        <20200110154328.6676215f@donnerap.cambridge.arm.com>
+        <CH2PR02MB70008D24DA7D1426E8A71013C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes@sipsolutions.net>
+On Fri, 10 Jan 2020 17:05:45 +0000
+Radhey Shyam Pandey <radheys@xilinx.com> wrote:
 
-[ Upstream commit f474808acb3c4b30552d9c59b181244e0300d218 ]
+Hi,
 
-A lot of places in the driver use onyx_read_register() without
-checking the return value, and it's been working OK for ~10 years
-or so, so probably never fails ... Rather than trying to check the
-return value everywhere, which would be relatively intrusive, at
-least make sure we don't use an uninitialized value.
+> > -----Original Message-----
+> > From: Andre Przywara <andre.przywara@arm.com>
+> > Sent: Friday, January 10, 2020 9:13 PM
+> > To: Radhey Shyam Pandey <radheys@xilinx.com>
+> > Cc: David S . Miller <davem@davemloft.net>; Michal Simek
+> > <michals@xilinx.com>; Robert Hancock <hancock@sedsystems.ca>;
+> > netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+> > 
+> > On Fri, 10 Jan 2020 15:14:46 +0000
+> > Radhey Shyam Pandey <radheys@xilinx.com> wrote:
+> > 
+> > Hi Radhey,
+> > 
+> > thanks for having a look!
+> >   
+> > > > -----Original Message-----
+> > > > From: Andre Przywara <andre.przywara@arm.com>
+> > > > Sent: Friday, January 10, 2020 5:24 PM
+> > > > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> > > > <radheys@xilinx.com>
+> > > > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> > > > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> > > > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > > > Subject: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+> > > >
+> > > > When axienet_dma_bd_init() bails out during the initialisation process,
+> > > > it might do so with parts of the structure already allocated and
+> > > > initialised, while other parts have not been touched yet. Before
+> > > > returning in this case, we call axienet_dma_bd_release(), which does not
+> > > > take care of this corner case.
+> > > > This is most obvious by the first loop happily dereferencing
+> > > > lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
+> > > >
+> > > > Make sure we only unmap or free already allocated structures, by:
+> > > > - directly returning with -ENOMEM if nothing has been allocated at all
+> > > > - checking for lp->rx_bd_v to be non-NULL *before* using it
+> > > > - only unmapping allocated DMA RX regions
+> > > >
+> > > > This avoids NULL pointer dereferences when initialisation fails.
+> > > >
+> > > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > > > ---
+> > > >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 43 ++++++++++++-------
+> > > >  1 file changed, 28 insertions(+), 15 deletions(-)
+> > > >
+> > > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > > index 97482cf093ce..7e90044cf2d9 100644
+> > > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > > @@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct
+> > > > net_device *ndev)
+> > > >  	int i;
+> > > >  	struct axienet_local *lp = netdev_priv(ndev);
+> > > >
+> > > > +	/* If we end up here, tx_bd_v must have been DMA allocated. */
+> > > > +	dma_free_coherent(ndev->dev.parent,
+> > > > +			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
+> > > > +			  lp->tx_bd_v,
+> > > > +			  lp->tx_bd_p);
+> > > > +
+> > > > +	if (!lp->rx_bd_v)
+> > > > +		return;
+> > > > +
+> > > >  	for (i = 0; i < lp->rx_bd_num; i++) {
+> > > > -		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
+> > > > -				 lp->max_frm_size, DMA_FROM_DEVICE);
+> > > > +		/* A NULL skb means this descriptor has not been initialised
+> > > > +		 * at all.
+> > > > +		 */
+> > > > +		if (!lp->rx_bd_v[i].skb)
+> > > > +			break;
+> > > > +
+> > > >  		dev_kfree_skb(lp->rx_bd_v[i].skb);
+> > > > -	}
+> > > >
+> > > > -	if (lp->rx_bd_v) {
+> > > > -		dma_free_coherent(ndev->dev.parent,
+> > > > -				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+> > > > -				  lp->rx_bd_v,
+> > > > -				  lp->rx_bd_p);
+> > > > -	}
+> > > > -	if (lp->tx_bd_v) {
+> > > > -		dma_free_coherent(ndev->dev.parent,
+> > > > -				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
+> > > > -				  lp->tx_bd_v,
+> > > > -				  lp->tx_bd_p);
+> > > > +		/* For each descriptor, we programmed cntrl with the (non-
+> > > > zero)
+> > > > +		 * descriptor size, after it had been successfully allocated.
+> > > > +		 * So a non-zero value in there means we need to unmap it.
+> > > > +		 */  
+> > >  
+> > > > +		if (lp->rx_bd_v[i].cntrl)  
+> > >
+> > > I think it should ok to unmap w/o any check?  
+> > 
+> > Do you mean because .phys would be 0 if not initialised? AFAIK 0 can be a
+> > valid DMA address, so there is no special check for that, and unmapping
+> > DMA address 0 will probably go wrong at some point. So it's unlike
+> > kfree(NULL).  
+> 
+> I mean if skb allocation is successful in _dma_bd_init then in release path
+> we can assume .phys is always a valid address and skip rx_bd_v[i].cntrl
+> check.
 
-Fixes: f3d9478b2ce4 ("[ALSA] snd-aoa: add snd-aoa")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/aoa/codecs/onyx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I don't think we can assume this. If the skb allocation succeeded, but then the dma_map_single failed (which we check with dma_mapping_error()), we would end up with a valid skb, but an uninitialised phys DMA address in the registers. That's why I set .cntrl only after having checked the dma_map_single() result.
 
-diff --git a/sound/aoa/codecs/onyx.c b/sound/aoa/codecs/onyx.c
-index a04edff8b729..ae50d59fb810 100644
---- a/sound/aoa/codecs/onyx.c
-+++ b/sound/aoa/codecs/onyx.c
-@@ -74,8 +74,10 @@ static int onyx_read_register(struct onyx *onyx, u8 reg, u8 *value)
- 		return 0;
- 	}
- 	v = i2c_smbus_read_byte_data(onyx->i2c, reg);
--	if (v < 0)
-+	if (v < 0) {
-+		*value = 0;
- 		return -1;
-+	}
- 	*value = (u8)v;
- 	onyx->cache[ONYX_REG_CONTROL-FIRSTREGISTER] = *value;
- 	return 0;
--- 
-2.20.1
+Or am I missing something?
+
+Cheers,
+Andre
+ 
+> > > > +			dma_unmap_single(ndev->dev.parent, lp-  
+> > > > >rx_bd_v[i].phys,  
+> > > > +					 lp->max_frm_size,
+> > > > DMA_FROM_DEVICE);
+> > > >  	}
+> > > > +
+> > > > +	dma_free_coherent(ndev->dev.parent,
+> > > > +			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+> > > > +			  lp->rx_bd_v,
+> > > > +			  lp->rx_bd_p);
+> > > >  }
+> > > >
+> > > >  /**
+> > > > @@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct net_device
+> > > > *ndev)
+> > > >  					 sizeof(*lp->tx_bd_v) * lp-  
+> > > > >tx_bd_num,  
+> > > >  					 &lp->tx_bd_p, GFP_KERNEL);
+> > > >  	if (!lp->tx_bd_v)
+> > > > -		goto out;
+> > > > +		return -ENOMEM;
+> > > >
+> > > >  	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
+> > > >  					 sizeof(*lp->rx_bd_v) * lp-  
+> > > > >rx_bd_num,  
+> > > > --
+> > > > 2.17.1  
+> > >  
+> 
 
