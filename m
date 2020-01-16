@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3C6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1934AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 389A32073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE292087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217116;
-	bh=NSPwKSCXXk+sKxxvdvO/ts9c48CH8XGxM2OgPCbg3Cg=;
+	s=default; t=1579217119;
+	bh=m8xS/QdXqDzMIWCYpmKHpbVJ73ewjXOb5tJMfMZoxEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zarbppk1IDgCcnaudRNexslRq2l1k9wBPzZENganGT/+rans7CWzRUt/wK5bA0N0j
-	 u2gFG7L1e41bnBzuFxx7eFh5R/z3cjCvPyA9qIHEq9Y6+iNbw2YiSBgnnaScnNe+Fb
-	 fu2jB1grdpQVPjXWseH0lyjge4t6/3rfX5P/gEDA=
+	b=HWeAzw/6wahG63jPt8RiRs26tFPBsrHrZMxxXA5lTd8Dc0d8B+rtv3P3o6+50PSoO
+	 JiD8/p2kIaOxnK6MJByS75Yk6Ivd+TLthTfy+VM36EmTIo+WDHxY/wJVENBMs6Fbc6
+	 uzE2ibfL7skPgTWR21vkf+Qc6Vx8Z+GABzQWqpTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbgAPXZP (ORCPT
+        id S2387899AbgAPXZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54446 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:25:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730302AbgAPXZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:03 -0500
+        id S1729946AbgAPXZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14612072B;
-        Thu, 16 Jan 2020 23:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F6B22075B;
+        Thu, 16 Jan 2020 23:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217103;
-        bh=NSPwKSCXXk+sKxxvdvO/ts9c48CH8XGxM2OgPCbg3Cg=;
+        s=default; t=1579217105;
+        bh=m8xS/QdXqDzMIWCYpmKHpbVJ73ewjXOb5tJMfMZoxEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTkzVWGAb4I9O3/ozu4jtRl6zh3CrkgDUMmB7DB/LLp8+rr7bRIX+hrRsRTiLivEk
-         34QWp7JRaDeWz1/gt8FcYtZQZVJPOBEFGy8CyfiFYLlOmrF2Zqh+0Ro7qwh76jSZNL
-         acZ7pJQ5GQPpzXwF2/NcgJEmdMoQ8pY2FPvuaqkw=
+        b=cMPq7UJ24ApHpcc0QY5lT9iFVROdYZYYyTHoSorUL3K9L2jQT2rL5ImHJJhN1jSJ6
+         OusxBWdT3VrnVIzbZVW5M9G6jjBR4tPGCbzmJBvph7v50hAOFCa5CIAK3XEkMd2Nu8
+         gbr+efKwZVv0D+hFgtcvHzlrJodPtoLEDmL8+jRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.4 149/203] media: ov6650: Fix default format not applied on device probe
-Date:   Fri, 17 Jan 2020 00:17:46 +0100
-Message-Id: <20200116231757.928202568@linuxfoundation.org>
+Subject: [PATCH 5.4 150/203] media: rcar-vin: Fix incorrect return statement in rvin_try_format()
+Date:   Fri, 17 Jan 2020 00:17:47 +0100
+Message-Id: <20200116231758.004486179@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,49 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-commit 5439fa9263cb293e41168bc03711ec18c4f11cba upstream.
+commit a0862a40364e2f87109317e31c51c9d7bc89e33f upstream.
 
-It is not clear what pixel format is actually configured in hardware on
-reset.  MEDIA_BUS_FMT_YUYV8_2X8, assumed on device probe since the
-driver was intiially submitted, is for sure not the one.
+While refactoring code the return statement became corrupted, fix it by
+returning the correct return code.
 
-Fix it by explicitly applying a known, driver default frame format just
-after initial device reset.
-
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reported-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Fixes: 897e371389e77514 ("media: rcar-vin: simplify how formats are set and reset"
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov6650.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/platform/rcar-vin/rcar-v4l2.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -877,6 +877,11 @@ static int ov6650_video_probe(struct v4l
- 	ret = ov6650_reset(client);
- 	if (!ret)
- 		ret = ov6650_prog_dflt(client);
-+	if (!ret) {
-+		struct v4l2_mbus_framefmt mf = ov6650_def_fmt;
-+
-+		ret = ov6650_s_fmt(sd, &mf);
-+	}
- 	if (!ret)
- 		ret = v4l2_ctrl_handler_setup(&priv->hdl);
+--- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
++++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+@@ -208,6 +208,7 @@ static int rvin_try_format(struct rvin_d
+ 	ret = v4l2_subdev_call(sd, pad, set_fmt, pad_cfg, &format);
+ 	if (ret < 0 && ret != -ENOIOCTLCMD)
+ 		goto done;
++	ret = 0;
  
-@@ -1031,8 +1036,6 @@ static int ov6650_probe(struct i2c_clien
- 	priv->rect.top	  = DEF_VSTRT << 1;
- 	priv->rect.width  = W_CIF;
- 	priv->rect.height = H_CIF;
--	priv->half_scale  = false;
--	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
+ 	v4l2_fill_pix_format(pix, &format.format);
  
- 	/* Hardware default frame interval */
- 	priv->tpf.numerator   = GET_CLKRC_DIV(DEF_CLKRC);
+@@ -242,7 +243,7 @@ static int rvin_try_format(struct rvin_d
+ done:
+ 	v4l2_subdev_free_pad_config(pad_cfg);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int rvin_querycap(struct file *file, void *priv,
 
 
