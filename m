@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE25C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF74AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC43B2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF6E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199910;
-	bh=6z52yvYtN4PgC4snKq0U9AwSafv+Pt5ZFMUFZUObv7s=;
+	s=default; t=1579199914;
+	bh=zC4D4MYBaF72dGuCGXktAmFfdxLO8JRLMOOUy13Gxfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z6feClX2JoYSLaYmTqGxtphPF9ZzGzQNLovp3+sV1kBmBY32dE7mI1JRfnrDq3xA6
-	 PjefGs3ZeLyWHe9h3jcdepo152QyKp4n9grKfgrokURi0CcE467s1Tz17SHM4OY/VX
-	 +l9PqNRceh68msUCq4+U7Ku/cW6Mod1lVrFWjs94=
+	b=jKZPlQ5NaIRrqGME8p8Yd/R0VeFfLaLmnINlCu9w30pRiWcrMpnSd2M69984Qkl7E
+	 2XTGkMweV+Y6KOczXMf1xbed2XxsrLCrUCuRf7SDExYlVZ0OhTr/TLULpZwh/CXtkL
+	 3a0i1weLlfLau8ZP46gPwJrydTeLM5OUtjAN8h+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390133AbgAPRM2 (ORCPT
+        id S2436871AbgAPSid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:38:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389851AbgAPRMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:25 -0500
+        id S2390482AbgAPRM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409CD24692;
-        Thu, 16 Jan 2020 17:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E87C324696;
+        Thu, 16 Jan 2020 17:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194744;
-        bh=6z52yvYtN4PgC4snKq0U9AwSafv+Pt5ZFMUFZUObv7s=;
+        s=default; t=1579194747;
+        bh=zC4D4MYBaF72dGuCGXktAmFfdxLO8JRLMOOUy13Gxfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cem/SlXrpFpYJFF73kgZVTOrYKJJK5X3I7ld2AO5EjkoEttP6IKR/wzgiLQe/dKTu
-         /DnR3AhOIYHm+3eTjH/jr6B+trnnPxQhxquNkVgaNwJ455IUtZPsz5Ib1tww1T3Pxw
-         PJe8XEauT1hdDslurrbXFqNDQF0VtE0yaDpKjvCc=
+        b=zy1tBCr/sw95Cj9boHnC8dpeHEKKB47+3Bfu69d4pYBL5w6zN1IkFXoDFo91G7WvH
+         sBsxFmzFW096lXF4IxoBJR904GsG1UdE3oJTmTN1FNwvBK3B7KXJGGwMe+8qbR0fl7
+         MHdjtD36VPmG7+NV4QptEtKpL+gaLhufuv68wIDQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 574/671] nvme: retain split access workaround for capability reads
-Date:   Thu, 16 Jan 2020 12:03:32 -0500
-Message-Id: <20200116170509.12787-311-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 576/671] rxrpc: Fix trace-after-put looking at the put connection record
+Date:   Thu, 16 Jan 2020 12:03:34 -0500
+Message-Id: <20200116170509.12787-313-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,55 +59,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
+[ Upstream commit 4c1295dccc0afe0905b6ca4c62ade7f2406f2cfb ]
 
-Commit 7fd8930f26be4
+rxrpc_put_*conn() calls trace_rxrpc_conn() after they have done the
+decrement of the refcount - which looks at the debug_id in the connection
+record.  But unless the refcount was reduced to zero, we no longer have the
+right to look in the record and, indeed, it may be deleted by some other
+thread.
 
-  "nvme: add a common helper to read Identify Controller data"
+Fix this by getting the debug_id out before decrementing the refcount and
+then passing that into the tracepoint.
 
-has re-introduced an issue that we have attempted to work around in the
-past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
-
-The problem is that some PCIe NVMe controllers do not implement 64-bit
-outbound accesses correctly, which is why the commit above switched
-to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
-the code.
-
-In the mean time, the NVMe subsystem has been refactored, and now calls
-into the PCIe support layer for NVMe via a .reg_read64() method, which
-fails to use lo_hi_readq(), and thus reintroduces the problem that the
-workaround above aimed to address.
-
-Given that, at the moment, .reg_read64() is only used to read the
-capability register [which is known to tolerate split reads], let's
-switch .reg_read64() to lo_hi_readq() as well.
-
-This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
-DesignWare PCIe host controller.
-
-Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 363deeab6d0f ("rxrpc: Add connection tracepoint and client conn state tracepoint")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/trace/events/rxrpc.h |  6 +++---
+ net/rxrpc/call_accept.c      |  2 +-
+ net/rxrpc/conn_client.c      |  6 ++++--
+ net/rxrpc/conn_object.c      | 13 +++++++------
+ net/rxrpc/conn_service.c     |  2 +-
+ 5 files changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 124f41157173..3c68a5b35ec1 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2396,7 +2396,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
+diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
+index a08916eb7615..0924119bcfa4 100644
+--- a/include/trace/events/rxrpc.h
++++ b/include/trace/events/rxrpc.h
+@@ -554,10 +554,10 @@ TRACE_EVENT(rxrpc_peer,
+ 	    );
  
- static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ TRACE_EVENT(rxrpc_conn,
+-	    TP_PROTO(struct rxrpc_connection *conn, enum rxrpc_conn_trace op,
++	    TP_PROTO(unsigned int conn_debug_id, enum rxrpc_conn_trace op,
+ 		     int usage, const void *where),
+ 
+-	    TP_ARGS(conn, op, usage, where),
++	    TP_ARGS(conn_debug_id, op, usage, where),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,	conn		)
+@@ -567,7 +567,7 @@ TRACE_EVENT(rxrpc_conn,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->conn = conn->debug_id;
++		    __entry->conn = conn_debug_id;
+ 		    __entry->op = op;
+ 		    __entry->usage = usage;
+ 		    __entry->where = where;
+diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
+index 8079aacaecac..c5566bc4aaca 100644
+--- a/net/rxrpc/call_accept.c
++++ b/net/rxrpc/call_accept.c
+@@ -88,7 +88,7 @@ static int rxrpc_service_prealloc_one(struct rxrpc_sock *rx,
+ 		smp_store_release(&b->conn_backlog_head,
+ 				  (head + 1) & (size - 1));
+ 
+-		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
++		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
+ 				 atomic_read(&conn->usage), here);
+ 	}
+ 
+diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
+index 3dbb126e6060..38d548532024 100644
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -217,7 +217,8 @@ rxrpc_alloc_client_connection(struct rxrpc_conn_parameters *cp, gfp_t gfp)
+ 	rxrpc_get_local(conn->params.local);
+ 	key_get(conn->params.key);
+ 
+-	trace_rxrpc_conn(conn, rxrpc_conn_new_client, atomic_read(&conn->usage),
++	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_client,
++			 atomic_read(&conn->usage),
+ 			 __builtin_return_address(0));
+ 	trace_rxrpc_client(conn, -1, rxrpc_client_alloc);
+ 	_leave(" = %p", conn);
+@@ -989,11 +990,12 @@ rxrpc_put_one_client_conn(struct rxrpc_connection *conn)
+ void rxrpc_put_client_conn(struct rxrpc_connection *conn)
  {
--	*val = readq(to_nvme_dev(ctrl)->bar + off);
-+	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
- 	return 0;
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id = conn->debug_id;
+ 	int n;
+ 
+ 	do {
+ 		n = atomic_dec_return(&conn->usage);
+-		trace_rxrpc_conn(conn, rxrpc_conn_put_client, n, here);
++		trace_rxrpc_conn(debug_id, rxrpc_conn_put_client, n, here);
+ 		if (n > 0)
+ 			return;
+ 		ASSERTCMP(n, >=, 0);
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 004a6eb529bc..f338efd2880a 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -272,7 +272,7 @@ bool rxrpc_queue_conn(struct rxrpc_connection *conn)
+ 	if (n == 0)
+ 		return false;
+ 	if (rxrpc_queue_work(&conn->processor))
+-		trace_rxrpc_conn(conn, rxrpc_conn_queued, n + 1, here);
++		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_queued, n + 1, here);
+ 	else
+ 		rxrpc_put_connection(conn);
+ 	return true;
+@@ -287,7 +287,7 @@ void rxrpc_see_connection(struct rxrpc_connection *conn)
+ 	if (conn) {
+ 		int n = atomic_read(&conn->usage);
+ 
+-		trace_rxrpc_conn(conn, rxrpc_conn_seen, n, here);
++		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_seen, n, here);
+ 	}
  }
  
+@@ -299,7 +299,7 @@ void rxrpc_get_connection(struct rxrpc_connection *conn)
+ 	const void *here = __builtin_return_address(0);
+ 	int n = atomic_inc_return(&conn->usage);
+ 
+-	trace_rxrpc_conn(conn, rxrpc_conn_got, n, here);
++	trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n, here);
+ }
+ 
+ /*
+@@ -313,7 +313,7 @@ rxrpc_get_connection_maybe(struct rxrpc_connection *conn)
+ 	if (conn) {
+ 		int n = atomic_fetch_add_unless(&conn->usage, 1, 0);
+ 		if (n > 0)
+-			trace_rxrpc_conn(conn, rxrpc_conn_got, n + 1, here);
++			trace_rxrpc_conn(conn->debug_id, rxrpc_conn_got, n + 1, here);
+ 		else
+ 			conn = NULL;
+ 	}
+@@ -336,10 +336,11 @@ static void rxrpc_set_service_reap_timer(struct rxrpc_net *rxnet,
+ void rxrpc_put_service_conn(struct rxrpc_connection *conn)
+ {
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id = conn->debug_id;
+ 	int n;
+ 
+ 	n = atomic_dec_return(&conn->usage);
+-	trace_rxrpc_conn(conn, rxrpc_conn_put_service, n, here);
++	trace_rxrpc_conn(debug_id, rxrpc_conn_put_service, n, here);
+ 	ASSERTCMP(n, >=, 0);
+ 	if (n == 1)
+ 		rxrpc_set_service_reap_timer(conn->params.local->rxnet,
+@@ -423,7 +424,7 @@ void rxrpc_service_connection_reaper(struct work_struct *work)
+ 		 */
+ 		if (atomic_cmpxchg(&conn->usage, 1, 0) != 1)
+ 			continue;
+-		trace_rxrpc_conn(conn, rxrpc_conn_reap_service, 0, NULL);
++		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_reap_service, 0, NULL);
+ 
+ 		if (rxrpc_conn_is_client(conn))
+ 			BUG();
+diff --git a/net/rxrpc/conn_service.c b/net/rxrpc/conn_service.c
+index 80773a50c755..6da7c4bf15e8 100644
+--- a/net/rxrpc/conn_service.c
++++ b/net/rxrpc/conn_service.c
+@@ -138,7 +138,7 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
+ 		list_add_tail(&conn->proc_link, &rxnet->conn_proc_list);
+ 		write_unlock(&rxnet->conn_lock);
+ 
+-		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
++		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
+ 				 atomic_read(&conn->usage),
+ 				 __builtin_return_address(0));
+ 	}
 -- 
 2.20.1
 
