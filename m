@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F48BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CA8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 644922073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2152A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198064;
-	bh=++DyZzwaU3+Tne7dByo6McEq64qBoy+NzQR4o2xPAcY=;
+	s=default; t=1579198069;
+	bh=eKMbYS1eV6aH1R+JumnZaqRP3Om9A8sq8qmG+cOdrOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ph9D7KBnj4hm49RndavpS7MXQR5lhxeRpmArdCH9D3Vos53fbHLnaF4YJAp/MOPUQ
-	 2iICH9WrBSYApHTDGKc1fBTXE6EC74Up/2HW4sB9GTWqzjMktrwZu5/j3e6a+IT6xL
-	 ulHphq8usVhLaYGPnBX0qJpq/r2QloXMOnqR7uew=
+	b=i2gl5WB9nJxYNh5UJ/zDSwGR5hqvX8rBOVctej3iSPg8itJL3QUxRYcA96kpMfpPq
+	 DbV9j7UCb4YfEmSwOPPJ986J/QsH+/M4ZP6ogsYGO9wC8F4hfBfwjCQzvHb1h6IjPW
+	 3im6kWIEH9/nxjxcxkcAfw24gIquTORN0kqxkECA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393212AbgAPRjA (ORCPT
+        id S2406752AbgAPSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:07:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393326AbgAPRiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:19 -0500
+        id S2388313AbgAPRi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740BD246EC;
-        Thu, 16 Jan 2020 17:38:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B5E246E5;
+        Thu, 16 Jan 2020 17:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196298;
-        bh=++DyZzwaU3+Tne7dByo6McEq64qBoy+NzQR4o2xPAcY=;
+        s=default; t=1579196337;
+        bh=eKMbYS1eV6aH1R+JumnZaqRP3Om9A8sq8qmG+cOdrOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tc8/rJTOHcHkDM1vN/iU2TC6SEkCHOvuv9dyUYSBv///zWfFydBmuXL3T8q+pgO4S
-         RRkJLt/1TC/PyCu2L0k1m4vBDgsUvB/Z+wFUxmZdnuoKF5oKtMlERctp+UJTAZQYDf
-         t9XNfQ1mYTAoTvssu7p1Y3+afjo+ol1y4/OLQ6QU=
+        b=IaCvLozLAn2cYMM17j/ITPUorIAkvVrlFvH3Y0PCab5MGP0BvNkyir1TQ1yq/6025
+         QlRh4sq4nl5Si7vtT7Wu7V7Va69gksHi8TP2f49cR46K1QzFwOO7Xl/NA9FAtVGLDK
+         E7X7Jl6klYGaxpSSm107j4cB5bdLhSCxWL95O9g8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 110/251] soc/fsl/qe: Fix an error code in qe_pin_request()
-Date:   Thu, 16 Jan 2020 12:34:19 -0500
-Message-Id: <20200116173641.22137-70-sashal@kernel.org>
+        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 135/251] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
+Date:   Thu, 16 Jan 2020 12:34:44 -0500
+Message-Id: <20200116173641.22137-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,34 +63,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
+[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
 
-We forgot to set "err" on this error path.
+In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
+the problem is that "temp_index" can be negative.  This patch changes
+the types to unsigned to address this array underflow bug.
 
-Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
+Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
+
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qe/gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpbe.c | 2 +-
+ include/media/davinci/vpbe.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 0aaf429f31d5..b5a7107a9c0a 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -152,8 +152,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	if (err < 0)
- 		goto err0;
- 	gc = gpio_to_chip(err);
--	if (WARN_ON(!gc))
-+	if (WARN_ON(!gc)) {
-+		err = -ENODEV;
- 		goto err0;
-+	}
+diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
+index abce9c4a1a8e..59518c08528b 100644
+--- a/drivers/media/platform/davinci/vpbe.c
++++ b/drivers/media/platform/davinci/vpbe.c
+@@ -130,7 +130,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
+ 			     struct v4l2_output *output)
+ {
+ 	struct vpbe_config *cfg = vpbe_dev->cfg;
+-	int temp_index = output->index;
++	unsigned int temp_index = output->index;
  
- 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
- 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
+ 	if (temp_index >= cfg->num_outputs)
+ 		return -EINVAL;
+diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
+index 4376beeb28c2..5d8ceeddc797 100644
+--- a/include/media/davinci/vpbe.h
++++ b/include/media/davinci/vpbe.h
+@@ -96,7 +96,7 @@ struct vpbe_config {
+ 	struct encoder_config_info *ext_encoders;
+ 	/* amplifier information goes here */
+ 	struct amp_config_info *amp;
+-	int num_outputs;
++	unsigned int num_outputs;
+ 	/* Order is venc outputs followed by LCD and then external encoders */
+ 	struct vpbe_output *outputs;
+ };
 -- 
 2.20.1
 
