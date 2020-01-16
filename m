@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6148C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC055C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA0E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD44B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193299;
-	bh=waNVBhksyA0mkdyrEbwbIzA9lgS4ZemC8XaZvfRZVvY=;
+	s=default; t=1579193303;
+	bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RnORD1oADS6AMd11b8P+yuEXudTiUfHnkxO/KS8AN9iStceZ0JhHKxvAC39tFAXV7
-	 MXAXQMKYMM5JkR2SrRz5urBF4/2i7nzHyljygblYNwDr/L0qxq2Mqfjq97M/VLCsZ4
-	 GVGpGeOn/ptoNOvvu7L4VdMsr/NBJljRO4HiDPbc=
+	b=e27UCT0MtITcadtiRCB4kDl73vuTAK5QLWhkJWTkBJx2qUA8JrgvpT42SgKmPmBcG
+	 ArvpQz/m6tPsqnfow05llAk119YK08D12JxayWtUqJpYjDz5p38Aa0UI3QsRaY9QOi
+	 mU+RTbyf++JrsNuonaitydLoRa4DTAYPRlq/9jQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgAPQsS (ORCPT
+        id S1730216AbgAPQsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:48:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:48:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbgAPQsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:48:15 -0500
+        id S1729165AbgAPQsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:48:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9200B20663;
-        Thu, 16 Jan 2020 16:48:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33242081E;
+        Thu, 16 Jan 2020 16:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193295;
-        bh=waNVBhksyA0mkdyrEbwbIzA9lgS4ZemC8XaZvfRZVvY=;
+        s=default; t=1579193300;
+        bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vK8wcv5fslg2MCjEAi2BvW3XOTzKVtz9C6ocDvxK7Ioj4+kEvIt8uSPPhKgT+AK+o
-         mV7OvzGL+JkeQIlopiJ0/y1yAaZ2w+lZl5fGJ71di8J2bblT8ZmjimJWeEyMOo8gqD
-         R484xmrCC4/kZOVGzl2qcD0jHj2G5RRXCNFx2lb0=
+        b=bL7xFort8+3XdTHshSIfZ6mttOxwCDgLPlA8MS261EPR0YplPoQJqZWwcI8rlPy74
+         tnJK4LNo9UAjmNibvXTGx/4mqObYO2tXpYw90IrqYjr3CbJZSC8qvJRTgZT3tM6XJ7
+         R52hLM6nZbayrYw9w0/u2YCHiqiIg+HE6eX3Pu7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 068/205] clk: imx7ulp: Correct DDR clock mux options
-Date:   Thu, 16 Jan 2020 11:40:43 -0500
-Message-Id: <20200116164300.6705-68-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 069/205] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date:   Thu, 16 Jan 2020 11:40:44 -0500
+Message-Id: <20200116164300.6705-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,45 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 2e2b928a04bd74ea410da72bd60e1c5b06398276 ]
+[ Upstream commit 43b0a4b482478aa4fe7240230be74a79dee95679 ]
 
-In the latest reference manual Rev.0,06/2019, the DDR clock mux
-is extended to 2 bits, and the clock options are also changed,
-correct them accordingly.
+This is unused on cheza.  Delete the node to get ride of the reserved-
+memory section, and to avoid the driver from attempting to load a zap
+shader that doesn't exist every time it powers up the GPU.
 
-Fixes: b1260067ac3d ("clk: imx: add imx7ulp clk driver")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+This also avoids a massive amount of dmesg spam about missing zap fw:
+  msm ae00000.mdss: [drm:adreno_request_fw] *ERROR* failed to load
+qcom/a630_zap.mdt: -2
+  adreno 5000000.gpu: [drm:adreno_zap_shader_load] *ERROR* Unable to
+load a630_zap.mdt
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Fixes: 3fdeaee951aa ("arm64: dts: sdm845: Add zap shader region for GPU")
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/imx/clk-imx7ulp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
-index d2c49fbd0563..04a3ae979281 100644
---- a/drivers/clk/imx/clk-imx7ulp.c
-+++ b/drivers/clk/imx/clk-imx7ulp.c
-@@ -25,7 +25,7 @@ static const char * const spll_sels[]		= { "spll", "spll_pfd_sel", };
- static const char * const apll_pfd_sels[]	= { "apll_pfd0", "apll_pfd1", "apll_pfd2", "apll_pfd3", };
- static const char * const apll_sels[]		= { "apll", "apll_pfd_sel", };
- static const char * const scs_sels[]		= { "dummy", "sosc", "sirc", "firc", "dummy", "apll_sel", "spll_sel", "dummy", };
--static const char * const ddr_sels[]		= { "apll_pfd_sel", "upll", };
-+static const char * const ddr_sels[]		= { "apll_pfd_sel", "dummy", "dummy", "dummy", };
- static const char * const nic_sels[]		= { "firc", "ddr_clk", };
- static const char * const periph_plat_sels[]	= { "dummy", "nic1_bus_clk", "nic1_clk", "ddr_clk", "apll_pfd2", "apll_pfd1", "apll_pfd0", "upll", };
- static const char * const periph_bus_sels[]	= { "dummy", "sosc_bus_clk", "mpll", "firc_bus_clk", "rosc", "nic1_bus_clk", "nic1_clk", "spll_bus_clk", };
-@@ -119,7 +119,7 @@ static void __init imx7ulp_clk_scg1_init(struct device_node *np)
- 	clks[IMX7ULP_CLK_SYS_SEL]	= imx_clk_hw_mux2("scs_sel", base + 0x14, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
- 	clks[IMX7ULP_CLK_HSRUN_SYS_SEL] = imx_clk_hw_mux2("hsrun_scs_sel", base + 0x1c, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
- 	clks[IMX7ULP_CLK_NIC_SEL]	= imx_clk_hw_mux2("nic_sel", base + 0x40, 28, 1, nic_sels, ARRAY_SIZE(nic_sels));
--	clks[IMX7ULP_CLK_DDR_SEL]	= imx_clk_hw_mux_flags("ddr_sel", base + 0x30, 24, 1, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
-+	clks[IMX7ULP_CLK_DDR_SEL]	= imx_clk_hw_mux_flags("ddr_sel", base + 0x30, 24, 2, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 34881c0113cb..99a28d64ee62 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -165,6 +165,8 @@
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
++/delete-node/ &zap_shader;
++/delete-node/ &gpu_mem;
  
- 	clks[IMX7ULP_CLK_CORE_DIV]	= imx_clk_hw_divider_flags("divcore",	"scs_sel",  base + 0x14, 16, 4, CLK_SET_RATE_PARENT);
- 	clks[IMX7ULP_CLK_HSRUN_CORE_DIV] = imx_clk_hw_divider_flags("hsrun_divcore", "hsrun_scs_sel", base + 0x1c, 16, 4, CLK_SET_RATE_PARENT);
+ /* Increase the size from 120 MB to 128 MB */
+ &mpss_region {
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index f406a4340b05..2287354fef86 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2824,7 +2824,7 @@
+ 
+ 			qcom,gmu = <&gmu>;
+ 
+-			zap-shader {
++			zap_shader: zap-shader {
+ 				memory-region = <&gpu_mem>;
+ 			};
+ 
 -- 
 2.20.1
 
