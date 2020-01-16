@@ -2,240 +2,140 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3604AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDA7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0868F2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4EE2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:44:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lq3Y9xB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgAPKid (ORCPT
+        id S1726189AbgAPKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:38:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42464 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbgAPKic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:38:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 59757AF0D;
-        Thu, 16 Jan 2020 10:38:29 +0000 (UTC)
-References: <0000000000002b81b70590a83ad7@google.com> <20200114143244.20739-1-rpalethorpe@suse.com> <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
-User-agent: mu4e 1.2.0; emacs 26.3
-From:   Richard Palethorpe <rpalethorpe@suse.de>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Richard Palethorpe <rpalethorpe@suse.com>,
-        linux-can@vger.kernel.org,
-        syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tyler Hall <tylerwhall@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller@googlegroups.com
-Subject: Re: [PATCH] can, slip: Protect tty->disc_data access with RCU
-Reply-To: rpalethorpe@suse.de
-In-reply-to: <19d5e4c6-72f4-631f-2ccd-b5df660a5ef6@gmail.com>
-Date:   Thu, 16 Jan 2020 11:38:28 +0100
-Message-ID: <87v9pbit3v.fsf@our.domain.is.not.set>
+        Thu, 16 Jan 2020 05:44:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53966 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgAPKof (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:44:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ffWMRa7YOLneyqHMaGbNXGH6RxbN38wir+be0Sv7y+M=; b=Lq3Y9xB2Bd3Kp0n5zU+KNjt79
+        1pVaBXT0TaiUL2y5oVTgLjkGXT33LJ3TjzWJBbx4rX9CInv2x7xh6NaRD7+BvLU4+6eR7lb+n7P7h
+        8np2HdOARffxBBj8KpDbIk+8HqytN0g38rM+ikcUvNGtBqhAmnJNcXQe/UDZWU96MXhmzcG/wtRiu
+        9QlLP5g7HH+JNrHAdbMtd/sGQvGX+5wdiMthZ+HDLRGCD4jDYLqfHWbO4Roqb3h3IC3us4AJSCcOp
+        yG0YaSEtDkZT+4D8Bg3GvwtcmJnKtBU+3JZTnesBWgk5+KHl79vHPTkGFZu/WeArd44j+t3ibIMP1
+        lWaSbItOg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1is2da-00010V-S1; Thu, 16 Jan 2020 10:44:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C257A304BDF;
+        Thu, 16 Jan 2020 11:42:51 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 66AA8203D72A2; Thu, 16 Jan 2020 11:44:28 +0100 (CET)
+Date:   Thu, 16 Jan 2020 11:44:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
+        prime.zeng@hisilicon.com, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, mingo@kernel.org
+Subject: Re: [PATCH] sched/topology: Assert non-NUMA topology masks don't
+ (partially) overlap
+Message-ID: <20200116104428.GP2827@hirez.programming.kicks-ass.net>
+References: <20200115160915.22575-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115160915.22575-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jan 15, 2020 at 04:09:15PM +0000, Valentin Schneider wrote:
+> A "less intrusive" alternative is to assert the sd->groups list doesn't get
+> re-written, which is a symptom of such bogus topologies. I've briefly
+> tested this, you can have a look at it here:
+> 
+>   http://www.linux-arm.org/git?p=linux-vs.git;a=commit;h=e0ead72137332cbd3d69c9055ab29e6ffae5b37b
 
-Eric Dumazet <eric.dumazet@gmail.com> writes:
+Something like that might still make sense. Can't never be too careful,
+right ;-)
 
-> On 1/14/20 6:32 AM, Richard Palethorpe wrote:
->> write_wakeup can happen in parallel with close where tty->disc_data is set
->> to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
->> is an atomic operation. Otherwise accessing tty->disc_data could result in
->> a NULL pointer deref or access to some random location.
->>
->> This problem was found by Syzkaller on slcan, but the same issue appears to
->> exist in slip where slcan was copied from.
->>
->> A fix which didn't use RCU was posted by Hillf Danton.
->>
->> Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
->> Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
->> Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
->> Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
->> Cc: Wolfgang Grandegger <wg@grandegger.com>
->> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Tyler Hall <tylerwhall@gmail.com>
->> Cc: netdev@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: syzkaller@googlegroups.com
->> ---
->>
->> Note, that mabye RCU should also applied to receive_buf as that also happens
->> in interrupt context. So if the pointer assignment is split by the compiler
->> then sl may point somewhere unexpected?
->>
->>  drivers/net/can/slcan.c | 11 +++++++++--
->>  drivers/net/slip/slip.c | 11 +++++++++--
->>  2 files changed, 18 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
->> index 2e57122f02fb..ee029aae69d4 100644
->> --- a/drivers/net/can/slcan.c
->> +++ b/drivers/net/can/slcan.c
->> @@ -344,7 +344,14 @@ static void slcan_transmit(struct work_struct *work)
->>   */
->>  static void slcan_write_wakeup(struct tty_struct *tty)
->>  {
->> -	struct slcan *sl = tty->disc_data;
->> +	struct slcan *sl;
->> +
->> +	rcu_read_lock();
->> +	sl = rcu_dereference(tty->disc_data);
->> +	rcu_read_unlock();
->
-> This rcu_read_lock()/rcu_read_unlock() pair is not protecting anything.
->
-> Right after rcu_read_unlock(), sl validity can not be guaranteed.
->
->> +
->> +	if (!sl)
->> +		return;
->>
->>  	schedule_work(&sl->tx_work);
->>  }
->> @@ -644,7 +651,7 @@ static void slcan_close(struct tty_struct *tty)
->>  		return;
->>
->>  	spin_lock_bh(&sl->lock);
->> -	tty->disc_data = NULL;
->> +	rcu_assign_pointer(tty->disc_data, NULL);
->>  	sl->tty = NULL;
->>  	spin_unlock_bh(&sl->lock);
->
->
->
-> Where is the rcu grace period before freeing enforced ?
->
+>  kernel/sched/topology.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 6ec1e595b1d4..dfb64c08a407 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -1879,6 +1879,42 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
+>  	return sd;
+>  }
+>  
+> +/*
+> + * Ensure topology masks are sane, i.e. there are no conflicts (overlaps) for
+> + * any two given CPUs at this (non-NUMA) topology level.
+> + */
+> +static bool topology_span_sane(struct sched_domain_topology_level *tl,
+> +			      const struct cpumask *cpu_map, int cpu)
+> +{
+> +	int i;
+> +
+> +	/* NUMA levels are allowed to overlap */
+> +	if (tl->flags & SDTL_OVERLAP)
+> +		return true;
+> +
+> +	/*
+> +	 * Non-NUMA levels cannot partially overlap - they must be either
+> +	 * completely equal or completely disjoint. Otherwise we can end up
+> +	 * breaking the sched_group lists - i.e. a later get_group() pass
+> +	 * breaks the linking done for an earlier span.
+> +	 */
+> +	for_each_cpu(i, cpu_map) {
+> +		if (i == cpu)
+> +			continue;
+> +		/*
+> +		 * We should 'and' all those masks with 'cpu_map' to exactly
+> +		 * match the topology we're about to build, but that can only
+> +		 * remove CPUs, which only lessens our ability to detect
+> +		 * overlaps
+> +		 */
+> +		if (!cpumask_equal(tl->mask(cpu), tl->mask(i)) &&
+> +		    cpumask_intersects(tl->mask(cpu), tl->mask(i)))
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * Find the sched_domain_topology_level where all CPU capacities are visible
+>   * for all CPUs.
+> @@ -1975,6 +2011,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+>  				has_asym = true;
+>  			}
+>  
+> +			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
+> +				goto error;
+> +
+>  			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
+>  
+>  			if (tl == sched_domain_topology)
 
-Sorry that was dumb.
+This is O(nr_cpus), but then, that function already is, so I don't see a
+problem with this.
 
-I have respun the patch so it now schedules the work inside the RCU read
-lock and it synchronises before freeing the netdev.
-
-However sparse complains about the address space of the pointer. I guess
-if disc_data is to be protected by RCU then it should be marked as
-such...
-
-I suppose that at least the access in slip/slcan_receive_buf should also
-be protected by RCU? It seems like disc_data could be freed from
-underneath it by close.
-
-At any rate below is the updated patch FYI.
-
--- >8 --
-
-Subject: [PATCH v2] can, slip: Protect tty->disc_data access with RCU
-
-write_wakeup can happen in parallel with close where tty->disc_data is set
-to NULL. So we a) need to check if tty->disc_data is NULL and b) ensure it
-is an atomic operation. Otherwise accessing tty->disc_data could result in a
-NULL pointer deref or access to some random location.
-
-This problem was found by Syzkaller on slcan, but the same issue appears to
-exist in slip where slcan was copied from.
-
-A fix which didn't use RCU was posted by Hillf Danton.
-
-Fixes: 661f7fda21b1 ("slip: Fix deadlock in write_wakeup")
-Fixes: a8e83b17536a ("slcan: Port write_wakeup deadlock fix from slip")
-Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
-Signed-off-by: Richard Palethorpe <rpalethorpe@suse.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Tyler Hall <tylerwhall@gmail.com>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: syzkaller@googlegroups.com
----
- drivers/net/can/slcan.c | 12 ++++++++++--
- drivers/net/slip/slip.c | 12 ++++++++++--
- 2 files changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/can/slcan.c b/drivers/net/can/slcan.c
-index 2e57122f02fb..2f5c287eac95 100644
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -344,9 +344,16 @@ static void slcan_transmit(struct work_struct *work)
-  */
- static void slcan_write_wakeup(struct tty_struct *tty)
- {
--	struct slcan *sl = tty->disc_data;
-+	struct slcan *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	if (!sl)
-+		goto out;
-
- 	schedule_work(&sl->tx_work);
-+out:
-+	rcu_read_unlock();
- }
-
- /* Send a can_frame to a TTY queue. */
-@@ -644,10 +651,11 @@ static void slcan_close(struct tty_struct *tty)
- 		return;
-
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
-
-+	synchronize_rcu();
- 	flush_work(&sl->tx_work);
-
- 	/* Flush network side */
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index 2a91c192659f..61d7e0d1d77d 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -452,9 +452,16 @@ static void slip_transmit(struct work_struct *work)
-  */
- static void slip_write_wakeup(struct tty_struct *tty)
- {
--	struct slip *sl = tty->disc_data;
-+	struct slip *sl;
-+
-+	rcu_read_lock();
-+	sl = rcu_dereference(tty->disc_data);
-+	if (!sl)
-+		goto out;
-
- 	schedule_work(&sl->tx_work);
-+out:
-+	rcu_read_unlock();
- }
-
- static void sl_tx_timeout(struct net_device *dev)
-@@ -882,10 +889,11 @@ static void slip_close(struct tty_struct *tty)
- 		return;
-
- 	spin_lock_bh(&sl->lock);
--	tty->disc_data = NULL;
-+	rcu_assign_pointer(tty->disc_data, NULL);
- 	sl->tty = NULL;
- 	spin_unlock_bh(&sl->lock);
-
-+	synchronize_rcu();
- 	flush_work(&sl->tx_work);
-
- 	/* VSV = very important to remove timers */
---
-2.24.0
+I'll take it, thanks!
