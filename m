@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B67EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EC8206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6AB206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgAPMgm (ORCPT
+        id S1726378AbgAPMgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:36:42 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39059 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgAPMgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 07:36:38 -0500
+Received: from relay.sw.ru ([185.231.240.75]:39066 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgAPMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:36:37 -0500
 Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.92.3)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1is4Nc-0000ya-Th; Thu, 16 Jan 2020 15:36:08 +0300
-Subject: [PATCH block v2 3/3] loop: Add support for REQ_NOZERO
+        id 1is4NS-0000yP-4A; Thu, 16 Jan 2020 15:35:58 +0300
+Subject: [PATCH block v2 1/3] block: Add @flags argument to
+ bdev_write_zeroes_sectors()
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         martin.petersen@oracle.com, axboe@kernel.dk, tytso@mit.edu,
@@ -34,8 +35,8 @@ To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
         chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
         dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
-Date:   Thu, 16 Jan 2020 15:36:08 +0300
-Message-ID: <157917816871.88675.11513065461322095922.stgit@localhost.localdomain>
+Date:   Thu, 16 Jan 2020 15:35:58 +0300
+Message-ID: <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
 In-Reply-To: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
 References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
 User-Agent: StGit/0.19
@@ -47,61 +48,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support for new modifier of REQ_OP_WRITE_ZEROES command.
-This results in allocation extents in backing file instead
-of actual blocks zeroing.
+This is a preparation for next patch, which introduces
+a new flag BLKDEV_ZERO_ALLOCATE for calls, which need
+only allocation of blocks and don't need actual blocks
+zeroing.
 
+CC: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- drivers/block/loop.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ block/blk-lib.c                     |    6 +++---
+ drivers/md/dm-kcopyd.c              |    2 +-
+ drivers/target/target_core_iblock.c |    4 ++--
+ include/linux/blkdev.h              |    3 ++-
+ 4 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 739b372a5112..f9e5af7b2ee0 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -581,6 +581,15 @@ static int lo_rw_aio(struct loop_device *lo, struct loop_cmd *cmd,
+diff --git a/block/blk-lib.c b/block/blk-lib.c
+index 5f2c429d4378..3e38c93cfc53 100644
+--- a/block/blk-lib.c
++++ b/block/blk-lib.c
+@@ -224,7 +224,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
+ 		return -EPERM;
+ 
+ 	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
+-	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev);
++	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
+ 
+ 	if (max_write_zeroes_sectors == 0)
+ 		return -EOPNOTSUPP;
+@@ -362,7 +362,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+ 	sector_t bs_mask;
+ 	struct bio *bio;
+ 	struct blk_plug plug;
+-	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev);
++	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
+ 
+ 	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+ 	if ((sector | nr_sects) & bs_mask)
+@@ -391,7 +391,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+ 			try_write_zeroes = false;
+ 			goto retry;
+ 		}
+-		if (!bdev_write_zeroes_sectors(bdev)) {
++		if (!bdev_write_zeroes_sectors(bdev, 0)) {
+ 			/*
+ 			 * Zeroing offload support was indicated, but the
+ 			 * device reported ILLEGAL REQUEST (for some devices
+diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
+index 1bbe4a34ef4c..f1b8e7926dd4 100644
+--- a/drivers/md/dm-kcopyd.c
++++ b/drivers/md/dm-kcopyd.c
+@@ -831,7 +831,7 @@ void dm_kcopyd_copy(struct dm_kcopyd_client *kc, struct dm_io_region *from,
+ 		 */
+ 		job->rw = REQ_OP_WRITE_ZEROES;
+ 		for (i = 0; i < job->num_dests; i++)
+-			if (!bdev_write_zeroes_sectors(job->dests[i].bdev)) {
++			if (!bdev_write_zeroes_sectors(job->dests[i].bdev, 0)) {
+ 				job->rw = WRITE;
+ 				break;
+ 			}
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 51ffd5c002de..73a63e197bf5 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -117,7 +117,7 @@ static int iblock_configure_device(struct se_device *dev)
+ 	 * Enable write same emulation for IBLOCK and use 0xFFFF as
+ 	 * the smaller WRITE_SAME(10) only has a two-byte block count.
+ 	 */
+-	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd);
++	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd, 0);
+ 	if (max_write_zeroes_sectors)
+ 		dev->dev_attrib.max_write_same_len = max_write_zeroes_sectors;
+ 	else
+@@ -468,7 +468,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
+ 		return TCM_INVALID_CDB_FIELD;
+ 	}
+ 
+-	if (bdev_write_zeroes_sectors(bdev)) {
++	if (bdev_write_zeroes_sectors(bdev, 0)) {
+ 		if (!iblock_execute_zero_out(bdev, cmd))
+ 			return 0;
+ 	}
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c45779f00cbd..4cd69552df9a 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1418,7 +1418,8 @@ static inline unsigned int bdev_write_same(struct block_device *bdev)
  	return 0;
  }
  
-+static unsigned int write_zeroes_to_fallocate_mode(unsigned int flags)
-+{
-+	if (flags & REQ_NOZERO)
-+		return 0;
-+	if (flags & REQ_NOUNMAP)
-+		return FALLOC_FL_ZERO_RANGE;
-+	return FALLOC_FL_PUNCH_HOLE;
-+}
-+
- static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+-static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
++static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
++						     unsigned int flags)
  {
- 	struct loop_cmd *cmd = blk_mq_rq_to_pdu(rq);
-@@ -604,9 +613,7 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 		 * write zeroes the range.  Otherwise, punch them out.
- 		 */
- 		return lo_fallocate(lo, rq, pos,
--			(rq->cmd_flags & REQ_NOUNMAP) ?
--				FALLOC_FL_ZERO_RANGE :
--				FALLOC_FL_PUNCH_HOLE);
-+			write_zeroes_to_fallocate_mode(rq->cmd_flags));
- 	case REQ_OP_DISCARD:
- 		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_WRITE:
-@@ -877,6 +884,7 @@ static void loop_config_discard(struct loop_device *lo)
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
-+		blk_queue_max_allocate_sectors(q, 0);
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- 		return;
- 	}
-@@ -886,6 +894,7 @@ static void loop_config_discard(struct loop_device *lo)
- 
- 	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
- 	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	blk_queue_max_allocate_sectors(q, UINT_MAX >> 9);
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
- }
+ 	struct request_queue *q = bdev_get_queue(bdev);
  
 
 
