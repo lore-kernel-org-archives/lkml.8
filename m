@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D499C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57EEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6792073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886082073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200219;
-	bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
+	s=default; t=1579200228;
+	bh=dEM9Y+iTXDCGhkcuhG9BAghRfknb9WehE91fX5lzDbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdx+y3+f5JVRMNBgJGmzico5qjrhB7JBDaJLj3M/K/TX78G0Jx4K5ctAnySRf/UuR
-	 0tWHKn3kSk0CEXd6UlezAoYzRn8nKPvENhQGOHssFhoAfDHU1/URgZlD7VUf/UHTv6
-	 rUaj7G81iuOMsqK6ehK8pbh3q3ReGFtpGitb2WW0=
+	b=m390mkMqSjMX/pKP/UzKSSdTZ2rmsL7KrZ5OnxFkn8kAm1mhiaCnn56qPfPB2Aspn
+	 cPaiypuA/8Y3xcGU/nH6H2IJgjY5B4+XM9QmYd2s+e8Yjxk5AV4+PHYFXm9QLRWsm0
+	 XLP/IcOe+LW7cX9b/lVX7CzjBo97XBpZ4ZBMNirQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392617AbgAPSni (ORCPT
+        id S2390310AbgAPSnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:43:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51372 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:43:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390180AbgAPRLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:13 -0500
+        id S2390166AbgAPRLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F24F2469E;
-        Thu, 16 Jan 2020 17:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D4F24686;
+        Thu, 16 Jan 2020 17:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194672;
-        bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
+        s=default; t=1579194669;
+        bh=dEM9Y+iTXDCGhkcuhG9BAghRfknb9WehE91fX5lzDbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4FgalBRG6eZMp+2iLHGq0I2yN02uozuwQ5FWVXHItWOpoWNoeRfQkAN4STykUSth
-         oAUlBd3AVeeKOtLRQ1OgEYwVX5wSrTGxhSsRaHa46+T1dopXEKCbg+atUuh0EVOdof
-         SmfrJshvGjvLcWNr+xrxOxKcc4lZHkrNIhKKiEmg=
+        b=TiZ0Aq8sVjQnW2c0/aLDAT5OxJbbpLTrWYmcW0FsBZYsm3aTP9UTSV5qo3xYH+WWn
+         +vFfLXeQpz25x0AO2UC6gfJk5SYev8pTAwLiRDVOaNuOWd9gLNSpg6f3Z0YlGkbEzC
+         Dr7FpJf8WHbIXel3myQgWIWj2Mjp75RgpCgY5wZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 520/671] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
-Date:   Thu, 16 Jan 2020 12:02:38 -0500
-Message-Id: <20200116170509.12787-257-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 517/671] x86, perf: Fix the dependency of the x86 insn decoder selftest
+Date:   Thu, 16 Jan 2020 12:02:35 -0500
+Message-Id: <20200116170509.12787-254-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,46 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 420c20be08a4597404d272ae9793b642401146eb ]
+[ Upstream commit 7720804a2ae46c90265a32c81c45fb6f8d2f4e8b ]
 
-An earlier commit re-worked the setting of the bitmask and is now
-assigning v with some bit flags rather than bitwise or-ing them
-into v, consequently the earlier bit-settings of v are being lost.
-Fix this by replacing an assignment with the bitwise or instead.
+Since x86 instruction decoder is not only for kprobes,
+it should be tested when the insn.c is compiled.
+(e.g. perf is enabled but kprobes is disabled)
 
-Addresses-Coverity: ("Unused value")
-Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bcma/driver_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
-index f499a469e66d..12b2cc9a3fbe 100644
---- a/drivers/bcma/driver_pci.c
-+++ b/drivers/bcma/driver_pci.c
-@@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
- 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
- 	}
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 7d68f0c7cfb1..687cd1a213d5 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -181,7 +181,7 @@ config HAVE_MMIOTRACE_SUPPORT
  
--	v = BCMA_CORE_PCI_MDIODATA_START;
-+	v |= BCMA_CORE_PCI_MDIODATA_START;
- 	v |= BCMA_CORE_PCI_MDIODATA_READ;
- 	v |= BCMA_CORE_PCI_MDIODATA_TA;
- 
-@@ -121,7 +121,7 @@ static void bcma_pcie_mdio_write(struct bcma_drv_pci *pc, u16 device,
- 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
- 	}
- 
--	v = BCMA_CORE_PCI_MDIODATA_START;
-+	v |= BCMA_CORE_PCI_MDIODATA_START;
- 	v |= BCMA_CORE_PCI_MDIODATA_WRITE;
- 	v |= BCMA_CORE_PCI_MDIODATA_TA;
- 	v |= data;
+ config X86_DECODER_SELFTEST
+ 	bool "x86 instruction decoder selftest"
+-	depends on DEBUG_KERNEL && KPROBES
++	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
+ 	depends on !COMPILE_TEST
+ 	---help---
+ 	 Perform x86 instruction decoder selftests at build time.
 -- 
 2.20.1
 
