@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8E3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BEBC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FA624699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEBD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197398;
-	bh=EsOFQ6AR3Udi8fHehBcmn+Mp+kyo+XV+cNAgevfSMpo=;
+	s=default; t=1579197405;
+	bh=TTm/1xiXVzRgbqhITYxzac3zAfj+k/VG3pkN5qcTSUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mBiAN5g8SvrGz6HHqp1B4uZ09WZX3BX1aqSeokCQ/yrSRd3ShBgCIdcWnuwXEk1tU
-	 WUb2/0djNDOHOKr0uLpKCxVjFv9WwgeuP3eweRFytkRDWs9/E46bqL+Nr0RQagAvOf
-	 8lrFipaxyWZ5DnVbfxLGc2Mh91jFGlX8wRIoEKQc=
+	b=bnuoKXGZsyjdHnOiO3W4dLO3BNxh4PA//JbaOgD7dmGkGNrrTRphN5owpPHuiD5hC
+	 Wd/Jp8X5hC4rPZ76I5+ZP8reOrPRbHwhd29U1gmrFv+60ZOauOILA+DEtE/7wFm1Af
+	 F6pO67MZP2oVDXP0oGPXUKJKAwYAa/Qm0FT7kqQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406759AbgAPR4h (ORCPT
+        id S2393996AbgAPRnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:43:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394016AbgAPRnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:52 -0500
+        id S2393927AbgAPRna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 171B524730;
-        Thu, 16 Jan 2020 17:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA93224718;
+        Thu, 16 Jan 2020 17:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196632;
-        bh=EsOFQ6AR3Udi8fHehBcmn+Mp+kyo+XV+cNAgevfSMpo=;
+        s=default; t=1579196609;
+        bh=TTm/1xiXVzRgbqhITYxzac3zAfj+k/VG3pkN5qcTSUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9MeyV8BIva7G8TguXK+h2HGW3XWtRk6i5yL12svV/jEAAL1hU/eq9tqZ48zVUxJr
-         Px8wqRqF+xnqe2LEVzkdxmfzbMnKJS5PV6xMb1XwkcUtso4a1Ne5z6N4rufYJRNOHS
-         2lkF8E+zViWbkQQx5MIe5zNY4FB0IDCeaSo0CyOU=
+        b=TTZOGj9oFNpJdBb1hIN0oTGji6BiZycnPa2XZVa+YTP8pJzXstviEM/V/QXmkYWfx
+         K4kCrO4unDfB4bf7aZnO04pW/OYGO+THi2HOJgJAmKhgD6xqq/NHU3ay6zXPjZl+xT
+         m/WCxRyA2ll2LZehKA6XhpcvS4rAsAYS/ucrGSoQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 045/174] block: don't use bio->bi_vcnt to figure out segment number
-Date:   Thu, 16 Jan 2020 12:40:42 -0500
-Message-Id: <20200116174251.24326-45-sashal@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 029/174] clk: armada-xp: fix refcount leak in axp_clk_init()
+Date:   Thu, 16 Jan 2020 12:40:26 -0500
+Message-Id: <20200116174251.24326-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
+[ Upstream commit db20a90a4b6745dad62753f8bd2f66afdd5abc84 ]
 
-It is wrong to use bio->bi_vcnt to figure out how many segments
-there are in the bio even though CLONED flag isn't set on this bio,
-because this bio may be splitted or advanced.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-So always use bio_segments() in blk_recount_segments(), and it shouldn't
-cause any performance loss now because the physical segment number is figured
-out in blk_queue_split() and BIO_SEG_VALID is set meantime since
-bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
-
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 0a11a6ae9437 ("clk: mvebu: armada-xp: maintain clock init order")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-merge.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/clk/mvebu/armada-xp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 7225511cf0b4..b8f1eaeeaac2 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -296,13 +296,7 @@ void blk_recalc_rq_segments(struct request *rq)
+diff --git a/drivers/clk/mvebu/armada-xp.c b/drivers/clk/mvebu/armada-xp.c
+index b3094315a3c0..2fa15a274719 100644
+--- a/drivers/clk/mvebu/armada-xp.c
++++ b/drivers/clk/mvebu/armada-xp.c
+@@ -202,7 +202,9 @@ static void __init axp_clk_init(struct device_node *np)
  
- void blk_recount_segments(struct request_queue *q, struct bio *bio)
- {
--	unsigned short seg_cnt;
--
--	/* estimate segment number by bi_vcnt for non-cloned bio */
--	if (bio_flagged(bio, BIO_CLONED))
--		seg_cnt = bio_segments(bio);
--	else
--		seg_cnt = bio->bi_vcnt;
-+	unsigned short seg_cnt = bio_segments(bio);
+ 	mvebu_coreclk_setup(np, &axp_coreclks);
  
- 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
- 			(seg_cnt < queue_max_segments(q)))
+-	if (cgnp)
++	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, axp_gating_desc);
++		of_node_put(cgnp);
++	}
+ }
+ CLK_OF_DECLARE(axp_clk, "marvell,armada-xp-core-clock", axp_clk_init);
 -- 
 2.20.1
 
