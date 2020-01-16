@@ -2,205 +2,177 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68E8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBAEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA4D2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C082073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nc0X5ckw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jA97zYVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389819AbgAPWGw (ORCPT
+        id S2389841AbgAPWHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:06:52 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40937 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbgAPWGw (ORCPT
+        Thu, 16 Jan 2020 17:07:18 -0500
+Received: from gateway20.websitewelcome.com ([192.185.60.19]:18582 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729260AbgAPWHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:06:52 -0500
-Received: by mail-io1-f68.google.com with SMTP id x1so23695988iop.7;
-        Thu, 16 Jan 2020 14:06:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=knzeQPpwpmUJ11TawlbFVOi7iUcMTe9UXbqXHmIy6x8=;
-        b=Nc0X5ckwS0Uncvh6W9RMln28oDNFJf92A6ApU1c+wkQPPYhW1nbCAiqa/woL1MRNct
-         8y1KcS2KVv7lCAEthRdvlIIB9F/whSaW+ngES7vrub2eyoGIGn28Z2yEyAWC/oHfJxR8
-         bcdgICJ76pHCkarN8qfZe9gRvcDncD08jVk1fSHMJ8lJejjeeSgGDSgXkaDec+59yQ//
-         /wAKv1uAlXU2wdf8TfZI2HzllyGqSSMjMh1pV00RwhDJgQVAM1/dDBf143Teaa/pB1MJ
-         KxqOuGZhQ4YXUUXu/mMiToQcY4VqNHxOqGa/H3Lib8ObAFwnHLgc8Ri5mkbmSOHLX+sW
-         xQdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=knzeQPpwpmUJ11TawlbFVOi7iUcMTe9UXbqXHmIy6x8=;
-        b=aKFJQC7XZInBHRtIFdQapLmbcbqrxrncAHvoxZO3j20RTxraXG4pQqTtvpEp9pxSQO
-         +i503SExvx34kEEpZG0Lci/jEWx0Lkhnv9WW3ka80kFp5kFJt97Lm7Hy2+3pCPto+kU/
-         V0FJv7gwbmJEsGa9y6rg039fA82Hjm6NMI56g4+qKKrzhXgmRP6AVnn1uj35N0p35fO9
-         l8rycI/vzh0YpsJLpIEDNrd9uHJWzGVHbgZaFHV8w2pRbWnBu4cZw92QG9OPr7PpwtRJ
-         sVqruhrGYRGzNyUiif+fu3OzyJYu1KziedVHJkJKkOdmmmDEGRnA8SCNUU7m5dY5klgr
-         y8Fw==
-X-Gm-Message-State: APjAAAW9oWSFRf1XI7bUzGqGy/SRAt34veeBUcFrF7sVH7si+NnBqtyn
-        DIq+rGKtBWZKSRR8xasE5lAXKNF3lvhE3ANayRc=
-X-Google-Smtp-Source: APXvYqxLK0nmek4moXMlWTzFOChCalpCN0T4wM+Ql3A33S8tK9KrwjxQPrkF8tPOqUuEVelBvumhZG++ugI41Oliorc=
-X-Received: by 2002:a05:6638:6a6:: with SMTP id d6mr30886433jad.132.1579212411258;
- Thu, 16 Jan 2020 14:06:51 -0800 (PST)
+        Thu, 16 Jan 2020 17:07:17 -0500
+X-Greylist: delayed 1331 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 17:07:16 EST
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 2D2C6400D0F70
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:32:50 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sCwqivEx6qNtvsCwqiWvHQ; Thu, 16 Jan 2020 15:45:04 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=MIME-Version:Content-Type:In-Reply-To:
+        References:Subject:Cc:To:From:Message-ID:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Uo2cT09CAUfsX0mNEXeVuvzQ9UQGtxxGE/nVeDW36gs=; b=jA97zYVTHqDPUAYsoxkgSDvxK
+        JZ3TIJ0j8BkjjkCP7UmH/9XhhHDYgRuz8AFpttUk6MU8p9RwkaYLpClhIHrooCxbUqIse8Yqncf5i
+        YXwpSZx4vf/0Gg1/kABUy5TC2vatTblXw45HGkpMxgHY2vt/h3sPl0XY1tJeAWW0dojPxv1yALACr
+        f7xUdSuRVMUpOjCv6QDf8jGqkg4Q0xNwKo8U22SQr2/y7sTf/9P6XXT2S1jQ942fotVVIYxstxbD7
+        sMQ/aW4LHd9QZPVBmvbPQ5SjyO9RfI2ilxPgp4Dzq2l9akJzF5zwgO+KfA1pFtNKniBvhcnIWJO46
+        I1V7zs0zw==;
+Received: from gator4166.hostgator.com ([108.167.133.22]:41607)
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1isCwp-000U4i-WC; Thu, 16 Jan 2020 15:45:03 -0600
+Received: from [187.162.252.62] ([187.162.252.62]) by embeddedor.com (Horde
+ Framework) with HTTPS; Thu, 16 Jan 2020 15:45:03 -0600
+Date:   Thu, 16 Jan 2020 15:45:03 -0600
+Message-ID: <20200116154503.Horde.MnWaeq-f0qzzp8gx01ERP2p@embeddedor.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] media: i2c: adv748x: Fix unsafe macros
+References: <20191022132522.GA12072@embeddedor>
+ <20200113231413.GA23583@ubuntu-x2-xlarge-x86>
+In-Reply-To: <20200113231413.GA23583@ubuntu-x2-xlarge-x86>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-References: <26f61914-3c0d-4911-7f21-23967839554c@canonical.com>
-In-Reply-To: <26f61914-3c0d-4911-7f21-23967839554c@canonical.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 16 Jan 2020 16:06:40 -0600
-Message-ID: <CAH2r5msT7GjFLGBbu40cYu3ZuwvWtdsCNM5V8n67o4uguC95Yg@mail.gmail.com>
-Subject: Re: cifs: Avoid doing network I/O while holding cache lock
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 108.167.133.22
+X-Source-L: Yes
+X-Exim-ID: 1isCwp-000U4i-WC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: gator4166.hostgator.com [108.167.133.22]:41607
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added the one line patch from Paulo to address what Colin reported and
-added a "Reported-by" for Colin mentioning Coverity.  merged into
-cifs-2.6.git for-next
+Hi!
 
-On Thu, Jan 16, 2020 at 1:10 PM Colin Ian King <colin.king@canonical.com> wrote:
+Quoting Nathan Chancellor <natechancellor@gmail.com>:
+
+> On Tue, Oct 22, 2019 at 08:25:22AM -0500, Gustavo A. R. Silva wrote:
+>> Enclose multiple macro parameters in parentheses in order to
+>> make such macros safer and fix the Clang warning below:
+>>
+>> drivers/media/i2c/adv748x/adv748x-afe.c:452:12: warning: operator '?:'
+>> has lower precedence than '|'; '|' will be evaluated first
+>> [-Wbitwise-conditional-parentheses]
+>>
+>> ret = sdp_clrset(state, ADV748X_SDP_FRP, ADV748X_SDP_FRP_MASK, enable
+>> ? ctrl->val - 1 : 0);
+>>
+>> Fixes: 3e89586a64df ("media: i2c: adv748x: add adv748x driver")
+>> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com
 >
-> Hi,
+> It doesn't look like this was picked up? I still see this warning on
+> 5.5-rc6 and next-20200113.
 >
-> static analysis with Coverity has detected an issue with the following
-> commit:
+> If it helps:
 >
-> commit 03535b72873ba74e80e6938b5f772cf5b07ca76b
-> Author: Paulo Alcantara (SUSE) <pc@cjr.nz>
-> Date:   Wed Dec 4 17:38:03 2019 -0300
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 >
->     cifs: Avoid doing network I/O while holding cache lock
->
->
->
-> This commit removed a memset on the vol object, causing the issue as
-> reported below by Coverity:
->
-> 1342static struct cifs_ses *find_root_ses(struct vol_info *vi,
-> 1343                                      struct cifs_tcon *tcon,
-> 1344                                      const char *path)
-> 1345{
-> 1346        char *rpath;
-> 1347        int rc;
-> 1348        struct cache_entry *ce;
-> 1349        struct dfs_info3_param ref = {0};
-> 1350        char *mdata = NULL, *devname = NULL;
-> 1351        struct TCP_Server_Info *server;
-> 1352        struct cifs_ses *ses;
->
->     1. var_decl: Declaring variable vol without initializer.
-> 1353        struct smb_vol vol;
-> 1354
-> 1355        rpath = get_dfs_root(path);
->
->     2. Condition IS_ERR(rpath), taking false branch.
-> 1356        if (IS_ERR(rpath))
-> 1357                return ERR_CAST(rpath);
-> 1358
-> 1359        down_read(&htable_rw_lock);
-> 1360
-> 1361        ce = lookup_cache_entry(rpath, NULL);
->
->     3. Condition IS_ERR(ce), taking true branch.
-> 1362        if (IS_ERR(ce)) {
-> 1363                up_read(&htable_rw_lock);
-> 1364                ses = ERR_CAST(ce);
->
->     4. Jumping to label out.
-> 1365                goto out;
-> 1366        }
-> 1367
-> 1368        rc = setup_referral(path, ce, &ref, get_tgt_name(ce));
-> 1369        if (rc) {
-> 1370                up_read(&htable_rw_lock);
-> 1371                ses = ERR_PTR(rc);
-> 1372                goto out;
-> 1373        }
-> 1374
-> 1375        up_read(&htable_rw_lock);
-> 1376
-> 1377        mdata = cifs_compose_mount_options(vi->mntdata, rpath, &ref,
-> 1378                                           &devname);
-> 1379        free_dfs_info_param(&ref);
-> 1380
-> 1381        if (IS_ERR(mdata)) {
-> 1382                ses = ERR_CAST(mdata);
-> 1383                mdata = NULL;
-> 1384                goto out;
-> 1385        }
-> 1386
-> 1387        rc = cifs_setup_volume_info(&vol, mdata, devname, false);
-> 1388        kfree(devname);
-> 1389
-> 1390        if (rc) {
-> 1391                ses = ERR_PTR(rc);
-> 1392                goto out;
-> 1393        }
-> 1394
-> 1395        server = get_tcp_server(&vol);
-> 1396        if (!server) {
-> 1397                ses = ERR_PTR(-EHOSTDOWN);
-> 1398                goto out;
-> 1399        }
-> 1400
-> 1401        ses = cifs_get_smb_ses(server, &vol);
-> 1402
-> 1403out:
->
->     5. uninit_use_in_call: Using uninitialized value vol.username when
-> calling cifs_cleanup_volume_info_contents.
->
->     6. uninit_use_in_call: Using uninitialized value vol.password when
-> calling cifs_cleanup_volume_info_contents.
->
->     7. uninit_use_in_call: Using uninitialized value vol.domainname when
-> calling cifs_cleanup_volume_info_contents.
->
->     8. uninit_use_in_call: Using uninitialized value vol.UNC when
-> calling cifs_cleanup_volume_info_contents.
->
->     9. uninit_use_in_call: Using uninitialized value vol.iocharset when
-> calling cifs_cleanup_volume_info_contents.
->
->  Uninitialized pointer read
->    10. uninit_use_in_call: Using uninitialized value vol.prepath when
-> calling cifs_cleanup_volume_info_contents.
->
-> 1404        cifs_cleanup_volume_info_contents(&vol);
-> 1405        kfree(mdata);
-> 1406        kfree(rpath);
->
-> The vol object is memset as a result of calling cifs_setup_volume_info()
-> but this is too late for the earlier jumps to the error cleanup path at
-> label out.  I did think about putting this back but it adds an
-> unnecessary memset, a better fix may be return immediately or to exit
-> via the kfree(mdata) at the end of the function.
->
-> Not sure what is best, so I'm flagging this up as an issue that needs
-> fixing.
->
-> Colin
+
+Thank you, Nathan! :)
+
+
+Friendly ping:
+
+Who can take this?
+
+It's been almost three months now since I first sent this patch out.
+
+Thanks!
+--
+Gustavo
+
+>> ---
+>>  drivers/media/i2c/adv748x/adv748x.h | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/adv748x/adv748x.h  
+>> b/drivers/media/i2c/adv748x/adv748x.h
+>> index 5042f9e94aee..fccb388ce179 100644
+>> --- a/drivers/media/i2c/adv748x/adv748x.h
+>> +++ b/drivers/media/i2c/adv748x/adv748x.h
+>> @@ -394,10 +394,10 @@ int adv748x_write_block(struct adv748x_state  
+>> *state, int client_page,
+>>
+>>  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+>>  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+>> -#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
+>> +#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
+>>
+>>  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+>> -#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) |  
+>> hdmi_read(s, r+1)) & m)
+>> +#define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) |  
+>> hdmi_read(s, (r)+1)) & (m))
+>>  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
+>>
+>>  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+>> @@ -405,11 +405,11 @@ int adv748x_write_block(struct adv748x_state  
+>> *state, int client_page,
+>>
+>>  #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+>>  #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+>> -#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~m) | v)
+>> +#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) &  
+>> ~(m)) | (v))
+>>
+>>  #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+>>  #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+>> -#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~m) | v)
+>> +#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
+>>
+>>  #define tx_read(t, r) adv748x_read(t->state, t->page, r)
+>>  #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
+>> --
+>> 2.23.0
+>>
 
 
 
--- 
-Thanks,
-
-Steve
