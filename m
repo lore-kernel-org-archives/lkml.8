@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA69C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D58C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8B92053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D177206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200915;
-	bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
+	s=default; t=1579200918;
+	bh=GASgO3943XMdqvSE6BOUqLZVlhdNiqCagP6RoEdfFtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJK0CKF5Y4GHmKC7xZK+FsNvJk2zZ/i9IdmGeJwQl2qHKa30PvWybMjojtCbn8GMY
-	 uYT7NAt5FvlvBz1FXBjHaL2oe00cTbE2CJlicSNvjwxFZ2oEUuPNIscsPHemVQ8Jo9
-	 OoCU9FiAigGReBGSoUYxDZi0WU/ubzc1s3jZcmqI=
+	b=qJlpzrukMZLxC7Gb9NXMUXi8uO7V1Pbf8uMqT2ChcnsUHkluO/yrLjfTAB4B/RmeO
+	 Bx/cT+fDOfMGbT/A95hOFyucYtRZvdQ7VfLljfXhfZ8tgeDB/NAqYjtwoatJxRir4B
+	 zNOvghfnzFJBYMg68KUNpkNq7o4p62foMKZCjrzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389424AbgAPSzO (ORCPT
+        id S2437170AbgAPSzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:55:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40088 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:55:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbgAPRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:44 -0500
+        id S2388697AbgAPRHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1374205F4;
-        Thu, 16 Jan 2020 17:07:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D95F520663;
+        Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194463;
-        bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
+        s=default; t=1579194460;
+        bh=GASgO3943XMdqvSE6BOUqLZVlhdNiqCagP6RoEdfFtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x7hzQEg58aqyNnOl5EIlKVHTWlZDjJcfRJ3XnCmgcsA8E7Jl2YY/aGNjGkwATK5VR
-         A9f1FN57kz9/1H2huHIMyTSnOFNeGcOLoCZ5mzO9Ck4YW57piLX61gGlW01xUwZsbM
-         HqB8578wGrc9ROrKHLU0TNQDaD98vHaw9+yJJyak=
+        b=cfw/UjWCiAxM/8s2XXp2h5j5zEiM4Wz4xwwuJWIOuzD+2uWjEFotfL9nGyi6964VT
+         xARNbwnvPT7FWvQCL5D1tuFK6C60KakJEqrGPjzmtm/I3Xa93FLBPlvDqDFQwbWi9K
+         i3cTZc97t2PFRBS7A+98n+Zj4Ug43yk9zR3b5cmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 370/671] spi: spi-fsl-spi: call spi_finalize_current_message() at the end
-Date:   Thu, 16 Jan 2020 12:00:08 -0500
-Message-Id: <20200116170509.12787-107-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 368/671] arm64: dts: meson: libretech-cc: set eMMC as removable
+Date:   Thu, 16 Jan 2020 12:00:06 -0500
+Message-Id: <20200116170509.12787-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,42 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 44a042182cb1e9f7916e015c836967bf638b33c4 ]
+[ Upstream commit 9f72e321d5506fe3e162a6308a4a295d7f10bb5d ]
 
-spi_finalize_current_message() shall be called once all
-actions are finished, otherwise the last actions might
-step over a newly started transfer.
+The eMMC on this board is add-on module which is not mandatory. Removing
+'non-removable' property should prevent some errors when booting a board
+w/o an eMMC module present.
 
-Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 72fb2c852188 ("ARM64: dts: meson-gxl-s905x-libretech-cc: fixup board definition")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 8b79e36fab21..cd784552de7f 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -407,7 +407,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index db293440e4ca..daad007fac1f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -256,7 +256,6 @@
+ 	cap-mmc-highspeed;
+ 	mmc-ddr-3_3v;
+ 	max-frequency = <50000000>;
+-	non-removable;
+ 	disable-wp;
  
- 	m->status = status;
--	spi_finalize_current_message(master);
- 
- 	if (status || !cs_change) {
- 		ndelay(nsecs);
-@@ -415,6 +414,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
- 
- 	fsl_spi_setup_transfer(spi, NULL);
-+	spi_finalize_current_message(master);
- 	return 0;
- }
- 
+ 	mmc-pwrseq = <&emmc_pwrseq>;
 -- 
 2.20.1
 
