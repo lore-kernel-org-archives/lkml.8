@@ -2,113 +2,139 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9355C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749D8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4492077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B9F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQJWWE+a"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j9Wbs+23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390003AbgAPW1R (ORCPT
+        id S2390053AbgAPW2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:27:17 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46106 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbgAPW1R (ORCPT
+        Thu, 16 Jan 2020 17:28:35 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47066 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390021AbgAPW2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:27:17 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r9so20901309otp.13;
-        Thu, 16 Jan 2020 14:27:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iSl/iz8q5qsynSrNKHIQvHUN+GEAmInTpvYEYnskbhI=;
-        b=tQJWWE+aXJ7Q4PQlKya0EvRWlTVBsEAQxCUciiydmJ0zAadyfj/YO0XajNeBIEgEM5
-         m31QFefRbLVzSESQvsL5jAAya91YemMAr3ap9SvX7qX8YT8IMZ4PVIdHEWXkYHuHN30W
-         VVvFISoOixhkg8amsKwCYpz8WPStm6v5KGpN2mDZfe7S8iB0uAxA3o6EdJ/L1aKyC+cv
-         Su6aGd8HJ+g12eSz6gk5SfrBO3YQXgeRwL7KqHNgdDFlqam8o6n08iHDDL8vwPrInSyy
-         Zo5Hp8uCbJjCR1zC2BubBMAnbt2L6q8gfqkg3QQ5iQ9RIAfjGrUk4ka0FV8VnigLv+pi
-         g4iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iSl/iz8q5qsynSrNKHIQvHUN+GEAmInTpvYEYnskbhI=;
-        b=cmZpxXMow0d6TUm6O5BFOk44hnYmg8uq1+bjVcquKnnwEOe/LU0DV7U7YMXtawNYUe
-         of3lEEtOkqzC7RAI4Mvu7+iAB38XDc4MheiE3cywVkGTVj0QGsnNCHwYMxSN3LCpgk/b
-         +VMBt4rNGmsGWl7G0UtjVVR9R9/wNVldktQkXYwYKYvd/JHvU8n+wIBXmyRRd5bJ0kc4
-         EDFXDqhd+Uv+W7kRZk5HvWm/KkoyPoQhyDlJbkjtQfJHyA8SJcLl9FzTGC9gLgqi9dh3
-         gP7tH3I626PkLEFLE8Yy+fLva/wzKi8HltPNnuHjmdPKGtgeH52iV1P+voaumT7hHSl5
-         7O4Q==
-X-Gm-Message-State: APjAAAWN5461K+05ouS7R2Pt4lIzhqaOmlhdgyeBaSAP1JNDPnfv+UnM
-        9xh6UAHQ83qTHR9W+/d3+zM=
-X-Google-Smtp-Source: APXvYqzFgJ0McJrahhe7vh2rOK8/NO5bak3ECkJ56UAVMeGC+zD/jnWt6BjxDAJVedX6AkXY0mFl5g==
-X-Received: by 2002:a05:6830:128e:: with SMTP id z14mr3883578otp.184.1579213636587;
-        Thu, 16 Jan 2020 14:27:16 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id i12sm8216172otk.11.2020.01.16.14.27.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 14:27:16 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] IB/hfi1: Fix logical condition in msix_request_irq
-Date:   Thu, 16 Jan 2020 15:26:58 -0700
-Message-Id: <20200116222658.5285-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 16 Jan 2020 17:28:34 -0500
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 61EE72D2;
+        Thu, 16 Jan 2020 23:28:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579213712;
+        bh=Z3nvz5BqJDqGaz8CPa474wKdYxW6vuAy7SgmFGcOwxs=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j9Wbs+23H/bPYgNSm28T9ZcDxqq7WAOaoq6XZaT+yJGllNbSmM2zVYsi+XQIUJetj
+         SZjRc+uNZPUSxTqRvlimCnrq2JV0py40M/OwE9JobiMn/whCQA4Oq2W3tp2E0cVyaM
+         YxiK3IcRlTMIc67TmBxmzMFonXjfB1fcvRKvSJpo=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH] media: i2c: adv748x: Fix unsafe macros
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-media@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+References: <20191022132522.GA12072@embeddedor>
+ <20200113231413.GA23583@ubuntu-x2-xlarge-x86>
+ <20200116154503.Horde.MnWaeq-f0qzzp8gx01ERP2p@embeddedor.com>
+ <CAKwvOd=cA7E0MOtFfaQ5-+-v=+YNHYQPgMq6yS517PLLKn=Qpw@mail.gmail.com>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <c11f86b7-f304-2667-0d2a-3d30a965b700@ideasonboard.com>
+Date:   Thu, 16 Jan 2020 22:28:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOd=cA7E0MOtFfaQ5-+-v=+YNHYQPgMq6yS517PLLKn=Qpw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Hi Nick
 
-drivers/infiniband/hw/hfi1/msix.c:136:22: warning: overlapping
-comparisons always evaluate to false [-Wtautological-overlap-compare]
-        if (type < IRQ_SDMA && type >= IRQ_OTHER)
-            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-1 warning generated.
+On 16/01/2020 21:51, Nick Desaulniers wrote:
+> On Thu, Jan 16, 2020 at 1:45 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> Hi!
+>> Friendly ping:
+>>
+>> Who can take this?
+>>
+>> It's been almost three months now since I first sent this patch out.
+> 
+> Kieran is listed as maintainer of:
+>   998 F:  drivers/media/i2c/adv748x/*
+> 
+> but I'm guessing the tree would be Mauro's.  It would be good if
+> Kieran can review, then Mauro can pick up?
 
-It is impossible for something to be less than 0 (IRQ_SDMA) and greater
-than or equal to 3 (IRQ_OTHER) at the same time. A logical OR should
-have been used to keep the same logic as before.
+Already done on the 22nd October 2019:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/841
-Fixes: 13d2a8384bd9 ("IB/hfi1: Decouple IRQ name from type")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/infiniband/hw/hfi1/msix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/linux-media/22780ef3-514e-d013-1da8-9576780fde1c@ideasonboard.com/
 
-diff --git a/drivers/infiniband/hw/hfi1/msix.c b/drivers/infiniband/hw/hfi1/msix.c
-index 4a620cf80588..db82db497b2c 100644
---- a/drivers/infiniband/hw/hfi1/msix.c
-+++ b/drivers/infiniband/hw/hfi1/msix.c
-@@ -133,7 +133,7 @@ static int msix_request_irq(struct hfi1_devdata *dd, void *arg,
- 	if (nr == dd->msix_info.max_requested)
- 		return -ENOSPC;
- 
--	if (type < IRQ_SDMA && type >= IRQ_OTHER)
-+	if (type < IRQ_SDMA || type >= IRQ_OTHER)
- 		return -EINVAL;
- 
- 	irq = pci_irq_vector(dd->pcidev, nr);
+Hans, Should this go through you?
+
+Or are we just waiting for Mauro to pick it up?
+
 -- 
-2.25.0
-
+Regards
+--
+Kieran
