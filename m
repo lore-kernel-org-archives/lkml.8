@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF11AC47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E278C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF70208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BFD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198921;
-	bh=CVd3bSBd9CWFqE/y5OmTSYd0iUg3npMQRQpRGVYmRrs=;
+	s=default; t=1579198931;
+	bh=hhbWhpvF5ZdlE2pCnvgPQ4xz2p9KSvhc5E7USna33YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2MYMzBfXsVhtEyJKT6DDdXspGzj/lqkLTVbLzxKKKLZ6Je8nNQXyO6AJJXri0ltAR
-	 d2tkHG4PKgNrcVWqg7yvx5nVzgFDHRwkGr8Z6FDObqNc6EHMkIuR8ELBkdOcoSv+Zz
-	 Gzx8Jy4DcQ4xJj+OCtFexuRFns+GnmcfhJpRBHRo=
+	b=SB3TmMsPUiR+10BMlAuI8fpq7dcs8zLSovMVLD/kP/rKKCcumeLGaQnn58Sd4QrNb
+	 NW7mWJnO5NF4TUVtHUz/A/1IwCRicWVFVg/e7DxULbHEw7vgpY1uQpyrm+bxVLu4DJ
+	 vEmxUdE9y/3GIdIeTOoPl/Oro3qQyjOMswxjpXQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436528AbgAPSWA (ORCPT
+        id S2392675AbgAPSWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:22:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37766 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:22:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392490AbgAPR1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:41 -0500
+        id S2392485AbgAPR1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEE53246D0;
-        Thu, 16 Jan 2020 17:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F220246C9;
+        Thu, 16 Jan 2020 17:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195661;
-        bh=CVd3bSBd9CWFqE/y5OmTSYd0iUg3npMQRQpRGVYmRrs=;
+        s=default; t=1579195659;
+        bh=hhbWhpvF5ZdlE2pCnvgPQ4xz2p9KSvhc5E7USna33YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aG1GWq9OmGhi0zp8H+OuqZakMbbxhbZQhZsJK6oGAi+MSimq6vMS0xtG0J2qJQ5mo
-         aHExGYnb+xVO29H7qFZbXfSnxJd1SK0n4yczY/T6qmHNeq91yvvPRzfiLzr7ULtpIw
-         dx3RruDkEKUi3Bzh4zxeDAnnE92E00xzw+FzgxGg=
+        b=2ZIEmDGhtzTAJ7ffvybQKGi0zKT0Py5KIsdKWSIEOYKepvAvydMRiln5LYr1v1VPW
+         8/UpAwjJvHxZ9+VgoId9bE63eNbvIuuNR/2Kg81+yZjZD3UvlPQuJcYJPXNKQFbBXq
+         fWP/auHeSAMuZTiEFzVHqdvAKpcsMmXwhZL/UegM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 220/371] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
-Date:   Thu, 16 Jan 2020 12:21:32 -0500
-Message-Id: <20200116172403.18149-163-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        Steve French <smfrench@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.14 219/371] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+Date:   Thu, 16 Jan 2020 12:21:31 -0500
+Message-Id: <20200116172403.18149-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,54 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
+[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
 
-Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-inet_frags_fini() is dismantling a kmem_cache, that might be needed
-later when unregister_pernet_subsys() eventually has to remove
-frags queues from hash tables and free them.
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
 
-This fixes potential use-after-free, and is a prereq for the following patch.
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
 
-Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
+
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Jeff Layton <jlayton@primarydata.com>
+Cc: Steve French <smfrench@gmail.com>
+Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ieee802154/6lowpan/reassembly.c | 2 +-
- net/ipv6/reassembly.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
-index ec7a5da56129..e873a6a007f2 100644
---- a/net/ieee802154/6lowpan/reassembly.c
-+++ b/net/ieee802154/6lowpan/reassembly.c
-@@ -634,7 +634,7 @@ int __init lowpan_net_frag_init(void)
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index f523a9ca9574..51bbb1c0b71a 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2320,7 +2320,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
  
- void lowpan_net_frag_exit(void)
- {
--	inet_frags_fini(&lowpan_frags);
- 	lowpan_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&lowpan_frags_ops);
-+	inet_frags_fini(&lowpan_frags);
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
+-		force_sig(SIGKILL, task);
++		send_sig(SIGKILL, task, 1);
  }
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index fe797b29ca89..6dea6e92e686 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -593,8 +593,8 @@ int __init ipv6_frag_init(void)
  
- void ipv6_frag_exit(void)
- {
--	inet_frags_fini(&ip6_frags);
- 	ip6_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&ip6_frags_ops);
- 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
-+	inet_frags_fini(&ip6_frags);
- }
+ static struct TCP_Server_Info *
 -- 
 2.20.1
 
