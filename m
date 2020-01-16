@@ -2,122 +2,126 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D4FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58955C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0342F20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E7620728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Aod3SYFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbgAPV5B (ORCPT
+        id S2387926AbgAPV5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:57:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgAPV5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:57:01 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5121920728;
-        Thu, 16 Jan 2020 21:57:00 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 16:56:58 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Unresolved reference for histogram variable
-Message-ID: <20200116165658.4e8d15fb@gandalf.local.home>
-In-Reply-To: <20200116154216.58ca08eb@gandalf.local.home>
-References: <20200116154216.58ca08eb@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 16 Jan 2020 16:57:17 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33202 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387718AbgAPV5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 16:57:17 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so20798784qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:57:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K2xuhFUNXht7fcfEH+3ztlqzjosMro36By5h4pXdIHc=;
+        b=Aod3SYFVPozEToTjnYF/YiRqPUPQyOs89E5qi9CDjvx1TxXnza6a/fgZ6irmTnQt4m
+         Fb3MVyT4sHRpVo3xNsrMfO96EWiIZ0DlApUvn8E4JEsBQ0mWcFW1osKcYKdA5Qwuq8iS
+         HUH5QtPX06IEKYllmnlLc/9+z6lQT4LJ+I7GI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K2xuhFUNXht7fcfEH+3ztlqzjosMro36By5h4pXdIHc=;
+        b=YpCPbgiRq3Prq2W+BAThvkkeJMxo6SQAjM8wwASKCGJ0th/4hJ/IT+h6AQ/nbCdzmb
+         RsWVxVCHwssMYTIvGy9c//rVUPJ7wTlaPOOYC31TAM4N+sn56Rg9WHlWwLoV8s10tXfb
+         XGKkTagQB1Zn7dc1KhzODPs0QLh3D7Rw3c6f3IeJvyUcyxCPvxGiQpXPLntJ5HulA827
+         Eaaj0d3Sw0kiCFyAvd3o3sHDIuSampx7zIMahA+/PK8he4fEwoBFgl6YrEvfxJWvwFyy
+         Nl/baCRWYvOsRnl2wFWL3G0y/1/Seqb7cX1rGJL/739yjvB+21qeOtb4ilbgRb+z4H1j
+         Cd5g==
+X-Gm-Message-State: APjAAAVevEjcrJjZyoVOtRkh6nhfS8qsnzCgdumTxOk2DcW2t0aDntdQ
+        VChNG6ZHtXJ1XzR2l11Llc0TaP9qq/OZxDtq1wR+9w==
+X-Google-Smtp-Source: APXvYqwy0IyiHirF5i1IcksR3wA9s3xZ6I9TI5yFROp2tDU1qUGmXAIsqH+a8/E5utq4wNqF047xga5FoevcUgRlqCA=
+X-Received: by 2002:a37:6d47:: with SMTP id i68mr1496273qkc.228.1579211836142;
+ Thu, 16 Jan 2020 13:57:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191004145741.118292-1-joel@joelfernandes.org> <20191004154102.GA20945@redhat.com>
+In-Reply-To: <20191004154102.GA20945@redhat.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 16 Jan 2020 16:57:05 -0500
+Message-ID: <CAEXW_YS20r3shEwk8GCTY9NcQB+duzTc82ROo5xgWakJwvKRRQ@mail.gmail.com>
+Subject: Re: [PATCH] Remove GP_REPLAY state from rcu_sync
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 15:42:16 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, Oct 4, 2019 at 11:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> On 10/04, Joel Fernandes (Google) wrote:
+> >
+> > But this is not always true if you consider the following events:
+>
+> I'm afraid I missed your point, but...
+>
+> > ---------------------->
+> > GP num         111111     22222222222222222222222222222222233333333
+> > GP state  i    e     p    x                 r              rx     i
+> > CPU0 :         rse      rsx
+> > CPU1 :                         rse     rsx
+> > CPU2 :                                         rse     rsx
+> >
+> > Here, we had 3 grace periods that elapsed, 1 for the rcu_sync_enter(),
+> > and 2 for the rcu_sync_exit(s).
+>
+> But this is fine?
+>
+> We only need to ensure that we have a full GP pass between the "last"
+> rcu_sync_exit() and GP_XXX -> GP_IDLE transition.
+>
+> > However, we had 3 rcu_sync_exit()s, not 2. In other words, the
+> > rcu_sync_exit() got batched.
+> >
+> > So my point here is, rcu_sync_exit() does not really always cause a new
+> > GP to happen
+>
+> See above, it should not.
+>
+> > Then what is the point of the GP_REPLAY state at all if it does not
+> > always wait for a new GP?
+>
+> Again, I don't understand... GP_REPLAY ensures that we will have a full GP
+> before rcu_sync_func() sets GP_IDLE, note that it does another "recursive"
+> call_rcu() if it sees GP_REPLAY.
 
-> in parse_expr():
-> 
-> 	operand1->read_once = true;
-> 	operand2->read_once = true;
-> 
-> Why is that?
-> 
-> This means that any variable used in an expression can not be use later
-> on.
-> 
-> Or should the variable be detected that it is used multiple times in
-> the expression, and have the parser detect this, and just reuse the
-> same variable multiple times?
+I finally got back to this (meanwhile life, job things happened). You
+are right, only the last one needs a full GP and it does get one here.
+Probably a comment in rcu_sync_exit() explaining this might help the
+future reader.
 
-This patch seems to fix the problem, and lets us reuse the same
-variable multiple times.
+Basically you are saying, if rcu_sync_exit() happens and GP_REPLAY is
+already set, we need not worry about starting a new GP because
+GP_REPLAY->GP_EXIT->GP_IDLE transition will involve a full GP anyway.
+And only if, GP_EXIT is already set, then we must set GP_REPLAY and
+wait for a full GP.  This ensures the last rcu_sync_exit() gets a full
+GP. I think that was what I was missing. Some reason I thought that
+every rcu_sync_exit() needs to start a full GP.
 
--- Steve
+thanks!
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 117a1202a6b9..b7f944735a4a 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -116,6 +116,7 @@ struct hist_field {
- 	struct ftrace_event_field	*field;
- 	unsigned long			flags;
- 	hist_field_fn_t			fn;
-+	unsigned int			ref;
- 	unsigned int			size;
- 	unsigned int			offset;
- 	unsigned int                    is_signed;
-@@ -2432,8 +2433,16 @@ static int contains_operator(char *str)
- 	return field_op;
- }
- 
-+static void get_hist_field(struct hist_field *hist_field)
-+{
-+	hist_field->ref++;
-+}
-+
- static void __destroy_hist_field(struct hist_field *hist_field)
- {
-+	if (--hist_field->ref > 1)
-+		return;
-+
- 	kfree(hist_field->var.name);
- 	kfree(hist_field->name);
- 	kfree(hist_field->type);
-@@ -2475,6 +2484,8 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
- 	if (!hist_field)
- 		return NULL;
- 
-+	hist_field->ref = 1;
-+
- 	hist_field->hist_data = hist_data;
- 
- 	if (flags & HIST_FIELD_FL_EXPR || flags & HIST_FIELD_FL_ALIAS)
-@@ -2670,6 +2681,19 @@ static struct hist_field *create_var_ref(struct hist_trigger_data *hist_data,
- {
- 	unsigned long flags = HIST_FIELD_FL_VAR_REF;
- 	struct hist_field *ref_field;
-+	int i;
-+
-+	for (i = 0; i < hist_data->n_var_refs; i++) {
-+		ref_field = hist_data->var_refs[i];
-+		/* Maybe this is overkill? */
-+		if (ref_field->var.idx == var_field->var.idx &&
-+		    ref_field->var.hist_data == var_field->hist_data &&
-+		    ref_field->size == var_field->size &&
-+		    ref_field->is_signed == var_field->is_signed) {
-+			get_hist_field(ref_field);
-+			return ref_field;
-+		}
-+	}
- 
- 	ref_field = create_hist_field(var_field->hist_data, NULL, flags, NULL);
- 	if (ref_field) {
+- Joel
