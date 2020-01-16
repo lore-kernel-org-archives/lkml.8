@@ -2,91 +2,163 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D656AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9194C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E8E206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:34:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bdDCDEzJ"
+	by mail.kernel.org (Postfix) with ESMTP id A38902075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgAPJeI (ORCPT
+        id S1730992AbgAPJfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:34:08 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:37072 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 04:35:18 -0500
+Received: from relay.sw.ru ([185.231.240.75]:33056 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgAPJeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:34:08 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47yzXs45Nbz9tyQL;
-        Thu, 16 Jan 2020 10:34:05 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=bdDCDEzJ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id U8nIyqefG5v1; Thu, 16 Jan 2020 10:34:05 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47yzXs32ysz9tyQK;
-        Thu, 16 Jan 2020 10:34:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579167245; bh=IEAXhb+SjJPqUD1Zb1vn+3GKKBJH4VCJ7C1isv48Ggo=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=bdDCDEzJBDKpMZIDPaRWu1S7MBHDg8dEK/pOSodR7nkO7rmvqqSCxIv61NAvEMhly
-         tjKfoP0FRRzhZS1bpnBkPx0HorlJWRmdde8ZBqSQydFJDMA3Pi0ZBFQ1VyF30EViUU
-         NycCRX/C3sPS8WXWWvuHzglQQvP8REiOzojyMsSs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E9CC8B812;
-        Thu, 16 Jan 2020 10:34:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CZ-uRnBuwtrT; Thu, 16 Jan 2020 10:34:06 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E40738B810;
-        Thu, 16 Jan 2020 10:34:05 +0100 (CET)
-Subject: Re: [PATCH v5 0/4] KASAN for powerpc64 radix
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com,
-        bsingharora@gmail.com
-References: <20200109070811.31169-1-dja@axtens.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <8a1b7f4b-de14-90fe-2efa-789882d28702@c-s.fr>
-Date:   Thu, 16 Jan 2020 10:34:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1726329AbgAPJfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:35:18 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1is1YL-00005M-OE; Thu, 16 Jan 2020 12:35:01 +0300
+Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
+To:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        rientjes@google.com, stable@vger.kernel.org
+References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
+Date:   Thu, 16 Jan 2020 12:35:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200109070811.31169-1-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116013100.7679-1-richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 09/01/2020 à 08:08, Daniel Axtens a écrit :
-> Building on the work of Christophe, Aneesh and Balbir, I've ported
-> KASAN to 64-bit Book3S kernels running on the Radix MMU.
+On 16.01.2020 04:31, Wei Yang wrote:
+> As all the other places, we grab the lock before manipulate the defer list.
+> Current implementation may face a race condition.
 > 
-> This provides full inline instrumentation on radix, but does require
-> that you be able to specify the amount of physically contiguous memory
-> on the system at compile time. More details in patch 4.
+> For example, the potential race would be:
+> 
+>     CPU1                      CPU2
+>     mem_cgroup_move_account   deferred_split_huge_page
+>       list_empty
+>                                 lock
+>                                 list_empty
+>                                 list_add_tail
+>                                 unlock
+>       lock
+>       # list_empty might not hold anymore
+>       list_add_tail
+>       unlock
+> 
+> When this sequence happens, the list_add_tail() in
+> mem_cgroup_move_account() corrupt the list since which is already been
+> added to some split_queue in split_huge_page_to_list().
+> 
+> Besides this, David Rientjes points out the split_queue_len would be in
+> a wrong state, which would be a significant issue for shrinkers.
+> 
+> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+> 
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> Cc: <stable@vger.kernel.org>    [5.4+]
+> 
+> ---
+> v3:
+>   * remove all review/ack tag since rewrite the changelog
+>   * use deferred_split_huge_page as the example of race
+>   * add cc stable 5.4+ tag as suggested by David Rientjes
+> 
+> v2:
+>   * move check on compound outside suggested by Alexander
+>   * an example of the race condition, suggested by Michal
+> ---
+>  mm/memcontrol.c | 18 +++++++++++-------
+>  1 file changed, 11 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index c5b5f74cfd4d..6450bbe394e2 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
+>  	}
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	if (compound && !list_empty(page_deferred_list(page))) {
+> +	if (compound) {
+>  		spin_lock(&from->deferred_split_queue.split_queue_lock);
+> -		list_del_init(page_deferred_list(page));
+> -		from->deferred_split_queue.split_queue_len--;
+> +		if (!list_empty(page_deferred_list(page))) {
+> +			list_del_init(page_deferred_list(page));
+> +			from->deferred_split_queue.split_queue_len--;
+> +		}
+>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  	}
+>  #endif
+> @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
+>  	page->mem_cgroup = to;
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	if (compound && list_empty(page_deferred_list(page))) {
+> +	if (compound) {
+>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> -		list_add_tail(page_deferred_list(page),
+> -			      &to->deferred_split_queue.split_queue);
+> -		to->deferred_split_queue.split_queue_len++;
+> +		if (list_empty(page_deferred_list(page))) {
+> +			list_add_tail(page_deferred_list(page),
+> +				      &to->deferred_split_queue.split_queue);
+> +			to->deferred_split_queue.split_queue_len++;
+> +		}
+>  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>  	}
+>  #endif
 
-This might be a stupid idea as I don't know ppc64 much. IIUC, PPC64 
-kernel can be relocated, there is no requirement to have it at address 
-0. Therefore, would it be possible to put the KASAN shadow mem at the 
-begining of the physical memory, instead of putting it at the end ?
-That way, you wouldn't need to know the amount of memory at compile time 
-because KASAN shadow mem would always be at address 0.
+The patch looks OK for me. But there is another question. I forget, why we unconditionally
+add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
+it was initially in the list? Something like:
 
-Christophe
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d4394ae4e5be..0be0136adaa6 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
+ 	struct pglist_data *pgdat;
+ 	unsigned long flags;
+ 	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
++	bool split = false;
+ 	int ret;
+ 	bool anon;
+ 
+@@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
+ 		if (!list_empty(page_deferred_list(page))) {
+ 			list_del_init(page_deferred_list(page));
+ 			from->deferred_split_queue.split_queue_len--;
++			split = true;
+ 		}
+ 		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+ 	}
+@@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
+ 	page->mem_cgroup = to;
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound) {
++	if (compound && split) {
+ 		spin_lock(&to->deferred_split_queue.split_queue_lock);
+ 		if (list_empty(page_deferred_list(page))) {
+ 			list_add_tail(page_deferred_list(page),
