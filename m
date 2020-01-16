@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCC3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB00DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894B02072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DFD2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218150;
-	bh=3gmjdTaVUXoSoGNgiGnKtLI5R2KJxvEfY/3ptwXubSw=;
+	s=default; t=1579218160;
+	bh=OQQauq5k3SzDeIr61k/kMJla6O/tXeJ41+844kMTTaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wEXeagTR44xGLagflDJ759YGnFSPV9PnH21FYVo1qyyYn2yJNub24zglRh4/9A76K
-	 YSU8CbhmkT41pEhCLAnj6YwNNER6Zj5cj0JWYXknczJcQoGxXkMrX4xKWdRzA6rUf/
-	 Ul7GNF8T98XSEFbqSX+4FSTgUCLyT8/9Opb37FGU=
+	b=gbs7X2NcovjdvSZ+9XoHk5zeZEOzyHX1wTQHaIQzt+dduTqsJOCM4SC2o1py3KeIH
+	 v2+Nc1E5bgcnuoZa+xd0mBaAp2pU+x+mhAtYvF3fXZuD8vosu1mDpMLdUpy6M6hti7
+	 Z7WqvakF7Itz09prMBRh0RP0kWBXTKskLEVVIEoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391879AbgAPXm3 (ORCPT
+        id S2389325AbgAPXmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:42:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:42:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgAPX0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:40 -0500
+        id S2388859AbgAPX02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D0920684;
-        Thu, 16 Jan 2020 23:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 899912072B;
+        Thu, 16 Jan 2020 23:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217200;
-        bh=3gmjdTaVUXoSoGNgiGnKtLI5R2KJxvEfY/3ptwXubSw=;
+        s=default; t=1579217188;
+        bh=OQQauq5k3SzDeIr61k/kMJla6O/tXeJ41+844kMTTaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vd3/qxNo4DXqBp1N8odiO342AgKBy417suU9disaPqELo3bFWLyjdFn7w8aoyvCqD
-         NeCf2qhjnp1Zcwz0KSdY8B/PFQYdyFnMqlYARmbdtYmOgAIdXgQHFeqCiJMfHdX2x5
-         GAA5XvEdObOuj3k2oxU2oCX17HZvJyvdivrG6BuE=
+        b=mxBYxucZHRB3pMQb1Rm3qSL7q1z3dchnNYjpjCgKaNGERwRZXef/gwXMY2FlAZ33C
+         a4X7yRPx7ZQZP+otP6BUQEsuedmdD/DfKns0H/C1JNC3LiI2YM6Wb+4sazO0a+u85n
+         6ASD/eu91ZKKU9O5TyxdaOgtdbAn/Rpvk/jxSbiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 164/203] ubifs: do_kill_orphans: Fix a memory leak bug
-Date:   Fri, 17 Jan 2020 00:18:01 +0100
-Message-Id: <20200116231759.013280402@linuxfoundation.org>
+        stable@vger.kernel.org, Yong Wu <yong.wu@mediatek.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 159/203] iommu/mediatek: Correct the flush_iotlb_all callback
+Date:   Fri, 17 Jan 2020 00:17:56 +0100
+Message-Id: <20200116231758.662329101@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,69 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Yong Wu <yong.wu@mediatek.com>
 
-commit 10256f000932f12596dc043cf880ecf488a32510 upstream.
+commit 2009122f1d83dd8375572661961eab1e7e86bffe upstream.
 
-If there are more than one valid snod on the sleb->nodes list,
-do_kill_orphans will malloc ino more than once without releasing
-previous ino's memory. Finally, it will trigger memory leak.
+Use the correct tlb_flush_all instead of the original one.
 
-Fixes: ee1438ce5dc4 ("ubifs: Check link count of inodes when...")
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 4d689b619445 ("iommu/io-pgtable-arm-v7s: Convert to IOMMU API TLB sync")
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/orphan.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/iommu/mtk_iommu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ubifs/orphan.c
-+++ b/fs/ubifs/orphan.c
-@@ -631,12 +631,17 @@ static int do_kill_orphans(struct ubifs_
- 	ino_t inum;
- 	int i, n, err, first = 1;
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -447,7 +447,7 @@ static size_t mtk_iommu_unmap(struct iom
  
-+	ino = kmalloc(UBIFS_MAX_INO_NODE_SZ, GFP_NOFS);
-+	if (!ino)
-+		return -ENOMEM;
-+
- 	list_for_each_entry(snod, &sleb->nodes, list) {
- 		if (snod->type != UBIFS_ORPH_NODE) {
- 			ubifs_err(c, "invalid node type %d in orphan area at %d:%d",
- 				  snod->type, sleb->lnum, snod->offs);
- 			ubifs_dump_node(c, snod->node);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto out_free;
- 		}
+ static void mtk_iommu_flush_iotlb_all(struct iommu_domain *domain)
+ {
+-	mtk_iommu_tlb_sync(mtk_iommu_get_m4u_data());
++	mtk_iommu_tlb_flush_all(mtk_iommu_get_m4u_data());
+ }
  
- 		orph = snod->node;
-@@ -663,20 +668,18 @@ static int do_kill_orphans(struct ubifs_
- 				ubifs_err(c, "out of order commit number %llu in orphan node at %d:%d",
- 					  cmt_no, sleb->lnum, snod->offs);
- 				ubifs_dump_node(c, snod->node);
--				return -EINVAL;
-+				err = -EINVAL;
-+				goto out_free;
- 			}
- 			dbg_rcvry("out of date LEB %d", sleb->lnum);
- 			*outofdate = 1;
--			return 0;
-+			err = 0;
-+			goto out_free;
- 		}
- 
- 		if (first)
- 			first = 0;
- 
--		ino = kmalloc(UBIFS_MAX_INO_NODE_SZ, GFP_NOFS);
--		if (!ino)
--			return -ENOMEM;
--
- 		n = (le32_to_cpu(orph->ch.len) - UBIFS_ORPH_NODE_SZ) >> 3;
- 		for (i = 0; i < n; i++) {
- 			union ubifs_key key1, key2;
+ static void mtk_iommu_iotlb_sync(struct iommu_domain *domain,
 
 
