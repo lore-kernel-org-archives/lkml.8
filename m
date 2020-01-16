@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CC2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E84C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5294E246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363E82077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197042;
-	bh=7mdvYsjz2S+4ygF5DvAs8ydvdy/6SDFkESCiPLp13T4=;
+	s=default; t=1579197048;
+	bh=OPa98pr8229ebjPXj4IhS5LOxf8G/Y4/ZXRc9zvSDi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYg9lrsbMYWu9QO1xW95lcqfH3F+jVMlhEhuMu26vV5o9jt60dDg5JTGlacr/tU8v
-	 BIi73z5Fli41bSelRYPgSHcqm9L5C6ukeJ1thfqfyoUmcb7lMCC0QlMM29ar/SMPs3
-	 7TMKiWHlOXIC7t5L+hKRB9pVoUp8Eve2qt68oAzs=
+	b=FSIU6XsXDe8vk8964oQbCwZVRf3vSXjpJsMqk4NxZRvQtl3gGiFj4hEU9bLTfFBM7
+	 iETnCnWpensLvR2RrlzgxGuW4+QpJxYxefLVMEwmsJMPf+wRUpAYZ59Q1GsAx8bZI1
+	 Gr9mVO1lsoWCGafIU5HvGEniO+OwOgAf7NRg9Pgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394396AbgAPRuk (ORCPT
+        id S2394583AbgAPRur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:50:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:50:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406245AbgAPRpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:41 -0500
+        id S2406039AbgAPRph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521742478A;
-        Thu, 16 Jan 2020 17:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 474E924781;
+        Thu, 16 Jan 2020 17:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196740;
-        bh=7mdvYsjz2S+4ygF5DvAs8ydvdy/6SDFkESCiPLp13T4=;
+        s=default; t=1579196736;
+        bh=OPa98pr8229ebjPXj4IhS5LOxf8G/Y4/ZXRc9zvSDi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bmyJxn6R2Ya2mKM5pLk5A+52TY/b4Yr1/AJy0b+u3/L/acCL5LpysPSZfyRayTXdO
-         wD01oKIxX//mHYKRkSM/1jqmh1lyrFM2BMLP6ip1iCaLaetC8ic6L7+IDUx+weHsIo
-         DnZrgrGD/Wk1zlH8kQHpspSUOGNsCytbhy/BrDHM=
+        b=LvJ2aYs9sfbWJS1qOY+xN4Aze/acYGFDkaFSbhR7HcuiBi7BSF66joNRVT6ZqUzgx
+         McvWN/9i4qVn5QxXWUDoO0g19iFDbRiAc8o0Ym/nDSXKlns3dfHAiiA0qanufjSYGG
+         4GIRnru4LE1tiiwsWlf1Fi2NwOUp0Od9d+n19Q0s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 121/174] ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
-Date:   Thu, 16 Jan 2020 12:41:58 -0500
-Message-Id: <20200116174251.24326-121-sashal@kernel.org>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 118/174] crypto: caam - free resources in case caam_rng registration failed
+Date:   Thu, 16 Jan 2020 12:41:55 -0500
+Message-Id: <20200116174251.24326-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,38 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-[ Upstream commit 9b4275c415acca6264a3d7f1182589959c93d530 ]
+[ Upstream commit c59a1d41672a89b5cac49db1a472ff889e35a2d2 ]
 
-sound/soc/codecs/cs4349.c:358:32: warning:
- cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
+Check the return value of the hardware registration for caam_rng and free
+resources in case of failure.
 
-cs4349_runtime_pm ops already defined, it seems
-we should enable it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815090157.70036-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e24f7c9e87d4 ("crypto: caam - hwrng support")
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4349.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/caam/caamrng.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
-index 0ac8fc5ed4ae..9ebd500ecf38 100644
---- a/sound/soc/codecs/cs4349.c
-+++ b/sound/soc/codecs/cs4349.c
-@@ -379,6 +379,7 @@ static struct i2c_driver cs4349_i2c_driver = {
- 	.driver = {
- 		.name		= "cs4349",
- 		.of_match_table	= cs4349_of_match,
-+		.pm = &cs4349_runtime_pm,
- 	},
- 	.id_table	= cs4349_i2c_id,
- 	.probe		= cs4349_i2c_probe,
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index 9b92af2c7241..a77319bf221d 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -361,7 +361,10 @@ static int __init caam_rng_init(void)
+ 		goto free_rng_ctx;
+ 
+ 	dev_info(dev, "registering rng-caam\n");
+-	return hwrng_register(&caam_rng);
++
++	err = hwrng_register(&caam_rng);
++	if (!err)
++		return err;
+ 
+ free_rng_ctx:
+ 	kfree(rng_ctx);
 -- 
 2.20.1
 
