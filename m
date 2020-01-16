@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7BBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B3BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33492064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5ED20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218330;
-	bh=9TP65DmAZOyP+WVUXv3LqkBhonR0W5m6WbRnSaordVc=;
+	s=default; t=1579218331;
+	bh=L4p5itd9rR/UnKs+CcnjAtWcMPVupUcsYE8+JisDULg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVvpjSrLKUGZcWYmJ6ndXxz1Hb24k2l1uhN4UP4A6YTIUo0SVkufqPn10bAn2gfju
-	 6rQjMMegbFfGKXIrDfpJE1DphyX/QFxE0U/igz6BddjMw6glR73Euj+FmSTE8/OhZP
-	 znhoCAfphwT5gN3YkYmcVp8fPuAnqq0XO8zAq7MM=
+	b=TW2PkrGtLIrYfC5rgLclWc/gTuX8nK0fbES4wEVqDgXvqAJMiIx7rv9EInAGAiwdh
+	 RmZVnWfyoFex2FOdb4diUKWLD7gcqP8YruGkNd19Bs+1c5vJwYs3hyy6WDiMfJjSYu
+	 0x6eBXHM3+CaSd5v1rISjaiPKSUteiEpUNTvnByY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389137AbgAPXp3 (ORCPT
+        id S1730948AbgAPXW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:45:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51014 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390974AbgAPXXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:01 -0500
+        id S2390953AbgAPXWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F0A20684;
-        Thu, 16 Jan 2020 23:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414D52072E;
+        Thu, 16 Jan 2020 23:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216981;
-        bh=9TP65DmAZOyP+WVUXv3LqkBhonR0W5m6WbRnSaordVc=;
+        s=default; t=1579216973;
+        bh=L4p5itd9rR/UnKs+CcnjAtWcMPVupUcsYE8+JisDULg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDq4g8LDL+K1i9InSb7iscvkyClJ2eFoU6MFAgnJcDmw547oI0JFFZAYef/lr4ik0
-         VwSXfORNYSSqdlZdHZpbmTLP/rgDpbkWZkewNQYzBMYaLmWCy4yTLmDsnIREVmrpMo
-         YIvLwkt4HLovxoHjQpkwwp5PJdeLgwKM3ibaNMO8=
+        b=zgDEogqu6F6L06JGg7hrJMa935rD3YrO8RzmwGG5P1fAi7QtQQJEv4zhw9xRSE5T3
+         gOgb6bYe7fCf87AqViEHd2lFncwcblvRJSf5WQIUGFQEEMac5yjDD2A5KrgcuKoeZK
+         Kwh8BglOGecl9JelhbikvMMlfBCa1QSIx+XXhR/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhou Wang <wangzhou1@hisilicon.com>,
-        kbuild test robot <lkp@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 099/203] crypto: hisilicon - select NEED_SG_DMA_LENGTH in qm Kconfig
-Date:   Fri, 17 Jan 2020 00:16:56 +0100
-Message-Id: <20200116231754.278397020@linuxfoundation.org>
+        stable@vger.kernel.org, Diego Calleja <diegocg@gmail.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 096/203] dm: add dm-clone to the documentation index
+Date:   Fri, 17 Jan 2020 00:16:53 +0100
+Message-Id: <20200116231754.045692996@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,32 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhou Wang <wangzhou1@hisilicon.com>
+From: Diego Calleja <diegocg@gmail.com>
 
-commit b981744ef04f7e8cb6931edab50021fff3c8077e upstream.
+commit 484e0d2b11e1fdd0d17702b282eb2ed56148385f upstream.
 
-To avoid compile error in some platforms, select NEED_SG_DMA_LENGTH in
-qm Kconfig.
-
-Fixes: dfed0098ab91 ("crypto: hisilicon - add hardware SGL support")
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 7431b7835f554 ("dm: add clone target")
+Signed-off-by: Diego Calleja <diegocg@gmail.com>
+Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/hisilicon/Kconfig |    1 +
+ Documentation/admin-guide/device-mapper/index.rst |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/hisilicon/Kconfig
-+++ b/drivers/crypto/hisilicon/Kconfig
-@@ -17,6 +17,7 @@ config CRYPTO_DEV_HISI_SEC
- config CRYPTO_DEV_HISI_QM
- 	tristate
- 	depends on ARM64 && PCI && PCI_MSI
-+	select NEED_SG_DMA_LENGTH
- 	help
- 	  HiSilicon accelerator engines use a common queue management
- 	  interface. Specific engine driver may use this module.
+--- a/Documentation/admin-guide/device-mapper/index.rst
++++ b/Documentation/admin-guide/device-mapper/index.rst
+@@ -8,6 +8,7 @@ Device Mapper
+     cache-policies
+     cache
+     delay
++    dm-clone
+     dm-crypt
+     dm-flakey
+     dm-init
 
 
