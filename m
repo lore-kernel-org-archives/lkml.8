@@ -2,118 +2,91 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA046C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FBDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E317222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F31F22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XimebBJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgAPBjw (ORCPT
+        id S1730197AbgAPBlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:39:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49795 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgAPBjw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:39:52 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iru8P-0004zY-Tg; Thu, 16 Jan 2020 02:39:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 3CF6710121C; Thu, 16 Jan 2020 02:39:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ramon Fried <rfried.dev@gmail.com>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-In-Reply-To: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
-Date:   Thu, 16 Jan 2020 02:39:45 +0100
-Message-ID: <87v9pcw55q.fsf@nanos.tec.linutronix.de>
+        Wed, 15 Jan 2020 20:41:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:43565 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729048AbgAPBlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:41:03 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yn306yYJz9sPW;
+        Thu, 16 Jan 2020 12:41:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579138861;
+        bh=iF8dGjvO6kswMpy1JZRItoPj/hzZRrEEPqmUL5wGpiA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XimebBJCPS8AzMG/J5PAGPqz4AWIIePzkdVzN7XQvlpJqyFeOJXCsZIzlYm91uGJW
+         z0AMRhNBn9tx23suVfpmMITvkFHpHHOmx/ZHkDs8LTkh8F1NWBTPSd0VdDdaTjEF2i
+         yd/uSiCQXZ/SJOKitsX1sY3pUnfkcLdd7jyCrhxZ0SPq4BSzocCSq4QJ4xsNcx+HJB
+         qhixqedNRRHWdXDtvC7NtNIpN39rn5LWUQPWVjOkL6B9FJDZ+10lpNu0SChbPZ42Tk
+         dgHq1kOzY+WyI7VgF4Cb6aM+rekD5gv/3M6C4yxy48RirtzDLjFVtP5Xa6wvLUOKcq
+         WZtYzbNRwJsuA==
+Date:   Thu, 16 Jan 2020 12:41:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the usb-gadget tree
+Message-ID: <20200116124100.58af81d5@canb.auug.org.au>
+In-Reply-To: <b7ef5047-c8c3-42cc-d049-fb72563d3544@linaro.org>
+References: <20200116070726.7e2ef8cc@canb.auug.org.au>
+        <b7ef5047-c8c3-42cc-d049-fb72563d3544@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/0jsW41eyiDVWTdreT2TM8+y";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ramon,
+--Sig_/0jsW41eyiDVWTdreT2TM8+y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ramon Fried <rfried.dev@gmail.com> writes:
-> On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> Ramon Fried <rfried.dev@gmail.com> writes:
->> Due to the semantics of MSI this is perfectly fine and aside of your
->> problem this has worked perfectly fine so far and it's an actual
->> performance win because it avoid fiddling with the MSI mask which is
->> slow.
->>
-> fiddling with MSI masks is a configuration space write, which is
-> non-posted, so it does come with a price.
-> The question is if a test was ever conducted to see the it's better
-> than spurious IRQ's.
+Hi Bryan,
 
-The point is that there are no spurious interrupts in the sane cases and
-the tests we did showed a real performance improvements in high
-frequency interrupt situations due to avoiding the config space access.
+On Thu, 16 Jan 2020 01:19:22 +0000 Bryan O'Donoghue <bryan.odonoghue@linaro=
+.org> wrote:
+>
+> How should extra long fixes like this be divided up ?
 
-Please stop claiming that this spurious interrupt problem is there by
-design. It's not. Read the MSI spec.
+Just let them run on even if they are too long i.e. don't split them at all.
 
-Also boot your laptop/workstation with 'threadirqs' on the kernel
-command line and check how many spurious interrupts come in. On a test
-machine which has that command line parameter set I see exactly ONE with
-an uptime of several days and heavy MSI interrupt activity. The ONE is
-even there without 'threadirqs' on the command line, so I really can't
-be bothered to analyze that.
+--=20
+Cheers,
+Stephen Rothwell
 
->> You still have not told which driver/hardware is affected by this. Can
->> you please provide that information so we can finally look at the actual
->> hardware/driver combo?
->>
-> Sure,
-> I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
-> line which several MSI are multiplexed on it.
+--Sig_/0jsW41eyiDVWTdreT2TM8+y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I assume you write the driver, not the VHDL for the actual hardware,
-right? If so, you still did not tell which hardware that is and where we
-can find information about it.
+-----BEGIN PGP SIGNATURE-----
 
-I further assume that 'multiplexed' means that the hardware is something
-like an MSI receiver on the CPU/chipset which handles multiple MSI
-messages and forwards them to a single shared interrupt line on the MIPS
-GIC. Right?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fvywACgkQAVBC80lX
+0GxLkgf/b0A+nGrggj9HA9czdShu5o3SQFdD46v4dtIOSJL5Ix4DaTqGH/lST817
+7IDySPHCs6gilXop6l6ZzVbw6gFQ47xGMn34WCrGQDthLM3D14yZoQp79VzQCE9m
+rp0uilwLyMzPRjX9D68RBZRBmeSr4BhZ0TCHjrpUnEGuHiVfCKCOBXbeCJdFT6Wy
+1JKwGYrh+ScFYq/XBkvYIasXIuH5aKdObvHKDE9VnXcyuzc/n0oMaC2HSiBaXC/z
+6CIeAxSiPRrtV9DeWkVx0vUCjULV/FdXRNTkEDvam7wfiFqOmILfQh/FVfoBTGTR
+vYSMijraYROwIyiFwv6MnQNI0aU6hA==
+=TWxy
+-----END PGP SIGNATURE-----
 
-Can you please provide a pointer to the hardware documentation?
-
-> It's configured with handle_level_irq() as the GIC is level IRQ.
-
-Which is completely bonkers. MSI has edge semantics and sharing an
-interrupt line for edge type interrupts is broken by design, unless the
-hardware which handles the incoming MSIs and forwards them to the level
-type interrupt line is designed properly and the driver does the right
-thing.
-
-> The ack callback acks the GIC irq.  the mask/unmask calls
-> pci_msi_mask_irq() / pci_msi_unmask_irq()
-
-What? How is that supposed to work with multiple MSIs?
-
-Either the hardware is a trainwreck or the driver or both.
-
-I can't tell as I can't find my crystal ball. Maybe I should replace it
-with an Mobileye :)
-
-Thanks,
-
-        tglx
+--Sig_/0jsW41eyiDVWTdreT2TM8+y--
