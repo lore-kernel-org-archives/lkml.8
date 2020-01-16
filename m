@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3595C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2E1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A587B20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67E920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217504;
-	bh=ix/mQLxi3KZU+nbONVL+rbEycWfox2G4fhX4kilNJt4=;
+	s=default; t=1579217507;
+	bh=zPjs+tVGI9LSJMOzn29WDkK/KTQw5p59s0ju7EurzYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdrjGWuQgzqdsA5x4c8bYZGDGYsb7R5N1DzV6xh/+wFOzRZ1yrgewJMr1yYFg26zH
-	 RD6wvpsoPfJCSXlXZrTlzYRb3famvag+5VFdGM3vckHrlGqoHXVtH/NrOvoxrYB7mo
-	 JZ+JNfEJm7uLDHTJhtkouBiqvPQc2e3y+9AeWjuQ=
+	b=EQEmw5aaUxSrisf5miAIenAV1RAUEL3Gm3DptKB4aZZ4hxTVr06ZIhQHetkmYrFPr
+	 AqeIdjHii4cmbaAUAXMF6Z0WreGV62sF/4O3Yfr6X1eI4kKV1Nb30EYSDJZQNZiqce
+	 bw1/LcOPTte+9JCyNJcZMqyahwf3fTDMM+GUYhR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391476AbgAPXbn (ORCPT
+        id S2390733AbgAPXbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391482AbgAPXbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:16 -0500
+        id S2391495AbgAPXbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68D5E20684;
-        Thu, 16 Jan 2020 23:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2AB2072B;
+        Thu, 16 Jan 2020 23:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217475;
-        bh=ix/mQLxi3KZU+nbONVL+rbEycWfox2G4fhX4kilNJt4=;
+        s=default; t=1579217478;
+        bh=zPjs+tVGI9LSJMOzn29WDkK/KTQw5p59s0ju7EurzYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwAkJ13+pbczslqmCEM3tCvdaYrY21XrU84AKpg/Kr74NjGOai1el2Th2EU6z0fRT
-         GCxYNK3z/IxQmH294xrnjEVoc/d4vHwevEyPYWL0Yfuu0zQC7g3D57rfC54Mcw8nI/
-         ZmQWIUcv4BSX9RWd8nJ9MML2NaYqrcUCNtTn1hRg=
+        b=MdSGyxKwyuj2dKMoT/g8uKyd04r4zaJC/eUljeMogLTYPYWtfKOrIo0+QGqpgwsaA
+         s/a7pnaAV+lhN1jF5CXW1te+Jvlv46CEHkAPE/e5vWMnxPulKifKcDKwqxha6erSFh
+         mIfFTHehb2Ho7oZgeC1Wub8y+UG2LBxhFxU0DXeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 14/71] cifs: Fix lease buffer length error
-Date:   Fri, 17 Jan 2020 00:18:12 +0100
-Message-Id: <20200116231711.535850476@linuxfoundation.org>
+Subject: [PATCH 4.14 15/71] wimax: i2400: fix memory leak
+Date:   Fri, 17 Jan 2020 00:18:13 +0100
+Message-Id: <20200116231711.667070476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -61,85 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit b57a55e2200ede754e4dc9cce4ba9402544b9365 upstream.
+commit 2507e6ab7a9a440773be476141a255934468c5ef upstream.
 
-There is a KASAN slab-out-of-bounds:
-BUG: KASAN: slab-out-of-bounds in _copy_from_iter_full+0x783/0xaa0
-Read of size 80 at addr ffff88810c35e180 by task mount.cifs/539
+In i2400m_op_rfkill_sw_toggle cmd buffer should be released along with
+skb response.
 
-CPU: 1 PID: 539 Comm: mount.cifs Not tainted 4.19 #10
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-            rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
-Call Trace:
- dump_stack+0xdd/0x12a
- print_address_description+0xa7/0x540
- kasan_report+0x1ff/0x550
- check_memory_region+0x2f1/0x310
- memcpy+0x2f/0x80
- _copy_from_iter_full+0x783/0xaa0
- tcp_sendmsg_locked+0x1840/0x4140
- tcp_sendmsg+0x37/0x60
- inet_sendmsg+0x18c/0x490
- sock_sendmsg+0xae/0x130
- smb_send_kvec+0x29c/0x520
- __smb_send_rqst+0x3ef/0xc60
- smb_send_rqst+0x25a/0x2e0
- compound_send_recv+0x9e8/0x2af0
- cifs_send_recv+0x24/0x30
- SMB2_open+0x35e/0x1620
- open_shroot+0x27b/0x490
- smb2_open_op_close+0x4e1/0x590
- smb2_query_path_info+0x2ac/0x650
- cifs_get_inode_info+0x1058/0x28f0
- cifs_root_iget+0x3bb/0xf80
- cifs_smb3_do_mount+0xe00/0x14c0
- cifs_do_mount+0x15/0x20
- mount_fs+0x5e/0x290
- vfs_kern_mount+0x88/0x460
- do_mount+0x398/0x31e0
- ksys_mount+0xc6/0x150
- __x64_sys_mount+0xea/0x190
- do_syscall_64+0x122/0x590
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-It can be reproduced by the following step:
-  1. samba configured with: server max protocol = SMB2_10
-  2. mount -o vers=default
-
-When parse the mount version parameter, the 'ops' and 'vals'
-was setted to smb30,  if negotiate result is smb21, just
-update the 'ops' to smb21, but the 'vals' is still smb30.
-When add lease context, the iov_base is allocated with smb21
-ops, but the iov_len is initiallited with the smb30. Because
-the iov_len is longer than iov_base, when send the message,
-copy array out of bounds.
-
-we need to keep the 'ops' and 'vals' consistent.
-
-Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.1 and later)")
-Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-[bwh: Backported to 4.14: We never switch to SMB3.1.1 here]
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/smb2pdu.c |    1 +
+ drivers/net/wimax/i2400m/op-rfkill.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -575,6 +575,7 @@ SMB2_negotiate(const unsigned int xid, s
- 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
- 			/* ops set to 3.0 by default for default so update */
- 			ses->server->ops = &smb21_operations;
-+			ses->server->vals = &smb21_values;
- 		}
- 	} else if (le16_to_cpu(rsp->DialectRevision) !=
- 				ses->server->vals->protocol_id) {
+--- a/drivers/net/wimax/i2400m/op-rfkill.c
++++ b/drivers/net/wimax/i2400m/op-rfkill.c
+@@ -142,6 +142,7 @@ int i2400m_op_rfkill_sw_toggle(struct wi
+ 			"%d\n", result);
+ 	result = 0;
+ error_cmd:
++	kfree(cmd);
+ 	kfree_skb(ack_skb);
+ error_msg_to_dev:
+ error_alloc:
 
 
