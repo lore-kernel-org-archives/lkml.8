@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F73AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228142072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A112075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217068;
-	bh=G7Vn/wR8G1zNHog83gz8Z834b+7wTpHqWwsVwuhIQrM=;
+	s=default; t=1579217069;
+	bh=PsSfzO05f+Oo1jRnR0rDPpL+kDOGWo5f0hc+PiXh7/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=15Vr15WSwtSLd05SaIEqJ3H5wHKLODklN0TYx+2/ewiKjot/W20To83Te416Pg2Ss
-	 fBEYGgbzXB9OICrjIizePTMpiuB9dgdHMiY6AYPN/Kr6IYAvZasDAiaO8DMo+97Xty
-	 ay5C7MHIw9VT3HEU6EG9qaQggyTC3aW3pHgz+m68=
+	b=Y/NHYi2UFaWPTh0qnNUPZD1Xuau5gUTzMVhAq6ddi0ejDZ6r3e7tR1Aq7tOyRnD8N
+	 GS5Je+93rFTs65TAIXwWzL98kEoPkqckwxwBwdsGuOQbVkPmVwNMaVM6PrzvkYCOsf
+	 k3gBXjEu7egkqrHqRZXvSv/rN04Qdnl0rSR4CF2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387732AbgAPXY0 (ORCPT
+        id S2388057AbgAPXY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387458AbgAPXYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:23 -0500
+        id S1733266AbgAPXYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8BDA20748;
-        Thu, 16 Jan 2020 23:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28FE62075B;
+        Thu, 16 Jan 2020 23:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217062;
-        bh=G7Vn/wR8G1zNHog83gz8Z834b+7wTpHqWwsVwuhIQrM=;
+        s=default; t=1579217064;
+        bh=PsSfzO05f+Oo1jRnR0rDPpL+kDOGWo5f0hc+PiXh7/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1fa8Cp4msOqOzy5P50B/qgB/wmfdgkCuCkhkhssxAkDbMH4Uw/dJUr2FUDthCOjX
-         b6J4EsLFJXc45y/yGwVUizv6BsWfB7XmGaRT2++RaDqLnH2gL8slA4OXqBz0o5DVVb
-         Kb6epHA+62a76RaV3H+yzPILHT2j2s7QGxOfdyao=
+        b=fr7DvOvzXsDCfLnIYXYdg3rnVQJ4MXE0ET4iPK/nEw35VojqyxP+tkS5N8pZTImod
+         f31C8kJodvF5B+1wQxiWJsFBQuarmhsRVat9egr+wpklzCXK2ywtn0qnBc6qmdrOlp
+         4r8uvL0p+2kHlCepHmFEyzwuP5GFvUziSh+aD3qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Remi Pommarel <repk@triplefau.lt>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 5.4 132/203] PCI: aardvark: Use LTSSM state to build link training flag
-Date:   Fri, 17 Jan 2020 00:17:29 +0100
-Message-Id: <20200116231756.662872344@linuxfoundation.org>
+Subject: [PATCH 5.4 133/203] PCI: aardvark: Fix PCI_EXP_RTCTL register configuration
+Date:   Fri, 17 Jan 2020 00:17:30 +0100
+Message-Id: <20200116231756.732374547@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -64,101 +62,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Remi Pommarel <repk@triplefau.lt>
 
-commit 364b3f1ff8f096d45f042a9c85daf7a1fc78413e upstream.
+commit c0f05a6ab52535c1bf5f43272eede3e11c5701a5 upstream.
 
-Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-implemented and does not reflect the actual link training state (the
-flag is always set to 0). In order to support link re-training feature
-this flag has to be emulated. The Link Training and Status State
-Machine (LTSSM) flag in Aardvark LMI config register could be used as
-a link training indicator. Indeed if the LTSSM is in L0 or upper state
-then link training has completed (see [1]).
-
-Unfortunately because after asking a link retraining it takes a while
-for the LTSSM state to become less than 0x10 (due to L0s to recovery
-state transition delays), LTSSM can still be in L0 while link training
-has not finished yet. So this waits for link to be in recovery or lesser
-state before returning after asking for a link retrain.
-
-[1] "PCI Express Base Specification", REV. 4.0
-    PCI Express, February 19 2014, Table 4-14
+PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+should not modify other interrupts' mask. The ISR mask polarity was also
+inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+should actually be cleared.
 
 Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-Tested-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-aardvark.c |   29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-aardvark.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -180,6 +180,8 @@
- #define LINK_WAIT_MAX_RETRIES		10
- #define LINK_WAIT_USLEEP_MIN		90000
- #define LINK_WAIT_USLEEP_MAX		100000
-+#define RETRAIN_WAIT_MAX_RETRIES	10
-+#define RETRAIN_WAIT_USLEEP_US		2000
+@@ -428,7 +428,7 @@ advk_pci_bridge_emul_pcie_conf_read(stru
  
- #define MSI_IRQ_NUM			32
- 
-@@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struc
- 	return -ETIMEDOUT;
- }
- 
-+static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-+{
-+	size_t retries;
-+
-+	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-+		if (!advk_pcie_link_up(pcie))
-+			break;
-+		udelay(RETRAIN_WAIT_USLEEP_US);
-+	}
-+}
-+
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
-@@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(stru
+ 	case PCI_EXP_RTCTL: {
+ 		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+-		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
++		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
  		return PCI_BRIDGE_EMUL_HANDLED;
  	}
  
-+	case PCI_EXP_LNKCTL: {
-+		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-+		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-+			~(PCI_EXP_LNKSTA_LT << 16);
-+		if (!advk_pcie_link_up(pcie))
-+			val |= (PCI_EXP_LNKSTA_LT << 16);
-+		*value = val;
-+		return PCI_BRIDGE_EMUL_HANDLED;
-+	}
-+
- 	case PCI_CAP_LIST_ID:
- 	case PCI_EXP_DEVCAP:
- 	case PCI_EXP_DEVCTL:
- 	case PCI_EXP_LNKCAP:
--	case PCI_EXP_LNKCTL:
- 		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
- 		return PCI_BRIDGE_EMUL_HANDLED;
- 	default:
-@@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(str
- 
- 	switch (reg) {
- 	case PCI_EXP_DEVCTL:
-+		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-+		break;
-+
- 	case PCI_EXP_LNKCTL:
- 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-+		if (new & PCI_EXP_LNKCTL_RL)
-+			advk_pcie_wait_for_retrain(pcie);
+@@ -478,10 +478,15 @@ advk_pci_bridge_emul_pcie_conf_write(str
+ 			advk_pcie_wait_for_retrain(pcie);
  		break;
  
- 	case PCI_EXP_RTCTL:
+-	case PCI_EXP_RTCTL:
+-		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+-		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
++	case PCI_EXP_RTCTL: {
++		/* Only mask/unmask PME interrupt */
++		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
++			~PCIE_MSG_PM_PME_MASK;
++		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
++			val |= PCIE_MSG_PM_PME_MASK;
++		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+ 		break;
++	}
+ 
+ 	case PCI_EXP_RTSTA:
+ 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
 
 
