@@ -2,107 +2,100 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F508C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E4CC33CBA
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DA02072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579188140;
-	bh=Ku2aKwOP6DpwDuz0lw1HoPs2qvU3odL5bVvT1r9AdRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SDn9uAKKGLRa2RgOf7SmIIMZZRCDciVXgRU6Ev94FTnMyyDjLPYmgEQ9+m/eofuIc
-	 HAW/equKjBDaqGmiy1dTf984gvbGuLeYSTmF8mXLbxptht3Eayc3O5U2HtSRZ7++At
-	 AmYYp9oTB01hQ+8+ZcWkEEXf0WmC+vq6DPgZa9OU=
+	by mail.kernel.org (Postfix) with ESMTP id 0D73E2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzs8yVan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgAPPWT (ORCPT
+        id S1729026AbgAPPWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:22:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40401 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbgAPPWS (ORCPT
+        Thu, 16 Jan 2020 10:22:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34894 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgAPPWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:22:18 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so19549796wrn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:22:17 -0800 (PST)
+        Thu, 16 Jan 2020 10:22:42 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so19540802wro.2;
+        Thu, 16 Jan 2020 07:22:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=vZZ9VyOzV34iQ0VxY5F4QTnc79//k1XDbodGn0X9/BI=;
+        b=lzs8yVanbsLsplmx8X5y+FC2PfGxjVxhWovxdAuhr5n1AMnQj6FcgATftk365XldMm
+         Pg6rwZzsLrHwxedRZIpfDWG/kaEmH8p0mtVGeojY0qDZ+y6XV7YD7HJH4dR1T3CBYmMb
+         2tYs6RM1uClP+oESBKqqsYBi0AuGK+VvDstUPSvOSGhh20BlPZLlOLZIOQujpc4oOABC
+         1n18InsiE7iRJBH9QmX9lArDfeWyw+pPptGBBQqd0sROgz27kBLzU3XclzaECs4Zh0US
+         fCgktVQY7pHYg4Gl+nQB1JrW4X5QP68n0p1NKuKLr63K1TdzapLQMdjWztcHHYHWhzVO
+         WYvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FTzYumS8YOtnp3SJI0/nekGMa3Yhr59tUFnF0F2ptLU=;
-        b=NdfWRXPZ2Qj+9Ie9rMFmSzcQO6QgaHigrvVSAdbsdKebbsMNYJAc8dIBfNwgHSbZE2
-         KF12xrtz7HGwweQZh0w9/6yn+BXyeYa9cJs50Uflm6+diOYgvWPv6qFhFtmx9ocec+un
-         XjFHeM8BdOwiqozA0SZe3EVZuUU9X2AjOtXiqBWKGau1CiClMQOubaJ9mmU8fJdk1avT
-         temsNkOEi7hdXRPE3+JE43vHJFgEpcuE2Ugazi6wSyM9cV3kG/4YpEu3IV5qRFEGgXA8
-         IOTpBumXy7QqU+h4kkcBVgdt6fnRBxV4kwA6NIXEylLqP+ogUdpErIqvtiku6zeLQie/
-         7U3g==
-X-Gm-Message-State: APjAAAWDVfFKqpr5NXV+72uhbmOxT8n1ertZkyqRnBJfTHOZgt79qQNL
-        XV29p8eYTm0C/JVAJKxO1vY=
-X-Google-Smtp-Source: APXvYqzM/cpTWKsf6QyyMx22ufqT++w4rkUpgAUuSjNwYreF7woTpENfGFHaB4N9Fu9yjJ35D7NQMA==
-X-Received: by 2002:adf:dfc2:: with SMTP id q2mr3776668wrn.251.1579188136862;
-        Thu, 16 Jan 2020 07:22:16 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id u22sm31139535wru.30.2020.01.16.07.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 07:22:16 -0800 (PST)
-Date:   Thu, 16 Jan 2020 16:22:14 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Scott Cheloha <cheloha@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Donald Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH v4] drivers/base/memory.c: cache blocks in radix tree to
- accelerate lookup
-Message-ID: <20200116152214.GX19428@dhcp22.suse.cz>
-References: <20191217193238-1-cheloha@linux.vnet.ibm.com>
- <20200109212516.17849-1-cheloha@linux.vnet.ibm.com>
- <181caae3-ffb8-c745-a4c9-1aef93ea6dd5@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <181caae3-ffb8-c745-a4c9-1aef93ea6dd5@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=vZZ9VyOzV34iQ0VxY5F4QTnc79//k1XDbodGn0X9/BI=;
+        b=d9kWdoelTVc4HCL4+H8pSg3wHmUhAOEEnqSMHIke6BlfbN3TjEovtgV+Y1mhqiTlMW
+         QthLJbnP3/RgyFCsJD8fUmYP/kg36S9hUS91vwH9FR1BuuiKR2zLn2qy8D/X6EqSSvDf
+         0Ch7kTtufCCcxPpiFIpTepOUePDkYkxuKU5OfqMqk6uPgaH5tlabuUtzan4CM1zDo5vI
+         w2rXr/5a2n93+H6OrqNVzDs1mib0jmUKByfsBjmzjJh1Vb2ncHm3W3qUWYIW3O01Euu2
+         V0CsmdSWOQ5tZ0IOhtabRiWH+BiecqS6qDef6aFLGTLOLvmDPpy545EFU7kDvZU1OPW6
+         PAyg==
+X-Gm-Message-State: APjAAAVa9FrpEVYC3b2gc+kMfnxB+jJ4AEAx9xSv1YafT4DGoO+fH/L5
+        e8HRZcBCDsrBwtjjMQw1XG0=
+X-Google-Smtp-Source: APXvYqyuFSu4gLbVEvoyKNl3FBhw734PapU1CBJhHea/vYM4blIBscvJQWf3mxNqEwlCKpMp0wwGYg==
+X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr3735432wrw.255.1579188160843;
+        Thu, 16 Jan 2020 07:22:40 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w8sm18193wmd.2.2020.01.16.07.22.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jan 2020 07:22:40 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     ulf.hansson@linaro.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH v2 3/3] dt-bindings: mmc: rockchip-dw-mshc: add description for rk3308
+Date:   Thu, 16 Jan 2020 16:22:30 +0100
+Message-Id: <20200116152230.29831-3-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200116152230.29831-1-jbx6244@gmail.com>
+References: <20200116152230.29831-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-01-20 20:09:48, David Hildenbrand wrote:
-> On 09.01.20 22:25, Scott Cheloha wrote:
-> > Searching for a particular memory block by id is an O(n) operation
-> > because each memory block's underlying device is kept in an unsorted
-> > linked list on the subsystem bus.
-> > 
-> > We can cut the lookup cost to O(log n) if we cache the memory blocks in
-> > a radix tree.  With a radix tree cache in place both memory subsystem
-> > initialization and memory hotplug run palpably faster on systems with a
-> > large number of memory blocks.
-> > 
-> > Signed-off-by: Scott Cheloha <cheloha@linux.ibm.com>
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> > Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
-> > Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> Soooo,
-> 
-> I just learned that radix trees are nowadays only a wrapper for xarray
-> (for quite a while already!), and that the xarray interface shall be
-> used in new code.
+The description below is already in use for rk3308.dtsi,
+but was somehow never added to a document, so add
+"rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc"
+for mmc nodes on a rk3308 platform to rockchip-dw-mshc.yaml.
 
-Good point. I somehow didn't realize this would add more work for a
-later code refactoring. The mapping should be pretty straightforward.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for noticing!
-
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+index 2f70f5ef0..89c3edd6a 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+@@ -35,6 +35,8 @@ properties:
+             - rockchip,rk3036-dw-mshc
+             # for Rockchip RK322x
+             - rockchip,rk3228-dw-mshc
++            # for Rockchip RK3308
++            - rockchip,rk3308-dw-mshc
+             # for Rockchip RK3328
+             - rockchip,rk3328-dw-mshc
+             # for Rockchip RK3368
 -- 
-Michal Hocko
-SUSE Labs
+2.11.0
+
