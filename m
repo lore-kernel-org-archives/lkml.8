@@ -2,107 +2,69 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF86C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFBFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB78D20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C00D206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199401;
-	bh=mAr6Zddc1rPASOuktELYGo8wqMA4ihXUJE/R/dMfsc4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4ewXA1/ZLiDL0ojbSvOnKAcSgoIRuqzoeDSuDt4APt1MI3mIZAsUzNDVUbCYMwRy
-	 LZiJSFqn7oUPuR16sdW8iCsqogrYyt4EFhQ4A8B8BzF1J5AcBzSykFoO1iiQhGCcom
-	 aHNC7MiV2BToT7QADa3u7kuLX0vfqzd3AZAPc/fs=
+	s=default; t=1579199408;
+	bh=aF+qcS9mrjO8tbEi8YwhBFivADRMZws4q6LY/Bt7bLw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=kAxmcoTbxEEe9cyhxepyg+iwGU2upb5KB64d+2ibV8QR/kHnv14I70iWcTA/iM7gv
+	 4KJoLQY/ogmLagKMLIVA8QBM3cR1CkntJaTGI3ekhIzx7mO7jFT9D+vB8N73oyEbYj
+	 eBpBd4HEUWHCvF/efYpkh/2nx2/9/SL9Mc9iVoAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436716AbgAPSaA (ORCPT
+        id S2404007AbgAPSaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:30:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33706 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:30:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392144AbgAPRZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:43 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B09CE246DD;
-        Thu, 16 Jan 2020 17:25:41 +0000 (UTC)
+        id S2436720AbgAPSaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:30:04 -0500
+Subject: Re: [GIT PULL] chrome-platform fixes for v5.5-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195542;
-        bh=mAr6Zddc1rPASOuktELYGo8wqMA4ihXUJE/R/dMfsc4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0ke1dv+RQ2mf0FMLwxBZWa6oYHOlAI7dHXQVvYV2JlUmGjyIU1RqnARHYLrAsJn1
-         gTJ+hxARbKBDBlgqfEvuwNi8Y7hG4bmiJX0PbXuXBL5S6rJ3+OuRSzWJQlrzAwxGjk
-         57tWPVKyp4C8NHF1xcquMqScYZXJIr1qQnjZhNSM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 135/371] net: sh_eth: fix a missing check of of_get_phy_mode
-Date:   Thu, 16 Jan 2020 12:20:07 -0500
-Message-Id: <20200116172403.18149-78-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1579199404;
+        bh=aF+qcS9mrjO8tbEi8YwhBFivADRMZws4q6LY/Bt7bLw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ZoBbonQLXLG7OOKSs39oqVjJ0jPHR2DnBCc7IWUXU4voThjbyYS6n1QTEN+8XZCuF
+         4l0YVn7T7Rr2S5kuEIaZwJzPKKkswWK0EYhOcmIOiC/M0TrOvuzGT8ahTyWs0Rn9W/
+         Tg5OGyTGTnuP3DexfCSKKl2fEi6p2OoTsd+LL+2Y=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200116175802.GA147875@google.com>
+References: <20200116175802.GA147875@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200116175802.GA147875@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+ tags/tag-chrome-platform-fixes-for-v5.5-rc7
+X-PR-Tracked-Commit-Id: dfb9a8857f4decbba8c2206e8877e1d741ee1b47
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0c99ee44b8921b872089a7374c733310d995fd92
+Message-Id: <157919940438.19397.11912146279100722478.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 Jan 2020 18:30:04 +0000
+To:     Benson Leung <bleung@google.com>
+Cc:     torvalds@linux-foundation.org, bleung@kernel.org,
+        bleung@chromium.org, bleung@google.com,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+The pull request you sent on Thu, 16 Jan 2020 09:58:02 -0800:
 
-[ Upstream commit 035a14e71f27eefa50087963b94cbdb3580d08bf ]
+> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-fixes-for-v5.5-rc7
 
-of_get_phy_mode may fail and return a negative error code;
-the fix checks the return value of of_get_phy_mode and
-returns NULL of it fails.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0c99ee44b8921b872089a7374c733310d995fd92
 
-Fixes: b356e978e92f ("sh_eth: add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/renesas/sh_eth.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thank you!
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 9b1906a65e11..25f3b2ad26e9 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -3046,12 +3046,16 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
- 	struct device_node *np = dev->of_node;
- 	struct sh_eth_plat_data *pdata;
- 	const char *mac_addr;
-+	int ret;
- 
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return NULL;
- 
--	pdata->phy_interface = of_get_phy_mode(np);
-+	ret = of_get_phy_mode(np);
-+	if (ret < 0)
-+		return NULL;
-+	pdata->phy_interface = ret;
- 
- 	mac_addr = of_get_mac_address(np);
- 	if (mac_addr)
 -- 
-2.20.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
