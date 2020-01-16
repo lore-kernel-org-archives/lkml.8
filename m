@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7657CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5017E246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E361A2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197407;
-	bh=axg2La1u2nSFtXIepKGu76m1vZXNB7WaZ4RvYE2Pifw=;
+	s=default; t=1579197415;
+	bh=IvhLZl9OwsezdqO6p8i8hAjb0pJmYjgbg9Le9zB7u1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cd+SS+CFyMBKr5/7lsHtC7aJxNj4jSxb7Mk/nQnHBrp+qg8sObBlBPm2VEvilKsqa
-	 QsMK3SvXJTn6uPG5mZMfURzj/pTDTl/CgzWz4BdFX1howwWaJpulO0/4NYxcRI73uH
-	 EspizE3bbklW1w4IGBwt62o12sESopFVrF3yqP6Y=
+	b=yxrC1wfhRQbNEK7Is0ocd4nkPMr144WWYwasZLnT9yJx6yakYfmnMR3wXQ17+EAsi
+	 njNI+WokZXCzgqK7j2DEQC2/OMoWPTI2biisLV/UoBILKmYbNDQfa35NBnJ6xqmfH2
+	 DGAj0szlD9lTM9XBpazZcZNhYJ/wJKa9nLJ5D8MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394535AbgAPR4q (ORCPT
+        id S2394547AbgAPR4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:56:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393999AbgAPRnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:49 -0500
+        id S2393989AbgAPRnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739352469C;
-        Thu, 16 Jan 2020 17:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC13A2474D;
+        Thu, 16 Jan 2020 17:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196629;
-        bh=axg2La1u2nSFtXIepKGu76m1vZXNB7WaZ4RvYE2Pifw=;
+        s=default; t=1579196626;
+        bh=IvhLZl9OwsezdqO6p8i8hAjb0pJmYjgbg9Le9zB7u1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QhQtEov0JR1hsrsHCuRfg52j/voO1xwqhz4FGFhDYjbPbj5LLlThriDSDDkSQRDIj
-         emcZiVkSVfWoaG5gGuMGJMCjqRXWHs3XzxGRH16zEP3klImtj8iBGjUiWUmm06guL5
-         DSgL22Bdg7gQDFrZ38HWxtmy1agl+1orMMLd83AI=
+        b=k7ZNkqtjrikdPsUPSDCY8ptR1QSb1X/oLiREGBLCqVcb8JXp6E2qbDum+eqAlAApd
+         kT7pR1aSkiv5sZSppD6RzSBvhKH2QYQKGALseJrtcoxy9UeHZ6FBrVoghUAoVbHyAp
+         K3lMXpnFzFPY4eVuqQCWm8azjXZXMz4H8rOnkElg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 043/174] pinctrl: sh-pfc: r8a7791: Fix scifb2_data_c pin group
-Date:   Thu, 16 Jan 2020 12:40:40 -0500
-Message-Id: <20200116174251.24326-43-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 041/174] fbdev: chipsfb: remove set but not used variable 'size'
+Date:   Thu, 16 Jan 2020 12:40:38 -0500
+Message-Id: <20200116174251.24326-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,34 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a4b0350047f1b10207e25e72d7cd3f7826e93769 ]
+[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
 
-The entry for "scifb2_data_c" in the SCIFB2 pin group array contains a
-typo, thus the group cannot be selected.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 5088451962389924 ("pinctrl: sh-pfc: r8a7791 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
+drivers/video/fbdev/chipsfb.c:352:22: warning:
+ variable 'size' set but not used [-Wunused-but-set-variable]
+
+Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+[b.zolnierkie: minor commit summary and description fixups]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/fbdev/chipsfb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-index f94e34e7f0b0..b2f8898ddb2c 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-@@ -4967,7 +4967,7 @@ static const char * const scifb2_groups[] = {
- 	"scifb2_data_b",
- 	"scifb2_clk_b",
- 	"scifb2_ctrl_b",
--	"scifb0_data_c",
-+	"scifb2_data_c",
- 	"scifb2_clk_c",
- 	"scifb2_data_d",
- };
+diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
+index 59abdc6a97f6..314b7eceb81c 100644
+--- a/drivers/video/fbdev/chipsfb.c
++++ b/drivers/video/fbdev/chipsfb.c
+@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
+ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
+ {
+ 	struct fb_info *p;
+-	unsigned long addr, size;
++	unsigned long addr;
+ 	unsigned short cmd;
+ 	int rc = -ENODEV;
+ 
+@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
+ 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
+ 		goto err_disable;
+ 	addr = pci_resource_start(dp, 0);
+-	size = pci_resource_len(dp, 0);
+ 	if (addr == 0)
+ 		goto err_disable;
+ 
 -- 
 2.20.1
 
