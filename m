@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC203C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACB520661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AB424679
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200526;
-	bh=lV6vCJ54AZJJG/iIgMdGhEKiyRI7RwaFGDruA9QXvkU=;
+	s=default; t=1579200534;
+	bh=Tsv2cFwSXKX5+sUOE41BpHJBx1IMbHjouscXos+JqRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LBay/zxnF3WAVBi0TX3XBKYXKmYWmAss8MX3Bl34TW89Y+qIIK6V2C7/zR7tleRVL
-	 Mcy+UMG8Tb/NlGP3ArS/j4mPL4LDInFLKfMJrTNkWBn9iQ1Hoaccdb4DJZoW+YOfiN
-	 eaBOPtsTxjGIejme6VyHV2vSj7RxrpXoxt6xNYd0=
+	b=nSFaaM1S72dlBK3LC3084WT9MHdIGSnmids96W/qy392s5zTi8Iu2j+aAcaapeaDs
+	 GnGna5XRWrvgvuCc3+0T2NTeyN7a6vV4gveG/TEKR5ortXIS5OdLYuhaqaoS9aHBM4
+	 z+g0A5QSnufdKPtKfOlskVlO8zUTk1wiUXtyD0+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436983AbgAPSsp (ORCPT
+        id S2437006AbgAPSsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:48:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389068AbgAPRJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:41 -0500
+        id S2389720AbgAPRJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E557D2081E;
-        Thu, 16 Jan 2020 17:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C8C24689;
+        Thu, 16 Jan 2020 17:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194580;
-        bh=lV6vCJ54AZJJG/iIgMdGhEKiyRI7RwaFGDruA9QXvkU=;
+        s=default; t=1579194578;
+        bh=Tsv2cFwSXKX5+sUOE41BpHJBx1IMbHjouscXos+JqRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFeOe3C+EYsGO6AIAehSqPbsUF1AH1b/+dt8SaZ9WiD8ZHgc02g7pISBiNMNPdoPM
-         4tRvj4iyh1svAxzMmIT9BFaKDsH2et9269p7NE9w0wQhPTaRXj4XB+3QCBL9vZZhPA
-         TMeqQUvaulH+bQ2mfBzk6qacg1184UKTr+u/CKsk=
+        b=ifsG+hEsHT8cL7IP/oKqIkvUvt8fkNq29uMWZCjd7FLKv7GE6DlL5eyGwLHpjIMI3
+         wt/TUtv4zmT8WUZOjBIqvsWInkn36zUIj2YTbU1d6UK/s7jKQ9fi7YN58vpbxWXOqI
+         APa+o61fs0wXrXVy6+OGdeSLzato3TIOlXxIlB7Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 454/671] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
-Date:   Thu, 16 Jan 2020 12:01:32 -0500
-Message-Id: <20200116170509.12787-191-sashal@kernel.org>
+Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 453/671] RDMA/hns: Fixs hw access invalid dma memory error
+Date:   Thu, 16 Jan 2020 12:01:31 -0500
+Message-Id: <20200116170509.12787-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,43 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit a131fb6364c1be0924dcb969ecf6b988c556a5d5 ]
+[ Upstream commit ec5bc2cc69b4fc494e04d10fc5226f6f9cf67c56 ]
 
-The Mobiveil internal MSI controller requires separate target addresses,
-one per MSI vector; this is clearly incompatible with the Multiple MSI
-feature, which requires the same target address for all vectors
-requested by an endpoint (ie the Message Address field in the MSI
-Capability structure), so the multi MSI feature is clearly not
-supported by the host controller driver.
+When smmu is enable, if execute the perftest command and then use 'kill
+-9' to exit, follow this operation repeatedly, the kernel will have a high
+probability to print the following smmu event:
 
-Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
-fixing the misconfiguration.
+  arm-smmu-v3 arm-smmu-v3.1.auto: event 0x10 received:
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0000000010
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x0000020900000080
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
+  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
 
-Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+This is because the hw will periodically refresh the qpc cache until the
+next reset.
+
+This patch fixed it by removing the action that release qpc memory in the
+'hns_roce_qp_free' function.
+
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a2d1e89d4867..dc228eb500ed 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -643,7 +643,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
- 
- static struct msi_domain_info mobiveil_msi_domain_info = {
- 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
--		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-+		   MSI_FLAG_PCI_MSIX),
- 	.chip	= &mobiveil_msi_irq_chip,
- };
- 
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index af24698ff226..3012d7eb4ccb 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -262,7 +262,6 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
+ 			hns_roce_table_put(hr_dev, &qp_table->trrl_table,
+ 					   hr_qp->qpn);
+ 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
+-		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(hns_roce_qp_free);
 -- 
 2.20.1
 
