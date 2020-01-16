@@ -2,123 +2,85 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921DBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA6FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADD920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAAD20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="X275vukm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388485AbgAPWqx (ORCPT
+        id S2390131AbgAPWrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:46:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52793 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729261AbgAPWqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:46:53 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1isDud-0002el-3a; Thu, 16 Jan 2020 22:46:51 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     stable@vger.kernel.org, Serge Hallyn <serge@hallyn.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Paris <eparis@redhat.com>
-Subject: [REVIEW PATCH v2] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
-Date:   Thu, 16 Jan 2020 23:45:18 +0100
-Message-Id: <20200116224518.30598-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 16 Jan 2020 17:47:21 -0500
+Received: from mout.gmx.net ([212.227.15.15]:39485 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729261AbgAPWrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 17:47:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1579214811;
+        bh=Z/+ElE6JHsBoeTs82chNmoWyjkvc9HXsuRbXbwL5AIo=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=X275vukmnCfPJ5Gm9No3n/sKhFXnPp1VhCVejl/ZHISXeXdm7WfjUzSPKYHo5rC2x
+         ymQXPE+C2UPZShPUQcXq2svNTx4N7eBkt4S0o0LogYWLvbh/am6kOwWa8tA7ncwmmT
+         tEjmZxbR7DTGuErp3FR4lWqXhCnza5ZKGLRami34=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.0.0.132] ([194.96.152.49]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M6Db0-1iyqg734PI-006eOl; Thu, 16
+ Jan 2020 23:46:51 +0100
+To:     linux@roeck-us.net
+Cc:     clemens@ladisch.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200116141800.9828-1-linux@roeck-us.net>
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+From:   Bernhard Gebetsberger <bernhard.gebetsberger@gmx.at>
+Message-ID: <576b5576-3bd5-484b-ee3f-6198f9d87db3@gmx.at>
+Date:   Thu, 16 Jan 2020 23:46:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116141800.9828-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-US
+X-Provags-ID: V03:K1:ViLtBJpUk+jRp2qBd4XUwUKlJxfM02hLwjMicorhArbxI7NXI0E
+ Fym025Xo+YXV/QtkLnmnDajdIsUATHIn0b33esuq7F3iTGVoAKWYnNfIlU0kR6ApV3NKw8/
+ dDFS26mCJYQZwA5eRQDv0IJTOuzBx9bbRScU0Pqtga2idz9PkQczxp8WvCDa2aBr/dOCbUx
+ TBWMDr9MfBi9EgmG7OiXw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mbx1B16A6HQ=:AZAVkGej55w2Ul46MqypZn
+ mfsVLPlaq2SU6bEbkCHYFS6YBqTdN+d1CzVWCPAOI2kCjPvKG1tYvtQqCe9rubTAhce95ZTAX
+ f3e1lvmJC4tJBT1PzXzbzoFuNioR8A4VxNEihVdV5n5Y55o8upOjUrO//tPbmXfm8w5XbeFiX
+ ee9z3xjTnrSrAcY5WaA1ohc9fHauC3FHvX2A7vWtuRjP5n6Iej0DyzwDWrm1ECb0Amn/WpE3L
+ U6m8ajlq4KVtKdbz/lC7ZoTU0Ak+B1kKRNiY6w9QxZJxltSyIbU/5uqZqeLeVCyGea/wgxbgP
+ ZohQUpIjo+fI0AuFH8rZLAIKUOS/HohzWK84+9ZQ6uX6EGuy1+Q0TMp3ghQCyM2E8145XC7J7
+ ycms2G0QPPZsTqJRK78bw+fHxFKxxXTHlJmUekg8soctkEy2YF8xS4U91C8dk/qiqhL9RX+DS
+ kfu0ZOz2mtPm0Y8NBpxjzV7N385YVeGb/NiUhutqVdVEZUva2ejjOxTclCw5R22MN3t+5xClE
+ nOU6VzEPoY24rA5TdeQOzjlNM3/hH9R/2yKkwaW97t1O57EpRkd6EcApoy4jW+MX1oL0SV5z/
+ CmOyCxy8xMJu50MrdFTW5ZjDXExjBC5DebmqxC3Ao2YEk8JA/tSdo+e/+VJG8b+jA5PQlU5nb
+ zcJOOa4ueNJXRxBVwffHzMJfklzZNFLPQEHTN1wINt0nmaZ1XNiJ0H9qRKEVkCVh0rQMRYfla
+ WsV94ZUUbMOrSotgvsL66t1ZM91GIMltV19lZ4Eezxn0wAtnZEEoIR37NLXM8v7WJV6oYAt7d
+ 3Bl9A4Rw2WE+HNdw4JFZU6jppp19VtAS+FBuMj0UpMO8MHynkKsf4q5YZaagm2AYxYhjt3aIN
+ VewJ2TiyiLru2Vy0agzB416fnxEj4NI867WSK1PJ5TSV3/vqiQ8amO32OlDDLRz76rDyjw24/
+ Ph6NNogqFcbeCbPliCfvsWkdA7Vnc06HEyYFrr0clik64Lsse3RC446vdkobeZ2XP7a43+xK7
+ cHtFo8E8Dqau1kHLXGgZy9bt/riTfyk1VdU5oySc0GiZkEfVQTXmkxB3IcEwT6KS/cLBb58AM
+ ciE5oa/3P/OLA6hZ3QRbs4zAhMmmymKbFi8iXs7WprTA4szMtJ2JT/ouloohWS8DHzOSsLRs8
+ 7hGFv/ohPsYeJ/QYTIwIkBIq3l4154bJhpQ0v92YFi5ZwnpNVwh9ytDm/AYaBQ6Q6dk6nFxo+
+ IfSyEd96eMeJOK3ZYkqvMyCvFdPgsXF+BiVIDWWBPT0zn8jQWCmFklK/fAH8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-introduced the ability to opt out of audit messages for accesses to
-various proc files since they are not violations of policy.
-While doing so it somehow switched the check from ns_capable() to
-has_ns_capability{_noaudit}(). That means it switched from checking the
-subjective credentials of the task to using the objective credentials. I
-couldn't find the original lkml thread and so I don't know why this switch
-was done. But it seems wrong since ptrace_has_cap() is currently only used
-in ptrace_may_access(). And it's used to check whether the calling task
-(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-to operate on the target task (object). According to the cred.h comments
-this would mean the subjective credentials of the calling task need to be
-used.
-This switches it to use security_capable() because we only call
-ptrace_has_cap() in ptrace_may_access() and in there we already have a
-stable reference to the calling tasks creds under cred_guard_mutex so
-there's no need to go through another series of dereferences and rcu
-locking done in ns_capable{_noaudit}().
-
-As one example where this might be particularly problematic, Jann pointed
-out that in combination with the upcoming IORING_OP_OPENAT feature, this
-bug might allow unprivileged users to bypass the capability checks while
-asynchronously opening files like /proc/*/mem, because the capability
-checks for this would be performed against kernel credentials.
-
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric Paris <eparis@redhat.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Reviewed-by: Jann Horn <jannh@google.com>
-Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- kernel/ptrace.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index cb9ddcc08119..d146133e97f1 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -264,12 +264,13 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
- 	return ret;
- }
- 
--static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-+static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-+			  unsigned int mode)
- {
- 	if (mode & PTRACE_MODE_NOAUDIT)
--		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NOAUDIT);
- 	else
--		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-+		return security_capable(cred, ns, CAP_SYS_PTRACE, CAP_OPT_NONE);
- }
- 
- /* Returns 0 on success, -errno on denial. */
-@@ -321,7 +322,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	    gid_eq(caller_gid, tcred->sgid) &&
- 	    gid_eq(caller_gid, tcred->gid))
- 		goto ok;
--	if (ptrace_has_cap(tcred->user_ns, mode))
-+	if (ptrace_has_cap(cred, tcred->user_ns, mode))
- 		goto ok;
- 	rcu_read_unlock();
- 	return -EPERM;
-@@ -340,7 +341,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
--	     !ptrace_has_cap(mm->user_ns, mode)))
-+	     !ptrace_has_cap(cred, mm->user_ns, mode)))
- 	    return -EPERM;
- 
- 	return security_ptrace_access_check(task, mode);
-
-base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
--- 
-2.25.0
-
+VGVzdGVkLWJ5OiBCZXJuaGFyZCBHZWJldHNiZXJnZXIgPGJlcm5oYXJkLmdlYmV0c2JlcmdlckBn
+bXguYXQ+DQoNClBhdGNoZXMgYXBwbGllZCBjbGVhbmx5IG9uIHRvcCBvZiA1LjUtcmM2LCBubyBp
+c3N1ZXMgdXNpbmcgYSBSeXplbiAzIDIyMDBHOg0KazEwdGVtcC1wY2ktMDBjMw0KQWRhcHRlcjog
+UENJIGFkYXB0ZXINClZjb3JlOsKgwqDCoMKgwqDCoMKgwqAgMS4yOSBWwqANClZzb2M6wqDCoMKg
+wqDCoMKgwqDCoMKgIDEuMTIgVsKgDQpUZGllOsKgwqDCoMKgwqDCoMKgwqAgKzI4LjLCsEPCoCAo
+aGlnaCA9ICs3MC4wwrBDKQ0KVGN0bDrCoMKgwqDCoMKgwqDCoMKgICsyOC4ywrBDwqANCkljb3Jl
+OsKgwqDCoMKgwqDCoMKgIDIzLjkwIEHCoA0KSXNvYzrCoMKgwqDCoMKgwqDCoMKgwqAgNi40OSBB
+DQoNCi0gQmVybmhhcmQNCg==
