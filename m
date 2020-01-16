@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DF9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D1BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8AA246DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAED246DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195535;
-	bh=q1PD+9BrGNCyY77bHX9F2/vlz59WAA3Rrgfxbt/G5iU=;
+	s=default; t=1579195542;
+	bh=O8o+WPlQAMCaUyaOt/651Bm5d0NIgeMC6LmTx2pz0D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nYpvQNeXXloaN83xbRDH/AeRzzhqK6xAW+riIttDzvVsNi2xQ8SZXtN0a1tmMbgwj
-	 6hCWMuKXVeb4b75rIMulrMuvbA1rhX9TMMp4q3bf/g3M/jvwG7z9do/oeSMPiDeg/h
-	 2mHaYAYEY87WQW4NdjXgK/nBLa0DxHaG/svbfEdc=
+	b=Y124HJznvxzDORb5OL7BioAOVqirV9TfKvnWpfG26TMZy//b1YV/ToLKOd2qR2xya
+	 eCM2GLCgDfvqgns65c+zStYm/U3pl5tkIF+Fb8uMPkBcx1KvESf3/ytbHoBSjUwWZ2
+	 5F1UQeRU9HnCpVHkI3WDrfcvNamya8nzR0cdA/JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392045AbgAPRZc (ORCPT
+        id S2392141AbgAPRZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32888 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391675AbgAPRZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:19 -0500
+        id S2391922AbgAPRZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0110246CA;
-        Thu, 16 Jan 2020 17:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10D502468C;
+        Thu, 16 Jan 2020 17:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195518;
-        bh=q1PD+9BrGNCyY77bHX9F2/vlz59WAA3Rrgfxbt/G5iU=;
+        s=default; t=1579195522;
+        bh=O8o+WPlQAMCaUyaOt/651Bm5d0NIgeMC6LmTx2pz0D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5GB6zd57yhLkK/8ltUCpGOglxz6xjCH11cNprSCGXW5WlUphoHAVJBjGbcxrDgcf
-         e/l58Jc10fI/xFiCQV8XGqDnDvME6Qcmum3VjCZu1lJBeYShmH3ZWSufK0kOD5EilK
-         PhiCPhEVdssevd4SqrYTE7kGqrM2u6t0t7G2gDaI=
+        b=y2i9GKcsQtbl9u++wKXfU9/uIhxDVsRYoEnov4zPpEIcPHXQczFUzfqeHPuRB54r8
+         uFcKzJXTkQRFkBIu5rLG26awXHYMcMqRlfjD53TO4HDchMsXH8nQAeJSG9UHfxE5iX
+         uPV4qZec3GfFwRcbrBAA6A8ydd84KcIteVoldbCg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 116/371] powerpc/64s: Fix logic when handling unknown CPU features
-Date:   Thu, 16 Jan 2020 12:19:48 -0500
-Message-Id: <20200116172403.18149-59-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 119/371] clocksource/drivers/exynos_mct: Fix error path in timer resources initialization
+Date:   Thu, 16 Jan 2020 12:19:51 -0500
+Message-Id: <20200116172403.18149-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,78 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 8cfaf106918a8c13abb24c641556172afbb9545c ]
+[ Upstream commit b9307420196009cdf18bad55e762ac49fb9a80f4 ]
 
-In cpufeatures_process_feature(), if a provided CPU feature is unknown and
-enable_unknown is false, we erroneously print that the feature is being
-enabled and return true, even though no feature has been enabled, and
-may also set feature bits based on the last entry in the match table.
+While freeing interrupt handlers in error path, don't assume that all
+requested interrupts are per-processor interrupts and properly release
+standard interrupts too.
 
-Fix this so that we only set feature bits from the match table if we have
-actually enabled a feature from that table, and when failing to enable an
-unknown feature, always print the "not enabling" message and return false.
-
-Coincidentally, some older gccs (<GCC 7), when invoked with
--fsanitize-coverage=trace-pc, cause a spurious uninitialised variable
-warning in this function:
-
-  arch/powerpc/kernel/dt_cpu_ftrs.c: In function ‘cpufeatures_process_feature’:
-  arch/powerpc/kernel/dt_cpu_ftrs.c:686:7: warning: ‘m’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-    if (m->cpu_ftr_bit_mask)
-
-An upcoming patch will enable support for kcov, which requires this option.
-This patch avoids the warning.
-
-Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
-Reported-by: Segher Boessenkool <segher@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[ajd: add commit message]
-Signed-off-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 56a94f13919c ("clocksource: exynos_mct: Avoid blocking calls in the cpu hotplug notifier")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/dt_cpu_ftrs.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/clocksource/exynos_mct.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
-index 2357df60de95..7ed2b1b6643c 100644
---- a/arch/powerpc/kernel/dt_cpu_ftrs.c
-+++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
-@@ -705,8 +705,10 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
- 		m = &dt_cpu_feature_match_table[i];
- 		if (!strcmp(f->name, m->name)) {
- 			known = true;
--			if (m->enable(f))
-+			if (m->enable(f)) {
-+				cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
- 				break;
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index aaf5bfa9bd9c..e3ae041ac30e 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -563,7 +563,19 @@ static int __init exynos4_timer_resources(struct device_node *np, void __iomem *
+ 	return 0;
+ 
+ out_irq:
+-	free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	if (mct_int_type == MCT_INT_PPI) {
++		free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	} else {
++		for_each_possible_cpu(cpu) {
++			struct mct_clock_event_device *pcpu_mevt =
++				per_cpu_ptr(&percpu_mct_tick, cpu);
++
++			if (pcpu_mevt->evt.irq != -1) {
++				free_irq(pcpu_mevt->evt.irq, pcpu_mevt);
++				pcpu_mevt->evt.irq = -1;
 +			}
++		}
++	}
+ 	return err;
+ }
  
- 			pr_info("not enabling: %s (disabled or unsupported by kernel)\n",
- 				f->name);
-@@ -714,17 +716,12 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
- 		}
- 	}
- 
--	if (!known && enable_unknown) {
--		if (!feat_try_enable_unknown(f)) {
--			pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
--				f->name);
--			return false;
--		}
-+	if (!known && (!enable_unknown || !feat_try_enable_unknown(f))) {
-+		pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
-+			f->name);
-+		return false;
- 	}
- 
--	if (m->cpu_ftr_bit_mask)
--		cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
--
- 	if (known)
- 		pr_debug("enabling: %s\n", f->name);
- 	else
 -- 
 2.20.1
 
