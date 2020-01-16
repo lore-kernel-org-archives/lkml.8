@@ -2,103 +2,93 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FA7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3129CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C512075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WCsLjsAT"
+	by mail.kernel.org (Postfix) with ESMTP id 086DC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731637AbgAPJhS (ORCPT
+        id S1731198AbgAPJiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:37:18 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:40369 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbgAPJhR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:37:17 -0500
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B507522EEB;
-        Thu, 16 Jan 2020 10:37:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1579167435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=41ClHMbo7eeE2kUDsrvdrT8WdN5/UCfeLZ2eNI4ME1Y=;
-        b=WCsLjsATACe56J1t6rrCOft4hBlmYsh+7bfh+c4I3xVnBJNYGYnxO/k2DO949Y/ye1iq9d
-        FmDHVcU6hj9Td7tL2ZnrVk4dVcVD+FrSnuLWxadFMkWUIUdR5Cq2jAes5KqRvTYewqX5q7
-        ypqstJQ2Q9WbaeEN5ajNvNYOtL7Q3Lk=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] mtd: spi-nor: Fix quad enable for Spansion like flashes
-Date:   Thu, 16 Jan 2020 10:37:00 +0100
-Message-Id: <20200116093700.28308-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Thu, 16 Jan 2020 04:38:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34458 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgAPJiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:38:09 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7D042B1AB;
+        Thu, 16 Jan 2020 09:38:07 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 213631E0CBC; Thu, 16 Jan 2020 10:38:07 +0100 (CET)
+Date:   Thu, 16 Jan 2020 10:38:07 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 05/12] fs: remove unneeded IS_DAX() check
+Message-ID: <20200116093807.GB8446@quack2.suse.cz>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-6-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: B507522EEB
-X-Spamd-Result: default: False [4.90 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         MID_CONTAINS_FROM(1.00)[];
-         NEURAL_HAM(-0.00)[-0.781];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110192942.25021-6-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 7b678c69c0ca ("mtd: spi-nor: Merge spansion Quad Enable
-methods") forgot to actually set the QE bit in some cases. Thus this
-breaks quad mode accesses to flashes which support readback of the
-status register-2. Fix it.
+On Fri 10-01-20 11:29:35, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The IS_DAX() check in io_is_direct() causes a race between changing the
+> DAX mode and creating the iocb flags.
+> 
+> Remove the check because DAX now emulates the page cache API and
+> therefore it does not matter if the file mode is DAX or not when the
+> iocb flags are created.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Fixes: 7b678c69c0ca ("mtd: spi-nor: Merge spansion Quad Enable methods")
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 ++
- 1 file changed, 2 insertions(+)
+The patch looks good to me. You can add:
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index addb6319fcbb..ea0429448207 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2140,6 +2140,8 @@ static int spi_nor_sr2_bit1_quad_enable(struct spi_nor *nor)
- 	if (nor->bouncebuf[0] & SR2_QUAD_EN_BIT1)
- 		return 0;
- 
-+	nor->bouncebuf[0] |= SR2_QUAD_EN_BIT1;
-+
- 	return spi_nor_write_16bit_cr_and_check(nor, nor->bouncebuf[0]);
- }
- 
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  include/linux/fs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index d7584bcef5d3..e11989502eac 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3365,7 +3365,7 @@ extern int file_update_time(struct file *file);
+>  
+>  static inline bool io_is_direct(struct file *filp)
+>  {
+> -	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+> +	return (filp->f_flags & O_DIRECT);
+>  }
+>  
+>  static inline bool vma_is_dax(struct vm_area_struct *vma)
+> -- 
+> 2.21.0
+> 
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
