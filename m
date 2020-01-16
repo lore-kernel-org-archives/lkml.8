@@ -2,58 +2,54 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50BCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43867C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9232073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C7620661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217856;
-	bh=rnofVM1r06/zCpQPxV0g+/0PybA7btznnK8eSOOv9tw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvF+pdLgsZe4+CGt/ZiLK/gsCwJW0V8k5FNZbwlMzZv1zi9+T6b0nYujZmjZ9CpcT
-	 ySyB6v33BUjC/1vVEC/udiR6xW0XFo6V4DF71KHaIWQvBKY2YQvYrvp8R4txP69oka
-	 Op4rWCfpZhVfztgxFRmgg6Lu1Pj1GBZJkYtxN5fg=
+	s=default; t=1579217864;
+	bh=LNLkwqumuCRsUZzAEzSEPyLEs54KO1X1kXB8A1qAvQw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VwOo6o4045RdE0+tcXPGl6aYRZ2yIC5sYCIVNUvP/k6pbgocNWbhrGBUMKioNPPYS
+	 ItMSOnVOLDRIHvjqTf0eoHjp2Ybm7LNVsxvyWTwW4ylKnep1bREccG6wOOpfNAw6px
+	 S+zCF4ZWEXhRsd3e0U/1P/71umL7kSUB1NTZ2bws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404536AbgAPXhe (ORCPT
+        id S2391411AbgAPXhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:37:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38288 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:37:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390085AbgAPXaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2390085AbgAPXhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:37:36 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F882073A;
-        Thu, 16 Jan 2020 23:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC8AE2072B;
+        Thu, 16 Jan 2020 23:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217451;
-        bh=rnofVM1r06/zCpQPxV0g+/0PybA7btznnK8eSOOv9tw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JETvV7mtCLlw9CIshlICCAf0usq8jQj1l75pMlfXVkNYnJxNkF+wN8XE/4I6N1XvA
-         9Utv+S8f/c/vmucG2TxgZb3XVa4tHD6WKkIcJflQHMVAMb6xgxbTNN0I22yRm8SNiX
-         AjkdQKXUuTjV/nXvFY3kUjOWtZP/2rEqkDZPGE5M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 63/84] media: v4l: cadence: Fix how unsued lanes are handled in csi2rx_start()
-Date:   Fri, 17 Jan 2020 00:18:37 +0100
-Message-Id: <20200116231721.075335811@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-References: <20200116231713.087649517@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
+        s=default; t=1579217856;
+        bh=LNLkwqumuCRsUZzAEzSEPyLEs54KO1X1kXB8A1qAvQw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XiJli2FduQhRgI8pXXx0H4Mh715uj9Rkkyyx6+ApiYXPlAB0n5ofBPOz8OI2HhrBN
+         ZQONr0gbIy//k0a+OQVnS0X+Gz8xKuwbw1lhBCN1S0fr8Xf/c2jLKvab/e1zcdVUTT
+         Eue2nsmA6xgn/tTSsHwXAQlqm2NaXo/VvouCw96Q=
+Date:   Thu, 16 Jan 2020 15:37:35 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmscan: remove prefetch_prev_lru_page
+Message-Id: <20200116153735.3090629f3b40bd850c66bd18@linux-foundation.org>
+In-Reply-To: <B6E75D9E-E9A2-4078-A89A-267310467B0A@lca.pw>
+References: <739f4470-8dfe-bb2f-8100-2134f48868b6@linux.alibaba.com>
+        <B6E75D9E-E9A2-4078-A89A-267310467B0A@lca.pw>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,33 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Thu, 16 Jan 2020 07:26:23 -0500 Qian Cai <cai@lca.pw> wrote:
 
-commit 2eca8e4c1df4864b937752c3aa2f7925114f4806 upstream.
+> 
+> 
+> > On Jan 14, 2020, at 9:33 PM, Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> > 
+> > ﻿
+> > 
+> >> 在 2020/1/14 下午9:46, Qian Cai 写道:
+> >> 
+> >> 
+> >>>> On Jan 14, 2020, at 7:55 AM, Alex Shi <alex.shi@linux.alibaba.com> wrote:
+> >>> 
+> >>> This macro are never used in git history. So better to remove.
+> >> 
+> >> When removing unused thingy, it is important to figure out which commit introduced it in the first place and Cc the relevant people in that commit.
+> >> 
+> > 
+> > Thanks fore reminder, Qian!
+> > 
+> > This macro was introduced in 1da177e4c3f4 Linux-2.6.12-rc2, no author or commiter could be found.
+> 
+> Looks a bit deeper for this, and I am not sure if it is necessary to remove it especially this does not cause any complication warning noise, because the macro looks like a part of API design to have a pair of both read and write version, even though only the write version is used at the moment.
+> 
+> In theory,  there could be users for the read version in the future, and then it needs to be added back.
 
-The 2nd parameter of 'find_first_zero_bit()' is a number of bits, not of
-bytes. So use 'csi2rx->max_lanes' instead of 'sizeof(lanes_used)'.
+Sure.  A problem with leaving it in place is that this leads people to
+assume it is tested, which it presumably is not.
 
-Fixes: 1fc3b37f34f6 ("media: v4l: cadence: Add Cadence MIPI-CSI2 RX driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/media/platform/cadence/cdns-csi2rx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/media/platform/cadence/cdns-csi2rx.c
-+++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-@@ -129,7 +129,7 @@ static int csi2rx_start(struct csi2rx_pr
- 	 */
- 	for (i = csi2rx->num_lanes; i < csi2rx->max_lanes; i++) {
- 		unsigned int idx = find_first_zero_bit(&lanes_used,
--						       sizeof(lanes_used));
-+						       csi2rx->max_lanes);
- 		set_bit(idx, &lanes_used);
- 		reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, i + 1);
- 	}
-
+I don't think there's any particular downside either way, really.  But
+it's presently cruft so I'm inclined to remove it.  If someone has a
+need then they can add it back (presumbly reimplement it, actually) and
+test it then.
 
