@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA46CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFCCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C9F2464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835862464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197620;
-	bh=St/rATh14XAuZNQEpkdMnC6jqu7FSvG0LFgOxzRINec=;
+	s=default; t=1579197622;
+	bh=WA3U/r//9cm2sKTS9jnpmWEUYRRJqifW3XA904FrhdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gid1Z6pdyhTfSskMB4PUmZf5NZqUFCtdYfZbNm5yoKyq8YnFtlfk5cFCpjPrSyRS4
-	 ad3QlotyJzyewDMHsIPMoiDplUUOpNG7cf39Xi/v0uGPIUKpajCAi1Bjm1BQrFe6tF
-	 Xj2wplO0QsLFnXtBNpZSOoG4hoJdHX/qLZ0/LdzU=
+	b=1xIFmqlWUl0kMidZuJDGEwIGrtMbJYNn3uql/X9Hh1aPnxz/S/oSpwGJjztoWLlqb
+	 gXAgB9xQ24+PYnnt8HhvmRXq+QPvZQJbket+BEHgNGsPfuJWtgtv8BrPSL1r2Fz/y5
+	 yd7R0uVKlO98/+kiWCkEXGZsz8Ry8pv2KtjxXPuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405812AbgAPRlx (ORCPT
+        id S2405803AbgAPRlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:41:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgAPRlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:13 -0500
+        id S2388445AbgAPRlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29B312469B;
-        Thu, 16 Jan 2020 17:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1080246A1;
+        Thu, 16 Jan 2020 17:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196472;
-        bh=St/rATh14XAuZNQEpkdMnC6jqu7FSvG0LFgOxzRINec=;
+        s=default; t=1579196470;
+        bh=WA3U/r//9cm2sKTS9jnpmWEUYRRJqifW3XA904FrhdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WPgC2lbjb6f4YxMQ0RBUzDJAp+p6s3nYFz1pNkileEKJcnLAUs//4PhUidMGSfRnH
-         WW/goXDjdbvUM3yR7eLmLg1C7A3b8qW2P1rY6u6uRHxwJ9E3w8aFYYamYlzY01elrm
-         Mg1TupKygHk3upUuqRrOlCEcE7s5xeZmPL12wR8o=
+        b=2aE75OCrjbD57022aqdVTD+EXT9PDIAX/paHSg17Dqun3eNZk7+dK2dHBkgcBs9mh
+         pwoWEaTlznjn5fnlLbD01KHiBLfpMQ0FZFw6ctNbjChGpz/zntEQhSDv1iOpRy/JIg
+         dR5rC0GlyND6S6T5IKkIMOHIOe6WBT0+TASGxciA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 222/251] afs: Fix large file support
-Date:   Thu, 16 Jan 2020 12:36:11 -0500
-Message-Id: <20200116173641.22137-182-sashal@kernel.org>
+Cc:     Stefan Wahren <stefan.wahren@in-tech.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 221/251] net: qca_spi: Move reset_count to struct qcaspi
+Date:   Thu, 16 Jan 2020 12:36:10 -0500
+Message-Id: <20200116173641.22137-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,43 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+From: Stefan Wahren <stefan.wahren@in-tech.com>
 
-[ Upstream commit b485275f1aca8a9da37fd35e4fad673935e827da ]
+[ Upstream commit bc19c32904e36548335b35fdce6ce734e20afc0a ]
 
-By default s_maxbytes is set to MAX_NON_LFS, which limits the usable
-file size to 2GB, enforced by the vfs.
+The reset counter is specific for every QCA700x chip. So move this
+into the private driver struct. Otherwise we get unpredictable reset
+behavior in setups with multiple QCA700x chips.
 
-Commit b9b1f8d5930a ("AFS: write support fixes") added support for the
-64-bit fetch and store server operations, but did not change this value.
-As a result, attempts to write past the 2G mark result in EFBIG errors:
-
- $ dd if=/dev/zero of=foo bs=1M count=1 seek=2048
- dd: error writing 'foo': File too large
-
-Set s_maxbytes to MAX_LFS_FILESIZE.
-
-Fixes: b9b1f8d5930a ("AFS: write support fixes")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 291ab06ecf67 (net: qualcomm: new Ethernet over SPI driver for QCA7000)
+Signed-off-by: Stefan Wahren <stefan.wahren@in-tech.com>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 9 ++++-----
+ drivers/net/ethernet/qualcomm/qca_spi.h | 1 +
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index fbdb022b75a2..65389394e202 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -317,6 +317,7 @@ static int afs_fill_super(struct super_block *sb,
- 	/* fill in the superblock */
- 	sb->s_blocksize		= PAGE_SIZE;
- 	sb->s_blocksize_bits	= PAGE_SHIFT;
-+	sb->s_maxbytes		= MAX_LFS_FILESIZE;
- 	sb->s_magic		= AFS_FS_MAGIC;
- 	sb->s_op		= &afs_super_ops;
- 	sb->s_bdi		= &as->volume->bdi;
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
+index 21f546587e3d..31583d6f044f 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -438,7 +438,6 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
+ 	u16 signature = 0;
+ 	u16 spi_config;
+ 	u16 wrbuf_space = 0;
+-	static u16 reset_count;
+ 
+ 	if (event == QCASPI_EVENT_CPUON) {
+ 		/* Read signature twice, if not valid
+@@ -491,13 +490,13 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
+ 
+ 		qca->sync = QCASPI_SYNC_RESET;
+ 		qca->stats.trig_reset++;
+-		reset_count = 0;
++		qca->reset_count = 0;
+ 		break;
+ 	case QCASPI_SYNC_RESET:
+-		reset_count++;
++		qca->reset_count++;
+ 		netdev_dbg(qca->net_dev, "sync: waiting for CPU on, count %u.\n",
+-			   reset_count);
+-		if (reset_count >= QCASPI_RESET_TIMEOUT) {
++			   qca->reset_count);
++		if (qca->reset_count >= QCASPI_RESET_TIMEOUT) {
+ 			/* reset did not seem to take place, try again */
+ 			qca->sync = QCASPI_SYNC_UNKNOWN;
+ 			qca->stats.reset_timeout++;
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/ethernet/qualcomm/qca_spi.h
+index 6e31a0e744a4..c48c314ca4df 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.h
++++ b/drivers/net/ethernet/qualcomm/qca_spi.h
+@@ -97,6 +97,7 @@ struct qcaspi {
+ 
+ 	unsigned int intr_req;
+ 	unsigned int intr_svc;
++	u16 reset_count;
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *device_root;
 -- 
 2.20.1
 
