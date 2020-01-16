@@ -2,97 +2,63 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F24C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD83C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDB322522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:37:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q1y7+qBr"
+	by mail.kernel.org (Postfix) with ESMTP id 3BD09222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgAPAh3 (ORCPT
+        id S1729538AbgAPAi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:37:29 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgAPAh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:37:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yldd5QYKz9sR0;
-        Thu, 16 Jan 2020 11:37:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579135045;
-        bh=GbTt+rKa0V2mpaEa87nv0cC/Exer67Ry1d8s0Ahz1w0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Q1y7+qBrzUIndY2aaSQNZkTDMed3sC37GDZKbSeXuzT8/r3GG5/g8JyQhfho78X38
-         3PLd3mRPcYSX/+esXQ9awFbjh+Xex9dvOL5srLf8TYA/eMkW3qZEQ2n3OClEB8MMFn
-         HCBEpL59medOPPWMIdL40Y/n801lEMItsjSwp4wUsRPIay5Sw+U4cq7O6kVvnz/kDN
-         /d54N8SI+2VNQ0gKOkDSHlK7pK1eGUD5qjQ/FSWrzmeSoue7ec66MqTmfQPrCxXWOa
-         dBA6iILQsTOtTAGdMbAVRPfwseMNb2+BNlVkoBlueE50x1YIyVaQAHgl8ry2t2/Jr/
-         +VpsuO4VzKKlg==
-Date:   Thu, 16 Jan 2020 11:37:25 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the xfs tree
-Message-ID: <20200116113725.0223f18c@canb.auug.org.au>
+        Wed, 15 Jan 2020 19:38:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49697 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbgAPAi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:38:56 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irtBR-0004Vs-3c; Thu, 16 Jan 2020 01:38:49 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 922B510121C; Thu, 16 Jan 2020 01:38:48 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mukesh Ojha <mojha@codeaurora.org>, mingo@kernel.org,
+        peterz@infradead.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mukesh Ojha <mojha@codeaurora.org>
+Subject: Re: [PATCH] irq_work: Fix comment for irq_work_run()
+In-Reply-To: <0101016eeb1507c9-0db4e0b6-011c-4754-a34c-9ef0b078b23b-000000@us-west-2.amazonses.com>
+References: <0101016eeb1507c9-0db4e0b6-011c-4754-a34c-9ef0b078b23b-000000@us-west-2.amazonses.com>
+Date:   Thu, 16 Jan 2020 01:38:48 +0100
+Message-ID: <87zheow7zb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fzDzLL6F/gLixfTVWdm9Y72";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fzDzLL6F/gLixfTVWdm9Y72
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Mukesh Ojha <mojha@codeaurora.org> writes:
 
-Hi all,
+> hotplug_cfd() does not exist anymore, update the
+> comment for irq_work_run() with smpcfd_dying_cpu().
 
-After merging the xfs tree, today's linux-next build
-(powerpppc64_defconfig) produced this warning:
+That's only half of the truth. Just check the output of:
 
-fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
-fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variab=
-le]
- 1523 |  int   done =3D 0;
-      |        ^~~~
+git grep irq_work_run
 
-Introduced by commit
+So even if the s/hotplug_cfd/smpcfd_dying_cpu/ change is correct, this
+comment is actively misleading.
 
-  4bbb04abb4ee ("xfs: truncate should remove all blocks, not just to the en=
-d of the page cache")
+Thanks,
 
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/fzDzLL6F/gLixfTVWdm9Y72
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fsEUACgkQAVBC80lX
-0GySSQf8CfAFnI3m7FiUt+ghaT7pAAinT5QZxeWmF/OD3jULbGZmtvFnDIhwMLXx
-pat7wO4rb0NK46aCuDqJR5+1UpbHbG+kMofImfuFWBdkUAxDpeOjgFpg1hgZpQDq
-GFG72BD/Xp4Ggfwq64K1nvNxyD5ujzjHNYFGUeC+uExda4u8DSFBKMU0XNIcatKo
-obOkvEx7mz7IRLqhHlpRBilyoBXT5qRDRYieUYrdw827Exm/vRhKxd97TJUC3u9K
-snbiRabSQKUSKjjvbAidUWmHMylodYZp/AIB5PNGUaioCsz+4YY3l4vdWKHPmRV2
-2pfobsgBzAkh0c5ktruLnQe1c59aig==
-=BD0u
------END PGP SIGNATURE-----
-
---Sig_/fzDzLL6F/gLixfTVWdm9Y72--
+        tglx
