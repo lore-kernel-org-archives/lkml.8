@@ -2,78 +2,104 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2ABC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F30C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03353206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9991E206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579199679;
+	bh=AcZfI0dDCmrfYQpYOI4n1Qj+eqCMp3jCGQWFTNdfUWY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EZ6CXTGYT+Xn2QoSxbjiRvLIE2foVEtvXogFWoonGqgQaztjM36R35yIxMp7ZIPRg
+	 dSW8rkcgcDdzhF3u8Pq9bz3zNmbJ2sZb9JwEtIdSKJtPcxBuijzWqBUl2cCTCqPBzd
+	 Kb2D6/R0Ht7e1UXtnYvqgZgaXdfLRNgvGqp47XIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbgAPSec (ORCPT
+        id S2436798AbgAPSeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:34:32 -0500
-Received: from out28-219.mail.aliyun.com ([115.124.28.219]:42644 "EHLO
-        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391658AbgAPRYh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:37 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2859474|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0287538-0.00116862-0.970078;DS=CONTINUE|ham_regular_dialog|0.0102448-0.000467264-0.989288;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03302;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 17 Jan 2020 01:24:29 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
-Subject: [PATCH v2 6/6] MIPS: CI20: Update defconfig to support SMP.
-Date:   Fri, 17 Jan 2020 01:23:49 +0800
-Message-Id: <1579195429-59828-8-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 16 Jan 2020 13:34:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391786AbgAPRYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2A524690;
+        Thu, 16 Jan 2020 17:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195475;
+        bh=AcZfI0dDCmrfYQpYOI4n1Qj+eqCMp3jCGQWFTNdfUWY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e/FJygJvElp/dllykO/9BPRaotpbddFP2NsAcWSqDLvC31MfreJZL+MSanQnVuCfq
+         kP4OasjeL2GN3ATbQj5FOiXT2Ak2DuPSMI4KS1ssJ1AbrvTXLe0zdlE51ifZXLF7/z
+         X/Fm/xxq96/eMa/gLCHfJdx13t0flUkF0BD1pB/c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 081/371] staging: most: cdev: add missing check for cdev_add failure
+Date:   Thu, 16 Jan 2020 12:19:13 -0500
+Message-Id: <20200116172403.18149-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "CONFIG_SMP=y" and "CONFIG_NR_CPUS=2" to support SMP.
+From: Colin Ian King <colin.king@canonical.com>
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+[ Upstream commit 5ae890780e1b4d08f2c0c5d4ea96fc3928fc0ee9 ]
+
+Currently the call to cdev_add is missing a check for failure. Fix this by
+checking for failure and exiting via a new error path that ensures the
+allocated comp_channel struct is kfree'd.
+
+Detected by CoverityScan, CID#1462359 ("Unchecked return value")
+
+Fixes: 9bc79bbcd0c5 ("Staging: most: add MOST driver's aim-cdev module")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/staging/most/aim-cdev/cdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Notes:
-    v1->v2:
-    No change.
-
- arch/mips/configs/ci20_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2..3aadb2e 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -1,3 +1,5 @@
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=2
- # CONFIG_LOCALVERSION_AUTO is not set
- CONFIG_KERNEL_XZ=y
- CONFIG_SYSVIPC=y
+diff --git a/drivers/staging/most/aim-cdev/cdev.c b/drivers/staging/most/aim-cdev/cdev.c
+index 1e5cbc893496..d000b6ff8a7d 100644
+--- a/drivers/staging/most/aim-cdev/cdev.c
++++ b/drivers/staging/most/aim-cdev/cdev.c
+@@ -455,7 +455,9 @@ static int aim_probe(struct most_interface *iface, int channel_id,
+ 	c->devno = MKDEV(major, current_minor);
+ 	cdev_init(&c->cdev, &channel_fops);
+ 	c->cdev.owner = THIS_MODULE;
+-	cdev_add(&c->cdev, c->devno, 1);
++	retval = cdev_add(&c->cdev, c->devno, 1);
++	if (retval < 0)
++		goto err_free_c;
+ 	c->iface = iface;
+ 	c->cfg = cfg;
+ 	c->channel_id = channel_id;
+@@ -491,6 +493,7 @@ static int aim_probe(struct most_interface *iface, int channel_id,
+ 	list_del(&c->list);
+ error_alloc_kfifo:
+ 	cdev_del(&c->cdev);
++err_free_c:
+ 	kfree(c);
+ error_alloc_channel:
+ 	ida_simple_remove(&minor_id, current_minor);
 -- 
-2.7.4
+2.20.1
 
