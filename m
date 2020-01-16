@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCA6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7065424699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6037D246BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197181;
-	bh=wy+NbcQAXSejU44rpycmfVfRkajCdzO8KkL0ZZiogy8=;
+	s=default; t=1579197189;
+	bh=TDPzQ8lOFzd1TlN4bzqYEgSRNq1zXrEqZe6K0L9fOU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bAL5XeoO6kK+tjzgo5oEiP/RLpJqowcQqPtxlP+npTOLS0bwnK24xW7/b9+WwPBIx
-	 YLVPe4RA7DdXxdNjnNeQTALq9gmmW5iY8NTrJ0S69SK+9UAQw97QtTpBAY+4XsK3aw
-	 BdDqf6FvKnjlKN7Cec+GtYsmN6J62uqxgKIbdI20=
+	b=K2oIuNkPlOtRSF1LigXMbm9rHEw3Ot38bO5oTT8xG3kbxPbI6JzNVaa4rktoJaCR0
+	 ZEfSph9FHOSuzxfdPHu1exTUr0ollrrabLV87w0eIAf2+pVm2Rje+rewITCYAl7q9h
+	 BB7A2ihDBxmGVGUw8xku1zAMttCJ8OOVxYz5Myb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393926AbgAPRxA (ORCPT
+        id S2404409AbgAPRxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:53:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36674 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:53:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406105AbgAPRpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:10 -0500
+        id S2406093AbgAPRpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 543512474F;
-        Thu, 16 Jan 2020 17:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1084D2476A;
+        Thu, 16 Jan 2020 17:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196710;
-        bh=wy+NbcQAXSejU44rpycmfVfRkajCdzO8KkL0ZZiogy8=;
+        s=default; t=1579196708;
+        bh=TDPzQ8lOFzd1TlN4bzqYEgSRNq1zXrEqZe6K0L9fOU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=miuYgLswJ9yQ51crb0yR3Hgw4M04ANx+dg6EITJ8eOJm7p1g89bkQ+LuDfhXSQwv2
-         O6adtD0bmo2DGQHR5Y9RX77YacvZs6BxSvNpdemTINbArAktC2M0thqKVHjKWo8ZK7
-         ENbLa8EDyM+ckIfd+5V9Xfidx2klpDafl7UiajXk=
+        b=aQCYMVVCcVm2Q6avsC/PtMZ4/SVBzX4fkNnRB201j+foxpev4Wry/rJOAvEP3RPtM
+         pTxKDw2jPaSHO3YI8Z3UViKO3zfWrhAvJy3a0zjb+Z6zE7XAQe7SWK0Bxi1jeQKtCA
+         HbuYR5PqyM/IDBbSvSL29bpjRkrRiRG46oGC2krc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 100/174] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
-Date:   Thu, 16 Jan 2020 12:41:37 -0500
-Message-Id: <20200116174251.24326-100-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 099/174] media: vivid: fix incorrect assignment operation when setting video mode
+Date:   Thu, 16 Jan 2020 12:41:36 -0500
+Message-Id: <20200116174251.24326-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,69 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
+[ Upstream commit d4ec9550e4b2d2e357a46fdc65d8ef3d4d15984c ]
 
-Allow external callers to force the cacheinfo code to release all its
-references to cache nodes, e.g. before processing device tree updates
-post-migration, and to rebuild the hierarchy afterward.
+The assigment of FB_VMODE_NONINTERLACE to var->vmode should be a
+bit-wise or of FB_VMODE_NONINTERLACE instead of an assignment,
+otherwise the previous clearing of the FB_VMODE_MASK bits of
+var->vmode makes no sense and is redundant.
 
-CPU online/offline must be blocked by callers; enforce this.
+Addresses-Coverity: ("Unused value")
+Fixes: ad4e02d5081d ("[media] vivid: add a simple framebuffer device for overlay testing")
 
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
- arch/powerpc/kernel/cacheinfo.h |  4 ++++
- 2 files changed, 25 insertions(+)
+ drivers/media/platform/vivid/vivid-osd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
-index c641983bbdd6..0122d5ce0637 100644
---- a/arch/powerpc/kernel/cacheinfo.c
-+++ b/arch/powerpc/kernel/cacheinfo.c
-@@ -867,4 +867,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
- 	if (cache)
- 		cache_cpu_clear(cache, cpu_id);
- }
-+
-+void cacheinfo_teardown(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_offline(cpu);
-+}
-+
-+void cacheinfo_rebuild(void)
-+{
-+	unsigned int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_online_cpu(cpu)
-+		cacheinfo_cpu_online(cpu);
-+}
-+
- #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
-diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
-index a7b74d36acd7..2cdee87a482c 100644
---- a/arch/powerpc/kernel/cacheinfo.h
-+++ b/arch/powerpc/kernel/cacheinfo.h
-@@ -5,4 +5,8 @@
- extern void cacheinfo_cpu_online(unsigned int cpu_id);
- extern void cacheinfo_cpu_offline(unsigned int cpu_id);
+diff --git a/drivers/media/platform/vivid/vivid-osd.c b/drivers/media/platform/vivid/vivid-osd.c
+index e15eef6a94e5..f3afc74f98ed 100644
+--- a/drivers/media/platform/vivid/vivid-osd.c
++++ b/drivers/media/platform/vivid/vivid-osd.c
+@@ -167,7 +167,7 @@ static int _vivid_fb_check_var(struct fb_var_screeninfo *var, struct vivid_dev *
+ 	var->nonstd = 0;
  
-+/* Allow migration/suspend to tear down and rebuild the hierarchy. */
-+extern void cacheinfo_teardown(void);
-+extern void cacheinfo_rebuild(void);
-+
- #endif /* _PPC_CACHEINFO_H */
+ 	var->vmode &= ~FB_VMODE_MASK;
+-	var->vmode = FB_VMODE_NONINTERLACED;
++	var->vmode |= FB_VMODE_NONINTERLACED;
+ 
+ 	/* Dummy values */
+ 	var->hsync_len = 24;
 -- 
 2.20.1
 
