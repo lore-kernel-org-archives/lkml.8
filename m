@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D824C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534EAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E253924695
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F5224695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196539;
-	bh=jwZSOtcnyH391D6AHflOgmp/rHi6EkXxpukUJRG6iAc=;
+	s=default; t=1579196547;
+	bh=W9AJE54V3aSrQ/GpLadLcNvwEjQqZbfkVhhCCM7hxCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8YHEn4JuW9zeyHSqMiShsFD5DI5Vqe5wLC//oUN6KcNzLDPe80Wy/cr+l7fyrUU9
-	 SX5sVQ3EQYDc49ryTFbmWVOzVOoNGL1czUkKdHUfUn3xzwyhNnZEfDojvzs5LSp/Y1
-	 epBQDJYT+Hrjpx9Ojo/D5GaR7griqnhVHEZ0bLvQ=
+	b=jfOrampHzePmYWwyOcMb5HHNPLH+ceSIy8Nuyg0EE7Q78uZ+gMmOk/qQsLjGoawGC
+	 b3pTYV3jbOGNIFECjKE8/jjUFKmRcj1nc8wBKh8LybhqhB2r1JR6gX7dPxdrLPkN4Z
+	 4LkSSoVpad5tR20hbBb0O097fTtU9mz4y2oG+QS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393815AbgAPRmS (ORCPT
+        id S2405649AbgAPRm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57728 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405524AbgAPRkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:31 -0500
+        id S2405715AbgAPRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ED9224733;
-        Thu, 16 Jan 2020 17:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D64A2471D;
+        Thu, 16 Jan 2020 17:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196430;
-        bh=jwZSOtcnyH391D6AHflOgmp/rHi6EkXxpukUJRG6iAc=;
+        s=default; t=1579196493;
+        bh=W9AJE54V3aSrQ/GpLadLcNvwEjQqZbfkVhhCCM7hxCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=breXOltFylBYf0GBdPLgLHyczq3FsxkvNjteH65qUWP7p6bjaz24rawe7JFk8JyiR
-         156IYXEhb9i39GojSC9TizceSyLBq1Wf2HdlQ72CrXaKkwaz0F3mDKd57Uh3SpnlTV
-         fmlX5FLQXHwYgPiyHW5IQqw5W14X2bchT9AYo0kw=
+        b=F+/ZZRfUMANagveb4hZE74vB5FOvItKaU46sWU0NhtNUyjvgjE2QWnoznuUkGBubt
+         aFvVLkOpolt4z4kk2JB0ZC8slvtgreTA3RMGSQWzJTpDuyh0xN6st0i5cdpR1Dy522
+         LdTRN7ykXTsRJ4XgWq2U2NOUYArqLZ+NKGizbVlY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
+Cc:     Eric Dumazet <edumazet@google.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 197/251] net: sonic: return NETDEV_TX_OK if failed to map buffer
-Date:   Thu, 16 Jan 2020 12:35:46 -0500
-Message-Id: <20200116173641.22137-157-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 236/251] net: neigh: use long type to store jiffies delta
+Date:   Thu, 16 Jan 2020 12:36:25 -0500
+Message-Id: <20200116173641.22137-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,40 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 ]
+[ Upstream commit 9d027e3a83f39b819e908e4e09084277a2e45e95 ]
 
-NETDEV_TX_BUSY really should only be used by drivers that call
-netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
-failed to map tx DMA buffer, it might trigger an infinite loop.
-This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
-printk to pr_err_ratelimited.
+A difference of two unsigned long needs long storage.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fixes: c7fb64db001f ("[NETLINK]: Neighbour table configuration and statistics via rtnetlink")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 4 ++--
+ net/core/neighbour.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 23821540ab07..11f472fd5d47 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -221,9 +221,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
--		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
-+		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
- 		dev_kfree_skb(skb);
--		return NETDEV_TX_BUSY;
-+		return NETDEV_TX_OK;
- 	}
- 
- 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index cd85cee14bd0..6578d1f8e6c4 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -1834,8 +1834,8 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
+ 		goto nla_put_failure;
+ 	{
+ 		unsigned long now = jiffies;
+-		unsigned int flush_delta = now - tbl->last_flush;
+-		unsigned int rand_delta = now - tbl->last_rand;
++		long flush_delta = now - tbl->last_flush;
++		long rand_delta = now - tbl->last_rand;
+ 		struct neigh_hash_table *nht;
+ 		struct ndt_config ndc = {
+ 			.ndtc_key_len		= tbl->key_len,
 -- 
 2.20.1
 
