@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3592C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06530246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D09C246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196013;
-	bh=D4koUEZyoEWnZ7PH6TZzuDnLbMuD8YMIatB3LvF3vQo=;
+	s=default; t=1579196018;
+	bh=uCIp6mD10XteebAJ2I2AXoP9KgVklKyDJoPbZYmlV6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p5wD0tQv3q9KtDIxA3YjHGVPkBp1BZ7SYBRyGrZsGDR8RfnoNeVHvrhVg+5kCPyTv
-	 +Jc5eAdQJKbEPXneL0hHApc6jcO0zPeqQ9GJEKyeMyTWTf3pHXZaDVAi1k1EQgloNh
-	 U6+8CqEnQWgoGWtgsiT8HHa0GU+Qmr0GdvLWo72s=
+	b=KMob5HVY05l8kwb2W09M3RKHrbt66QDTINlJmedkqbUj2rajvXGBzLu/l7LgMqAUF
+	 4g+Xo8A4GA7LG3W60TMW9J1ytQNli0dyo8+w1ptqJst20BSBLp+5huVDJ38rku9Jhi
+	 ZVpJKGEmhijomavVXm4pGGZjpIngOcNVIw5BmR1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404707AbgAPRdc (ORCPT
+        id S2404422AbgAPRaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404245AbgAPRa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:27 -0500
+        id S2404390AbgAPRaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE90224726;
-        Thu, 16 Jan 2020 17:30:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832BB24726;
+        Thu, 16 Jan 2020 17:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195826;
-        bh=D4koUEZyoEWnZ7PH6TZzuDnLbMuD8YMIatB3LvF3vQo=;
+        s=default; t=1579195820;
+        bh=uCIp6mD10XteebAJ2I2AXoP9KgVklKyDJoPbZYmlV6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wezxv6d3p8dF3sAolIjNA+iX49Sw8FWf4SUEFLIr0YIYOdCR1V40twa0V32wkVOaZ
-         ht4msTpWOY8LK8aEj9Qtj4YR48xswkovGZO0r8Cqv2/tijOO4yTYie5G0GDTRd9elM
-         /vLZa7DY3U7HGuAby9dIh0iYA0k8r0z0PuIaZ7os=
+        b=EKnE3BbCCwbKiYb1Cb6ItrgLsxO4MxGjZXquMNbt/wJeOvnYMgqXmRdXjMJKGnMTk
+         qklFBb1+SP8mPlkuXZFpP/9ejnsRBb4FrduJPGnaZo1EZ9kbHwvThJgM+3fvD9yejE
+         YalXxsqT797J1m/1sgGDjTmxOPylswYRVCI81yd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 334/371] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
-Date:   Thu, 16 Jan 2020 12:23:26 -0500
-Message-Id: <20200116172403.18149-277-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Jakub Kicinski <kubakici@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 329/371] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
+Date:   Thu, 16 Jan 2020 12:23:21 -0500
+Message-Id: <20200116172403.18149-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,39 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
+[ Upstream commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 ]
 
-The call to pinctrl_count_index_with_args checks for a -EINVAL return
-however this function calls pinctrl_get_list_and_count and this can
-return -ENOENT. Rather than check for a specific error, fix this by
-checking for any error return to catch the -ENOENT case.
+Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
+coverity with the following error:
 
-Addresses-Coverity: ("Improper use of negative")
-Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Logical vs. bitwise operator
+The expression's value does not depend on the operands; inadvertent use
+of the wrong operator is a likely logic error.
+
+Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
+Fixes: c869f77d6abb ("add mt7601u driver")
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
+ drivers/net/wireless/mediatek/mt7601u/phy.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 5c1b6325d80d..8ac1f1ce4442 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wireless/mediatek/mt7601u/phy.c
+index ca09a5d4305e..71a47459bf8a 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/phy.c
++++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
+@@ -221,7 +221,7 @@ int mt7601u_wait_bbp_ready(struct mt7601u_dev *dev)
  
- 	rows = pinctrl_count_index_with_args(np, name);
--	if (rows == -EINVAL)
-+	if (rows < 0)
- 		return rows;
+ 	do {
+ 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
+-		if (val && ~val)
++		if (val && val != 0xff)
+ 			break;
+ 	} while (--i);
  
- 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 -- 
 2.20.1
 
