@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31724C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7384EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B102073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43919206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218405;
-	bh=uCgsCD/PC8upsUFz8l4cub7gwgwpAiMz3Y8qPsgJln0=;
+	s=default; t=1579218411;
+	bh=DpGXwf5WCT68h30EiLxwSBUtzxw2I203M5y/g0r7J7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F0BfmPZUh25Z5V2nQoR4SUTLz+EPR05ZbAlAQ5NjSe7H6GPvcUboKCjQJPtaYbjt9
-	 KSyBpQmoSmKI+VU3dQQKmnqm2R11Jj9W7MbmDDimfE8vid8Bo6Jl1+XkTYnusCJ42H
-	 8xI18Ywa5zKK/2rQn3BaDCXepHIDGNMOhZlQEHhY=
+	b=1ZVZtMbOUINaYZssvpfqb4m5F+LynH+bcWH2IvPKm32cjEcYHnIOjFaWmVeOY1ihQ
+	 FT4H3zLa3Ida8VZOB7y5vRrDWkmgylApor37JgPHnhBlVr4k4EChXw38qWi1qMX8Cz
+	 GjVl8wrEmMSt8RG+n1j1i7XWVAJ6947JX3lq3wmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392069AbgAPXqo (ORCPT
+        id S2392081AbgAPXqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:46:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49124 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390857AbgAPXVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:41 -0500
+        id S2388331AbgAPXVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95F35206D9;
-        Thu, 16 Jan 2020 23:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22146206D9;
+        Thu, 16 Jan 2020 23:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216901;
-        bh=uCgsCD/PC8upsUFz8l4cub7gwgwpAiMz3Y8qPsgJln0=;
+        s=default; t=1579216896;
+        bh=DpGXwf5WCT68h30EiLxwSBUtzxw2I203M5y/g0r7J7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+nRt6OMvuiakbes7GAgo/rVURrJaR4DKaKJbJQjXB+VVaPE0/I/9MZNkY7Fp0Mg/
-         4hWyRxAVAjEZrgvt5O+INKAeoJ/MJHaATQZWrM0RbqjfgcQ/XEGnQbex6eJ3G79xnI
-         QoDCIWdnsTkfEMAjDHxgYbRJr+ion51+256VuluY=
+        b=rEaTDQ6yf4XXxMOfuXBr5JUsrWWpZdQXUzeQQ8VrkfpQEWUC0DjErLHIk/UOR+RtS
+         gzv6lv5P1C3jdCviBfAgLFxVYZMkiaZZ8NMKeUPu+tCIimid47QgxsnYDODoWJJVCp
+         dgsaE/apwYpoQTdFXu/Dm6en3u+Lqdah+EugS/wc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 050/203] syscalls/x86: Fix function types in COND_SYSCALL
-Date:   Fri, 17 Jan 2020 00:16:07 +0100
-Message-Id: <20200116231748.356024867@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 064/203] RDMA/counter: Prevent QP counter manual binding in auto mode
+Date:   Fri, 17 Jan 2020 00:16:21 +0100
+Message-Id: <20200116231749.667062189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -66,80 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Mark Zhang <markz@mellanox.com>
 
-commit 6e4847640c6aebcaa2d9b3686cecc91b41f09269 upstream.
+commit 663912a6378a34fd4f43b8d873f0c6c6322d9d0e upstream.
 
-Define a weak function in COND_SYSCALL instead of a weak alias to
-sys_ni_syscall(), which has an incompatible type. This fixes indirect
-call mismatches with Control-Flow Integrity (CFI) checking.
+If auto mode is configured, manual counter allocation and QP bind is not
+allowed.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191008224049.115427-6-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 1bd8e0a9d0fd ("RDMA/counter: Allow manual mode configuration support")
+Link: https://lore.kernel.org/r/20190916071154.20383-3-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/syscall_wrapper.h |   21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/counters.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -6,6 +6,8 @@
- #ifndef _ASM_X86_SYSCALL_WRAPPER_H
- #define _ASM_X86_SYSCALL_WRAPPER_H
+--- a/drivers/infiniband/core/counters.c
++++ b/drivers/infiniband/core/counters.c
+@@ -466,10 +466,15 @@ static struct rdma_counter *rdma_get_cou
+ int rdma_counter_bind_qpn(struct ib_device *dev, u8 port,
+ 			  u32 qp_num, u32 counter_id)
+ {
++	struct rdma_port_counter *port_counter;
+ 	struct rdma_counter *counter;
+ 	struct ib_qp *qp;
+ 	int ret;
  
-+struct pt_regs;
++	port_counter = &dev->port_data[port].port_counter;
++	if (port_counter->mode.mode == RDMA_COUNTER_MODE_AUTO)
++		return -EINVAL;
 +
- /* Mapping of registers to parameters for syscalls on x86-64 and x32 */
- #define SC_X86_64_REGS_TO_ARGS(x, ...)					\
- 	__MAP(x,__SC_ARGS						\
-@@ -64,9 +66,15 @@
- 	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
- 	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+ 	qp = rdma_counter_get_qp(dev, qp_num);
+ 	if (!qp)
+ 		return -ENOENT;
+@@ -506,6 +511,7 @@ err:
+ int rdma_counter_bind_qpn_alloc(struct ib_device *dev, u8 port,
+ 				u32 qp_num, u32 *counter_id)
+ {
++	struct rdma_port_counter *port_counter;
+ 	struct rdma_counter *counter;
+ 	struct ib_qp *qp;
+ 	int ret;
+@@ -513,9 +519,13 @@ int rdma_counter_bind_qpn_alloc(struct i
+ 	if (!rdma_is_port_valid(dev, port))
+ 		return -EINVAL;
  
--#define COND_SYSCALL(name)						\
--	cond_syscall(__x64_sys_##name);					\
--	cond_syscall(__ia32_sys_##name)
-+#define COND_SYSCALL(name)							\
-+	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
-+	{									\
-+		return sys_ni_syscall();					\
-+	}									\
-+	asmlinkage __weak long __ia32_sys_##name(const struct pt_regs *__unused)\
-+	{									\
-+		return sys_ni_syscall();					\
-+	}
+-	if (!dev->port_data[port].port_counter.hstats)
++	port_counter = &dev->port_data[port].port_counter;
++	if (!port_counter->hstats)
+ 		return -EOPNOTSUPP;
  
- #define SYS_NI(name)							\
- 	SYSCALL_ALIAS(__x64_sys_##name, sys_ni_posix_timers);		\
-@@ -218,7 +226,11 @@
- #endif
- 
- #ifndef COND_SYSCALL
--#define COND_SYSCALL(name) cond_syscall(__x64_sys_##name)
-+#define COND_SYSCALL(name) 							\
-+	asmlinkage __weak long __x64_sys_##name(const struct pt_regs *__unused)	\
-+	{									\
-+		return sys_ni_syscall();					\
-+	}
- #endif
- 
- #ifndef SYS_NI
-@@ -230,7 +242,6 @@
-  * For VSYSCALLS, we need to declare these three syscalls with the new
-  * pt_regs-based calling convention for in-kernel use.
-  */
--struct pt_regs;
- asmlinkage long __x64_sys_getcpu(const struct pt_regs *regs);
- asmlinkage long __x64_sys_gettimeofday(const struct pt_regs *regs);
- asmlinkage long __x64_sys_time(const struct pt_regs *regs);
++	if (port_counter->mode.mode == RDMA_COUNTER_MODE_AUTO)
++		return -EINVAL;
++
+ 	qp = rdma_counter_get_qp(dev, qp_num);
+ 	if (!qp)
+ 		return -ENOENT;
 
 
