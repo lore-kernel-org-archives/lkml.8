@@ -2,103 +2,178 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FAFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5064DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162BB206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DCF20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ranq0WLA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JPk1IALQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgAPNWz (ORCPT
+        id S1729152AbgAPNXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:22:55 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37838 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729012AbgAPNWy (ORCPT
+        Thu, 16 Jan 2020 08:23:05 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34754 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726979AbgAPNWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:22:54 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so3792122wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YSdGbyz4cAulbJtXxaRPqLeCVXowQPtOo42gy8TEczA=;
-        b=Ranq0WLA1uu0HiM6WvTKGe2oXravJHsDL3dTHoeOm6b8VZwoDtcTvOdi7sVtVC8uF2
-         WsOdhbzQsuiXkAeKt9dxaeHua9qs+BpOcmqKmiyz42tpL8leLCNSpIvYhbE/Zm5X4egH
-         jRU+BV9fMZ/vsfv59hrBJ74Lf4ZTHuEIsKoHFoBHe/wEQ5EJcmU3pGrjSsS4G4rXvUsl
-         Kr46kZewS6tGgdyHkTgThm5RwLkxtjOM31SxPdOyc58lN49McAbWMUXUuZFOTr/LDk8D
-         Yai0qsBQc2D7AMuzThTQhfnXmCV7TMzq7UuLxw5UB6y9MI45dExi8Vrk4FWDwhyF5w6N
-         095A==
+        Thu, 16 Jan 2020 08:22:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579180941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dddkGyog6/ukNzxfITycfkaFpImnWg5YZpf57HIco9g=;
+        b=JPk1IALQ4iON3jTpKc9aPujw/uuB2qQ8jMmIK16RC4Eyj7Ikuz9rVd1wnOGl7ARyltgLIV
+        sS4ErMtapyDa8+scEBhfvHIldGUR5ezEKWkoOgrO91UVTwMfGS4STlyfmiLpo6W173+XgD
+        N8vS64q7iAuSEyHseqvj+wUeztQnypg=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-tcfj13ejOUKaGbsnOmHjdw-1; Thu, 16 Jan 2020 08:22:20 -0500
+X-MC-Unique: tcfj13ejOUKaGbsnOmHjdw-1
+Received: by mail-lf1-f70.google.com with SMTP id w72so3809364lff.20
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:22:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YSdGbyz4cAulbJtXxaRPqLeCVXowQPtOo42gy8TEczA=;
-        b=clzasheQah85hgY3hK0/l1JYQOjFhCNocyvfF7PKjuh4cuzFYxyvX45flS2iuwANKt
-         HEP57NGez9pHBQENhVo/EPqfWuPjJGAtfR1KioTHKc635tLNBeAPlqyhZdu1Bh5c19iC
-         O2EHGLNiWtNWw5+2C5hftLAaNcwElQ25zDwIff0WrMvg3ql+xIvVAvLBTAZsSenerzza
-         0nLhynFGIjBD4DvAC7is29HPSlayOOyveoin5i5P3OyPM56fqi7fRTB+XFaFv/a8xCyt
-         ak0gGUFu3Lc5tStNqZzi5v8Aut/BZ+0dXB9B7ffXUYvYeVakzJwz75pvnS01eJsfqTPp
-         AM9g==
-X-Gm-Message-State: APjAAAXlLxCNGQdzLWeyyktwcgsCrvMrbsai66lGo5vEfIB0q6gElZWz
-        DlUNUxY90TDOhzhK5S/Ge8/owhyxhA4=
-X-Google-Smtp-Source: APXvYqyegg4fv22A4mzkGZTi+FEK/MG0s3X/hV45khQTWD7H31khgUc1Pf4GP4r6RA3yTNynh1gdSQ==
-X-Received: by 2002:a7b:c3d2:: with SMTP id t18mr6317885wmj.90.1579180972252;
-        Thu, 16 Jan 2020 05:22:52 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id s128sm4730518wme.39.2020.01.16.05.22.50
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=dddkGyog6/ukNzxfITycfkaFpImnWg5YZpf57HIco9g=;
+        b=azR9rkfafjJEsAI+jp19Iviz+Dzxp8MqP0oJNOnmP0KgAkvOK93EF0OoxczPsVroky
+         JRrFY8Y1iuMPz5bKI07BCvwZ91Ru7tQ71RPSMZ/aG6+5k80wnjW302+e1Y0OZZtveJT8
+         n6opn/I03G33+/dOfGWuYhoYabuqUEI90M4kd8dO4dBZHAgGrOQavRyly5YQi9DGws7Z
+         l4WgSiPz3vDcPKYmOVpU728isqIXUoKcgEgRDWrlxXH9FRyTXVx+dWuNWquYrlIThfCu
+         rWSUs855SC3xopHW/UEP3d1ACZIDK9HW+4x4RwvNBAFxj6dsGJPNnRdwsYAzKMq7ppuK
+         KszQ==
+X-Gm-Message-State: APjAAAVnjgA/dSxX1dNVNFx1Tmvkdze3oNgJwquBJhQd6UTKtZCueIw5
+        gXe9YlzbAweZJnGPo3Od7iUCJBcEpFst6mxu8PK4bk/25Y4elSfpvo+D1/8TvQ8fHiBMXzd5Okz
+        +CIvHk089d1Q5ao69wtvRH0wQ
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr2377244lfa.70.1579180938886;
+        Thu, 16 Jan 2020 05:22:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxHM8ojNS2+z7RRp2C22+OxchWf4eKxJheokOyRKS33/7g/+IOIFCtNATZQpBdA7df3Cna3AQ==
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr2377225lfa.70.1579180938699;
+        Thu, 16 Jan 2020 05:22:18 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id 140sm10713621lfk.78.2020.01.16.05.22.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 05:22:51 -0800 (PST)
-Date:   Thu, 16 Jan 2020 13:23:09 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH RESEND 2/3] mfd: madera: Wait for boot done before
- accessing any other registers
-Message-ID: <20200116132309.GJ325@dell>
-References: <20200114151048.20282-1-ckeepax@opensource.cirrus.com>
- <20200114151048.20282-2-ckeepax@opensource.cirrus.com>
+        Thu, 16 Jan 2020 05:22:18 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 39AED1804D7; Thu, 16 Jan 2020 14:22:16 +0100 (CET)
+Subject: [PATCH bpf-next v3 04/11] tools/runqslower: Use consistent include
+ paths for libbpf
+From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Thu, 16 Jan 2020 14:22:16 +0100
+Message-ID: <157918093613.1357254.10230277763921623892.stgit@toke.dk>
+In-Reply-To: <157918093154.1357254.7616059374996162336.stgit@toke.dk>
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114151048.20282-2-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Charles Keepax wrote:
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-> It is advised to wait for the boot done bit to be set before reading
-> any other register, update the driver to respect this.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> This patch can be applied separately from the other patches in the series,
-> if needed. Just resending to keep everything together in one chain.
-> 
-> Thanks,
-> Charles
-> 
->  drivers/mfd/madera-core.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+Fix the runqslower tool to include libbpf header files with the bpf/
+prefix, to be consistent with external users of the library. Also ensure
+that all includes of exported libbpf header files (those that are exported
+on 'make install' of the library) use bracketed includes instead of quoted.
 
-Just applied v1 of this.
+To not break the build, keep the old include path until everything has been
+changed to the new one; a subsequent patch will remove that.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken from selftests dir")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+---
+ tools/bpf/runqslower/Makefile         |    5 +++--
+ tools/bpf/runqslower/runqslower.bpf.c |    2 +-
+ tools/bpf/runqslower/runqslower.c     |    4 ++--
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
+index 89fb7cd30f1a..c0512b830805 100644
+--- a/tools/bpf/runqslower/Makefile
++++ b/tools/bpf/runqslower/Makefile
+@@ -5,6 +5,7 @@ LLC := llc
+ LLVM_STRIP := llvm-strip
+ DEFAULT_BPFTOOL := $(OUTPUT)/sbin/bpftool
+ BPFTOOL ?= $(DEFAULT_BPFTOOL)
++LIBBPF_INCLUDE := -I$(abspath ../../lib) -I$(abspath ../../lib/bpf)
+ LIBBPF_SRC := $(abspath ../../lib/bpf)
+ CFLAGS := -g -Wall
+ 
+@@ -57,13 +58,13 @@ $(OUTPUT)/%.skel.h: $(OUTPUT)/%.bpf.o | $(BPFTOOL)
+ 
+ $(OUTPUT)/%.bpf.o: %.bpf.c $(OUTPUT)/libbpf.a | $(OUTPUT)
+ 	$(call msg,BPF,$@)
+-	$(Q)$(CLANG) -g -O2 -target bpf -I$(OUTPUT) -I$(LIBBPF_SRC)	      \
++	$(Q)$(CLANG) -g -O2 -target bpf -I$(OUTPUT) $(LIBBPF_INCLUDE)	      \
+ 		 -c $(filter %.c,$^) -o $@ &&				      \
+ 	$(LLVM_STRIP) -g $@
+ 
+ $(OUTPUT)/%.o: %.c | $(OUTPUT)
+ 	$(call msg,CC,$@)
+-	$(Q)$(CC) $(CFLAGS) -I$(LIBBPF_SRC) -I$(OUTPUT) -c $(filter %.c,$^) -o $@
++	$(Q)$(CC) $(CFLAGS) $(LIBBPF_INCLUDE) -I$(OUTPUT) -c $(filter %.c,$^) -o $@
+ 
+ $(OUTPUT):
+ 	$(call msg,MKDIR,$@)
+diff --git a/tools/bpf/runqslower/runqslower.bpf.c b/tools/bpf/runqslower/runqslower.bpf.c
+index 623cce4d37f5..48a39f72fadf 100644
+--- a/tools/bpf/runqslower/runqslower.bpf.c
++++ b/tools/bpf/runqslower/runqslower.bpf.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2019 Facebook
+ #include "vmlinux.h"
+-#include <bpf_helpers.h>
++#include <bpf/bpf_helpers.h>
+ #include "runqslower.h"
+ 
+ #define TASK_RUNNING 0
+diff --git a/tools/bpf/runqslower/runqslower.c b/tools/bpf/runqslower/runqslower.c
+index 996f0e2c560e..d89715844952 100644
+--- a/tools/bpf/runqslower/runqslower.c
++++ b/tools/bpf/runqslower/runqslower.c
+@@ -6,8 +6,8 @@
+ #include <string.h>
+ #include <sys/resource.h>
+ #include <time.h>
+-#include <libbpf.h>
+-#include <bpf.h>
++#include <bpf/libbpf.h>
++#include <bpf/bpf.h>
+ #include "runqslower.h"
+ #include "runqslower.skel.h"
+ 
+
