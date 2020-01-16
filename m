@@ -2,101 +2,124 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF5FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0DBC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7EE2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D7A52075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgAPMqH (ORCPT
+        id S1726897AbgAPMq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:46:07 -0500
-Received: from mga05.intel.com ([192.55.52.43]:32140 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgAPMqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:46:07 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 04:46:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="425523609"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jan 2020 04:46:06 -0800
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Jan 2020 04:46:06 -0800
-Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
- FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Jan 2020 04:46:06 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
- Thu, 16 Jan 2020 20:46:04 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: RE: [PATCH v4 02/12] vfio_pci: move
- vfio_pci_is_vga/vfio_vga_disabled to header file
-Thread-Topic: [PATCH v4 02/12] vfio_pci: move
- vfio_pci_is_vga/vfio_vga_disabled to header file
-Thread-Index: AQHVxVTzJZb0H1kknEai/t4XhlnqkqfrEHAAgAI5+xA=
-Date:   Thu, 16 Jan 2020 12:46:04 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A183F44@SHSMSX104.ccr.corp.intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-3-git-send-email-yi.l.liu@intel.com>
- <20200115114322.31644ede.cohuck@redhat.com>
-In-Reply-To: <20200115114322.31644ede.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTBiNGM4ZTYtMTgxNC00YjViLThjMjUtMDY4NTYzMzU0NGJjIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZlwvcVwvRWptRWFweWFTbk13MEEwU0t5cSt0cVVHWjE3UEJsem1WWWYyTXBObUFpTFNQV2JSbHRHWlRXTFVpTEpGIn0=
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 Jan 2020 07:46:57 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9638 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726440AbgAPMq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:46:57 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 91DA06A5E57719B433F2;
+        Thu, 16 Jan 2020 20:46:54 +0800 (CST)
+Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 16 Jan 2020 20:46:48 +0800
+From:   Zengruan Ye <yezengruan@huawei.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>
+CC:     <yezengruan@huawei.com>, <maz@kernel.org>, <james.morse@arm.com>,
+        <linux@armlinux.org.uk>, <suzuki.poulose@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <catalin.marinas@arm.com>,
+        <mark.rutland@arm.com>, <will@kernel.org>, <steven.price@arm.com>,
+        <daniel.lezcano@linaro.org>, <wanghaibin.wang@huawei.com>,
+        <peterz@infradead.org>, <longman@redhat.com>
+Subject: [PATCH v3 4/8] KVM: arm64: Add SMCCC paravirtualised lock calls
+Date:   Thu, 16 Jan 2020 20:46:22 +0800
+Message-ID: <20200116124626.1155-5-yezengruan@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+In-Reply-To: <20200116124626.1155-1-yezengruan@huawei.com>
+References: <20200116124626.1155-1-yezengruan@huawei.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.221.248]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBDb3JuZWxpYSBIdWNrIFttYWlsdG86Y29odWNrQHJlZGhhdC5jb21dDQo+IFNlbnQ6
-IFdlZG5lc2RheSwgSmFudWFyeSAxNSwgMjAyMCA2OjQzIFBNDQo+IFRvOiBMaXUsIFlpIEwgPHlp
-LmwubGl1QGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAwMi8xMl0gdmZpb19w
-Y2k6IG1vdmUgdmZpb19wY2lfaXNfdmdhL3ZmaW9fdmdhX2Rpc2FibGVkIHRvDQo+IGhlYWRlciBm
-aWxlDQo+IA0KPiBPbiBUdWUsICA3IEphbiAyMDIwIDIwOjAxOjM5ICswODAwDQo+IExpdSBZaSBM
-IDx5aS5sLmxpdUBpbnRlbC5jb20+IHdyb3RlOg0KPiANCj4gPiBUaGlzIHBhdGNoIG1vdmVzIHR3
-byBpbmxpbmUgZnVuY3Rpb25zIHRvIHZmaW9fcGNpX3ByaXZhdGUuaCBmb3INCj4gPiBmdXJ0aGVy
-IHNoYXJpbmcgYWNyb3NzIHNvdXJjZSBmaWxlcy4gQWxzbyBhdm9pZHMgYmVsb3cgY29tcGlsaW5n
-IGVycm9yDQo+ID4gaW4gZnVydGhlciBjb2RlIHNwbGl0Lg0KPiA+DQo+ID4gImVycm9yOiBpbmxp
-bmluZyBmYWlsZWQgaW4gY2FsbCB0byBhbHdheXNfaW5saW5lIOKAmHZmaW9fcGNpX2lzX3ZnYeKA
-mToNCj4gPiBmdW5jdGlvbiBib2R5IG5vdCBhdmFpbGFibGUiLg0KPiANCj4gIldlIHdhbnQgdG8g
-dXNlIHRoZXNlIGZ1bmN0aW9ucyBmcm9tIG90aGVyIGZpbGVzLCBzbyBtb3ZlIHRoZW0gdG8gYSBo
-ZWFkZXIiIHNlZW1zDQo+IHRvIGJlIGp1c3RpZmljYXRpb24gZW5vdWdoOyB3aHkgbWVudGlvbiB0
-aGUgY29tcGlsYXRpb24gZXJyb3I/DQoNCkV4YWN0bHkuIFdoYXQgYSBzdHVwaWQgY29tbWl0IG1l
-c3NhZ2UgSSBtYWRlLiBUaGFua3MgdmVyeSBtdWNoLiBJDQplbmNvdW50ZXJlZCBzdWNoIGNvbXBp
-bGF0aW9uIGVycm9yIGR1cmluZyBvbmUgc3RlcCBpbiBteSBkZXZlbG9wbWVudCwNCnNvIGFkZGVk
-IGl0IGluIHRoZSBjb21taXQgbWVzc2FnZS4gSSBhZ3JlZSBpdCBpcyBub3QgbmVjZXNzYXJ5Lg0K
-DQpUaGFua3MsDQpZaSBMaXUNCg0KPiA+DQo+ID4gQ2M6IEtldmluIFRpYW4gPGtldmluLnRpYW5A
-aW50ZWwuY29tPg0KPiA+IENjOiBMdSBCYW9sdSA8YmFvbHUubHVAbGludXguaW50ZWwuY29tPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IExpdSBZaSBMIDx5aS5sLmxpdUBpbnRlbC5jb20+DQo+ID4gLS0t
-DQo+ID4gIGRyaXZlcnMvdmZpby9wY2kvdmZpb19wY2kuYyAgICAgICAgIHwgMTQgLS0tLS0tLS0t
-LS0tLS0NCj4gPiAgZHJpdmVycy92ZmlvL3BjaS92ZmlvX3BjaV9wcml2YXRlLmggfCAxNCArKysr
-KysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDE0IGRl
-bGV0aW9ucygtKQ0KDQo=
+Add two new SMCCC compatible hypercalls for PV lock features:
+ * ARM_SMCCC_VENDOR_HYP_KVM_PV_LOCK_FUNC_ID:  0x86000001
+   - KVM_PV_LOCK_FEATURES:   0
+   - KVM_PV_LOCK_PREEMPTED:  1
+
+Also add the header file which defines the ABI for the paravirtualized
+lock features we're about to add.
+
+Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+---
+ arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
+ include/linux/arm-smccc.h           | 10 ++++++++++
+ 2 files changed, 26 insertions(+)
+ create mode 100644 arch/arm64/include/asm/pvlock-abi.h
+
+diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
+new file mode 100644
+index 000000000000..06e0c3d7710a
+--- /dev/null
++++ b/arch/arm64/include/asm/pvlock-abi.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright(c) 2019 Huawei Technologies Co., Ltd
++ * Author: Zengruan Ye <yezengruan@huawei.com>
++ */
++
++#ifndef __ASM_PVLOCK_ABI_H
++#define __ASM_PVLOCK_ABI_H
++
++struct pvlock_vcpu_state {
++	__le64 preempted;
++	/* Structure must be 64 byte aligned, pad to that size */
++	u8 padding[56];
++} __packed;
++
++#endif
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index 2b2c295c9109..081be5f6a6be 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -394,14 +394,24 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 
+ /* KVM "vendor specific" services */
+ #define ARM_SMCCC_KVM_FUNC_FEATURES		0
++#define ARM_SMCCC_KVM_FUNC_PV_LOCK		1
+ #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
+ #define ARM_SMCCC_KVM_NUM_FUNCS			128
+ 
++#define KVM_PV_LOCK_FEATURES			0
++#define KVM_PV_LOCK_PREEMPTED			1
++
+ #define ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID			\
+ 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
+ 			   ARM_SMCCC_SMC_32,				\
+ 			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
+ 			   ARM_SMCCC_KVM_FUNC_FEATURES)
+ 
++#define ARM_SMCCC_VENDOR_HYP_KVM_PV_LOCK_FUNC_ID			\
++	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
++			   ARM_SMCCC_SMC_32,				\
++			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
++			   ARM_SMCCC_KVM_FUNC_PV_LOCK)
++
+ #endif /*__ASSEMBLY__*/
+ #endif /*__LINUX_ARM_SMCCC_H*/
+-- 
+2.19.1
+
+
