@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1B9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3ADC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC952077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389E6207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202240;
-	bh=aX7ifRBNjLV4P2WSjgKpSySenyZPKe/92qia74ikSpM=;
+	s=default; t=1579202246;
+	bh=mrqyG+s5KkU79YeSwsbvGa5llda5DIJSBZQHAAEAfXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGNBBqBcI3+OMu5KVs7jyHOJt3/tlF7IJDQqDRNA2Ypn6BV16KjOu7jAOTZikFGwJ
-	 lR30xIzuEHt8n6XpjcPYQ/k7fUg481dKwnwW+tYWFIFA15wUyf/LoFp1DKXZb3SP3h
-	 j9RpJicYz/zWBJ0bTE2h5+heY/BQE4STk7YHXRm0=
+	b=XBoqdWRVIL4Ni+ejtph9mbSuBzJX0tW+fZs7nKP5u+QRo0wdin2JG62hwHtC1zHjd
+	 36Rfm14T+td3J/y9zxMdnOGQoEZMM166kKkGy+a/Yuz3yOgcIJRBCzZEAAoHy9GKMC
+	 X6ngzaHr5jZr3ZU5OqY0N51wbwnJNhCZXqWcw/Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437634AbgAPTRS (ORCPT
+        id S1733208AbgAPTRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:17:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:17:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732955AbgAPQz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:29 -0500
+        id S1732677AbgAPQzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99BD420730;
-        Thu, 16 Jan 2020 16:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 203882192A;
+        Thu, 16 Jan 2020 16:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193729;
-        bh=aX7ifRBNjLV4P2WSjgKpSySenyZPKe/92qia74ikSpM=;
+        s=default; t=1579193719;
+        bh=mrqyG+s5KkU79YeSwsbvGa5llda5DIJSBZQHAAEAfXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=REESr598VvRipbs6BUyv2+jkx4T+ZuYc7TQap51G9srO4pj5GzjEVjLDxdjk5iXFM
-         cpqAtuOFaTzrUoO7Np85+BvyoqOlbeKJRajm7Cw47EGAxuFXTcZ4S+0mbySHC12hTI
-         xbipoPb+Ne3cRV0zezS+kVAC2e6sCV83eww7JvVA=
+        b=guhFjWabM+V+h7WfYKpDiAInDCYY4vWr0VP1h6djzh0ellC5q6V2cjZ5Oaur23IRI
+         plkElDqBj+BK61Hq0y/Pp7WB4K56kC4YAJNt1vODjk/sNoSlEhha8em113l/S0ZCmX
+         y2skKv97CErUtRhjVhFMUl9b4msN2BdFhhLLnvqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 022/671] usb: dwc3: add EXTCON dependency for qcom
-Date:   Thu, 16 Jan 2020 11:44:13 -0500
-Message-Id: <20200116165502.8838-22-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 014/671] drm/hisilicon: hibmc: Don't overwrite fb helper surface depth
+Date:   Thu, 16 Jan 2020 11:44:05 -0500
+Message-Id: <20200116165502.8838-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 3def4031b3e3fbb524cbd01555b057a6cef0d5e6 ]
+[ Upstream commit 0ff9f49646353ce31312411e7e7bd2281492a40e ]
 
-Like the omap back-end, we get a link error with CONFIG_EXTCON=m
-when building the qcom back-end into the kernel:
+Currently the driver overwrites the surface depth provided by the fb
+helper to give an invalid bpp/surface depth combination.
 
-drivers/usb/dwc3/dwc3-qcom.o: In function `dwc3_qcom_probe':
-dwc3-qcom.c:(.text+0x13dc): undefined reference to `extcon_get_edev_by_phandle'
-dwc3-qcom.c:(.text+0x1b18): undefined reference to `devm_extcon_register_notifier'
-dwc3-qcom.c:(.text+0x1b9c): undefined reference to `extcon_get_state'
+This has been exposed by commit 70109354fed2 ("drm: Reject unknown legacy
+bpp and depth for drm_mode_addfb ioctl"), which now causes the driver to
+fail to probe.
 
-Do the same thing as OMAP and add an explicit dependency on
-EXTCON.
+Fix by not overwriting the surface depth.
 
-Fixes: a4333c3a6ba9 ("usb: dwc3: Add Qualcomm DWC3 glue driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: d1667b86795a ("drm/hisilicon/hibmc: Add support for frame buffer")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Signed-off-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 518ead12458d..1a0404fda596 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -113,7 +113,7 @@ config USB_DWC3_ST
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+index 8bd29075ae4e..edcca1761500 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+@@ -71,7 +71,6 @@ static int hibmc_drm_fb_create(struct drm_fb_helper *helper,
+ 	DRM_DEBUG_DRIVER("surface width(%d), height(%d) and bpp(%d)\n",
+ 			 sizes->surface_width, sizes->surface_height,
+ 			 sizes->surface_bpp);
+-	sizes->surface_depth = 32;
  
- config USB_DWC3_QCOM
- 	tristate "Qualcomm Platform"
--	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on EXTCON && (ARCH_QCOM || COMPILE_TEST)
- 	depends on OF
- 	default USB_DWC3
- 	help
+ 	bytes_per_pixel = DIV_ROUND_UP(sizes->surface_bpp, 8);
+ 
 -- 
 2.20.1
 
