@@ -4,65 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D6BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00852C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F9A20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BC820684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ioVjQXd2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wMg9yon3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406216AbgAPSXu (ORCPT
+        id S2436608AbgAPSXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:50 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45536 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392079AbgAPSXp (ORCPT
+        Thu, 16 Jan 2020 13:23:53 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39744 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436601AbgAPSXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:23:45 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so20147121wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:44 -0800 (PST)
+        Thu, 16 Jan 2020 13:23:49 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 20so4848157wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KoOAq8OaTgDys4/VWmzArQlHil0lOieh7oG6QVZBgkY=;
-        b=ioVjQXd2Qo4Z301KWJyb2Jb4Z/XHp+7OAf3tiwA7n2BAZh6kjksZU5UHCS2ZaE6v3X
-         EuEJe+dXrGD+21KcePZ6guomZqc3Ctap+EF8XVLdLE21L22b5w/8i7RM6MhCrqTUz8Oi
-         B5K78zMZO8byPpBgfnAtI19SupqHiRJiTlQiIEhZunqhtmXeZCqFvPfEm6nn5TM/hmSw
-         HEK8cjswH6AGw3PfdmBkCS6n/a7hLf1YF5wUre+DmzzBYMPKzyfhFCJGwfaJauO1fJGc
-         2kpe5gHZunPAHCzkenLlhuq2ExQDdPgpVdpfZCtooIL9bTkCTdkrPgMG8PlFO4J2BdIb
-         fqsw==
+        bh=CFUXWCoU1GaVGQJCApPpzIXtOQ4n3RKVnyVBQr+vvTE=;
+        b=wMg9yon3wD1KTnh/xP8Axj6tMi+eJVx/FhoC1ZjI9dE8ETWN/mmtlulIKQfMP8WpVn
+         PTQoF3XpO9d6PY2vKaXlWBuTZH7vf3cinEM3Ex9mhku5Av1ZHkWr+VLCRam+apC/tJJh
+         pI5HKzyjCKwvum7HFOZ+f6ebjYruIJyUE0ieZftumJR4hY2Y4neUELw9/Q2rIuBg1so9
+         T9W8j0EhFA7Cce8IclcjJYgX5nc0Kg4rJw0edvi+XlAaidtqGylO/JedAnQnX/ZhqSV5
+         yB+mJZezonIZRbW8njrxGu0bjZC8Avf1kpfE2PAmos+eWMHmEK1rrofgJp5/82IGh+Ij
+         o62Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KoOAq8OaTgDys4/VWmzArQlHil0lOieh7oG6QVZBgkY=;
-        b=PTiOKZOPAdVvsLiAE5rTlaYjlDfAPQDwJQf5Qc9OwGFk6tH9SNZNUsB6YuqYOMh0/v
-         cjd4GiI4Hd4O2kS5QIzVi8TcSz8mwzjCDNQAlskb+PAeSz2grJg5B22g8rOEcQAvftR2
-         lboDS0GCsw4CnOY0pROVD2L6BdLqNiOY9LLuYeYtywFYhRNM4CiJTRXi9KZu3YhtE59D
-         wEp+zrf/9Zlck12D7x3VQq62jfzWUEqK0iUZH3v4KSK3qYBo6w4Q0cAwIMnHt9hLzjJW
-         2EIjO8otnWaLBW17eRtXkz6K60/mrV9g8orkVXSLKJy39QiV7F0MNvvj/eG5d7sQY0C8
-         Ie1A==
-X-Gm-Message-State: APjAAAXF9vrOAIRxbFtkvobSFPujE8MygEIwnPQDyblbLe3smtsjiErC
-        +OKsXlY7RLjKKJIBj4Qv/v6AhQ==
-X-Google-Smtp-Source: APXvYqzzv/jX890eYDuQ6QXKZfiVQoGyGTEDAu3RSAlyWgNJVDFz+3F7dM99QEcW2Eky/avpu3f0mg==
-X-Received: by 2002:adf:ec83:: with SMTP id z3mr4580596wrn.133.1579199023357;
-        Thu, 16 Jan 2020 10:23:43 -0800 (PST)
+        bh=CFUXWCoU1GaVGQJCApPpzIXtOQ4n3RKVnyVBQr+vvTE=;
+        b=h+2LAaCOLtlS3xEsczY2rP6chF0QiUfCPdN7jdGyPTMWvdl2j/G1w8FW3owUKo6ieq
+         73L0uUTOPfezN8lqvyvwnTFfZZcEGkeYKykGop8lCXt8rVk7EzdzzPLPj3jq7kkdrH4h
+         cGYUCs+jvdXspLByaKrmhDTt6bGUPltcV4x3HdbU0oOmxehl5JCkFBr9yVO92u6T+O4H
+         qf+vn/TJIzszIryfyPfMjJpymL/iu99qbUmqWsgh1nVZxvsNIwAKWJK27SUPPNaOK/0X
+         7nWue5Mm6TFGD6HUm2oXUCUN/IXF/z9yQXwjHgBfwoyhSH+7pkEOMLT1Mh9PHLss30Dq
+         bT+w==
+X-Gm-Message-State: APjAAAWhX/hoUNviyhn4dn7+me0pre8BdXPL2bbUW2neOrdHHtTxqy73
+        81gT7KmWgUIu/c1z6pWCHKqNZw==
+X-Google-Smtp-Source: APXvYqz9p3x889PG53zrjvLa/vVTmAWcumWOPV54Y55x8Fvajo7aI8gThVuh+gL/YS8FgXG4QsYqwQ==
+X-Received: by 2002:a1c:3dd5:: with SMTP id k204mr357176wma.92.1579199026511;
+        Thu, 16 Jan 2020 10:23:46 -0800 (PST)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
-        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.42
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:23:42 -0800 (PST)
+        Thu, 16 Jan 2020 10:23:45 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH 15/17] clocksource/drivers/timer-microchip-pit64b: Fix sparse warning
-Date:   Thu, 16 Jan 2020 19:23:02 +0100
-Message-Id: <20200116182304.4926-15-daniel.lezcano@linaro.org>
+        Andrea Parri <parri.andrea@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS)
+Subject: [PATCH 16/17] clocksource/drivers/hyper-v: Untangle stimers and timesync from clocksources
+Date:   Thu, 16 Jan 2020 19:23:03 +0100
+Message-Id: <20200116182304.4926-16-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
 References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
@@ -72,41 +76,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Andrea Parri <parri.andrea@gmail.com>
 
-Fix sparse warning:
-"warning: Using plain integer as NULL pointer"
+hyperv_timer.c exports hyperv_cs, which is used by stimers and the
+timesync mechanism.  However, the clocksource dependency is not
+needed: these mechanisms only depend on the partition reference
+counter (which can be read via a MSR or via the TSC Reference Page).
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Introduce the (function) pointer hv_read_reference_counter, as an
+embodiment of the partition reference counter read, and export it
+in place of the hyperv_cs pointer.  The latter can be removed.
+
+This should clarify that there's no relationship between Hyper-V
+stimers & timesync and the Linux clocksource abstractions.  No
+functional or semantic change.
+
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1578304688-14882-1-git-send-email-claudiu.beznea@microchip.com
+Link: https://lore.kernel.org/r/20200109160650.16150-2-parri.andrea@gmail.com
 ---
- drivers/clocksource/timer-microchip-pit64b.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clocksource/hyperv_timer.c | 36 +++++++++++++++++++-----------
+ drivers/hv/hv_util.c               |  8 +++----
+ include/clocksource/hyperv_timer.h |  2 +-
+ 3 files changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
-index 27a389a7e078..bd63d3484838 100644
---- a/drivers/clocksource/timer-microchip-pit64b.c
-+++ b/drivers/clocksource/timer-microchip-pit64b.c
-@@ -248,6 +248,8 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
- 	if (!pclk_rate)
- 		return -EINVAL;
- 
-+	timer->mode = 0;
-+
- 	/* Try using GCLK. */
- 	gclk_round = clk_round_rate(timer->gclk, max_rate);
- 	if (gclk_round < 0)
-@@ -360,7 +362,7 @@ static int __init mchp_pit64b_dt_init_timer(struct device_node *node,
- 					    bool clkevt)
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 12d75b50a317..42748adccc98 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -66,7 +66,7 @@ static int hv_ce_set_next_event(unsigned long delta,
  {
- 	u32 freq = clkevt ? MCHP_PIT64B_DEF_CE_FREQ : MCHP_PIT64B_DEF_CS_FREQ;
--	struct mchp_pit64b_timer timer = { 0 };
-+	struct mchp_pit64b_timer timer;
- 	unsigned long clk_rate;
- 	u32 irq = 0;
- 	int ret;
+ 	u64 current_tick;
+ 
+-	current_tick = hyperv_cs->read(NULL);
++	current_tick = hv_read_reference_counter();
+ 	current_tick += delta;
+ 	hv_init_timer(0, current_tick);
+ 	return 0;
+@@ -304,8 +304,8 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+  * Hyper-V and 32-bit x86.  The TSC reference page version is preferred.
+  */
+ 
+-struct clocksource *hyperv_cs;
+-EXPORT_SYMBOL_GPL(hyperv_cs);
++u64 (*hv_read_reference_counter)(void);
++EXPORT_SYMBOL_GPL(hv_read_reference_counter);
+ 
+ static union {
+ 	struct ms_hyperv_tsc_page page;
+@@ -318,7 +318,7 @@ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+ }
+ EXPORT_SYMBOL_GPL(hv_get_tsc_page);
+ 
+-static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
++static u64 notrace read_hv_clock_tsc(void)
+ {
+ 	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
+ 
+@@ -328,9 +328,14 @@ static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
+ 	return current_tick;
+ }
+ 
++static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
++{
++	return read_hv_clock_tsc();
++}
++
+ static u64 read_hv_sched_clock_tsc(void)
+ {
+-	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
++	return read_hv_clock_tsc() - hv_sched_clock_offset;
+ }
+ 
+ static void suspend_hv_clock_tsc(struct clocksource *arg)
+@@ -359,14 +364,14 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
+ static struct clocksource hyperv_cs_tsc = {
+ 	.name	= "hyperv_clocksource_tsc_page",
+ 	.rating	= 400,
+-	.read	= read_hv_clock_tsc,
++	.read	= read_hv_clock_tsc_cs,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ 	.suspend= suspend_hv_clock_tsc,
+ 	.resume	= resume_hv_clock_tsc,
+ };
+ 
+-static u64 notrace read_hv_clock_msr(struct clocksource *arg)
++static u64 notrace read_hv_clock_msr(void)
+ {
+ 	u64 current_tick;
+ 	/*
+@@ -378,15 +383,20 @@ static u64 notrace read_hv_clock_msr(struct clocksource *arg)
+ 	return current_tick;
+ }
+ 
++static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
++{
++	return read_hv_clock_msr();
++}
++
+ static u64 read_hv_sched_clock_msr(void)
+ {
+-	return read_hv_clock_msr(NULL) - hv_sched_clock_offset;
++	return read_hv_clock_msr() - hv_sched_clock_offset;
+ }
+ 
+ static struct clocksource hyperv_cs_msr = {
+ 	.name	= "hyperv_clocksource_msr",
+ 	.rating	= 400,
+-	.read	= read_hv_clock_msr,
++	.read	= read_hv_clock_msr_cs,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ };
+@@ -399,7 +409,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+ 		return false;
+ 
+-	hyperv_cs = &hyperv_cs_tsc;
++	hv_read_reference_counter = read_hv_clock_tsc;
+ 	phys_addr = virt_to_phys(hv_get_tsc_page());
+ 
+ 	/*
+@@ -417,7 +427,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	hv_set_clocksource_vdso(hyperv_cs_tsc);
+ 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+ 
+-	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
++	hv_sched_clock_offset = hv_read_reference_counter();
+ 	hv_setup_sched_clock(read_hv_sched_clock_tsc);
+ 
+ 	return true;
+@@ -439,10 +449,10 @@ void __init hv_init_clocksource(void)
+ 	if (!(ms_hyperv.features & HV_MSR_TIME_REF_COUNT_AVAILABLE))
+ 		return;
+ 
+-	hyperv_cs = &hyperv_cs_msr;
++	hv_read_reference_counter = read_hv_clock_msr;
+ 	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
+ 
+-	hv_sched_clock_offset = hyperv_cs->read(hyperv_cs);
++	hv_sched_clock_offset = hv_read_reference_counter();
+ 	hv_setup_sched_clock(read_hv_sched_clock_msr);
+ }
+ EXPORT_SYMBOL_GPL(hv_init_clocksource);
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 766bd8457346..296f9098c9e4 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -211,7 +211,7 @@ static struct timespec64 hv_get_adj_host_time(void)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&host_ts.lock, flags);
+-	reftime = hyperv_cs->read(hyperv_cs);
++	reftime = hv_read_reference_counter();
+ 	newtime = host_ts.host_time + (reftime - host_ts.ref_time);
+ 	ts = ns_to_timespec64((newtime - WLTIMEDELTA) * 100);
+ 	spin_unlock_irqrestore(&host_ts.lock, flags);
+@@ -250,7 +250,7 @@ static inline void adj_guesttime(u64 hosttime, u64 reftime, u8 adj_flags)
+ 	 */
+ 	spin_lock_irqsave(&host_ts.lock, flags);
+ 
+-	cur_reftime = hyperv_cs->read(hyperv_cs);
++	cur_reftime = hv_read_reference_counter();
+ 	host_ts.host_time = hosttime;
+ 	host_ts.ref_time = cur_reftime;
+ 
+@@ -315,7 +315,7 @@ static void timesync_onchannelcallback(void *context)
+ 					sizeof(struct vmbuspipe_hdr) +
+ 					sizeof(struct icmsg_hdr)];
+ 				adj_guesttime(timedatap->parenttime,
+-					      hyperv_cs->read(hyperv_cs),
++					      hv_read_reference_counter(),
+ 					      timedatap->flags);
+ 			}
+ 		}
+@@ -524,7 +524,7 @@ static struct ptp_clock *hv_ptp_clock;
+ static int hv_timesync_init(struct hv_util_service *srv)
+ {
+ 	/* TimeSync requires Hyper-V clocksource. */
+-	if (!hyperv_cs)
++	if (!hv_read_reference_counter)
+ 		return -ENODEV;
+ 
+ 	spin_lock_init(&host_ts.lock);
+diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
+index 553e539469f0..34eef083c988 100644
+--- a/include/clocksource/hyperv_timer.h
++++ b/include/clocksource/hyperv_timer.h
+@@ -30,7 +30,7 @@ extern void hv_stimer_global_cleanup(void);
+ extern void hv_stimer0_isr(void);
+ 
+ #ifdef CONFIG_HYPERV_TIMER
+-extern struct clocksource *hyperv_cs;
++extern u64 (*hv_read_reference_counter)(void);
+ extern void hv_init_clocksource(void);
+ 
+ extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
 -- 
 2.17.1
 
