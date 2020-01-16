@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E60C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A192C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73EFF2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A642053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201412;
-	bh=qYzyfsKwX5P/PuWJpfC14glwxT+idLXapD5N8g1prvE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aFBaK6204FJlDX71cdHwRuXUTM7mcloLKTSpErPxv5FU8vv0l/vTV9Q6SiE0LcPmT
-	 6qgv9zcMSuydDYvl5Vr2hyuDdR6VP+6rTE5mLp1HRzIPZVVjsg+t14hPnfhll3rmJS
-	 ix/K50VUPYuxD+keITAxLzhOGm6DV86sB0LkPPwo=
+	s=default; t=1579201424;
+	bh=R7KkKUaYv6rkoyqNNorHo/kp3uI7wYQla8dT74bJabc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T5k9JuTmLY873uLuLODwDhjyC4c8zykABDhwR+iGxV9+iUBYDnQIOWpSwJTYEl9Xb
+	 3FMf0PDzDMmc1uLdJIx42bXtj5PsY8wWbFgdwwXJzaT4afTINXbrZIugDn9cHwsc7V
+	 BGRgDi6f1v/6Z3w/i5HN3nKg6+Y7ojCHK4jFAWAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437340AbgAPTDa (ORCPT
+        id S2407281AbgAPTDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:03:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387697AbgAPRFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:12 -0500
+        id S2388399AbgAPRCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9B522077B;
-        Thu, 16 Jan 2020 17:05:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F2A2087E;
+        Thu, 16 Jan 2020 17:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194311;
-        bh=qYzyfsKwX5P/PuWJpfC14glwxT+idLXapD5N8g1prvE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ND1YA85D+Ir14Xc2EjSui0jo0qJr4xassAjsjhWKhmaagrUocLAqVI42WqgXpN6uV
-         wXLrM4zQVsN5HkkmvEWwNUhtKAUDKWNQgfogMxaR1FMw3ZdH9PNggP3PgVwoDIHOCA
-         G6Xj4ncZ+0C98nBbGaPajzSxGfk4qj6Fz3kjgI/o=
+        s=default; t=1579194151;
+        bh=R7KkKUaYv6rkoyqNNorHo/kp3uI7wYQla8dT74bJabc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ovFVWcpFfpkftBPgqDyPdZu8s4+lbxR716c9yQtIFf30J1O0DSl39XbKbKj+awEF1
+         yigYnV47si26zmQ9Ct0G6Z0awhB7zbZat11qHjfUh0S5dAUIMH+K2q7rRgDOOSWsaM
+         /4S1H990YmpRvVc/+kNgiLFtzCmqRu3uyXxT8ok4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 264/671] media: davinci-isif: avoid uninitialized variable use
-Date:   Thu, 16 Jan 2020 11:58:22 -0500
-Message-Id: <20200116170509.12787-1-sashal@kernel.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        ceph-devel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 235/671] rbd: clear ->xferred on error from rbd_obj_issue_copyup()
+Date:   Thu, 16 Jan 2020 11:52:24 -0500
+Message-Id: <20200116165940.10720-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,76 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
+[ Upstream commit 356889c49d84f11f446ec235bd52ca1a7d581aa0 ]
 
-clang warns about a possible variable use that gcc never
-complained about:
+Otherwise the assert in rbd_obj_end_request() is triggered.
 
-drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
-      [-Werror,-Wuninitialized]
-                dm365_vpss_set_pg_frame_size(frame_size);
-                                             ^~~~~~~~~~
-drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
-        struct vpss_pg_frame_size frame_size;
-        ^
-1 error generated.
-
-There is no initialization for this variable at all, and there
-has never been one in the mainline kernel, so we really should
-not put that stack data into an mmio register.
-
-On the other hand, I suspect that gcc checks the condition
-more closely and notices that the global
-isif_cfg.bayer.config_params.test_pat_gen flag is initialized
-to zero and never written to from any code path, so anything
-depending on it can be eliminated.
-
-To shut up the clang warning, just remove the dead code manually,
-it has probably never been used because any attempt to do so
-would have resulted in undefined behavior.
-
-Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 3da691bf4366 ("rbd: new request handling code")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/isif.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/block/rbd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
-index 340f8218f54d..80fa60a4c448 100644
---- a/drivers/media/platform/davinci/isif.c
-+++ b/drivers/media/platform/davinci/isif.c
-@@ -884,9 +884,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
- static int isif_config_ycbcr(void)
- {
- 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
--	struct vpss_pg_frame_size frame_size;
- 	u32 modeset = 0, ccdcfg = 0;
--	struct vpss_sync_pol sync;
- 
- 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
- 
-@@ -974,13 +972,6 @@ static int isif_config_ycbcr(void)
- 		/* two fields are interleaved in memory */
- 		regw(0x00000249, SDOFST);
- 
--	/* Setup test pattern if enabled */
--	if (isif_cfg.bayer.config_params.test_pat_gen) {
--		sync.ccdpg_hdpol = params->hd_pol;
--		sync.ccdpg_vdpol = params->vd_pol;
--		dm365_vpss_set_sync_pol(sync);
--		dm365_vpss_set_pg_frame_size(frame_size);
--	}
- 	return 0;
- }
- 
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index 585378bc988c..b942f4c8cea8 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -2506,6 +2506,7 @@ static bool rbd_obj_handle_write(struct rbd_obj_request *obj_req)
+ 		ret = rbd_obj_issue_copyup(obj_req, obj_req->xferred);
+ 		if (ret) {
+ 			obj_req->result = ret;
++			obj_req->xferred = 0;
+ 			return true;
+ 		}
+ 		return false;
 -- 
 2.20.1
 
