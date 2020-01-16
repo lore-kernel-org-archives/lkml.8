@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D0FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC486C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614CE22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DC32467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195082;
-	bh=a5NXb3Y9E0fU3qlVRFz+TmR7Y8NUePy1259Ab0G/ik4=;
+	s=default; t=1579195088;
+	bh=4SRJb8qcVjP2QHL9Zdeu2yEEZmxwQyxCQJ9qOUOh2i0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tiFDLPfOWVHP3iNCO8BbWrhNse2OyidZR9u5hWpNz+6n3NeWnbh+C5Dng7BE73TqQ
-	 abuMuen+m0xAYf/eQrGHqJmRifmAGJ0hE3yJQea2/XicFkATA+IFSbnt1jbw1mC7gR
-	 Eo8NSvDGlGqcbIJlTdfXvDdRqh1lobr4OvBv5Lgo=
+	b=HE883w6pov8chaLyO+EHpsIWg10curpT5kupoKl73jwIsTJPB3OwPtXo0d0mVzJ/r
+	 TxQ21aQe5zgBtP7OoUKfPu4wiGclOOHYjr618oclt+3zEMxNiP+82LQodcovFSf1Ph
+	 MoAPt8riYbH3kjlVFpYKH4ikZAmPyirE99yHg/Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391336AbgAPRSB (ORCPT
+        id S2391379AbgAPRSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43894 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391287AbgAPRRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:51 -0500
+        id S2391323AbgAPRR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 927902469D;
-        Thu, 16 Jan 2020 17:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EE012469D;
+        Thu, 16 Jan 2020 17:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195070;
-        bh=a5NXb3Y9E0fU3qlVRFz+TmR7Y8NUePy1259Ab0G/ik4=;
+        s=default; t=1579195078;
+        bh=4SRJb8qcVjP2QHL9Zdeu2yEEZmxwQyxCQJ9qOUOh2i0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxZPe7VG9IiybWYh9/kexZybybAaPGU+Si/WBxdhRGfLqDgEV8ZbrendjrbibCwOv
-         BOwk8lMz1idoGSMbELwnwjUkWCXLQgH93kKXDR/X2Mq5xOoMOr1AE4VTR2h4MBsO2o
-         OkqWAZiCcMmhMa0LvP+6HEmcRLfyzCLGx2y9fJFo=
+        b=zNvuMDWIvLMUU7EjcR4+r1lFDyW/M8yJIaRYeb4cKc+wz+5CQ7kONGhzfn/iVEmnN
+         A3nwUGm5jYMovzcKKsHs447/SsgjT8PzgkoUbuWMkXRquzcbSHv5K5K7nT1FKYtf4G
+         FA9y9QDrs4qaLDRS2GZ6JTa/OVuHXMxDM7/VrPr4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kelvin Cao <kelvin.cao@microchip.com>,
-        Wesley Sheng <wesley.sheng@microchip.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 023/371] switchtec: Remove immediate status check after submitting MRPC command
-Date:   Thu, 16 Jan 2020 12:11:31 -0500
-Message-Id: <20200116171719.16965-23-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 028/371] pinctrl: sh-pfc: sh73a0: Add missing TO pin to tpu4_to3 group
+Date:   Thu, 16 Jan 2020 12:11:36 -0500
+Message-Id: <20200116171719.16965-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -61,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kelvin Cao <kelvin.cao@microchip.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 526180408b815aa7b96fd48bd23cdd33ef04e38e ]
+[ Upstream commit 124cde98f856b6206b804acbdec3b7c80f8c3427 ]
 
-After submitting a Firmware Download MRPC command, Switchtec firmware will
-delay Management EP BAR MemRd TLP responses by more than 10ms.  This is a
-firmware limitation.  Delayed MemRd completions are a problem for systems
-with a low Completion Timeout (CTO).
+The tpu4_to3_mux[] array contains the TPU4TO3 pin mark, but the
+tpu4_to3_pins[] array lacks the corresponding pin number.
 
-The current driver checks the MRPC status immediately after submitting an
-MRPC command, which results in a delayed MemRd completion that may cause a
-Completion Timeout.
+Add the missing pin number, for non-GPIO pin F26.
 
-Remove the immediate status check and rely on the check after receiving an
-interrupt or timing out.
-
-This is only a software workaround to the READ issue and a proper fix of
-this should be done in firmware.
-
-Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
-Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Fixes: 5da4eb049de803c7 ("sh-pfc: sh73a0: Add TPU pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 0941555b84a5..73dba2739849 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -399,10 +399,6 @@ static void mrpc_cmd_submit(struct switchtec_dev *stdev)
- 		    stuser->data, stuser->data_len);
- 	iowrite32(stuser->cmd, &stdev->mmio_mrpc->cmd);
- 
--	stuser->status = ioread32(&stdev->mmio_mrpc->status);
--	if (stuser->status != SWITCHTEC_MRPC_STATUS_INPROGRESS)
--		mrpc_complete_cmd(stdev);
--
- 	schedule_delayed_work(&stdev->mrpc_timeout,
- 			      msecs_to_jiffies(500));
- }
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+index d25e6f674d0a..f8fbedb46585 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+@@ -3086,6 +3086,7 @@ static const unsigned int tpu4_to2_mux[] = {
+ };
+ static const unsigned int tpu4_to3_pins[] = {
+ 	/* TO */
++	PIN_NUMBER(6, 26),
+ };
+ static const unsigned int tpu4_to3_mux[] = {
+ 	TPU4TO3_MARK,
 -- 
 2.20.1
 
