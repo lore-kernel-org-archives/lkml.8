@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5F7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0A62467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0852467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194584;
-	bh=LRE46spzsK1yi2Y1AgFPyTpW5VLwK4ZFCsLOMK/Y3gY=;
+	s=default; t=1579194593;
+	bh=3qKvzdVHJtKqiD1XDd9gYxY9M0XMt+MlxqxmSCoyTpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rfkQoohIUtRe3M1MeLyy/zAmfZupzCOB6EOTIRwZhIT0FoZqxOs0MGFo3uLyj//t2
-	 RGCItTThptUyHii0ALEYlTx8CxWjTFBQ7cVcqLUBAZmVx1kZcRluMHcEu9xgWMwlOY
-	 C9tXh1B4In+3w2gI/A1rZBlWkkNfexqN+rbJQddA=
+	b=y9J363R6ln2IZUIB70gAdTSKDauoflDJdyVXKaIKyFUCI+87RTaUHxKmrvisLz7He
+	 kf9bd9VTzgjk2hNjr8hZqzMvFk3A+U4yTQh9rGqsuLkr80Cc+m6oP0okOaMqCO1Hox
+	 ZW2SZbuBGRPs3vnTAOPEPSoEDzOUp6tK5KFpEMiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389731AbgAPRJn (ORCPT
+        id S2389769AbgAPRJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45754 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389385AbgAPRJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:35 -0500
+        id S2389727AbgAPRJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BFFC21D56;
-        Thu, 16 Jan 2020 17:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1AC2467A;
+        Thu, 16 Jan 2020 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194574;
-        bh=LRE46spzsK1yi2Y1AgFPyTpW5VLwK4ZFCsLOMK/Y3gY=;
+        s=default; t=1579194581;
+        bh=3qKvzdVHJtKqiD1XDd9gYxY9M0XMt+MlxqxmSCoyTpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5glCQDZbUWFc0bC+2n1ezx0QLFlU2Ogva5eUPFawCGs3sNOLXrIeTAZxayA3gcxb
-         mQgICiYLkE9kPMl7G3nfreGM/RmWqbchmQOc4DBK8H6737ddxkayM/gmUZx2C67Sy6
-         d+UfD1tAh+ovxmR2KusB6xPlHas5Qei7zcDniOGs=
+        b=HHqt7rdtE7dT0wv7cZjb1PbIQ4Z2p7gs/94lIugZSFOkuzMj8Zw7LFlgUZLE7Hc1b
+         DPX4v2KPjCm0liOyVot9DC90N5QicHFj090zXiZn53PbC7urfHXhk8j8dccsJ+f88R
+         qVDNJubWC4xkJ8Tdc4eGZrja9XTRyIW2Z/UaH56A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Lei YU <mine260309@gmail.com>,
-        John Wang <wangzqbj@inspur.com>, Joel Stanley <joel@jms.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 450/671] fsi/core: Fix error paths on CFAM init
-Date:   Thu, 16 Jan 2020 12:01:28 -0500
-Message-Id: <20200116170509.12787-187-sashal@kernel.org>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 455/671] PCI: mobiveil: Fix devfn check in mobiveil_pcie_valid_device()
+Date:   Thu, 16 Jan 2020 12:01:33 -0500
+Message-Id: <20200116170509.12787-192-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,92 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 371975b0b07520c85098652d561639837a60a905 ]
+[ Upstream commit cbd50b3ca3964c79dac65fda277637577e029e8c ]
 
-Change d1dcd67825 re-worked the struct fsi_slave initialisation in
-fsi_slave_init, but introduced a few inconsitencies: the slave->dev is
-now registered through cdev_device_add, but we may kfree() the device
-out from underneath the cdev registration. We may also leave an IDA
-allocated.
+Current check for devfn number in mobiveil_pci_valid_device() is
+wrong in that it flags as invalid functions present in PCI device 0
+in the root bus while it is perfectly valid to access all functions
+in PCI device 0 in the root bus.
 
-This change fixes the error paths, so that we kfree() only before the
-device is registered with the core code. We also move the smode write to
-before we start creating proper devices, as it's the most likely to
-fail. We also remove the IDA-allocated minor on error, and properly
-clean up the of_node.
+Update the check in mobiveil_pci_valid_device() to fix the issue.
 
-Fixes: d1dcd6782576 ("fsi: Add cfam char devices")
-Reported-by: Lei YU <mine260309@gmail.com>
-Tested-by: John Wang <wangzqbj@inspur.com>
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-core.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index c6fa9b393e84..bd62236d3f97 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -1060,6 +1060,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index dc228eb500ed..476be4f3c7f6 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -174,7 +174,7 @@ static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ 	 * Do not read more than one device on the bus directly
+ 	 * attached to RC
+ 	 */
+-	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
++	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+ 		return false;
  
- 	}
- 
-+	rc = fsi_slave_set_smode(slave);
-+	if (rc) {
-+		dev_warn(&master->dev,
-+				"can't set smode on slave:%02x:%02x %d\n",
-+				link, id, rc);
-+		goto err_free;
-+	}
-+
- 	/* Allocate a minor in the FSI space */
- 	rc = __fsi_get_new_minor(slave, fsi_dev_cfam, &slave->dev.devt,
- 				 &slave->cdev_idx);
-@@ -1071,17 +1079,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 	rc = cdev_device_add(&slave->cdev, &slave->dev);
- 	if (rc) {
- 		dev_err(&slave->dev, "Error %d creating slave device\n", rc);
--		goto err_free;
-+		goto err_free_ida;
- 	}
- 
--	rc = fsi_slave_set_smode(slave);
--	if (rc) {
--		dev_warn(&master->dev,
--				"can't set smode on slave:%02x:%02x %d\n",
--				link, id, rc);
--		kfree(slave);
--		return -ENODEV;
--	}
-+	/* Now that we have the cdev registered with the core, any fatal
-+	 * failures beyond this point will need to clean up through
-+	 * cdev_device_del(). Fortunately though, nothing past here is fatal.
-+	 */
-+
- 	if (master->link_config)
- 		master->link_config(master, link,
- 				    slave->t_send_delay,
-@@ -1098,10 +1103,13 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
- 				rc);
- 
--	return rc;
-+	return 0;
- 
-- err_free:
--	put_device(&slave->dev);
-+err_free_ida:
-+	fsi_free_minor(slave->dev.devt);
-+err_free:
-+	of_node_put(slave->dev.of_node);
-+	kfree(slave);
- 	return rc;
- }
- 
+ 	return true;
 -- 
 2.20.1
 
