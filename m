@@ -2,206 +2,147 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5962C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD305C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A892075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7DA207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="E6bi9Nty"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KIuhOSQc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbgAPJhC (ORCPT
+        id S1731597AbgAPJhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:37:02 -0500
-Received: from mail-eopbgr80087.outbound.protection.outlook.com ([40.107.8.87]:64362
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731359AbgAPJhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:37:04 -0500
+Received: from mout.web.de ([212.227.15.4]:43303 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731449AbgAPJhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 04:37:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VaP1V70G5VYMR4CeOcIMM1CiDWyA4RpXVEamDnWW9Wfxk+phPqplNWSnUSpgOkeS+Cse3uRvsPA8896ioC32hmjzYrT0cl1apl9qB90unA3lMlkoqHa/phu4kYZ5hDLgfpqRXCGuev74Cs/9d8jNuIDbIiVpSAthjGCEkVk5+90G6TQ7oFlta6agZs32DK0EHJXPKWZjBcanFArhSJecWW0Q44zXzbEEEVDpsSeuSHeWsDWJWPkYyYyciMv+Jg6rDMUQXjd/ht22swNPYMtxrW/COSy1YSGpOmx7e7VC+iCT3bufXhmtQBlIAEof8tgZ7gTPSxEcAAzanx4K1aPzew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jlJoconKYcpTSaPKk3IB2Ja8D3tpGGcnW8ypi+qaPVQ=;
- b=oObD36QkZj6AQh4bH58kgsdPUgQgx3DkXMCE0HYgbYfq+7V/92HOPaJ3iecFECIxec+Ghk9oeDlAXVUP7SeyLF3eSDPNAiYgWDrn0Jkna+EwjfDtUOIfF7Ewc3h3gmybQASTDu2inTk/GOv2nlXtfwm/GZxXY7tTreX1kEjEiVdJfRtu+vxwyBPeNNqKZtmnZBt3i66oBUG4P+qwK3u5rvNQA3EbL5PvpFziw3PKBJHA2boPFv7+JgO4xxhZWhrNyttfyJ0A9R7AOBSxtGTbvhmm1w1BfiebqM/xG3IpNQwJ++DTJvN3yWjRbeGIvJjIotkLqA0WLTRZ8AN4fuSIzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jlJoconKYcpTSaPKk3IB2Ja8D3tpGGcnW8ypi+qaPVQ=;
- b=E6bi9Ntycb33x0JenSDvEjIOVVswUkZyKxjR78eUzBmo1V5FNbwMfjwBoe3BN4QHKa/sJWKYYzJMHlYjG5hsFKT8sE4Pr49DK/ShughgS0oyqlxL/s5fLUKDkvKYduWrU5CSYS+y4AXd6a8djqx4ZnMZ1vhHHqlCnCHP+ly1SUo=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4337.eurprd04.prod.outlook.com (52.134.124.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Thu, 16 Jan 2020 09:36:57 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
- 09:36:57 +0000
-Received: from localhost.localdomain (119.31.174.66) by HK2PR0302CA0022.apcprd03.prod.outlook.com (2603:1096:202::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.6 via Frontend Transport; Thu, 16 Jan 2020 09:36:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "info@metux.net" <info@metux.net>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "git@andred.net" <git@andred.net>, Abel Vesa <abel.vesa@nxp.com>,
-        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [RFC 3/4] ARM: imx: move cpu definitions into a header
-Thread-Topic: [RFC 3/4] ARM: imx: move cpu definitions into a header
-Thread-Index: AQHVzFB+G3o1/8PlD0Sf3//E6frY/A==
-Date:   Thu, 16 Jan 2020 09:36:57 +0000
-Message-ID: <1579167145-1480-4-git-send-email-peng.fan@nxp.com>
-References: <1579167145-1480-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1579167145-1480-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0302CA0022.apcprd03.prod.outlook.com
- (2603:1096:202::32) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6e41dfa4-2b21-48ac-ad83-08d79a67a14e
-x-ms-traffictypediagnostic: AM0PR04MB4337:|AM0PR04MB4337:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB4337F497D7540FBA27503BF288360@AM0PR04MB4337.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(199004)(189003)(8936002)(86362001)(69590400006)(71200400001)(6512007)(186003)(16526019)(52116002)(956004)(44832011)(2616005)(6486002)(26005)(6506007)(478600001)(4326008)(7416002)(2906002)(81166006)(66556008)(81156014)(66476007)(66446008)(8676002)(110136005)(316002)(54906003)(5660300002)(36756003)(66946007)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4337;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UjHwxXi9OLfgWozZHI+n2W0hWQu+9DZZsngWID2s5UoGUaEXqC6HwO4iLwR6sop1pFhllhvxJjltE6ee9/Q53ud9e3yIBRgo6DyWSPm/UHqjSiiTYXzxvRzqckk1zOeaHN0wE62E5KMZvOyoMWvPvVyveraziW6YwwCo2sdYEdzv0/huwD40FoZGOST83upuL9emayNan5Oi6WE7ThQd6rx2UdmocDX7E8vtav69S/8VAY5ux8DgP2pB/FU93uMDi0RQP+kckG3og6s3Y53ZUuuKdkQ2EWcdPcr0EfBDTZBmugljB5D7T7NCf75QOcH9BHPnpHqC/xD6aWFf3ewBsV3N41bR2yN+CN5jyVHIwMCyfg/BxaX20XL+9SiXM1Ssll+SlE2557wqmx7aaSwqyWAaKcj9M1cj8GfvNHJqAagNJZecqqEx+XdooOULmJUyafFRBpFmQVFtYhI+eGxKaNjCqU2yFhBNuolqyFBjNzlxdbImoS2CRl+Y/Ogu+DV/
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1579167405;
+        bh=m0t+4JuI/Zbb5bWxl9uCpXvHpa4Fj8lq3ztfYXq77cA=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=KIuhOSQc40KPwQrGHVmPZlI3FZviNBZdIUm+s0nezsoXQDl2vSf9rcO488yoVZ74e
+         Voi0GChGAA4AhBTzF6YeZaCztQBRitCfO/nxPcMJ4lkz2KcffcVpgcU/j5fnA9cjq/
+         rCkLkQ1oAw6rNoCblF2ZhLoHVo5X+Sxi/42Br9uo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.6.163]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Ma2V5-1jDnr13vV1-00LlsL; Thu, 16
+ Jan 2020 10:36:45 +0100
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+Subject: Re: [PATCH v10 00/14] add the latest exfat driver
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Message-ID: <7e5e56be-5b87-8f9c-60fa-134a13f8e762@web.de>
+Date:   Thu, 16 Jan 2020 10:36:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e41dfa4-2b21-48ac-ad83-08d79a67a14e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 09:36:57.6330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ALl+g3ALjXIZXavXA4/xVKtWHaW3K6dEEchDGfBdg6g7u+BvLVU9vm2FLfwQAT1MORqhyIo/LaiMQR88Dsue8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4337
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:50zNE19FmdhA427OFaCmImPWk1hx7iFyaMRJzRQHP9B5a2pkKwR
+ 1eci7/4M1MIlpvHhRDZQski5IhycVN86VpZ6VZz67jq7dQrPq3++i8lPriEdMuN2ARILGGX
+ dbbBrXouzjMsj0HJ4i/lrSpnUWfiitDYQtOXcuy98c0ry/jiNZ+2+bi7SIiIROOIyJh2kig
+ DRrUF+BB8UmwIENAbBAXg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:X+xYRvIzknU=:+J9BcHO6Rk2dJMoHpb+Z+9
+ ql1kHmoGA2VLyO9dnrbaiI2Wre9aRdz8oUeOfm4zP84RACG7ERLY2UU/V8MlCIJm5/y1smGJw
+ p7XekBKI/JrVV1xPUF14gLHVqQBkrMt9h/kpRMkqzXxokU7DeDjnveP7zYk8N/ffTfSnDN7++
+ pxR4nIhObBcfUmK6vEFYzyNGLTIjllzgYt9cTcPmgRFm8Kki3XyVj2jhl0TeWzmjeTZRvmJrG
+ +tf1lOvBlXLezRQH6RTpeU+uROe31va6SiHQJD3hI9DBIF4ueKnnHfyJKSj7KKbNdqFqPKnUf
+ uq8YM+MRcOj1dlMSI4Y+7yhE+PHfR+3j+rsBmdYaYJK7FWLT4qTRr7SwOrJsM+1D12JG3+lLx
+ aTReuS5qQg0j5t+H0+iuZCJOqK9kFIN17NT2F+o716kQoX7q1La7z0mRq2H4VVHM5YSKAi56m
+ 9NRL9LU4TskJmdBqrFi3IgG68XOW7DXYIvdSlLWgajjIkAv5ObEXsj4Q3oI9mreJ7+/zKHF7l
+ 23kHFo4ZiYDTcGZ+En8qitgTF1OgQ28ju5RcO/IYWplqXBEtEbYj7VUR4mEm5SivQjYlfZh6C
+ R/i54Wy9ZZB7guB7VJ2QaYpZliujPbDDlp1mYb+bSzsUaJ57SDTVW2oHlSFXJLFJkUmWxVxZc
+ TFTiZfw2IhEOsWoNqfIXApyZ+hvfl7fhuGdCKaMLNtabNbUpWwhGe6x3I1Hci6uCxkSslrU9p
+ euR9gXxwT3CoN5yjtuTceVwgUk+TlbPlpME/2N5SVQzQaGxarKHHEYoE+lbfnb+GfGjKkECjk
+ p9F/637tsyZJecBhoYK2zBuK4ezkg4wLdOdKBOIN3zu2jddbo1YEBUOk4wYY2B270Ts8owfuH
+ gd+17UQCHCZcakF/cA/SQ91pJEbmWcVuarmh8xGZ94qiH0AZRgiZOfPLn8ymhxDNqsQqd9NZN
+ a7O4I/mW05tyJHr3aIhu7MEel2Zr1wP10h/zq6EDlz9qsyZOGGQui1FU64EmW2Z2vnRmWl8hR
+ nicjO7Eev9ds0fGE5rqv4LD/iH8WOtxOFJNJ9V16pZ3jkq6ygziHKdsAK9ItSQ3+KYrWRTnu4
+ iYcAOwolQauPQovbrJp4zIF78CqQBE1FPnu4bDaDSoTzO3C3UrQd2TLAt76GLPp//cw0OgDNs
+ 7m5WsNJFc2OCSPg23rK5wxdJmHUZcgkI+kaa1fdubhBSnW/b1vDmXW2/mt9oxngINQmL2+i0B
+ ODM4Bg9j/OKs+1AtdFzq69eTqFl0QeFfTxlbqCNhSQwRPcog47tGVWwiLiVg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+> We plan to treat this version as the future upstream for the code base
+> once merged, and all new features and bug fixes will go upstream first.
+>
+> v10:
 
-The soc device register code will be moved to drivers/soc/imx/,
-the code needs the cpu type definitions. So let's move the cpu
-type definitions to a header.
+I find it interesting how the patch change log grew.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm/mach-imx/mxc.h | 22 +---------------------
- include/soc/imx/cpu.h   | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 21 deletions(-)
- create mode 100644 include/soc/imx/cpu.h
 
-diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
-index 2bfd2d59b4a6..fe2d0f5abfcc 100644
---- a/arch/arm/mach-imx/mxc.h
-+++ b/arch/arm/mach-imx/mxc.h
-@@ -8,35 +8,15 @@
- #define __ASM_ARCH_MXC_H__
-=20
- #include <linux/types.h>
-+#include <soc/imx/cpu.h>
-=20
- #ifndef __ASM_ARCH_MXC_HARDWARE_H__
- #error "Do not include directly."
- #endif
-=20
--#define MXC_CPU_MX1		1
--#define MXC_CPU_MX21		21
--#define MXC_CPU_MX25		25
--#define MXC_CPU_MX27		27
--#define MXC_CPU_MX31		31
--#define MXC_CPU_MX35		35
--#define MXC_CPU_MX51		51
--#define MXC_CPU_MX53		53
--#define MXC_CPU_IMX6SL		0x60
--#define MXC_CPU_IMX6DL		0x61
--#define MXC_CPU_IMX6SX		0x62
--#define MXC_CPU_IMX6Q		0x63
--#define MXC_CPU_IMX6UL		0x64
--#define MXC_CPU_IMX6ULL		0x65
--/* virtual cpu id for i.mx6ulz */
--#define MXC_CPU_IMX6ULZ		0x6b
--#define MXC_CPU_IMX6SLL		0x67
--#define MXC_CPU_IMX7D		0x72
--#define MXC_CPU_IMX7ULP		0xff
--
- #define IMX_DDR_TYPE_LPDDR2		1
-=20
- #ifndef __ASSEMBLY__
--extern unsigned int __mxc_cpu_type;
-=20
- #ifdef CONFIG_SOC_IMX6SL
- static inline bool cpu_is_imx6sl(void)
-diff --git a/include/soc/imx/cpu.h b/include/soc/imx/cpu.h
-new file mode 100644
-index 000000000000..0669fc08a501
---- /dev/null
-+++ b/include/soc/imx/cpu.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+#ifndef __IMX_CPU_H__
-+#define __IMX_CPU_H__
-+
-+#define MXC_CPU_MX1		1
-+#define MXC_CPU_MX21		21
-+#define MXC_CPU_MX25		25
-+#define MXC_CPU_MX27		27
-+#define MXC_CPU_MX31		31
-+#define MXC_CPU_MX35		35
-+#define MXC_CPU_MX51		51
-+#define MXC_CPU_MX53		53
-+#define MXC_CPU_IMX6SL		0x60
-+#define MXC_CPU_IMX6DL		0x61
-+#define MXC_CPU_IMX6SX		0x62
-+#define MXC_CPU_IMX6Q		0x63
-+#define MXC_CPU_IMX6UL		0x64
-+#define MXC_CPU_IMX6ULL		0x65
-+/* virtual cpu id for i.mx6ulz */
-+#define MXC_CPU_IMX6ULZ		0x6b
-+#define MXC_CPU_IMX6SLL		0x67
-+#define MXC_CPU_IMX7D		0x72
-+#define MXC_CPU_IMX7ULP		0xff
-+
-+#ifndef __ASSEMBLY__
-+extern unsigned int __mxc_cpu_type;
-+#endif
-+
-+#endif
---=20
-2.16.4
+>  - Process length value as 1 when conversion is failed.
 
+Would this description be nicer without the word =E2=80=9Cis=E2=80=9D?
+
+
+I pointed also further software development concerns out.
+I hope that they will get corresponding constructive feedback finally.
+Other contributors are similarly waiting for =E2=80=9Ceffects=E2=80=9D acc=
+ording to
+their code review comments.
+How will communication delays evolve for the clarification of
+remaining open issues?
+
+Regards,
+Markus
