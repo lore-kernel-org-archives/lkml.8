@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40336C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B960FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BE6246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867E4246B4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195071;
-	bh=hOjkk+9ukcJhXI0EqCJJubVofhE0FK+eKaZ29cbr58E=;
+	s=default; t=1579195074;
+	bh=6Fd7Q3BMWeJNBGk0kKO5Sfece9B848AW7wMsA8jHAYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qTr+OKEPph70MKJB0m6GQ0Czub2X5m1Zi3mvenmDlUb6AkViGlkwV++0QvsAkMhW1
-	 GTSY9aLUinfa42AtqYpwXxCrPUYCzlAhAYx0xsRV/dZhSCoNwysPWNZqtwasuE42RQ
-	 WBC+CCnf+Xns5UvFOM3de5Mt3GSCgHmm2ZAkXNgQ=
+	b=DUy25WeGXtxB36KdDvgju1ZPM4ppwCzHUIXvomAwtaJ+p1lfWPJFUkwUV0lMH+FYG
+	 mqLZZfH0OrJEiuqDxj7aX+gPvSu0XmhuCg1XMmMEx2r6imTT5rEgFbh/7kcBW8YgPI
+	 xLeF1gjFvoImg/4oEoMdwtCAfXkHA/e+6cOphXds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390740AbgAPRRu (ORCPT
+        id S2391291AbgAPRRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:17:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387616AbgAPRRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:40 -0500
+        id S1732461AbgAPRRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4D6E2051A;
-        Thu, 16 Jan 2020 17:17:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6678C246AA;
+        Thu, 16 Jan 2020 17:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195059;
-        bh=hOjkk+9ukcJhXI0EqCJJubVofhE0FK+eKaZ29cbr58E=;
+        s=default; t=1579195062;
+        bh=6Fd7Q3BMWeJNBGk0kKO5Sfece9B848AW7wMsA8jHAYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1moj+FaVZxyvVpDwOsbVrKmIGVe2uYaA8rT42AWwPyFL7cbbx2FseqvyBPEJHv6j
-         FOtY5DZ5/FQuXs8+xf6cobsiIghwBNSjJhspwyT1Sbhoie3YiwEMzvWwDN2nHf8YJs
-         4UkOI/yu52Bf+ZisRobaCk428n5/KFAQohvyokF0=
+        b=PoBpmXvv7/5yvwZ4sx7+DJMT4tsxlcBXj4/8nIb3oGNO45DzwJkea5EIK7jpqT1AX
+         9NqHcWPX/Gu56vfOsNjJXq1dD1YepIWdYLILW2ZCLUregg1TWpVDd7EfPEaWxpJCXc
+         RloRPpUETBRPsINn20+MAsyUk61lXd2YmHXDIUP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/371] mlxsw: reg: QEEC: Add minimum shaper fields
-Date:   Thu, 16 Jan 2020 12:11:23 -0500
-Message-Id: <20200116171719.16965-15-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 017/371] pcrypt: use format specifier in kobject_add
+Date:   Thu, 16 Jan 2020 12:11:25 -0500
+Message-Id: <20200116171719.16965-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -60,75 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
+[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
 
-Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
-configuration of minimum shaper.
+Passing string 'name' as the format specifier is potentially hazardous
+because name could (although very unlikely to) have a format specifier
+embedded in it causing issues when parsing the non-existent arguments
+to these.  Follow best practice by using the "%s" format string for
+the string 'name'.
 
-Increase the QEEC length to 0x20 as well: that's the length that the
-register has had for a long time now, but with the configurations that
-mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
-With mise=true however, FW rejects packets unless they have the full
-required length.
+Cleans up clang warning:
+crypto/pcrypt.c:397:40: warning: format string is not a string literal
+(potentially insecure) [-Wformat-security]
 
-Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ crypto/pcrypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index 8ab7a4f98a07..e7974ba06432 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -2452,7 +2452,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
-  * Configures the ETS elements.
-  */
- #define MLXSW_REG_QEEC_ID 0x400D
--#define MLXSW_REG_QEEC_LEN 0x1C
-+#define MLXSW_REG_QEEC_LEN 0x20
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index f8ec3d4ba4a8..a5718c0a3dc4 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ 	int ret;
  
- MLXSW_REG_DEFINE(qeec, MLXSW_REG_QEEC_ID, MLXSW_REG_QEEC_LEN);
+ 	pinst->kobj.kset = pcrypt_kset;
+-	ret = kobject_add(&pinst->kobj, NULL, name);
++	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
+ 	if (!ret)
+ 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
  
-@@ -2494,6 +2494,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
-  */
- MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
- 
-+/* reg_qeec_mise
-+ * Min shaper configuration enable. Enables configuration of the min
-+ * shaper on this ETS element
-+ * 0 - Disable
-+ * 1 - Enable
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
-+
- enum {
- 	MLXSW_REG_QEEC_BYTES_MODE,
- 	MLXSW_REG_QEEC_PACKETS_MODE,
-@@ -2510,6 +2519,17 @@ enum {
-  */
- MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
- 
-+/* The smallest permitted min shaper rate. */
-+#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
-+
-+/* reg_qeec_min_shaper_rate
-+ * Min shaper information rate.
-+ * For CPU port, can only be configured for port hierarchy.
-+ * When in bytes mode, value is specified in units of 1000bps.
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
-+
- /* reg_qeec_mase
-  * Max shaper configuration enable. Enables configuration of the max
-  * shaper on this ETS element.
 -- 
 2.20.1
 
