@@ -2,92 +2,152 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229CFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80EC2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196885;
-	bh=k1oj8Q3S+cyZjezjyGu4MQPFxKMfh/wg8Du3DKYi+BE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K2Uvjm48db7SLHkpGE7YKgkpvbRMKDfQV+I0I03772O0d1rtFFGSW3OkGwXMhEIPj
-	 8EacrQVhrJhQ8eO6GXSPbpuSci90R0xRMSOUSQR+Wbb1earGckisCJ7LSTktue3xTa
-	 E7T0Nyvq+mKlhsqwnKDd92rnzcxi5EDPRBxu7hOk=
+	by mail.kernel.org (Postfix) with ESMTP id 769282468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="VNS30gze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394308AbgAPRsA (ORCPT
+        id S2394334AbgAPRsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:48:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406773AbgAPRqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:43 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B2A246D3;
-        Thu, 16 Jan 2020 17:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196803;
-        bh=k1oj8Q3S+cyZjezjyGu4MQPFxKMfh/wg8Du3DKYi+BE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHV34b4sUeCUIg7SA0bD2c+gnPt+g8/C+aS4M1rw/BCCTlfMMflBKBlT4zSy0EJbC
-         mf3ne/RB/F64yVFLjtJoaOYiPsLQzpGoh6Z0DARaOYxD5fmyi/0h7R8cCje3B90o4j
-         ieTvSJi4gK23yiMfwhBYiMsSyPBPKc+H5c0We+Rg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 162/174] net: neigh: use long type to store jiffies delta
-Date:   Thu, 16 Jan 2020 12:42:39 -0500
-Message-Id: <20200116174251.24326-162-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
-References: <20200116174251.24326-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:48:09 -0500
+Received: from mail.efficios.com ([167.114.26.124]:53310 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394319AbgAPRsE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:48:04 -0500
+X-Greylist: delayed 385 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 12:48:03 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 71D8E244DF1;
+        Thu, 16 Jan 2020 12:41:36 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id HX7ngnA8TMm3; Thu, 16 Jan 2020 12:41:36 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 1E023244EEF;
+        Thu, 16 Jan 2020 12:41:36 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1E023244EEF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1579196496;
+        bh=Ru5guD9vkjoHa8ITAqIsg69uJf3lqm/wZ2degfKpy4k=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=VNS30gzevq3SrFJjiFF4QG5kOegfaEx+QHi+syYK/vKJK4AbzXwY8hrSS3B5h4K+K
+         dc5uS1gJPj7gw4CXkSyBiD1FgwfoFBWC1W8CizZboMhlx3J6D8yVl3usGB59VFYKjq
+         +ITIVB0jXVNS1Z7m3Qs5iZYColHHXZG3CjRzG+p9qqWzHubRB4dAZ3ZOkG6P6XW3vD
+         Foi0QZgGPBy5rK75UPCQZu/oyZ5rlnGWo7srUwlY/SqiWt4Q073wXW0P1qcGmVaHzb
+         S5LxnfP8kqUCSdGG7IcRNbSbZnEN8vNkJEFio2dV6mRLO7hrKnKfet1L71PIvyiAXN
+         w0k/2e5YCVlbA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id ntsglEfqopQx; Thu, 16 Jan 2020 12:41:36 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 0761B2450C1;
+        Thu, 16 Jan 2020 12:41:36 -0500 (EST)
+Date:   Thu, 16 Jan 2020 12:41:35 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Li Zefan <lizefan@huawei.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Message-ID: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+Subject: [regression] cpuset: offlined CPUs removed from affinity masks
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Index: LCpgHYsKGbsNKD4rV33Ft2KJ/GZobw==
+Thread-Topic: cpuset: offlined CPUs removed from affinity masks
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Hi,
 
-[ Upstream commit 9d027e3a83f39b819e908e4e09084277a2e45e95 ]
+I noticed the following regression with CONFIG_CPUSET=y. Note that
+I am not using cpusets at all (only using the root cpuset I'm given
+at boot), it's just configured in. I am currently working on a 5.2.5
+kernel. I am simply combining use of taskset(1) (setting the affinity
+mask of a process) and cpu hotplug. The result is that with
+CONFIG_CPUSET=y, setting the affinity mask including an offline CPU number
+don't keep that CPU in the affinity mask, and it is never put back when the
+CPU comes back online. CONFIG_CPUSET=n behaves as expected, and puts back
+the CPU into the affinity mask reported to user-space when it comes back
+online.
 
-A difference of two unsigned long needs long storage.
 
-Fixes: c7fb64db001f ("[NETLINK]: Neighbour table configuration and statistics via rtnetlink")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/neighbour.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+* With CONFIG_CPUSET=y (unexpected behavior):
 
-diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index af1ecd0e7b07..9849f1f4cf4f 100644
---- a/net/core/neighbour.c
-+++ b/net/core/neighbour.c
-@@ -1837,8 +1837,8 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
- 		goto nla_put_failure;
- 	{
- 		unsigned long now = jiffies;
--		unsigned int flush_delta = now - tbl->last_flush;
--		unsigned int rand_delta = now - tbl->last_rand;
-+		long flush_delta = now - tbl->last_flush;
-+		long rand_delta = now - tbl->last_rand;
- 		struct neigh_hash_table *nht;
- 		struct ndt_config ndc = {
- 			.ndtc_key_len		= tbl->key_len,
+# echo 0 > /sys/devices/system/cpu/cpu1/online
+
+% taskset 0x7 ./loop &
+% taskset -p $!
+pid 1341's current affinity mask: 5
+
+# echo 1 > /sys/devices/system/cpu/cpu1/online
+
+taskset -p $!
+pid 1341's current affinity mask: 5
+
+kill $!
+
+
+* With CONFIG_CPUSET=n (expected behavior):
+
+(Offlining CPU, then start task)
+
+# echo 0 > /sys/devices/system/cpu/cpu1/online
+
+% taskset 0x7 ./loop &
+% taskset -p $!
+pid 1358's current affinity mask: 5
+
+# echo 1 > /sys/devices/system/cpu/cpu1/online
+
+taskset -p $!
+pid 1358's current affinity mask: 7
+
+kill $!
+
+
+Test system lscpu output:
+
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              32
+On-line CPU(s) list: 0-31
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           2
+NUMA node(s):        2
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               60
+Model name:          Intel Core Processor (Haswell, no TSX, IBRS)
+Stepping:            1
+CPU MHz:             2399.996
+BogoMIPS:            4799.99
+Hypervisor vendor:   KVM
+Virtualization type: full
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            4096K
+NUMA node0 CPU(s):   0-7,16-23
+NUMA node1 CPU(s):   8-15,24-31
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm cpuid_fault invpcid_single pti ibrs ibpb fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt
+
+
+
 -- 
-2.20.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
