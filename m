@@ -2,339 +2,322 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B59EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C774C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58823206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72A5206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="fYoEA8AO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgAPHWG (ORCPT
+        id S1730562AbgAPHX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 02:22:06 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36107 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgAPHWF (ORCPT
+        Thu, 16 Jan 2020 02:23:29 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:32239 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgAPHX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 02:22:05 -0500
-X-Originating-IP: 209.85.222.44
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-        (Authenticated sender: pshelar@ovn.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 26E5D1C000A;
-        Thu, 16 Jan 2020 07:22:01 +0000 (UTC)
-Received: by mail-ua1-f44.google.com with SMTP id y23so7295023ual.2;
-        Wed, 15 Jan 2020 23:22:01 -0800 (PST)
-X-Gm-Message-State: APjAAAWjdlKmhsmhn1ePJwWMTViKSGBbqPJdzscRaRCf3InQmbm+kLXq
-        OiyZW5icrDQE3AQz0N0hhP4VrxPYqTq0CHpMsdo=
-X-Google-Smtp-Source: APXvYqze4p20u7T4qntGnP4aOG5mm1nPGhjKLqWCHkVzhE/ZRJsOJdo/HXQQgSBjC+TfOfDV7kafbagFaTgNP4jrHG4=
-X-Received: by 2002:ab0:2006:: with SMTP id v6mr18554592uak.22.1579159320560;
- Wed, 15 Jan 2020 23:22:00 -0800 (PST)
+        Thu, 16 Jan 2020 02:23:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579159403;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=DLlSXgCpG03ghP7KKNwatqK2l3dHS0GX4ZWE+B3ebDc=;
+        b=fYoEA8AOfDd3KlcIkmE4flgWN0SQByr0k1EB9n0CD2ous9nQviN4Yp7wVCgLHoQY4N
+        nvAMfruV6GhgJMXM5MeirjY1D5gVSttnDcz9sptWtgDUODo0j1TZLw5c1PxtKnwynNV7
+        kXoEaAs+y7b4+HXIKrZOhE/j3B3FpHzkA3N+6dq7eeUMB5i+dT1ivFnLjTty+Z/CBIop
+        cCchv7WSxYzDuksvTUKYcY32/jyjilr+CpgGwWLh/lh5ZHlM7uMtCh2sFZD9rX14PiMU
+        LbXPVvjbDO44Pmd/NxikFuj8Og6f0M1pt/28esmKHAmEY12CQpTQro+0Hwo14U3sS/ro
+        8Y6Q==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0G7M5aJH
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 16 Jan 2020 08:22:05 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v28 01/12] Linux Random Number Generator
+Date:   Thu, 16 Jan 2020 08:22:05 +0100
+Message-ID: <5851701.o564lLvvJa@tauon.chronox.de>
+In-Reply-To: <3a8d5d2d-d54f-cf18-0c93-dbe8cd91ed12@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2211028.KG5F5qfgHC@positron.chronox.de> <3a8d5d2d-d54f-cf18-0c93-dbe8cd91ed12@infradead.org>
 MIME-Version: 1.0
-References: <20200115164030.56045-1-mcroce@redhat.com>
-In-Reply-To: <20200115164030.56045-1-mcroce@redhat.com>
-From:   Pravin Shelar <pshelar@ovn.org>
-Date:   Wed, 15 Jan 2020 23:21:49 -0800
-X-Gmail-Original-Message-ID: <CAOrHB_D_zM+rceB9U3O_0GbGQW3KUouE-==haQf7MZUJm5p4wg@mail.gmail.com>
-Message-ID: <CAOrHB_D_zM+rceB9U3O_0GbGQW3KUouE-==haQf7MZUJm5p4wg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] openvswitch: add TTL decrement action
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        ovs dev <dev@openvswitch.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bindiya Kurle <bindiyakurle@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ben Pfaff <blp@ovn.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 8:40 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> New action to decrement TTL instead of setting it to a fixed value.
-> This action will decrement the TTL and, in case of expired TTL, drop it
-> or execute an action passed via a nested attribute.
-> The default TTL expired action is to drop the packet.
->
-> Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
->
-> Tested with a corresponding change in the userspace:
->
->     # ovs-dpctl dump-flows
->     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1
->     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},2
->     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
->     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
->
->     # ping -c1 192.168.0.2 -t 42
->     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 120
->     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
->         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
->     # ping -c1 192.168.0.2 -t 1
->     #
->
-Thanks for the patch.
+Am Donnerstag, 16. Januar 2020, 01:11:40 CET schrieb Randy Dunlap:
 
-> Co-developed-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> ---
->  include/uapi/linux/openvswitch.h |  2 +
->  net/openvswitch/actions.c        | 67 ++++++++++++++++++++++++++++++
->  net/openvswitch/flow_netlink.c   | 71 ++++++++++++++++++++++++++++++++
->  3 files changed, 140 insertions(+)
->
-> diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
-> index ae2bff14e7e1..9d3f040847af 100644
-> --- a/include/uapi/linux/openvswitch.h
-> +++ b/include/uapi/linux/openvswitch.h
-> @@ -958,6 +958,7 @@ enum ovs_action_attr {
->         OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
->         OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
->         OVS_ACTION_ATTR_ADD_MPLS,     /* struct ovs_action_add_mpls. */
-> +       OVS_ACTION_ATTR_DEC_TTL,      /* Nested OVS_DEC_TTL_ATTR_*. */
->
->         __OVS_ACTION_ATTR_MAX,        /* Nothing past this will be accepted
->                                        * from userspace. */
-> @@ -1050,4 +1051,5 @@ struct ovs_zone_limit {
->         __u32 count;
->  };
->
-> +#define OVS_DEC_TTL_ATTR_EXEC      0
+Hi Randy,
 
-I am not sure if we need this, But if you want the nested attribute
-then lets define enum with this single attribute and have actions as
-part of its data. This would be optional argument, so userspace can
-skip it, and in that case datapath can drop the packet.
+> Hi,
+>=20
+> On 1/15/20 2:31 AM, Stephan M=C3=BCller wrote:
+> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
+> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+> > CC: Willy Tarreau <w@1wt.eu>
+> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
+> > CC: Vito Caputo <vcaputo@pengaru.com>
+> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
+> > CC: Jan Kara <jack@suse.cz>
+> > CC: Ray Strode <rstrode@redhat.com>
+> > CC: William Jon McCann <mccann@jhu.edu>
+> > CC: zhangjs <zachary@baishancloud.com>
+> > CC: Andy Lutomirski <luto@kernel.org>
+> > CC: Florian Weimer <fweimer@redhat.com>
+> > CC: Lennart Poettering <mzxreary@0pointer.de>
+> > CC: Nicolai Stange <nstange@suse.de>
+> > Mathematical aspects Reviewed-by: "Peter, Matthias"
+> > <matthias.peter@bsi.bund.de> Reviewed-by: Marcelo Henrique Cerri
+> > <marcelo.cerri@canonical.com>
+> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+> > Tested-by: Roman Drahtm=C3=BCller <draht@schaltsekun.de>
+> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Tested-by: Neil Horman <nhorman@redhat.com>
+> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
+> > ---
+> >=20
+> >  MAINTAINERS                         |   7 +
+> >  drivers/char/Kconfig                |   2 +
+> >  drivers/char/Makefile               |   9 +-
+> >  drivers/char/lrng/Kconfig           |  67 +++
+> >  drivers/char/lrng/Makefile          |   9 +
+> >  drivers/char/lrng/lrng_archrandom.c |  94 ++++
+> >  drivers/char/lrng/lrng_aux.c        | 148 +++++++
+> >  drivers/char/lrng/lrng_chacha20.c   | 265 ++++++++++++
+> >  drivers/char/lrng/lrng_chacha20.h   |  25 ++
+> >  drivers/char/lrng/lrng_drng.c       | 400 +++++++++++++++++
+> >  drivers/char/lrng/lrng_interfaces.c | 638 ++++++++++++++++++++++++++++
+> >  drivers/char/lrng/lrng_internal.h   | 296 +++++++++++++
+> >  drivers/char/lrng/lrng_lfsr.h       | 152 +++++++
+> >  drivers/char/lrng/lrng_pool.c       | 588 +++++++++++++++++++++++++
+> >  drivers/char/lrng/lrng_sw_noise.c   | 102 +++++
+> >  drivers/char/lrng/lrng_sw_noise.h   |  57 +++
+> >  include/linux/lrng.h                |  63 +++
+> >  17 files changed, 2921 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/char/lrng/Kconfig
+> >  create mode 100644 drivers/char/lrng/Makefile
+> >  create mode 100644 drivers/char/lrng/lrng_archrandom.c
+> >  create mode 100644 drivers/char/lrng/lrng_aux.c
+> >  create mode 100644 drivers/char/lrng/lrng_chacha20.c
+> >  create mode 100644 drivers/char/lrng/lrng_chacha20.h
+> >  create mode 100644 drivers/char/lrng/lrng_drng.c
+> >  create mode 100644 drivers/char/lrng/lrng_interfaces.c
+> >  create mode 100644 drivers/char/lrng/lrng_internal.h
+> >  create mode 100644 drivers/char/lrng/lrng_lfsr.h
+> >  create mode 100644 drivers/char/lrng/lrng_pool.c
+> >  create mode 100644 drivers/char/lrng/lrng_sw_noise.c
+> >  create mode 100644 drivers/char/lrng/lrng_sw_noise.h
+> >  create mode 100644 include/linux/lrng.h
+> >=20
+> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+> > new file mode 100644
+> > index 000000000000..56f13efd3592
+> > --- /dev/null
+> > +++ b/drivers/char/lrng/Kconfig
+> > @@ -0,0 +1,67 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Linux Random Number Generator configuration
+> > +#
+> > +
+> > +menuconfig LRNG
+> > +	bool "Linux Random Number Generator"
+>=20
+> This should probably depend on CRYPTO and/or some other CRYPTO_xxx symbol=
+s.
+> Or (worst case) select them.  :(
 
->  #endif /* _LINUX_OPENVSWITCH_H */
-> diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-> index 7fbfe2adfffa..1b0afc9bf1ad 100644
-> --- a/net/openvswitch/actions.c
-> +++ b/net/openvswitch/actions.c
-> @@ -964,6 +964,26 @@ static int output_userspace(struct datapath *dp, struct sk_buff *skb,
->         return ovs_dp_upcall(dp, skb, key, &upcall, cutlen);
->  }
->
-> +static int dec_ttl(struct datapath *dp, struct sk_buff *skb,
-> +                  struct sw_flow_key *key,
-> +                  const struct nlattr *attr, bool last)
-Can you give it better name, for example: dec_ttl_exception_handler().
+It does not - all CRYPTO related code is limited into the lrng_drbg.c,=20
+lrng_kcapi.c and lrng_jent.c which are all guarded by a Kconfig option.
+>=20
+> This message (when CONFIG_CRYPTO is disabled and no crypto facilities are
+> enabled) should be avoidable when the correct Kconfig entries are used:
+>=20
+> ../drivers/char/lrng/lrng_drbg.c:38:2: error: #error "Unknown DRBG in use"
+>  #error "Unknown DRBG in use"
 
-> +{
-> +       /* The first action is always 'OVS_DEC_TTL_ATTR_ARG'. */
-> +       struct nlattr *dec_ttl_arg = nla_data(attr);
-> +       u32 nested = nla_get_u32(dec_ttl_arg);
-> +       int rem = nla_len(attr);
-> +
-> +       if (nested) {
-> +               struct nlattr *actions = nla_next(dec_ttl_arg, &rem);
-> +
-> +               if (actions)
-> +                       return clone_execute(dp, skb, key, 0, actions, rem,
-> +                                            last, false);
-> +       }
-> +       consume_skb(skb);
-> +       return 0;
-> +}
-> +
->  /* When 'last' is true, sample() should always consume the 'skb'.
->   * Otherwise, sample() should keep 'skb' intact regardless what
->   * actions are executed within sample().
-> @@ -1180,6 +1200,45 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
->                              nla_len(actions), last, clone_flow_key);
->  }
->
-> +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-> +{
-> +       int err;
-> +
-> +       if (skb->protocol == htons(ETH_P_IPV6)) {
-> +               struct ipv6hdr *nh;
-> +
-> +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +                                         sizeof(*nh));
-> +               if (unlikely(err))
-> +                       return err;
-> +
-> +               nh = ipv6_hdr(skb);
-> +
-> +               if (nh->hop_limit <= 1)
-> +                       return -EHOSTUNREACH;
-> +
-> +               key->ip.ttl = --nh->hop_limit;
-> +       } else {
-> +               struct iphdr *nh;
-> +               u8 old_ttl;
-> +
-> +               err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> +                                         sizeof(*nh));
-> +               if (unlikely(err))
-> +                       return err;
-> +
-> +               nh = ip_hdr(skb);
-> +               if (nh->ttl <= 1)
-> +                       return -EHOSTUNREACH;
-> +
-> +               old_ttl = nh->ttl--;
-> +               csum_replace2(&nh->check, htons(old_ttl << 8),
-> +                             htons(nh->ttl << 8));
-> +               key->ip.ttl = nh->ttl;
-> +       }
-> +       return 0;
-> +}
-> +
->  /* Execute a list of actions against 'skb'. */
->  static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->                               struct sw_flow_key *key,
-> @@ -1365,6 +1424,14 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
->
->                         break;
->                 }
-> +
-> +               case OVS_ACTION_ATTR_DEC_TTL:
-> +                       err = execute_dec_ttl(skb, key);
-> +                       if (err == -EHOSTUNREACH) {
-> +                               err = dec_ttl(dp, skb, key, a, true);
-> +                               return err;
-> +                       }
-> +                       break;
->                 }
->
->                 if (unlikely(err)) {
-> diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-> index 7da4230627f5..0354d5501b70 100644
-> --- a/net/openvswitch/flow_netlink.c
-> +++ b/net/openvswitch/flow_netlink.c
-> @@ -80,6 +80,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
->                 case OVS_ACTION_ATTR_METER:
->                 case OVS_ACTION_ATTR_CHECK_PKT_LEN:
->                 case OVS_ACTION_ATTR_ADD_MPLS:
-> +               case OVS_ACTION_ATTR_DEC_TTL:
->                 default:
->                         return true;
->                 }
-> @@ -2495,6 +2496,40 @@ static int validate_and_copy_sample(struct net *net, const struct nlattr *attr,
->         return 0;
->  }
->
-> +static int validate_and_copy_dec_ttl(struct net *net,
-> +                                    const struct nlattr *attr,
-> +                                    const struct sw_flow_key *key,
-> +                                    struct sw_flow_actions **sfa,
-> +                                    __be16 eth_type, __be16 vlan_tci,
-> +                                    u32 mpls_label_count, bool log)
-> +{
-> +       u32 nested = true;
-> +       int start, err;
-> +
-> +       if (!nla_len(attr))
-> +               nested = false;
-> +
-> +       start = add_nested_action_start(sfa, OVS_ACTION_ATTR_DEC_TTL, log);
-> +       if (start < 0)
-> +               return start;
-> +
-> +       err = ovs_nla_add_action(sfa, OVS_DEC_TTL_ATTR_EXEC, &nested,
-> +                                sizeof(nested), log);
-> +
-> +       if (err)
-> +               return err;
-> +
-As mentioned above if there are no nested action, I do not see need to
-add this flag. In Fast path, action can check size of data of
-attribute OVS_ACTION_ATTR_DEC_TTL. In case it is zero we can drop the
-packet.
+Right - this should now be fixed with a depends on CRYPTO for the=20
+aforementioned 3 C files which have an equal entry in Kconfig.
+>=20
+> > +	help
+> > +	  The Linux Random Number Generator (LRNG) is the replacement
+> > +	  of the existing /dev/random provided with drivers/char/random.c.
+> > +	  It generates entropy from different noise sources and
+> > +	  delivers significant entropy during boot.
+> > +
+> > +if LRNG
+> > +
+> > +choice
+> > +	prompt "LRNG Entropy Pool Size"
+> > +	default LRNG_POOL_SIZE_4096
+> > +	help
+> > +	  Select the size of the LRNG entropy pool. The size of the
+> > +	  entropy pool is relevant for the amount of entropy that
+> > +	  the LRNG can maintain as a maximum. The larger the size
+> > +	  of the entropy pool is the more entropy can be maintained
+> > +	  but the less often older entropic values are overwritten
+> > +	  with new entropy.
+> > +
+> > +	config LRNG_POOL_SIZE_512
+> > +		bool "512 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_1024
+> > +		bool "1024 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_2048
+> > +		bool "2048 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_4096
+> > +		bool "4096 bits (default)"
+> > +
+> > +	config LRNG_POOL_SIZE_8192
+> > +		bool "8192 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_16384
+> > +		bool "16384 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_32768
+> > +		bool "32768 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_65536
+> > +		bool "65536 bits"
+> > +
+> > +	config LRNG_POOL_SIZE_131072
+> > +		bool "131072 bits"
+> > +endchoice
+> > +
+> > +config LRNG_POOL_SIZE
+> > +	int
+> > +	default 0 if LRNG_POOL_SIZE_512
+> > +	default 1 if LRNG_POOL_SIZE_1024
+> > +	default 2 if LRNG_POOL_SIZE_2048
+> > +	default 3 if LRNG_POOL_SIZE_4096
+> > +	default 4 if LRNG_POOL_SIZE_8192
+> > +	default 5 if LRNG_POOL_SIZE_16384
+> > +	default 6 if LRNG_POOL_SIZE_32768
+> > +	default 7 if LRNG_POOL_SIZE_65536
+> > +	default 8 if LRNG_POOL_SIZE_131072
+> > +
+> > +endif # LRNG
+> >=20
+> > diff --git a/drivers/char/lrng/lrng_archrandom.c
+> > b/drivers/char/lrng/lrng_archrandom.c new file mode 100644
+> > index 000000000000..eeba708d025f
+> > --- /dev/null
+> > +++ b/drivers/char/lrng/lrng_archrandom.c
+> > @@ -0,0 +1,94 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > +/*
+> > + * LRNG Fast Noise Source: CPU-based noise source
+> > + *
+> > + * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/random.h>
+> > +
+> > +#include "lrng_internal.h"
+> > +
+> > +/*
+> > + * Estimated entropy of data is a 32th of
+> > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * As we have no ability to review t=
+he
+> > implementation of those noise sources, + * it is prudent to have a
+> > conservative estimate here.
+> > + */
+> > +#define LRNG_ARCHRANDOM_DEFAULT_STRENGTH
+> > (LRNG_DRNG_SECURITY_STRENGTH_BITS>>5) +#define
+> > LRNG_ARCHRANDOM_TRUST_CPU_STRENGTH LRNG_DRNG_SECURITY_STRENGTH_BITS
+> > +#ifdef CONFIG_RANDOM_TRUST_CPU
+> > +static u32 archrandom =3D LRNG_ARCHRANDOM_TRUST_CPU_STRENGTH;
+> > +#else
+> > +static u32 archrandom =3D LRNG_ARCHRANDOM_DEFAULT_STRENGTH;
+> > +#endif
+> > +module_param(archrandom, uint, 0644);
+> > +MODULE_PARM_DESC(archrandom, "Entropy in bits of 256 data bits from CPU
+> > noise " +			     "source (e.g. RDRAND)");
+>=20
+> Please put the string on one line like several other MODULE_PARM_DESC() a=
+re
+> done:
+>=20
+> +MODULE_PARM_DESC(archrandom,
+> +		"Entropy in bits of 256 data bits from CPU noise source (e.g.=20
+RDRAND)");
 
-> +       if (nested) {
-> +               err = __ovs_nla_copy_actions(net, attr, key, sfa, eth_type,
-> +                                            vlan_tci, mpls_label_count, log);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       add_nested_action_end(*sfa, start);
-> +       return 0;
-> +}
-> +
->  static int validate_and_copy_clone(struct net *net,
->                                    const struct nlattr *attr,
->                                    const struct sw_flow_key *key,
-> @@ -3007,6 +3042,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->                         [OVS_ACTION_ATTR_CLONE] = (u32)-1,
->                         [OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
->                         [OVS_ACTION_ATTR_ADD_MPLS] = sizeof(struct ovs_action_add_mpls),
-> +                       [OVS_ACTION_ATTR_DEC_TTL] = (u32)-1,
->                 };
->                 const struct ovs_action_push_vlan *vlan;
->                 int type = nla_type(a);
-> @@ -3267,6 +3303,15 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
->                         break;
->                 }
->
-> +               case OVS_ACTION_ATTR_DEC_TTL:
-> +                       err = validate_and_copy_dec_ttl(net, a, key, sfa,
-> +                                                       eth_type, vlan_tci,
-> +                                                       mpls_label_count, log);
-> +                       if (err)
-> +                               return err;
-> +                       skip_copy = true;
-> +                       break;
-> +
->                 default:
->                         OVS_NLERR(log, "Unknown Action type %d", type);
->                         return -EINVAL;
-> @@ -3438,6 +3483,26 @@ static int check_pkt_len_action_to_attr(const struct nlattr *attr,
->         return err;
->  }
->
-> +static int dec_ttl_action_to_attr(const struct nlattr *attr,
-> +                                 struct sk_buff *skb)
-> +{
-> +       int err = 0, rem = nla_len(attr);
-> +       struct nlattr *start;
-> +
-> +       start = nla_nest_start_noflag(skb, OVS_ACTION_ATTR_DEC_TTL);
-> +
-> +       if (!start)
-> +               return -EMSGSIZE;
-> +
-> +       err = ovs_nla_put_actions(nla_data(attr), rem, skb);
-> +       if (err)
-> +               nla_nest_cancel(skb, start);
-> +       else
-> +               nla_nest_end(skb, start);
-> +
-Same here, we can check the size of data and depending on that add
-nested attribute OVS_DEC_TTL_ATTR_EXEC.
+Done.
+>=20
+>=20
+> With CONFIG_CRYPTO disabled, these warnings happen:
+>=20
+> WARNING: unmet direct dependencies detected for CRYPTO_DRBG_MENU
+>   Depends on [n]: CRYPTO [=3Dn]
+>   Selected by [m]:
+>   - LRNG_DRBG [=3Dm] && LRNG [=3Dy] && LRNG_DRNG_SWITCH [=3Dy]
+>=20
+> WARNING: unmet direct dependencies detected for CRYPTO_RNG
+>   Depends on [n]: CRYPTO [=3Dn]
+>   Selected by [m]:
+>   - LRNG_KCAPI [=3Dm] && LRNG [=3Dy] && LRNG_DRNG_SWITCH [=3Dy]
+>=20
+> ../drivers/char/lrng/lrng_drbg.c: In function =E2=80=98lrng_hash_name=E2=
+=80=99:
+> ../drivers/char/lrng/lrng_drbg.c:225:1: warning: control reaches end of
+> non-void function [-Wreturn-type] }
+>  ^
+> ../drivers/char/lrng/lrng_drbg.c: In function =E2=80=98lrng_drbg_name=E2=
+=80=99:
+> ../drivers/char/lrng/lrng_drbg.c:220:1: warning: control reaches end of
+> non-void function [-Wreturn-type] }
+>  ^
+>=20
+> and build errors happen also, which can be prevented with Kconfig fixes.
 
-> +       return err;
-> +}
-> +
->  static int set_action_to_attr(const struct nlattr *a, struct sk_buff *skb)
->  {
->         const struct nlattr *ovs_key = nla_data(a);
-> @@ -3538,6 +3603,12 @@ int ovs_nla_put_actions(const struct nlattr *attr, int len, struct sk_buff *skb)
->                                 return err;
->                         break;
->
-> +               case OVS_ACTION_ATTR_DEC_TTL:
-> +                       err = dec_ttl_action_to_attr(a, skb);
-> +                       if (err)
-> +                               return err;
-> +                       break;
-> +
->                 default:
->                         if (nla_put(skb, type, nla_len(a), nla_data(a)))
->                                 return -EMSGSIZE;
-> --
-> 2.24.1
-Let me know what kind of testing you have done for nested action case.
+With the changes to the Kconfig file as explained in the other emails, I ca=
+n=20
+successfully compile the LRNG without the crypto API being enabled.
+
+Thank you for pointing that one out.
+
+Ciao
+Stephan
+
+
