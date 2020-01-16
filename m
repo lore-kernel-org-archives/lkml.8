@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67626C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA623C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E68B246C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE4E2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196948;
-	bh=9XW7SWDu+KCgjzAcqzRMIf/9Nyn+7Kj2PwLiQnolGfk=;
+	s=default; t=1579196957;
+	bh=YOIE4NNw0fteHkmepF0f7B4QZv5cJzxsWkK7m3/I6zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJnSyDVNLM9FcxhKF4Mzi6WGbBy71uhlfH0WpAwyw6eg/A3FoJwXcuMM61JaXOVXh
-	 bj/WIhKkLBwOBcWJE49H/LCaFgvigXCSo7gjdoGEMWASxdELiSPKjuIh6n+/q4pxl7
-	 CUrP8tUEHyQCL68ZFVsyjCYlESraTAr5SH6GgZPs=
+	b=cjDNxIq795mckbwgXCGL0xsiEO9a8q1LDkvr4NukYvExts5s5QhnFYF+G17VPlfBd
+	 oYuK+RfXiZ2kUJZ3xZ43EQhG66WD+R9b848SbUStLqnShLIu2w6b8nqnV2+O0L6PzY
+	 b+obMzcBTzeH6kBcgj2EpyaCiNMi2sqULmFIjSSQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394404AbgAPRtH (ORCPT
+        id S2406626AbgAPRqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:49:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39002 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406641AbgAPRqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:21 -0500
+        id S2406584AbgAPRqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FA0246DC;
-        Thu, 16 Jan 2020 17:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78D23246DB;
+        Thu, 16 Jan 2020 17:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196780;
-        bh=9XW7SWDu+KCgjzAcqzRMIf/9Nyn+7Kj2PwLiQnolGfk=;
+        s=default; t=1579196772;
+        bh=YOIE4NNw0fteHkmepF0f7B4QZv5cJzxsWkK7m3/I6zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqGuEcquX55csfJUhWvX+VGFyC4xki3d1ib6qDMey/UvwKKHDK3PL2TahcNxEc3D1
-         JkW55f8T99O1q6m6miXp5rP1KwNnHNt85WMfwlvzyVuvYC3m3qa47WXW9jBnZRt+Dz
-         tXfg6QvSUKjIowSXAbZRQGxntRp0+kIy3kpqhuSE=
+        b=WIy2oMHHRsivfAaWL3d29+UxuwrlVDv+fAnxWb+9Zlu+9vKpUuhiEDuP7qDtdk77r
+         CZez3125JD+IhXlA/GRic1gykM/FwZN+i+JwI2MP41W3COKQnohBBB1XKR84F5ptim
+         27wtzw56OnhBuHw5GgpnrUNvlSHI5AK6gDSBHMUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Antonio Borneo <antonio.borneo@st.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 146/174] net: stmmac: fix length of PTP clock's name string
-Date:   Thu, 16 Jan 2020 12:42:23 -0500
-Message-Id: <20200116174251.24326-146-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 143/174] mac80211: accept deauth frames in IBSS mode
+Date:   Thu, 16 Jan 2020 12:42:20 -0500
+Message-Id: <20200116174251.24326-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,49 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-The field "name" in struct ptp_clock_info has a fixed size of 16
-chars and is used as zero terminated string by clock_name_show()
-in drivers/ptp/ptp_sysfs.c
-The current initialization value requires 17 chars to fit also the
-null termination, and this causes overflow to the next bytes in
-the struct when the string is read as null terminated:
-	hexdump -C /sys/class/ptp/ptp0/clock_name
-	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
-	00000010  a0 ac b9 03 0a                                    |.....|
-where the extra 4 bytes (excluding the newline) after the string
-represent the integer 0x03b9aca0 = 62500000 assigned to the field
-"max_adj" that follows "name" in the same struct.
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-There is no strict requirement for the "name" content and in the
-comment in ptp_clock_kernel.h it's reported it should just be 'A
-short "friendly name" to identify the clock'.
-Replace it with "stmmac ptp".
-
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index 170a18b61281..147c9f8cee7f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -157,7 +157,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
- /* structure describing a PTP hardware clock */
- static struct ptp_clock_info stmmac_ptp_clock_ops = {
- 	.owner = THIS_MODULE,
--	.name = "stmmac_ptp_clock",
-+	.name = "stmmac ptp",
- 	.max_adj = 62500000,
- 	.n_alarm = 0,
- 	.n_ext_ts = 0,
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 3b8e2f97d815..2b7975c4dac7 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3040,9 +3040,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
++
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
