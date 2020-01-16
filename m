@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E99AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E923EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D370F20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87E2206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217682;
-	bh=zUwbC1w2zhbHABY8M4rwoXqvkrgONGKbYDP+0nH1LKA=;
+	s=default; t=1579217688;
+	bh=UYFTwy/8mNp/kF5FDWrxnpyRxnkxPblHvy8mqx408r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g9HILEP76Xvj+7ZxeKJ+NewG5l1X9O0DKGjp+lsAc8IMYwXRiUFxoXLyZbv6qQ+UQ
-	 VbMOtkI3BEzVRveftINWciTI7qkHcGgKwNRMyNtnkj3WHkVOGbwitkf+xGHIyiTPJ2
-	 b7YFVU7IfP200Ou2UiIUxsYf68Z2cG5Czmmh8sbY=
+	b=h9UF5nCsLrKKJZv/bcGekxe6GaKVQ1jAb/OdyvrEy1yI51CnOSk39WcfaGueMN3S/
+	 Fn3JbrmzPQW890qRAXae2tDDVcoPGrg3FUfMw/Fwl8mlFkp2XXXuxm7ULjr4f2cU7G
+	 tk3IpGN+SyRx1IkAIch3J3r4/O/Da0PwJnPjHgCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404131AbgAPXel (ORCPT
+        id S2391657AbgAPXeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:34:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:34:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404292AbgAPXdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:33:11 -0500
+        id S2404249AbgAPXdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:33:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8822B2072B;
-        Thu, 16 Jan 2020 23:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A5D20661;
+        Thu, 16 Jan 2020 23:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217591;
-        bh=zUwbC1w2zhbHABY8M4rwoXqvkrgONGKbYDP+0nH1LKA=;
+        s=default; t=1579217588;
+        bh=UYFTwy/8mNp/kF5FDWrxnpyRxnkxPblHvy8mqx408r4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7Y4IkSBJvoIz4bSnW12QveE+P6tlNbDR1IFQtgr81EM1a1PcR/eGObGnj0VuDiZz
-         Gz9HWNo+Y0ZQ7TKpDW249sSAyru9uuN+vbgfbil/cIi595VVnmfH83AxY4MAAk3iU/
-         jsUTSS6Djaf5bpwigYhH5v1qHMO3RwY7toYxhHMs=
+        b=Bd5iygsfBm1DDayRXMz3004rzB5uCXxg2bKCDTAalTeId6lSHzkHqMf7D+Ig3q5cp
+         CAcE7WPHcfCb2gAFQWqwKjnlH8//2403jDX04ZuSiuKb32SV7Qomw7BvMZUSuJgAu4
+         dksmxauGHW0ByS0G9MhFqkZYWo6VmlRBOmB3ZJNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Swapna Manupati <swapna.manupati@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 24/71] gpio: zynq: Fix for bug in zynq_gpio_restore_context API
-Date:   Fri, 17 Jan 2020 00:18:22 +0100
-Message-Id: <20200116231712.900067453@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Dirk Mueller <dmueller@suse.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Juerg Haefliger <juergh@canonical.com>
+Subject: [PATCH 4.14 33/71] arm64: Check for errata before evaluating cpu features
+Date:   Fri, 17 Jan 2020 00:18:31 +0100
+Message-Id: <20200116231714.391385773@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -62,56 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Swapna Manupati <swapna.manupati@xilinx.com>
+From: Dirk Mueller <dmueller@suse.com>
 
-commit 36f2e7207f21a83ca0054116191f119ac64583ab upstream.
+commit dc0e36581eb2da1aa3c63ceeff0f10ef1e899b2a upstream.
 
-This patch writes the inverse value of Interrupt Mask Status
-register into the Interrupt Enable register in
-zynq_gpio_restore_context API to fix the bug.
+Since commit d3aec8a28be3b8 ("arm64: capabilities: Restrict KPTI
+detection to boot-time CPUs") we rely on errata flags being already
+populated during feature enumeration. The order of errata and
+features was flipped as part of commit ed478b3f9e4a ("arm64:
+capabilities: Group handling of features and errata workarounds").
 
-Fixes: e11de4de28c0 ("gpio: zynq: Add support for suspend resume")
-Signed-off-by: Swapna Manupati <swapna.manupati@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-Link: https://lore.kernel.org/r/1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Return to the orginal order of errata and feature evaluation to
+ensure errata flags are present during feature evaluation.
+
+Fixes: ed478b3f9e4a ("arm64: capabilities: Group handling of
+    features and errata workarounds")
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>
+CC: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Dirk Mueller <dmueller@suse.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Juerg Haefliger <juergh@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-zynq.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/cpufeature.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -639,6 +639,8 @@ static void zynq_gpio_restore_context(st
- 	unsigned int bank_num;
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1278,9 +1278,9 @@ static void __update_cpu_capabilities(co
  
- 	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++) {
-+		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
-+				ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
- 		writel_relaxed(gpio->context.datalsw[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_DATA_LSW_OFFSET(bank_num));
-@@ -648,9 +650,6 @@ static void zynq_gpio_restore_context(st
- 		writel_relaxed(gpio->context.dirm[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_DIRM_OFFSET(bank_num));
--		writel_relaxed(gpio->context.int_en[bank_num],
--			       gpio->base_addr +
--			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
- 		writel_relaxed(gpio->context.int_type[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
-@@ -660,6 +659,9 @@ static void zynq_gpio_restore_context(st
- 		writel_relaxed(gpio->context.int_any[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_INTANY_OFFSET(bank_num));
-+		writel_relaxed(~(gpio->context.int_en[bank_num]),
-+			       gpio->base_addr +
-+			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
- 	}
+ static void update_cpu_capabilities(u16 scope_mask)
+ {
+-	__update_cpu_capabilities(arm64_features, scope_mask, "detected:");
+ 	__update_cpu_capabilities(arm64_errata, scope_mask,
+ 				  "enabling workaround for");
++	__update_cpu_capabilities(arm64_features, scope_mask, "detected:");
  }
  
+ static int __enable_cpu_capability(void *arg)
+@@ -1335,8 +1335,8 @@ __enable_cpu_capabilities(const struct a
+ 
+ static void __init enable_cpu_capabilities(u16 scope_mask)
+ {
+-	__enable_cpu_capabilities(arm64_features, scope_mask);
+ 	__enable_cpu_capabilities(arm64_errata, scope_mask);
++	__enable_cpu_capabilities(arm64_features, scope_mask);
+ }
+ 
+ /*
 
 
