@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56663C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F79C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 242A82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4FC24681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197431;
-	bh=wktD1BteLyPPyytIdN3IcJavNeMlILjGaeCO9Oss1nM=;
+	s=default; t=1579197434;
+	bh=Ph4Sj2DWmZ+09srvo7BvwZuzQCcypt5DJZ8oPDkcdOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLSHvB16yQ3WryfyXFRfNtMvyrHDARjVIOhHjGZ6KInEv/CpbLvXQEkEOTU/Uo31l
-	 hm3cmBDAk19qSv4yGdwC2blwUsjGUymGsNXZznRgLRoD5yF0Na1zy/WmBAVuSkfAMm
-	 Ums3ec5K0NDJlA0pD9eBbl8nuuXwAr203ZEjto/4=
+	b=p4ppcdKEIMRwlJ+pSK4EChtzJL9EZISjwt5O/VoDYxjusp4RZjc3T7P9L23YjW6Oa
+	 k+/SDiqsS8mx0hUc+6pbAovMedBiRs6d9UHWtB2k50ckb97Bqo9zKoIxujFQ/yGLEw
+	 ebQYNahXcqw/F2VT/VxmL+GnNyUZzXD65Bg+GrtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394566AbgAPR5J (ORCPT
+        id S2394472AbgAPR5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:57:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393971AbgAPRnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:41 -0500
+        id S2393965AbgAPRnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5394424748;
-        Thu, 16 Jan 2020 17:43:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5023E24718;
+        Thu, 16 Jan 2020 17:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196621;
-        bh=wktD1BteLyPPyytIdN3IcJavNeMlILjGaeCO9Oss1nM=;
+        s=default; t=1579196619;
+        bh=Ph4Sj2DWmZ+09srvo7BvwZuzQCcypt5DJZ8oPDkcdOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p/iF/GoXI6Hk2YslHdzWWQCB+52mQ+KzqaTDfiy30km0LAFuqhMImRLlKt0Pf+FzZ
-         NHYV4Z4SywYffFCmHOLKBMAl/8L6fzNz+9eba96UehRNAgNaoH2vvbTZU2hN8z1UB9
-         H4/zBZcTQfhiAPNAcxcQ4NjJtrnNOWHJ/A7D+J+g=
+        b=0EnK0Hw2LyyfEQJAmCONc/jJ5jkcy4ahBTSJN1SvNZhbZM4eru+6jhcZYgT32mmmS
+         ZM6nvnO8Cy+KtGrm/nLYJwl+Fi7nSgL/qEL8riJo3GZlrTWRYZkrAC90/hXPJQrT9A
+         KXzkR/JxwbNHdzjIiiYsw8qfuwXJPBzOpishe+IE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 037/174] rtc: ds1672: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 12:40:34 -0500
-Message-Id: <20200116174251.24326-37-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 036/174] tty: ipwireless: Fix potential NULL pointer dereference
+Date:   Thu, 16 Jan 2020 12:40:33 -0500
+Message-Id: <20200116174251.24326-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,41 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
+[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+There is a potential NULL pointer dereference in case
+alloc_ctrl_packet() fails and returns NULL.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
-
-Detected by CoverityScan, CID#138801 ("Unintended sign extension")
-
-Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-ds1672.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/ipwireless/hardware.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
-index 92b1cbf2c4a7..2bea733b1589 100644
---- a/drivers/rtc/rtc-ds1672.c
-+++ b/drivers/rtc/rtc-ds1672.c
-@@ -60,7 +60,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
- 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
- 		__func__, buf[0], buf[1], buf[2], buf[3]);
+diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
+index ad7031a4f3c4..454cdc6f2c05 100644
+--- a/drivers/tty/ipwireless/hardware.c
++++ b/drivers/tty/ipwireless/hardware.c
+@@ -1515,6 +1515,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
+ 			sizeof(struct ipw_setup_get_version_query_packet),
+ 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
+ 			TL_SETUP_SIGNO_GET_VERSION_QRY);
++	if (!ver_packet)
++		return;
+ 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
  
--	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+	       (buf[1] << 8) | buf[0];
- 
- 	rtc_time_to_tm(time, tm);
- 
+ 	/*
 -- 
 2.20.1
 
