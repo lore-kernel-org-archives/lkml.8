@@ -2,90 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DABC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FADC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64889217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCAF214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198712;
-	bh=eK+zgsqPWz6GAYkJtti8rLXXAgfol0Ms7k1eGuEjvcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nlt2wWiv0g5g1kfEXIujdDrCCnOdAJEsVhldjq/w1TX3rENZc13fvt6owM9jzVfa9
-	 gXJJSpGGCEXsAB9fa9j6tIa1qQHZ9giqixl3+uBWoaAsFqHQ1feBuPLbQ5bTAOFn2A
-	 jw9sPB8XM6Z659kmotA6XLReyB6hLYnFfReYTNLc=
+	s=default; t=1579198715;
+	bh=N6NL80NyMEmBK1Ck48h21G8o7JDmrLH68BcMhLlv+3k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DcsO6TSQltvfH6VdWP46nItuCgtyq05mfvpahQ2Q6pUYZPTi383mEvgO8p0bEjozX
+	 mTqmfkuX1fW7qdfBCfT1yDs869pxCKNFiKjqrY2DW3cFRtv0iaWfezZfRyH3h8ZMVG
+	 v5wJVO3Y35tXEN40HRLa0nKAGuPWh98SJzH5ph5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395410AbgAPSSa (ORCPT
+        id S2395421AbgAPSSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:18:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33596 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:18:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387827AbgAPSS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:18:27 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2392655AbgAPR2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:47 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD97820684;
-        Thu, 16 Jan 2020 18:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C502246E8;
+        Thu, 16 Jan 2020 17:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579198706;
-        bh=eK+zgsqPWz6GAYkJtti8rLXXAgfol0Ms7k1eGuEjvcg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uSA1/16Jv5t+QkTG5DUYDIw5GCOnYY7mMdMEHjQJg4sRtJx0p92p7BGyiz1r3y+zt
-         HIA5X6uhHXR8fQZhMAgOktn72OxXqWdijpihtIWgO3rxYSaNPqu/WwZgGkRoZGgc3f
-         iezAkiFdQPopG1zeb3Cek072wQSLs3i8/5I2lSlQ=
-Date:   Thu, 16 Jan 2020 18:18:20 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 12/15] arm64: vdso: disable Shadow Call Stack
-Message-ID: <20200116181820.GB22420@willie-the-truck>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191206221351.38241-1-samitolvanen@google.com>
- <20191206221351.38241-13-samitolvanen@google.com>
- <20200116174648.GE21396@willie-the-truck>
- <CABCJKucWusLEaLyq=Dv5pWjxcUX7Q9dL=fSstwNK4eJ_6k33=w@mail.gmail.com>
+        s=default; t=1579195727;
+        bh=N6NL80NyMEmBK1Ck48h21G8o7JDmrLH68BcMhLlv+3k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BJQqak/USWV+Rx5bGj5xy5gur37QstpW+i0wTmG/MXfod+3TURj0D52xj6kIdABvq
+         hzf20qm0Nb0xQWnwregGBrMABx64cqRsRa/Chy3kl4xdFMvRAs9QtWIlqM5nVkkARD
+         3a5+wXkEDJ/98uQnWg7HBzfyrj9RiQ/vZCGBToJY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.14 268/371] net/rds: Add a few missing rds_stat_names entries
+Date:   Thu, 16 Jan 2020 12:22:20 -0500
+Message-Id: <20200116172403.18149-211-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKucWusLEaLyq=Dv5pWjxcUX7Q9dL=fSstwNK4eJ_6k33=w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 10:14:24AM -0800, Sami Tolvanen wrote:
-> On Thu, Jan 16, 2020 at 9:46 AM Will Deacon <will@kernel.org> wrote:
-> > Should we be removing -ffixed-x18 too, or does that not propagate here
-> > anyway?
-> 
-> No, we shouldn't touch -ffixed-x18 here. The vDSO is always built with
-> x18 reserved since commit 98cd3c3f83fbb ("arm64: vdso: Build vDSO with
-> -ffixed-x18").
+From: Gerd Rausch <gerd.rausch@oracle.com>
 
-Thanks, in which case:
+[ Upstream commit 55c70ca00c982fbc0df4c4d3e31747fb73f4ddb5 ]
 
-Acked-by: Will Deacon <will@kernel.org>
+In a previous commit, fields were added to "struct rds_statistics"
+but array "rds_stat_names" was not updated accordingly.
 
-Will
+Please note the inconsistent naming of the string representations
+that is done in the name of compatibility
+with the Oracle internal code-base.
+
+s_recv_bytes_added_to_socket     -> "recv_bytes_added_to_sock"
+s_recv_bytes_removed_from_socket -> "recv_bytes_freed_fromsock"
+
+Fixes: 192a798f5299 ("RDS: add stat for socket recv memory usage")
+Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/rds/stats.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/rds/stats.c b/net/rds/stats.c
+index 73be187d389e..6bbab4d74c4f 100644
+--- a/net/rds/stats.c
++++ b/net/rds/stats.c
+@@ -76,6 +76,8 @@ static const char *const rds_stat_names[] = {
+ 	"cong_update_received",
+ 	"cong_send_error",
+ 	"cong_send_blocked",
++	"recv_bytes_added_to_sock",
++	"recv_bytes_freed_fromsock",
+ };
+ 
+ void rds_stats_info_copy(struct rds_info_iterator *iter,
+-- 
+2.20.1
+
