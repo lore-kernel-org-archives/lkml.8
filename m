@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ABDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D718AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C83520730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B6922522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193621;
-	bh=WOatxWdEkr1/WBsWme1t5rvPG8MeDirT7jnJezUPyHY=;
+	s=default; t=1579193627;
+	bh=RZLN/GyyfS05oYGs4sRibs4loKFtEY5puOXxElSy0q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGbZQApsob/ToJ+jNkITN2slkSBm/Lkj2xRV77UyW1E6Q/XKxaehoUvbV2ThzXxl6
-	 qa6lNJxHMBB7OrFodFDXxqAbrOvZzkKSLg5zSxgq+rqhHLq1JQ4P+iujbSjJX+/nwn
-	 lJFBJPbepCsd2RFHlZgo1hXCioaYL1efXvDXw9jI=
+	b=aFl6XpyQ+xgSu6D3dI/WzfpqC8jUwltnGgxQoQJoBahG5BDJ91Rmb/F9kaxYUjxk4
+	 9IlOvAnPT4KeWvNxZaSHk6U3ByRn79JqBfmJK2ubL08npyPbkcFG1If1lUIZcjp+wi
+	 UDLgaYEYwfIlJkHa4oocr6vZ391unjRu6f2WU3Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbgAPQxk (ORCPT
+        id S1729543AbgAPQxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:53:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37506 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbgAPQxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:36 -0500
+        id S1731087AbgAPQxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2202176D;
-        Thu, 16 Jan 2020 16:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC02E21D56;
+        Thu, 16 Jan 2020 16:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193616;
-        bh=WOatxWdEkr1/WBsWme1t5rvPG8MeDirT7jnJezUPyHY=;
+        s=default; t=1579193618;
+        bh=RZLN/GyyfS05oYGs4sRibs4loKFtEY5puOXxElSy0q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixjxEeoTNjzdwOnLp0NtEXNn4eNsqpFfBC2R2I5xHzzqN1h3SHj76OT+KIpCv1OEK
-         UQbT602r9jIv8pYqlgVUJVnpAKVt7syDcIK6kRcJPW8uYaJmYrKMOTv+fP1GKW+5rV
-         E3MhhSRNn0rGxy3cArYTv8xWVQ7Ft1vyFlNmr34A=
+        b=ffNMgf9zpdJRdM7DtbPSWDc0JFO0i1lWuH/GRM6wYKFD15PSYkF+8fE3QJIwiBVCV
+         mynThaUIl0ZMWgo4Cp+OmD38T8+ES+1PWlWX8WAG4dvX5HsZdVhCLxZdpVGN6pyvwV
+         vm4LqMUePQKvrQlzTUwdipe34Sowrx3XwOzi93iw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kars de Jong <jongk@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 152/205] rtc: msm6242: Fix reading of 10-hour digit
-Date:   Thu, 16 Jan 2020 11:42:07 -0500
-Message-Id: <20200116164300.6705-152-sashal@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 154/205] clk: Fix memory leak in clk_unregister()
+Date:   Thu, 16 Jan 2020 11:42:09 -0500
+Message-Id: <20200116164300.6705-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,42 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kars de Jong <jongk@linux-m68k.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit e34494c8df0cd96fc432efae121db3212c46ae48 ]
+[ Upstream commit 8247470772beb38822f226c99a2ed8c195f6b438 ]
 
-The driver was reading the wrong register as the 10-hour digit due to
-a misplaced ')'. It was in fact reading the 1-second digit register due
-to this bug.
+Memory allocated in alloc_clk() for 'struct clk' and
+'const char *con_id' while invoking clk_register() is never freed
+in clk_unregister(), resulting in kmemleak showing the following
+backtrace.
 
-Also remove the use of a magic number for the hour mask and use the define
-for it which was already present.
+  backtrace:
+    [<00000000546f5dd0>] kmem_cache_alloc+0x18c/0x270
+    [<0000000073a32862>] alloc_clk+0x30/0x70
+    [<0000000082942480>] __clk_register+0xc8/0x760
+    [<000000005c859fca>] devm_clk_register+0x54/0xb0
+    [<00000000868834a8>] 0xffff800008c60950
+    [<00000000d5a80534>] platform_drv_probe+0x50/0xa0
+    [<000000001b3889fc>] really_probe+0x108/0x348
+    [<00000000953fa60a>] driver_probe_device+0x58/0x100
+    [<0000000008acc17c>] device_driver_attach+0x6c/0x90
+    [<0000000022813df3>] __driver_attach+0x84/0xc8
+    [<00000000448d5443>] bus_for_each_dev+0x74/0xc8
+    [<00000000294aa93f>] driver_attach+0x20/0x28
+    [<00000000e5e52626>] bus_add_driver+0x148/0x1f0
+    [<000000001de21efc>] driver_register+0x60/0x110
+    [<00000000af07c068>] __platform_driver_register+0x40/0x48
+    [<0000000060fa80ee>] 0xffff800008c66020
 
-Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
-Tested-by: Kars de Jong <jongk@linux-m68k.org>
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fix it here.
+
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Link: https://lkml.kernel.org/r/20191022071153.21118-1-kishon@ti.com
+Fixes: 1df4046a93e0 ("clk: Combine __clk_get() and __clk_create_clk()")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-msm6242.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/clk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-msm6242.c b/drivers/rtc/rtc-msm6242.c
-index 1c2d3c4a4963..b1f2bedee77e 100644
---- a/drivers/rtc/rtc-msm6242.c
-+++ b/drivers/rtc/rtc-msm6242.c
-@@ -133,7 +133,8 @@ static int msm6242_read_time(struct device *dev, struct rtc_time *tm)
- 		      msm6242_read(priv, MSM6242_SECOND1);
- 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
- 		      msm6242_read(priv, MSM6242_MINUTE1);
--	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
-+	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
-+		       MSM6242_HOUR10_HR_MASK) * 10 +
- 		      msm6242_read(priv, MSM6242_HOUR1);
- 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
- 		      msm6242_read(priv, MSM6242_DAY1);
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 27a95c86a80b..4fc294c2f9e8 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3886,6 +3886,7 @@ void clk_unregister(struct clk *clk)
+ 					__func__, clk->core->name);
+ 
+ 	kref_put(&clk->core->ref, __clk_release);
++	free_clk(clk);
+ unlock:
+ 	clk_prepare_unlock();
+ }
 -- 
 2.20.1
 
