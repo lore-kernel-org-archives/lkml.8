@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B259C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC74C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EFE246EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A93B246D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196294;
-	bh=vpXMA70GMULzu8hHCJ5fBHkANPQkjGgDAgfAbdUdYY0=;
+	s=default; t=1579196308;
+	bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7coxB0qVvlco0Pr+FAvxrUPv0LDkP5J0l04uTY+qq+2CWZZ7dg2Jp3BYYLhQe41w
-	 XNOl84otqZfi4Gyf1LkEpG5Z9bFbJMND8v8nRpP1HtKhh4sHl/+2KPOaqzZLm4+ndZ
-	 JSvREoU4AqTlq5w6aE+efnAeLPp64VKRSJLJA/+o=
+	b=hFQ5ruyrmP6vY8ECVlIPqsYL6MpkSL5SjIg9CNx/L1Xm06b8spwM7rY9ivXZ/kvyY
+	 PF56xyLVOEqAFVueITnCTFsH0Hq454Mfwzh2LiD1IuOQ9evtjiVkDrOmw4xGbiIg/Y
+	 t0+Kxq78/r9TbesR6EHNJAlrbIIMM/fO/y7gkV/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393087AbgAPRiN (ORCPT
+        id S2405023AbgAPRi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:38:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405425AbgAPRhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:40 -0500
+        id S1730625AbgAPRht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FC7246C6;
-        Thu, 16 Jan 2020 17:37:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B6E246BB;
+        Thu, 16 Jan 2020 17:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196259;
-        bh=vpXMA70GMULzu8hHCJ5fBHkANPQkjGgDAgfAbdUdYY0=;
+        s=default; t=1579196269;
+        bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uL1h02AxOeGs9imN6vDC+dpynkgmybsDV5GC4VcstE4uk4ads6+3/uLuHmCL5x93U
-         JkTWGbNkjJUqIW9A7WalPJxkU0mgDD7H9pTruDjJKuiUgnVdKddShlvDahXNPBWQIR
-         uCVC6W4XcsUhxWi101uUvnorPW2YHXAaX28rT8Ag=
+        b=nJah1n52NlryBaU4+vpwsl4GFFDC9CYrNa/Lk838sn55R/QYxNqWuY05H65DZCNVp
+         gYHuprTMeChkmyNgT9gA2xEA5j++n4avgnF5vpmw1VkQHoKtkzP0jp8hOPQheKIUbR
+         cX1tpoTXgqXZldnLZfOBKxpmKsgVxhMIe9emsV5U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 084/251] NFS: Fix a soft lockup in the delegation recovery code
-Date:   Thu, 16 Jan 2020 12:33:53 -0500
-Message-Id: <20200116173641.22137-44-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        nios2-dev@lists.rocketboards.org
+Subject: [PATCH AUTOSEL 4.9 091/251] nios2: ksyms: Add missing symbol exports
+Date:   Thu, 16 Jan 2020 12:34:00 -0500
+Message-Id: <20200116173641.22137-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -58,81 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
+[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
 
-Fix a soft lockup when NFS client delegation recovery is attempted
-but the inode is in the process of being freed. When the
-igrab(inode) call fails, and we have to restart the recovery process,
-we need to ensure that we won't attempt to recover the same delegation
-again.
+Building nios2:allmodconfig fails as follows (each symbol is only listed
+once).
 
-Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
+ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
+ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
+ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
+ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
+ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
+
+The problem is seen with gcc 7.3.0.
+
+Export the missing symbols.
+
+Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/delegation.c | 20 ++++++++++++--------
- fs/nfs/delegation.h |  1 +
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 9a8830a0f31f..014039618cff 100644
---- a/fs/nfs/delegation.c
-+++ b/fs/nfs/delegation.c
-@@ -234,6 +234,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
- 	spin_lock(&delegation->lock);
- 	if (delegation->inode != NULL)
- 		inode = igrab(delegation->inode);
-+	if (!inode)
-+		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
- 	spin_unlock(&delegation->lock);
- 	return inode;
- }
-@@ -867,10 +869,11 @@ void nfs_delegation_reap_unclaimed(struct nfs_client *clp)
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-@@ -975,10 +978,11 @@ void nfs_reap_expired_delegations(struct nfs_client *clp)
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
- 		list_for_each_entry_rcu(delegation, &server->delegations,
- 								super_list) {
--			if (test_bit(NFS_DELEGATION_RETURNING,
--						&delegation->flags))
--				continue;
--			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
-+			if (test_bit(NFS_DELEGATION_INODE_FREEING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_RETURNING,
-+						&delegation->flags) ||
-+			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
- 						&delegation->flags) == 0)
- 				continue;
- 			if (!nfs_sb_active(server->super))
-diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
-index 2c6cb7fb7d5e..f72095bf9e10 100644
---- a/fs/nfs/delegation.h
-+++ b/fs/nfs/delegation.h
-@@ -33,6 +33,7 @@ enum {
- 	NFS_DELEGATION_RETURNING,
- 	NFS_DELEGATION_REVOKED,
- 	NFS_DELEGATION_TEST_EXPIRED,
-+	NFS_DELEGATION_INODE_FREEING,
- };
+diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
+index bf2f55d10a4d..4e704046a150 100644
+--- a/arch/nios2/kernel/nios2_ksyms.c
++++ b/arch/nios2/kernel/nios2_ksyms.c
+@@ -9,12 +9,20 @@
+ #include <linux/export.h>
+ #include <linux/string.h>
  
- int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred, struct nfs_openres *res);
++#include <asm/cacheflush.h>
++#include <asm/pgtable.h>
++
+ /* string functions */
+ 
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memset);
+ EXPORT_SYMBOL(memmove);
+ 
++/* memory management */
++
++EXPORT_SYMBOL(empty_zero_page);
++EXPORT_SYMBOL(flush_icache_range);
++
+ /*
+  * libgcc functions - functions that are used internally by the
+  * compiler...  (prototypes are not correct though, but that
+@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
+ DECLARE_EXPORT(__umoddi3);
+ DECLARE_EXPORT(__umodsi3);
+ DECLARE_EXPORT(__muldi3);
++DECLARE_EXPORT(__ucmpdi2);
++DECLARE_EXPORT(__lshrdi3);
++DECLARE_EXPORT(__ashldi3);
++DECLARE_EXPORT(__ashrdi3);
 -- 
 2.20.1
 
