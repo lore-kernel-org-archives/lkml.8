@@ -2,381 +2,133 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92230C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6185522522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579142490;
-	bh=bL6W9dVW7ChqHeQWZ3sbbZx+6o2tY6JTBsNfhvydQVA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Xy7UYAuAGfbYHpGtVn9IaqfPjVuiKYHgn5iJ62dfX7TYhM2cUEIPG74dmYjnEOMJB
-	 x5jcFsdmnNsFDww+2voTxZWZnwrpcPlfe8tPugZHwcTQeh6WhxFqHh/vc+s9VK/AJS
-	 GJKY3M0S6Da3fDpGwMQ6V4m9HMfi3l7NDZdjgbrc=
+	by mail.kernel.org (Postfix) with ESMTP id 5D9D522522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZC0gpoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgAPCl3 (ORCPT
+        id S1730123AbgAPCoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:41:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbgAPCl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:41:28 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA282084D;
-        Thu, 16 Jan 2020 02:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579142486;
-        bh=bL6W9dVW7ChqHeQWZ3sbbZx+6o2tY6JTBsNfhvydQVA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=M7NuYo6h1Vv+Ht8jtDwK4TOHACm2u31newuM1ADa3FRacJg0hbh25vksJPdEoHaU1
-         HuRVFOm13fjc/ShBjhTUMErLL968SLN4b2eBIC9YyNos7Z7PTM2eLIuMlsmWKVeGsq
-         FuXq+OyWSPG5NB0IqanNSkmhGggbXGWLFCw8IyRY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8E694352274D; Wed, 15 Jan 2020 18:41:26 -0800 (PST)
-Date:   Wed, 15 Jan 2020 18:41:26 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200116024126.GS2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200116011410.GC246464@google.com>
+        Wed, 15 Jan 2020 21:44:25 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42371 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbgAPCoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 21:44:25 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so18035135otd.9;
+        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
+        b=fZC0gpoWyib170KL5rP2oTpwxhcZZLQjhtxaZDNij1MDAPULVU14doVOJGK46LsTp/
+         1UQ7oBb7UEPQZih68kAds0Z483kZkk83bDJ+1yb80YqLdqbau1lHyjCZPhCj9b21rTYK
+         CnSWETNaJ8saaWFDaDezzX8keTnxM+Y1ZpTQcHh8PeQarkHYigNoPEwpCrwPCdp4HDxe
+         biZrYKEbssNNmDoJnS7A8QQxhitW3VOnDf39hK/mam6xb2W7Otyq9mmMqwyyXemNdBgJ
+         TB8ujQyqQLPnB42CvGQ2DOj/065LULoN9BNElsMkpE54uTVX9derTW4Cd2G2psbxP0y+
+         F1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
+        b=b5+gxGpbs/B47aLCqsEnOGOQCvWVjFJI/TVIcIS5V07CDkBOWtii4sr2fEP/VGQ4pN
+         CsYqKMi2LfmR2PRTAhTvLTC+F+HPQ3MT+R5p+M6kgiujFhp6Ith4Txonr9cQH4zaZNos
+         W2jG+l7KT7VJYN4E2h1mWo43Rogmaq/ZNLdEzVyGNHqnSkkHsSwyRoovosSNi4Yhsk5p
+         hqW8iHBW+UqdQGJbUCa1j9QTmzElUVMBNgoZUO7scdosct3juduheRoAq9vp/ixEcmYM
+         BqU4MGzD0mJhHvoKE2lY6a1SZcx9Tax3lDx7Rkgnx0++KX7h0nYD3wtZPBeNAE+Vo1SK
+         772w==
+X-Gm-Message-State: APjAAAWePj9p2y56lQMmJalMcTC7BNInZcdFWpFwoBfQSkg3/6ZN7+5W
+        23wFYLJFLxjv+dNcg5FxBjuKxrgXS9s=
+X-Google-Smtp-Source: APXvYqyMzjUqnYZhbCuI8vmeXgY3MMiWg+xL/yMGpoTUZvlOw9zo4fFc9iQ7oLgje0urhCYDbdTXmw==
+X-Received: by 2002:a9d:5888:: with SMTP id x8mr285541otg.361.1579142664039;
+        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
+Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
+        by smtp.gmail.com with ESMTPSA id c12sm7357959otp.9.2020.01.15.18.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 18:44:23 -0800 (PST)
+Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
+ notification"
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
+        Keith Busch <keith.busch@intel.com>
+Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Shyam Iyer <Shyam_Iyer@dell.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200115221008.GA191037@google.com>
+From:   Alex G <mr.nuke.me@gmail.com>
+Message-ID: <967fb44c-b1cd-875c-2354-b6ad0b8ae6d7@gmail.com>
+Date:   Wed, 15 Jan 2020 20:44:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116011410.GC246464@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200115221008.GA191037@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 08:14:10PM -0500, Joel Fernandes wrote:
-> On Tue, Dec 31, 2019 at 01:22:41PM +0100, Uladzislau Rezki (Sony) wrote:
-> > kfree_rcu() logic can be improved further by using kfree_bulk()
-> > interface along with "basic batching support" introduced earlier.
-> > 
-> > The are at least two advantages of using "bulk" interface:
-> > - in case of large number of kfree_rcu() requests kfree_bulk()
-> >   reduces the per-object overhead caused by calling kfree()
-> >   per-object.
-> > 
-> > - reduces the number of cache-misses due to "pointer chasing"
-> >   between objects which can be far spread between each other.
-> > 
-> > This approach defines a new kfree_rcu_bulk_data structure that
-> > stores pointers in an array with a specific size. Number of entries
-> > in that array depends on PAGE_SIZE making kfree_rcu_bulk_data
-> > structure to be exactly one page.
-> > 
-> > Since it deals with "block-chain" technique there is an extra
-> > need in dynamic allocation when a new block is required. Memory
-> > is allocated with GFP_NOWAIT | __GFP_NOWARN flags, i.e. that
-> > allows to skip direct reclaim under low memory condition to
-> > prevent stalling and fails silently under high memory pressure.
-> > 
-> > The "emergency path" gets maintained when a system is run out
-> > of memory. In that case objects are linked into regular list
-> > and that is it.
-> > 
-> > In order to evaluate it, the "rcuperf" was run to analyze how
-> > much memory is consumed and what is kfree_bulk() throughput.
-> > 
-> > Testing on the HiKey-960, arm64, 8xCPUs with below parameters:
-> > 
-> > CONFIG_SLAB=y
-> > kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1
-> > 
-> > 102898760401 ns, loops: 200000, batches: 5822, memory footprint: 158MB
-> > 89947009882  ns, loops: 200000, batches: 6715, memory footprint: 115MB
-> > 
-> > rcuperf shows approximately ~12% better throughput(Total time)
-> > in case of using "bulk" interface. The "drain logic" or its RCU
-> > callback does the work faster that leads to better throughput.
-> 
-> Tested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-> (Vlad is going to post a v2 which fixes a debugobjects bug but that should
-> not have any impact on testing).
+Hi Bjorn,
 
-Very good!  Uladzislau, could you please add Joel's Tested-by in
-your next posting?
+I'm no longer working on this, so my memory may not be up to speed. If 
+the endpoint is causing the bandwidth change, then we should get an 
+_autonomous_ link management interrupt instead. I don't think we report 
+those, and that shouldn't spam the logs
 
-							Thanx, Paul
+If it's not a (non-autonomous) link management interrupt, then something 
+is causing the downstream port to do funny things. I don't think ASPM is 
+supposed to be causing this.
 
-> thanks,
+Do we know what's causing these swings?
+
+For now, I suggest a boot-time parameter to disable link speed reporting 
+instead of a compile time option.
+
+Alex
+
+On 1/15/20 4:10 PM, Bjorn Helgaas wrote:
+> I think we have a problem with link bandwidth change notifications
+> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
 > 
->  - Joel
+> Here's a recent bug report where Jan reported "_tons_" of these
+> notifications on an nvme device:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206197
 > 
+> There was similar discussion involving GPU drivers at
+> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
 > 
+> The current solution is the CONFIG_PCIE_BW config option, which
+> disables the messages completely.  That option defaults to "off" (no
+> messages), but even so, I think it's a little problematic.
 > 
-> > 
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > ---
-> >  kernel/rcu/tree.c | 154 ++++++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 130 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 48fba2257748..4ee5c737558b 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2754,22 +2754,45 @@ EXPORT_SYMBOL_GPL(call_rcu);
-> >  #define KFREE_DRAIN_JIFFIES (HZ / 50)
-> >  #define KFREE_N_BATCHES 2
-> >  
-> > +/*
-> > + * This macro defines how many entries the "records" array
-> > + * will contain. It is based on the fact that the size of
-> > + * kfree_rcu_bulk_data structure becomes exactly one page.
-> > + */
-> > +#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 2)
-> > +
-> > +/**
-> > + * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
-> > + * @nr_records: Number of active pointers in the array
-> > + * @records: Array of the kfree_rcu() pointers
-> > + * @next: Next bulk object in the block chain
-> > + */
-> > +struct kfree_rcu_bulk_data {
-> > +	unsigned long nr_records;
-> > +	void *records[KFREE_BULK_MAX_ENTR];
-> > +	struct kfree_rcu_bulk_data *next;
-> > +};
-> > +
-> >  /**
-> >   * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
-> >   * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
-> >   * @head_free: List of kfree_rcu() objects waiting for a grace period
-> > + * @bhead_free: Bulk-List of kfree_rcu() objects waiting for a grace period
-> >   * @krcp: Pointer to @kfree_rcu_cpu structure
-> >   */
-> >  
-> >  struct kfree_rcu_cpu_work {
-> >  	struct rcu_work rcu_work;
-> >  	struct rcu_head *head_free;
-> > +	struct kfree_rcu_bulk_data *bhead_free;
-> >  	struct kfree_rcu_cpu *krcp;
-> >  };
-> >  
-> >  /**
-> >   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
-> >   * @head: List of kfree_rcu() objects not yet waiting for a grace period
-> > + * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
-> > + * @bcached: Keeps at most one object for later reuse when build chain blocks
-> >   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
-> >   * @lock: Synchronize access to this structure
-> >   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-> > @@ -2783,6 +2806,8 @@ struct kfree_rcu_cpu_work {
-> >   */
-> >  struct kfree_rcu_cpu {
-> >  	struct rcu_head *head;
-> > +	struct kfree_rcu_bulk_data *bhead;
-> > +	struct kfree_rcu_bulk_data *bcached;
-> >  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
-> >  	spinlock_t lock;
-> >  	struct delayed_work monitor_work;
-> > @@ -2800,6 +2825,7 @@ static void kfree_rcu_work(struct work_struct *work)
-> >  {
-> >  	unsigned long flags;
-> >  	struct rcu_head *head, *next;
-> > +	struct kfree_rcu_bulk_data *bhead, *bnext;
-> >  	struct kfree_rcu_cpu *krcp;
-> >  	struct kfree_rcu_cpu_work *krwp;
-> >  
-> > @@ -2809,22 +2835,39 @@ static void kfree_rcu_work(struct work_struct *work)
-> >  	spin_lock_irqsave(&krcp->lock, flags);
-> >  	head = krwp->head_free;
-> >  	krwp->head_free = NULL;
-> > +	bhead = krwp->bhead_free;
-> > +	krwp->bhead_free = NULL;
-> >  	spin_unlock_irqrestore(&krcp->lock, flags);
-> >  
-> > -	// List "head" is now private, so traverse locklessly.
-> > +	/* List "bhead" is now private, so traverse locklessly. */
-> > +	for (; bhead; bhead = bnext) {
-> > +		bnext = bhead->next;
-> > +
-> > +		rcu_lock_acquire(&rcu_callback_map);
-> > +		kfree_bulk(bhead->nr_records, bhead->records);
-> > +		rcu_lock_release(&rcu_callback_map);
-> > +
-> > +		if (cmpxchg(&krcp->bcached, NULL, bhead))
-> > +			free_page((unsigned long) bhead);
-> > +
-> > +		cond_resched_tasks_rcu_qs();
-> > +	}
-> > +
-> > +	/*
-> > +	 * Emergency case only. It can happen under low memory
-> > +	 * condition when an allocation gets failed, so the "bulk"
-> > +	 * path can not be temporary maintained.
-> > +	 */
-> >  	for (; head; head = next) {
-> >  		unsigned long offset = (unsigned long)head->func;
-> >  
-> >  		next = head->next;
-> > -		// Potentially optimize with kfree_bulk in future.
-> >  		debug_rcu_head_unqueue(head);
-> >  		rcu_lock_acquire(&rcu_callback_map);
-> >  		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
-> >  
-> > -		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
-> > -			/* Could be optimized with kfree_bulk() in future. */
-> > +		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
-> >  			kfree((void *)head - offset);
-> > -		}
-> >  
-> >  		rcu_lock_release(&rcu_callback_map);
-> >  		cond_resched_tasks_rcu_qs();
-> > @@ -2839,26 +2882,45 @@ static void kfree_rcu_work(struct work_struct *work)
-> >   */
-> >  static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
-> >  {
-> > +	struct kfree_rcu_cpu_work *krwp;
-> > +	bool queued = false;
-> >  	int i;
-> > -	struct kfree_rcu_cpu_work *krwp = NULL;
-> >  
-> >  	lockdep_assert_held(&krcp->lock);
-> > -	for (i = 0; i < KFREE_N_BATCHES; i++)
-> > -		if (!krcp->krw_arr[i].head_free) {
-> > -			krwp = &(krcp->krw_arr[i]);
-> > -			break;
-> > -		}
-> >  
-> > -	// If a previous RCU batch is in progress, we cannot immediately
-> > -	// queue another one, so return false to tell caller to retry.
-> > -	if (!krwp)
-> > -		return false;
-> > +	for (i = 0; i < KFREE_N_BATCHES; i++) {
-> > +		krwp = &(krcp->krw_arr[i]);
-> >  
-> > -	krwp->head_free = krcp->head;
-> > -	krcp->head = NULL;
-> > -	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
-> > -	queue_rcu_work(system_wq, &krwp->rcu_work);
-> > -	return true;
-> > +		/*
-> > +		 * Try to detach bhead or head and attach it over any
-> > +		 * available corresponding free channel. It can be that
-> > +		 * a previous RCU batch is in progress, it means that
-> > +		 * immediately to queue another one is not possible so
-> > +		 * return false to tell caller to retry.
-> > +		 */
-> > +		if ((krcp->bhead && !krwp->bhead_free) ||
-> > +				(krcp->head && !krwp->head_free)) {
-> > +			if (!krwp->bhead_free) {
-> > +				krwp->bhead_free = krcp->bhead;
-> > +				krcp->bhead = NULL;
-> > +			}
-> > +
-> > +			if (!krwp->head_free) {
-> > +				krwp->head_free = krcp->head;
-> > +				krcp->head = NULL;
-> > +			}
-> > +
-> > +			/*
-> > +			 * The work can already be queued. If so, it means that
-> > +			 * within a short time, second, either head or bhead has
-> > +			 * been detached as well.
-> > +			 */
-> > +			queue_rcu_work(system_wq, &krwp->rcu_work);
-> > +			queued = true;
-> > +		}
-> > +	}
-> > +
-> > +	return queued;
-> >  }
-> >  
-> >  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
-> > @@ -2895,6 +2957,39 @@ static void kfree_rcu_monitor(struct work_struct *work)
-> >  		spin_unlock_irqrestore(&krcp->lock, flags);
-> >  }
-> >  
-> > +static inline bool
-> > +kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> > +{
-> > +	struct kfree_rcu_bulk_data *bnode;
-> > +
-> > +	if (unlikely(!krcp->initialized))
-> > +		return false;
-> > +
-> > +	lockdep_assert_held(&krcp->lock);
-> > +
-> > +	/* Check if a new block is required. */
-> > +	if (!krcp->bhead ||
-> > +			krcp->bhead->nr_records == KFREE_BULK_MAX_ENTR) {
-> > +		bnode = xchg(&krcp->bcached, NULL);
-> > +		if (!bnode)
-> > +			bnode = (struct kfree_rcu_bulk_data *)
-> > +				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> > +
-> > +		/* No cache or an allocation got failed. */
-> > +		if (unlikely(!bnode))
-> > +			return false;
-> > +
-> > +		/* Initialize the new block. */
-> > +		bnode->nr_records = 0;
-> > +		bnode->next = krcp->bhead;
-> > +		krcp->bhead = bnode;
-> > +	}
-> > +
-> > +	/* Finally insert. */
-> > +	krcp->bhead->records[krcp->bhead->nr_records++] = ptr;
-> > +	return true;
-> > +}
-> > +
-> >  /*
-> >   * Queue a request for lazy invocation of kfree() after a grace period.
-> >   *
-> > @@ -2926,9 +3021,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  			  __func__, head);
-> >  		goto unlock_return;
-> >  	}
-> > -	head->func = func;
-> > -	head->next = krcp->head;
-> > -	krcp->head = head;
-> > +
-> > +	/*
-> > +	 * Under high memory pressure GFP_NOWAIT can fail,
-> > +	 * in that case the emergency path is maintained.
-> > +	 */
-> > +	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp,
-> > +			(void *) head - (unsigned long) func))) {
-> > +		head->func = func;
-> > +		head->next = krcp->head;
-> > +		krcp->head = head;
-> > +	}
-> >  
-> >  	// Set timer to drain after KFREE_DRAIN_JIFFIES.
-> >  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
-> > @@ -3834,8 +3937,11 @@ static void __init kfree_rcu_batch_init(void)
-> >  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-> >  
-> >  		spin_lock_init(&krcp->lock);
-> > -		for (i = 0; i < KFREE_N_BATCHES; i++)
-> > +		for (i = 0; i < KFREE_N_BATCHES; i++) {
-> > +			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
-> >  			krcp->krw_arr[i].krcp = krcp;
-> > +		}
-> > +
-> >  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
-> >  		krcp->initialized = true;
-> >  	}
-> > -- 
-> > 2.20.1
-> > 
+> Users are not really in a position to figure out whether it's safe to
+> enable.  All they can do is experiment and see whether it works with
+> their current mix of devices and drivers.
+> 
+> I don't think it's currently useful for distros because it's a
+> compile-time switch, and distros cannot predict what system configs
+> will be used, so I don't think they can enable it.
+> 
+> Does anybody have proposals for making it smarter about distinguishing
+> real problems from intentional power management, or maybe interfaces
+> drivers could use to tell us when we should ignore bandwidth changes?
+> 
+> Bjorn
+> 
