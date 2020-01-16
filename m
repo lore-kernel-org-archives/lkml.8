@@ -2,115 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E47C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71DAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F367620748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C4A20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="cH5daPaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgAPPFY (ORCPT
+        id S1726889AbgAPPFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:05:24 -0500
-Received: from correo.us.es ([193.147.175.20]:32970 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgAPPFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:05:23 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id A2723508CDF
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 93A32DA738
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 88A74DA791; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 0FDC6DA712;
-        Thu, 16 Jan 2020 16:05:19 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Thu, 16 Jan 2020 16:05:19 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id DADC342EF9E1;
-        Thu, 16 Jan 2020 16:05:18 +0100 (CET)
-Date:   Thu, 16 Jan 2020 16:05:18 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, eparis@parisplace.org, ebiederm@xmission.com,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v2 0/9] Address NETFILTER_CFG issues
-Message-ID: <20200116150518.gfmzixoqagmk77rw@salvia>
-References: <cover.1577830902.git.rgb@redhat.com>
+        Thu, 16 Jan 2020 10:05:31 -0500
+Received: from www413.your-server.de ([88.198.28.140]:59790 "EHLO
+        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgAPPFb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 10:05:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
+        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZexOn4FEQsloo7emu6e0E5yv/ua4j8MP3CCsOZRUTrA=; b=cH5daPaIgIih/Pf96nB99OLLk
+        He2uzFd9DbAroxYeSqMNge2LxXZrOBo0v9OmLE1S1Lx6nZDqfcfSUgRRsALGbAG6E0i3u9JEOoLeO
+        nW8ahzkp0DymxyHCyrb8Lpgu8dDWPvaZBgthAi6iJ6k3RMozor0uQuZVcP18d1Kpdi3rjJr9/D93w
+        YCYKZS4ffZBVmP4qGFJjIvCR2lV95riAy6Ynqt3L9SGKqmK97KlJbSORWmZeIQ7ZkC0OnfYRwsphz
+        I5+MAvoMGMdH7r3DNTwUd2/voreF9TX9qKfWfK7oGJ64qA47BDI8Gy3Lhadp1enI/h8niGUyqBCSq
+        tYsAw7+fQ==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1is6i5-0002D5-DF; Thu, 16 Jan 2020 16:05:25 +0100
+Received: from [2a02:8106:231:700:38db:ba68:aa3a:bbaa] (helo=localhost.localdomain)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1is6i5-000K38-4Y; Thu, 16 Jan 2020 16:05:25 +0100
+Message-ID: <edb721906354e26c26883edf5bce09690ca07d6d.camel@cyberus-technology.de>
+Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
+ global include
+From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        zhiyuan.lv@intel.com, hang.yuan@intel.com,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Date:   Thu, 16 Jan 2020 16:05:22 +0100
+In-Reply-To: <20200116142345.GA476889@kroah.com>
+References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
+         <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
+         <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
+         <20200115152215.GA3830321@kroah.com>
+         <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
+         <20200116142345.GA476889@kroah.com>
+Organization: Cyberus Technology GmbH
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1577830902.git.rgb@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25697/Thu Jan 16 12:42:45 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:54:01PM -0500, Richard Guy Briggs wrote:
-> There were questions about the presence and cause of unsolicited syscall events
-> in the logs containing NETFILTER_CFG records and sometimes unaccompanied
-> NETFILTER_CFG records.
-> 
-> During testing at least the following list of events trigger NETFILTER_CFG
-> records and the syscalls related (There may be more events that will trigger
-> this message type.):
-> 	init_module, finit_module: modprobe
-> 	setsockopt: iptables-restore, ip6tables-restore, ebtables-restore
-> 	unshare: (h?)ostnamed
-> 	clone: libvirtd
-> 
-> The syscall events unsolicited by any audit rule were found to be caused by a
-> missing !audit_dummy_context() check before creating a NETFILTER_CFG
-> record and issuing the record immediately rather than saving the
-> information to create the record at syscall exit.
-> Check !audit_dummy_context() before creating the NETFILTER_CFG record.
-> 
-> The vast majority of unaccompanied records are caused by the fedora default
-> rule: "-a never,task" and the occasional early startup one is I believe caused
-> by the iptables filter table module hard linked into the kernel rather than a
-> loadable module. The !audit_dummy_context() check above should avoid them.
-> 
-> A couple of other factors should help eliminate unaccompanied records
-> which include commit cb74ed278f80 ("audit: always enable syscall
-> auditing when supported and audit is enabled") which makes sure that
-> when audit is enabled, so automatically is syscall auditing, and ghak66
-> which addressed initializing audit before PID 1.
-> 
-> Ebtables module initialization to register tables doesn't generate records
-> because it was never hooked in to audit.  Recommend adding audit hooks to log
-> this.
-> 
-> Table unregistration was never logged, which is now covered.
-> 
-> Seemingly duplicate records are not actually exact duplicates that are caused
-> by netfilter table initialization in different network namespaces from the same
-> syscall.  Recommend adding the network namespace ID (proc inode and dev)
-> to the record to make this obvious (address later with ghak79 after nsid
-> patches).
-> 
-> See: https://github.com/linux-audit/audit-kernel/issues/25
-> See: https://github.com/linux-audit/audit-kernel/issues/35
-> See: https://github.com/linux-audit/audit-kernel/issues/43
-> See: https://github.com/linux-audit/audit-kernel/issues/44
+Hi Greg,
 
-What tree is this batch targeted to?
+On Thu, 2020-01-16 at 15:23 +0100, Greg KH wrote:
+> On Thu, Jan 16, 2020 at 03:13:01PM +0100, Julian Stecklina wrote:
+> > Hi Greg, Christoph,
+> > 
+> > On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
+> > > On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
+> > > > Now that the GVT interface to hypervisors does not depend on i915/GVT
+> > > > internals anymore, we can move the headers to the global include/.
+> > > > 
+> > > > This makes out-of-tree modules for hypervisor integration possible.
+> > > 
+> > > What kind of out-of-tree modules do you need/want for this?
+> > 
+> > The mediated virtualization support in the i915 driver needs a backend to
+> > the
+> > hypervisor. There is currently one backend for KVM in the tree
+> > (drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends
+> > out
+> > of tree in various states of development that I know of. We are currently
+> > developing one of these.
+> 
+> Great, then just submit this patch series as part of your patch series
+> when submitting yoru hypervisor code.  That's the normal way to export
+> new symbols, we can't do so without an in-kernel user.
 
-Thanks.
+Fair enough.
+
+As I already said, the KVMGT code is the in-kernel user. But I guess I can
+extend the already existing function pointer way of decoupling KVMGT from i915
+and be on my way without exporting any symbols.
+
+Somewhat independent of the current discussion, I also think that it's valuable
+to have a defined API (I'm not saying stable API) for the hypervisor backends to
+define what's okay and not okay for them to do.
+
+Thanks,
+Julian
+
