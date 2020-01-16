@@ -2,120 +2,202 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E60CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8842C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 223FB20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A97C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:29:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YNsZvqMC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaebaFcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbgAPJ0L (ORCPT
+        id S1730523AbgAPJ3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:26:11 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:46166 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729138AbgAPJ0K (ORCPT
+        Thu, 16 Jan 2020 04:29:01 -0500
+Received: from mail-pg1-f174.google.com ([209.85.215.174]:33299 "EHLO
+        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgAPJ3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:26:10 -0500
-Received: by mail-il1-f193.google.com with SMTP id t17so17515592ilm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:26:09 -0800 (PST)
+        Thu, 16 Jan 2020 04:29:01 -0500
+Received: by mail-pg1-f174.google.com with SMTP id 6so9618155pgk.0;
+        Thu, 16 Jan 2020 01:29:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5+T2+f3YUqy/mz/g0zqdHuyixNv3uIRSRLqHpYCvIA8=;
-        b=YNsZvqMC3qBwhA390kR+0O1+Z775NXpgorZ1Uj0LTNfhunlCVnboeL+hdbdTD7zPyj
-         cO4YdefQbXLyr/t0viYTQNIs2/R9znJRs+JPdwF+zlywPmjg5MJOT97iGih9buKS3tvr
-         detFCcSpM8To0oU1Jp0ON3jtZma7mcyCUwQck=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jKNqEDMAYJLWiVXwLrJSv2qQntpmVMG4CM0E+WSOCeg=;
+        b=IaebaFcpW3PSdbTSyUT224K3/YfvSKnBaLGL4X2CT/EtvihEIrkdEgGgb8Qngv6hpN
+         /qY9a+w5OXZ6h7usiipxX+0Svn42v3ecnGWXMYFSswYCTU7i1UW7OqN2pyCX+tdZ18D7
+         nNpdUSO+t2D1AAm2DHqpOvvch4r31qeFBNwHSULRQtlDA0GG2FKItBZ9kQAXRGP3GEV2
+         up2CrVCjWu8iyq0GYH/HGBxYWj5xJvv8Pm8utUM2NQpJlBmPoZJMP4sj4aQt4mtlnbGO
+         O2Sz59onVGRoPwY8Q5l13HvCkFZ/oJ9mQv7SzSzOOGqce3X7Gp8zh7km4SmOYMIlHWlv
+         lCVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5+T2+f3YUqy/mz/g0zqdHuyixNv3uIRSRLqHpYCvIA8=;
-        b=t1BG5Nqz+Yte6FN5BxXoA0I0eGxRVTVwb3/P+qIGmqAF7TM1NXdGzYvo9pQ3UE2iR8
-         2/5SdBOzLAXhbMY7CnQkRI+ovZ4N0HC2qoar9eX+kv/BKeceakFvqEWCErjXSY25Is/F
-         xnChVi/4MuTZdQYHPaj3fLL7t8tQaUUbnA0lR0N38iy6lNYgEqDz1aUE0YZIyEbJUNUY
-         /fPk5kuKsHAm7Yrxx2pimJZhTdzDTMexiDrZyYbbf0XWYvNGQ6IhKmOuaf12q3ITYnAS
-         vX+ndKhbbhvtxwlOPGP275KparYldAQxu+sOJBQ256nSzTjzH7mNZbGlJOcd0o38JGtk
-         p4eQ==
-X-Gm-Message-State: APjAAAVFcyZq9dx7xbHZEu28ISJjFGCpYcU+B4uzv/GJXQI0iBX4ov2/
-        4HFRZgcp9kMFWrPPE3hyV5gtHAFUyVSy2E0zpnYfRA==
-X-Google-Smtp-Source: APXvYqzcJuvwLp0x5+fMsP13ADUUEVQCs/aLETOB1GPnAQGr8kZxelM+YUGAkJZnZhbBbnQ8HdB5j4UwUbclM7dRrHw=
-X-Received: by 2002:a92:8851:: with SMTP id h78mr2599028ild.308.1579166769584;
- Thu, 16 Jan 2020 01:26:09 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=jKNqEDMAYJLWiVXwLrJSv2qQntpmVMG4CM0E+WSOCeg=;
+        b=aCj0TkTatyBtAbe4NripF2zYI6sMmTjl1st1x3pzs9cOprhkHcfOxakj9/+/vEVUeQ
+         OSaTwWnbc/1a3xy1pQxNmy3xrPJyx0XlUyjOpBr4JCTi/4pgNgO/s6OqL3J5IKk7qbrw
+         8epzPkn6gfuUxbEjvh6sDZPj1RTWQTkKOxvQRwxZHpqGERvNYXOD1xt0UcENClaMLHgP
+         l3zHRf4jKN4AXw34HgBRLTf6xJgaNqPa9SH8sycsIYw9Io4IPXwQyoykIAND/1HTx83r
+         nRsOHIGPip38CkUzyRU38XgNl0anp50GKatPbJBOUOZSJjLqzC5KMYgG3qmAMAfX3x9h
+         M+SQ==
+X-Gm-Message-State: APjAAAX5VwZZXTVIINp/p1ut/NowoLy9HaiRCLqgV99DmXy6EMj8xeI/
+        RvncFVTcGRR1zj4IvSe2xYs4E79n5FsJ+5rF
+X-Google-Smtp-Source: APXvYqxhFXKcGChC/mi6M3HY0Ab3AyLkeay+tKD2boeg9Nk/4j7dCuV/kI66ooyvN+iArLtdq5iHPg==
+X-Received: by 2002:a62:1b4d:: with SMTP id b74mr37357303pfb.59.1579166940199;
+        Thu, 16 Jan 2020 01:29:00 -0800 (PST)
+Received: from xps.vpn2.bfsu.edu.cn ([103.125.232.133])
+        by smtp.gmail.com with ESMTPSA id d27sm23276038pgm.53.2020.01.16.01.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 01:28:59 -0800 (PST)
+From:   YunQiang Su <syq@debian.org>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        James.Bottomley@hansenpartnership.com, viro@zeniv.linux.org.uk
+Cc:     YunQiang Su <ysu@wavecomp.com>
+Subject: [PATCH v4] binfmt_misc: pass info about P flag by AT_FLAGS
+Date:   Thu, 16 Jan 2020 17:28:52 +0800
+Message-Id: <20200116092852.438603-1-syq@debian.org>
+X-Mailer: git-send-email 2.25.0.rc1
 MIME-Version: 1.0
-References: <20200115063410.131692-1-hsinyi@chromium.org> <20200115114112.GA3663@bogus>
-In-Reply-To: <20200115114112.GA3663@bogus>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 16 Jan 2020 17:25:43 +0800
-Message-ID: <CAJMQK-ip7C71=K+CViEKcc3ed4GPY_Uknm5uNgLJTzZb2aQOcA@mail.gmail.com>
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-csky@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 7:41 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Wed, Jan 15, 2020 at 02:34:10PM +0800, Hsin-Yi Wang wrote:
-> > Currently system reboots uses architecture specific codes (smp_send_stop)
-> > to offline non reboot CPUs. Most architecture's implementation is looping
-> > through all non reboot online CPUs and call ipi function to each of them. Some
-> > architecture like arm64, arm, and x86... would set offline masks to cpu without
-> > really offline them. This causes some race condition and kernel warning comes
-> > out sometimes when system reboots.
-> >
-> > This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
-> > migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> > checking online cpus would be an empty loop. If architecture don't enable this
-> > config, or some cpus somehow fails to offline, it would fallback to ipi
-> > function.
-> >
->
-> What's the timing impact on systems with large number of CPUs(say 256 or
-> more) ? I remember we added some change to reduce the wait times for
-> offlining CPUs in system suspend path on arm64, still not negligible.
->
+From: YunQiang Su <ysu@wavecomp.com>
 
-This is not the final solution, but I would still provided some data
-points here:
+Currently program invoked by binfmt_misc cannot be aware about whether
+P flag, aka preserve path is enabled.
 
-Tested on my arm64 with 4 cpu: 2 a53 and 2 a72.
-Offlining 3 cpu takes about 60~65 ms
-Offlining 2 cpu(a53+a72 or a72+a72) takes about 42~47 ms
-Offlining 1 cpu(a53 or a72) takes about 23~25 ms.
+Some applications like qemu need to know since it has 2 use case:
+  1. call by hand, like: qemu-mipsel-static test.app OPTION
+     so, qemu have to assume that P option is not enabled.
+  2. call by binfmt_misc. If qemu cannot know about whether P flag is
+     enabled, distribution's have to set qemu without P flag, and
+     binfmt_misc call qemu like:
+       qemu-mipsel-static /absolute/path/to/test.app OPTION
+     even test.app is not called by absoulute path, like
+       ./relative/path/to/test.app
 
-It would take longer time for systems with large number of CPUs.
+This patch passes this information by the 0st bits of unused AT_FLAGS.
+Then, in qemu, we can get this info by:
+   getauxval(AT_FLAGS) & (1<<0)
+
+v3->v4:
+ use BINPRM_FLAGS_PRESERVE_ARGV0 (1<<3) as internal ABI, and
+     AT_FLAGS_PRESERVE_ARGV0 (1<<0) as external ABI.
+
+v2->v3:
+  define a new AT_FLAGS_PRESERVE_ARGV0 as (1<<0), so now we use 0st bit.
+
+v1->v2:
+  not enable kdebug
+
+See: https://bugs.launchpad.net/qemu/+bug/1818483
+Signed-off-by: YunQiang Su <ysu@wavecomp.com>
+---
+ fs/binfmt_elf.c              | 6 +++++-
+ fs/binfmt_elf_fdpic.c        | 6 +++++-
+ fs/binfmt_misc.c             | 2 ++
+ include/linux/binfmts.h      | 4 ++++
+ include/uapi/linux/binfmts.h | 3 +++
+ 5 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index f4713ea76e82..c4efff74223f 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -178,6 +178,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	unsigned char k_rand_bytes[16];
+ 	int items;
+ 	elf_addr_t *elf_info;
++	elf_addr_t flags = 0;
+ 	int ei_index;
+ 	const struct cred *cred = current_cred();
+ 	struct vm_area_struct *vma;
+@@ -252,7 +253,10 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
+ 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+ 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+-	NEW_AUX_ENT(AT_FLAGS, 0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0) {
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	}
++	NEW_AUX_ENT(AT_FLAGS, flags);
+ 	NEW_AUX_ENT(AT_ENTRY, e_entry);
+ 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 240f66663543..c89a4630efad 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	char __user *u_platform, *u_base_platform, *p;
+ 	int loop;
+ 	int nr;	/* reset for each csp adjustment */
++	unsigned long flags = 0;
+ 
+ #ifdef CONFIG_MMU
+ 	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
+@@ -647,7 +648,10 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
+ 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
+ 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
+ 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
+-	NEW_AUX_ENT(AT_FLAGS,	0);
++	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0) {
++		flags |= AT_FLAGS_PRESERVE_ARGV0;
++	}
++	NEW_AUX_ENT(AT_FLAGS,	flags);
+ 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
+ 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
+ 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
+diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+index cdb45829354d..3f41b667b241 100644
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -158,6 +158,8 @@ static int load_misc_binary(struct linux_binprm *bprm)
+ 		retval = remove_arg_zero(bprm);
+ 		if (retval)
+ 			goto ret;
++	} else {
++		bprm->interp_flags |= BINPRM_FLAGS_PRESERVE_ARGV0;
+ 	}
+ 
+ 	if (fmt->flags & MISC_FMT_OPEN_BINARY) {
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index b40fc633f3be..265b80d5fd6f 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -78,6 +78,10 @@ struct linux_binprm {
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
+ #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+ 
++/* if preserve the argv0 for the interpreter  */
++#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
++#define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
++
+ /* Function parameter for binfmt->coredump */
+ struct coredump_params {
+ 	const kernel_siginfo_t *siginfo;
+diff --git a/include/uapi/linux/binfmts.h b/include/uapi/linux/binfmts.h
+index 689025d9c185..cd69a4ebba3f 100644
+--- a/include/uapi/linux/binfmts.h
++++ b/include/uapi/linux/binfmts.h
+@@ -18,4 +18,7 @@ struct pt_regs;
+ /* sizeof(linux_binprm->buf) */
+ #define BINPRM_BUF_SIZE 256
+ 
++#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
++#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
++
+ #endif /* _UAPI_LINUX_BINFMTS_H */
+-- 
+2.25.0.rc1
+
