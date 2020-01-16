@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD693C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E62C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9F220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9541020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195027;
-	bh=0YFaWcb15ye1CrXZgnwX8z1XFUDrX3MGS2VAo9jXphY=;
+	s=default; t=1579195030;
+	bh=t3NzLjqky/Ad3i0HuvmURg01ba2B4dUEqMwPsFzQWqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qWxAgscukQ+e+YxK58ASRimvOtVoekTyIWd7TpoD2lHF9kVV4b/Mammtg4NCd4F+b
-	 xuNonEIapdHe+FdPKbtc3M46BvlCZIrrdQcTCf9vT1b/ewFjeEPJY44Kj919qL7dGu
-	 8xmsmG4DGNEmwmLm3jIcZsd+JlAn8VsGsGvIl6sc=
+	b=2naBU/PwM7/NaO0IVQNVvY6b5nSsoaqpyC1MrUNzTRmt0HY5XJqtz2XU7CdkhFaPs
+	 9TJsxOKAAgu7P58O86xdGQJV7Zcsx3Fcysfb/hIuvCN2NDbu9p6atKjZJEvWApSmHM
+	 CP+xOnEDtRZV8oywG/8Ltl/kDkq7Bg59qbT+aS4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390466AbgAPRN4 (ORCPT
+        id S2391187AbgAPRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:13:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390818AbgAPRNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:45 -0500
+        id S2390859AbgAPRNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB3AF246A5;
-        Thu, 16 Jan 2020 17:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E5E246A7;
+        Thu, 16 Jan 2020 17:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194825;
-        bh=0YFaWcb15ye1CrXZgnwX8z1XFUDrX3MGS2VAo9jXphY=;
+        s=default; t=1579194833;
+        bh=t3NzLjqky/Ad3i0HuvmURg01ba2B4dUEqMwPsFzQWqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u86rZRpTkpCHd66AgrPZwZUw9zqD0dlCkmjJbt47euW5tD+nF08pYxbOSZeq19OEA
-         +8bBBSY1ZwQMpihol0qF8PsUxs3eJYlmH5Sk35bJACjPcB7JZB+7ibYMENP/p9fwnq
-         48MfaJD35OAsTkBzhwpmcEmVEy9qCuzu9Egbat9c=
+        b=NUCjHXK64dpBBkIuul/oisKrmjMyYgc/IxOag+nDIo6hMmHZJd2RWhqVivQisyBkn
+         K0qNSRiwfLivIfJQ2WYmEkHNTiHlHXk9pNdqwL3h5Zyw7VK9j60XNLvT2zZJW+o7Dd
+         0PBr1pi+RUU1ypIYMkHmkMN1sR+s23jYxFe9WaX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 629/671] RDMA/mlx5: Return proper error value
-Date:   Thu, 16 Jan 2020 12:04:27 -0500
-Message-Id: <20200116170509.12787-366-sashal@kernel.org>
+Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 634/671] media: exynos4-is: Fix recursive locking in isp_video_release()
+Date:   Thu, 16 Jan 2020 12:04:32 -0500
+Message-Id: <20200116170509.12787-371-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,37 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-[ Upstream commit 546d30099ed204792083f043cd7e016de86016a3 ]
+[ Upstream commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd ]
 
-Returned value from mlx5_mr_cache_alloc() is checked to be error or real
-pointer. Return proper error code instead of NULL which is not checked
-later.
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
-Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
-Link: https://lore.kernel.org/r/20191029055721.7192-1-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mr.c | 2 +-
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index bd1fdadf7ba0..18fd9aa6510f 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -457,7 +457,7 @@ struct mlx5_ib_mr *mlx5_mr_cache_alloc(struct mlx5_ib_dev *dev, int entry)
- 
- 	if (entry < 0 || entry >= MAX_MR_CACHE_ENTRIES) {
- 		mlx5_ib_err(dev, "cache entry %d is out of range\n", entry);
--		return NULL;
-+		return ERR_PTR(-EINVAL);
+diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+index a920164f53f1..39340abefd14 100644
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -316,7 +316,7 @@ static int isp_video_release(struct file *file)
+ 		ivc->streaming = 0;
  	}
  
- 	ent = &cache->ent[entry];
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
+ 
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 -- 
 2.20.1
 
