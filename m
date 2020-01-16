@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0845DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D46C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A042073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD3A207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202322;
-	bh=LomtqtWcTWq5Lnolg/EZTmS/WvghW41OIZLXueRo6W0=;
+	s=default; t=1579202326;
+	bh=uEbdXswwLVVYXOJIGfiADFINsVJhxIIscaqDI+gL9YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSsLOoD+Klz7eapG+IEktjMe+mmqngcS8xsK55algGndqlOQNfBONZere5DzSgQFR
-	 PSlhp3z3mFcnuk+Nu1BAZZik7LexK9GJGwwdt60nqdOYM6vwzOcRC+vfnyW7GjlRio
-	 C8dK1EUeNAONkWjzhkz3lbk2FIR95KJlmnWWs5TA=
+	b=ZGnjVFfUmOioD8S0n0DvXRBpO1nqh8KACAUoAihefDqEHXt+ugv0+i8gcWAcQ6us6
+	 qKDShWkgGuyRm4D3vFZWmqvmyy8U8Rz8mbTKGkv9jZVAZ1oAKeDwoeJU7C7it12ObQ
+	 +al7zzPKDlnKew9tt2la+lv6SpgoG7UNWs28xVFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407277AbgAPTSk (ORCPT
+        id S1732012AbgAPQyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:18:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732137AbgAPQyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:32 -0500
+        id S1731675AbgAPQyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565EC205F4;
-        Thu, 16 Jan 2020 16:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CAAE2176D;
+        Thu, 16 Jan 2020 16:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193672;
-        bh=LomtqtWcTWq5Lnolg/EZTmS/WvghW41OIZLXueRo6W0=;
+        s=default; t=1579193658;
+        bh=uEbdXswwLVVYXOJIGfiADFINsVJhxIIscaqDI+gL9YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HcYNDTHQ1UVZuoRaDqbn4WjKFYAAw5z22RQiSizjI9EOgTGuNR1f1qg88GvEGZd18
-         4lTtzACsyuF2jYFOsxdWunI8ND2caXd6PbSKm6BzPbx35bfZyTbOIJfXg9dWBN+AJF
-         hbv8dqTqqDRPY1BamBS9/yXytZbqgN1s6Bvpa2QI=
+        b=LS31/I5bYnZbXP+dZP8BI4lrbsw8tBpoDtC2qPm1lGulbX+hpPGz0o0rFCPZfTJpi
+         hSOvudfto/5gPNJposcbLytJ3bNe95JxSv5qKm0CHXyzBYfmU4ksijThsawvsN5DGT
+         /CUhfQ6KxmRgphJIZzrXWqGxzGUtYHWJ4YEDajac=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        David Miller <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 197/205] net-sysfs: Call dev_hold always in netdev_queue_add_kobject
-Date:   Thu, 16 Jan 2020 11:42:52 -0500
-Message-Id: <20200116164300.6705-197-sashal@kernel.org>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 186/205] bpf: Force .BTF section start to zero when dumping from vmlinux
+Date:   Thu, 16 Jan 2020 11:42:41 -0500
+Message-Id: <20200116164300.6705-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,49 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: Stanislav Fomichev <sdf@google.com>
 
-[ Upstream commit e0b60903b434a7ee21ba8d8659f207ed84101e89 ]
+[ Upstream commit df786c9b947639aedbc7bb44b5dae2a7824af360 ]
 
-Dev_hold has to be called always in netdev_queue_add_kobject.
-Otherwise usage count drops below 0 in case of failure in
-kobject_init_and_add.
+While trying to figure out why fentry_fexit selftest doesn't pass for me
+(old pahole, broken BTF), I found out that my latest patch can break vmlinux
+.BTF generation. objcopy preserves section start when doing --only-section,
+so there is a chance (depending on where pahole inserts .BTF section) to
+have leading empty zeroes. Let's explicitly force section offset to zero.
 
-Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: David Miller <davem@davemloft.net>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Before:
+
+$ objcopy --set-section-flags .BTF=alloc -O binary \
+	--only-section=.BTF vmlinux .btf.vmlinux.bin
+$ xxd .btf.vmlinux.bin | head -n1
+00000000: 0000 0000 0000 0000 0000 0000 0000 0000  ................
+
+After:
+
+$ objcopy --change-section-address .BTF=0 \
+	--set-section-flags .BTF=alloc -O binary \
+	--only-section=.BTF vmlinux .btf.vmlinux.bin
+$ xxd .btf.vmlinux.bin | head -n1
+00000000: 9feb 0100 1800 0000 0000 0000 80e1 1c00  ................
+          ^BTF magic
+
+As part of this change, I'm also dropping '2>/dev/null' from objcopy
+invocation to be able to catch possible other issues (objcopy doesn't
+produce any warnings for me anymore, it did before with --dump-section).
+
+Fixes: da5fb18225b4 ("bpf: Support pre-2.25-binutils objcopy for vmlinux BTF")
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20191127225759.39923-1-sdf@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/net-sysfs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ scripts/link-vmlinux.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index b4db68e5caa9..4c826b8bf9b1 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1462,14 +1462,17 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
- 	struct kobject *kobj = &queue->kobj;
- 	int error = 0;
- 
-+	/* Kobject_put later will trigger netdev_queue_release call
-+	 * which decreases dev refcount: Take that reference here
-+	 */
-+	dev_hold(queue->dev);
-+
- 	kobj->kset = dev->queues_kset;
- 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
- 				     "tx-%u", index);
- 	if (error)
- 		goto err;
- 
--	dev_hold(queue->dev);
--
- #ifdef CONFIG_BQL
- 	error = sysfs_create_group(kobj, &dql_group);
- 	if (error)
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 2998ddb323e3..436379940356 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -127,8 +127,9 @@ gen_btf()
+ 		cut -d, -f1 | cut -d' ' -f2)
+ 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
+ 		awk '{print $4}')
+-	${OBJCOPY} --set-section-flags .BTF=alloc -O binary \
+-		--only-section=.BTF ${1} .btf.vmlinux.bin 2>/dev/null
++	${OBJCOPY} --change-section-address .BTF=0 \
++		--set-section-flags .BTF=alloc -O binary \
++		--only-section=.BTF ${1} .btf.vmlinux.bin
+ 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
+ 		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
+ }
 -- 
 2.20.1
 
