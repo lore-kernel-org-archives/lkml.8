@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC203C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B46720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACB520661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200519;
-	bh=2dxMZ0XX0ymzZ5ZeO57n1kVvU7HDxLY2QeDz4UF2+DY=;
+	s=default; t=1579200526;
+	bh=lV6vCJ54AZJJG/iIgMdGhEKiyRI7RwaFGDruA9QXvkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1xydbjdhaMvwD9zaXQ5YfJwd6YvoweKShVqx7d0rgfPYAdVr5WgtLgm1kLhaD3B2
-	 m49u2ITRpS2GnwxNGP13OuO+Fvs+uAZ2Yc5aNjSegJsylKNYxCqKGdtuMka7XGoYII
-	 G0W/9Xu1s00aONxoYuAHFW2yQKzlESuTPgex+268=
+	b=LBay/zxnF3WAVBi0TX3XBKYXKmYWmAss8MX3Bl34TW89Y+qIIK6V2C7/zR7tleRVL
+	 Mcy+UMG8Tb/NlGP3ArS/j4mPL4LDInFLKfMJrTNkWBn9iQ1Hoaccdb4DJZoW+YOfiN
+	 eaBOPtsTxjGIejme6VyHV2vSj7RxrpXoxt6xNYd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436974AbgAPSsh (ORCPT
+        id S2436983AbgAPSsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46272 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:48:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389735AbgAPRJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:44 -0500
+        id S2389068AbgAPRJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88C0B2468D;
-        Thu, 16 Jan 2020 17:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E557D2081E;
+        Thu, 16 Jan 2020 17:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194584;
-        bh=2dxMZ0XX0ymzZ5ZeO57n1kVvU7HDxLY2QeDz4UF2+DY=;
+        s=default; t=1579194580;
+        bh=lV6vCJ54AZJJG/iIgMdGhEKiyRI7RwaFGDruA9QXvkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bI8rzPfR7afFsmovSB974vyQWrF9q3hTaiU/PYdPxWY5YjFKwHyUhCBRyHA/IVyx
-         wafS1u18xADnsPCKCN5x/biCU0xT3LisHEvSTkKQc/A7opUtOpDHzUcmJc95p/DDWr
-         RBd5Zj1BW6yJu8gcaOk/bu1yBFOkSt4MFre4iCVs=
+        b=gFeOe3C+EYsGO6AIAehSqPbsUF1AH1b/+dt8SaZ9WiD8ZHgc02g7pISBiNMNPdoPM
+         4tRvj4iyh1svAxzMmIT9BFaKDsH2et9269p7NE9w0wQhPTaRXj4XB+3QCBL9vZZhPA
+         TMeqQUvaulH+bQ2mfBzk6qacg1184UKTr+u/CKsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Disseldorp <ddiss@suse.de>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 457/671] ceph: fix "ceph.dir.rctime" vxattr value
-Date:   Thu, 16 Jan 2020 12:01:35 -0500
-Message-Id: <20200116170509.12787-194-sashal@kernel.org>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 454/671] PCI: mobiveil: Remove the flag MSI_FLAG_MULTI_PCI_MSI
+Date:   Thu, 16 Jan 2020 12:01:32 -0500
+Message-Id: <20200116170509.12787-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-[ Upstream commit 718807289d4130be1fe13f24f018733116958070 ]
+[ Upstream commit a131fb6364c1be0924dcb969ecf6b988c556a5d5 ]
 
-The vxattr value incorrectly places a "09" prefix to the nanoseconds
-field, instead of providing it as a zero-pad width specifier after '%'.
+The Mobiveil internal MSI controller requires separate target addresses,
+one per MSI vector; this is clearly incompatible with the Multiple MSI
+feature, which requires the same target address for all vectors
+requested by an endpoint (ie the Message Address field in the MSI
+Capability structure), so the multi MSI feature is clearly not
+supported by the host controller driver.
 
-Fixes: 3489b42a72a4 ("ceph: fix three bugs, two in ceph_vxattrcb_file_layout()")
-Link: https://tracker.ceph.com/issues/39943
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Remove the flag MSI_FLAG_MULTI_PCI_MSI and with it multi MSI support,
+fixing the misconfiguration.
+
+Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/xattr.c | 2 +-
+ drivers/pci/controller/pcie-mobiveil.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 5e4f3f833e85..a09ce27ab220 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -221,7 +221,7 @@ static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
- static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
- 				       size_t size)
- {
--	return snprintf(val, size, "%lld.09%ld", ci->i_rctime.tv_sec,
-+	return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
- 			ci->i_rctime.tv_nsec);
- }
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index a2d1e89d4867..dc228eb500ed 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -643,7 +643,7 @@ static struct irq_chip mobiveil_msi_irq_chip = {
+ 
+ static struct msi_domain_info mobiveil_msi_domain_info = {
+ 	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+-		MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
++		   MSI_FLAG_PCI_MSIX),
+ 	.chip	= &mobiveil_msi_irq_chip,
+ };
  
 -- 
 2.20.1
