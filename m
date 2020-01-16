@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4DCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B77C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E7720728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC23E22525
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194017;
-	bh=Bc4a90GgNt+53UllOU4U/kOkUJVjCw2i0sdjNuCUjNc=;
+	s=default; t=1579194028;
+	bh=IipMnTXhBIxyAvhtlYI+7dCiLvBs2w2RwqoI+ysNijA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FEZ88z3m9gfEVrXGtM57aVFoHgkBOwqbzhApknYg3/Yi9op90r3ERReS+mq42N0jJ
-	 b1KzN2ZydePxP/y6+il2Effo/1CGjay3IfOA2wvA2wGPBNsB9myUqozCBich4yU9TN
-	 TJ3w5/4oOovxG10/Mdax7JxxlTxzcaXc5BQ2aGUE=
+	b=JDa4v+bOSzKJGLnZUGrjvPfIfVAohUCGogf09G0iVodDxBwWtqEEfMMz0PZ2NT/Yd
+	 I3DfXTwUy2cNbgZscZlLYRfulecQgOfkqy/W2CbmMAMnWLzIBINgda5ZJXRBuyYwxW
+	 UbFoCjRERePoguAE4mdDSP7Du9T8m90t+It3/NF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733160AbgAPRAQ (ORCPT
+        id S2387758AbgAPRAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49540 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387664AbgAPRAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:07 -0500
+        id S2387722AbgAPRAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3835520728;
-        Thu, 16 Jan 2020 17:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B19222525;
+        Thu, 16 Jan 2020 17:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194007;
-        bh=Bc4a90GgNt+53UllOU4U/kOkUJVjCw2i0sdjNuCUjNc=;
+        s=default; t=1579194016;
+        bh=IipMnTXhBIxyAvhtlYI+7dCiLvBs2w2RwqoI+ysNijA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ee61mccV7pamxZN8MHNcycecMu2ToPTyStAqIqoPs0l/KrWaEjhnOUSNqI8ClycAV
-         PSZ/mn71wCPYDB8RYUGxXanrKUCRScfLuBadufaWyOnExIxDb2LYWkgwWQlbnm51SL
-         NtUdXXyEvCzllyt+3PevW5g6Fqlmrbpf4ZID+KUA=
+        b=G2dX9xknjjZnKXXnCJTh8mp7CcIqfHeYB6FD7CmkksE5POZZpaEofxRbUgfpPPZL4
+         QxQfGNSQz2fmWvZmTjFClhqiX8qYlq1OuEmFrGvcp+453KwPswcRuaEUrnnw+Re4b4
+         uVErlxk1BmfDJc6R3XhsJ8B+Jvre1ZXHPyRSmDj4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 132/671] iwlwifi: mvm: avoid possible access out of array.
-Date:   Thu, 16 Jan 2020 11:50:41 -0500
-Message-Id: <20200116165940.10720-15-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 138/671] tty: ipwireless: Fix potential NULL pointer dereference
+Date:   Thu, 16 Jan 2020 11:50:47 -0500
+Message-Id: <20200116165940.10720-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,64 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b0d795a9ae558209656b18930c2b4def5f8fdfb8 ]
+[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
 
-The value in txq_id can be out of array scope,
-validate it before accessing the array.
+There is a potential NULL pointer dereference in case
+alloc_ctrl_packet() fails and returns NULL.
 
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: cf961e16620f ("iwlwifi: mvm: support dqa-mode agg on non-shared queue")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/tty/ipwireless/hardware.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-index e850aa504b60..69057701641e 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -2462,7 +2462,7 @@ int iwl_mvm_sta_tx_agg_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
- 	struct iwl_mvm_tid_data *tid_data;
- 	u16 normalized_ssn;
--	int txq_id;
-+	u16 txq_id;
- 	int ret;
+diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
+index b0baa4ce10f9..6bbf35682d53 100644
+--- a/drivers/tty/ipwireless/hardware.c
++++ b/drivers/tty/ipwireless/hardware.c
+@@ -1516,6 +1516,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
+ 			sizeof(struct ipw_setup_get_version_query_packet),
+ 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
+ 			TL_SETUP_SIGNO_GET_VERSION_QRY);
++	if (!ver_packet)
++		return;
+ 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
  
- 	if (WARN_ON_ONCE(tid >= IWL_MAX_TID_COUNT))
-@@ -2506,17 +2506,24 @@ int iwl_mvm_sta_tx_agg_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 	 */
- 	txq_id = mvmsta->tid_data[tid].txq_id;
- 	if (txq_id == IWL_MVM_INVALID_QUEUE) {
--		txq_id = iwl_mvm_find_free_queue(mvm, mvmsta->sta_id,
--						 IWL_MVM_DQA_MIN_DATA_QUEUE,
--						 IWL_MVM_DQA_MAX_DATA_QUEUE);
--		if (txq_id < 0) {
--			ret = txq_id;
-+		ret = iwl_mvm_find_free_queue(mvm, mvmsta->sta_id,
-+					      IWL_MVM_DQA_MIN_DATA_QUEUE,
-+					      IWL_MVM_DQA_MAX_DATA_QUEUE);
-+		if (ret < 0) {
- 			IWL_ERR(mvm, "Failed to allocate agg queue\n");
- 			goto release_locks;
- 		}
- 
-+		txq_id = ret;
-+
- 		/* TXQ hasn't yet been enabled, so mark it only as reserved */
- 		mvm->queue_info[txq_id].status = IWL_MVM_QUEUE_RESERVED;
-+	} else if (WARN_ON(txq_id >= IWL_MAX_HW_QUEUES)) {
-+		ret = -ENXIO;
-+		IWL_ERR(mvm, "tid_id %d out of range (0, %d)!\n",
-+			tid, IWL_MAX_HW_QUEUES - 1);
-+		goto out;
-+
- 	} else if (unlikely(mvm->queue_info[txq_id].status ==
- 			    IWL_MVM_QUEUE_SHARED)) {
- 		ret = -ENXIO;
+ 	/*
 -- 
 2.20.1
 
