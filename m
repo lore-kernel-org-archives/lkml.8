@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290F0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF91C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E752E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D372077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218383;
-	bh=+NWel1XDc0nVhEjZEKuLMD5HJ5Mm8G7/Xz0caA0IHO8=;
+	s=default; t=1579218388;
+	bh=KnNF++O83Xcivapna5ZWxJ3A/nCVJ2nlj6WaYyZBObc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=atV5qVJxU8bdtPd15ryexv17O8SkwX/KlINjuyytNDdnMZhN3EoIyMZXSzhXkj3Hl
-	 z4ge1fx5zgbQoU/mLOaCPFvAnXtndWe9ztW8LGljxIyB0US4llvCGK2VXEfa2EWjYZ
-	 DTkzfdVnaLwkPZE3a0QAZ0KkFKU9UpXHSJ+ZGln0=
+	b=hz5lYENz3nJiislu6R2LAgkVen7RIb/mXXSTrEwcAQoaDf/RYqustItU4t7vPNJYc
+	 eQYVtaqUTFtGE1sIzRcYVvSSL13pxz35jSL0QvepdcO1CIAKha0e/LjdWdnLTrWn+w
+	 cEy2vhdFOGngVFrZb4sQstCcdvHY9+dK7pYr9NQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389464AbgAPXWF (ORCPT
+        id S2390905AbgAPXq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731984AbgAPXVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:55 -0500
+        id S2390881AbgAPXV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12C9220684;
-        Thu, 16 Jan 2020 23:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A63E2087E;
+        Thu, 16 Jan 2020 23:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216915;
-        bh=+NWel1XDc0nVhEjZEKuLMD5HJ5Mm8G7/Xz0caA0IHO8=;
+        s=default; t=1579216917;
+        bh=KnNF++O83Xcivapna5ZWxJ3A/nCVJ2nlj6WaYyZBObc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8RbaMF/gWoCFzeG8PCVZDF+yK36JqfzfLzMwpzwsiWzQXHHnYTwvV0/mBNWaUVL/
-         0zm4QGagiD+V8/a42X3MYfgpzDD+egJEH4YXsV7f9I5Ilf7LXr6MN5hz3/Ehmtu5u2
-         tXFL8wnU2OZNJqd1IVMmh38mfBus91Q+hauvJOF8=
+        b=JG4l0MhdL6qrS9D0QEDOHURKZn32BtDxJbBXJ07uoaYlwtzk+Tb7SUCDTiGcF5ZaU
+         /nS6H1HUhHwTsc7EF152yVcgij6DKelSUtxNqY01INMUFZp0xsLRn8CzEORiXc73cB
+         Jv+8jMCJloVcTeT0UixXQmc1SfhsUHMPXHDqQfj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 056/203] ASoC: simple_card_utils.h: Add missing include
-Date:   Fri, 17 Jan 2020 00:16:13 +0100
-Message-Id: <20200116231748.878130122@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 047/203] syscalls/x86: Wire up COMPAT_SYSCALL_DEFINE0
+Date:   Fri, 17 Jan 2020 00:16:04 +0100
+Message-Id: <20200116231748.097040033@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,41 +66,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 4bbee14d8e5487e3d2662138e3767cf4678cdf57 upstream.
+commit cf3b83e19d7c928e05a5d193c375463182c6029a upstream.
 
-When debug is enabled compiler cannot find the definition of
-clk_get_rate resulting in the following error:
+x86 has special handling for COMPAT_SYSCALL_DEFINEx, but there was
+no override for COMPAT_SYSCALL_DEFINE0.  Wire it up so that we can
+use it for rt_sigreturn.
 
-./include/sound/simple_card_utils.h:168:40: note: previous implicit
-declaration of ‘clk_get_rate’ was here
-   dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
-./include/sound/simple_card_utils.h:168:3: note: in expansion of macro
-‘dev_dbg’
-   dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
-
-Fix this by including the appropriate header.
-
-Fixes: 0580dde59438686d ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20191009153615.32105-2-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008224049.115427-3-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/simple_card_utils.h |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/syscall_wrapper.h |   32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
---- a/include/sound/simple_card_utils.h
-+++ b/include/sound/simple_card_utils.h
-@@ -8,6 +8,7 @@
- #ifndef __SIMPLE_CARD_UTILS_H
- #define __SIMPLE_CARD_UTILS_H
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -28,13 +28,21 @@
+  * kernel/sys_ni.c and SYS_NI in kernel/time/posix-stubs.c to cover this
+  * case as well.
+  */
++#define __IA32_COMPAT_SYS_STUB0(x, name)				\
++	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs);\
++	ALLOW_ERROR_INJECTION(__ia32_compat_sys_##name, ERRNO);		\
++	asmlinkage long __ia32_compat_sys_##name(const struct pt_regs *regs)\
++	{								\
++		return __se_compat_sys_##name();			\
++	}
++
+ #define __IA32_COMPAT_SYS_STUBx(x, name, ...)				\
+ 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs);\
+ 	ALLOW_ERROR_INJECTION(__ia32_compat_sys##name, ERRNO);		\
+ 	asmlinkage long __ia32_compat_sys##name(const struct pt_regs *regs)\
+ 	{								\
+ 		return __se_compat_sys##name(SC_IA32_REGS_TO_ARGS(x,__VA_ARGS__));\
+-	}								\
++	}
  
-+#include <linux/clk.h>
- #include <sound/soc.h>
+ #define __IA32_SYS_STUBx(x, name, ...)					\
+ 	asmlinkage long __ia32_sys##name(const struct pt_regs *regs);	\
+@@ -76,15 +84,24 @@
+  * of the x86-64-style parameter ordering of x32 syscalls. The syscalls common
+  * with x86_64 obviously do not need such care.
+  */
++#define __X32_COMPAT_SYS_STUB0(x, name, ...)				\
++	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs);\
++	ALLOW_ERROR_INJECTION(__x32_compat_sys_##name, ERRNO);		\
++	asmlinkage long __x32_compat_sys_##name(const struct pt_regs *regs)\
++	{								\
++		return __se_compat_sys_##name();\
++	}
++
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)				\
+ 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs);\
+ 	ALLOW_ERROR_INJECTION(__x32_compat_sys##name, ERRNO);		\
+ 	asmlinkage long __x32_compat_sys##name(const struct pt_regs *regs)\
+ 	{								\
+ 		return __se_compat_sys##name(SC_X86_64_REGS_TO_ARGS(x,__VA_ARGS__));\
+-	}								\
++	}
  
- #define asoc_simple_init_hp(card, sjack, prefix) \
+ #else /* CONFIG_X86_X32 */
++#define __X32_COMPAT_SYS_STUB0(x, name)
+ #define __X32_COMPAT_SYS_STUBx(x, name, ...)
+ #endif /* CONFIG_X86_X32 */
+ 
+@@ -95,6 +112,17 @@
+  * mapping of registers to parameters, we need to generate stubs for each
+  * of them.
+  */
++#define COMPAT_SYSCALL_DEFINE0(name)					\
++	static long __se_compat_sys_##name(void);			\
++	static inline long __do_compat_sys_##name(void);		\
++	__IA32_COMPAT_SYS_STUB0(x, name)				\
++	__X32_COMPAT_SYS_STUB0(x, name)					\
++	static long __se_compat_sys_##name(void)			\
++	{								\
++		return __do_compat_sys_##name();			\
++	}								\
++	static inline long __do_compat_sys_##name(void)
++
+ #define COMPAT_SYSCALL_DEFINEx(x, name, ...)					\
+ 	static long __se_compat_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
+ 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
 
 
