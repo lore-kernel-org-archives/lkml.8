@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141C8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDECC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E273B24776
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB75524780
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196702;
-	bh=c3ZG/5qWqwG2BVgKAWARfygrxw58Z6v2wDO+fEzRY00=;
+	s=default; t=1579196710;
+	bh=FZyY3AusIL/ws+s305lUHWFZJFeAb3WZkMJPSEuYV+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FL1vVcw1NRDPjADxw8fUr2yx3CdCclHxmu2NI4IxQjTWwNG67HXozQq0PkYyghhB
-	 skPmACioPAJqbk/FW0CZnXUi4/93OI4SQrEw/mmmR05IIPS6NRw2FcZTidLZhFwJbs
-	 G8bH3YpxdLpGHnVKbIg47Jq1Gwd6kc1770p+E5DA=
+	b=yRMYQhIpgc2P9s8YakEzfbLhtUXn5Vf2K/lik6Q510BiRxRtguArN1k+xfotxNEIt
+	 jJK3ib4xFke72aWbFS/MkKqRNFVstpnFz2ba7X1eTRhBajLx6CQRqJWqYnGMWP8hvf
+	 KCMdgj50EJU1aUp0zBiz6A4VauhDQQN7BaoOx/+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406038AbgAPRpA (ORCPT
+        id S2406102AbgAPRpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405823AbgAPRoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:34 -0500
+        id S2405935AbgAPRon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D572474D;
-        Thu, 16 Jan 2020 17:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 405A12476C;
+        Thu, 16 Jan 2020 17:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196673;
-        bh=c3ZG/5qWqwG2BVgKAWARfygrxw58Z6v2wDO+fEzRY00=;
+        s=default; t=1579196682;
+        bh=FZyY3AusIL/ws+s305lUHWFZJFeAb3WZkMJPSEuYV+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxjelLjRMTYRZ2Pze3QZYTG/EuvOxqufQzffD85IYPwSWy8j52HIt2tR8ponuSvMG
-         e5OQd1QxtJjcKjAjBANOz7J3a9QlEWrMfKm5KqebCPXU5i8UK7Jbn1qlo2aa8zST+p
-         Jd3VfwWiqZ8ZLvTOoJZp5AE2HNpubtEShs1w9hgc=
+        b=0qa3FMxJahq+MuaLpu+Rn85RqlQvbrXLNYtXPF+uclll8BiZOdtrEY/OnpITRqX7V
+         fELnOVJ3w0dFoAOnEkgTZJsXL/4hm0J9sVJaR/7FTjvnL1K9MApyeyWWjChIdX7nu7
+         AleXr0Ch7WkgOsMmNjyEbwR4VCFJOrpkAyj7OaHM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 073/174] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Thu, 16 Jan 2020 12:41:10 -0500
-Message-Id: <20200116174251.24326-73-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 080/174] dmaengine: axi-dmac: Don't check the number of frames for alignment
+Date:   Thu, 16 Jan 2020 12:41:17 -0500
+Message-Id: <20200116174251.24326-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,98 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
+
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
+
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 611a127f08d8..8975baab73e5 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -5780,8 +5780,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -5800,11 +5799,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
- 	}
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 5b2395e7e04d..6de3d2142c7d 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -441,7 +441,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
  
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -5816,27 +5814,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
- 	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
- 	}
- 	return ret;
-+
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
- }
- 
- /**
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
 -- 
 2.20.1
 
