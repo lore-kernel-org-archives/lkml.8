@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE32C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A692073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605D1208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193279;
-	bh=W5GsXPgetj+H1lgqnH7m0kOe+yhVb2jMSSzjWLFHHfI=;
+	s=default; t=1579193285;
+	bh=ylrQYMiUd958FmaBqH6W2z+JR6vME6Lajrty0yVxl4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GpOVdu7fwpTLlxuYtBIG92SKq0YRnP6IbEyM4EgwrW94/pE8VUoyEnQRYN+Hs5fJf
-	 MLMHyqDouFh7QdCgRoDoVWFzrMYVuO6QcydNfot4poNc6jqz625somPZx465I540Od
-	 16e0BeSGbXA83tMnp78gzlPxTOo7pMMjNIMuAjcs=
+	b=lOGXmgbxYGoKAPD88038I8uOLZX0vk6T6a2XO1ocQqdfDr+X+jY+RPdesDsGxLvOn
+	 yYcVtpSokzagD6nABnYMxnwz/kVwdlwb6g6L44hNPGAjLhsJTsIh45YJ47EUbvswI/
+	 DE/59p6fNzRmM0sz/OzM7kXeQRPoXwzsUAMMR7GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgAPQr7 (ORCPT
+        id S1730150AbgAPQsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57884 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:48:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729543AbgAPQrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:47:51 -0500
+        id S1730113AbgAPQsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:48:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD9120663;
-        Thu, 16 Jan 2020 16:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF49220663;
+        Thu, 16 Jan 2020 16:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193270;
-        bh=W5GsXPgetj+H1lgqnH7m0kOe+yhVb2jMSSzjWLFHHfI=;
+        s=default; t=1579193279;
+        bh=ylrQYMiUd958FmaBqH6W2z+JR6vME6Lajrty0yVxl4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YGfsOCotVZtKU70uk+2cd1ZqfRex4mMdMfhFkr0hnUuHmAGdq9AT7tJ2cynbArc77
-         x4UQ65e2+9dcdf77Q3BlQQEKx5RsNj9hnSKW8XGkoXlqkI1SKKTjhdSbvh/U6oXx0U
-         VRnXS8OGt2c8xABnpNuiv7hS267wVXi21Up9xubE=
+        b=yflLwB7+G0XhdyYmQBnKlNJhRkN2tusLhaIYDMYtVLQkXMu2NiKjjoYiiBoQdRI2c
+         /I5xt2GZv/CpPiaWqi5nDOoPw6bUwCHcDqcjXJJTqxSfTsoLER+wHulcRZjcGLK8GR
+         L3HfJEZw3ahEjtklDzDMmfFCUbWS+2ALrnBn7CxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 061/205] scsi: esas2r: unlock on error in esas2r_nvram_read_direct()
-Date:   Thu, 16 Jan 2020 11:40:36 -0500
-Message-Id: <20200116164300.6705-61-sashal@kernel.org>
+Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 064/205] iwlwifi: mvm: consider ieee80211 station max amsdu value
+Date:   Thu, 16 Jan 2020 11:40:39 -0500
+Message-Id: <20200116164300.6705-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,33 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 ]
+[ Upstream commit ee4cce9b9d6421d037ffc002536b918fd7f4aff3 ]
 
-This error path is missing an unlock.
+debugfs amsdu_len sets only the max_amsdu_len for ieee80211 station
+so take it into consideration while getting max amsdu
 
-Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
-Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: af2984e9e625 ("iwlwifi: mvm: add a debugfs entry to set a fixed size AMSDU for all TX packets")
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/esas2r/esas2r_flash.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c | 8 +++++++-
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c    | 7 ++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/esas2r/esas2r_flash.c b/drivers/scsi/esas2r/esas2r_flash.c
-index 7bd376d95ed5..b02ac389e6c6 100644
---- a/drivers/scsi/esas2r/esas2r_flash.c
-+++ b/drivers/scsi/esas2r/esas2r_flash.c
-@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esas2r_adapter *a)
- 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
- 				     sizeof(struct esas2r_sas_nvram))) {
- 		esas2r_hdebug("NVRAM read failed, using defaults");
-+		up(&a->nvram_semaphore);
- 		return false;
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+index 8f50e2b121bd..098d48153a38 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+@@ -350,7 +350,13 @@ void iwl_mvm_tlc_update_notif(struct iwl_mvm *mvm,
+ 		u16 size = le32_to_cpu(notif->amsdu_size);
+ 		int i;
  
+-		if (WARN_ON(sta->max_amsdu_len < size))
++		/*
++		 * In debug sta->max_amsdu_len < size
++		 * so also check with orig_amsdu_len which holds the original
++		 * data before debugfs changed the value
++		 */
++		if (WARN_ON(sta->max_amsdu_len < size &&
++			    mvmsta->orig_amsdu_len < size))
+ 			goto out;
+ 
+ 		mvmsta->amsdu_enabled = le32_to_cpu(notif->amsdu_enabled);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 8a059da7a1fa..e3b2a2bf3863 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -935,7 +935,12 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
+ 	    !(mvmsta->amsdu_enabled & BIT(tid)))
+ 		return iwl_mvm_tx_tso_segment(skb, 1, netdev_flags, mpdus_skb);
+ 
+-	max_amsdu_len = iwl_mvm_max_amsdu_size(mvm, sta, tid);
++	/*
++	 * Take the min of ieee80211 station and mvm station
++	 */
++	max_amsdu_len =
++		min_t(unsigned int, sta->max_amsdu_len,
++		      iwl_mvm_max_amsdu_size(mvm, sta, tid));
+ 
+ 	/*
+ 	 * Limit A-MSDU in A-MPDU to 4095 bytes when VHT is not
 -- 
 2.20.1
 
