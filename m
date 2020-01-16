@@ -2,81 +2,145 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D875C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070C1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEB32077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC03205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GNMuVgbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgAPKtC (ORCPT
+        id S1726370AbgAPKum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:49:02 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:41717 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgAPKtC (ORCPT
+        Thu, 16 Jan 2020 05:50:42 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33360 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAPKul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:49:02 -0500
-Received: by mail-il1-f200.google.com with SMTP id k9so15591596ili.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 02:49:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=vXf7A0NOmOYnzFvw+i/lGTeJq016329/QakV55aUcG0=;
-        b=eNTZxIfiYzKDu0LbWdmrlXVZ7lLDkcxk5FZlhB4R9ZE7CCncJ5cq5gjjScSDWJMJW7
-         6twUHcOKsQvQ6sBxslr5VpEb72v3TU9RB6p4CQJj/tpYgr3hX31Owd0IbyRN1jyMGi6q
-         xu0vkWymETTWX0IM/2d5luKWAmTIsy5npm06OBFcpSriqLkF2NDwO+QUZ2731GHiZiRb
-         hFWHLCShfUIpp4BlCWvtayUBPFzlhTjOHoTFQ4N1fe4ZoVGE6a8bW3YWFwboYiz7yI/8
-         Y7Byhng8EFD0Rxk1Rq7Apsj9Rev/Q+c7t39zD9EbPnJAM53wPL5jOKNSKgKewAGpT0nT
-         D5mQ==
-X-Gm-Message-State: APjAAAWRpGMs6t/pmGSTVefMdWciw9faz6POEcALrIuMhj+8Ya9hEKCe
-        Yg8mcGcOaVH4sd1RwMDmRlhSOaMDzO7TklkwLtibdl1LaEta
-X-Google-Smtp-Source: APXvYqxopJ/jpk1yIg/I62PmVhs8FXVnSYmF1TfUZ9VNvmnmuoElsGzQesNp8GprKQ9VNUmhiQEqsoJLXz2GyBosz3vGAuYabDoY
+        Thu, 16 Jan 2020 05:50:41 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoV3N006287;
+        Thu, 16 Jan 2020 04:50:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579171831;
+        bh=ARpeFSvEQvv2QH/Fv93pfZ16NpaDOAet0C0uZscJMv8=;
+        h=From:To:CC:Subject:Date;
+        b=GNMuVgbBqrGiszvnkqSj9Mw7YMJfGJbskpV4GwZTX59NBNyFSRpl15DHvbZ0mEFaK
+         bp9gc4SCdFeViIA52uGcpFeUXUUzDhXIGmILT8MEk4KM61WRQQWQ2ZeK/bvxA6mM+C
+         SLVFw4tP1gATVB+o9bkZKMlANn7Cb9Ir8KWV0UeI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAoU9N088065
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 04:50:30 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 04:50:30 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 04:50:30 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdS000589;
+        Thu, 16 Jan 2020 04:50:27 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <adrian.hunter@intel.com>, <kishon@ti.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
+        <faiz_abbas@ti.com>, <tony@atomide.com>
+Subject: [PATCH v5 00/10] Port am335x and am437x devices to sdhci-omap
+Date:   Thu, 16 Jan 2020 16:21:44 +0530
+Message-ID: <20200116105154.7685-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-X-Received: by 2002:a92:3cd4:: with SMTP id j81mr3015923ilf.77.1579171741688;
- Thu, 16 Jan 2020 02:49:01 -0800 (PST)
-Date:   Thu, 16 Jan 2020 02:49:01 -0800
-In-Reply-To: <000000000000b9fc96059c36db9e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b3ea0f059c3f9203@google.com>
-Subject: Re: WARNING in nft_request_module
-From:   syzbot <syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+The following add driver patches for porting TI's am335x and am437x devices to
+the sdhci-omap driver.
 
-commit 452238e8d5ffd8b77f92387519513839d4ca7379
-Author: Florian Westphal <fw@strlen.de>
-Date:   Wed Jul 11 11:45:10 2018 +0000
+Patches 1-4 Add Support for external DMA to the sdhci driver.
 
-     netfilter: nf_tables: add and use helper for module autoload
+Patches 5-7 refactor the sdhci_set_timeout() function and use it disable
+data timeout interrupt for erase commands
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17bb83e1e00000
-start commit:   51d69817 Merge tag 'platform-drivers-x86-v5.5-3' of git://..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=147b83e1e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=107b83e1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=0e63ae76d117ae1c3a01
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b14421e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138473fee00000
+Patches 8-9 add new compatibles for am335x and am43xx devices to the
+sdhci-omap driver.
 
-Reported-by: syzbot+0e63ae76d117ae1c3a01@syzkaller.appspotmail.com
-Fixes: 452238e8d5ff ("netfilter: nf_tables: add and use helper for module  
-autoload")
+Patch 10 implements special reset required for am335x and am437x
+devices.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+DT changes will be posted as a separate series.
+
+Tested on: am335x-evm, am335x-boneblack, am335x-bonegreen-wireless,
+am335x-sk, am335x-bone, am437x-idk, am43xx-gp-evm, am43xx-epos-evm.
+
+v5:
+1. Patch 3 now uses the dma_submit_error() API instead of checking the
+   cookie on its own.
+2. Dropped the patch adding ti,needs-special-reset property to
+   sdhci-omap. Using a flag in the driver instead.
+3. Minor spacing changes.
+
+v4:
+1. Made the factoring out of initialize_data, block_info and mrqs_done as a
+   separate patch
+2. Replaced the patch introducing the quirk to disable DTO during erase
+   operations to a set_timeout() callback in sdhci-omap
+3. Ported the ti,needs-special-reset property from omap_hsmmc to sdhci-omap.
+4. Minor style changes.
+
+v3:
+1. Dropped patch 1 because the tasklet was removed by Adrian in an
+   earlier series.
+2. Added dma bindings in sdhci-omap as optional properties.
+3. Rebased on top of latest mainline.
+
+v2:
+1. sdhci is using two bottom halves. One threaded_rq for card detect and a
+   tasklet for finishing mmc requests. Patch 1 removes the tasklet and
+   moves its function to the threaded_irq. This enables me to
+   terminate_sync() in sdhci_request_done()
+
+2. Factored out common code for between the normal adn external dma case
+
+3. Using existing API sdhci_data_timeout_irq for disabling DTO during
+   erase commands.
+
+4. Fixed subject line for dt-bindings patch
+
+Chunyan Zhang (3):
+  dt-bindings: sdhci-omap: Add properties for using external dma
+  mmc: sdhci: add support for using external DMA devices
+  mmc: sdhci-omap: Add using external dma
+
+Faiz Abbas (7):
+  mmc: sdhci: Factor out some operations set to their own functions
+  mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
+  mmc: sdhci: Refactor sdhci_set_timeout()
+  mmc: sdhci-omap: Disable data timeout interrupt during erase
+  dt-bindings: sdhci-omap: Add am335x and am437x specific bindings
+  mmc: sdhci-omap: Add am335x and am437x specific compatibles
+  mmc: sdhci-omap: Add special reset capability
+
+ .../devicetree/bindings/mmc/sdhci-omap.txt    |  11 +
+ drivers/mmc/host/Kconfig                      |   4 +
+ drivers/mmc/host/sdhci-omap.c                 |  60 ++-
+ drivers/mmc/host/sdhci.c                      | 353 +++++++++++++++---
+ drivers/mmc/host/sdhci.h                      |  10 +
+ 5 files changed, 380 insertions(+), 58 deletions(-)
+
+-- 
+2.19.2
+
