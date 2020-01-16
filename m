@@ -2,122 +2,323 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E512C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A65C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77B72176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579176768;
-	bh=Rno+FCx/m1FJiLhugMJfP4rvryOioCbSFWb8zHnO6x4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rNfnSEZ4ZxUkB9CVpzzpm0XJCY8A7BTEZJVdDjHWF8GfAk7/1s6X9Hk/1dMSmYzjc
-	 9Qr7Zc7NMtHtcDji5jGjHepXm5WvLAROHRs+DOhxE5rsJYpHq6IhjU8qTJB0e8GL9r
-	 6kbEo2LUFsw/R3+l8hZC27Bkc2c4PG3FyCkbp6hE=
+	by mail.kernel.org (Postfix) with ESMTP id 1BEEE207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgAPMMr (ORCPT
+        id S1726527AbgAPMTN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:12:47 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38609 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgAPMMq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:12:46 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so18927016wrh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 04:12:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0rLdvAF+Tn/NR14A4y+3n0cCH4WC63jUVnW1yxIhRT8=;
-        b=GuzXOeJBB+oSflWOUi7S7CVezJM+nnrJYCdTr9TPQQDbmg6cLzw9Ded3zi9Htt8c4h
-         zIqyKtaPiX1jxsGoEY1dg7WgsGJ+Xli6Y4M/n+s3zGGAs8vf8W9e+ZbR/e6gm6p36A4H
-         YheX0E+tBuiReKLU+OLWHazMWbsCq2JgRwXy6lZlLIskoJuOkeKzqoIJ8omrWrDjzlBH
-         y5fPfulS2ftVOhfnTZLJD6i71w733SFV6fsQWBYxpKlvzrXxS4DKtLFVprY0hAb87gb0
-         pd5eB4VpG9ci9GlaCpHfSGgVAEGcv/5n5ZCV6aL2OP8i6vddr1PRIriNWTB1B6zkdM4N
-         lXlQ==
-X-Gm-Message-State: APjAAAUfPuRw+OFlsCzie7fyMzI8YJt1eyRbTlSIxJzWd8tDTvmoA7EZ
-        ahYU/tg+vexH7E1kE6L4coo=
-X-Google-Smtp-Source: APXvYqwscoC+uS5MwbMLg1PKaUrbBbc0a7r+kz7kgZD6Vfh2GDIcn7wbZyal11zA/CtZLTnG+p/whw==
-X-Received: by 2002:adf:a308:: with SMTP id c8mr2970195wrb.240.1579176764684;
-        Thu, 16 Jan 2020 04:12:44 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id d14sm30434151wru.9.2020.01.16.04.12.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 04:12:43 -0800 (PST)
-Date:   Thu, 16 Jan 2020 13:12:40 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     buddy.zhang@aliyun.com
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/cma.c: find a named CMA area by name
-Message-ID: <20200116121240.GS19428@dhcp22.suse.cz>
-References: <20200116101322.17795-1-buddy.zhang@aliyun.com>
+        Thu, 16 Jan 2020 07:19:13 -0500
+Received: from mga07.intel.com ([134.134.136.100]:8848 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbgAPMTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:19:12 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 04:19:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
+   d="scan'208";a="214058940"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga007.jf.intel.com with ESMTP; 16 Jan 2020 04:19:11 -0800
+Received: from fmsmsx155.amr.corp.intel.com (10.18.116.71) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jan 2020 04:19:11 -0800
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX155.amr.corp.intel.com (10.18.116.71) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jan 2020 04:19:11 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.203]) with mapi id 14.03.0439.000;
+ Thu, 16 Jan 2020 20:19:09 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: RE: [PATCH v4 01/12] vfio_pci: refine user config reference in
+ vfio-pci module
+Thread-Topic: [PATCH v4 01/12] vfio_pci: refine user config reference in
+ vfio-pci module
+Thread-Index: AQHVxVTyyvu6iY3Kg0i4TKhKInVOI6fibQKAgArSApA=
+Date:   Thu, 16 Jan 2020 12:19:09 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A183E28@SHSMSX104.ccr.corp.intel.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-2-git-send-email-yi.l.liu@intel.com>
+ <20200109154821.047f700a@w520.home>
+In-Reply-To: <20200109154821.047f700a@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDE3ZmUyYzMtNzhjMS00MWUyLTkyMGYtYzg5NjU0MTY1MzZlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoid041UGNSSGYwZXpIOVNtazV2dDErQnZuTGtCQldiU3BwNzB5ZTNudjNLM1BFbU1tTlZDbmFTdjBrNDZDRWRHWSJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116101322.17795-1-buddy.zhang@aliyun.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-01-20 18:13:22, buddy.zhang@aliyun.com wrote:
-> From: BuddyZhang <buddy.zhang@aliyun.com>
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Friday, January 10, 2020 6:48 AM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v4 01/12] vfio_pci: refine user config reference in vfio-pci
+> module
 > 
-> This function could help developer who want to find a special
-> named CMA area.
+> On Tue,  7 Jan 2020 20:01:38 +0800
+> Liu Yi L <yi.l.liu@intel.com> wrote:
 > 
-> The CMA supports multiple named CMA areas, and the device could
-> use or exclusive a special CAM arae via "cma_area" on "struct
-> device". When probing, the device can setup special CMA area which
-> find by "cma_find_by_name()".
+> > This patch adds three fields in struct vfio_pci_device to pass the user
+> > configurations of vfio-pci.ko module to some functions which could be
+> > common in future usage. The values stored in struct vfio_pci_device will
+> > be initiated in probe and refreshed in device open phase to allow runtime
+> > modifications to parameters. e.g. disable_idle_d3 and nointxmask.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci.c         | 37 ++++++++++++++++++++++++++-----------
+> >  drivers/vfio/pci/vfio_pci_private.h |  8 ++++++++
+> >  2 files changed, 34 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > index 379a02c..af507c2 100644
+> > --- a/drivers/vfio/pci/vfio_pci.c
+> > +++ b/drivers/vfio/pci/vfio_pci.c
+> > @@ -54,10 +54,10 @@ module_param(disable_idle_d3, bool, S_IRUGO |
+> S_IWUSR);
+> >  MODULE_PARM_DESC(disable_idle_d3,
+> >  		 "Disable using the PCI D3 low power state for idle, unused devices");
+> >
+> > -static inline bool vfio_vga_disabled(void)
+> > +static inline bool vfio_vga_disabled(struct vfio_pci_device *vdev)
+> >  {
+> >  #ifdef CONFIG_VFIO_PCI_VGA
+> > -	return disable_vga;
+> > +	return vdev->disable_vga;
+> >  #else
+> >  	return true;
+> >  #endif
+> > @@ -78,7 +78,8 @@ static unsigned int vfio_pci_set_vga_decode(void *opaque,
+> bool single_vga)
+> >  	unsigned char max_busnr;
+> >  	unsigned int decodes;
+> >
+> > -	if (single_vga || !vfio_vga_disabled() || pci_is_root_bus(pdev->bus))
+> > +	if (single_vga || !vfio_vga_disabled(vdev) ||
+> > +		pci_is_root_bus(pdev->bus))
+> >  		return VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM |
+> >  		       VGA_RSRC_LEGACY_IO | VGA_RSRC_LEGACY_MEM;
+> >
+> > @@ -289,7 +290,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+> >  	if (!vdev->pci_saved_state)
+> >  		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
+> >
+> > -	if (likely(!nointxmask)) {
+> > +	if (likely(!vdev->nointxmask)) {
+> >  		if (vfio_pci_nointx(pdev)) {
+> >  			pci_info(pdev, "Masking broken INTx support\n");
+> >  			vdev->nointx = true;
+> > @@ -326,7 +327,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+> >  	} else
+> >  		vdev->msix_bar = 0xFF;
+> >
+> > -	if (!vfio_vga_disabled() && vfio_pci_is_vga(pdev))
+> > +	if (!vfio_vga_disabled(vdev) && vfio_pci_is_vga(pdev))
+> >  		vdev->has_vga = true;
+> >
+> >
+> > @@ -462,10 +463,17 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+> >
+> >  	vfio_pci_try_bus_reset(vdev);
+> >
+> > -	if (!disable_idle_d3)
+> > +	if (!vdev->disable_idle_d3)
+> >  		vfio_pci_set_power_state(vdev, PCI_D3hot);
+> >  }
+> >
+> > +void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
+> > +			bool nointxmask, bool disable_idle_d3)
+> > +{
+> > +	vdev->nointxmask = nointxmask;
+> > +	vdev->disable_idle_d3 = disable_idle_d3;
 > 
-> If device can't find named CMA area, "cma_find_by_name()" will
-> return NULL, and device will used default CMA area.
+> These two are selected (not disable_vga) because they're the only
+> writable module options, correct?
 
-Please do not add new exported symbols without actual users.
+yep. These were selected per previous review comments from
+you. I also checked in the code, the existing 4 module options
+are clarified as below, and I can see only nointxmask and disable_idle_d3
+are writable. I guess this should be the evidence for selecting the
+modules options to be refreshed in vfio_pci_refresh_config().
 
-> Signed-off-by: BuddyZhang <buddy.zhang@aliyun.com>
-> ---
->  mm/cma.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/mm/cma.c b/mm/cma.c
-> index be55d1988c67..6581dabcaf34 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -40,6 +40,18 @@ struct cma cma_areas[MAX_CMA_AREAS];
->  unsigned cma_area_count;
->  static DEFINE_MUTEX(cma_mutex);
->  
-> +struct cma *cma_find_by_name(const char *name)
-> +{
-> +	int idx;
-> +
-> +	for (idx = 0; idx < MAX_CMA_AREAS; idx++) {
-> +		if (cma_areas[idx].name && !strcmp(name, cma_areas[idx].name))
-> +			return &cma_areas[idx];
-> +	}
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL(cma_find_by_name);
-> +
->  phys_addr_t cma_get_base(const struct cma *cma)
->  {
->  	return PFN_PHYS(cma->base_pfn);
-> 
-> base-commit: 5b483a1a0ea1ab19a5734051c9692c2cfabe1327
-> -- 
-> 2.17.1
-> 
+static char ids[1024] __initdata;
+module_param_string(ids, ids, sizeof(ids), 0);
 
--- 
-Michal Hocko
-SUSE Labs
+static bool nointxmask;
+module_param_named(nointxmask, nointxmask, bool, S_IRUGO | S_IWUSR);
+
+static bool disable_vga;
+module_param(disable_vga, bool, S_IRUGO);
+
+static bool disable_idle_d3;
+module_param(disable_idle_d3, bool, S_IRUGO | S_IWUSR);
+
+> 
+> > +}
+> > +
+> >  static void vfio_pci_release(void *device_data)
+> >  {
+> >  	struct vfio_pci_device *vdev = device_data;
+> > @@ -490,6 +498,8 @@ static int vfio_pci_open(void *device_data)
+> >  	if (!try_module_get(THIS_MODULE))
+> >  		return -ENODEV;
+> >
+> > +	vfio_pci_refresh_config(vdev, nointxmask, disable_idle_d3);
+> > +
+> >  	mutex_lock(&vdev->reflck->lock);
+> >
+> >  	if (!vdev->refcnt) {
+> > @@ -1330,6 +1340,11 @@ static int vfio_pci_probe(struct pci_dev *pdev, const
+> struct pci_device_id *id)
+> >  	spin_lock_init(&vdev->irqlock);
+> >  	mutex_init(&vdev->ioeventfds_lock);
+> >  	INIT_LIST_HEAD(&vdev->ioeventfds_list);
+> > +	vdev->nointxmask = nointxmask;
+> > +#ifdef CONFIG_VFIO_PCI_VGA
+> > +	vdev->disable_vga = disable_vga;
+> > +#endif
+> > +	vdev->disable_idle_d3 = disable_idle_d3;
+> 
+> But this could still use vfio_pci_refresh_config() for those writable
+> options and set disable_vga separately, couldn't it? 
+
+Right, would modify it. thanks.
+
+> Also, since
+> disable_idle_d3 is related to power handling of the device while it is
+> not opened by the user, shouldn't the config also be refreshed when the
+> device is released by the user?
+
+Oh, yes. You told me to do it. But I assumed that we only care
+about the config used during an open() and a release() circle.
+I missed it will affect the power management. Let me add the
+config refresh at release() all the same. Thanks.
+
+> 
+> >
+> >  	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
+> >  	if (ret) {
+> > @@ -1354,7 +1369,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, const
+> struct pci_device_id *id)
+> >
+> >  	vfio_pci_probe_power_state(vdev);
+> >
+> > -	if (!disable_idle_d3) {
+> > +	if (!vdev->disable_idle_d3) {
+> >  		/*
+> >  		 * pci-core sets the device power state to an unknown value at
+> >  		 * bootup and after being removed from a driver.  The only
+> > @@ -1385,7 +1400,7 @@ static void vfio_pci_remove(struct pci_dev *pdev)
+> >  	kfree(vdev->region);
+> >  	mutex_destroy(&vdev->ioeventfds_lock);
+> >
+> > -	if (!disable_idle_d3)
+> > +	if (!vdev->disable_idle_d3)
+> >  		vfio_pci_set_power_state(vdev, PCI_D0);
+> >
+> >  	kfree(vdev->pm_save);
+> > @@ -1620,7 +1635,7 @@ static void vfio_pci_try_bus_reset(struct vfio_pci_device
+> *vdev)
+> >  		if (!ret) {
+> >  			tmp->needs_reset = false;
+> >
+> > -			if (tmp != vdev && !disable_idle_d3)
+> > +			if (tmp != vdev && !tmp->disable_idle_d3)
+> >  				vfio_pci_set_power_state(tmp, PCI_D3hot);
+> >  		}
+> >
+> > @@ -1636,7 +1651,7 @@ static void __exit vfio_pci_cleanup(void)
+> >  	vfio_pci_uninit_perm_bits();
+> >  }
+> >
+> > -static void __init vfio_pci_fill_ids(void)
+> > +static void __init vfio_pci_fill_ids(char *ids)
+> 
+> This might be more clear if the global was also renamed vfio_pci_ids.
+
+Yep. Let me rename it later.
+
+> >  {
+> >  	char *p, *id;
+> >  	int rc;
+> > @@ -1691,7 +1706,7 @@ static int __init vfio_pci_init(void)
+> >  	if (ret)
+> >  		goto out_driver;
+> >
+> > -	vfio_pci_fill_ids();
+> > +	vfio_pci_fill_ids(ids);
+> >
+> >  	return 0;
+> >
+> > diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> > index 8a2c760..0398608 100644
+> > --- a/drivers/vfio/pci/vfio_pci_private.h
+> > +++ b/drivers/vfio/pci/vfio_pci_private.h
+> > @@ -122,6 +122,11 @@ struct vfio_pci_device {
+> >  	struct list_head	dummy_resources_list;
+> >  	struct mutex		ioeventfds_lock;
+> >  	struct list_head	ioeventfds_list;
+> > +	bool			nointxmask;
+> > +#ifdef CONFIG_VFIO_PCI_VGA
+> > +	bool			disable_vga;
+> > +#endif
+> > +	bool			disable_idle_d3;
+> 
+> It seems like there are more relevant places these could be within this
+> structure, ex. nointxmask next to nointx, disable_vga near has_vga,
+> disable_idle_d3 maybe near needs_pm_restore (even though those aren't
+> conceptually related).  Not necessarily related to this series, it
+> might be time to convert the existing bools to bit fields, but even
+> before that the alignment of adding these as bools grouped with the
+> existing bools is probably better.  Thanks,
+
+Agreed. Will place the new bools at better place (with proper neighbors:-))
+
+> Alex
+
+Thanks,
+Yi Liu
+
+> 
+> >  };
+> >
+> >  #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
+> > @@ -130,6 +135,9 @@ struct vfio_pci_device {
+> >  #define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
+> >  #define irq_is(vdev, type) (vdev->irq_type == type)
+> >
+> > +extern void vfio_pci_refresh_config(struct vfio_pci_device *vdev,
+> > +				bool nointxmask, bool disable_idle_d3);
+> > +
+> >  extern void vfio_pci_intx_mask(struct vfio_pci_device *vdev);
+> >  extern void vfio_pci_intx_unmask(struct vfio_pci_device *vdev);
+> >
+
