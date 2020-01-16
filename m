@@ -2,115 +2,316 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71DAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3466EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C4A20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B0720748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="cH5daPaI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4SxvugD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgAPPFb (ORCPT
+        id S1726714AbgAPPHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:05:31 -0500
-Received: from www413.your-server.de ([88.198.28.140]:59790 "EHLO
-        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAPPFb (ORCPT
+        Thu, 16 Jan 2020 10:07:19 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41656 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgAPPHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:05:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
-        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZexOn4FEQsloo7emu6e0E5yv/ua4j8MP3CCsOZRUTrA=; b=cH5daPaIgIih/Pf96nB99OLLk
-        He2uzFd9DbAroxYeSqMNge2LxXZrOBo0v9OmLE1S1Lx6nZDqfcfSUgRRsALGbAG6E0i3u9JEOoLeO
-        nW8ahzkp0DymxyHCyrb8Lpgu8dDWPvaZBgthAi6iJ6k3RMozor0uQuZVcP18d1Kpdi3rjJr9/D93w
-        YCYKZS4ffZBVmP4qGFJjIvCR2lV95riAy6Ynqt3L9SGKqmK97KlJbSORWmZeIQ7ZkC0OnfYRwsphz
-        I5+MAvoMGMdH7r3DNTwUd2/voreF9TX9qKfWfK7oGJ64qA47BDI8Gy3Lhadp1enI/h8niGUyqBCSq
-        tYsAw7+fQ==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1is6i5-0002D5-DF; Thu, 16 Jan 2020 16:05:25 +0100
-Received: from [2a02:8106:231:700:38db:ba68:aa3a:bbaa] (helo=localhost.localdomain)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1is6i5-000K38-4Y; Thu, 16 Jan 2020 16:05:25 +0100
-Message-ID: <edb721906354e26c26883edf5bce09690ca07d6d.camel@cyberus-technology.de>
-Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
- global include
-From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhiyuan.lv@intel.com, hang.yuan@intel.com,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Thomas Prescher <thomas.prescher@cyberus-technology.de>
-Date:   Thu, 16 Jan 2020 16:05:22 +0100
-In-Reply-To: <20200116142345.GA476889@kroah.com>
-References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
-         <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
-         <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
-         <20200115152215.GA3830321@kroah.com>
-         <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
-         <20200116142345.GA476889@kroah.com>
-Organization: Cyberus Technology GmbH
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Thu, 16 Jan 2020 10:07:18 -0500
+Received: by mail-pl1-f196.google.com with SMTP id t14so499864plr.8;
+        Thu, 16 Jan 2020 07:07:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vjxcdMtJ7Oexv+w5Dwu8AKI8PT0pyBlB7MnZKY70u2g=;
+        b=l4SxvugDg0fLlOIXOafZ1g4C5s2UV1MESOmBy0guCzBET0HgG/OBkvxLgb66OjpiIa
+         SzS3TyXQE3eC2bqIa1MoE+zD7NPSlm6R38D+oSwG6nWSyJ7lzb46WFcCX4hnAwIpjiHp
+         6iLQFPvz4qMB8DZjaKjhAV+CHsd4M4RpBmioqgI2ZB7mtWlcxa/JQfLCjtNFbfdxbA8/
+         9M/1H/TcyUkH2xObNpLiwbxO3icJIP0XAb6YFCZM8cfzyk7WTGEFd06wsHZsI8TRh9T+
+         hXEPfcyMfACwuVFI00wwn38TNAowkb8DcW16gP/VLAUAaRWEYmq61ZVs1yh5r3veuhUJ
+         9XRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vjxcdMtJ7Oexv+w5Dwu8AKI8PT0pyBlB7MnZKY70u2g=;
+        b=QUF9ZQT5A24OV1V8pG5RElEsHtjJK90irBGvrYhnHddMSMF5D7SQFvyWofguv2kNPv
+         vY+o6bMpcRtx+J64zmzrElmt0R0L1fmEFbLr2GofKSARVZ9MbVDPuXwb0/60as2/VcGy
+         VOAYSiTFW0g8AoMvGSrP4V3V0uUeusJT7aToDw/qpk1OL4FKKsFgiBBKdM0vsQ5sByIv
+         OfTZDjdvoTAOP2H9B8afZYxuy0unTw+tTYDghTZx1E+hTSWBAxFfMgLtLYYFqHW9yKfk
+         LCYysdg544pLKbS5kIQsXGG4kb4PPLmpZYa+d4RkKp1BBylzL9ExxdhsCSyJYfvTAWvj
+         0UHQ==
+X-Gm-Message-State: APjAAAXPXrXQRUImfexgTzKQYqJSVlB/t8e3xlbADU/I4auG0ChPSVxm
+        64U32eaN/AQ6aDnb6W8L2eY=
+X-Google-Smtp-Source: APXvYqzFr7XTWY65mFhGJamleS49FRXRWBoQFLo5MgZafwRm4viQsiyF+KrXj0p/XcfgFMlPWIjoQQ==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr37834417plt.26.1579187237843;
+        Thu, 16 Jan 2020 07:07:17 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c68sm26272677pfc.156.2020.01.16.07.07.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 07:07:17 -0800 (PST)
+Subject: Re: [PATCH 7/9] watchdog: of_xilinx_wdt: Add Versal support
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
+        sgoud@xilinx.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com
+References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1579181217-31127-8-git-send-email-srinivas.neeli@xilinx.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <55d1e8d6-abed-6d6a-614a-435e84e64f05@roeck-us.net>
+Date:   Thu, 16 Jan 2020 07:07:15 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <1579181217-31127-8-git-send-email-srinivas.neeli@xilinx.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25697/Thu Jan 16 12:42:45 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Thu, 2020-01-16 at 15:23 +0100, Greg KH wrote:
-> On Thu, Jan 16, 2020 at 03:13:01PM +0100, Julian Stecklina wrote:
-> > Hi Greg, Christoph,
-> > 
-> > On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
-> > > On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
-> > > > Now that the GVT interface to hypervisors does not depend on i915/GVT
-> > > > internals anymore, we can move the headers to the global include/.
-> > > > 
-> > > > This makes out-of-tree modules for hypervisor integration possible.
-> > > 
-> > > What kind of out-of-tree modules do you need/want for this?
-> > 
-> > The mediated virtualization support in the i915 driver needs a backend to
-> > the
-> > hypervisor. There is currently one backend for KVM in the tree
-> > (drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends
-> > out
-> > of tree in various states of development that I know of. We are currently
-> > developing one of these.
+On 1/16/20 5:26 AM, Srinivas Neeli wrote:
+> From: Srinivas Goud <srinivas.goud@xilinx.com>
 > 
-> Great, then just submit this patch series as part of your patch series
-> when submitting yoru hypervisor code.  That's the normal way to export
-> new symbols, we can't do so without an in-kernel user.
+> Versal watchdog driver uses generic watchdog mode.
+> Generic watchdog contains closed and open window of equal timeout.
+> Generic watchdog will generate reset signal if it is not explicitly
+> refreshed in second window.
+> 
 
-Fair enough.
-
-As I already said, the KVMGT code is the in-kernel user. But I guess I can
-extend the already existing function pointer way of decoupling KVMGT from i915
-and be on my way without exporting any symbols.
-
-Somewhat independent of the current discussion, I also think that it's valuable
-to have a defined API (I'm not saying stable API) for the hypervisor backends to
-define what's okay and not okay for them to do.
+WHy don't you just implement a separate driver for this watchdog ?
+It seems to be completely different. I don't immediately see the
+benefit of having a single driver. If there is one, please explain
+in detail.
 
 Thanks,
-Julian
+Guenter
+
+> Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> ---
+>   drivers/watchdog/of_xilinx_wdt.c | 150 ++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 149 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+> index 3b93b60f1a00..d2c389d9eaa7 100644
+> --- a/drivers/watchdog/of_xilinx_wdt.c
+> +++ b/drivers/watchdog/of_xilinx_wdt.c
+> @@ -2,7 +2,7 @@
+>   /*
+>    * Watchdog Device Driver for Xilinx axi/xps_timebase_wdt
+>    *
+> - * (C) Copyright 2013 - 2014 Xilinx, Inc.
+> + * (C) Copyright 2013 - 2020 Xilinx, Inc.
+>    * (C) Copyright 2011 (Alejandro Cabrera <aldaya@gmail.com>)
+>    */
+>   
+> @@ -18,10 +18,19 @@
+>   #include <linux/of_device.h>
+>   #include <linux/of_address.h>
+>   
+> +#define XWT_WWDT_MIN_TIMEOUT		1
+> +#define XWT_WWDT_MAX_TIMEOUT		80
+> +
+>   /* Register offsets for the Wdt device */
+>   #define XWT_TWCSR0_OFFSET   0x0 /* Control/Status Register0 */
+>   #define XWT_TWCSR1_OFFSET   0x4 /* Control/Status Register1 */
+>   #define XWT_TBR_OFFSET      0x8 /* Timebase Register Offset */
+> +#define XWT_WWREF_OFFSET	0x1000 /* Refresh Register */
+> +#define XWT_WWCSR_OFFSET	0x2000 /* Control/Status Register */
+> +#define XWT_WWOFF_OFFSET	0x2008 /* Offset Register */
+> +#define XWT_WWCMP0_OFFSET	0x2010 /* Compare Value Register0 */
+> +#define XWT_WWCMP1_OFFSET	0x2014 /* Compare Value Register1 */
+> +#define XWT_WWWRST_OFFSET	0x2FD0 /* Warm Reset Register */
+>   
+>   /* Control/Status Register Masks  */
+>   #define XWT_CSR0_WRS_MASK	BIT(3) /* Reset status */
+> @@ -31,6 +40,15 @@
+>   /* Control/Status Register 0/1 bits  */
+>   #define XWT_CSRX_EWDT2_MASK	BIT(0) /* Enable bit 2 */
+>   
+> +/* Refresh Register Masks */
+> +#define XWT_WWREF_GWRR_MASK	BIT(0) /* Refresh and start new period */
+> +
+> +/* Generic Control/Status Register Masks  */
+> +#define XWT_WWCSR_GWEN_MASK	BIT(0) /* Enable Bit */
+> +
+> +/* Warm Reset Register Masks */
+> +#define XWT_WWRST_GWWRR_MASK	BIT(0) /* Warm Reset Register */
+> +
+>   /* SelfTest constants */
+>   #define XWT_MAX_SELFTEST_LOOP_COUNT 0x00010000
+>   #define XWT_TIMER_FAILED            0xFFFFFFFF
+> @@ -41,9 +59,11 @@
+>    * enum xwdt_ip_type - WDT IP type.
+>    *
+>    * @XWDT_WDT: Soft wdt ip.
+> + * @XWDT_WWDT: Window wdt ip.
+>    */
+>   enum xwdt_ip_type {
+>   	XWDT_WDT = 0,
+> +	XWDT_WWDT,
+>   };
+>   
+>   struct xwdt_devtype_data {
+> @@ -145,6 +165,126 @@ static const struct watchdog_ops xilinx_wdt_ops = {
+>   	.ping = xilinx_wdt_keepalive,
+>   };
+>   
+> +static int xilinx_wwdt_start(struct watchdog_device *wdd)
+> +{
+> +	int ret;
+> +	u32 control_status_reg;
+> +	u64 count;
+> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
+> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
+> +
+> +	unsigned long clock_f = clk_get_rate(xdev->clk);
+> +
+> +	/* Calculate timeout count */
+> +	count = wdd->timeout * clock_f;
+> +	ret  = clk_enable(xdev->clk);
+> +	if (ret) {
+> +		dev_err(wdd->parent, "Failed to enable clock\n");
+> +		return ret;
+> +	}
+> +
+> +	spin_lock(&xdev->spinlock);
+> +
+> +	/*
+> +	 * Timeout count is half as there are two windows
+> +	 * first window overflow is ignored (interrupt),
+> +	 * reset is only generated at second window overflow
+> +	 */
+> +	count = count >> 1;
+> +
+> +	/* Disable the generic watchdog timer */
+> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
+> +	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
+> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
+> +
+> +	/* Set compare and offset registers for generic watchdog timeout */
+> +	iowrite32((u32)count, xdev->base + XWT_WWCMP0_OFFSET);
+> +	iowrite32((u32)0, xdev->base + XWT_WWCMP1_OFFSET);
+> +	iowrite32((u32)count, xdev->base + XWT_WWOFF_OFFSET);
+> +
+> +	/* Enable the generic watchdog timer */
+> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
+> +	control_status_reg |= (XWT_WWCSR_GWEN_MASK);
+> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
+> +
+> +	spin_unlock(&xdev->spinlock);
+> +
+> +	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Started!\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int xilinx_wwdt_stop(struct watchdog_device *wdd)
+> +{
+> +	u32 control_status_reg;
+> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
+> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
+> +
+> +	spin_lock(&xdev->spinlock);
+> +
+> +	/* Disable the generic watchdog timer */
+> +	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
+> +	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
+> +	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
+> +
+> +	spin_unlock(&xdev->spinlock);
+> +
+> +	clk_disable(xdev->clk);
+> +
+> +	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Stopped!\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int xilinx_wwdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
+> +
+> +	spin_lock(&xdev->spinlock);
+> +
+> +	iowrite32(XWT_WWREF_GWRR_MASK, xdev->base + XWT_WWREF_OFFSET);
+> +
+> +	spin_unlock(&xdev->spinlock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int xilinx_wwdt_set_timeout(struct watchdog_device *wdd,
+> +				   unsigned int new_time)
+> +{
+> +	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
+> +	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
+> +
+> +	if (new_time < XWT_WWDT_MIN_TIMEOUT ||
+> +	    new_time > XWT_WWDT_MAX_TIMEOUT) {
+> +		dev_warn(xilinx_wdt_wdd->parent,
+> +			 "timeout value must be %d<=x<=%d, using %d\n",
+> +				XWT_WWDT_MIN_TIMEOUT,
+> +				XWT_WWDT_MAX_TIMEOUT, new_time);
+> +		return -EINVAL;
+> +	}
+> +
+> +	wdd->timeout = new_time;
+> +
+> +	return xilinx_wwdt_start(wdd);
+> +}
+> +
+> +static const struct watchdog_info xilinx_wwdt_ident = {
+> +	.options =  WDIOF_MAGICCLOSE |
+> +		WDIOF_KEEPALIVEPING |
+> +		WDIOF_SETTIMEOUT,
+> +	.firmware_version =	1,
+> +	.identity = "xlnx_wwdt watchdog",
+> +};
+> +
+> +static const struct watchdog_ops xilinx_wwdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = xilinx_wwdt_start,
+> +	.stop = xilinx_wwdt_stop,
+> +	.ping = xilinx_wwdt_keepalive,
+> +	.set_timeout = xilinx_wwdt_set_timeout,
+> +};
+> +
+>   static u32 xwdt_selftest(struct xwdt_device *xdev)
+>   {
+>   	int i;
+> @@ -181,11 +321,19 @@ static const struct xwdt_devtype_data xwdt_wdt_data = {
+>   	.xwdt_ops = &xilinx_wdt_ops,
+>   };
+>   
+> +static const struct xwdt_devtype_data xwdt_wwdt_data = {
+> +	.wdttype = XWDT_WWDT,
+> +	.xwdt_info = &xilinx_wwdt_ident,
+> +	.xwdt_ops = &xilinx_wwdt_ops,
+> +};
+> +
+>   static const struct of_device_id xwdt_of_match[] = {
+>   	{ .compatible = "xlnx,xps-timebase-wdt-1.00.a",
+>   		.data = &xwdt_wdt_data },
+>   	{ .compatible = "xlnx,xps-timebase-wdt-1.01.a",
+>   		.data = &xwdt_wdt_data },
+> +	{ .compatible = "xlnx,versal-wwdt-1.0",
+> +		.data = &xwdt_wwdt_data },
+>   	{},
+>   };
+>   MODULE_DEVICE_TABLE(of, xwdt_of_match);
+> 
 
