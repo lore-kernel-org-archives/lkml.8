@@ -2,256 +2,171 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD1C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C32C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1436206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB3A206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKo3K68q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAPQVo (ORCPT
+        id S1726876AbgAPQ0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:21:44 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:58034 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbgAPQVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:21:11 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A6B742006D8;
-        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 98ABF200314;
-        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 30DB32047A;
-        Thu, 16 Jan 2020 17:21:09 +0100 (CET)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Subject: [PATCH v3 3/9] crypto: caam - refactor ahash_edesc_alloc
-Date:   Thu, 16 Jan 2020 18:20:47 +0200
-Message-Id: <1579191653-400-4-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1579191653-400-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1579191653-400-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 Jan 2020 11:26:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26014 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726343AbgAPQ0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579191993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
+        b=fKo3K68q54zdlfew/C5LpHN6rVj40ArTeHZSQ7mBl/cZH8h7SQhPfYmfctU/BkepHQvfdx
+        jU3l/ckmBUSRaOD5CHxf1xl40507i7B6EVuJpP1X8rB3u3PfhEuPtrqwzQ1lMTg0fkaRI9
+        xwfCjk8p0B0IgT2VZkzk1q6QPCHakrQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-6-0SksJhezMXOl6o633zV7og-1; Thu, 16 Jan 2020 11:26:31 -0500
+X-MC-Unique: 0SksJhezMXOl6o633zV7og-1
+Received: by mail-wr1-f71.google.com with SMTP id y7so9474317wrm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:26:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
+        b=diqiyi6sFmyaH5cQ7g4qfeHWawCiJYKoFL8GG838nD6BCZr+D1fXY3au4xYS5R9TYN
+         nJCRBHx79uXqS5lYwlJJM9z2YXsbAr+4E7G3Kzy2x3TMrWZlcV628t5rdlDa0V87TgRc
+         BZUvzyoG7/16w3LlZGh5eGVy27hybPCfeq40YJhZpZa6vOpeoDfcwQA3GkpWW3AEVS3z
+         aOl81mhOQSSCUlLCxdqRg7hBgM1ivDzxS+ShnEnulTAaCEdzkMoaXakHggqMyapxMX2p
+         Ng9lN/hP2Htd5YYTxTc8gkNozzkeP3//Lf8UnQoa0eYjnFYNId9xY4h+7zNLcNQpSFPN
+         RGOQ==
+X-Gm-Message-State: APjAAAWOODjH5sIVyaey/+Usc1Fy9FWJLzLTIIXxwa03jkGSiScMAHUG
+        G5Sr04Z8P2vCK78100zlYz9oLkYM4hTcTeu0+AldMhorWU+o5pqszgZToiwTFtHkYL54vy9FVTO
+        /gD2ThWpBaD/qtbV2SRHC2Qvk
+X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855364wmk.172.1579191990296;
+        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz9EJwBuG6ODNlyZBGksf47bJ8nGES+4PVLl9IGi7RpL8xuA0/DC21LXggZnSo0PfYTMZWZmA==
+X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855343wmk.172.1579191990037;
+        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id t12sm29701964wrs.96.2020.01.16.08.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 08:26:29 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     lantianyu1986@gmail.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org,
+        michael.h.kelley@microsoft.com
+Subject: Re: [PATCH V2] x86/Hyper-V: Balloon up according to request page number
+In-Reply-To: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
+References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
+Date:   Thu, 16 Jan 2020 17:26:28 +0100
+Message-ID: <87tv4vgyff.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changed parameters for ahash_edesc_alloc function:
-- remove flags since they can be computed in
-ahash_edesc_alloc, the only place they are needed;
-- use ahash_request instead of caam_hash_ctx, to be
-able to compute gfp flags.
+lantianyu1986@gmail.com writes:
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Reviewed-by: Horia Geanta <horia.geanta@nxp.com>
----
- drivers/crypto/caam/caamhash.c | 62 +++++++++++++++---------------------------
- 1 file changed, 22 insertions(+), 40 deletions(-)
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>
+> Current code has assumption that balloon request memory size aligns
+> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+> balloon driver receives non-aligned balloon request, it produces warning
+> and balloon up more memory than requested in order to keep 2MB alignment.
+> Remove the warning and balloon up memory according to actual requested
+> memory size.
+>
+> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v2:
+>     - Change logic of switching alloc_unit from 2MB to 4KB
+>     in the balloon_up() to avoid redundant iteration when
+>     handle non-aligned page request.
+>     - Remove 2MB alignment operation and comment in balloon_up()
+> ---
+>  drivers/hv/hv_balloon.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 7f3e7ab22d5d..536807efbc35 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+>  	if (num_pages < alloc_unit)
+>  		return 0;
+>  
+> -	for (i = 0; (i * alloc_unit) < num_pages; i++) {
+> +	for (i = 0; i < num_pages / alloc_unit; i++) {
+>  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+>  			HV_HYP_PAGE_SIZE)
+>  			return i * alloc_unit;
+> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
+>  
+>  	}
+>  
+> -	return num_pages;
+> +	return i * alloc_unit;
+>  }
+>  
+>  static void balloon_up(union dm_msg_info *msg_info)
+> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
+>  	long avail_pages;
+>  	unsigned long floor;
+>  
+> -	/* The host balloons pages in 2M granularity. */
+> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
+> -
+>  	/*
+>  	 * We will attempt 2M allocations. However, if we fail to
+>  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_info)
+>  	avail_pages = si_mem_available();
+>  	floor = compute_balloon_floor();
+>  
+> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
+> +	/* Refuse to balloon below the floor. */
+>  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+>  		pr_warn("Balloon request will be partially fulfilled. %s\n",
+>  			avail_pages < num_pages ? "Not enough memory." :
+>  			"Balloon floor reached.");
+>  
+>  		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
+> -		num_pages -= num_pages % PAGES_IN_2M;
+>  	}
+>  
+>  	while (!done) {
+> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
+>  		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
+>  						    bl_resp, alloc_unit);
+>  
+> -		if (alloc_unit != 1 && num_ballooned == 0) {
+> +		if (alloc_unit != 1 && num_ballooned != num_pages) {
+>  			alloc_unit = 1;
+>  			continue;
+>  		}
 
-diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
-index 59881a8..4db8507 100644
---- a/drivers/crypto/caam/caamhash.c
-+++ b/drivers/crypto/caam/caamhash.c
-@@ -661,11 +661,14 @@ static void ahash_done_ctx_dst(struct device *jrdev, u32 *desc, u32 err,
-  * Allocate an enhanced descriptor, which contains the hardware descriptor
-  * and space for hardware scatter table containing sg_num entries.
-  */
--static struct ahash_edesc *ahash_edesc_alloc(struct caam_hash_ctx *ctx,
-+static struct ahash_edesc *ahash_edesc_alloc(struct ahash_request *req,
- 					     int sg_num, u32 *sh_desc,
--					     dma_addr_t sh_desc_dma,
--					     gfp_t flags)
-+					     dma_addr_t sh_desc_dma)
- {
-+	struct crypto_ahash *ahash = crypto_ahash_reqtfm(req);
-+	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
-+	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
-+		       GFP_KERNEL : GFP_ATOMIC;
- 	struct ahash_edesc *edesc;
- 	unsigned int sg_size = sg_num * sizeof(struct sec4_sg_entry);
- 
-@@ -724,8 +727,6 @@ static int ahash_update_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	u8 *buf = state->buf;
- 	int *buflen = &state->buflen;
- 	int *next_buflen = &state->next_buflen;
-@@ -779,8 +780,8 @@ static int ahash_update_ctx(struct ahash_request *req)
- 		 * allocate space for base edesc and hw desc commands,
- 		 * link tables
- 		 */
--		edesc = ahash_edesc_alloc(ctx, pad_nents, ctx->sh_desc_update,
--					  ctx->sh_desc_update_dma, flags);
-+		edesc = ahash_edesc_alloc(req, pad_nents, ctx->sh_desc_update,
-+					  ctx->sh_desc_update_dma);
- 		if (!edesc) {
- 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 			return -ENOMEM;
-@@ -854,8 +855,6 @@ static int ahash_final_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	int buflen = state->buflen;
- 	u32 *desc;
- 	int sec4_sg_bytes;
-@@ -867,8 +866,8 @@ static int ahash_final_ctx(struct ahash_request *req)
- 			sizeof(struct sec4_sg_entry);
- 
- 	/* allocate space for base edesc and hw desc commands, link tables */
--	edesc = ahash_edesc_alloc(ctx, 4, ctx->sh_desc_fin,
--				  ctx->sh_desc_fin_dma, flags);
-+	edesc = ahash_edesc_alloc(req, 4, ctx->sh_desc_fin,
-+				  ctx->sh_desc_fin_dma);
- 	if (!edesc)
- 		return -ENOMEM;
- 
-@@ -920,8 +919,6 @@ static int ahash_finup_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	int buflen = state->buflen;
- 	u32 *desc;
- 	int sec4_sg_src_index;
-@@ -950,9 +947,8 @@ static int ahash_finup_ctx(struct ahash_request *req)
- 	sec4_sg_src_index = 1 + (buflen ? 1 : 0);
- 
- 	/* allocate space for base edesc and hw desc commands, link tables */
--	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
--				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma,
--				  flags);
-+	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
-+				  ctx->sh_desc_fin, ctx->sh_desc_fin_dma);
- 	if (!edesc) {
- 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 		return -ENOMEM;
-@@ -1000,8 +996,6 @@ static int ahash_digest(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	u32 *desc;
- 	int digestsize = crypto_ahash_digestsize(ahash);
- 	int src_nents, mapped_nents;
-@@ -1028,9 +1022,8 @@ static int ahash_digest(struct ahash_request *req)
- 	}
- 
- 	/* allocate space for base edesc and hw desc commands, link tables */
--	edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ? mapped_nents : 0,
--				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
--				  flags);
-+	edesc = ahash_edesc_alloc(req, mapped_nents > 1 ? mapped_nents : 0,
-+				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
- 	if (!edesc) {
- 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 		return -ENOMEM;
-@@ -1077,8 +1070,6 @@ static int ahash_final_no_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	u8 *buf = state->buf;
- 	int buflen = state->buflen;
- 	u32 *desc;
-@@ -1087,8 +1078,8 @@ static int ahash_final_no_ctx(struct ahash_request *req)
- 	int ret;
- 
- 	/* allocate space for base edesc and hw desc commands, link tables */
--	edesc = ahash_edesc_alloc(ctx, 0, ctx->sh_desc_digest,
--				  ctx->sh_desc_digest_dma, flags);
-+	edesc = ahash_edesc_alloc(req, 0, ctx->sh_desc_digest,
-+				  ctx->sh_desc_digest_dma);
- 	if (!edesc)
- 		return -ENOMEM;
- 
-@@ -1136,8 +1127,6 @@ static int ahash_update_no_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	u8 *buf = state->buf;
- 	int *buflen = &state->buflen;
- 	int *next_buflen = &state->next_buflen;
-@@ -1190,10 +1179,9 @@ static int ahash_update_no_ctx(struct ahash_request *req)
- 		 * allocate space for base edesc and hw desc commands,
- 		 * link tables
- 		 */
--		edesc = ahash_edesc_alloc(ctx, pad_nents,
-+		edesc = ahash_edesc_alloc(req, pad_nents,
- 					  ctx->sh_desc_update_first,
--					  ctx->sh_desc_update_first_dma,
--					  flags);
-+					  ctx->sh_desc_update_first_dma);
- 		if (!edesc) {
- 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 			return -ENOMEM;
-@@ -1261,8 +1249,6 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	int buflen = state->buflen;
- 	u32 *desc;
- 	int sec4_sg_bytes, sec4_sg_src_index, src_nents, mapped_nents;
-@@ -1292,9 +1278,8 @@ static int ahash_finup_no_ctx(struct ahash_request *req)
- 			 sizeof(struct sec4_sg_entry);
- 
- 	/* allocate space for base edesc and hw desc commands, link tables */
--	edesc = ahash_edesc_alloc(ctx, sec4_sg_src_index + mapped_nents,
--				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma,
--				  flags);
-+	edesc = ahash_edesc_alloc(req, sec4_sg_src_index + mapped_nents,
-+				  ctx->sh_desc_digest, ctx->sh_desc_digest_dma);
- 	if (!edesc) {
- 		dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 		return -ENOMEM;
-@@ -1347,8 +1332,6 @@ static int ahash_update_first(struct ahash_request *req)
- 	struct caam_hash_ctx *ctx = crypto_ahash_ctx(ahash);
- 	struct caam_hash_state *state = ahash_request_ctx(req);
- 	struct device *jrdev = ctx->jrdev;
--	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
--		       GFP_KERNEL : GFP_ATOMIC;
- 	u8 *buf = state->buf;
- 	int *buflen = &state->buflen;
- 	int *next_buflen = &state->next_buflen;
-@@ -1396,11 +1379,10 @@ static int ahash_update_first(struct ahash_request *req)
- 		 * allocate space for base edesc and hw desc commands,
- 		 * link tables
- 		 */
--		edesc = ahash_edesc_alloc(ctx, mapped_nents > 1 ?
-+		edesc = ahash_edesc_alloc(req, mapped_nents > 1 ?
- 					  mapped_nents : 0,
- 					  ctx->sh_desc_update_first,
--					  ctx->sh_desc_update_first_dma,
--					  flags);
-+					  ctx->sh_desc_update_first_dma);
- 		if (!edesc) {
- 			dma_unmap_sg(jrdev, req->src, src_nents, DMA_TO_DEVICE);
- 			return -ENOMEM;
+Thank you for addressing my comments on v1, this all looks good to me
+now so:
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.1.0
+Vitaly
 
