@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48534C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68193C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC502072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AB5206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201278;
-	bh=O658uSSxWwmoGFnHthtFfmzLKgcANu2grOllItCu8B8=;
+	s=default; t=1579201280;
+	bh=xybzNEW3gagGYev3jsj1LC82FcimqtoXS0anepIdcYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bld/MUhGMfw1yRYclcxNU8Yn7HmHhz6Z1jkMYoDYdsIx6/vVxt8n9Fy+x+2zCc88s
-	 LNvDgbSBBWyvzzp2sn+toKL9r5LdUS9ha8mIGlq+mBZgMBbcKNwuEXjWL/lxDsa6/R
-	 xdOysxNDagNO+rLrIJR7YBKveLRt/eWqg+UIQ5BE=
+	b=Q3Pe887MMhD1vfyT/x+lAPGcf1/Zp0gHoaThwwG79EWx4o9DQ/TuOXJsW8CmL1kuL
+	 vLGFAeEjxF2uX8J+ZQC+Vz3C2NtFWUbmrjmGerCcAtlbebrNr+EYO2aTNGZXl9E3UX
+	 Gfl+uZPV3P4XB6rzpoAoQ7rgIS48GyiFl/T5YjHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437272AbgAPTBL (ORCPT
+        id S2388809AbgAPRF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:01:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388625AbgAPRF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:59 -0500
+        id S2388684AbgAPRFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165B2205F4;
-        Thu, 16 Jan 2020 17:05:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89FDF2077B;
+        Thu, 16 Jan 2020 17:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194359;
-        bh=O658uSSxWwmoGFnHthtFfmzLKgcANu2grOllItCu8B8=;
+        s=default; t=1579194342;
+        bh=xybzNEW3gagGYev3jsj1LC82FcimqtoXS0anepIdcYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isjkQwNNzSo5oMcVOIK0IC6wIcKBDlZzlTzyYoqKBBy8ZlUdvj2ZboDKyI46OfT2w
-         PlPbthE1pIElBsEhrUz8xSJU1hQ3WvkT7us+3TqcudV8zmfEaemYaNz1ERqbujG4S1
-         KmN0wvRTA/vQg0+4fHa9KeYxd2W4vpBeH7UIAZZA=
+        b=HewKpN7KRq4Qbjd1xle3+98nQcRAMDVp632EIn9fSghPr0/hue6vi7/Xhw/2LhRxp
+         Ml+2mBFB+BGaIgU9zZd+Xw3oqgYn+jqImcmqSznkPh/FxGCWpq1bSRVQYa1rtdnSYQ
+         ZxqpyROlJBfCsqzmsGbxFXnMnWBdAP/mL6PJaEkI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 296/671] staging: android: vsoc: fix copy_from_user overrun
-Date:   Thu, 16 Jan 2020 11:58:54 -0500
-Message-Id: <20200116170509.12787-33-sashal@kernel.org>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 285/671] clk: qcom: Skip halt checks on gcc_pcie_0_pipe_clk for 8998
+Date:   Thu, 16 Jan 2020 11:58:43 -0500
+Message-Id: <20200116170509.12787-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,38 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Stehlé <vincent.stehle@laposte.net>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-[ Upstream commit 060ea4271a82270be6d44e8e9aefe8f155fb5626 ]
+[ Upstream commit c0ee0e43c049a13d11e913edf875e4ee376dc84b ]
 
-The `np->permission' structure is smaller than the `np' structure but
-sizeof(*np) worth of data is copied in there. Fix the size passed to
-copy_from_user() to avoid overrun.
+See similar issue solved by commit 5f2420ed2189
+("clk: qcom: Skip halt checks on gcc_usb3_phy_pipe_clk for 8998")
 
-Fixes: 3d2ec9dcd553 ("staging: Android: Add 'vsoc' driver for cuttlefish.")
-Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Without this patch, PCIe PHY init fails:
+
+qcom-qmp-phy 1c06000.phy: pipe_clk enable failed err=-16
+phy phy-1c06000.phy.0: phy init failed --> -16
+
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/android/vsoc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/gcc-msm8998.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/android/vsoc.c b/drivers/staging/android/vsoc.c
-index 22571abcaa4e..034d86869772 100644
---- a/drivers/staging/android/vsoc.c
-+++ b/drivers/staging/android/vsoc.c
-@@ -260,7 +260,8 @@ do_create_fd_scoped_permission(struct vsoc_device_region *region_p,
- 	atomic_t *owner_ptr = NULL;
- 	struct vsoc_device_region *managed_region_p;
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index 4e23973b6cd1..772a08101ddf 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -2144,7 +2144,7 @@ static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
  
--	if (copy_from_user(&np->permission, &arg->perm, sizeof(*np)) ||
-+	if (copy_from_user(&np->permission,
-+			   &arg->perm, sizeof(np->permission)) ||
- 	    copy_from_user(&managed_fd,
- 			   &arg->managed_region_fd, sizeof(managed_fd))) {
- 		return -EFAULT;
+ static struct clk_branch gcc_pcie_0_pipe_clk = {
+ 	.halt_reg = 0x6b018,
+-	.halt_check = BRANCH_HALT,
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x6b018,
+ 		.enable_mask = BIT(0),
 -- 
 2.20.1
 
