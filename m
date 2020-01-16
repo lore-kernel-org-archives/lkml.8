@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415D1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9D320684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0803820684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217546;
-	bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
+	s=default; t=1579217554;
+	bh=86Pm6fYfDDizdEsbuHEgjTe6dYvfZcvkBZXO+WecKPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2lO+l935ypkyhnZQzzwIWkc752TTO36heLw98OEDNihr2jsa3LPFePL7Bh3zuN3c
-	 Z6+S+Pb6FSFoGuJsBNoc4TR7Sc0LYoTCBXLl+BP+BKhJZjE/qaFjMAZSBfK5LE0Sui
-	 9HHFG4pvZ+L4NwnwlEO1rugH+ElXwiEfpwNall4Q=
+	b=Imxb1WZZVhNX47vPHdcHL6kqv2ITM5rrx+K20syCq4ecAHgvr4QDPehLygtYPHcpG
+	 MmHLs5rOSRu1Y+hZrEG69UXnmvetFBvTEj1Z8az+kIRejTgqjfhjTgQSCPgWSDkY8I
+	 J2OumGmhX50BzStSisqHwywX0Z9UdnGcYfrsYrGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391562AbgAPXcY (ORCPT
+        id S2391576AbgAPXcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41598 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:32:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404050AbgAPXcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:32:19 -0500
+        id S2391561AbgAPXcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B52206D9;
-        Thu, 16 Jan 2020 23:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D73C2072E;
+        Thu, 16 Jan 2020 23:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217538;
-        bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
+        s=default; t=1579217543;
+        bh=86Pm6fYfDDizdEsbuHEgjTe6dYvfZcvkBZXO+WecKPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEw+1NNAfZzO+qNA3XtcVpBd+FRZBMldfRzL5bJUm6nGqef6ik43uOE7jBDbSDesT
-         UWQKMjVURiacMgCpOj/P5yg4EoAavS7eD3o/dul0S4wulNmFDIqqNXsuPMUDGYGY/C
-         0CZVME+uwhqp45cUp3dplB/Nd7u8ZBB2HAB8gNN0=
+        b=Rf+rQZNaaR+bsi94JeaZS5A9nY2Ognjq/2BtUZl2d6vpdNo5Y1n5fHKfw7BZk60MY
+         5BV/SMaseLj/ilGRygKb4e2Zsp8U0DmlYtbGMMIx9Z+yzF8GYQr5uUT1PYD07WqiQ6
+         e6efcR9pNmAnV6Rf9C3x0ECVsNfsaHYOsCdx16io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.14 40/71] mei: fix modalias documentation
-Date:   Fri, 17 Jan 2020 00:18:38 +0100
-Message-Id: <20200116231715.340326697@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.14 42/71] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Fri, 17 Jan 2020 00:18:40 +0100
+Message-Id: <20200116231715.588419555@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 73668309215285366c433489de70d31362987be9 upstream.
+commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d upstream.
 
-mei client bus added the client protocol version to the device alias,
-but ABI documentation was not updated.
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-Fixes: b26864cad1c9 (mei: bus: add client protocol version to the device alias)
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20191008005735.12707-1-tomas.winkler@intel.com
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/ABI/testing/sysfs-bus-mei |    2 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/ABI/testing/sysfs-bus-mei
-+++ b/Documentation/ABI/testing/sysfs-bus-mei
-@@ -4,7 +4,7 @@ KernelVersion:	3.10
- Contact:	Samuel Ortiz <sameo@linux.intel.com>
- 		linux-mei@linux.intel.com
- Description:	Stores the same MODALIAS value emitted by uevent
--		Format: mei:<mei device name>:<device uuid>:
-+		Format: mei:<mei device name>:<device uuid>:<protocol version>
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(str
+ 		return -EINVAL;
  
- What:		/sys/bus/mei/devices/.../name
- Date:		May 2015
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
+ 
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 
 
