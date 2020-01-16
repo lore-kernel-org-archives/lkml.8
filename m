@@ -2,175 +2,192 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ACFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A81C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF23F2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201285;
-	bh=oZge8qcjmLHr1FyJzPzSH7Q+rLT/brvpKPHpjdJPLY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNqDf526Smhdi9aw6kqi61TLBWP6m5lreUb065gBwL6c9kXR3lDyc/HsZYI/FPMgD
-	 nA64xf4it3z6zMhq8VOBw+qCjHA22YOzkPb6hDBCKNPnmYLp58DQoBUQrb2xX1ogL8
-	 r/+MhoVGFDcwzE04D4nUu1WWXH+XHPlFoaTsGIrI=
+	by mail.kernel.org (Postfix) with ESMTP id 052912053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407258AbgAPTBW (ORCPT
+        id S2437291AbgAPTB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:01:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35438 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:01:29 -0500
+Received: from mga14.intel.com ([192.55.52.115]:12875 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388807AbgAPRF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4980E2051A;
-        Thu, 16 Jan 2020 17:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194355;
-        bh=oZge8qcjmLHr1FyJzPzSH7Q+rLT/brvpKPHpjdJPLY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPAdUJPYlN7cIYjbqJpPmOLe9N4OWQNfJvaEasqE1h2aqMc+Aty6xg2fQeRrPZIS7
-         g/aF+p2QM2Be8YTZX059cST7CFoegBpeOBv2gRAzCIJQv9iGfKTqsPRxl1Y858oHe4
-         YjkHxLN/LT6hNwsIZMQqv57Yd5b5Rt2zsfsNAk9U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 294/671] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
-Date:   Thu, 16 Jan 2020 11:58:52 -0500
-Message-Id: <20200116170509.12787-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2388807AbgAPTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:01:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:01:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="220465275"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.113])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jan 2020 11:01:13 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [RESEND PATCH V3] perf/x86: Consider pinned events for group validation
+Date:   Thu, 16 Jan 2020 11:00:25 -0800
+Message-Id: <1579201225-178031-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
+perf stat -M metrics relies on weak groups to reject unschedulable
+groups and run them as non-groups.
+This uses the group validation code in the kernel. Unfortunately
+that code doesn't take pinned events, such as the NMI watchdog, into
+account. So some groups can pass validation, but then later still
+never schedule.
 
-Super-IO accesses may fail on a system with no or unmapped LPC bus.
+For example,
 
-Also, other drivers may attempt to access the LPC bus at the same time,
-resulting in undefined behavior.
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $perf stat -M Page_Walks_Utilization
 
-Use request_muxed_region() to ensure that IO access on the requested
-address space is supported, and to ensure that access by multiple drivers
-is synchronized.
+ Performance counter stats for 'system wide':
 
-Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+     <not counted>      itlb_misses.walk_pending
+(0.00%)
+     <not counted>      dtlb_load_misses.walk_pending
+(0.00%)
+     <not counted>      dtlb_store_misses.walk_pending
+(0.00%)
+     <not counted>      ept.walk_pending
+(0.00%)
+     <not counted>      cycles
+(0.00%)
+
+       1.176613558 seconds time elapsed
+
+Current pinned events are always scheduled first. So the new group must
+can be scheduled together with current pinned events. Otherwise, it will
+never get a chance to be scheduled later.
+The trick is to pretend the current pinned events as part of the new
+group, and insert them into the fake_cpuc.
+The simulation result will tell if they can be scheduled successfully.
+The fake_cpuc never touch event state. The current pinned events will
+not be impacted.
+Disabling interrupts to prevent the events in current CPU's cpuc going
+away and getting freed.
+
+It won't catch all possible cases that cannot be scheduled, such as
+events pinned differently on different CPUs, or complicated constraints.
+The validation is based on current environment. It doesn't help on the
+case, which first create a group and then a pinned event, either.
+But for the most common case, the NMI watchdog interacting with the
+current perf metrics, it is strong enough.
+
+After applying the patch,
+
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $ perf stat -M Page_Walks_Utilization
+
+ Performance counter stats for 'system wide':
+
+         2,491,910      itlb_misses.walk_pending  #      0.0
+Page_Walks_Utilization   (79.94%)
+        13,630,942      dtlb_load_misses.walk_pending
+(80.02%)
+           207,255      dtlb_store_misses.walk_pending
+(80.04%)
+                 0      ept.walk_pending
+(80.04%)
+       236,204,924      cycles
+(79.97%)
+
+       0.901785713 seconds time elapsed
+
+Reported-by: Stephane Eranian <eranian@google.com>
+Suggested-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
-index 8ac89d0781cc..a575e1cdb81a 100644
---- a/drivers/hwmon/w83627hf.c
-+++ b/drivers/hwmon/w83627hf.c
-@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
- 	outb(ld,  sio->sioaddr + 1);
- }
- 
--static inline void
-+static inline int
- superio_enter(struct w83627hf_sio_data *sio)
+Changes since V3:
+- Update comments (preemption is disabled as well)
+
+The V2 still only check current CPU's cpuc. Because I think we cannot
+prevent the cpuc in other CPU without a lock. Adding a lock will
+introduce extra overhead in some critical path, e.g. context switch.
+The patch is good enough for the common case. We may leave the other
+complicated cases as they are.
+
+Changes since V1:
+- Disabling interrupts to prevent the events in current CPU's cpuc
+  going away and getting freed.
+- Update comments and description
+
+ arch/x86/events/core.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 43d0918..c4d9e14 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2032,9 +2032,12 @@ static int validate_event(struct perf_event *event)
+  */
+ static int validate_group(struct perf_event *event)
  {
-+	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
-+		return -EBUSY;
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_event *leader = event->group_leader;
+ 	struct cpu_hw_events *fake_cpuc;
+-	int ret = -EINVAL, n;
++	struct perf_event *pinned_event;
++	int ret = -EINVAL, n, i;
++	unsigned long flags;
+ 
+ 	fake_cpuc = allocate_fake_cpuc();
+ 	if (IS_ERR(fake_cpuc))
+@@ -2054,9 +2057,38 @@ static int validate_group(struct perf_event *event)
+ 	if (n < 0)
+ 		goto out;
+ 
++	/*
++	 * Disable interrupts and preemption to prevent the events in this
++	 * CPU's cpuc going away and getting freed.
++	 */
++	local_irq_save(flags);
 +
- 	outb(0x87, sio->sioaddr);
- 	outb(0x87, sio->sioaddr);
-+
-+	return 0;
- }
- 
- static inline void
- superio_exit(struct w83627hf_sio_data *sio)
- {
- 	outb(0xAA, sio->sioaddr);
-+	release_region(sio->sioaddr, 2);
- }
- 
- #define W627_DEVID 0x52
-@@ -1278,7 +1284,7 @@ static DEVICE_ATTR_RO(name);
- static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 				struct w83627hf_sio_data *sio_data)
- {
--	int err = -ENODEV;
-+	int err;
- 	u16 val;
- 
- 	static __initconst char *const names[] = {
-@@ -1290,7 +1296,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
- 	};
- 
- 	sio_data->sioaddr = sioaddr;
--	superio_enter(sio_data);
-+	err = superio_enter(sio_data);
-+	if (err)
-+		return err;
-+
-+	err = -ENODEV;
- 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
- 	switch (val) {
- 	case W627_DEVID:
-@@ -1644,9 +1654,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff, sel;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
++	/*
++	 * The new group must can be scheduled together with current pinned
++	 * events. Otherwise, it will never get a chance to be scheduled later.
++	 *
++	 * It won't catch all possible cases that cannot schedule, such as
++	 * events pinned on CPU1, but the validation for a new CPU1 event
++	 * running on other CPU. However, it's good enough to handle common
++	 * cases like the global NMI watchdog.
++	 */
++	for (i = 0; i < cpuc->n_events; i++) {
++		pinned_event = cpuc->event_list[i];
++		if (WARN_ON_ONCE(!pinned_event))
++			continue;
++		if (!pinned_event->attr.pinned)
++			continue;
++		fake_cpuc->n_events = n;
++		n = collect_events(fake_cpuc, pinned_event, false);
++		if (n < 0)
++			goto irq;
 +	}
 +
- 	superio_select(sio_data, W83627HF_LD_GPIO5);
+ 	fake_cpuc->n_events = 0;
+ 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
  
-+	res = 0xff;
-+
- 	/* Make sure these GPIO pins are enabled */
- 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
- 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
-@@ -1677,7 +1699,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
- 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
- 	int res = 0xff;
- 
--	superio_enter(sio_data);
-+	if (superio_enter(sio_data)) {
-+		/*
-+		 * Some other driver reserved the address space for itself.
-+		 * We don't want to fail driver instantiation because of that,
-+		 * so display a warning and keep going.
-+		 */
-+		dev_warn(&pdev->dev,
-+			 "Can not read VID data: Failed to enable SuperIO access\n");
-+		return res;
-+	}
-+
- 	superio_select(sio_data, W83627HF_LD_HWM);
- 
- 	/* Make sure these GPIO pins are enabled */
++irq:
++	local_irq_restore(flags);
+ out:
+ 	free_fake_cpuc(fake_cpuc);
+ 	return ret;
 -- 
-2.20.1
+2.7.4
 
