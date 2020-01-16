@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B07C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E955C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1656D246C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF1E246D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196287;
-	bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
+	s=default; t=1579196290;
+	bh=bFpgvpIsX7xYt7AEP1O4Mz3AHiaUEeRaeY8XZmOCVNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5HgEn9C6P7hsCEsuc6aCaXlCvTCXxzDWpxtdOlwYU1bRbiuZVNpI6D9IvderY5C1
-	 xqTS8my2PtHgpi0FMYS28VrdK5dG6prdDThPDcIm6vlsxtqbBjWI1l2IwIgEsp4jr6
-	 Qg27pKDv7bav+Rs9vLVxwL9l14f3oGuh79W6G+3E=
+	b=DXFoLCkA5SMXxqTHLLlKbzvzicKqpy58rMZxAF+6Z+EcNgoUj6mmflP/qDa+lQiDe
+	 V41QUE8e/FBhCZQKGoumcNK1SJ+Nz1syfERmsLEjAy6geMiqhbL1hMnoaB0H/4FnDD
+	 mAqf4PJdkyzhhwz4YF4B1W3VMZBpcf1TZzIZjjuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393269AbgAPRiF (ORCPT
+        id S2393284AbgAPRiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:38:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405408AbgAPRhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:35 -0500
+        id S2405422AbgAPRhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B7C246B1;
-        Thu, 16 Jan 2020 17:37:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1145246C3;
+        Thu, 16 Jan 2020 17:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196255;
-        bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
+        s=default; t=1579196258;
+        bh=bFpgvpIsX7xYt7AEP1O4Mz3AHiaUEeRaeY8XZmOCVNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZ/SZ+EeiyarBWsZN6JN6PykW4cKl7GZG5ItKyq6FJry9eoeG6S5wzrwsYaVzSBbo
-         xHY9CKfzDVN74WLS8dXS3w+Osy24VpbKQ4yu+TTqWs9qwzbmvNeqHLrnBobMlAv6xt
-         u6OhvTCfYniJdbyoUVFIg6NmlbXec++O+G+HJ/og=
+        b=UcqONqGQtp7eHAZtDNiPZwRaidNWbYNNdeYuI0hFf0tW6rMYMk+sue+45OTBcAnMJ
+         cqZbznNj0IG3oKHhh0/PGeuyiZoJgjug1UftpFTsRM85sdSAWGEF/0457+swCPxS8k
+         YFNru5XjVQWzVEbh68gCJYuQ4VwjtCreznfMLY8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 081/251] drm/nouveau/pmu: don't print reply values if exec is false
-Date:   Thu, 16 Jan 2020 12:33:50 -0500
-Message-Id: <20200116173641.22137-41-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 083/251] fs/nfs: Fix nfs_parse_devname to not modify it's argument
+Date:   Thu, 16 Jan 2020 12:33:52 -0500
+Message-Id: <20200116173641.22137-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,42 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
+[ Upstream commit 40cc394be1aa18848b8757e03bd8ed23281f572e ]
 
-Currently the uninitialized values in the array reply are printed out
-when exec is false and nvkm_pmu_send has not updated the array. Avoid
-confusion by only dumping out these values if they have been actually
-updated.
+In the rare and unsupported case of a hostname list nfs_parse_devname
+will modify dev_name.  There is no need to modify dev_name as the all
+that is being computed is the length of the hostname, so the computed
+length can just be shorted.
 
-Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
-Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: dc04589827f7 ("NFS: Use common device name parsing logic for NFSv4 and NFSv2/v3")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-index e6f74168238c..2ef9e942f43a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-@@ -87,10 +87,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
- 	if (exec) {
- 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
- 			      memx->base, finish);
-+		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
-+			   reply[0], reply[1]);
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 42c31587a936..4c21e572f2d9 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1928,7 +1928,7 @@ static int nfs_parse_devname(const char *dev_name,
+ 		/* kill possible hostname list: not supported */
+ 		comma = strchr(dev_name, ',');
+ 		if (comma != NULL && comma < end)
+-			*comma = 0;
++			len = comma - dev_name;
  	}
  
--	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
--		   reply[0], reply[1]);
- 	kfree(memx);
- 	return 0;
- }
+ 	if (len > maxnamlen)
 -- 
 2.20.1
 
