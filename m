@@ -2,402 +2,307 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273D3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01162077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0866B20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r5O/F1al"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TyP2e5Ks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgAPTvh (ORCPT
+        id S1732579AbgAPTvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:51:37 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43329 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730652AbgAPTvg (ORCPT
+        Thu, 16 Jan 2020 14:51:43 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38727 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730652AbgAPTvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:51:36 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x6so10731904pfo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:51:36 -0800 (PST)
+        Thu, 16 Jan 2020 14:51:43 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f20so8784805plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:51:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wu+I8aE11hoRgbOsBs0FtKqpK+C2bZSgRMmLwWFZIRw=;
-        b=r5O/F1alUl7CBjpQdp0GZXx4v1NXnzhtUe6P/VPfC6ZasmBJRUUI09knkDD2oHGrn/
-         yDxzA0e1yhYyussa/w9yGeprzDlaMXL1WC7B6ynovLgsxvz54xfg0W+uQ3uAJqIpYz9o
-         H9zlD+evVptsKTVKN7F3TO68ts/QGrat3Mli3A3+SXkpnWE+REq+0ECXE3Nkr4el/kRR
-         4Ueap7wvqXdOnA6Lfmq11MsnSifCVJtw+zUhQcQAL4uiQrdqDz9UKWEuevnVt17CJhJF
-         Kem/H9vhlG7mlYV+0z02Yx1R3DirrPYgE8uwzF0VeYq4FZXyxEFu4gtbbaqzEpKkCevG
-         pSGQ==
+        h=date:from:subject:cc:to:in-reply-to:references:message-id;
+        bh=g60WNasJ7Z271ktE5244YPkyrntxLxFVIdNescBp9z4=;
+        b=TyP2e5KsTPJw/bqBRc5c9WnVyrhciZJnzvKBfi349Enmd/eVjQkK8tBcSn4I7KTYS0
+         h0iSXw+dCYj59gpz2+8PvuUFMpd22OwCcb9Jj1UaOtS/3can81xVzLtlpGaJ5hnpkoQ4
+         6VDFcROmb6HoXkzN5HqsT0XIxrSe2OnQYMdJuNy/Ef0MPSapd3dww8vwwkzeJeiBJPqu
+         3tQIKXX6J0LV0BKQyy8hLyRD6DL33fLdYME0jElBeJGsUoqan5p5QXO0NvfzolxE8gEu
+         cYerInxxCkDfI6zMScGn3j5Pm2pqJRA4zZsBI+8O+HJxsPw//oTDVSiU+tXrGUdFVfjw
+         krIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wu+I8aE11hoRgbOsBs0FtKqpK+C2bZSgRMmLwWFZIRw=;
-        b=G/MAcn4ZKyNPtWIFV2VguX6semDLeXCHYRomUF/lb72QOmBMDSpmLNeo3ae8FYE4JQ
-         9esQH5BOCZcMW5jaeuVfvLMsaGnZQtX56VlTVy2jZLyQi4jweGRuAV6xJAK+HD4YodrC
-         fESAsAXr1OauPGlsbzWV52yUirBL1xNT0ieneRGGes63v9UnLX0HziiLeJTf3h1V+7Ds
-         rfRL2J3au2RcRgEGz64SBPuIRluiJec2he9XPMaFLFZpD9o75FAxviJnqDKR2JHQHlNc
-         I0LNQPX/Jtg3UCsSMCDn4+QVj3Vy+57qJXo6l9MZxsN8UMGrxRBCFwWKoJz/LIm/DUpY
-         r0zg==
-X-Gm-Message-State: APjAAAU28+ljDs39JjHoMd6jOq10GBzLeowUgmOjb1kKMOBFAKoe3C+B
-        e4chRWxU/v/WorAJ+KoDrQ1Ygg==
-X-Google-Smtp-Source: APXvYqykIHiICYqDETHsqr98rlEaUSUjEQi/PLKCwnevGFD6S6IIr365ComFOM8ZRnUCLO1NSwgH5A==
-X-Received: by 2002:a63:3e03:: with SMTP id l3mr41344370pga.118.1579204295555;
-        Thu, 16 Jan 2020 11:51:35 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id fa21sm4571804pjb.17.2020.01.16.11.51.34
+        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
+         :message-id;
+        bh=g60WNasJ7Z271ktE5244YPkyrntxLxFVIdNescBp9z4=;
+        b=rfDFnG5rK/ofs9dLKgcPBpjN/wfG7wKB2ubk+jfJdRfajS+s2B94zopFl23v6Sv2oN
+         ztfEyqsbZZrvG6OZ8ViWXAe9SLjMknJPTMt33cAGq7JY8XswupRlo8f3Ho5xcvtnNOCZ
+         43q0yLRPMkdhMioo46BmJXmlqx2eQ39QKegRgy4RmaglyjPFHm36oe+wXZf4AHJjDCCn
+         OTgRma+k8XzAv7nBmwMVf5/s00Udp2zzCvsolKCukFw0THMa1mW/GRGpHkgxbaGqctBx
+         MrYyCr0C8GhGszAtWrN/ZBlQZ7M8SQ65F1UlqHxeH2FMydfQPYnwwIhJtYo92G7Hq8MP
+         SXOw==
+X-Gm-Message-State: APjAAAUvo+YdYxOvCRtgeWFRhRBZ6OjJqniKU7AUD1StwMyZEcpa8XCI
+        qA7FtXC3my4Gnk6ZnZ6bwEpAcA==
+X-Google-Smtp-Source: APXvYqym6i53VUu8ggCl15lqU29XS7/GTsjQdgdYLUwbbasUkynvicTtqBqTIBuUeVaZu00lOGlruw==
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr33015308ple.226.1579204301567;
+        Thu, 16 Jan 2020 11:51:41 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
+        by smtp.gmail.com with ESMTPSA id m22sm26593404pgn.8.2020.01.16.11.51.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 11:51:34 -0800 (PST)
-Date:   Thu, 16 Jan 2020 11:51:29 -0800
-From:   Benson Leung <bleung@google.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: Re: [PATCH v6 1/3] platform: chrome: Add cros-usbpd-notify driver
-Message-ID: <20200116195129.GD208460@google.com>
-References: <20200114232219.93171-1-pmalani@chromium.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="osDK9TLjxFScVI/L"
-Content-Disposition: inline
-In-Reply-To: <20200114232219.93171-1-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Jan 2020 11:51:41 -0800 (PST)
+Date:   Thu, 16 Jan 2020 11:51:41 -0800 (PST)
+X-Google-Original-Date: Thu, 16 Jan 2020 10:41:32 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH v10 02/19] RISC-V: Add bitmap reprensenting ISA features common across CPUs
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        pbonzini@redhat.com, rkrcmar@redhat.com, graf@amazon.com,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, anup@brainfault.org,
+        kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <Anup.Patel@wdc.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+In-Reply-To: <20191223113443.68969-3-anup.patel@wdc.com>
+References: <20191223113443.68969-3-anup.patel@wdc.com>
+  <20191223113443.68969-1-anup.patel@wdc.com>
+Message-ID: <mhng-24b22694-82f4-467b-b6a9-0fb2e186d3f2@palmerdabbelt-glaptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---osDK9TLjxFScVI/L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 14, 2020 at 03:22:18PM -0800, Prashant Malani wrote:
-> From: Jon Flatley <jflat@chromium.org>
->=20
-> ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
-> related events. The existing cros-usbpd-charger driver relies on these
-> events without ever actually receiving them on ACPI platforms. This is
-> because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
-> ACPI driver that offers firmware updates to USB-C chargers.
->=20
-> Introduce a new platform driver under cros-ec, the ChromeOS embedded
-> controller, that handles these PD events and dispatches them
-> appropriately over a notifier chain to all drivers that use them.
->=20
-> On platforms that don't have the ACPI device defined, the driver gets
-> instantiated for ECs which support the EC_FEATURE_USB_PD feature bit,
-> and the notification events will get delivered using the MKBP event
-> handling mechanism.
->=20
-> Co-Developed-by: Prashant Malani <pmalani@chromium.org>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Signed-off-by: Jon Flatley <jflat@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-
-Minor nit, otherwise,
-Reviewed-by: Benson Leung <bleung@chromium.org>
-
-
+On Mon, 23 Dec 2019 03:35:26 PST (-0800), Anup Patel wrote:
+> This patch adds riscv_isa bitmap which represents Host ISA features
+> common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> because elf_hwcap will only have ISA features relevant for user-space
+> apps whereas riscv_isa will have ISA features relevant to both kernel
+> and user-space apps.
+>
+> One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> we will use it to do following operations:
+>
+> 1. Check whether hypervisor extension is available
+> 2. Find ISA features that need to be virtualized (e.g. floating
+>    point support, vector extension, etc.)
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Alexander Graf <graf@amazon.com>
 > ---
->=20
-> Changes in v6(pmalani@chromium.org):
-> - Fix build error from typo in cros_usbpd_notify_acpi_device_ids
->   variable name.
->=20
-> Changes in v5(pmalani@chromium.org):
-> - Split the driver into platform and ACPI variants, each enclosed by
->   CONFIG_OF and CONFIG_ACPI #ifdefs respectively.
-> - Updated the copyright year to 2020.
-> - Reworded the commit message and Kconfig description to incorporate
->   the modified driver structure.
->=20
-> Changes in v4(pmalani@chromium.org):
-> - No code changes, but added new version so that versioning is
->   consistent with the next patch in the series.
->=20
-> Changes in v3 (pmalani@chromium.org):
-> - Renamed driver and files from "cros_ec_pd_notify" to
->   "cros_usbpd_notify" to be more consistent with other naming.
-> - Moved the change to include cros-usbpd-notify in the charger MFD
->   into a separate follow-on patch.
->=20
-> Changes in v2 (pmalani@chromium.org):
-> - Removed dependency on DT entry; instead, we will instantiate
->   the driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
-> - Modified the cros-ec-pd-notify device to be an mfd_cell under
->   usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
->   to derive the cros EC structs appropriately.
-> - Replaced "usbpd_notify" with "pd_notify" in functions and structures.
-> - Addressed comments from upstream maintainer.
->=20
->  drivers/platform/chrome/Kconfig               |  10 ++
->  drivers/platform/chrome/Makefile              |   1 +
->  drivers/platform/chrome/cros_usbpd_notify.c   | 153 ++++++++++++++++++
->  .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
->  4 files changed, 181 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
->  create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
->=20
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kc=
-onfig
-> index 5f57282a28da0..89df6c991089d 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -226,6 +226,16 @@ config CROS_USBPD_LOGGER
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called cros_usbpd_logger.
-> =20
-> +config CROS_USBPD_NOTIFY
-> +	tristate "ChromeOS Type-C power delivery event notifier"
-> +	depends on CROS_EC
-> +	help
-> +	  If you say Y here, you get support for Type-C PD event notifications
-> +	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
-> +	  GOOG0003 ACPI device, and on platforms which don't have this device it
-> +	  will get initialized on ECs which support the feature
-> +	  EC_FEATURE_USB_PD.
+>  arch/riscv/include/asm/hwcap.h | 22 +++++++++
+>  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 102 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index 1bb0cd04aec3..5589c012e004 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -8,6 +8,7 @@
+>  #ifndef _ASM_RISCV_HWCAP_H
+>  #define _ASM_RISCV_HWCAP_H
+>  
+> +#include <linux/bits.h>
+>  #include <uapi/asm/hwcap.h>
+>  
+>  #ifndef __ASSEMBLY__
+> @@ -22,6 +23,27 @@ enum {
+>  };
+>  
+>  extern unsigned long elf_hwcap;
 > +
->  source "drivers/platform/chrome/wilco_ec/Kconfig"
-> =20
->  endif # CHROMEOS_PLATFORMS
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/M=
-akefile
-> index aacd5920d8a18..f6465f8ef0b5e 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+=3D cros_ec_debugfs.o
->  obj-$(CONFIG_CROS_EC_SENSORHUB)		+=3D cros_ec_sensorhub.o
->  obj-$(CONFIG_CROS_EC_SYSFS)		+=3D cros_ec_sysfs.o
->  obj-$(CONFIG_CROS_USBPD_LOGGER)		+=3D cros_usbpd_logger.o
-> +obj-$(CONFIG_CROS_USBPD_NOTIFY)		+=3D cros_usbpd_notify.o
-> =20
->  obj-$(CONFIG_WILCO_EC)			+=3D wilco_ec/
-> diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platfo=
-rm/chrome/cros_usbpd_notify.c
-> new file mode 100644
-> index 0000000000000..858e494995843
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_usbpd_notify.c
-> @@ -0,0 +1,153 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2020 Google LLC
+> +#define RISCV_ISA_EXT_a		('a' - 'a')
+> +#define RISCV_ISA_EXT_c		('c' - 'a')
+> +#define RISCV_ISA_EXT_d		('d' - 'a')
+> +#define RISCV_ISA_EXT_f		('f' - 'a')
+> +#define RISCV_ISA_EXT_h		('h' - 'a')
+> +#define RISCV_ISA_EXT_i		('i' - 'a')
+> +#define RISCV_ISA_EXT_m		('m' - 'a')
+> +#define RISCV_ISA_EXT_s		('s' - 'a')
+> +#define RISCV_ISA_EXT_u		('u' - 'a')
+
+Unfortunately the ISA doesn't really work this way any more: the single-letter
+extensions are just aliases for longer extension strings, each of which
+represents a single instruction.  I know we're saddled with some ABI that looks
+this way, but I really don't want to add new code that depends on these defunct
+assumptions -- there isn't that much in Linux right now, but there's a lot in
+the FSF toolchain and getting that all out is going to be a long project.
+
+> +
+> +#define RISCV_ISA_EXT_MAX	256
+
+Why so big?  It looks like the rest of the code just touches the first word,
+and most of that is explicit.
+
+> +
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> +
+> +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> +
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> +#define riscv_isa_extension_available(isa_bitmap, ext)	\
+> +	__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> +
+>  #endif
+>  
+>  #endif /* _ASM_RISCV_HWCAP_H */
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index 0b40705567b7..e172a2322b34 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -6,6 +6,7 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>  
+> +#include <linux/bitmap.h>
+>  #include <linux/of.h>
+>  #include <asm/processor.h>
+>  #include <asm/hwcap.h>
+> @@ -13,15 +14,57 @@
+>  #include <asm/switch_to.h>
+>  
+>  unsigned long elf_hwcap __read_mostly;
+> +
+> +/* Host ISA bitmap */
+> +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> +
+>  #ifdef CONFIG_FPU
+>  bool has_fpu __read_mostly;
+>  #endif
+>  
+> +/**
+> + * riscv_isa_extension_base() - Get base extension word
 > + *
-> + * This driver serves as the receiver of cros_ec PD host events.
+> + * @isa_bitmap: ISA bitmap to use
+> + * Return: base extension word as unsigned long value
+> + *
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
 > + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/platform_data/cros_ec_commands.h>
-> +#include <linux/platform_data/cros_usbpd_notify.h>
+> +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> +{
+> +	if (!isa_bitmap)
+> +		return riscv_isa[0];
+> +	return isa_bitmap[0];
+> +}
+> +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
 
-Same nit as other: Alphabetize #include list.
+This isn't used, which makes it hard to review.  Can you please split out the
+changes that don't depend on the V extension to come out of draft?  That would
+make it easier to take some of the code early, which lets us keep around less
+diff.
 
-> +#include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRV_NAME "cros-usbpd-notify"
-> +#define ACPI_DRV_NAME "GOOG0003"
-> +
-> +static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
 > +
 > +/**
-> + * cros_usbpd_register_notify - Register a notifier callback for PD even=
-ts.
-> + * @nb: Notifier block pointer to register
+> + * __riscv_isa_extension_available() - Check whether given extension
+> + * is available or not
 > + *
-> + * On ACPI platforms this corresponds to host events on the ECPD
-> + * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp e=
-vents
-> + * for USB PD events.
+> + * @isa_bitmap: ISA bitmap to use
+> + * @bit: bit position of the desired extension
+> + * Return: true or false
 > + *
-> + * Return: 0 on success or negative error code.
+> + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
 > + */
-> +int cros_usbpd_register_notify(struct notifier_block *nb)
+> +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
 > +{
-> +	return blocking_notifier_chain_register(
-> +			&cros_usbpd_notifier_list, nb);
+> +	const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> +
+> +	if (bit >= RISCV_ISA_EXT_MAX)
+> +		return false;
+> +
+> +	return test_bit(bit, bmap) ? true : false;
 > +}
-> +EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
+> +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
 > +
+>  void riscv_fill_hwcap(void)
+>  {
+>  	struct device_node *node;
+>  	const char *isa;
+> -	size_t i;
+> +	char print_str[BITS_PER_LONG + 1];
+> +	size_t i, j, isa_len;
+>  	static unsigned long isa2hwcap[256] = {0};
+>  
+>  	isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> @@ -33,8 +76,11 @@ void riscv_fill_hwcap(void)
+>  
+>  	elf_hwcap = 0;
+>  
+> +	bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
 > +
-> +/**
-> + * cros_usbpd_unregister_notify - Unregister notifier callback for PD ev=
-ents.
-> + * @nb: Notifier block pointer to unregister
-> + *
-> + * Unregister a notifier callback that was previously registered with
-> + * cros_usbpd_register_notify().
-> + */
-> +void cros_usbpd_unregister_notify(struct notifier_block *nb)
-> +{
-> +	blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
-> +
-> +#ifdef CONFIG_ACPI
-> +
-> +static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
-> +{
-> +	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
-> +}
-> +
-> +static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] =
-=3D {
-> +	{ ACPI_DRV_NAME, 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
-> +
-> +static struct acpi_driver cros_usbpd_notify_acpi_driver =3D {
-> +	.name =3D DRV_NAME,
-> +	.class =3D DRV_NAME,
-> +	.ids =3D cros_usbpd_notify_acpi_device_ids,
-> +	.ops =3D {
-> +		.add =3D cros_usbpd_notify_add_acpi,
-> +		.notify =3D cros_usbpd_notify_acpi,
-> +	},
-> +};
-> +module_acpi_driver(cros_usbpd_notify_acpi_driver);
-> +
-> +#endif /* CONFIG_ACPI */
-> +
-> +#ifdef CONFIG_OF
-> +
-> +static int cros_usbpd_notify_plat(struct notifier_block *nb,
-> +		unsigned long queued_during_suspend, void *data)
-> +{
-> +	struct cros_ec_device *ec_dev =3D (struct cros_ec_device *)data;
-> +	u32 host_event =3D cros_ec_get_host_event(ec_dev);
-> +
-> +	if (!host_event)
-> +		return NOTIFY_BAD;
-> +
-> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
-> +		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
-> +				host_event, NULL);
-> +		return NOTIFY_OK;
-> +	}
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct cros_ec_dev *ecdev =3D dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb;
-> +	int ret;
-> +
-> +	nb =3D devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
-> +	if (!nb)
-> +		return -ENOMEM;
-> +
-> +	nb->notifier_call =3D cros_usbpd_notify_plat;
-> +	dev_set_drvdata(dev, nb);
-> +
-> +	ret =3D blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
-> +						nb);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to register notifier\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct cros_ec_dev *ecdev =3D dev_get_drvdata(dev->parent);
-> +	struct notifier_block *nb =3D
-> +		(struct notifier_block *)dev_get_drvdata(dev);
-> +
-> +	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
-> +			nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver cros_usbpd_notify_plat_driver =3D {
-> +	.driver =3D {
-> +		.name =3D DRV_NAME,
-> +	},
-> +	.probe =3D cros_usbpd_notify_probe_plat,
-> +	.remove =3D cros_usbpd_notify_remove_plat,
-> +};
-> +module_platform_driver(cros_usbpd_notify_plat_driver);
-> +
-> +#endif /* CONFIG_OF */
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
-> +MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/li=
-nux/platform_data/cros_usbpd_notify.h
-> new file mode 100644
-> index 0000000000000..4f2791722b6d3
-> --- /dev/null
-> +++ b/include/linux/platform_data/cros_usbpd_notify.h
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ChromeOS EC Power Delivery Notifier Driver
-> + *
-> + * Copyright 2020 Google LLC
-> + */
-> +
-> +#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> +#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
-> +
-> +#include <linux/notifier.h>
-> +
-> +int cros_usbpd_register_notify(struct notifier_block *nb);
-> +
-> +void cros_usbpd_unregister_notify(struct notifier_block *nb);
-> +
-> +#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
-> --=20
-> 2.25.0.341.g760bfbb309-goog
->=20
+>  	for_each_of_cpu_node(node) {
+>  		unsigned long this_hwcap = 0;
+> +		unsigned long this_isa = 0;
+>  
+>  		if (riscv_of_processor_hartid(node) < 0)
+>  			continue;
+> @@ -42,8 +88,24 @@ void riscv_fill_hwcap(void)
+>  		if (riscv_read_check_isa(node, &isa) < 0)
+>  			continue;
+>  
+> -		for (i = 0; i < strlen(isa); ++i)
+> +		i = 0;
+> +		isa_len = strlen(isa);
+> +#if IS_ENABLED(CONFIG_32BIT)
+> +		if (!strncmp(isa, "rv32", 4))
+> +			i += 4;
+> +#elif IS_ENABLED(CONFIG_64BIT)
+> +		if (!strncmp(isa, "rv64", 4))
+> +			i += 4;
 
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
+We shouldn't be accepting arbitrary inputs and attempting to correct them, just
+enforce that an actual ISA string is provided and check it against what the
+kernel can support.
 
---osDK9TLjxFScVI/L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXiC+wQAKCRBzbaomhzOw
-wuN3AQDB4Q1NmuP+t8X4OizjnyRzUk9VBJVkoynrO5XKn7/SqgD/YZ3TvXxhLxNq
-d7qveRMcSkrAreryhqfg9GlJQJRagA8=
-=gH1s
------END PGP SIGNATURE-----
-
---osDK9TLjxFScVI/L--
+> +#endif
+> +		for (; i < isa_len; ++i) {
+>  			this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> +			/*
+> +			 * TODO: X, Y and Z extension parsing for Host ISA
+> +			 * bitmap will be added in-future.
+> +			 */
+> +			if ('a' <= isa[i] && isa[i] < 'x')
+> +				this_isa |= (1UL << (isa[i] - 'a'));
+> +		}
+>  
+>  		/*
+>  		 * All "okay" hart should have same isa. Set HWCAP based on
+> @@ -54,6 +116,11 @@ void riscv_fill_hwcap(void)
+>  			elf_hwcap &= this_hwcap;
+>  		else
+>  			elf_hwcap = this_hwcap;
+> +
+> +		if (riscv_isa[0])
+> +			riscv_isa[0] &= this_isa;
+> +		else
+> +			riscv_isa[0] = this_isa;
+>  	}
+>  
+>  	/* We don't support systems with F but without D, so mask those out
+> @@ -63,7 +130,17 @@ void riscv_fill_hwcap(void)
+>  		elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+>  	}
+>  
+> -	pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> +	memset(print_str, 0, sizeof(print_str));
+> +	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +		if (riscv_isa[0] & BIT_MASK(i))
+> +			print_str[j++] = (char)('a' + i);
+> +	pr_info("riscv: ISA extensions %s\n", print_str);
+> +
+> +	memset(print_str, 0, sizeof(print_str));
+> +	for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> +		if (elf_hwcap & BIT_MASK(i))
+> +			print_str[j++] = (char)('a' + i);
+> +	pr_info("riscv: ELF capabilities %s\n", print_str);
+>  
+>  #ifdef CONFIG_FPU
+>  	if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> -- 
+> 2.17.1
