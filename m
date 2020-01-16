@@ -2,108 +2,184 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD43C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3826CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF1120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BmcKpvf4"
+	by mail.kernel.org (Postfix) with ESMTP id 136A4207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgAPF50 (ORCPT
+        id S1729151AbgAPF6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:57:26 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40331 "EHLO ozlabs.org"
+        Thu, 16 Jan 2020 00:58:55 -0500
+Received: from mga03.intel.com ([134.134.136.65]:46766 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726933AbgAPF5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:57:25 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ytkp3hYGz9sPW;
-        Thu, 16 Jan 2020 16:57:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579154243;
-        bh=TIBTkvq4qX5YeghYiAJQ60HvuvhkHq5DZiUwvOkT5no=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BmcKpvf4nxsIdgUpsRtWI0b0DvH2vVAMlzGZMtVO4nuuVvkb1BGdwH+QVbe0jP8HA
-         TxmOlwNUpcQn6Rzi4PYrjSsi6TWX2nc9N80R8UWOBUyHZghXF5STD/Fi68u9x7jUF1
-         IKRKbUVvZeTkoZTPVJifcyPqi40Z19rfj0aPQRlGxiR8XLdj/Xe/zfZ7KNbbWdWP1S
-         624QjEFNfXpfH9x8w5OcluJjI5dhzEUm4lWAqGx3JDFjotqu+2dYmFjpCQYqYGhxPe
-         q4/9YfXnIKgv/tn7Yo/UzB/gA954SxWp6vKovsRe0fQ32syZj0/2t/Inu/cY6yWDOY
-         IAgSJAGfQwqkA==
-Date:   Thu, 16 Jan 2020 16:57:03 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: linux-next: build failure after merge of the kunit-next tree
-Message-ID: <20200116165703.4e04be51@canb.auug.org.au>
+        id S1726366AbgAPF6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 00:58:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 21:58:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="218408846"
+Received: from unknown (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga008.jf.intel.com with ESMTP; 15 Jan 2020 21:58:51 -0800
+Date:   Thu, 16 Jan 2020 00:49:41 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest with
+ vfio_dma_rw
+Message-ID: <20200116054941.GB1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+ <20200115035455.12417-1-yan.y.zhao@intel.com>
+ <20200115130651.29d7e9e0@w520.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Rw3GuoXIcZBOMK6Di9auPIJ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115130651.29d7e9e0@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Rw3GuoXIcZBOMK6Di9auPIJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:
+> On Tue, 14 Jan 2020 22:54:55 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > As a device model, it is better to read/write guest memory using vfio
+> > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > 
+> > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > cycles more overhead on average.
+> > 
+> > -------------------------------------
+> > |    interface     | avg cpu cycles |
+> > |-----------------------------------|
+> > | kvm_write_guest  |     1554       |
+> > | ----------------------------------|
+> > | kvm_read_guest   |     707        |
+> > |-----------------------------------|
+> > | vfio_dma_rw(w)   |     2274       |
+> > |-----------------------------------|
+> > | vfio_dma_rw(r)   |     1378       |
+> > -------------------------------------
+> 
+> In v1 you had:
+> 
+> -------------------------------------
+> |    interface     | avg cpu cycles |
+> |-----------------------------------|
+> | kvm_write_guest  |     1546       |
+> | ----------------------------------|
+> | kvm_read_guest   |     686        |
+> |-----------------------------------|
+> | vfio_iova_rw(w)  |     2233       |
+> |-----------------------------------|
+> | vfio_iova_rw(r)  |     1262       |
+> -------------------------------------
+> 
+> So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> now +1.8-9.2%.  I would have expected the algorithm change to at least
+> not be worse for small accesses and be better for accesses crossing
+> page boundaries.  Do you know what happened?
+>
+I only tested the 4 interfaces in GVT's environment, where most of the
+guest memory accesses are less than one page.
+And the different fluctuations should be caused by the locks.
+vfio_dma_rw contends locks with other vfio accesses which are assumed to
+be abundant in the case of GVT.
 
-Hi all,
+> > Comparison of benchmarks scores are as blow:
+> > ------------------------------------------------------
+> > |  avg score  | kvm_read/write_guest  | vfio_dma_rw  |
+> > |----------------------------------------------------|
+> > |   Glmark2   |         1284          |    1296      |
+> > |----------------------------------------------------|
+> > |  Lightsmark |         61.24         |    61.27     |
+> > |----------------------------------------------------|
+> > |  OpenArena  |         140.9         |    137.4     |
+> > |----------------------------------------------------|
+> > |   Heaven    |          671          |     670      |
+> > ------------------------------------------------------
+> > No obvious performance downgrade found.
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/gpu/drm/i915/gvt/kvmgt.c | 26 +++++++-------------------
+> >  1 file changed, 7 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > index bd79a9718cc7..17edc9a7ff05 100644
+> > --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > @@ -1966,31 +1966,19 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
+> >  			void *buf, unsigned long len, bool write)
+> >  {
+> >  	struct kvmgt_guest_info *info;
+> > -	struct kvm *kvm;
+> > -	int idx, ret;
+> > -	bool kthread = current->mm == NULL;
+> > +	int ret;
+> > +	struct intel_vgpu *vgpu;
+> > +	struct device *dev;
+> >  
+> >  	if (!handle_valid(handle))
+> >  		return -ESRCH;
+> >  
+> >  	info = (struct kvmgt_guest_info *)handle;
+> > -	kvm = info->kvm;
+> > -
+> > -	if (kthread) {
+> > -		if (!mmget_not_zero(kvm->mm))
+> > -			return -EFAULT;
+> > -		use_mm(kvm->mm);
+> > -	}
+> > -
+> > -	idx = srcu_read_lock(&kvm->srcu);
+> > -	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
+> > -		      kvm_read_guest(kvm, gpa, buf, len);
+> > -	srcu_read_unlock(&kvm->srcu, idx);
+> > +	vgpu = info->vgpu;
+> > +	dev = mdev_dev(vgpu->vdev.mdev);
+> >  
+> > -	if (kthread) {
+> > -		unuse_mm(kvm->mm);
+> > -		mmput(kvm->mm);
+> > -	}
+> > +	ret = write ? vfio_dma_rw(dev, gpa, buf, len, true) :
+> > +			vfio_dma_rw(dev, gpa, buf, len, false);
+> 
+> As Paolo suggested previously, this can be simplified:
+> 
+> ret = vfio_dma_rw(dev, gpa, buf, len, write);
+>
+> >  
+> >  	return ret;
+> 
+> Or even more simple, remove the ret variable:
+> 
+> return vfio_dma_rw(dev, gpa, buf, len, write);
+> 
+oh, it seems that I missed Paolo's mail. will change it. thank you!
 
-After merging the kunit-next tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `=
-kunit_test_suites_init':
-property-entry-test.c:(.text+0x26): undefined reference to `kunit_run_tests'
-x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `=
-pe_test_reference':
-property-entry-test.c:(.text+0x275): undefined reference to `kunit_binary_a=
-ssert_format'
-x86_64-linux-gnu-ld: property-entry-test.c:(.text+0x2c4): undefined referen=
-ce to `kunit_do_assertion'
-
-and lots more ...
-
-Caused by commit
-
-  27f9d7e984d9 ("software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST")
-
-from the pm tree interacting with commit
-
-  35c57fc3f8ea ("kunit: building kunit as a module breaks allmodconfig")
-
-I have disabled CONFIG_KUNIT_DRIVER_PE_TEST for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Rw3GuoXIcZBOMK6Di9auPIJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4f+y8ACgkQAVBC80lX
-0Gxnvwf/cClvAMqnOdUDL/t2vAYzPc1Z8B3a6ELAnp+nU0uTkkyUtfssOyvbim+A
-5MszgCFPxmSewp8AwmHnlz+zJv7JbvXS5Rubj0EzQHxxRIxvD8Z9Ewe/g71vRKE3
-IeAxZGmt1K+rVFilKNOfObP69v2xiC3b2f+MzaHTVgCNmZp5yhNX69GyxT7k5OO2
-O8Y3uz4atSnJmX+30WsXHXt4O7Y8kX7tB6JkqoT0i4obg8gv0bq2WXLs/BwXrWTp
-hNmm5kenmFXy1+VxE3Hd1P5F5PomTC/NeatLJSOk+9n/bDccESAtF4rEftGvgNf+
-VOeHwrcqlQlz9CTZAum7SNo3lv+6Mw==
-=V2DI
------END PGP SIGNATURE-----
-
---Sig_/Rw3GuoXIcZBOMK6Di9auPIJ--
+Thanks
+Yan
+> 
+> >  }
+> 
