@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14D2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C84EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3935206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64BA206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218452;
-	bh=amStAd1KELjmA1Scb6cF9nLqAP1m98ADee0TQF538lQ=;
+	s=default; t=1579218458;
+	bh=98cRC04yURKjGE1BkLFvLk6G387leR2Q90ANMDBQl5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PaYWitL1i1aVH/edntCKJB2cjxCLMEgItlqGr9qt2yPoSDuUXCdIvFfOw3BUJ4Akv
-	 NXFydfcEreqW7qWRquKMqa0uqgT8o66xSucActgzGGb7Wuk70uT3OqeqBwSBlJkcna
-	 XJTC5OS2cHQvQYBDfnZiRuJChwAfTPtRejvGxs+8=
+	b=e2y9cfMukZCTm3TbornMZEyRlAs2+hz1qr9TkD7sD1Sgethytszi/a9VhDipl7Uq7
+	 7guuE6GrCd8Q1yjxafCUyRN3y13+b0AYymqCP80OiihYnAcAe4w+8Ag5k91D4WKLWA
+	 QYI8G/n3/70g7+AZzyvp5lDtI93FGWp6CYJx2jtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392103AbgAPXr1 (ORCPT
+        id S1729491AbgAPXrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:47:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:47:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389926AbgAPXUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:53 -0500
+        id S2390727AbgAPXUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865262077C;
-        Thu, 16 Jan 2020 23:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE9492072B;
+        Thu, 16 Jan 2020 23:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216853;
-        bh=amStAd1KELjmA1Scb6cF9nLqAP1m98ADee0TQF538lQ=;
+        s=default; t=1579216848;
+        bh=98cRC04yURKjGE1BkLFvLk6G387leR2Q90ANMDBQl5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOqiPVd3UyAL/6QQMDfR3lH5iiTqk3TVvD5mOMXWKhkhYa+eXR/6LhGl/icNdYSu3
-         cmYUC+qPBP/GgHyI9uvqD+TOriOJtULvtlbXuYERrf3Gga08t2EHj/L4Zrx5D6vaz3
-         fEfxu2xmCF6LUS7+l3KlI4MS1p7Bz5x+pQVG01ls=
+        b=yQsWHzJXt1rHLoRYLKrv2DJ8E/lfKwqoLx4oI+ND/6YkW1Wufue5FlG84LY03belr
+         eQfBEMuuDNAqVds23W8x1PolB0qhtGYhlKRihH0mi1MvPMZoP2AH/7WkWS6rbTyMoX
+         RSDGQDG3FIJvVLe86GhCLguI+pU2tIzPrL50bzIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ed Maste <emaste@freebsd.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 046/203] perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
-Date:   Fri, 17 Jan 2020 00:16:03 +0100
-Message-Id: <20200116231748.018307555@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 5.4 044/203] reset: brcmstb: Remove resource checks
+Date:   Fri, 17 Jan 2020 00:16:01 +0100
+Message-Id: <20200116231747.854191375@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -68,43 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ed Maste <emaste@freebsd.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 58b3bafff8257c6946df5d6aeb215b8ac839ed2a upstream.
+commit ce89d8d3a70fa530e16f0b0f8994385a214cd0c0 upstream.
 
-In 7fcfa9a2d9 an unintended prefix "Counter:18 Name:" was removed from
-the description for L1D_RO_EXCL_WRITES, but the extra name remained in
-the description.  Remove it too.
+The use of IS_ALIGNED() is incorrect, the typical resource we pass looks
+like this: start: 0x8404318, size: 0x30. When using IS_ALIGNED() we will
+get the following 0x8404318 & (0x18 - 1) = 0x10 which is definitively
+not equal to 0, same goes with the size. These two checks would make the
+driver fail probing.
 
-Fixes: 7fcfa9a2d9a7 ("perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES")
-Signed-off-by: Ed Maste <emaste@freebsd.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Hu <nickhu@andestech.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Link: http://lore.kernel.org/lkml/20191212145346.5026-1-emaste@freefall.freebsd.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Remove the resource checks, since there should be no constraint on the
+base addresse or size.
+
+Fixes: 77750bc089e4 ("reset: Add Broadcom STB SW_INIT reset controller driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/pmu-events/arch/s390/cf_z14/extended.json |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/reset/reset-brcmstb.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-@@ -4,7 +4,7 @@
- 		"EventCode": "128",
- 		"EventName": "L1D_RO_EXCL_WRITES",
- 		"BriefDescription": "L1D Read-only Exclusive Writes",
--		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
+--- a/drivers/reset/reset-brcmstb.c
++++ b/drivers/reset/reset-brcmstb.c
+@@ -91,12 +91,6 @@ static int brcmstb_reset_probe(struct pl
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
+-	    !IS_ALIGNED(resource_size(res), SW_INIT_BANK_SIZE)) {
+-		dev_err(kdev, "incorrect register range\n");
+-		return -EINVAL;
+-	}
+-
+ 	priv->base = devm_ioremap_resource(kdev, res);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
 
 
