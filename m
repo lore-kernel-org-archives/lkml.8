@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93840C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637FA208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7828B2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198506;
-	bh=SDIJYKrcaxCHsyHrfJ79C5x/3Dng5f9PEgcisQhgeBg=;
+	s=default; t=1579198514;
+	bh=+Iu1QIvoLrD1qnpF7RJVVZI3OxOt0LCWPPdAv2W/3no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFraVUC8KC7F+AYlyK09O0SWkrSwXuPZAynf+e1xXVURlbOh+AUQzAiHtCjYAONVJ
-	 6RwHR1+p3coLW9sPBw6Oggj97gH1gZkiFyEnjxDHz7RVW6i54zx21CzUmu8Gy5KcM3
-	 2fz6Tm9Tq4NWl2rslbj0OD5bHEVUHBxpwkfvJoeU=
+	b=2szJ8tcX4WsFDlP6xFSBljWBMISj/BDA9rZwjxyMFwmzFczF2LnqckDkFn9Eax62r
+	 Fuv9rTl8X+Py0mtzLqFsrZmKvR0GGpHw5lb7lLI4sNmdt4vVnPbbPs9OkxKCdmfH20
+	 upsy38o1Vk8mZMsxZUrIInknXNK7koLZDvgBDX+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395262AbgAPSPE (ORCPT
+        id S2436459AbgAPSPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:15:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42016 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:15:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392585AbgAPR3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:52 -0500
+        id S2392861AbgAPR3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02E87246FB;
-        Thu, 16 Jan 2020 17:29:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A76E24711;
+        Thu, 16 Jan 2020 17:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195792;
-        bh=SDIJYKrcaxCHsyHrfJ79C5x/3Dng5f9PEgcisQhgeBg=;
+        s=default; t=1579195788;
+        bh=+Iu1QIvoLrD1qnpF7RJVVZI3OxOt0LCWPPdAv2W/3no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J09T6e/T684XdpAhaXXFg6cND5yc0u4z85RaeYVgadoenCShavNc5jRiQjyvd6uxI
-         z13b2pF8dnJDzNJb82Uhpc3ShRrd9FF1IrJ4YsIQK7wJIOmjLsfqjJj7TCahA1yUTh
-         cZXx5S+KM2iOfEzmhYc1CbyI6KZWOQtjxK+nQ2hs=
+        b=yIUJjKMXUSByzgzpqReNJnn1djpK9cuW8yb2nLI70e3lBkpRw8VpmQJgcAXmCobNX
+         WlbgjdHW0QNFk9PzrpsDqPOAa6U0HvVZDZyr6SYmgdqsUH4aAG+8TgDHHKmHX7FmFo
+         6DzaKkxCAxUvux+Vr28PfrmvuBuhGUzia5z3WroM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 313/371] mac80211: accept deauth frames in IBSS mode
-Date:   Thu, 16 Jan 2020 12:23:05 -0500
-Message-Id: <20200116172403.18149-256-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 310/371] ipv6: Handle race in addrconf_dad_work
+Date:   Thu, 16 Jan 2020 12:23:02 -0500
+Message-Id: <20200116172403.18149-253-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,47 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
+[ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
 
-We can process deauth frames and all, but we drop them very
-early in the RX path today - this could never have worked.
+Rajendra reported a kernel panic when a link was taken down:
 
-Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[ 6870.263084] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
+[ 6870.271856] IP: [<ffffffff8efc5764>] __ipv6_ifa_notify+0x154/0x290
+
+<snip>
+
+[ 6870.570501] Call Trace:
+[ 6870.573238] [<ffffffff8efc58c6>] ? ipv6_ifa_notify+0x26/0x40
+[ 6870.579665] [<ffffffff8efc98ec>] ? addrconf_dad_completed+0x4c/0x2c0
+[ 6870.586869] [<ffffffff8efe70c6>] ? ipv6_dev_mc_inc+0x196/0x260
+[ 6870.593491] [<ffffffff8efc9c6a>] ? addrconf_dad_work+0x10a/0x430
+[ 6870.600305] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.606732] [<ffffffff8ea93a7a>] ? process_one_work+0x18a/0x430
+[ 6870.613449] [<ffffffff8ea93d6d>] ? worker_thread+0x4d/0x490
+[ 6870.619778] [<ffffffff8ea93d20>] ? process_one_work+0x430/0x430
+[ 6870.626495] [<ffffffff8ea99dd9>] ? kthread+0xd9/0xf0
+[ 6870.632145] [<ffffffff8f01ade4>] ? __switch_to_asm+0x34/0x70
+[ 6870.638573] [<ffffffff8ea99d00>] ? kthread_park+0x60/0x60
+[ 6870.644707] [<ffffffff8f01ae77>] ? ret_from_fork+0x57/0x70
+[ 6870.650936] Code: 31 c0 31 d2 41 b9 20 00 08 02 b9 09 00 00 0
+
+addrconf_dad_work is kicked to be scheduled when a device is brought
+up. There is a race between addrcond_dad_work getting scheduled and
+taking the rtnl lock and a process taking the link down (under rtnl).
+The latter removes the host route from the inet6_addr as part of
+addrconf_ifdown which is run for NETDEV_DOWN. The former attempts
+to use the host route in ipv6_ifa_notify. If the down event removes
+the host route due to the race to the rtnl, then the BUG listed above
+occurs.
+
+This scenario does not occur when the ipv6 address is not kept
+(net.ipv6.conf.all.keep_addr_on_down = 0) as addrconf_ifdown sets the
+state of the ifp to DEAD. Handle when the addresses are kept by checking
+IF_READY which is reset by addrconf_ifdown.
+
+The 'dead' flag for an inet6_addr is set only under rtnl, in
+addrconf_ifdown and it means the device is getting removed (or IPv6 is
+disabled). The interesting cases for changing the idev flag are
+addrconf_notify (NETDEV_UP and NETDEV_CHANGE) and addrconf_ifdown
+(reset the flag). The former does not have the idev lock - only rtnl;
+the latter has both. Based on that the existing dead + IF_READY check
+can be moved to right after the rtnl_lock in addrconf_dad_work.
+
+Fixes: f1705ec197e7 ("net: ipv6: Make address flushing on ifdown optional")
+Reported-by: Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ net/ipv6/addrconf.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 4a6b3c7b35e3..31000622376d 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3227,9 +3227,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
- 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
- 		/* process for all: mesh, mlme, ibss */
- 		break;
-+	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
-+		if (is_multicast_ether_addr(mgmt->da) &&
-+		    !is_broadcast_ether_addr(mgmt->da))
-+			return RX_DROP_MONITOR;
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index a81201dd3a1a..57bc05ff88d3 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3908,6 +3908,12 @@ static void addrconf_dad_work(struct work_struct *w)
+ 
+ 	rtnl_lock();
+ 
++	/* check if device was taken down before this delayed work
++	 * function could be canceled
++	 */
++	if (idev->dead || !(idev->if_flags & IF_READY))
++		goto out;
 +
-+		/* process only for station/IBSS */
-+		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
-+		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
-+			return RX_DROP_MONITOR;
-+		break;
- 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
- 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
--	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
- 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
- 		if (is_multicast_ether_addr(mgmt->da) &&
- 		    !is_broadcast_ether_addr(mgmt->da))
+ 	spin_lock_bh(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_PREDAD) {
+ 		action = DAD_BEGIN;
+@@ -3953,11 +3959,6 @@ static void addrconf_dad_work(struct work_struct *w)
+ 		goto out;
+ 
+ 	write_lock_bh(&idev->lock);
+-	if (idev->dead || !(idev->if_flags & IF_READY)) {
+-		write_unlock_bh(&idev->lock);
+-		goto out;
+-	}
+-
+ 	spin_lock(&ifp->lock);
+ 	if (ifp->state == INET6_IFADDR_STATE_DEAD) {
+ 		spin_unlock(&ifp->lock);
 -- 
 2.20.1
 
