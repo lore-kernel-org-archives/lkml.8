@@ -2,155 +2,297 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680EBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F29C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D472073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579175490;
-	bh=Uysjm6FCzvmwDdMnRuuUbGoLB/N18XLec0jvaEjWjkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aldFu76Edvhv/KyPOrmwrd688z23FlrpOlbruTyVfp4OtnYnPk6Z4oyMNLK+TgSuG
-	 xMdFamrwkzoVTkP6gwO6+4GoZ1M+6olLJ1N5fFuvVr+/bysG7VQ/LycRUlNeI0hNd0
-	 bA+h/4EmSgKI2CH2q9XTjYSAEqCh0DwU1C4D7JPc=
+	by mail.kernel.org (Postfix) with ESMTP id 08251217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=freesources.org header.i=@freesources.org header.b="R/PGHP+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgAPLv2 (ORCPT
+        id S1726418AbgAPLyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:51:28 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51189 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgAPLv2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:51:28 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so3468896wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 03:51:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hYwmGm3w13xInJD6NEJGeWujf8MPf8QQ9A7V+Wr5aVo=;
-        b=Tz3CS4SVXKWpbEkS4H/4Gfd02hYuhXGj13pdyWtaEQyUdf1l2oZ7JxVxToTJxOhIxb
-         /7XqDKhti/Lu4iqdJfIcfEotJfQvdGA80KQAqB35087f0+LAZHwxX0uM5fPKnUZDKhRf
-         v3rjB4cFZiHNpgiDFdl38fncSSjLMXcDDSsE62pZxV5zrxwQeOtUs/ar5XqxmYcOGWa1
-         ixK6FGEnm4cGNNbmKa+Ht9o87SwZaEgj/6/EUUoIovHh2ABJiI9cF4n1Tl0JNhHOqpQd
-         VVEqetg/vn8mcKw/z7ziXE2/RVAFbL/F1lJ35oRW7MgQpbAipGO5sX42hqma8QzdhaE7
-         7LzA==
-X-Gm-Message-State: APjAAAXF7acc0lshVpj+UPwYmzBhE7tiFyef4eUuD9QVcBSowf3tswNS
-        gEEkEgQm+XZ+0mD84VZO+q8=
-X-Google-Smtp-Source: APXvYqwa5Y4lsai7TzHGC1APYB1sw7jRfp3hKLaz4b6IBV5KXaAQ3ddLOpt8gvdAhvxj6O+JnyPVmw==
-X-Received: by 2002:a7b:c84a:: with SMTP id c10mr5829495wml.157.1579175486124;
-        Thu, 16 Jan 2020 03:51:26 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id l17sm27756852wro.77.2020.01.16.03.51.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 03:51:24 -0800 (PST)
-Date:   Thu, 16 Jan 2020 12:51:23 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in
- mpol_parse_str()
-Message-ID: <20200116115123.GR19428@dhcp22.suse.cz>
-References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
- <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz>
- <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
- <20200115150315.GH19428@dhcp22.suse.cz>
- <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
- <20200115190528.GJ19428@dhcp22.suse.cz>
- <CACT4Y+b5HJW9PhjkSZ+L09YqQt08ALCtudHV4m5x5qv+xH-2Yg@mail.gmail.com>
- <20200116073922.GL19428@dhcp22.suse.cz>
- <CACT4Y+aWNQxSMSnHn6ORkBNM2wWp_K6tPxthj=_FmnyOfO5huA@mail.gmail.com>
+        Thu, 16 Jan 2020 06:54:02 -0500
+Received: from mx3.freesources.org ([195.34.172.217]:51050 "EHLO
+        mx3.freesources.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAPLyC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.ORG>);
+        Thu, 16 Jan 2020 06:54:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=freesources.org; s=20160526; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DezD5PhW5+tytBKqleQuwyxbxvAfMTq0ZQYrNfQAdn4=; b=R/PGHP+4zZbHSNCvHLHvEGJnVX
+        LpKGXbFN3UHBZkuvGTAYhJJsduPkZey/p7nk8Xlq5Ke4B85ZAqDWU04FyYDmHst3+BYyCVPs1kplT
+        /J9787T+QSh/PI4HhIjGSWU32Vp6+aKnSSCFeWrdzNNAorZBzn+11OafYRvhPWL8ixDY=;
+Received: from anon-42-243.vpn.ipredator.se ([46.246.42.243])
+        by mx3.freesources.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <jonas@freesources.org>)
+        id 1is3in-0004eE-1l; Thu, 16 Jan 2020 11:53:57 +0000
+From:   Jonas Meurer <jonas@freesources.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-kernel@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Tim Dittler <tim.dittler@systemli.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Autocrypt: addr=jonas@freesources.org; prefer-encrypt=mutual; keydata=
+ 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
+ 2SCIHpzHfm/mpRL2
+Subject: [PATCH v3] PM: suspend: Add sysfs attribute to control the "sync on
+ suspend" behavior
+Message-ID: <d05a1c0c-1212-17f4-3772-042e2ff76a40@freesources.org>
+Date:   Thu, 16 Jan 2020 12:53:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+aWNQxSMSnHn6ORkBNM2wWp_K6tPxthj=_FmnyOfO5huA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-01-20 11:13:09, Dmitry Vyukov wrote:
-> On Thu, Jan 16, 2020 at 8:39 AM Michal Hocko <mhocko@kernel.org> wrote:
-[...]
-> > > $ grep vmalloc\( net/netfilter/*.c
-> > > net/netfilter/nf_tables_api.c: return kvmalloc(alloc, GFP_KERNEL);
-> > > net/netfilter/x_tables.c: xt[af].compat_tab = vmalloc(mem);
-> > > net/netfilter/x_tables.c: mem = vmalloc(len);
-> > > net/netfilter/x_tables.c: info = kvmalloc(sz, GFP_KERNEL_ACCOUNT);
-> > > net/netfilter/xt_hashlimit.c: /* FIXME: don't use vmalloc() here or
-> > > anywhere else -HW */
-> > > net/netfilter/xt_hashlimit.c: hinfo = vmalloc(struct_size(hinfo, hash, size));
-> > >
-> > > These are not bound to processes/threads as namespaces are orthogonal to tasks.
-> >
-> > I cannot really comment on those. This is for networking people to
-> > examine and find out whether they allow an untrusted user to runaway.
-> 
-> Unless I am missing an elephant in this whole picture, kernel code
-> contains 20K+ unaccounted allocations and if I am not mistaken few of
-> them were audited and are intentionally unaccounted rather than
-> unaccounted just because it's the default. So if we want DoS
-> protection, it's really for every kernel developer/maintainer to audit
-> and fix these allocation sites. And since we have a unikernel, a
-> single unaccounted allocation may compromise the whole kernel. I
-> assume we would need something like GFP_UNACCOUNTED to mark audited
-> allocations that don't need accounting and then slowly reduce number
-> of allocations without both ACCOUNTED and UNACCOUNTED.
+The sysfs attribute `/sys/power/sync_on_suspend` controls, whether or not
+filesystems are synced by the kernel before system suspend.
 
-This is the original approach which led to all sorts of problems and so
-we switched the opt-out to opt-in. Have a look at a9bb7e620efd ("memcg:
-only account kmem allocations marked as __GFP_ACCOUNT").
-Our protection will never be perfect because that would require to
-design the system with the protection in mind.
+Congruously, the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC
+is slightly changed: It now defines the run-tim default for the new sysfs
+attribute `/sys/power/sync_on_suspend`.
+
+The run-time attribute is added because the existing corresponding
+build-time Kconfig flag for (`CONFIG_SUSPEND_SKIP_SYNC`) is not flexible
+enough. E.g. Linux distributions that provide pre-compiled kernels
+usually want to stick with the default (sync filesystems before suspend)
+but under special conditions this needs to be changed.
+
+One example for such a special condition is user-space handling of
+suspending block devices (e.g. using `cryptsetup luksSuspend` or `dmsetup
+suspend`) before system suspend. The Kernel trying to sync filesystems
+after the underlying block device already got suspended obviously leads
+to dead-locks. Be aware that you have to take care of the filesystem sync
+yourself before suspending the system in those scenarios.
+
+Signed-off-by: Jonas Meurer <jonas@freesources.org>
+---
+ Documentation/ABI/testing/sysfs-power | 13 +++++++++++
+ include/linux/suspend.h               |  2 ++
+ kernel/power/Kconfig                  |  5 +++-
+ kernel/power/main.c                   | 33 +++++++++++++++++++++++++++
+ kernel/power/suspend.c                |  2 +-
+ 5 files changed, 53 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 6f87b9dd384b..9392a83afce8 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -407,3 +407,16 @@ Contact:	Kalesh Singh <kaleshsingh96@gmail.com>
+ Description:
+ 		The /sys/power/suspend_stats/last_failed_step file contains
+ 		the last failed step in the suspend/resume path.
++
++What:		/sys/power/sync_on_suspend
++Date:		October 2019
++Contact:	Jonas Meurer <jonas@freesources.org>
++Description:
++		This file controls whether or not the kernel will sync()
++		filesystems during system suspend (after freezing user space
++		and before suspending devices).
++
++		Writing a "1" to this file enables the sync() and writing a
++		"0" disables it.  Reads from the file return the current value.
++		The default is "1" but can be configured with the build-time
++		config flag "SUSPEND_SKIP_SYNC".
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 6fc8843f1c9e..4a230c2f1c31 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -329,6 +329,7 @@ extern void arch_suspend_disable_irqs(void);
+ extern void arch_suspend_enable_irqs(void);
  
-> > > Somebody told me that it's not good to use GFP_ACCOUNT if the
-> > > allocation is not tied to the lifetime of the process. Is it still
-> > > true?
-> >
-> > Those are more tricky. Mostly because there is no way to reclaim the
-> > memory once the hard limit is hit. Even the memcg oom killer will not
-> > help much. So a care should be taken when adding GFP_ACCOUNT for those.
-> > On the other hand it would prevent an unbounded allocations at least
-> > so the DoS would be reduced to the hard limited memcg.
-> 
-> What exactly is this care in practice?
-> It seems that in a148ce15375fc664ad64762c751c0c2aecb2cafe you just
-> added it and the allocation is not tied to the process. At least I
-> don't see any explanation as to why that one is safe, while accounting
-> other similar allocation is not...
-
-My memory is dim but AFAIR the memcg accounting was compromise between
-usability and the whole system stability. Really large tables could be
-allocated by untrusted users and that was seen as a _real_ problem. The
-previous solution added _some_ protection which led to regressions
-even for reasonable cases though. Memcg accounting was deemed as
-reasonable middle ground.
-
-The result is that a completely depleted memcg requires an admin
-intervention and the admin has to know what to do to tear it down.
-Kernel cannot do anything about that. And that is the trickiness I've
-had in mind. Listing page tables is something admins can do quite
-easily, right? There are many other objects which are much harder to act
-about. E.g. what are you going to do with tmpfs mounts? Are you going to
-remove them and cause potential data loss? That being said some objects
-really have to be limited even before they start consuming memory IMHO.
-
+ extern int pm_suspend(suspend_state_t state);
++extern bool sync_on_suspend_enabled;
+ #else /* !CONFIG_SUSPEND */
+ #define suspend_valid_only_mem	NULL
+ 
+@@ -342,6 +343,7 @@ static inline bool pm_suspend_default_s2idle(void) { return false; }
+ 
+ static inline void suspend_set_ops(const struct platform_suspend_ops *ops) {}
+ static inline int pm_suspend(suspend_state_t state) { return -ENOSYS; }
++static inline bool sync_on_suspend_enabled(void) { return true; }
+ static inline bool idle_should_enter_s2idle(void) { return false; }
+ static inline void __init pm_states_init(void) {}
+ static inline void s2idle_set_ops(const struct platform_s2idle_ops *ops) {}
+diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+index d3667b4075c1..7cbfbeacd68a 100644
+--- a/kernel/power/Kconfig
++++ b/kernel/power/Kconfig
+@@ -27,7 +27,10 @@ config SUSPEND_SKIP_SYNC
+ 	  Skip the kernel sys_sync() before freezing user processes.
+ 	  Some systems prefer not to pay this cost on every invocation
+ 	  of suspend, or they are content with invoking sync() from
+-	  user-space before invoking suspend.  Say Y if that's your case.
++	  user-space before invoking suspend.  There's a run-time switch
++	  at '/sys/power/sync_on_suspend' to configure this behaviour.
++	  This setting changes the default for the run-tim switch. Say Y
++	  to change the default to disable the kernel sys_sync().
+ 
+ config HIBERNATE_CALLBACKS
+ 	bool
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index e26de7af520b..69b7a8aeca3b 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -190,6 +190,38 @@ static ssize_t mem_sleep_store(struct kobject *kobj, struct kobj_attribute *attr
+ }
+ 
+ power_attr(mem_sleep);
++
++/*
++ * sync_on_suspend: invoke ksys_sync_helper() before suspend.
++ *
++ * show() returns whether ksys_sync_helper() is invoked before suspend.
++ * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
++ */
++bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
++
++static ssize_t sync_on_suspend_show(struct kobject *kobj,
++				   struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%d\n", sync_on_suspend_enabled);
++}
++
++static ssize_t sync_on_suspend_store(struct kobject *kobj,
++				    struct kobj_attribute *attr,
++				    const char *buf, size_t n)
++{
++	unsigned long val;
++
++	if (kstrtoul(buf, 10, &val))
++		return -EINVAL;
++
++	if (val > 1)
++		return -EINVAL;
++
++	sync_on_suspend_enabled = !!val;
++	return n;
++}
++
++power_attr(sync_on_suspend);
+ #endif /* CONFIG_SUSPEND */
+ 
+ #ifdef CONFIG_PM_SLEEP_DEBUG
+@@ -855,6 +887,7 @@ static struct attribute * g[] = {
+ 	&wakeup_count_attr.attr,
+ #ifdef CONFIG_SUSPEND
+ 	&mem_sleep_attr.attr,
++	&sync_on_suspend_attr.attr,
+ #endif
+ #ifdef CONFIG_PM_AUTOSLEEP
+ 	&autosleep_attr.attr,
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index f3b7239f1892..2c47280fbfc7 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
+ 	if (state == PM_SUSPEND_TO_IDLE)
+ 		s2idle_begin();
+ 
+-	if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC)) {
++	if (sync_on_suspend_enabled) {
+ 		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+ 		ksys_sync_helper();
+ 		trace_suspend_resume(TPS("sync_filesystems"), 0, false);
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
