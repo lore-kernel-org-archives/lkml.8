@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AF3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24993C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A809206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FD12075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200927;
-	bh=yvtZJ7G06qHmIA9YwZK0mSiWIPHTw3YbdwvdRaviQYo=;
+	s=default; t=1579200938;
+	bh=qvLxjJ+7RTcPVWEj5B8DKfhGrxf4MZTY7DMCPPaYJJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fOcTv7HBvZEeNAoNfIlW+2N5b/13miwFYihgIf+stzhII1+opXbiv3lgocmKkndtG
-	 2nV7ymlpXZA5xjOhvB13fc9VbxQeIcMtlHL13P+l6cKrpRRHQ3rUOuRKL7ZYT6i5Bd
-	 vBlhNg2lszbahA2QaJvorih5HfjEJrQAKXH7jIhA=
+	b=AiQ8RltuJZkHgaIS//q0ouoN18oKSmYpKcg1IJScQVA9TyqxIjSLBjMRj01weMbrU
+	 c+sdsG1x68c2Xa8v171fj9NNH9e+LtYNc0QeBkakn/ddDzdxazUne6JeklInyzsI0W
+	 84X1y4wMciWsmUn9GpCEWBGJFwSdfT6KHeIPZr0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437174AbgAPSzZ (ORCPT
+        id S2407221AbgAPSzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:55:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388727AbgAPRHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:39 -0500
+        id S2389195AbgAPRHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D5A24680;
-        Thu, 16 Jan 2020 17:07:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D42205F4;
+        Thu, 16 Jan 2020 17:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194459;
-        bh=yvtZJ7G06qHmIA9YwZK0mSiWIPHTw3YbdwvdRaviQYo=;
+        s=default; t=1579194455;
+        bh=qvLxjJ+7RTcPVWEj5B8DKfhGrxf4MZTY7DMCPPaYJJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auFAhfqdJmcRtj2mDwNjzvsd/cBv0y7e3mAPHMBP/sccBRzV/sytKRKM/89ZQa5aG
-         ddkk7HM1Eu7MQQJSmem9pguGY6hJx7KCfGxBKDrsZyDwVb2uKCAgunCSedS1I1jDiR
-         j235SfAmpy58rbjGRzpe8qtREUXcRnKTYd1gDCI4=
+        b=dHs/GFf0B7v90zh6Q1KzycrdrvIkQaAPnMWRa44V49qKRp6QHahPXsUdU8iTXZrEQ
+         GHkWS8rUk9NqLTR3EhT4J+wG7sFMd/bQL5XFIsOPX2tNJM6Y/TIN1z6DfUX0dqDVoK
+         l+qrQl3mSXpr6laMgkw5TXOqBhyS+VBXOrten8vE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 367/671] dmaengine: tegra210-adma: Fix crash during probe
-Date:   Thu, 16 Jan 2020 12:00:05 -0500
-Message-Id: <20200116170509.12787-104-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 365/671] clk: meson: gxbb: no spread spectrum on mpll0
+Date:   Thu, 16 Jan 2020 12:00:03 -0500
+Message-Id: <20200116170509.12787-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,90 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
+[ Upstream commit 8925dbd03bb29b1b0de30ac4e02c18faf8ddc9db ]
 
-Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-added support to save and restore the DMA channel registers when runtime
-suspending the ADMA. This change is causing the kernel to crash when
-probing the ADMA, if the device is probed deferred when looking up the
-channel interrupts. The crash occurs because not all of the channel base
-addresses have been setup at this point and in the clean-up path of the
-probe, pm_runtime_suspend() is called invoking its callback which
-expects all the channel base addresses to be initialised.
+The documentation says there is an SSEN bit on mpll0 but, after testing
+it, no spread spectrum function appears to be enabled by this bit on any
+of the MPLLs.
 
-Although this could be fixed by simply checking for a NULL address, on
-further review of the driver it seems more appropriate that we only call
-pm_runtime_get_sync() after all the channel interrupts and base
-addresses have been configured. Therefore, fix this crash by moving the
-calls to pm_runtime_enable(), pm_runtime_get_sync() and
-tegra_adma_init() after the DMA channels have been initialised.
+Let's remove it until we know more
 
-Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 1f737ffa13ef ("clk: meson: mpll: fix mpll0 fractional part ignored")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/clk/meson/gxbb.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index ac2a6b800db3..4f4733d831a1 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		return PTR_ERR(tdma->ahub_clk);
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
--	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
--		goto rpm_disable;
--
--	ret = tegra_adma_init(tdma);
--	if (ret)
--		goto rpm_put;
--
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < tdma->nr_channels; i++) {
- 		struct tegra_adma_chan *tdc = &tdma->channels[i];
-@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		tdc->tdma = tdma;
- 	}
- 
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		goto rpm_disable;
-+
-+	ret = tegra_adma_init(tdma);
-+	if (ret)
-+		goto rpm_put;
-+
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- dma_remove:
- 	dma_async_device_unregister(&tdma->dma_dev);
--irq_dispose:
--	while (--i >= 0)
--		irq_dispose_mapping(tdma->channels[i].irq);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+irq_dispose:
-+	while (--i >= 0)
-+		irq_dispose_mapping(tdma->channels[i].irq);
- 
- 	return ret;
- }
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index b039909e03cf..38ffa51a5bad 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -650,11 +650,6 @@ static struct clk_regmap gxbb_mpll0_div = {
+ 			.shift   = 16,
+ 			.width   = 9,
+ 		},
+-		.ssen = {
+-			.reg_off = HHI_MPLL_CNTL,
+-			.shift   = 25,
+-			.width	 = 1,
+-		},
+ 		.lock = &meson_clk_lock,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
 -- 
 2.20.1
 
