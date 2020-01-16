@@ -2,138 +2,175 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493D2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772F8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA3520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC3420748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:28:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0xyXB8i"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZxJfN5oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgAPI1o (ORCPT
+        id S1731036AbgAPI2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:27:44 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36538 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727007AbgAPI1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:27:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579163262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n6OKWorUpXtJWORIatOckAmUa1LJaKhueVthosat7x4=;
-        b=A0xyXB8iVxpwkoYKnyo5aDV5h45P0CvX6ull1JarP2bB6bsEhuSLZfp6arExHJZYNjLCsB
-        vhXlnEj2wujduNl/MQ4fQ19V6+tNpgVp/kZ8BtX6GQsw01GZoJiO6ihigw/7zk9U/xtPqz
-        7Bh40KSEc2irinWyJe8H3j5qEzjzOzM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-C4zO1LDqNamtQJ5e1J4iSg-1; Thu, 16 Jan 2020 03:27:41 -0500
-X-MC-Unique: C4zO1LDqNamtQJ5e1J4iSg-1
-Received: by mail-wr1-f72.google.com with SMTP id r2so8991675wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 00:27:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=n6OKWorUpXtJWORIatOckAmUa1LJaKhueVthosat7x4=;
-        b=NiryLITWeqfam1xJTVExRbfiFqkAehQLvckuKLK6v7BaFy/rdm3HurwtqOKLqZWqlo
-         1gy8Fiw7d3qYiq523bOF2N9Tk4B75S8jyMkV2yBiY3DK/a874LVmp11EISKRc7R7twtZ
-         HFRkiGAPhNzve4tu/ImvTtnrZBcHnieAGdGKV6KdmTRNVZ8nLq5/AKyjA0ZvTeC49DcQ
-         0PHTE/USgs+fpnYAgEkIggH0enKHwlqIH8dv+XgcjJPqzfKWGEY6/dD+VVrWq9DY/Ep3
-         9pZGoeXjbr6SBVldmdskP+k5Ws+XmeDtJrvtLmHKznpBQYWSKW0i7ustl6/ZomSaqfmn
-         61NQ==
-X-Gm-Message-State: APjAAAUafCnt2S+dZ+1JTmxpnLfsMLKZVb8ku77+HllmIZfnB5NAgrqN
-        /nKyGOdLjtvsBqnV5RQNPoHSnQIniMNM0qjeqDginC/YMmgg228ubxx81I8MBUwhYv5DhBpWrxs
-        iHoLLN5aDGgWKDHkaFus1Ztl1
-X-Received: by 2002:a1c:f210:: with SMTP id s16mr4684975wmc.57.1579163260068;
-        Thu, 16 Jan 2020 00:27:40 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwVolGeukQa36Dfr81fPYllOJxeYL24l5Z41rqF1Lj8IsfizGSC2C91s7ayuKdoMSkQ+1ZraA==
-X-Received: by 2002:a1c:f210:: with SMTP id s16mr4684950wmc.57.1579163259854;
-        Thu, 16 Jan 2020 00:27:39 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id p7sm1879703wmp.31.2020.01.16.00.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 00:27:39 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Haiwei Li <lihaiwei.kernel@gmail.com>
-Cc:     "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "wanpengli\@tencent.com" <wanpengli@tencent.com>,
-        "jmattson\@google.com" <jmattson@google.com>,
-        "joro\@8bytes.org" <joro@8bytes.org>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "mingo\@redhat.com" <mingo@redhat.com>, bp@alien8.de,
-        "hpa\@zytor.com" <hpa@zytor.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] KVM: Adding 'else' to reduce checking.
-In-Reply-To: <2a1a3b72-acc5-4977-5621-439aac53f243@gmail.com>
-References: <2a1a3b72-acc5-4977-5621-439aac53f243@gmail.com>
-Date:   Thu, 16 Jan 2020 09:27:37 +0100
-Message-ID: <87d0bjiz5y.fsf@vitty.brq.redhat.com>
+        Thu, 16 Jan 2020 03:28:30 -0500
+Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:37205
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726812AbgAPI2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 03:28:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iX2sSFO9PJCN0RiiLy/UD9A5u2NnTzXmVZ0u1EeKpTMhDx+ouIjbdmboTNzuft1q2mRpX9ZZRhC5tNlMtIF/UJhTivY5dsEVyL/fqHzjFdLEXVJvnz9nuSgEUYrrcEwNmlO/V/c08dAnejmuN1G+FxKvYd6R6CBmcDJuIHsb73N7Eedx/b/BAqGI6KCtu1qmne2sZC88W2Y2s+7kqJV+p8uMGyx89Oc7/i0jjAcq/odAVAC1isiarTX42Ld3DDXCvGewFT0XzFmb45UFDyxpPsD0iA9TR6c3VOutMGKyVXIKqf6Lz7hYu3P5bdizRVffrfHYpbyFXRrLQpcNSp5QRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EANhXmSVmRlHjC42A3Enh7V7U6f0NI9Sb0cusnW0ng0=;
+ b=RXuK7V5mRRhMmqGZbQKEKFzxeCHm2+fuMSyKBLMI97re4PokR4reyD4MMePswGrNxnB0HXWxTHlZQMivXNm/7IME0u3pJIDxZ0nZHSFse4llrT8KoN0fzCW3kvMYy1bwPSCcQVeB4aBeCyfY2i/L29d1+Q4JTUsByehet7RvPFm2aPm3TdN9dF56MqTlhxGHlrR2HmZEzhGd7RMU8EE7tF3ICI3vRqGq/gtFd2jLsuQef8U954qsfQZMA6Q4XMccdu6Q73YimBkryopiP5zmDs+KpqWc6cIIG4HbzKkGg0vLKd0UgL3odwCwcfUMSn/PnF5U79PNd4NppDXqLGismQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EANhXmSVmRlHjC42A3Enh7V7U6f0NI9Sb0cusnW0ng0=;
+ b=ZxJfN5oemAw7lkRPgQ4D2VtufVIN1VEwv7zrPluPtEde9Y3KxRTjh53VojzkLeum3ujiuL/ubJxGd2g0XNsXHbaqXQ2sdLHyvKlG+HNsT7aAb+5++4W7qPMYdGw1r1WPhAyqn2HrwllmnRtTkhG8ZyevZKOqvtspgWYK9i7Ydo8=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5698.eurprd04.prod.outlook.com (20.178.118.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.12; Thu, 16 Jan 2020 08:28:23 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 08:28:23 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "wens@csie.org" <wens@csie.org>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Topic: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+Thread-Index: AQHVtaDOy35Q6KpKLESPO8UEr8sdH6ftIitQ
+Date:   Thu, 16 Jan 2020 08:28:23 +0000
+Message-ID: <AM0PR04MB448174E1DE647E9F2F65106988360@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e5c18318-3b3a-4827-e00e-08d79a5e0d56
+x-ms-traffictypediagnostic: AM0PR04MB5698:|AM0PR04MB5698:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5698915F081B12570F3A4D6D88360@AM0PR04MB5698.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(189003)(199004)(9686003)(316002)(66446008)(64756008)(66556008)(71200400001)(5660300002)(86362001)(7696005)(66476007)(478600001)(8676002)(6506007)(66946007)(52536014)(55016002)(8936002)(7416002)(76116006)(54906003)(2906002)(110136005)(26005)(81156014)(81166006)(33656002)(186003)(44832011)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5698;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ftJWQfmdURHj2gXcAuHxjL853T9R7cKCB8JlQrrf993bAqf5NveqkBgOjBYIaD3UoAS+8PdC3LU35FyO0QinHApXIt+Z6Xb7gNL3AH93enmkWUIK7R9qJeihrgRHgBVRx/nF6vt2y4+47XMjM3mr2HdVsgLcbyD0c9tUASX9BVqU/UrOufismWtuP40Ur+kCqSXYxh0tWONlPnFm1p1sc/MxVs1FbzQISJfsXN/Y3PTh728gYAgZEf1TkxmGVORukRnwLz29cmTByqs12+RBYnLYMywTsvPxE9KIBAsMF/scRAnNrtOTmEqQmbz4zxuzk7pRQ7gBU90VZSQnL7xKeAk+TuuI76BEAhMU1FwNcvafua2N/yqsduT2sV2LGi17iKaVXXHLt+DvQg7vPv4UT05ixkjqrU0d54T1OcW0jQPv+VsNnA88dX/6Re1bXrBR
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5c18318-3b3a-4827-e00e-08d79a5e0d56
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 08:28:23.6845
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y0opulALU5yj+y//e58fZzxMkYFgWTmLuWvLNzDatUMOLyvXyg9aLK22GHkzdYzLtSrIpEuLxxpOxnyuTpPy4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5698
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Haiwei Li <lihaiwei.kernel@gmail.com> writes:
+Hi Linus,
 
->  From 4e19436679a97e3cee73b4ae613ff91580c721d2 Mon Sep 17 00:00:00 2001
-> From: Haiwei Li <lihaiwei@tencent.com>
-> Date: Thu, 16 Jan 2020 13:51:03 +0800
-> Subject: [PATCH] Adding 'else' to reduce checking.
->
-> These two conditions are in conflict, adding 'else' to reduce checking.
->
-> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+> Subject: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
+
+Would you pick this patch up?
+
+Per Uwe, this v1 patch use %pe is better that v2 use %d.
+
+Thanks,
+Peng.
+
+>=20
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> platform_irq_count() and platform_get_irq() is the more generic way
+> (independent of device trees) to determine the count of available interru=
+pts.
+> So use this instead.
+>=20
+> As platform_irq_count() might return an error code (which of_irq_count
+> doesn't) some additional handling is necessary.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->   arch/x86/kvm/lapic.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 679692b..ef5802f 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1573,7 +1573,7 @@ static void 
-> kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
->          kvm_apic_local_deliver(apic, APIC_LVTT);
->          if (apic_lvtt_tscdeadline(apic))
->                  ktimer->tscdeadline = 0;
-> -       if (apic_lvtt_oneshot(apic)) {
-> +       else if (apic_lvtt_oneshot(apic)) {
->                  ktimer->tscdeadline = 0;
->                  ktimer->target_expiration = 0;
->          }
-
-I bet the compiler will generate the exact same code
-(apic_lvtt_tscdeadline() and apic_lvtt_oneshot() are inlines), however,
-I think your patch is still worthy: 'else' makes it obvious it's either
-one or another and not both.
-
-One nitpick: coding style requires braces even for single statements in
-case other branches require them so in your case it should now be:
-
-if (apic_lvtt_tscdeadline(apic)) {
-	ktimer->tscdeadline = 0;
-} else if (apic_lvtt_oneshot(apic)) {
-        ktimer->tscdeadline = 0;
-        ktimer->target_expiration = 0;
-}
-
-With that,
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index aa9dcde0f069..cc66a6429a06 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/pinctrl/pinconf-generic.h>  #include
+> <linux/pinctrl/pinconf.h>  #include <linux/pinctrl/pinctrl.h> @@ -739,7
+> +738,14 @@ static int armada_37xx_irqchip_register(struct platform_device
+> *pdev,
+>  		return ret;
+>  	}
+>=20
+> -	nr_irq_parent =3D of_irq_count(np);
+> +	nr_irq_parent =3D platform_irq_count(pdev);
+> +	if (nr_irq_parent < 0) {
+> +		if (nr_irq_parent !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> +				ERR_PTR(nr_irq_parent));
+> +		return nr_irq_parent;
+> +	}
+> +
+>  	spin_lock_init(&info->irq_lock);
+>=20
+>  	if (!nr_irq_parent) {
+> @@ -776,7 +782,7 @@ static int armada_37xx_irqchip_register(struct
+> platform_device *pdev,
+>  	if (!girq->parents)
+>  		return -ENOMEM;
+>  	for (i =3D 0; i < nr_irq_parent; i++) {
+> -		int irq =3D irq_of_parse_and_map(np, i);
+> +		int irq =3D platform_get_irq(pdev, i);
+>=20
+>  		if (irq < 0)
+>  			continue;
+> --
+> 2.16.4
 
