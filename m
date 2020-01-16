@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3C4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CF9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F742469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5BD20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194763;
-	bh=bKmCCL+nFaZVoUvGVtR+CZXLw04c6sx0it0xFjT08fw=;
+	s=default; t=1579194766;
+	bh=hpu6Tkyl98vFxhi9jnYRAUwIgGag0U6ndpdJTEwzzOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hNU98U2r0dpsQsdRGCw2m4Zf72AKwrh+3b/qOyME965kbwwxZUsH14KIVBEeHD+J7
-	 ApjJEor6d/6xKkqDvtmZpoquulEMOOGSYWfs06f4b7BpFCDBTsut80rcJVSLC9CqnQ
-	 Q5V67mbtpiuZA37Ks+c0oqcVKWqjlBicJ/XGfOQw=
+	b=J4/CZvXSyejz4xW5SBF9wrJ3E64BF+gJevpI9UFdLMweEA/fc4BGpycCH+4ryLGqx
+	 wA1Vac0ipUmV0c+C22yXSqzmsawFBld8D4oVbuzFWLONH89zOxgoM2ReDHvxbVBCF6
+	 +jgGqnQVR0Es6YrBGO6LEF58IRcUE8kg9Qe4vnMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390186AbgAPRMm (ORCPT
+        id S2390561AbgAPRMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55836 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgAPRMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:39 -0500
+        id S2389511AbgAPRMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34ED724696;
-        Thu, 16 Jan 2020 17:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E33A224690;
+        Thu, 16 Jan 2020 17:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194759;
-        bh=bKmCCL+nFaZVoUvGVtR+CZXLw04c6sx0it0xFjT08fw=;
+        s=default; t=1579194761;
+        bh=hpu6Tkyl98vFxhi9jnYRAUwIgGag0U6ndpdJTEwzzOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kaJ3Woqd/tCNQKZsd5ARJHG6MQa6WPz9i+9Yw3yLEpjyFgPQnHohYOf3/NGywTRRL
-         pu4yP0eukfYX/wOTqEMPgTk2ezF+qCNWehkQyQ/B4IQZXh2cPwo5L0s//nCSuj3HMT
-         CHZPIUND9FLjrmmiONo4ohaTtoxvlR1mIalvqeGM=
+        b=HAo/r75QmTrSdnwABpuNGGrSDqrM+XYfKCtmIHE60nsGgXgxChEuGW8znnU9xMwCF
+         jYw/6ww0adlWRE7aOyRBbDfd1FYUYNgOkBHIQhKwrMdoLo+mRHgOvbXh0KK5SMddTZ
+         Ugr2RhDosOVZDpUN70OEo/WXz6VJZFA6zcTw2sZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        William Tu <u9012063@gmail.com>,
+Cc:     Antonio Borneo <antonio.borneo@st.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 581/671] ip6erspan: remove the incorrect mtu limit for ip6erspan
-Date:   Thu, 16 Jan 2020 12:03:39 -0500
-Message-Id: <20200116170509.12787-318-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 583/671] net: stmmac: fix length of PTP clock's name string
+Date:   Thu, 16 Jan 2020 12:03:41 -0500
+Message-Id: <20200116170509.12787-320-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,39 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-[ Upstream commit 4123f637a5129470ff9d3cb00a5a4e213f2e15cc ]
+[ Upstream commit 5da202c88f8c355ad79bc2e8eb582e6d433060e7 ]
 
-ip6erspan driver calls ether_setup(), after commit 61e84623ace3
-("net: centralize net_device min/max MTU checking"), the range
-of mtu is [min_mtu, max_mtu], which is [68, 1500] by default.
+The field "name" in struct ptp_clock_info has a fixed size of 16
+chars and is used as zero terminated string by clock_name_show()
+in drivers/ptp/ptp_sysfs.c
+The current initialization value requires 17 chars to fit also the
+null termination, and this causes overflow to the next bytes in
+the struct when the string is read as null terminated:
+	hexdump -C /sys/class/ptp/ptp0/clock_name
+	00000000  73 74 6d 6d 61 63 5f 70  74 70 5f 63 6c 6f 63 6b  |stmmac_ptp_clock|
+	00000010  a0 ac b9 03 0a                                    |.....|
+where the extra 4 bytes (excluding the newline) after the string
+represent the integer 0x03b9aca0 = 62500000 assigned to the field
+"max_adj" that follows "name" in the same struct.
 
-It causes the dev mtu of the erspan device to not be greater
-than 1500, this limit value is not correct for ip6erspan tap
-device.
+There is no strict requirement for the "name" content and in the
+comment in ptp_clock_kernel.h it's reported it should just be 'A
+short "friendly name" to identify the clock'.
+Replace it with "stmmac ptp".
 
-Fixes: 61e84623ace3 ("net: centralize net_device min/max MTU checking")
-Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Acked-by: William Tu <u9012063@gmail.com>
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Fixes: 92ba6888510c ("stmmac: add the support for PTP hw clock driver")
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_gre.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index b3515a4f1303..1f2d0022ba6f 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -2218,6 +2218,7 @@ static void ip6erspan_tap_setup(struct net_device *dev)
- {
- 	ether_setup(dev);
- 
-+	dev->max_mtu = 0;
- 	dev->netdev_ops = &ip6erspan_netdev_ops;
- 	dev->needs_free_netdev = true;
- 	dev->priv_destructor = ip6gre_dev_free;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+index cc60b3fb0892..8f8b8f381ffd 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+@@ -174,7 +174,7 @@ static int stmmac_enable(struct ptp_clock_info *ptp,
+ /* structure describing a PTP hardware clock */
+ static struct ptp_clock_info stmmac_ptp_clock_ops = {
+ 	.owner = THIS_MODULE,
+-	.name = "stmmac_ptp_clock",
++	.name = "stmmac ptp",
+ 	.max_adj = 62500000,
+ 	.n_alarm = 0,
+ 	.n_ext_ts = 0,
 -- 
 2.20.1
 
