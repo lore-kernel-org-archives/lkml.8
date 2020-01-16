@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26C9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BD2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D0F2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388BD246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196999;
-	bh=arzn62WqO3LV5rgp5twHz/Jh5XNGBB+EvyPTE9wYqjA=;
+	s=default; t=1579197008;
+	bh=N7kS+mHj2N5K7KqxhD2fQNqane2S9SAKkAmMDbmt93o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FiVqQ4+2RMCzjFJs+95NAVX6LLOQRLRfTVyRBN5GGCYfgmVtNEqrfPSeoQGcgBMaE
-	 lzQYnCRo1gdNI6dlhEl6AsqAXjQG85q8y+CDQIIZyUu8in641j71oac74SkwnusuLA
-	 LcNasl9ZBjCcjV8iDpRpNYWw41NKaFSoybNml4QE=
+	b=SsZCkMM2rU9xKi+Hc5p9OeE7cUKb3tDaNhNnYIu0Xp0NGM6NvYYK2dzAa3cW6+wcC
+	 1Ahh6YitlXlOMXXOgpoJBaWySLDZT0zJ14/RLq6zVaxvkrJSz72eRehrVYvM8ezLlE
+	 vhzJb9Wl7KNPaMNqYkeFB2wDrH23SLnm/eACQapc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394315AbgAPRt6 (ORCPT
+        id S2406572AbgAPRp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:49:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393907AbgAPRqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:00 -0500
+        id S2406523AbgAPRpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1887A246D3;
-        Thu, 16 Jan 2020 17:45:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF50246BA;
+        Thu, 16 Jan 2020 17:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196760;
-        bh=arzn62WqO3LV5rgp5twHz/Jh5XNGBB+EvyPTE9wYqjA=;
+        s=default; t=1579196750;
+        bh=N7kS+mHj2N5K7KqxhD2fQNqane2S9SAKkAmMDbmt93o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KDEZEAAex0bQVnJ965zHBwcqP/kH+5E7dSxN/WkjnoI9HjGGv/PVGDAHtjOzX0IKd
-         Y2YgDgzQ8+IF/J0nf2WnWGpj6KltGv7IZ0gyHNfVS2Gu2tGZhnwcz+AgmUYnVyNNG4
-         kx/RX/sGPmMcNbmHnkb6gJhoXxZnotznLTmldVoA=
+        b=VUfjP2GJgm0pQZrpHtUyX8zOu1/6R9ahHhANtVHmwlHupRvhalDS/tKZVwOcyihNf
+         q5Ygmh+w9sAz7hJLibt789DVvz+5ju6JwHHCA8MVXdTR+P1ydI8JiPok/BmomZ45AL
+         H+EhVLg0T7ts9FP/94zC8HCyCEK3O63cpor2LS0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 134/174] net: sonic: return NETDEV_TX_OK if failed to map buffer
-Date:   Thu, 16 Jan 2020 12:42:11 -0500
-Message-Id: <20200116174251.24326-134-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 127/174] ahci: Do not export local variable ahci_em_messages
+Date:   Thu, 16 Jan 2020 12:42:04 -0500
+Message-Id: <20200116174251.24326-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,40 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 ]
+[ Upstream commit 60fc35f327e0a9e60b955c0f3c3ed623608d1baa ]
 
-NETDEV_TX_BUSY really should only be used by drivers that call
-netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
-failed to map tx DMA buffer, it might trigger an infinite loop.
-This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
-printk to pr_err_ratelimited.
+The commit ed08d40cdec4
+  ("ahci: Changing two module params with static and __read_mostly")
+moved ahci_em_messages to be static while missing the fact of exporting it.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
+
+Drop export for the local variable ahci_em_messages.
+
+Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+Cc: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/ata/libahci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 0798b4adb039..b5f1f4ea9d4a 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -221,9 +221,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 8116cb2fef2d..1241cecfcfca 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -187,7 +187,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
+ EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
  
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
--		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
-+		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
- 		dev_kfree_skb(skb);
--		return NETDEV_TX_BUSY;
-+		return NETDEV_TX_OK;
- 	}
- 
- 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ static bool ahci_em_messages __read_mostly = true;
+-EXPORT_SYMBOL_GPL(ahci_em_messages);
+ module_param(ahci_em_messages, bool, 0444);
+ /* add other LED protocol types when they become supported */
+ MODULE_PARM_DESC(ahci_em_messages,
 -- 
 2.20.1
 
