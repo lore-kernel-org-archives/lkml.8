@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E66C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E6CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE06207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE01420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202511;
-	bh=oY7XO9Dk74wIYR+ZjzfKL3yXu+cjNaRxvkmpqouDKL0=;
+	s=default; t=1579202515;
+	bh=zv0uIQnbRuBqCuzGClHLpmzrWhj9qCdptkqR74SgYfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jquVuZr4VL7LO0Jql9DIrY8yxwTxi6DyvBXxVGBg6rt55hbQkZ2PwH2lIBOSuEcMh
-	 Vnx23flDliNqDknKeZXcrUjCKwv0VQcVXL108GmLAQ40GFzz+igt6zNuaDVXMbtmeD
-	 nyeitYLtPPJp5z0ZfBmxKsI1tdwzPXFmSEp8YqVQ=
+	b=shs0c5x/LnIocHnpaYYrvLFi9DIhql/8hFGG+kp8Q2Qjt+hhXbDhRlX6kEKyhvRqh
+	 RdOc0f29yIVesTgbOqfhNAYD1jEcZ+pe6WSXBDg8EVH4+QHgTGthzh5R4J7F+IXGE2
+	 tLM5et47jOHEda0o3BtKKEGrSkKvk/hyzNBXoYW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392466AbgAPTVt (ORCPT
+        id S2437681AbgAPTVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37672 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:21:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbgAPQxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:41 -0500
+        id S1731066AbgAPQxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F0C22522;
-        Thu, 16 Jan 2020 16:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72337214AF;
+        Thu, 16 Jan 2020 16:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193621;
-        bh=oY7XO9Dk74wIYR+ZjzfKL3yXu+cjNaRxvkmpqouDKL0=;
+        s=default; t=1579193617;
+        bh=zv0uIQnbRuBqCuzGClHLpmzrWhj9qCdptkqR74SgYfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKSq/oljSixu/OCqzzFLW8rDp8pV8hDkOmrf+kaUc7WMUfILkSHAya6UgLutIOaHv
-         zLgEPkuQF8fG0/zB9J4YfeDw/5ZNOOBApgMI3ihBYFQ8xEUJARtg3xT2wX53VKINrE
-         WIdELMrjq8Xg/KVqSY9W6Hjc+AokycuLlAsoP1GA=
+        b=PwSR9O2zM3e5dZKi4kPruSALAsifbTuvCBq/fjHzflyT4l/gL+6bIlbvM5A1vuSsH
+         nS1HdQAx7UxRlvkvtOCSjJ2MoQ9X7lSh5MeHzXz4lW4JfH9XoMUSq3hCBN2I6xEnU3
+         4geXSS6R9vV68Cs+5u0BM2NXzMWG2DsiPRKKgWC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 156/205] scsi: qla4xxx: fix double free bug
-Date:   Thu, 16 Jan 2020 11:42:11 -0500
-Message-Id: <20200116164300.6705-156-sashal@kernel.org>
+Cc:     Shuiqing Li <shuiqing.li@unisoc.com>,
+        Dongwei Wang <dongwei.wang@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 153/205] watchdog: sprd: Fix the incorrect pointer getting from driver data
+Date:   Thu, 16 Jan 2020 11:42:08 -0500
+Message-Id: <20200116164300.6705-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,38 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Shuiqing Li <shuiqing.li@unisoc.com>
 
-[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
+[ Upstream commit 39e68d9e7ab276880980ee5386301fb218202192 ]
 
-The variable init_fw_cb is released twice, resulting in a double free
-bug. The call to the function dma_free_coherent() before goto is removed to
-get rid of potential double free.
+The device driver data saved the 'struct sprd_wdt' object, it is
+incorrect to get 'struct watchdog_device' object from the driver
+data, thus fix it.
 
-Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
-Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 477603467009 ("watchdog: Add Spreadtrum watchdog driver")
+Reported-by: Dongwei Wang <dongwei.wang@unisoc.com>
+Signed-off-by: Shuiqing Li <shuiqing.li@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/watchdog/sprd_wdt.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
-index dac9a7013208..02636b4785c5 100644
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
+diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
+index 0bb17b046140..65cb55f3916f 100644
+--- a/drivers/watchdog/sprd_wdt.c
++++ b/drivers/watchdog/sprd_wdt.c
+@@ -327,10 +327,9 @@ static int sprd_wdt_probe(struct platform_device *pdev)
  
- 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
- 	    QLA_SUCCESS) {
--		dma_free_coherent(&ha->pdev->dev,
--				  sizeof(struct addr_ctrl_blk),
--				  init_fw_cb, init_fw_cb_dma);
- 		goto exit_init_fw_cb;
- 	}
+ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
  
+-	if (watchdog_active(wdd))
++	if (watchdog_active(&wdt->wdd))
+ 		sprd_wdt_stop(&wdt->wdd);
+ 	sprd_wdt_disable(wdt);
+ 
+@@ -339,7 +338,6 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+ 
+ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ {
+-	struct watchdog_device *wdd = dev_get_drvdata(dev);
+ 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+ 	int ret;
+ 
+@@ -347,7 +345,7 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (watchdog_active(wdd)) {
++	if (watchdog_active(&wdt->wdd)) {
+ 		ret = sprd_wdt_start(&wdt->wdd);
+ 		if (ret) {
+ 			sprd_wdt_disable(wdt);
 -- 
 2.20.1
 
