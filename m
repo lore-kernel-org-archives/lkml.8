@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2846CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA0EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C7024679
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFADE246E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196800;
-	bh=k1fq5nFoqnfWZTchrpzChgxwNnp4TJV0qSEx9lO+Y4U=;
+	s=default; t=1579196803;
+	bh=tjezgqyB0lb6GvQGpNFUAhir6YPDZj0KFE56LLwsDVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CDU/ItcFSrKmBOCJD/QY+tRrFNvpyl0O0GAy2K32Wcd4NwR+rZfplfuN/k6gRdkpi
-	 OhCnO7KE3bfLctQeSizSqu0oBv6McH+IlA76M9bt4ZZlLtE8grzy2vNaNNsFc0/0R1
-	 ZXM4KALjJuNm6utNICphGbvF23BZ/KP9K+jNniaU=
+	b=CPwhB6Ru0UBm4rX6gn9uz0eWFqxWnk0/1fCf06Ad97unHcUpTPbD4DP8WWGgQ9nJb
+	 I9w63zQw2Fb0IDbSdXbvfcnoEtRcZ4xBDTseNQ6lPF8lEV8oKNVpWffnt2Lu+4Uala
+	 AC6pTn48HmTZmLUAVodmu3sd1z42RRJCQsOhJQx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406119AbgAPRqj (ORCPT
+        id S2406766AbgAPRqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39414 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406704AbgAPRqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:33 -0500
+        id S2406738AbgAPRqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86FC246B8;
-        Thu, 16 Jan 2020 17:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9E1246DE;
+        Thu, 16 Jan 2020 17:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196792;
-        bh=k1fq5nFoqnfWZTchrpzChgxwNnp4TJV0qSEx9lO+Y4U=;
+        s=default; t=1579196799;
+        bh=tjezgqyB0lb6GvQGpNFUAhir6YPDZj0KFE56LLwsDVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uy2ro8uFmuM/6wHbDq/Pvdun6sVZwKkTd4/kOl4WbeOq+cW+0dwQdI6Xqgz+aDjiE
-         YvZxWdyYhgb7+ZRCyhJFaALrBvR1WsiFjPlSb2A4voOMBdbMz3s59lnMXEYWZLXgvQ
-         PRreHaCPZ8saUPNMia/WQolv4VCJS//KH5nE6FOs=
+        b=mmR0MM0r7SDpzNzBbvY3PqCphAOfFOEiVp73TfZNdghLvEys3G9rOz3+WY2Bu6FZu
+         +Fk4tZ4lxcPRRz1WpY0/46OGvL5cP/xkm+lGNqUl+6Ah0GagbtWLYMU68ZxyL+wKM3
+         jSkJavCdjj6aaqTBw8lvMElyTueRT2L2u2N8Q+h4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 154/174] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
-Date:   Thu, 16 Jan 2020 12:42:31 -0500
-Message-Id: <20200116174251.24326-154-sashal@kernel.org>
+Cc:     Marian Mihailescu <mihailescu2m@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 159/174] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+Date:   Thu, 16 Jan 2020 12:42:36 -0500
+Message-Id: <20200116174251.24326-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,54 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-[ Upstream commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f ]
+[ Upstream commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 ]
 
-Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
-op get_fmt") converted a former ov6650_g_fmt() video operation callback
-to an ov6650_get_fmt() pad operation callback.  However, the converted
-function disregards a format->which flag that pad operations should
-obey and always returns active frame format settings.
+Save and restore top PLL related configuration registers for big (APLL)
+and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
+were reset to default values after suspend/resume cycle and performance
+after system resume was affected when performance governor has been selected.
 
-That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
--EINVAL, or providing the response from a pad config argument, likely
-updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
-Since implementation of the latter is trivial, go for it.
-
-Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/clk/samsung/clk-exynos5420.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index 01f82c3fc1d1..7928ea8528e1 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -524,10 +524,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	*mf = ov6650_def_fmt;
- 
- 	/* update media bus format code and frame size */
--	mf->width	= priv->rect.width >> priv->half_scale;
--	mf->height	= priv->rect.height >> priv->half_scale;
--	mf->code	= priv->code;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
- 
-+	} else {
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
-+	}
- 	return 0;
- }
- 
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index c94de13ce362..21bfedf40478 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -166,6 +166,8 @@ static unsigned long exynos5x_clk_regs[] __initdata = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	APLL_CON0,
++	KPLL_CON0,
+ 	CPLL_CON0,
+ 	DPLL_CON0,
+ 	EPLL_CON0,
 -- 
 2.20.1
 
