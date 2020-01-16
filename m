@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AA1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB617C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B872470E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C1124702
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195740;
-	bh=joW9gCGtn7LIvHqY6FdzL63I+rB36f9vG8zWb0MgOoc=;
+	s=default; t=1579195742;
+	bh=wp8H6JrP5r7Xu478e+qmlSSOd3BEKvsKmv9Oq1SZ05c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GEejF4Nn5ysjPuB4nNoT1EP1VQ1NlagqhkTHSqi+iFgBbgsvTw0ioKMBORpyLIi5U
-	 K3eh8a5pZKCyRKp8EK75W108NTJMvCEfcn9+/9f+Yc0hUuTtr8CPEA7SVzs93/Q78M
-	 1cxV26YHtVtym9jJbX9rV/YYCgVPHI5UDyn3IYFI=
+	b=T9Wlh6HgGlRFk8QxFLh8NjTYLXFQpYb+TxFSsssbo1+opvLuIKjNHv+mbGPmdaVJa
+	 coSxR2isfdVjuT9gIPieaKSZr5WF8Pq1O6W34bfJAs3aM89lyTiRNZDnqT1SbeyqVP
+	 8EZ+EPSNENPtePDMBLpLF1GN9g23KTpJ1HLY/jr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404234AbgAPR27 (ORCPT
+        id S2404251AbgAPR3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392658AbgAPR2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:49 -0500
+        id S2392682AbgAPR2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8824B246EE;
-        Thu, 16 Jan 2020 17:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B84C8246E8;
+        Thu, 16 Jan 2020 17:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195728;
-        bh=joW9gCGtn7LIvHqY6FdzL63I+rB36f9vG8zWb0MgOoc=;
+        s=default; t=1579195732;
+        bh=wp8H6JrP5r7Xu478e+qmlSSOd3BEKvsKmv9Oq1SZ05c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OtC/Lj/5wY84wjxqDudsQxiW3FfVwcD0WGJQZutF/zK5yj/dQ0+vi7PnOnHbD0A2B
-         I+7wsZfXDe+QwFrMnVFEiKh3fPb2jcOx7qE4ozbuz2tNGGz+HKj0hx1jt0hMwZqR7i
-         MsOAOJ3+PWjz6r8aaRKpC//YvO18t5VU9S0GJpf8=
+        b=G29w+FI3OaFUaIAQ4BncKp3AsyDqEEI+KfgpuY4WdL0MZhwLgOLJx4ve2IBhlsec8
+         sHicx6vpsyGs/S2K3obNMA5zyH92tygbRCu+6Kr3nDwkKTqHDBy5G1tu4Eec0Wu9OK
+         i0hUOG9xyfitbDrMKjj3GTN8KbHM+w4XmdL75iHw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 269/371] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
-Date:   Thu, 16 Jan 2020 12:22:21 -0500
-Message-Id: <20200116172403.18149-212-sashal@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 271/371] ASoC: sun4i-i2s: RX and TX counter registers are swapped
+Date:   Thu, 16 Jan 2020 12:22:23 -0500
+Message-Id: <20200116172403.18149-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,55 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
+[ Upstream commit cf2c0e1ce9544df42170fb921f12da82dc0cc8d6 ]
 
-If FW returns FRAG_ERR in response error code, driver is resending the
-command only when HWRM command returns success. Fix the code to resend
-NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
-FRAG_ERR in its response error code.
+The RX and TX counters registers offset have been swapped, fix that.
 
-Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fa7c0d13cb26 ("ASoC: sunxi: Add Allwinner A10 Digital Audio driver")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/8b26477560ad5fd8f69e037b167c5e61de5c26a3.1566242458.git-series.maxime.ripard@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 963beaa8fabb..3c78cd1cdd6f 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1667,21 +1667,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	mutex_lock(&bp->hwrm_cmd_lock);
- 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
- 				      INSTALL_PACKAGE_TIMEOUT);
--	if (hwrm_err)
--		goto flash_pkg_exit;
--
--	if (resp->error_code) {
-+	if (hwrm_err) {
- 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index da0a2083e12a..d2802fd8c1dd 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -80,8 +80,8 @@
+ #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
+ #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
  
--		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
-+		if (resp->error_code && error_code ==
-+		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
- 			install.flags |= cpu_to_le16(
- 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
- 			hwrm_err = _hwrm_send_message(bp, &install,
- 						      sizeof(install),
- 						      INSTALL_PACKAGE_TIMEOUT);
--			if (hwrm_err)
--				goto flash_pkg_exit;
- 		}
-+		if (hwrm_err)
-+			goto flash_pkg_exit;
- 	}
+-#define SUN4I_I2S_RX_CNT_REG		0x28
+-#define SUN4I_I2S_TX_CNT_REG		0x2c
++#define SUN4I_I2S_TX_CNT_REG		0x28
++#define SUN4I_I2S_RX_CNT_REG		0x2c
  
- 	if (resp->result) {
+ #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
+ #define SUN4I_I2S_CHAN_SEL(num_chan)		(((num_chan) - 1) << 0)
 -- 
 2.20.1
 
