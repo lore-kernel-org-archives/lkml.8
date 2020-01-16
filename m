@@ -2,114 +2,120 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2833C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40317C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C92D20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198638;
-	bh=bdYDF/iChZtMetzI45f9XkEHVFoP6QF7TX2gToOJzk0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blk0aV0zZJIxyoyv7ykdZZJH81rWWEomptu84qSmyB4GWbkLpaodwXa2oIElsoRTC
-	 3KqZprQA4VKxPipVbBWfHTsHf3Mx8mDTJvJPYR6bPe73oj9/DfEja+21Pz4R5TXvBz
-	 L9CqJq1LJliGgGBIS9NZ8ZArV0K97xNoqREw55Vw=
+	by mail.kernel.org (Postfix) with ESMTP id 27E7E20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436479AbgAPSRR (ORCPT
+        id S2436511AbgAPSRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Jan 2020 13:17:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52900 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436474AbgAPSRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 13:17:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404303AbgAPR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:12 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67AE9246F4;
-        Thu, 16 Jan 2020 17:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195752;
-        bh=bdYDF/iChZtMetzI45f9XkEHVFoP6QF7TX2gToOJzk0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aey+I1fzytBqb2FUB7cZLjo9QqKpydukSkSjczBgCK0ZFPMFQ0rZPwwH/pR3fz7DU
-         lN1dkzl1rLrxps6Z5DThQCu18J0ul+s7qdheLHO3VWb9gU32Jg4C2Ux8GqMjqnaND4
-         geko0dLxdSjzcKjaHI2s9cgWmbGjFdKEcGCfrj7M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dexuan Cui <decui@microsoft.com>, Lili Deng <v-lide@microsoft.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 284/371] irqdomain: Add the missing assignment of domain->fwnode for named fwnode
-Date:   Thu, 16 Jan 2020 12:22:36 -0500
-Message-Id: <20200116172403.18149-227-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1is9hX-0003ni-5o; Thu, 16 Jan 2020 19:17:03 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 92A16101226; Thu, 16 Jan 2020 19:17:02 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH] watchdog/softlockup: Enforce that timestamp is valid on boot
+In-Reply-To: <20200116151146.wn6ec7igl2bfk4c2@rric.localdomain>
+References: <20200103151032.19590-1-longman@redhat.com> <87sgkgw3xq.fsf@nanos.tec.linutronix.de> <87blr3wrqw.fsf@nanos.tec.linutronix.de> <20200116151146.wn6ec7igl2bfk4c2@rric.localdomain>
+Date:   Thu, 16 Jan 2020 19:17:02 +0100
+Message-ID: <87o8v3uuzl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+Robert reported that during boot the watchdog timestamp is set to 0 for one
+second which is the indicator for a watchdog reset.
 
-[ Upstream commit 711419e504ebd68c8f03656616829c8ad7829389 ]
+The reason for this is that the timestamp is in seconds and the time is
+taken from sched clock and divided by ~1e9. sched clock starts at 0 which
+means that for the first second during boot the watchdog timestamp is 0,
+i.e. reset.
 
-Recently device pass-through stops working for Linux VM running on Hyper-V.
+Use ULONG_MAX as the reset indicator value so the watchdog works correctly
+right from the start. ULONG_MAX would only conflict with a real timestamp
+if the system reaches an uptime of 136 years on 32bit and almost eternity
+on 64bit.
 
-git-bisect shows the regression is caused by the recent commit
-467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
-is that the commit d59f6617eef0 forgets to set the domain->fwnode for
-IRQCHIP_FWNODE_NAMED*, and as a result:
-
-1. The domain->fwnode remains to be NULL.
-
-2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
-false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
-msi_domain to NULL.
-
-3. When the device is added onto the root bus, the device's dev->msi_domain
-is set to NULL in pci_set_msi_domain().
-
-4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
-calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
-arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
-actually pci_msi_setup_msi_irqs() is supposed to call
-msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
-hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
-hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
-the device driver can not receive any interrupt.
-
-Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
-Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
-Reported-by: Lili Deng <v-lide@microsoft.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/irqdomain.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/watchdog.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index ac4644e92b49..0f0e7975a309 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -147,6 +147,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 		switch (fwid->type) {
- 		case IRQCHIP_FWNODE_NAMED:
- 		case IRQCHIP_FWNODE_NAMED_ID:
-+			domain->fwnode = fwnode;
- 			domain->name = kstrdup(fwid->name, GFP_KERNEL);
- 			if (!domain->name) {
- 				kfree(domain);
--- 
-2.20.1
-
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -161,6 +161,8 @@ static void lockup_detector_update_enabl
+ 
+ #ifdef CONFIG_SOFTLOCKUP_DETECTOR
+ 
++#define SOFTLOCKUP_RESET	ULONG_MAX
++
+ /* Global variables, exported for sysctl */
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+@@ -272,7 +274,7 @@ notrace void touch_softlockup_watchdog_s
+ 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
+ 	 * gets zeroed here, so use the raw_ operation.
+ 	 */
+-	raw_cpu_write(watchdog_touch_ts, 0);
++	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ notrace void touch_softlockup_watchdog(void)
+@@ -296,14 +298,14 @@ void touch_all_softlockup_watchdogs(void
+ 	 * the softlockup check.
+ 	 */
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+-		per_cpu(watchdog_touch_ts, cpu) = 0;
++		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
+ 	wq_watchdog_touch(-1);
+ }
+ 
+ void touch_softlockup_watchdog_sync(void)
+ {
+ 	__this_cpu_write(softlockup_touch_sync, true);
+-	__this_cpu_write(watchdog_touch_ts, 0);
++	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ static int is_softlockup(unsigned long touch_ts)
+@@ -379,7 +381,7 @@ static enum hrtimer_restart watchdog_tim
+ 	/* .. and repeat */
+ 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
+ 
+-	if (touch_ts == 0) {
++	if (touch_ts == SOFTLOCKUP_RESET) {
+ 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
+ 			/*
+ 			 * If the time stamp was touched atomically
