@@ -2,158 +2,93 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F95C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F28C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880AF246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YeqtpcEn"
+	by mail.kernel.org (Postfix) with ESMTP id 3C14D246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579195202;
+	bh=+wjsP+BL3zBz0Sf8nVBdYXWxBkY7p2jY+SVK1Rd4QWA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DiY55faTO2vHbQoO4XeHH3UG7YsG5uMnGOoQCMQCLht/L6XdZJ6OBf0Fq8nrB2e6w
+	 DYhUykpngjfbrOd5pQpgwaotoQNAeiE7ekwedquojkvY5Ys8jXSqipeZcOSqTzzPKF
+	 aIKBcw1heh4t2yKb0G4beoqBo0u4jeOuhaOiKJQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391572AbgAPRT4 (ORCPT
+        id S2391404AbgAPRUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:19:56 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46017 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391385AbgAPRSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:15 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so16053223lfa.12;
-        Thu, 16 Jan 2020 09:18:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cuaekrQn9t7Wj/AF8dj3MhOapcvvLHIEhjAaNfRzTGg=;
-        b=YeqtpcEn2IV/D8OXJFcE8Jwf4Jf5u0lcuquyAt+BbRQSOM/wxvpHkWOoKD0qy6YOie
-         9dHspbuT06VGVoA3E0PbLe6tWs5+kTIUz8ZkVDy3/mO0/LEk0oM26QAQy9BuypSnnEhD
-         qqAStYiLDCN9jgloEBLnmd6Nlef0pYcf1K04K7smMA05WBEAdAPMahNf9pJPKvPhhIda
-         Ak3P6YljIUp2wRIalY3YIeHWrYa17sFFj6e2zgKElpQ536ZrBgV2Sc19gIwqi8JiXLdC
-         fYjw9GChQHcYFPTUeRB2U1S+Axy3alvJ7swTG3kYbqobHJyvrf0BPqePsvyQ5jtnChKl
-         YZPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cuaekrQn9t7Wj/AF8dj3MhOapcvvLHIEhjAaNfRzTGg=;
-        b=rG6a6rsucntkBqkZv23eKaV992eHVu9UTd6g1CtahMipdIAfGvlMr5jbHJKX/qzJel
-         EudUdrlmFzUp0Ka0S++dxL5toQQB7+DZY5VcfFQ6YuNznktSS4FXrtBaK1rMisyuc74q
-         4T2HE1smdldiV9MCvPiZQ2hTSRMA7oqLzDrMigMLuvmNecnI1+1h66ko/3PUYwXcPjIB
-         9ke19yR+pSKT8MQGGZNJjxPbREG5HOEC+TVtcf8hUpySJl1lODNliWSXE+BJe3GgK8Jm
-         bdjPS9Ey3vw0ZS0oImBDloCG6CRd0hsfZG2uhWUh1jhQuFUKpcX21ARD41Ovl/ASGXRm
-         Bz5g==
-X-Gm-Message-State: APjAAAUBtoV+kGIBbG3U/UxF/PFZ7CTjmwtq7iDnb7VloNyt6N65FmSp
-        3i3oGIvy0iXyTM2V3HI772UMNS6O
-X-Google-Smtp-Source: APXvYqy220VkFSTrKosDWOSCYosOmrkKL0p+neVS7EHUWpmuEjB9hGMhiTUcC+NgyGSjqCMQG3I39w==
-X-Received: by 2002:a19:3f51:: with SMTP id m78mr2935387lfa.70.1579195092626;
-        Thu, 16 Jan 2020 09:18:12 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id j19sm12606841lfb.90.2020.01.16.09.18.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 09:18:12 -0800 (PST)
-Subject: Re: [PATCH v4 09/14] dmaengine: tegra-apb: Clean up runtime PM
- teardown
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-10-digetx@gmail.com>
- <9a5c4f82-5653-8d81-e304-76675aff5d8f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <11cdf32b-23d5-8a4e-0832-3c75e90b8abe@gmail.com>
-Date:   Thu, 16 Jan 2020 20:18:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 16 Jan 2020 12:20:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390359AbgAPRSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:13 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96F44246C6;
+        Thu, 16 Jan 2020 17:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195092;
+        bh=+wjsP+BL3zBz0Sf8nVBdYXWxBkY7p2jY+SVK1Rd4QWA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m7FEicedoWbX3dCl9UF+kfSI9DKXD/OXBldXkTRzJdi3++AST7wq9zAUdXn4zMXvp
+         iV9dDCfk2tT/pEk9xVGV70SmrH5H+SJBa6BNj+KkhgS2ynb1xmoab6x5YDiNs76QMZ
+         wYat3p8WDYlZ2GyNnMeKiIRXTMkBl4IKU29aOBR0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 039/371] clk: samsung: exynos4: fix refcount leak in exynos4_get_xom()
+Date:   Thu, 16 Jan 2020 12:11:47 -0500
+Message-Id: <20200116171719.16965-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
+References: <20200116171719.16965-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <9a5c4f82-5653-8d81-e304-76675aff5d8f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.01.2020 12:57, Jon Hunter пишет:
-> 
-> On 12/01/2020 17:30, Dmitry Osipenko wrote:
->> It's cleaner to teardown RPM by revering the enable sequence, which makes
->> code much easier to follow.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 22 +++++++++++++---------
->>  1 file changed, 13 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index 7158bd3145c4..cc4a9ca20780 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -1429,13 +1429,15 @@ static int tegra_dma_probe(struct platform_device *pdev)
->>  	spin_lock_init(&tdma->global_lock);
->>  
->>  	pm_runtime_enable(&pdev->dev);
->> -	if (!pm_runtime_enabled(&pdev->dev))
->> +	if (!pm_runtime_enabled(&pdev->dev)) {
->>  		ret = tegra_dma_runtime_resume(&pdev->dev);
->> -	else
->> +		if (ret)
->> +			return ret;
->> +	} else {
->>  		ret = pm_runtime_get_sync(&pdev->dev);
->> -
->> -	if (ret < 0)
->> -		goto err_pm_disable;
->> +		if (ret < 0)
->> +			goto err_pm_disable;
->> +	}
->>  
->>  	/* Reset DMA controller */
->>  	reset_control_assert(tdma->rst);
->> @@ -1545,9 +1547,10 @@ static int tegra_dma_probe(struct platform_device *pdev)
->>  	dma_async_device_unregister(&tdma->dma_dev);
->>  
->>  err_pm_disable:
->> -	pm_runtime_disable(&pdev->dev);
->> -	if (!pm_runtime_status_suspended(&pdev->dev))
->> +	if (!pm_runtime_enabled(&pdev->dev))
->>  		tegra_dma_runtime_suspend(&pdev->dev);
->> +	else
->> +		pm_runtime_disable(&pdev->dev);
->>  
->>  	return ret;
->>  }
->> @@ -1558,9 +1561,10 @@ static int tegra_dma_remove(struct platform_device *pdev)
->>  
->>  	dma_async_device_unregister(&tdma->dma_dev);
->>  
->> -	pm_runtime_disable(&pdev->dev);
->> -	if (!pm_runtime_status_suspended(&pdev->dev))
->> +	if (!pm_runtime_enabled(&pdev->dev))
->>  		tegra_dma_runtime_suspend(&pdev->dev);
->> +	else
->> +		pm_runtime_disable(&pdev->dev);
-> 
-> Looks like dma_async_device_unregister() will warn if a client still has
-> a channel requested but does not prevent the unregister from completing.
-> So it could be possible that we could be leaving the controller active now.
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-It's a drivers dependency bug if DMA driver's module isn't properly
-refcounted and thus could be removed while it has active users. Nothing
-we can do about it here, the actual source of the bug needs to be fixed.
+[ Upstream commit cee82eb9532090cd1dc953e845d71f9b1445c84e ]
 
-Perhaps Tegra DMA driver could inc/dec module's refcounf on channel's
-request/free, but I think it should be responsibility of the DMA core to
-care about the refcounting (if it doesn't do it already).
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
+
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: e062b571777f ("clk: exynos4: register clocks using common clock framework")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/samsung/clk-exynos4.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+index d8d3cb67b402..3d3026221927 100644
+--- a/drivers/clk/samsung/clk-exynos4.c
++++ b/drivers/clk/samsung/clk-exynos4.c
+@@ -1240,6 +1240,7 @@ static unsigned long __init exynos4_get_xom(void)
+ 			xom = readl(chipid_base + 8);
+ 
+ 		iounmap(chipid_base);
++		of_node_put(np);
+ 	}
+ 
+ 	return xom;
+-- 
+2.20.1
+
