@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF9BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E281C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD91217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D712081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194451;
-	bh=fto6auODjSObhV4dyVgUD2pgW/Kn8GTtAltYPsvBTbo=;
+	s=default; t=1579194459;
+	bh=VFJctDrbefn6w/W8GiG7pae/I2U6dtsmHmDknQOiW3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZWxXklOI9lv7n4FajIym9hUcTyDlCXlQ6GQJcnS7CqgN+bQrDW1cwJbXEBc/sUpSr
-	 BkWDHruDe+72RrH+FiksiMso0HXMvQFniMsNoZfGWXetqWl1cu47/DdG7h4wQKiahi
-	 uDTw5kf4gjoE1TmfcBQFU1T2HvC8SlG6NYnxths0=
+	b=2SNlYwVxnVNvCnzJnWDO98jA7b2LLMvfcHoHxOccBPzDk9236oMqPdFLc62hEK2jU
+	 0uNMkL6gL4/mzZQh14RBIL+r//pSaQdA2bRdt/lgkH0EhY3IDT+CDyVPj3CLfk9hIm
+	 fuL2I4fBqMT6nZGAtni77pLGf9Ce6okqBzCx5e5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388695AbgAPRHa (ORCPT
+        id S2388464AbgAPRHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38954 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389142AbgAPRHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:19 -0500
+        id S2389182AbgAPRH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4473B217F4;
-        Thu, 16 Jan 2020 17:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09AB4205F4;
+        Thu, 16 Jan 2020 17:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194438;
-        bh=fto6auODjSObhV4dyVgUD2pgW/Kn8GTtAltYPsvBTbo=;
+        s=default; t=1579194449;
+        bh=VFJctDrbefn6w/W8GiG7pae/I2U6dtsmHmDknQOiW3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YB8+BWK4k9qbUwLF5udjoGvu+QfsLG3hOJoe+lztIxMigh52Oq+qYdOUZ6vSg0HU6
-         tQ6NaPHaiYc3e3KPvGl7nITihYsT0jh9Vht25b1Wh9VH96qo/jYkdu+tMnTdWvPwI7
-         F+JhZGdLtfnH+CZ7vO4k4//Uj0k+7qpZ7aB2WApc=
+        b=P9NsbxsB1qpd2lsPnTn6BWA3Mz2h12ZDSTcg2/4Qp8V48WE7hJUYv3MzIZAhuQkRY
+         y4S7nGsAVPB51VpFKv03RXZeNKMNHuR0DIitKffhQESANkY9DTW2X70toNRchH60sq
+         WgwGd6+cOipOCGJrQhk8trjjpEd4EUgh5+ufCpHY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 352/671] ARM: riscpc: fix lack of keyboard interrupts after irq conversion
-Date:   Thu, 16 Jan 2020 11:59:50 -0500
-Message-Id: <20200116170509.12787-89-sashal@kernel.org>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 359/671] EDAC/mc: Fix edac_mc_find() in case no device is found
+Date:   Thu, 16 Jan 2020 11:59:57 -0500
+Message-Id: <20200116170509.12787-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,40 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 63a0666bca9311f35017be454587f3ba903644b8 ]
+[ Upstream commit 29a0c843973bc385918158c6976e4dbe891df969 ]
 
-Fix lack of keyboard interrupts for RiscPC due to incorrect conversion.
+The function should return NULL in case no device is found, but it
+always returns the last checked mc device from the list even if the
+index did not match. Fix that.
 
-Fixes: e8d36d5dbb6a ("ARM: kill off set_irq_flags usage")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+I did some analysis why this did not raise any issues for about 3 years
+and the reason is that edac_mc_find() is mostly used to search for
+existing devices. Thus, the bug is not triggered.
+
+ [ bp: Drop the if (mci->mc_idx > idx) test in favor of readability. ]
+
+Fixes: c73e8833bec5 ("EDAC, mc: Fix locking around mc_devices list")
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Link: https://lkml.kernel.org/r/20190514104838.15065-1-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-rpc/irq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/edac/edac_mc.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-rpc/irq.c b/arch/arm/mach-rpc/irq.c
-index b8a61cb11207..7f0f40178634 100644
---- a/arch/arm/mach-rpc/irq.c
-+++ b/arch/arm/mach-rpc/irq.c
-@@ -118,7 +118,7 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index f59511bd9926..fd440b35d76e 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -681,22 +681,18 @@ static int del_mc_from_global_list(struct mem_ctl_info *mci)
  
- void __init rpc_init_irq(void)
+ struct mem_ctl_info *edac_mc_find(int idx)
  {
--	unsigned int irq, clr, set = 0;
-+	unsigned int irq, clr, set;
+-	struct mem_ctl_info *mci = NULL;
++	struct mem_ctl_info *mci;
+ 	struct list_head *item;
  
- 	iomd_writeb(0, IOMD_IRQMASKA);
- 	iomd_writeb(0, IOMD_IRQMASKB);
-@@ -130,6 +130,7 @@ void __init rpc_init_irq(void)
+ 	mutex_lock(&mem_ctls_mutex);
  
- 	for (irq = 0; irq < NR_IRQS; irq++) {
- 		clr = IRQ_NOREQUEST;
-+		set = 0;
+ 	list_for_each(item, &mc_devices) {
+ 		mci = list_entry(item, struct mem_ctl_info, link);
+-
+-		if (mci->mc_idx >= idx) {
+-			if (mci->mc_idx == idx) {
+-				goto unlock;
+-			}
+-			break;
+-		}
++		if (mci->mc_idx == idx)
++			goto unlock;
+ 	}
  
- 		if (irq <= 6 || (irq >= 9 && irq <= 15))
- 			clr |= IRQ_NOPROBE;
++	mci = NULL;
+ unlock:
+ 	mutex_unlock(&mem_ctls_mutex);
+ 	return mci;
 -- 
 2.20.1
 
