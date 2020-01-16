@@ -2,53 +2,54 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1EDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A18EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DCC2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA932064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218227;
-	bh=Tj3l0s/mriT87vVDENKxkh8qVWriOTRaC6xKtmVo30A=;
+	s=default; t=1579218233;
+	bh=CtoeY/iV094Q9xMkZINh314p/7c2W56mhxr/mjN84fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgMJg9f6B3ZNavQT9ITjFn9+c9cWko6AK+Puv7QX2PWZLyY396ISI0f8V0g3CVdZU
-	 /5NjcqFVnAAEQhpsUbI4W42s7RcnV5jyvm9UM7GihDHZIoQFR8s9+sPU/1igosyU7i
-	 RQFVYWPyl+FKoodyS8oe/4WHzylXVi0bIs4s6ofE=
+	b=es05lMB9la3A2/3/5vGbOJ5PjrBd/YReK3AO+BcdpBK464tJ6PwM32tFbtbqmJxkg
+	 BneYicff/be+aIeICRZrVCxaiw6gKpa1jzykKdHHphW2p/vNOE+gPp7tzstFi6z6F3
+	 SknobLopVEyDrWK8b32grnM311mYN9kEs485rjtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbgAPXYm (ORCPT
+        id S2391802AbgAPXnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:43:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgAPXYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:37 -0500
+        id S2388071AbgAPXYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FACF2072B;
-        Thu, 16 Jan 2020 23:24:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A913E2072B;
+        Thu, 16 Jan 2020 23:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217076;
-        bh=Tj3l0s/mriT87vVDENKxkh8qVWriOTRaC6xKtmVo30A=;
+        s=default; t=1579217079;
+        bh=CtoeY/iV094Q9xMkZINh314p/7c2W56mhxr/mjN84fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFbBF+BnAr7mO+3RGdtBeKAQ3tsZYisOOdbvXhYBLcAIq6CTKs4oyq6E/plHVJ1WB
-         LtbVvmPP8rizdIpmGDy52HANW2mvJPPOCcDHdHvqG8AUfGBV/oYxHHRUP5Vn7H61A3
-         TsSTOdPya9WR3QquxXaxaZfHai2N0FBIZZDxJZ18=
+        b=NSrPPIBK6Vi7+PRM3HY5qAAw8/anWPn9MM3Vb3dNecaVRq1aW6dAdxK4aJPWRkgkp
+         aeTyLAWyxnQQTqcYd7YFr1rceYaIFfmN43qMuFmlH/jxWALBosB+Ee0Y6jBgUxOQ7v
+         6oYVCW6ADhAaAeCXwXnfSwrObIF/gtQ4ban8qhEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 122/203] pinctrl: lewisburg: Update pin list according to v1.1v6
-Date:   Fri, 17 Jan 2020 00:17:19 +0100
-Message-Id: <20200116231755.964517297@linuxfoundation.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 123/203] PCI: pciehp: Do not disable interrupt twice on suspend
+Date:   Fri, 17 Jan 2020 00:17:20 +0100
+Message-Id: <20200116231756.034414476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,227 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit e66ff71fd0dba36a53f91f39e4da6c7b84764f2e upstream.
+commit 75fcc0ce72e5cea2e357cdde858216c5bad40442 upstream.
 
-Version 1.1v6 of pin list has some changes in pin names for Intel Lewisburg.
+We try to keep PCIe hotplug ports runtime suspended when entering system
+suspend. Because the PCIe portdrv sets the DPM_FLAG_NEVER_SKIP flag, the PM
+core always calls system suspend/resume hooks even if the device is left
+runtime suspended. Since PCIe hotplug driver re-used the same function for
+both runtime suspend and system suspend, it ended up disabling hotplug
+interrupt twice and the second time following was printed:
 
-Update the driver accordingly.
+  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
 
-Note, it reveals the bug in the driver that misses two pins in GPP_L and
-has rather two extra ones. That's why the ordering of some groups is changed.
+Prevent this from happening by checking whether the device is already
+runtime suspended when the system suspend hook is called.
 
-Fixes: e480b745386e ("pinctrl: intel: Add Intel Lewisburg GPIO support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20191120133739.54332-1-andriy.shevchenko@linux.intel.com
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+Link: https://lore.kernel.org/r/20191029170022.57528-1-mika.westerberg@linux.intel.com
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/intel/pinctrl-lewisburg.c |  171 +++++++++++++++---------------
- 1 file changed, 86 insertions(+), 85 deletions(-)
+ drivers/pci/hotplug/pciehp_core.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/drivers/pinctrl/intel/pinctrl-lewisburg.c
-+++ b/drivers/pinctrl/intel/pinctrl-lewisburg.c
-@@ -33,6 +33,7 @@
- 		.npins = ((e) - (s) + 1),		\
- 	}
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_de
+ 	return pcie_ports_native || host->native_pme;
+ }
  
-+/* Lewisburg */
- static const struct pinctrl_pin_desc lbg_pins[] = {
- 	/* GPP_A */
- 	PINCTRL_PIN(0, "RCINB"),
-@@ -72,7 +73,7 @@ static const struct pinctrl_pin_desc lbg
- 	PINCTRL_PIN(33, "SRCCLKREQB_4"),
- 	PINCTRL_PIN(34, "SRCCLKREQB_5"),
- 	PINCTRL_PIN(35, "GPP_B_11"),
--	PINCTRL_PIN(36, "GLB_RST_WARN_N"),
-+	PINCTRL_PIN(36, "SLP_S0B"),
- 	PINCTRL_PIN(37, "PLTRSTB"),
- 	PINCTRL_PIN(38, "SPKR"),
- 	PINCTRL_PIN(39, "GPP_B_15"),
-@@ -185,96 +186,96 @@ static const struct pinctrl_pin_desc lbg
- 	PINCTRL_PIN(141, "GBE_PCI_DIS"),
- 	PINCTRL_PIN(142, "GBE_LAN_DIS"),
- 	PINCTRL_PIN(143, "GPP_I_10"),
--	PINCTRL_PIN(144, "GPIO_RCOMP_3P3"),
- 	/* GPP_J */
--	PINCTRL_PIN(145, "GBE_LED_0_0"),
--	PINCTRL_PIN(146, "GBE_LED_0_1"),
--	PINCTRL_PIN(147, "GBE_LED_1_0"),
--	PINCTRL_PIN(148, "GBE_LED_1_1"),
--	PINCTRL_PIN(149, "GBE_LED_2_0"),
--	PINCTRL_PIN(150, "GBE_LED_2_1"),
--	PINCTRL_PIN(151, "GBE_LED_3_0"),
--	PINCTRL_PIN(152, "GBE_LED_3_1"),
--	PINCTRL_PIN(153, "GBE_SCL_0"),
--	PINCTRL_PIN(154, "GBE_SDA_0"),
--	PINCTRL_PIN(155, "GBE_SCL_1"),
--	PINCTRL_PIN(156, "GBE_SDA_1"),
--	PINCTRL_PIN(157, "GBE_SCL_2"),
--	PINCTRL_PIN(158, "GBE_SDA_2"),
--	PINCTRL_PIN(159, "GBE_SCL_3"),
--	PINCTRL_PIN(160, "GBE_SDA_3"),
--	PINCTRL_PIN(161, "GBE_SDP_0_0"),
--	PINCTRL_PIN(162, "GBE_SDP_0_1"),
--	PINCTRL_PIN(163, "GBE_SDP_1_0"),
--	PINCTRL_PIN(164, "GBE_SDP_1_1"),
--	PINCTRL_PIN(165, "GBE_SDP_2_0"),
--	PINCTRL_PIN(166, "GBE_SDP_2_1"),
--	PINCTRL_PIN(167, "GBE_SDP_3_0"),
--	PINCTRL_PIN(168, "GBE_SDP_3_1"),
-+	PINCTRL_PIN(144, "GBE_LED_0_0"),
-+	PINCTRL_PIN(145, "GBE_LED_0_1"),
-+	PINCTRL_PIN(146, "GBE_LED_1_0"),
-+	PINCTRL_PIN(147, "GBE_LED_1_1"),
-+	PINCTRL_PIN(148, "GBE_LED_2_0"),
-+	PINCTRL_PIN(149, "GBE_LED_2_1"),
-+	PINCTRL_PIN(150, "GBE_LED_3_0"),
-+	PINCTRL_PIN(151, "GBE_LED_3_1"),
-+	PINCTRL_PIN(152, "GBE_SCL_0"),
-+	PINCTRL_PIN(153, "GBE_SDA_0"),
-+	PINCTRL_PIN(154, "GBE_SCL_1"),
-+	PINCTRL_PIN(155, "GBE_SDA_1"),
-+	PINCTRL_PIN(156, "GBE_SCL_2"),
-+	PINCTRL_PIN(157, "GBE_SDA_2"),
-+	PINCTRL_PIN(158, "GBE_SCL_3"),
-+	PINCTRL_PIN(159, "GBE_SDA_3"),
-+	PINCTRL_PIN(160, "GBE_SDP_0_0"),
-+	PINCTRL_PIN(161, "GBE_SDP_0_1"),
-+	PINCTRL_PIN(162, "GBE_SDP_1_0"),
-+	PINCTRL_PIN(163, "GBE_SDP_1_1"),
-+	PINCTRL_PIN(164, "GBE_SDP_2_0"),
-+	PINCTRL_PIN(165, "GBE_SDP_2_1"),
-+	PINCTRL_PIN(166, "GBE_SDP_3_0"),
-+	PINCTRL_PIN(167, "GBE_SDP_3_1"),
- 	/* GPP_K */
--	PINCTRL_PIN(169, "GBE_RMIICLK"),
--	PINCTRL_PIN(170, "GBE_RMII_TXD_0"),
--	PINCTRL_PIN(171, "GBE_RMII_TXD_1"),
-+	PINCTRL_PIN(168, "GBE_RMIICLK"),
-+	PINCTRL_PIN(169, "GBE_RMII_RXD_0"),
-+	PINCTRL_PIN(170, "GBE_RMII_RXD_1"),
-+	PINCTRL_PIN(171, "GBE_RMII_CRS_DV"),
- 	PINCTRL_PIN(172, "GBE_RMII_TX_EN"),
--	PINCTRL_PIN(173, "GBE_RMII_CRS_DV"),
--	PINCTRL_PIN(174, "GBE_RMII_RXD_0"),
--	PINCTRL_PIN(175, "GBE_RMII_RXD_1"),
--	PINCTRL_PIN(176, "GBE_RMII_RX_ER"),
--	PINCTRL_PIN(177, "GBE_RMII_ARBIN"),
--	PINCTRL_PIN(178, "GBE_RMII_ARB_OUT"),
--	PINCTRL_PIN(179, "PE_RST_N"),
--	PINCTRL_PIN(180, "GPIO_RCOMP_1P8_3P3"),
-+	PINCTRL_PIN(173, "GBE_RMII_TXD_0"),
-+	PINCTRL_PIN(174, "GBE_RMII_TXD_1"),
-+	PINCTRL_PIN(175, "GBE_RMII_RX_ER"),
-+	PINCTRL_PIN(176, "GBE_RMII_ARBIN"),
-+	PINCTRL_PIN(177, "GBE_RMII_ARB_OUT"),
-+	PINCTRL_PIN(178, "PE_RST_N"),
- 	/* GPP_G */
--	PINCTRL_PIN(181, "FAN_TACH_0"),
--	PINCTRL_PIN(182, "FAN_TACH_1"),
--	PINCTRL_PIN(183, "FAN_TACH_2"),
--	PINCTRL_PIN(184, "FAN_TACH_3"),
--	PINCTRL_PIN(185, "FAN_TACH_4"),
--	PINCTRL_PIN(186, "FAN_TACH_5"),
--	PINCTRL_PIN(187, "FAN_TACH_6"),
--	PINCTRL_PIN(188, "FAN_TACH_7"),
--	PINCTRL_PIN(189, "FAN_PWM_0"),
--	PINCTRL_PIN(190, "FAN_PWM_1"),
--	PINCTRL_PIN(191, "FAN_PWM_2"),
--	PINCTRL_PIN(192, "FAN_PWM_3"),
--	PINCTRL_PIN(193, "GSXDOUT"),
--	PINCTRL_PIN(194, "GSXSLOAD"),
--	PINCTRL_PIN(195, "GSXDIN"),
--	PINCTRL_PIN(196, "GSXSRESETB"),
--	PINCTRL_PIN(197, "GSXCLK"),
--	PINCTRL_PIN(198, "ADR_COMPLETE"),
--	PINCTRL_PIN(199, "NMIB"),
--	PINCTRL_PIN(200, "SMIB"),
--	PINCTRL_PIN(201, "SSATA_DEVSLP_0"),
--	PINCTRL_PIN(202, "SSATA_DEVSLP_1"),
--	PINCTRL_PIN(203, "SSATA_DEVSLP_2"),
--	PINCTRL_PIN(204, "SSATAXPCIE0_SSATAGP0"),
-+	PINCTRL_PIN(179, "FAN_TACH_0"),
-+	PINCTRL_PIN(180, "FAN_TACH_1"),
-+	PINCTRL_PIN(181, "FAN_TACH_2"),
-+	PINCTRL_PIN(182, "FAN_TACH_3"),
-+	PINCTRL_PIN(183, "FAN_TACH_4"),
-+	PINCTRL_PIN(184, "FAN_TACH_5"),
-+	PINCTRL_PIN(185, "FAN_TACH_6"),
-+	PINCTRL_PIN(186, "FAN_TACH_7"),
-+	PINCTRL_PIN(187, "FAN_PWM_0"),
-+	PINCTRL_PIN(188, "FAN_PWM_1"),
-+	PINCTRL_PIN(189, "FAN_PWM_2"),
-+	PINCTRL_PIN(190, "FAN_PWM_3"),
-+	PINCTRL_PIN(191, "GSXDOUT"),
-+	PINCTRL_PIN(192, "GSXSLOAD"),
-+	PINCTRL_PIN(193, "GSXDIN"),
-+	PINCTRL_PIN(194, "GSXSRESETB"),
-+	PINCTRL_PIN(195, "GSXCLK"),
-+	PINCTRL_PIN(196, "ADR_COMPLETE"),
-+	PINCTRL_PIN(197, "NMIB"),
-+	PINCTRL_PIN(198, "SMIB"),
-+	PINCTRL_PIN(199, "SSATA_DEVSLP_0"),
-+	PINCTRL_PIN(200, "SSATA_DEVSLP_1"),
-+	PINCTRL_PIN(201, "SSATA_DEVSLP_2"),
-+	PINCTRL_PIN(202, "SSATAXPCIE0_SSATAGP0"),
- 	/* GPP_H */
--	PINCTRL_PIN(205, "SRCCLKREQB_6"),
--	PINCTRL_PIN(206, "SRCCLKREQB_7"),
--	PINCTRL_PIN(207, "SRCCLKREQB_8"),
--	PINCTRL_PIN(208, "SRCCLKREQB_9"),
--	PINCTRL_PIN(209, "SRCCLKREQB_10"),
--	PINCTRL_PIN(210, "SRCCLKREQB_11"),
--	PINCTRL_PIN(211, "SRCCLKREQB_12"),
--	PINCTRL_PIN(212, "SRCCLKREQB_13"),
--	PINCTRL_PIN(213, "SRCCLKREQB_14"),
--	PINCTRL_PIN(214, "SRCCLKREQB_15"),
--	PINCTRL_PIN(215, "SML2CLK"),
--	PINCTRL_PIN(216, "SML2DATA"),
--	PINCTRL_PIN(217, "SML2ALERTB"),
--	PINCTRL_PIN(218, "SML3CLK"),
--	PINCTRL_PIN(219, "SML3DATA"),
--	PINCTRL_PIN(220, "SML3ALERTB"),
--	PINCTRL_PIN(221, "SML4CLK"),
--	PINCTRL_PIN(222, "SML4DATA"),
--	PINCTRL_PIN(223, "SML4ALERTB"),
--	PINCTRL_PIN(224, "SSATAXPCIE1_SSATAGP1"),
--	PINCTRL_PIN(225, "SSATAXPCIE2_SSATAGP2"),
--	PINCTRL_PIN(226, "SSATAXPCIE3_SSATAGP3"),
--	PINCTRL_PIN(227, "SSATAXPCIE4_SSATAGP4"),
--	PINCTRL_PIN(228, "SSATAXPCIE5_SSATAGP5"),
-+	PINCTRL_PIN(203, "SRCCLKREQB_6"),
-+	PINCTRL_PIN(204, "SRCCLKREQB_7"),
-+	PINCTRL_PIN(205, "SRCCLKREQB_8"),
-+	PINCTRL_PIN(206, "SRCCLKREQB_9"),
-+	PINCTRL_PIN(207, "SRCCLKREQB_10"),
-+	PINCTRL_PIN(208, "SRCCLKREQB_11"),
-+	PINCTRL_PIN(209, "SRCCLKREQB_12"),
-+	PINCTRL_PIN(210, "SRCCLKREQB_13"),
-+	PINCTRL_PIN(211, "SRCCLKREQB_14"),
-+	PINCTRL_PIN(212, "SRCCLKREQB_15"),
-+	PINCTRL_PIN(213, "SML2CLK"),
-+	PINCTRL_PIN(214, "SML2DATA"),
-+	PINCTRL_PIN(215, "SML2ALERTB"),
-+	PINCTRL_PIN(216, "SML3CLK"),
-+	PINCTRL_PIN(217, "SML3DATA"),
-+	PINCTRL_PIN(218, "SML3ALERTB"),
-+	PINCTRL_PIN(219, "SML4CLK"),
-+	PINCTRL_PIN(220, "SML4DATA"),
-+	PINCTRL_PIN(221, "SML4ALERTB"),
-+	PINCTRL_PIN(222, "SSATAXPCIE1_SSATAGP1"),
-+	PINCTRL_PIN(223, "SSATAXPCIE2_SSATAGP2"),
-+	PINCTRL_PIN(224, "SSATAXPCIE3_SSATAGP3"),
-+	PINCTRL_PIN(225, "SSATAXPCIE4_SSATAGP4"),
-+	PINCTRL_PIN(226, "SSATAXPCIE5_SSATAGP5"),
- 	/* GPP_L */
-+	PINCTRL_PIN(227, "GPP_L_0"),
-+	PINCTRL_PIN(228, "EC_CSME_INTR_OUT"),
- 	PINCTRL_PIN(229, "VISA2CH0_D0"),
- 	PINCTRL_PIN(230, "VISA2CH0_D1"),
- 	PINCTRL_PIN(231, "VISA2CH0_D2"),
+-static int pciehp_suspend(struct pcie_device *dev)
++static void pciehp_disable_interrupt(struct pcie_device *dev)
+ {
+ 	/*
+ 	 * Disable hotplug interrupt so that it does not trigger
+@@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_de
+ 	 */
+ 	if (pme_is_native(dev))
+ 		pcie_disable_interrupt(get_service_data(dev));
++}
+ 
++#ifdef CONFIG_PM_SLEEP
++static int pciehp_suspend(struct pcie_device *dev)
++{
++	/*
++	 * If the port is already runtime suspended we can keep it that
++	 * way.
++	 */
++	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
++		return 0;
++
++	pciehp_disable_interrupt(dev);
+ 	return 0;
+ }
+ 
+@@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pc
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static int pciehp_resume(struct pcie_device *dev)
+ {
+@@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_dev
+ 	return 0;
+ }
+ 
++static int pciehp_runtime_suspend(struct pcie_device *dev)
++{
++	pciehp_disable_interrupt(dev);
++	return 0;
++}
++
+ static int pciehp_runtime_resume(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl = get_service_data(dev);
+@@ -318,10 +337,12 @@ static struct pcie_port_service_driver h
+ 	.remove		= pciehp_remove,
+ 
+ #ifdef	CONFIG_PM
++#ifdef	CONFIG_PM_SLEEP
+ 	.suspend	= pciehp_suspend,
+ 	.resume_noirq	= pciehp_resume_noirq,
+ 	.resume		= pciehp_resume,
+-	.runtime_suspend = pciehp_suspend,
++#endif
++	.runtime_suspend = pciehp_runtime_suspend,
+ 	.runtime_resume	= pciehp_runtime_resume,
+ #endif	/* PM */
+ };
 
 
