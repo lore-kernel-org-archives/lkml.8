@@ -2,106 +2,98 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D5BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A63C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B45205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF3D206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgAPNKm (ORCPT
+        id S1726785AbgAPNNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:10:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43522 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727012AbgAPNKm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:10:42 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GD73fM105048
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:10:41 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xhm35ns7e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:10:40 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 16 Jan 2020 13:10:38 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Jan 2020 13:10:35 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GDAYc411272198
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 13:10:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FDA9AE057;
-        Thu, 16 Jan 2020 13:10:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C7BEAE06A;
-        Thu, 16 Jan 2020 13:10:33 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.139.213])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jan 2020 13:10:33 +0000 (GMT)
-Subject: Re: [PATCH] IMA: inconsistent lock state in ima_process_queued_keys
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dvyukov@google.com, James.Bottomley@HansenPartnership.com,
-        arnd@arndb.de, linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Date:   Thu, 16 Jan 2020 08:10:32 -0500
-In-Reply-To: <20200116031342.3418-1-nramas@linux.microsoft.com>
-References: <20200116031342.3418-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Thu, 16 Jan 2020 08:13:42 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49162 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726278AbgAPNNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:13:42 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2B85277B6B48B87C9A96;
+        Thu, 16 Jan 2020 21:13:39 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.129) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 Jan 2020
+ 21:13:28 +0800
+Subject: Re: [PATCH -next] drivers/net: netdevsim depends on INET
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <chenzhou10@huawei.com>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200116125219.166830-1-yaohongbo@huawei.com>
+ <20200116050506.18c2cce3@cakuba.hsd1.ca.comcast.net>
+From:   Hongbo Yao <yaohongbo@huawei.com>
+Message-ID: <fc6c7d33-479d-6cb6-3126-dc215789d6f3@huawei.com>
+Date:   Thu, 16 Jan 2020 21:13:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200116050506.18c2cce3@cakuba.hsd1.ca.comcast.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20011613-0008-0000-0000-00000349E7B0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011613-0009-0000-0000-00004A6A416F
-Message-Id: <1579180232.5857.23.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxlogscore=794 malwarescore=0 mlxscore=0 suspectscore=2 bulkscore=0
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001160112
+X-Originating-IP: [10.173.221.129]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-15 at 19:13 -0800, Lakshmi Ramasubramanian wrote:
-> ima_queued_keys() is called from a non-interrupt context, but
-> ima_process_queued_keys() may be called from both an interrupt
-> context (ima_timer_handler) and non-interrupt context
-> (ima_update_policy). Since the spinlock named ima_keys_lock is used
-> in both ima_queued_keys() and ima_process_queued_keys(),
-> irq version of the spinlock macros, spin_lock_irqsave() and
-> spin_unlock_irqrestore(), should be used[1].
-> 
-> This patch fixes the "inconsistent lock state" issue caused by
-> using the non-irq version of the spinlock macros in ima_queue_key()
-> and ima_process_queued_keys().
-> 
-> [1] Documentation/locking/spinlocks.rst
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Reported-by: syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>
-> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> Fixes: 8f5d2d06f217 ("IMA: Defined timer to free queued keys")
-> Fixes: 9fb38e76b5f1 ("IMA: Define workqueue for early boot key measurements")
 
-Thanks!  This patch is now queued in next-integrity-testing.
 
-Mimi
+On 2020/1/16 21:05, Jakub Kicinski wrote:
+> On Thu, 16 Jan 2020 20:52:19 +0800, Hongbo Yao wrote:
+>> If CONFIG_INET is not set and CONFIG_NETDEVSIM=y.
+>> Building drivers/net/netdevsim/fib.o will get the following error:
+>>
+>> drivers/net/netdevsim/fib.o: In function `nsim_fib4_rt_hw_flags_set':
+>> fib.c:(.text+0x12b): undefined reference to `fib_alias_hw_flags_set'
+>> drivers/net/netdevsim/fib.o: In function `nsim_fib4_rt_destroy':
+>> fib.c:(.text+0xb11): undefined reference to `free_fib_info'
+>>
+>> Correct the Kconfig for netdevsim.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 83c9e13aa39ae("netdevsim: add software driver for testing
+>> offloads")
+> 
+> Please provide a _correct_ Fixes tag, and don't line wrap it.
+> The commit you're pointing to doesn't use any of the fib functions 
+> so how can it be to blame?
+
+Thank you for catching my mistake.
+I'll resend it.
+
+Best regards,
+Hongbo.
+>> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+>> ---
+>>  drivers/net/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+>> index 77ee9afad038..25a8f9387d5a 100644
+>> --- a/drivers/net/Kconfig
+>> +++ b/drivers/net/Kconfig
+>> @@ -549,6 +549,7 @@ source "drivers/net/hyperv/Kconfig"
+>>  config NETDEVSIM
+>>  	tristate "Simulated networking device"
+>>  	depends on DEBUG_FS
+>> +	depends on INET
+>>  	depends on IPV6 || IPV6=n
+>>  	select NET_DEVLINK
+>>  	help
+> 
+> 
+> .
+> 
 
