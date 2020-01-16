@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EBEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9806C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D09C2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E13B206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216884;
-	bh=OJr/ByO9TRbCM9xgvCxyO58tS8jx1apSCf0bS3fx80w=;
+	s=default; t=1579216886;
+	bh=++ojnTPojwk+HgVg78h7H+X+w8TmRkZDj7wnWMjCXaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SZgxGYB44iRTy2bPG5ajA6v8WHQN/OZqSjC3bFC54SbOaR1vXdb+ndJcJjQ9CK7Q4
-	 +b8AmeRYDLMiV+l+mGWfP0r4+Y9BiVAZ8hWyWZb2slNwBG9PeBKFHI0nXWZrjTkFze
-	 TrGwp0rZWL/dcJqEB43rp9cZW8vU0fztbzVndvD4=
+	b=sVhb1q3JOOc04AqiZ0wnpo5NY3+fvTLS0dhyhGBXWxir6WbV1wQize6udXYmwv7lr
+	 QQjBKp80PVWhNvVhbWGNJvtzOAAVdPmMbe/EIAy4eUOu/g5+SuCoGFqUbRKEZALb3f
+	 KrktC9YiMibJEz60O/th9FUoSSa9NA2WRzKI4+Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390806AbgAPXVX (ORCPT
+        id S2390820AbgAPXVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:21:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48296 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389488AbgAPXVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:15 -0500
+        id S2390793AbgAPXVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F85F2072B;
-        Thu, 16 Jan 2020 23:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC92C2072B;
+        Thu, 16 Jan 2020 23:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216875;
-        bh=OJr/ByO9TRbCM9xgvCxyO58tS8jx1apSCf0bS3fx80w=;
+        s=default; t=1579216877;
+        bh=++ojnTPojwk+HgVg78h7H+X+w8TmRkZDj7wnWMjCXaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLgBwiULRTiBv0MYfwQiilXs79t29C1de+YxvK8xA1miMW1116+GGrZU493kjcA7C
-         bnqwyzZjfm9ZGmvI5psbynaaEc4sOp5enXxh4QU7Echw08YlucTRpOrAEEWwrNBbVQ
-         cHSX1duwovQegvgVHKB8c0s6W3dmFhSmJ4bqLpdg=
+        b=U8Sgr8WDnVBItK8NLxYtql00eWpps7ERmgt7kskYnv1lW1zTgQQDCqW8jA4El9U3o
+         QPZNv9iCWGE5DTL39cVWim0n56bS1oLSTABsaLLvwN7jlTAAVO3kzK+EsX22S0KLTU
+         uTRmR+JOhuwi198ViqobuYZkS3Lk0/HCwFZQdsbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH 5.4 029/203] drm/tegra: Fix ordering of cleanup code
-Date:   Fri, 17 Jan 2020 00:15:46 +0100
-Message-Id: <20200116231746.894208763@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 048/203] syscalls/x86: Use COMPAT_SYSCALL_DEFINE0 for IA32 (rt_)sigreturn
+Date:   Fri, 17 Jan 2020 00:16:05 +0100
+Message-Id: <20200116231748.186323489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,53 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-commit 051172e8c1ceef8749f19faacc1d3bef65d20d8d upstream.
+commit 00198a6eaf66609de5e4de9163bb42c7ca9dd7b7 upstream.
 
-Commit Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after
-initialization") changed the initialization order of the IOMMU related
-bits but didn't update the cleanup path accordingly. This asymmetry can
-cause failures during error recovery.
+Use COMPAT_SYSCALL_DEFINE0 to define (rt_)sigreturn() syscalls to
+replace sys32_sigreturn() and sys32_rt_sigreturn(). This fixes indirect
+call mismatches with Control-Flow Integrity (CFI) checking.
 
-Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after initialization")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191008224049.115427-4-samitolvanen@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/tegra/drm.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/entry/syscalls/syscall_32.tbl |    4 ++--
+ arch/x86/ia32/ia32_signal.c            |    5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/tegra/drm.c
-+++ b/drivers/gpu/drm/tegra/drm.c
-@@ -201,19 +201,19 @@ hub:
- 	if (tegra->hub)
- 		tegra_display_hub_cleanup(tegra->hub);
- device:
--	host1x_device_exit(device);
--fbdev:
--	drm_kms_helper_poll_fini(drm);
--	tegra_drm_fb_free(drm);
--config:
--	drm_mode_config_cleanup(drm);
--
- 	if (tegra->domain) {
- 		mutex_destroy(&tegra->mm_lock);
- 		drm_mm_takedown(&tegra->mm);
- 		put_iova_domain(&tegra->carveout.domain);
- 		iova_cache_put();
- 	}
-+
-+	host1x_device_exit(device);
-+fbdev:
-+	drm_kms_helper_poll_fini(drm);
-+	tegra_drm_fb_free(drm);
-+config:
-+	drm_mode_config_cleanup(drm);
- domain:
- 	if (tegra->domain)
- 		iommu_domain_free(tegra->domain);
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -130,7 +130,7 @@
+ 116	i386	sysinfo			sys_sysinfo			__ia32_compat_sys_sysinfo
+ 117	i386	ipc			sys_ipc				__ia32_compat_sys_ipc
+ 118	i386	fsync			sys_fsync			__ia32_sys_fsync
+-119	i386	sigreturn		sys_sigreturn			sys32_sigreturn
++119	i386	sigreturn		sys_sigreturn			__ia32_compat_sys_sigreturn
+ 120	i386	clone			sys_clone			__ia32_compat_sys_x86_clone
+ 121	i386	setdomainname		sys_setdomainname		__ia32_sys_setdomainname
+ 122	i386	uname			sys_newuname			__ia32_sys_newuname
+@@ -184,7 +184,7 @@
+ 170	i386	setresgid		sys_setresgid16			__ia32_sys_setresgid16
+ 171	i386	getresgid		sys_getresgid16			__ia32_sys_getresgid16
+ 172	i386	prctl			sys_prctl			__ia32_sys_prctl
+-173	i386	rt_sigreturn		sys_rt_sigreturn		sys32_rt_sigreturn
++173	i386	rt_sigreturn		sys_rt_sigreturn		__ia32_compat_sys_rt_sigreturn
+ 174	i386	rt_sigaction		sys_rt_sigaction		__ia32_compat_sys_rt_sigaction
+ 175	i386	rt_sigprocmask		sys_rt_sigprocmask		__ia32_compat_sys_rt_sigprocmask
+ 176	i386	rt_sigpending		sys_rt_sigpending		__ia32_compat_sys_rt_sigpending
+--- a/arch/x86/ia32/ia32_signal.c
++++ b/arch/x86/ia32/ia32_signal.c
+@@ -21,6 +21,7 @@
+ #include <linux/personality.h>
+ #include <linux/compat.h>
+ #include <linux/binfmts.h>
++#include <linux/syscalls.h>
+ #include <asm/ucontext.h>
+ #include <linux/uaccess.h>
+ #include <asm/fpu/internal.h>
+@@ -118,7 +119,7 @@ static int ia32_restore_sigcontext(struc
+ 	return err;
+ }
+ 
+-asmlinkage long sys32_sigreturn(void)
++COMPAT_SYSCALL_DEFINE0(sigreturn)
+ {
+ 	struct pt_regs *regs = current_pt_regs();
+ 	struct sigframe_ia32 __user *frame = (struct sigframe_ia32 __user *)(regs->sp-8);
+@@ -144,7 +145,7 @@ badframe:
+ 	return 0;
+ }
+ 
+-asmlinkage long sys32_rt_sigreturn(void)
++COMPAT_SYSCALL_DEFINE0(rt_sigreturn)
+ {
+ 	struct pt_regs *regs = current_pt_regs();
+ 	struct rt_sigframe_ia32 __user *frame;
 
 
