@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A02C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA1FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAEC206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E7A2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201443;
-	bh=pOkluVnHUm+ELhjKzSD++0rgASEdiCKf2x3XTdb8Res=;
+	s=default; t=1579201448;
+	bh=t2pCbgLU6bYVpMZGNQjLIu/gBmRQLtz6DvACAV5Ms0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqjbt+ZzNkO6MEVfliUvJAdFXPm/m/+6J1TneV+3js2TbHub+Redp9Gc9QT+Vv3NE
-	 rcwQ6BR3SScrB0PKcWE8Fci92FITIoWlC19pt/UMNrG93dY5PrSAWxp1PkbPf0KcQE
-	 9PiCXHDgLYcLlMYqqS4ezkTlPgAbu7AYqjtXzGMc=
+	b=SETXYLidHyCpB2xXttvgw/MSamjLPdCYIuEQ8Vej6Qa9QiSSbGIAjJStuGUp7av7P
+	 hLk0hPyYSxeb+z/oQD5f2C1q0Uvu1Ieka3TvfbYMqC7FhAC8H1shnequX+3QDeBS5P
+	 dStZr4iNFMJNyqVpbz1uCweFzXsuGwP0lIeP/ppk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbgAPRC0 (ORCPT
+        id S2389158AbgAPTEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:04:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388295AbgAPRCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:13 -0500
+        id S2388360AbgAPRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E9FC2073A;
-        Thu, 16 Jan 2020 17:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A4121582;
+        Thu, 16 Jan 2020 17:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194132;
-        bh=pOkluVnHUm+ELhjKzSD++0rgASEdiCKf2x3XTdb8Res=;
+        s=default; t=1579194146;
+        bh=t2pCbgLU6bYVpMZGNQjLIu/gBmRQLtz6DvACAV5Ms0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1nfaltul760cPgg8VJtXsxkPdbBE4H/6pEQ6OfBkPjQPwrOlv3xtCfH/7SxhCbNF
-         Z2ATpoVEiWFYm8s6aKTOeLEYata1f+Vn+vEWL7ibqpZsTILx/hQBfiJBUjHWSHkz0q
-         Am9H8eJxuXQu3agEyYA1PAYIcO5vD+G0VzjzWcgk=
+        b=qsSDbekmsse7Ny95kPkQIh9kr2cCfr+TSDoZdaUAx/yjIzouHr6TQDRMzbChmgveu
+         /yPNnlYetLwuUkV1Mwvqx9gK1msHWCnCwqnB6vWc4GvQnjdV8yAKNMhsVNjH794fZN
+         LbtYC9N2Em9mZCdPsf2DgVYJQTe2MVv7/msAFqg0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 222/671] ARM: 8849/1: NOMMU: Fix encodings for PMSAv8's PRBAR4/PRLAR4
-Date:   Thu, 16 Jan 2020 11:52:11 -0500
-Message-Id: <20200116165940.10720-105-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 231/671] NFSv4/flexfiles: Fix invalid deref in FF_LAYOUT_DEVID_NODE()
+Date:   Thu, 16 Jan 2020 11:52:20 -0500
+Message-Id: <20200116165940.10720-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,46 +58,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit d410a8a49e3e00e07d43037e90f776d522b25a6a ]
+[ Upstream commit 108bb4afd351d65826648a47f11fa3104e250d9b ]
 
-To access PRBARn, where n is referenced as a binary number:
+If the attempt to instantiate the mirror's layout DS pointer failed,
+then that pointer may hold a value of type ERR_PTR(), so we need
+to check that before we dereference it.
 
-MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Read PRBARn into Rt
-MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0] ; Write Rt into PRBARn
-
-To access PRLARn, where n is referenced as a binary number:
-
-MRC p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Read PRLARn into Rt
-MCR p15, 0, <Rt>, c6, c8+n[3:1], 4*n[0]+1 ; Write Rt into PRLARn
-
-For PR{B,L}AR4, n is 4, n[0] is 0, n[3:1] is 2, while current encoding
-done with n[0] set to 1 which is wrong. Use proper encoding instead.
-
-Fixes: 046835b4aa22b9ab6aa0bb274e3b71047c4b887d ("ARM: 8757/1: NOMMU: Support PMSAv8 MPU")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 65990d1afbd2d ("pNFS/flexfiles: Fix a deadlock on LAYOUTGET")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-nommu.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.h | 32 +++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index 326a97aa3ea0..22efcf48604c 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -441,8 +441,8 @@ M_CLASS(str	r6, [r12, #PMSAv8_RLAR_A(3)])
- 	str	r5, [r12, #PMSAv8_RBAR_A(0)]
- 	str	r6, [r12, #PMSAv8_RLAR_A(0)]
- #else
--	mcr	p15, 0, r5, c6, c10, 1			@ PRBAR4
--	mcr	p15, 0, r6, c6, c10, 2			@ PRLAR4
-+	mcr	p15, 0, r5, c6, c10, 0			@ PRBAR4
-+	mcr	p15, 0, r6, c6, c10, 1			@ PRLAR4
- #endif
- #endif
- 	ret	lr
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.h b/fs/nfs/flexfilelayout/flexfilelayout.h
+index de50a342d5a5..2ac99124474c 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.h
++++ b/fs/nfs/flexfilelayout/flexfilelayout.h
+@@ -132,16 +132,6 @@ FF_LAYOUT_LSEG(struct pnfs_layout_segment *lseg)
+ 			    generic_hdr);
+ }
+ 
+-static inline struct nfs4_deviceid_node *
+-FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
+-{
+-	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt ||
+-	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx] == NULL ||
+-	    FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds == NULL)
+-		return NULL;
+-	return &FF_LAYOUT_LSEG(lseg)->mirror_array[idx]->mirror_ds->id_node;
+-}
+-
+ static inline struct nfs4_ff_layout_ds *
+ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
+ {
+@@ -151,9 +141,25 @@ FF_LAYOUT_MIRROR_DS(struct nfs4_deviceid_node *node)
+ static inline struct nfs4_ff_layout_mirror *
+ FF_LAYOUT_COMP(struct pnfs_layout_segment *lseg, u32 idx)
+ {
+-	if (idx >= FF_LAYOUT_LSEG(lseg)->mirror_array_cnt)
+-		return NULL;
+-	return FF_LAYOUT_LSEG(lseg)->mirror_array[idx];
++	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
++
++	if (idx < fls->mirror_array_cnt)
++		return fls->mirror_array[idx];
++	return NULL;
++}
++
++static inline struct nfs4_deviceid_node *
++FF_LAYOUT_DEVID_NODE(struct pnfs_layout_segment *lseg, u32 idx)
++{
++	struct nfs4_ff_layout_mirror *mirror = FF_LAYOUT_COMP(lseg, idx);
++
++	if (mirror != NULL) {
++		struct nfs4_ff_layout_ds *mirror_ds = mirror->mirror_ds;
++
++		if (!IS_ERR_OR_NULL(mirror_ds))
++			return &mirror_ds->id_node;
++	}
++	return NULL;
+ }
+ 
+ static inline u32
 -- 
 2.20.1
 
