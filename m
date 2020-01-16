@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12691C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8DAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D696420730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6992073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198574;
-	bh=SvZ5OrhhiPtFOlvOroJEoAgQuDteiJvyZKM3FiexRWs=;
+	s=default; t=1579198578;
+	bh=OEdYCTN3y8EPJ9dDW/5viKwgfPGu0Jh8WKDLMDDsaXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GEm+e9fLcNesFB4Y5agp8yjGDmdSCsuUfCK5QZBZ7rG47E6p8xu2/I0NfB2Z4ndMw
-	 H06NxyeMndOx8gHX2K2UnpS5P4oC0vOa1K9Sdcxgc5/SUbmL4Q2rc9pPHWI7A2iTSg
-	 Ex9zv/ZYVLs3tG/qf+b2yP/E7ZpIdcy75EOD7Hs0=
+	b=I8dBotzHR7Chq7WmwYHYwP1vlpUNcu5jYWF36pLFM3063HuhR6kqRQb/6lAjhVcQk
+	 SeMyTe1bvVCymM5x/lLCk5ZGweECjuC78Cyeb/BFqepp/n7HpMFIg3WNjvN45eY7WJ
+	 7kLoFonkLXIP6QDfTDz+1VEg1J4lAD2K7J3Vyfns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405193AbgAPSQM (ORCPT
+        id S2392731AbgAPR3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:16:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41442 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392749AbgAPR3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:33 -0500
+        id S2392712AbgAPR30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF8382471D;
-        Thu, 16 Jan 2020 17:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 700D7246E3;
+        Thu, 16 Jan 2020 17:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195772;
-        bh=SvZ5OrhhiPtFOlvOroJEoAgQuDteiJvyZKM3FiexRWs=;
+        s=default; t=1579195766;
+        bh=OEdYCTN3y8EPJ9dDW/5viKwgfPGu0Jh8WKDLMDDsaXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kWPHzEW8lARk7BoFcZKRZxBD9C3gvm5//yGWiu3yhX+apdRtw6D6oU6nUdMkO4VAX
-         ndSWLEccZ25+OXC+b1kfN8xi2UcEhSrS5FncGyKhdRkFPLb8HNkJs21PWXrNhq0tB0
-         xyrp+9Fx30JQuL1KG7z24pDW1ul0VbXb7GXB/tnM=
+        b=G8kGH0YZ9JOl22R8yNy8SvwnvNq+DZUSgZHQGXbbKjMUsc1FvHUuORe73tDaljZx/
+         6ESr8OfxBkGWD+WlZGCgcsW9R172tKyFNEoDPaVGMkjzz/xWzm+PoSvVPiatMFHfbk
+         FDpkrB1MnAQZDaPotD+YjKshTogrOZW2esmfxs1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Jin <li.jin@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 298/371] pinctrl: iproc-gpio: Fix incorrect pinconf configurations
-Date:   Thu, 16 Jan 2020 12:22:50 -0500
-Message-Id: <20200116172403.18149-241-sashal@kernel.org>
+Cc:     Omar Sandoval <osandov@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 294/371] btrfs: use correct count in btrfs_file_write_iter()
+Date:   Thu, 16 Jan 2020 12:22:46 -0500
+Message-Id: <20200116172403.18149-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,225 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Jin <li.jin@broadcom.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit 398a1f50e3c731586182fd52b834103b0aa2f826 ]
+[ Upstream commit c09767a8960ca0500fb636bf73686723337debf4 ]
 
-Fix drive strength for AON/CRMU controller; fix pull-up/down setting
-for CCM/CDRU controller.
+generic_write_checks() may modify iov_iter_count(), so we must get the
+count after the call, not before. Using the wrong one has a couple of
+consequences:
 
-Fixes: 616043d58a89 ("pinctrl: Rename gpio driver from cygnus to iproc")
-Signed-off-by: Li Jin <li.jin@broadcom.com>
-Link: https://lore.kernel.org/r/1567054348-19685-2-git-send-email-srinath.mannam@broadcom.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+1. We check a longer range in check_can_nocow() for nowait than we're
+   actually writing.
+2. We create extra hole extent maps in btrfs_cont_expand(). As far as I
+   can tell, this is harmless, but I might be missing something.
+
+These issues are pretty minor, but let's fix it before something more
+important trips on it.
+
+Fixes: edf064e7c6fe ("btrfs: nowait aio support")
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 96 +++++++++++++++++++-----
- 1 file changed, 77 insertions(+), 19 deletions(-)
+ fs/btrfs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-index 85a8c97d9dfe..5fe419e468ec 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -54,8 +54,12 @@
- /* drive strength control for ASIU GPIO */
- #define IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index bf654d48eb46..dd5f6e0df63f 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1882,7 +1882,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
+ 	bool sync = (file->f_flags & O_DSYNC) || IS_SYNC(file->f_mapping->host);
+ 	ssize_t err;
+ 	loff_t pos;
+-	size_t count = iov_iter_count(from);
++	size_t count;
+ 	loff_t oldsize;
+ 	int clean_page = 0;
  
--/* drive strength control for CCM/CRMU (AON) GPIO */
--#define IPROC_GPIO_DRV0_CTRL_OFFSET  0x00
-+/* pinconf for CCM GPIO */
-+#define IPROC_GPIO_PULL_DN_OFFSET   0x10
-+#define IPROC_GPIO_PULL_UP_OFFSET   0x14
-+
-+/* pinconf for CRMU(aon) GPIO and CCM GPIO*/
-+#define IPROC_GPIO_DRV_CTRL_OFFSET  0x00
- 
- #define GPIO_BANK_SIZE 0x200
- #define NGPIOS_PER_BANK 32
-@@ -76,6 +80,12 @@ enum iproc_pinconf_param {
- 	IPROC_PINCON_MAX,
- };
- 
-+enum iproc_pinconf_ctrl_type {
-+	IOCTRL_TYPE_AON = 1,
-+	IOCTRL_TYPE_CDRU,
-+	IOCTRL_TYPE_INVALID,
-+};
-+
- /*
-  * Iproc GPIO core
-  *
-@@ -100,6 +110,7 @@ struct iproc_gpio {
- 
- 	void __iomem *base;
- 	void __iomem *io_ctrl;
-+	enum iproc_pinconf_ctrl_type io_ctrl_type;
- 
- 	raw_spinlock_t lock;
- 
-@@ -461,20 +472,44 @@ static const struct pinctrl_ops iproc_pctrl_ops = {
- static int iproc_gpio_set_pull(struct iproc_gpio *chip, unsigned gpio,
- 				bool disable, bool pull_up)
- {
-+	void __iomem *base;
- 	unsigned long flags;
-+	unsigned int shift;
-+	u32 val_1, val_2;
- 
- 	raw_spin_lock_irqsave(&chip->lock, flags);
--
--	if (disable) {
--		iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio, false);
-+	if (chip->io_ctrl_type == IOCTRL_TYPE_CDRU) {
-+		base = chip->io_ctrl;
-+		shift = IPROC_GPIO_SHIFT(gpio);
-+
-+		val_1 = readl(base + IPROC_GPIO_PULL_UP_OFFSET);
-+		val_2 = readl(base + IPROC_GPIO_PULL_DN_OFFSET);
-+		if (disable) {
-+			/* no pull-up or pull-down */
-+			val_1 &= ~BIT(shift);
-+			val_2 &= ~BIT(shift);
-+		} else if (pull_up) {
-+			val_1 |= BIT(shift);
-+			val_2 &= ~BIT(shift);
-+		} else {
-+			val_1 &= ~BIT(shift);
-+			val_2 |= BIT(shift);
-+		}
-+		writel(val_1, base + IPROC_GPIO_PULL_UP_OFFSET);
-+		writel(val_2, base + IPROC_GPIO_PULL_DN_OFFSET);
- 	} else {
--		iproc_set_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio,
--			       pull_up);
--		iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio, true);
-+		if (disable) {
-+			iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio,
-+				      false);
-+		} else {
-+			iproc_set_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio,
-+				      pull_up);
-+			iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio,
-+				      true);
-+		}
+@@ -1903,6 +1903,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
  	}
  
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
--
- 	dev_dbg(chip->dev, "gpio:%u set pullup:%d\n", gpio, pull_up);
- 
- 	return 0;
-@@ -483,14 +518,35 @@ static int iproc_gpio_set_pull(struct iproc_gpio *chip, unsigned gpio,
- static void iproc_gpio_get_pull(struct iproc_gpio *chip, unsigned gpio,
- 				 bool *disable, bool *pull_up)
- {
-+	void __iomem *base;
- 	unsigned long flags;
-+	unsigned int shift;
-+	u32 val_1, val_2;
- 
- 	raw_spin_lock_irqsave(&chip->lock, flags);
--	*disable = !iproc_get_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio);
--	*pull_up = iproc_get_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio);
-+	if (chip->io_ctrl_type == IOCTRL_TYPE_CDRU) {
-+		base = chip->io_ctrl;
-+		shift = IPROC_GPIO_SHIFT(gpio);
-+
-+		val_1 = readl(base + IPROC_GPIO_PULL_UP_OFFSET) & BIT(shift);
-+		val_2 = readl(base + IPROC_GPIO_PULL_DN_OFFSET) & BIT(shift);
-+
-+		*pull_up = val_1 ? true : false;
-+		*disable = (val_1 | val_2) ? false : true;
-+
-+	} else {
-+		*disable = !iproc_get_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio);
-+		*pull_up = iproc_get_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio);
-+	}
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
- }
- 
-+#define DRV_STRENGTH_OFFSET(gpio, bit, type)  ((type) == IOCTRL_TYPE_AON ? \
-+	((2 - (bit)) * 4 + IPROC_GPIO_DRV_CTRL_OFFSET) : \
-+	((type) == IOCTRL_TYPE_CDRU) ? \
-+	((bit) * 4 + IPROC_GPIO_DRV_CTRL_OFFSET) : \
-+	((bit) * 4 + IPROC_GPIO_REG(gpio, IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET)))
-+
- static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 				    unsigned strength)
- {
-@@ -505,11 +561,8 @@ static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 
- 	if (chip->io_ctrl) {
- 		base = chip->io_ctrl;
--		offset = IPROC_GPIO_DRV0_CTRL_OFFSET;
- 	} else {
- 		base = chip->base;
--		offset = IPROC_GPIO_REG(gpio,
--					 IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET);
- 	}
- 
- 	shift = IPROC_GPIO_SHIFT(gpio);
-@@ -520,11 +573,11 @@ static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 	raw_spin_lock_irqsave(&chip->lock, flags);
- 	strength = (strength / 2) - 1;
- 	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-+		offset = DRV_STRENGTH_OFFSET(gpio, i, chip->io_ctrl_type);
- 		val = readl(base + offset);
- 		val &= ~BIT(shift);
- 		val |= ((strength >> i) & 0x1) << shift;
- 		writel(val, base + offset);
--		offset += 4;
- 	}
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
- 
-@@ -541,11 +594,8 @@ static int iproc_gpio_get_strength(struct iproc_gpio *chip, unsigned gpio,
- 
- 	if (chip->io_ctrl) {
- 		base = chip->io_ctrl;
--		offset = IPROC_GPIO_DRV0_CTRL_OFFSET;
- 	} else {
- 		base = chip->base;
--		offset = IPROC_GPIO_REG(gpio,
--					 IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET);
- 	}
- 
- 	shift = IPROC_GPIO_SHIFT(gpio);
-@@ -553,10 +603,10 @@ static int iproc_gpio_get_strength(struct iproc_gpio *chip, unsigned gpio,
- 	raw_spin_lock_irqsave(&chip->lock, flags);
- 	*strength = 0;
- 	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-+		offset = DRV_STRENGTH_OFFSET(gpio, i, chip->io_ctrl_type);
- 		val = readl(base + offset) & BIT(shift);
- 		val >>= shift;
- 		*strength += (val << i);
--		offset += 4;
- 	}
- 
- 	/* convert to mA */
-@@ -734,6 +784,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 	u32 ngpios, pinconf_disable_mask = 0;
- 	int irq, ret;
- 	bool no_pinconf = false;
-+	enum iproc_pinconf_ctrl_type io_ctrl_type = IOCTRL_TYPE_INVALID;
- 
- 	/* NSP does not support drive strength config */
- 	if (of_device_is_compatible(dev->of_node, "brcm,iproc-nsp-gpio"))
-@@ -764,8 +815,15 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 			dev_err(dev, "unable to map I/O memory\n");
- 			return PTR_ERR(chip->io_ctrl);
- 		}
-+		if (of_device_is_compatible(dev->of_node,
-+					    "brcm,cygnus-ccm-gpio"))
-+			io_ctrl_type = IOCTRL_TYPE_CDRU;
-+		else
-+			io_ctrl_type = IOCTRL_TYPE_AON;
- 	}
- 
-+	chip->io_ctrl_type = io_ctrl_type;
-+
- 	if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
- 		dev_err(&pdev->dev, "missing ngpios DT property\n");
- 		return -ENODEV;
+ 	pos = iocb->ki_pos;
++	count = iov_iter_count(from);
+ 	if (iocb->ki_flags & IOCB_NOWAIT) {
+ 		/*
+ 		 * We will allocate space in case nodatacow is not set,
 -- 
 2.20.1
 
