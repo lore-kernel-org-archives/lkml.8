@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F545C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33615C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688C02464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0289F2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gxE//bpY"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="q8PPO1w+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394695AbgAPR6w (ORCPT
+        id S2394703AbgAPR65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:58:52 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35922 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 12:58:57 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:56834 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394671AbgAPR6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:58:37 -0500
+        id S2394636AbgAPR6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:58:34 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zBkx5Pynz9v4gt;
-        Thu, 16 Jan 2020 18:58:33 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47zBkt5hw8z9v4gT;
+        Thu, 16 Jan 2020 18:58:30 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=gxE//bpY; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=q8PPO1w+; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id jfl2bkZ8t9tf; Thu, 16 Jan 2020 18:58:33 +0100 (CET)
+        with ESMTP id 3vr6hJqYZ03C; Thu, 16 Jan 2020 18:58:30 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkx3Rwbz9v4gc;
-        Thu, 16 Jan 2020 18:58:33 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkt4ZGwz9v3tS;
+        Thu, 16 Jan 2020 18:58:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579197513; bh=UFDJu66szbpL4Xw0xXz0xNV43kPco38dmpx+eBljPF4=;
+        t=1579197510; bh=90rYnxXVFFg2sXpFnbUxoLCrPtKnV80e/n61mFcxEBc=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=gxE//bpYKFxAWuGDDXDIa3xdSWFzMMRq4FuxjO1eMSFN2a05pq5qLbwB0TN6BrWmJ
-         ZnzwYy+g3jHvmO2BCygYehv9TiPmItAeN3sPUHsDnH/0B45RoA8w+Zipz7TfG4jVK+
-         1LBc5voMUebWSGExFornSGTfsSHNAHbcf+37K/PM=
+        b=q8PPO1w+1lOZ9BFbvHd2xLc8pEsoo0PK8+cnSqrAMszVf5sVlLevxWnQBIm4PCeN0
+         wtszmC7/INZ2hQvhA2/rGKslHRX/QFmC5x1VAt53ungT6uFVpqJD+3LVjbz6pmvNfV
+         ybgqR0FaYNXWTem+g9hPbp2XaErP4bD1hkXg1kyM=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 206E98B82A;
-        Thu, 16 Jan 2020 18:58:35 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 308758B82D;
+        Thu, 16 Jan 2020 18:58:32 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id X73jTLr1bjTq; Thu, 16 Jan 2020 18:58:35 +0100 (CET)
+        with ESMTP id kEt9T_zHLnzb; Thu, 16 Jan 2020 18:58:32 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C8E018B82D;
-        Thu, 16 Jan 2020 18:58:34 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B07E88B82A;
+        Thu, 16 Jan 2020 18:58:31 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 9F40364A33; Thu, 16 Jan 2020 17:58:34 +0000 (UTC)
-Message-Id: <c8ce9baaef0dc7273e4bcc31f353b17b655113d1.1579196675.git.christophe.leroy@c-s.fr>
+        id 894DC64A33; Thu, 16 Jan 2020 17:58:31 +0000 (UTC)
+Message-Id: <027645df415c27a91921247df46976beed6f2133.1579196675.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
 References: <cover.1579196675.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v4 10/11] lib: vdso: Allow arches to override the ns shift
- operation
+Subject: [RFC PATCH v4 07/11] powerpc/vdso: provide vdso data pointer from the
+ ASM caller.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
@@ -68,77 +68,203 @@ To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         x86@kernel.org
-Date:   Thu, 16 Jan 2020 17:58:34 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 17:58:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On powerpc/32, GCC (8.1) generates pretty bad code for the
-ns >>= vd->shift operation taking into account that the
-shift is always < 32 and the upper part of the result is
-likely to be nul. GCC makes reversed assumptions considering
-the shift to be likely >= 32 and the upper part to be like not nul.
+__arch_get_vdso_data() clobbers the link register, requiring
+the caller to save it.
 
-unsigned long long shift(unsigned long long x, unsigned char s)
-{
-	return x >> s;
-}
+As the ASM calling function already has to set a stack frame and
+saves the link register before calling the C vdso function,
+retriving the vdso data pointer there is lighter.
 
-results in:
+The improvement is significant:
 
-00000018 <shift>:
-  18:	35 25 ff e0 	addic.  r9,r5,-32
-  1c:	41 80 00 10 	blt     2c <shift+0x14>
-  20:	7c 64 4c 30 	srw     r4,r3,r9
-  24:	38 60 00 00 	li      r3,0
-  28:	4e 80 00 20 	blr
-  2c:	54 69 08 3c 	rlwinm  r9,r3,1,0,30
-  30:	21 45 00 1f 	subfic  r10,r5,31
-  34:	7c 84 2c 30 	srw     r4,r4,r5
-  38:	7d 29 50 30 	slw     r9,r9,r10
-  3c:	7c 63 2c 30 	srw     r3,r3,r5
-  40:	7d 24 23 78 	or      r4,r9,r4
-  44:	4e 80 00 20 	blr
+Before:
+gettimeofday:    vdso: 1212 nsec/call
+clock-getres-realtime-coarse:    vdso: 714 nsec/call
+clock-gettime-realtime-coarse:    vdso: 784 nsec/call
+clock-getres-realtime:    vdso: 714 nsec/call
 
-Even when forcing the shift with an &= 31, it still considers
-the shift as likely >= 32.
-
-Define a vdso_shift_ns() macro that can be overriden by
-arches.
+After:
+gettimeofday:    vdso: 1094 nsec/call
+getcpu:    vdso: not tested
+clock-getres-realtime-coarse:    vdso: 545 nsec/call
+clock-gettime-realtime-coarse:    vdso: 584 nsec/call
+clock-getres-realtime:    vdso: 545 nsec/call
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- lib/vdso/gettimeofday.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 10 +---------
+ arch/powerpc/kernel/vdso32/gettimeofday.S    |  3 +++
+ arch/powerpc/kernel/vdso32/vgettimeofday.c   | 19 +++++++++++--------
+ arch/powerpc/kernel/vdso64/gettimeofday.S    |  3 +++
+ arch/powerpc/kernel/vdso64/vgettimeofday.c   | 19 +++++++++++--------
+ 5 files changed, 29 insertions(+), 25 deletions(-)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 724b45c3e8ac..9ba92058cfd7 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -39,6 +39,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
+diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
+index c2cafd85d3cb..0a247f9b9af9 100644
+--- a/arch/powerpc/include/asm/vdso/gettimeofday.h
++++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+@@ -6,7 +6,6 @@
+ 
+ #include <asm/time.h>
+ #include <asm/unistd.h>
+-#include <asm/vdso_datapage.h>
+ #include <uapi/linux/time.h>
+ 
+ #define VDSO_HAS_CLOCK_GETRES		1
+@@ -73,14 +72,7 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
+ 	return get_tb();
  }
- #endif
  
-+#ifndef vdso_shift_ns
-+static __always_inline u64 vdso_shift_ns(u64 ns, unsigned long shift)
-+{
-+	return ns >> shift;
-+}
-+#endif
-+
- #ifndef __arch_vdso_hres_capable
- static inline bool __arch_vdso_hres_capable(void)
+-void *__get_datapage(void);
+-
+-static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
+-{
+-	struct vdso_arch_data *vdso_data = __get_datapage();
+-
+-	return vdso_data->data;
+-}
++const struct vdso_data *__arch_get_vdso_data(void);
+ 
+ /*
+  * powerpc specific delta calculation.
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index ba0bd64b3da3..0d43878e462c 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -9,6 +9,7 @@
+ #include <asm/processor.h>
+ #include <asm/ppc_asm.h>
+ #include <asm/vdso.h>
++#include <asm/vdso_datapage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ 
+@@ -18,6 +19,7 @@
+ 	stwu	r1, -16(r1)
+ 	mflr	r0
+ 	stw	r0, 20(r1)
++	get_datapage	r5, VDSO_DATA_OFFSET
+ 	bl	\funct
+ 	lwz	r0, 20(r1)
+ 	cmpwi	r3, 0
+@@ -79,6 +81,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+ 	stwu	r1, -16(r1)
+ 	mflr	r0
+ 	stw	r0, 20(r1)
++	get_datapage	r4, VDSO_DATA_OFFSET
+ 	bl	__c_kernel_time
+ 	lwz	r0, 20(r1)
+ 	crclr	cr0*4+so
+diff --git a/arch/powerpc/kernel/vdso32/vgettimeofday.c b/arch/powerpc/kernel/vdso32/vgettimeofday.c
+index 4ed1bf2ae30e..9bdc3c435846 100644
+--- a/arch/powerpc/kernel/vdso32/vgettimeofday.c
++++ b/arch/powerpc/kernel/vdso32/vgettimeofday.c
+@@ -5,22 +5,25 @@
+ #include <linux/time.h>
+ #include <linux/types.h>
+ 
+-int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts)
++int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
++			     const struct vdso_data *vd)
  {
-@@ -148,7 +155,7 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		ns = vdso_ts->nsec;
- 		last = vd->cycle_last;
- 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
--		ns >>= vd->shift;
-+		ns = vdso_shift_ns(ns, vd->shift);
- 		sec = vdso_ts->sec;
- 	} while (unlikely(vdso_read_retry(vd, seq)));
+-	return __cvdso_clock_gettime32(clock, ts);
++	return __cvdso_clock_gettime32_data(vd, clock, ts);
+ }
  
+-int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
++int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
++			    const struct vdso_data *vd)
+ {
+-	return __cvdso_gettimeofday(tv, tz);
++	return __cvdso_gettimeofday_data(vd, tv, tz);
+ }
+ 
+-int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res)
++int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res,
++			    const struct vdso_data *vd)
+ {
+-	return __cvdso_clock_getres_time32(clock_id, res);
++	return __cvdso_clock_getres_time32_data(vd, clock_id, res);
+ }
+ 
+-time_t __c_kernel_time(time_t *time)
++time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+ {
+-	return __cvdso_time(time);
++	return __cvdso_time_data(vd, time);
+ }
+diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
+index 22f4f1f73bbc..f61c53eb6600 100644
+--- a/arch/powerpc/kernel/vdso64/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
+@@ -9,6 +9,7 @@
+ #include <asm/processor.h>
+ #include <asm/ppc_asm.h>
+ #include <asm/vdso.h>
++#include <asm/vdso_datapage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ 
+@@ -18,6 +19,7 @@
+ 	mflr	r0
+ 	std	r0, 16(r1)
+ 	stdu	r1, -128(r1)
++	get_datapage	r5, VDSO_DATA_OFFSET
+ 	bl	\funct
+ 	addi	r1, r1, 128
+ 	ld	r0, 16(r1)
+@@ -79,6 +81,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+ 	mflr	r0
+ 	std	r0, 16(r1)
+ 	stdu	r1, -128(r1)
++	get_datapage	r4, VDSO_DATA_OFFSET
+ 	bl	__c_kernel_time
+ 	addi	r1, r1, 128
+ 	ld	r0, 16(r1)
+diff --git a/arch/powerpc/kernel/vdso64/vgettimeofday.c b/arch/powerpc/kernel/vdso64/vgettimeofday.c
+index 407c6a7ed4e2..cd80867c501c 100644
+--- a/arch/powerpc/kernel/vdso64/vgettimeofday.c
++++ b/arch/powerpc/kernel/vdso64/vgettimeofday.c
+@@ -5,22 +5,25 @@
+ #include <linux/time.h>
+ #include <linux/types.h>
+ 
+-int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
++int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts,
++			     const struct vdso_data *vd)
+ {
+-	return __cvdso_clock_gettime(clock, ts);
++	return __cvdso_clock_gettime_data(vd, clock, ts);
+ }
+ 
+-int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
++int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
++			    const struct vdso_data *vd)
+ {
+-	return __cvdso_gettimeofday(tv, tz);
++	return __cvdso_gettimeofday_data(vd, tv, tz);
+ }
+ 
+-int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res)
++int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res,
++			    const struct vdso_data *vd)
+ {
+-	return __cvdso_clock_getres(clock_id, res);
++	return __cvdso_clock_getres_data(vd, clock_id, res);
+ }
+ 
+-time_t __c_kernel_time(time_t *time)
++time_t __c_kernel_time(time_t *time, const struct vdso_data *vd)
+ {
+-	return __cvdso_time(time);
++	return __cvdso_time_data(vd, time);
+ }
 -- 
 2.13.3
 
