@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABBFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ECEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10B3206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C884920748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217301;
-	bh=ocAANWlWEdcaXT6VbO9RDlKzdJkJnLOESxnJLG+KFdM=;
+	s=default; t=1579217303;
+	bh=zUwbC1w2zhbHABY8M4rwoXqvkrgONGKbYDP+0nH1LKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vQOnQ6JZBMJfc/qN+73Bli3IHsPZ901fzrK9a0UF2gkjkgD/qqBauy6nq1nCE1s+V
-	 hoV66kAkdzejvS/4EiHctIjrV4elU6AjSgX0aQbDxDaRC+ve+MDMc8Ub0sJvLwFSW+
-	 ybltm8H4XGKHRpMSeW7OY/qsWKRWaARXo4xs5P6U=
+	b=vJfD1dvNfB6cwDypLn7FF64gF2MReN37wrLRmbb4c2grmZl6jS0R8lPEVEAhe3+nm
+	 9WMPROz/JK2syr5cEB8G/jcpajmEA2MOpQNICtvGAnwp1UrqV/OpmXjJrYdZoqPBqc
+	 kkoouQbaDj9QG1yLJ3Xm4FY9A1a83yVjgf0j+eXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391094AbgAPX2V (ORCPT
+        id S2389208AbgAPX2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390734AbgAPX2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:15 -0500
+        id S2391073AbgAPX2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D4620684;
-        Thu, 16 Jan 2020 23:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A80206D9;
+        Thu, 16 Jan 2020 23:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217294;
-        bh=ocAANWlWEdcaXT6VbO9RDlKzdJkJnLOESxnJLG+KFdM=;
+        s=default; t=1579217296;
+        bh=zUwbC1w2zhbHABY8M4rwoXqvkrgONGKbYDP+0nH1LKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzihyre7pjoVDGFiknGoCfTnLMTZ6kPGxfAyUJ8ju3Iu/r4mqfKrXb315iTXfv5Wd
-         gXUsWLhuWakz9QaJG08e0dkAGzKZeA/1+TfyQMBQD/PEXIsiWQI1JXxTdEed2bdCVr
-         njGdeYecaYgfsZ7WDQKu+pW/ps9Sqjq7gi3yhOEY=
+        b=Amrd01Wz7vVF0sEpAoVhcqsldrsZZBFk0jocjER6731l9o4XYTkq2PPMdNaHxCEtm
+         Dwa24aMQcfXUUHyfeTZz9L1hhsR1VUE57YfIsjSYtLAceW+TtdXaLNpdGQE4qUMeQ8
+         jCw1NIHyJtESWOlMZn4DjRquv1GYVAX13E26n250=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.19 23/84] mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
-Date:   Fri, 17 Jan 2020 00:17:57 +0100
-Message-Id: <20200116231716.388547311@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Swapna Manupati <swapna.manupati@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 24/84] gpio: zynq: Fix for bug in zynq_gpio_restore_context API
+Date:   Fri, 17 Jan 2020 00:17:58 +0100
+Message-Id: <20200116231716.500899761@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -61,37 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Swapna Manupati <swapna.manupati@xilinx.com>
 
-commit 8bcef0d54067077cf9a6cb129022c77559926e8c upstream.
+commit 36f2e7207f21a83ca0054116191f119ac64583ab upstream.
 
-The commit converting the driver to DMAengine was missing the flags for
-the memcpy prepare call.
-It went unnoticed since the omap-dma driver was ignoring them.
+This patch writes the inverse value of Interrupt Mask Status
+register into the Interrupt Enable register in
+zynq_gpio_restore_context API to fix the bug.
 
-Fixes: 3ed6a4d1de2c5 (" mtd: onenand: omap2: Convert to use dmaengine for memcp")
-Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: e11de4de28c0 ("gpio: zynq: Add support for suspend resume")
+Signed-off-by: Swapna Manupati <swapna.manupati@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Link: https://lore.kernel.org/r/1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/onenand/omap2.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-zynq.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/nand/onenand/omap2.c
-+++ b/drivers/mtd/nand/onenand/omap2.c
-@@ -341,7 +341,8 @@ static inline int omap2_onenand_dma_tran
- 	struct dma_async_tx_descriptor *tx;
- 	dma_cookie_t cookie;
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -639,6 +639,8 @@ static void zynq_gpio_restore_context(st
+ 	unsigned int bank_num;
  
--	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count, 0);
-+	tx = dmaengine_prep_dma_memcpy(c->dma_chan, dst, src, count,
-+				       DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
- 	if (!tx) {
- 		dev_err(&c->pdev->dev, "Failed to prepare DMA memcpy\n");
- 		return -EIO;
+ 	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++) {
++		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
++				ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
+ 		writel_relaxed(gpio->context.datalsw[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_DATA_LSW_OFFSET(bank_num));
+@@ -648,9 +650,6 @@ static void zynq_gpio_restore_context(st
+ 		writel_relaxed(gpio->context.dirm[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+-		writel_relaxed(gpio->context.int_en[bank_num],
+-			       gpio->base_addr +
+-			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
+ 		writel_relaxed(gpio->context.int_type[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
+@@ -660,6 +659,9 @@ static void zynq_gpio_restore_context(st
+ 		writel_relaxed(gpio->context.int_any[bank_num],
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_INTANY_OFFSET(bank_num));
++		writel_relaxed(~(gpio->context.int_en[bank_num]),
++			       gpio->base_addr +
++			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
+ 	}
+ }
+ 
 
 
