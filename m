@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C93FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74D424695
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFB4246C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196521;
-	bh=m0dvd1MzdvUnaVm0wWphhZlsI4OTLffO8VdX+34Wx+8=;
+	s=default; t=1579196525;
+	bh=fPlNpHQvfkloCcuCGF/dUff98NWTDSU1o9YkuNNxshY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SQIV0U63qqBgPN1QTVAnAUD2grqBeunP4GXPHsZHeCY/ZKL6FM+dv0VxNxoacvhK3
-	 0XKFHBodCLkWFuriISf/VaBQfeddb6O3L8hC2Meycez+MSL3qJfmqapjqfkP3Busmk
-	 ohFNMzUIhxZM4SV5PZK4Fy2UK1aMguuvnZPtqk8g=
+	b=XHuuZ2C59IJA3e7kRwKirVqu78IkgVsnULEqJlqpzBXJV2cJ9JuTfDHRlJ0iNkoqH
+	 5IFHtWUGO2BuETI9VZmdcZLXTsefDHa2DzqiFUf3VCexCySBsXzOPyVxSzxC5pmJVL
+	 FtA/+puQ3RHI8f+Ai7DDEmadY1zUYPoGtFz9QE3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393797AbgAPRmB (ORCPT
+        id S1730113AbgAPRmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405627AbgAPRlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:20 -0500
+        id S2393776AbgAPRlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D61246A1;
-        Thu, 16 Jan 2020 17:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85AA246A1;
+        Thu, 16 Jan 2020 17:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196478;
-        bh=m0dvd1MzdvUnaVm0wWphhZlsI4OTLffO8VdX+34Wx+8=;
+        s=default; t=1579196482;
+        bh=fPlNpHQvfkloCcuCGF/dUff98NWTDSU1o9YkuNNxshY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iWcWoqIkpXIk4yE/FXikMUa1+gsWvFNATvud9z9gcftvDZ6slIMjmhbS9mrVV7Yr9
-         1C1anh3vi3xuk/nCY86dytuLouRggn6k7GVZtO+2U0e7eUMRdSKt04UFkaxFt2TAfC
-         vyzxqxUCoSNqLITAQtwdpguoXUEtMsKvaUl4FWhI=
+        b=Qi52rk/1xV1cgwWrIPskE/FYQjKpEtFwUmC55y438bRaKM7QdaAjUqf9m8qmJ96+h
+         R+H5iaKYI1cErJyASqmTmK+oQFqh2Nvf9l93jgmwcyTxU08N6Zplz7fcYqJEZnvw2/
+         j8DJsW2rHtmBREopBtEzxCMqFDy2yxyHanOnz+sU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 226/251] media: ov6650: Fix some format attributes not under control
-Date:   Thu, 16 Jan 2020 12:36:15 -0500
-Message-Id: <20200116173641.22137-186-sashal@kernel.org>
+Cc:     Mans Rullgard <mans@mansr.com>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 229/251] spi: atmel: fix handling of cs_change set on non-last xfer
+Date:   Thu, 16 Jan 2020 12:36:18 -0500
+Message-Id: <20200116173641.22137-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,130 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Mans Rullgard <mans@mansr.com>
 
-[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
+[ Upstream commit fed8d8c7a6dc2a76d7764842853d81c770b0788e ]
 
-User arguments passed to .get/set_fmt() pad operation callbacks may
-contain unsupported values.  The driver takes control over frame size
-and pixel code as well as colorspace and field attributes but has never
-cared for remainig format attributes, i.e., ycbcr_enc, quantization
-and xfer_func, introduced by commit 11ff030c7365 ("[media]
-v4l2-mediabus: improve colorspace support").  Fix it.
+The driver does the wrong thing when cs_change is set on a non-last
+xfer in a message.  When cs_change is set, the driver deactivates the
+CS and leaves it off until a later xfer again has cs_change set whereas
+it should be briefly toggling CS off and on again.
 
-Set up a static v4l2_mbus_framefmt structure with attributes
-initialized to reasonable defaults and use it for updating content of
-user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
-postpone frame size update, now performed from inside ov6650_s_fmt()
-helper, util the user argument is first updated in ov6650_set_fmt() with
-default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
-all attributes to pad config, only those handled by the driver, then
-fill the response with the default frame format updated with resulting
-pad config format code and frame size.
-
-Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This patch brings the behaviour of the driver back in line with the
+documentation and common sense.  The delay of 10 us is the same as is
+used by the default spi_transfer_one_message() function in spi.c.
+[gregory: rebased on for-5.5 from spi tree]
+Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/soc_camera/ov6650.c | 51 ++++++++++++++++++++-------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ drivers/spi/spi-atmel.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
-index e9271ad9ee4c..3b118d45d433 100644
---- a/drivers/media/i2c/soc_camera/ov6650.c
-+++ b/drivers/media/i2c/soc_camera/ov6650.c
-@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
- 	MEDIA_BUS_FMT_Y8_1X8,
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 691c04b3e5b6..938840af9c50 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -315,7 +315,6 @@ struct atmel_spi {
+ 	struct atmel_spi_dma	dma;
+ 
+ 	bool			keep_cs;
+-	bool			cs_active;
+ 
+ 	u32			fifo_size;
  };
- 
-+static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
-+	.width		= W_CIF,
-+	.height		= H_CIF,
-+	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-+	.colorspace	= V4L2_COLORSPACE_SRGB,
-+	.field		= V4L2_FIELD_NONE,
-+	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
-+	.quantization	= V4L2_QUANTIZATION_DEFAULT,
-+	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
-+};
-+
- /* read a register */
- static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
- {
-@@ -511,11 +522,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	if (format->pad)
- 		return -EINVAL;
- 
-+	/* initialize response with default media bus frame format */
-+	*mf = ov6650_def_fmt;
-+
-+	/* update media bus format code and frame size */
- 	mf->width	= priv->rect.width >> priv->half_scale;
- 	mf->height	= priv->rect.height >> priv->half_scale;
- 	mf->code	= priv->code;
--	mf->colorspace	= V4L2_COLORSPACE_SRGB;
--	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
- }
-@@ -678,10 +691,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 	if (!ret)
- 		priv->code = code;
- 
--	if (!ret) {
--		mf->width = priv->rect.width >> half_scale;
--		mf->height = priv->rect.height >> half_scale;
--	}
- 	return ret;
- }
- 
-@@ -700,9 +709,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
- 				&mf->height, 2, H_CIF, 1, 0);
- 
--	mf->field = V4L2_FIELD_NONE;
--	mf->colorspace = V4L2_COLORSPACE_SRGB;
--
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_Y10_1X10:
- 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
-@@ -718,10 +724,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 		break;
+@@ -1404,11 +1403,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
+ 				 &msg->transfers)) {
+ 			as->keep_cs = true;
+ 		} else {
+-			as->cs_active = !as->cs_active;
+-			if (as->cs_active)
+-				cs_activate(as, msg->spi);
+-			else
+-				cs_deactivate(as, msg->spi);
++			cs_deactivate(as, msg->spi);
++			udelay(10);
++			cs_activate(as, msg->spi);
+ 		}
  	}
  
--	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
--		return ov6650_s_fmt(sd, mf);
--	cfg->try_fmt = *mf;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		/* store media bus format code and frame size in pad config */
-+		cfg->try_fmt.width = mf->width;
-+		cfg->try_fmt.height = mf->height;
-+		cfg->try_fmt.code = mf->code;
+@@ -1431,7 +1428,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
+ 	atmel_spi_lock(as);
+ 	cs_activate(as, spi);
  
-+		/* return default mbus frame format updated with pad config */
-+		*mf = ov6650_def_fmt;
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
-+
-+	} else {
-+		/* apply new media bus format code and frame size */
-+		int ret = ov6650_s_fmt(sd, mf);
-+
-+		if (ret)
-+			return ret;
-+
-+		/* return default format updated with active size and code */
-+		*mf = ov6650_def_fmt;
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
-+	}
- 	return 0;
- }
+-	as->cs_active = true;
+ 	as->keep_cs = false;
  
+ 	msg->status = 0;
 -- 
 2.20.1
 
