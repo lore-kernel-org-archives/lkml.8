@@ -2,211 +2,90 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07D0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B0F206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C91DF208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UCN+paU/"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="T/c/Nc6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbgAPSc6 (ORCPT
+        id S2392256AbgAPSdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:32:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33994 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391821AbgAPRYz (ORCPT
+        Thu, 16 Jan 2020 13:33:01 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42717 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403840AbgAPRYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579195495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rJXCaurapNQ3l0l2gppkZEC8B+0gvsSxNTKA5/PN+5k=;
-        b=UCN+paU/wQyQ6BTwPFumvC9JIx0Ubm1/ikweKV4QQMKD1tHx8Vk2Mqc52IGh6rXmeRjEYt
-        v663eqs+wmRTbXzDuq/3M0xbFsdFs/wOfL00SesM61/4zBhU9YbFfLdKen3jwgLujlovSp
-        h14kqg7JFrAAjhEIsmWYfbRNhCmzGIQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-D6q33l1yOH-_YtBkUiFYyg-1; Thu, 16 Jan 2020 12:24:53 -0500
-X-MC-Unique: D6q33l1yOH-_YtBkUiFYyg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BD63477;
-        Thu, 16 Jan 2020 17:24:52 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-242.ams2.redhat.com [10.36.117.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A6405C1D8;
-        Thu, 16 Jan 2020 17:24:48 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-hyperv@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH net-next 3/3] vhost/vsock: use netns of process that opens the vhost-vsock device
-Date:   Thu, 16 Jan 2020 18:24:28 +0100
-Message-Id: <20200116172428.311437-4-sgarzare@redhat.com>
-In-Reply-To: <20200116172428.311437-1-sgarzare@redhat.com>
-References: <20200116172428.311437-1-sgarzare@redhat.com>
+        Thu, 16 Jan 2020 12:24:54 -0500
+Received: by mail-qt1-f196.google.com with SMTP id j5so19467835qtq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:24:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qPrmqLJiP71VA0NeSCTEgrXiIHb5kLqqrkQ2JxiPGho=;
+        b=T/c/Nc6bCUmuGGYnx1mXNg/wgMTrK3EvK5NFy5avi9BI9aT7kuWce6IxNfrkIpAWW0
+         iR3P24nqtNcVGBXiyJ7MI5JseF7tB3k1jcbrdsGZUMVibmkTIybMqOZWo6qQ753qpTYO
+         c5ZGa85I+xjZMTgsSS6UjvhAsHpENoK10hL1sSkGFhJUwfcA6VBwxyoe/uAxOPPOKJkf
+         8vQW2xc4GCrqjGKMcMFDphepzX+SXVRJUpH8V6vMXJx8rF7kAgHgyz+wyV3KLFbILyYu
+         20Y+pBa88uStAUTQLjOTMRgIBIB3dXfcwBZS0tWfKMEzcJamwSP7Xt/HQSCa3rF3oIJw
+         H6OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qPrmqLJiP71VA0NeSCTEgrXiIHb5kLqqrkQ2JxiPGho=;
+        b=nWlgXFmA5ko7vtvBqAgT3Nul0GIunjGNbCsmg2Vhq+rQEsWRajFtwBwBuKueYChMr5
+         owzQaY9XkwEce8/MHvAy6+ZVxR8l3u9mXoIvKzIYPBe7Shj6LGw8kHXgXau9ur1hxeM6
+         GnQRlEhmkFyimYaLFVYsByeRQh636x+aFarLKsXPOV3KompePjLP3ex6fmSskbqUtrHr
+         5KDCQ0Z/q7l6ah8qOPh3cc+dRLstOFXR9Uk1w6otb4Ff3uzDXaNrd5XpephpPeUus00I
+         Z7xvINMneVi8bZ8GLI9lVRqdmf2zrNRVRvY+mn5Cg0/NEmRxK2/Ey7XFcbrkfPgsKqCA
+         FoNQ==
+X-Gm-Message-State: APjAAAXftsSQ7h4o8eoBDQU+zKtwb4OCPSZaZYgUl/prfPhLae1atWt/
+        rqm5Z8GJ/UAE+yCwACcN01EDsg==
+X-Google-Smtp-Source: APXvYqxxqV46E3xnhe2R/O4tw7/YVw+xjh9fYHOBoymWRu1GkQeW5Hkm+Nfw9QCWg2PhbIGK3pBGbg==
+X-Received: by 2002:aed:24ec:: with SMTP id u41mr3553692qtc.220.1579195493467;
+        Thu, 16 Jan 2020 09:24:53 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::ae73])
+        by smtp.gmail.com with ESMTPSA id g18sm10401144qki.13.2020.01.16.09.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 09:24:52 -0800 (PST)
+Date:   Thu, 16 Jan 2020 12:24:51 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 4/6] mm: kmem: switch to nr_pages in
+ (__)memcg_kmem_charge_memcg()
+Message-ID: <20200116172451.GD57074@cmpxchg.org>
+References: <20200109202659.752357-1-guro@fb.com>
+ <20200109202659.752357-5-guro@fb.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109202659.752357-5-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch assigns the network namespace of the process that opened
-vhost-vsock device (e.g. VMM) to the packets coming from the guest,
-allowing only host sockets in the same network namespace to
-communicate with the guest.
+On Thu, Jan 09, 2020 at 12:26:57PM -0800, Roman Gushchin wrote:
+> These functions are charging the given number of kernel pages to the
+> given memory cgroup. The number doesn't have to be a power of two.
+> Let's make them to take the unsigned int nr_pages as an argument
+> instead of the page order.
+> 
+> It makes them look consistent with the corresponding uncharge
+> functions and functions like: mem_cgroup_charge_skmem(memcg, nr_pages).
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-This patch also allows having different VMs, running in different
-network namespace, with the same CID.
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-RFC -> v1
- * used 'vsock_net_eq()' insted of 'net_eq()'
----
- drivers/vhost/vsock.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index f1d39939d5e4..8b0169105559 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -40,6 +40,7 @@ static DEFINE_READ_MOSTLY_HASHTABLE(vhost_vsock_hash, 8=
-);
- struct vhost_vsock {
- 	struct vhost_dev dev;
- 	struct vhost_virtqueue vqs[2];
-+	struct net *net;
-=20
- 	/* Link to global vhost_vsock_hash, writes use vhost_vsock_mutex */
- 	struct hlist_node hash;
-@@ -61,7 +62,7 @@ static u32 vhost_transport_get_local_cid(void)
- /* Callers that dereference the return value must hold vhost_vsock_mutex=
- or the
-  * RCU read lock.
-  */
--static struct vhost_vsock *vhost_vsock_get(u32 guest_cid)
-+static struct vhost_vsock *vhost_vsock_get(u32 guest_cid, struct net *ne=
-t)
- {
- 	struct vhost_vsock *vsock;
-=20
-@@ -72,7 +73,7 @@ static struct vhost_vsock *vhost_vsock_get(u32 guest_ci=
-d)
- 		if (other_cid =3D=3D 0)
- 			continue;
-=20
--		if (other_cid =3D=3D guest_cid)
-+		if (other_cid =3D=3D guest_cid && vsock_net_eq(net, vsock->net))
- 			return vsock;
-=20
- 	}
-@@ -245,7 +246,7 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt *pkt=
-)
- 	rcu_read_lock();
-=20
- 	/* Find the vhost_vsock according to guest context id  */
--	vsock =3D vhost_vsock_get(le64_to_cpu(pkt->hdr.dst_cid));
-+	vsock =3D vhost_vsock_get(le64_to_cpu(pkt->hdr.dst_cid), pkt->net);
- 	if (!vsock) {
- 		rcu_read_unlock();
- 		virtio_transport_free_pkt(pkt);
-@@ -277,7 +278,8 @@ vhost_transport_cancel_pkt(struct vsock_sock *vsk)
- 	rcu_read_lock();
-=20
- 	/* Find the vhost_vsock according to guest context id  */
--	vsock =3D vhost_vsock_get(vsk->remote_addr.svm_cid);
-+	vsock =3D vhost_vsock_get(vsk->remote_addr.svm_cid,
-+				sock_net(sk_vsock(vsk)));
- 	if (!vsock)
- 		goto out;
-=20
-@@ -474,7 +476,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_w=
-ork *work)
- 			continue;
- 		}
-=20
--		pkt->net =3D vsock_default_net();
-+		pkt->net =3D vsock->net;
- 		len =3D pkt->len;
-=20
- 		/* Deliver to monitoring devices all received packets */
-@@ -608,7 +610,14 @@ static int vhost_vsock_dev_open(struct inode *inode,=
- struct file *file)
- 	vqs =3D kmalloc_array(ARRAY_SIZE(vsock->vqs), sizeof(*vqs), GFP_KERNEL)=
-;
- 	if (!vqs) {
- 		ret =3D -ENOMEM;
--		goto out;
-+		goto out_vsock;
-+	}
-+
-+	/* Derive the network namespace from the pid opening the device */
-+	vsock->net =3D get_net_ns_by_pid(current->pid);
-+	if (IS_ERR(vsock->net)) {
-+		ret =3D PTR_ERR(vsock->net);
-+		goto out_vqs;
- 	}
-=20
- 	vsock->guest_cid =3D 0; /* no CID assigned yet */
-@@ -630,7 +639,9 @@ static int vhost_vsock_dev_open(struct inode *inode, =
-struct file *file)
- 	vhost_work_init(&vsock->send_pkt_work, vhost_transport_send_pkt_work);
- 	return 0;
-=20
--out:
-+out_vqs:
-+	kfree(vqs);
-+out_vsock:
- 	vhost_vsock_free(vsock);
- 	return ret;
- }
-@@ -655,7 +666,7 @@ static void vhost_vsock_reset_orphans(struct sock *sk=
-)
- 	 */
-=20
- 	/* If the peer is still valid, no need to reset connection */
--	if (vhost_vsock_get(vsk->remote_addr.svm_cid))
-+	if (vhost_vsock_get(vsk->remote_addr.svm_cid, sock_net(sk)))
- 		return;
-=20
- 	/* If the close timeout is pending, let it expire.  This avoids races
-@@ -703,6 +714,7 @@ static int vhost_vsock_dev_release(struct inode *inod=
-e, struct file *file)
- 	spin_unlock_bh(&vsock->send_pkt_list_lock);
-=20
- 	vhost_dev_cleanup(&vsock->dev);
-+	put_net(vsock->net);
- 	kfree(vsock->dev.vqs);
- 	vhost_vsock_free(vsock);
- 	return 0;
-@@ -729,7 +741,7 @@ static int vhost_vsock_set_cid(struct vhost_vsock *vs=
-ock, u64 guest_cid)
-=20
- 	/* Refuse if CID is already in use */
- 	mutex_lock(&vhost_vsock_mutex);
--	other =3D vhost_vsock_get(guest_cid);
-+	other =3D vhost_vsock_get(guest_cid, vsock->net);
- 	if (other && other !=3D vsock) {
- 		mutex_unlock(&vhost_vsock_mutex);
- 		return -EADDRINUSE;
---=20
-2.24.1
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
