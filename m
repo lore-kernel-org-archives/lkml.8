@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE779C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A070C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A64246CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6543246D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195584;
-	bh=8DDoQiOrvvIKFroA4z/RhkKhCGF4MSC6aNKkMx1JK84=;
+	s=default; t=1579195592;
+	bh=00b8VWgnfkcFnME6wpnUkkx2fSb1zkuDu3bJITKvyQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEa9WCWiKOaPjqm7r4JFnLacdSs+6g6YWmtNgSaLMVS1FAXKrRtnbgSTnyDXqK3Hw
-	 1ODSqrW73RoFwiwIxnMsGuYgOEdG3ApvoEzoY4i+s7FlPYha3W/PkfGrwpax83PzcD
-	 KIh4Gtq1sdGYWqHxzfpGKyGdZxe8O2HBnengEolk=
+	b=IdH21h1EpbDk87POVjO3xC7plUCcyp6xf0dP68UTY0uw7/UB8bPdQsegLax8sXed9
+	 /AgKPDLstgdJoH1dDr0KckKYG8OZEQbZoirnkN4mqHBxhQuU62NEpJIaHbB3MffT6h
+	 yUUQ47A2P7IVaZfrQwcxlb8LYma0SW5fgaHkvaAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403938AbgAPR0Y (ORCPT
+        id S2392307AbgAPR0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392276AbgAPR0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:17 -0500
+        id S2403921AbgAPR0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84FF20730;
-        Thu, 16 Jan 2020 17:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B24246C9;
+        Thu, 16 Jan 2020 17:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195577;
-        bh=8DDoQiOrvvIKFroA4z/RhkKhCGF4MSC6aNKkMx1JK84=;
+        s=default; t=1579195582;
+        bh=00b8VWgnfkcFnME6wpnUkkx2fSb1zkuDu3bJITKvyQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDI2iwCC5/XN0qPXzIpGOUx8EF4LLmm6Ndp98DMHaVf0fzdZ6V6Ew22wrKJ+CK6+9
-         RjeMe7meeK6iQ5cZJ6KGC0iJ7czoeuqf3a/aLd7uMAg8ZwyhLvINGQZqc9CPRzM9Vg
-         8uobCaLBt1JPWuKzgBeyEgHgau+q3aOnjRTatBP4=
+        b=jeldqMrE+NbGSUq0Mc9gkEFUKaaS9NFAhmTB+LK5vF71U1TloCGvVJ9INFQduqqdr
+         eOP19PB2HH0ZiMgcmV+MPciEc06rknac3PK9BjQBYarkATAhOXC+YmTXM7ACLeP7tJ
+         o3naoIgWXYul9vuCrpl3MkZ9Tzwx89x9mVJQJCM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Mike Christie <mchristi@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 159/371] scsi: target/core: Fix a race condition in the LUN lookup code
-Date:   Thu, 16 Jan 2020 12:20:31 -0500
-Message-Id: <20200116172403.18149-102-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 163/371] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+Date:   Thu, 16 Jan 2020 12:20:35 -0500
+Message-Id: <20200116172403.18149-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -64,50 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 63f7479439c95bcd49b7dd4af809862c316c71a3 ]
+[ Upstream commit 98e2630284ab741804bd0713e932e725466f2f84 ]
 
-The rcu_dereference(deve->se_lun) expression occurs twice in the LUN lookup
-functions. Since these expressions are not serialized against deve->se_lun
-assignments each of these expressions may yield a different result. Avoid
-that the wrong LUN pointer is stored in se_cmd by reading deve->se_lun only
-once.
+Currently the kfree of output.pointer can be potentially freeing
+an uninitalized pointer in the case where out_data is NULL. Fix this
+by reworking the case where out_data is not-null to perform the
+ACPI status check and also the kfree of outpoint.pointer in one block
+and hence ensuring the pointer is only freed when it has been used.
 
-Cc: Mike Christie <mchristi@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Nicholas Bellinger <nab@linux-iscsi.org>
-Fixes: 29a05deebf6c ("target: Convert se_node_acl->device_list[] to RCU hlist") # v4.10
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Also replace the if (ptr != NULL) idiom with just if (ptr).
+
+Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/alienware-wmi.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
-index 92b52d2314b5..cebef8e5a43d 100644
---- a/drivers/target/target_core_device.c
-+++ b/drivers/target/target_core_device.c
-@@ -85,7 +85,7 @@ transport_lookup_cmd_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
- 			goto out_unlock;
- 		}
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index e335b18da20f..cbd84e2e3bd4 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -505,23 +505,22 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
  
--		se_cmd->se_lun = rcu_dereference(deve->se_lun);
-+		se_cmd->se_lun = se_lun;
- 		se_cmd->pr_res_key = deve->pr_res_key;
- 		se_cmd->orig_fe_lun = unpacked_lun;
- 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
-@@ -176,7 +176,7 @@ int transport_lookup_tmr_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
- 			goto out_unlock;
- 		}
+ 	input.length = (acpi_size) sizeof(*in_args);
+ 	input.pointer = in_args;
+-	if (out_data != NULL) {
++	if (out_data) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+ 		output.pointer = NULL;
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, &output);
+-	} else
++		if (ACPI_SUCCESS(status)) {
++			obj = (union acpi_object *)output.pointer;
++			if (obj && obj->type == ACPI_TYPE_INTEGER)
++				*out_data = (u32)obj->integer.value;
++		}
++		kfree(output.pointer);
++	} else {
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+ 					     command, &input, NULL);
+-
+-	if (ACPI_SUCCESS(status) && out_data != NULL) {
+-		obj = (union acpi_object *)output.pointer;
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			*out_data = (u32) obj->integer.value;
+ 	}
+-	kfree(output.pointer);
+ 	return status;
+-
+ }
  
--		se_cmd->se_lun = rcu_dereference(deve->se_lun);
-+		se_cmd->se_lun = se_lun;
- 		se_cmd->pr_res_key = deve->pr_res_key;
- 		se_cmd->orig_fe_lun = unpacked_lun;
- 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
+ /*
 -- 
 2.20.1
 
