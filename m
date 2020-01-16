@@ -2,230 +2,152 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8048EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C163C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5143022522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fjuLtDAc"
+	by mail.kernel.org (Postfix) with ESMTP id 184752465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbgAPAVf (ORCPT
+        id S1730958AbgAPAZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:21:35 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:58922 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729548AbgAPAV2 (ORCPT
+        Wed, 15 Jan 2020 19:25:13 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55917 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAPAZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:21:28 -0500
-Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 42F6240710;
-        Thu, 16 Jan 2020 00:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579134087; bh=wTjg8je1GLFPZ7gb9T1YyqXkhQW7LS79Z0CW+YLPek4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjuLtDAc+7TGwQlPH6Y4Udq1ppw/L/x06mC2vYxOuATS0qne+rdbsV3ToHVQZKx2Q
-         3UHSdcurPoY3mLMSg2vchirIJv3o1l7PGHQ5h3T+a5/XG1EXzKHv/tAdNDKyUNfY9R
-         lQOeyuEaparXIbFnpR+q3le9V1N/POFcu4lVzZAJrFEPZVpOF/ksDeYSDs3Fz+BbOH
-         FyVANWVAamtoxN6rSOfrK0VDK1LxQQbNEm8QVdo2ydRYOMqqt7Kzm36esS3bvNx1vC
-         BzfGSvIA53bc911alsgp8HTCEa9DxN6ohXUE1Eb4KLXzWp9LrxcicbcvauwShF5X6/
-         ymby6mPIgqjtg==
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.20])
-        by mailhost.synopsys.com (Postfix) with ESMTP id ACE8CA0063;
-        Thu, 16 Jan 2020 00:21:26 +0000 (UTC)
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v2 2/2] ARC: uaccess: use optimized generic __strnlen_user/__strncpy_from_user
-Date:   Wed, 15 Jan 2020 16:21:24 -0800
-Message-Id: <20200116002124.17988-3-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116002124.17988-1-vgupta@synopsys.com>
-References: <20200116002124.17988-1-vgupta@synopsys.com>
+        Wed, 15 Jan 2020 19:25:12 -0500
+Received: by mail-io1-f70.google.com with SMTP id z21so11473678iob.22
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 16:25:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=E/oWkfdcQbDfePZTjWHYErwHEs0VAeL7p12HZGFsEIk=;
+        b=FyF/jC1jpN0BNU02TRGPmSfa4nGg+a4qC/Ev3WG2Ltvk/mQD5/RUFC9Iq/kZSYKNDQ
+         BuS89Dh4H+Pxeri3DkKjNK7tZBcDmop4L4ZAGEES0yJ8uaKc2rxgmmnMR/Nyr70tJhzy
+         oV524L+HDM9Car9zUZ8KoRt6NdhGycSYi+/e72uZPMcMEMid1ht74L/iDfDRV9JDyGnL
+         WsjZqJWrMs5AWcEPisyK4UOMpC6FYfSP2Xl/Ijjf83AvFFIQ9nlUsO/qaIsqbINi2P5b
+         pjaN/VpoFD5PcUjVJL46NWsQkMTYUHSq25a8TM3BTRIvBfMdvRJT9z4fd39XNz1CkQYS
+         aEHQ==
+X-Gm-Message-State: APjAAAXlPaS4WZ0ZxeghmIgCZRFn4XPqxsn2d3dHd77C6wuDjDRVpYIw
+        Z0g8ol9ICZ93ZKF2uBcPlLaOmL7E8TzrmzZRWOUBuqZOltD3
+X-Google-Smtp-Source: APXvYqx2DjN1NUxxTZJDCofOduxEolLGzZZA42hjKihqgv1QIIIN1OvWPIckaKHBUaWrkaJYI6IQBHwhDpVTmUJckIxSYYVVmScE
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:c6d5:: with SMTP id r21mr25963661jan.129.1579134311682;
+ Wed, 15 Jan 2020 16:25:11 -0800 (PST)
+Date:   Wed, 15 Jan 2020 16:25:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b3599c059c36db0d@google.com>
+Subject: BUG: corrupted list in nf_tables_commit
+From:   syzbot <syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The existing ARC variants have 2 issues
- - Use ZOL which may not be present in forthcoming architecture
- - Byte loop based vs. generic version which is word loop based
+Hello,
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+syzbot found the following crash on:
+
+HEAD commit:    51d69817 Merge tag 'platform-drivers-x86-v5.5-3' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16218315e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=37a6804945a3a13b1572
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ad1821e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d8fc35e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+37a6804945a3a13b1572@syzkaller.appspotmail.com
+
+list_del corruption, ffff88808c9bb000->prev is LIST_POISON2  
+(dead000000000122)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:48!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9707 Comm: syz-executor974 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__list_del_entry_valid.cold+0x37/0x4f lib/list_debug.c:48
+Code: be fd 0f 0b 4c 89 ea 4c 89 f6 48 c7 c7 20 66 71 88 e8 c0 e7 be fd 0f  
+0b 4c 89 e2 4c 89 f6 48 c7 c7 80 66 71 88 e8 ac e7 be fd <0f> 0b 4c 89 f6  
+48 c7 c7 40 67 71 88 e8 9b e7 be fd 0f 0b cc cc cc
+RSP: 0018:ffffc900020273f0 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff88808c9bb000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e5396 RDI: fffff52000404e70
+RBP: ffffc90002027408 R08: 000000000000004e R09: ffffed1015d06621
+R10: ffffed1015d06620 R11: ffff8880ae833107 R12: dead000000000122
+R13: ffff888093e70d80 R14: ffff88808c9bb000 R15: dffffc0000000000
+FS:  0000000000d18880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020003ac0 CR3: 0000000096a25000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  __list_del_entry include/linux/list.h:131 [inline]
+  list_del_rcu include/linux/rculist.h:148 [inline]
+  nf_tables_commit+0x1068/0x3b30 net/netfilter/nf_tables_api.c:7183
+  nfnetlink_rcv_batch+0xc78/0x17a0 net/netfilter/nfnetlink.c:485
+  nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+  nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:639 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:659
+  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+  __do_sys_sendmsg net/socket.c:2426 [inline]
+  __se_sys_sendmsg net/socket.c:2424 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441aa9
+Code: e8 fc ab 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 9b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcfa467588 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441aa9
+RDX: 0000000000000042 RSI: 0000000020003ac0 RDI: 0000000000000003
+RBP: 0000000000006f6c R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000004 R11: 0000000000000246 R12: 00000000004028d0
+R13: 0000000000402960 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 9581ba900963d50f ]---
+RIP: 0010:__list_del_entry_valid.cold+0x37/0x4f lib/list_debug.c:48
+Code: be fd 0f 0b 4c 89 ea 4c 89 f6 48 c7 c7 20 66 71 88 e8 c0 e7 be fd 0f  
+0b 4c 89 e2 4c 89 f6 48 c7 c7 80 66 71 88 e8 ac e7 be fd <0f> 0b 4c 89 f6  
+48 c7 c7 40 67 71 88 e8 9b e7 be fd 0f 0b cc cc cc
+RSP: 0018:ffffc900020273f0 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff88808c9bb000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e5396 RDI: fffff52000404e70
+RBP: ffffc90002027408 R08: 000000000000004e R09: ffffed1015d06621
+R10: ffffed1015d06620 R11: ffff8880ae833107 R12: dead000000000122
+R13: ffff888093e70d80 R14: ffff88808c9bb000 R15: dffffc0000000000
+FS:  0000000000d18880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020003ac0 CR3: 0000000096a25000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- arch/arc/Kconfig               |  2 +
- arch/arc/include/asm/uaccess.h | 85 ++--------------------------------
- arch/arc/mm/extable.c          | 23 ---------
- 3 files changed, 6 insertions(+), 104 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index 26108ea785c2..3b074c4d31fb 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -26,6 +26,8 @@ config ARC
- 	select GENERIC_PENDING_IRQ if SMP
- 	select GENERIC_SCHED_CLOCK
- 	select GENERIC_SMP_IDLE_THREAD
-+	select GENERIC_STRNCPY_FROM_USER if MMU
-+	select GENERIC_STRNLEN_USER if MMU
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_DEBUG_STACKOVERFLOW
-diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
-index ea40ec7f6cae..a3c943993b7b 100644
---- a/arch/arc/include/asm/uaccess.h
-+++ b/arch/arc/include/asm/uaccess.h
-@@ -52,6 +52,8 @@
- #define __access_ok(addr, sz)	(unlikely(__kernel_ok) || \
- 				 likely(__user_ok((addr), (sz))))
- 
-+#define user_addr_max() 	(uaccess_kernel() ? ~0UL : get_fs())
-+
- /*********** Single byte/hword/word copies ******************/
- 
- #define __get_user_fn(sz, u, k)					\
-@@ -613,7 +615,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
- 	return res;
- }
- 
--static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
-+static inline unsigned long __clear_user(void __user *to, unsigned long n)
- {
- 	long res = n;
- 	unsigned char *d_char = to;
-@@ -655,89 +657,10 @@ static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
- 	return res;
- }
- 
--static inline long
--__arc_strncpy_from_user(char *dst, const char __user *src, long count)
--{
--	long res = 0;
--	char val;
--
--	if (count == 0)
--		return 0;
--
--	__asm__ __volatile__(
--	"	mov	lp_count, %5		\n"
--	"	lp	3f			\n"
--	"1:	ldb.ab  %3, [%2, 1]		\n"
--	"	breq.d	%3, 0, 3f               \n"
--	"	stb.ab  %3, [%1, 1]		\n"
--	"	add	%0, %0, 1	# Num of NON NULL bytes copied	\n"
--	"3:								\n"
--	"	.section .fixup, \"ax\"		\n"
--	"	.align 4			\n"
--	"4:	mov %0, %4		# sets @res as -EFAULT	\n"
--	"	j   3b				\n"
--	"	.previous			\n"
--	"	.section __ex_table, \"a\"	\n"
--	"	.align 4			\n"
--	"	.word   1b, 4b			\n"
--	"	.previous			\n"
--	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
--	: "g"(-EFAULT), "r"(count)
--	: "lp_count", "memory");
--
--	return res;
--}
--
--static inline long __arc_strnlen_user(const char __user *s, long n)
--{
--	long res, tmp1, cnt;
--	char val;
--
--	__asm__ __volatile__(
--	"	mov %2, %1			\n"
--	"1:	ldb.ab  %3, [%0, 1]		\n"
--	"	breq.d  %3, 0, 2f		\n"
--	"	sub.f   %2, %2, 1		\n"
--	"	bnz 1b				\n"
--	"	sub %2, %2, 1			\n"
--	"2:	sub %0, %1, %2			\n"
--	"3:	;nop				\n"
--	"	.section .fixup, \"ax\"		\n"
--	"	.align 4			\n"
--	"4:	mov %0, 0			\n"
--	"	j   3b				\n"
--	"	.previous			\n"
--	"	.section __ex_table, \"a\"	\n"
--	"	.align 4			\n"
--	"	.word 1b, 4b			\n"
--	"	.previous			\n"
--	: "=r"(res), "=r"(tmp1), "=r"(cnt), "=r"(val)
--	: "0"(s), "1"(n)
--	: "memory");
--
--	return res;
--}
--
--#ifndef CONFIG_CC_OPTIMIZE_FOR_SIZE
--
- #define INLINE_COPY_TO_USER
- #define INLINE_COPY_FROM_USER
- 
--#define __clear_user(d, n)		__arc_clear_user(d, n)
--#define __strncpy_from_user(d, s, n)	__arc_strncpy_from_user(d, s, n)
--#define __strnlen_user(s, n)		__arc_strnlen_user(s, n)
--#else
--extern unsigned long arc_clear_user_noinline(void __user *to,
--		unsigned long n);
--extern long arc_strncpy_from_user_noinline (char *dst, const char __user *src,
--		long count);
--extern long arc_strnlen_user_noinline(const char __user *src, long n);
--
--#define __clear_user(d, n)		arc_clear_user_noinline(d, n)
--#define __strncpy_from_user(d, s, n)	arc_strncpy_from_user_noinline(d, s, n)
--#define __strnlen_user(s, n)		arc_strnlen_user_noinline(s, n)
--
--#endif
-+#define __clear_user		__clear_user
- 
- #include <asm/segment.h>
- #include <asm-generic/uaccess.h>
-diff --git a/arch/arc/mm/extable.c b/arch/arc/mm/extable.c
-index b06b09ddf924..88fa3a4d4906 100644
---- a/arch/arc/mm/extable.c
-+++ b/arch/arc/mm/extable.c
-@@ -22,26 +22,3 @@ int fixup_exception(struct pt_regs *regs)
- 
- 	return 0;
- }
--
--#ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
--
--unsigned long arc_clear_user_noinline(void __user *to,
--		unsigned long n)
--{
--	return __arc_clear_user(to, n);
--}
--EXPORT_SYMBOL(arc_clear_user_noinline);
--
--long arc_strncpy_from_user_noinline(char *dst, const char __user *src,
--		long count)
--{
--	return __arc_strncpy_from_user(dst, src, count);
--}
--EXPORT_SYMBOL(arc_strncpy_from_user_noinline);
--
--long arc_strnlen_user_noinline(const char __user *src, long n)
--{
--	return __arc_strnlen_user(src, n);
--}
--EXPORT_SYMBOL(arc_strnlen_user_noinline);
--#endif
--- 
-2.20.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
