@@ -2,103 +2,262 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9513BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32709C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA2F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2ncpFHV"
+	by mail.kernel.org (Postfix) with ESMTP id E54812053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200550;
+	bh=zWIVbCJUd3+CRNeZR8VkGLIJl7ILEecnGPvy7R0d51g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M3ZlhH5ozb2ZlJglsvblQLrM5+Svm9JuRsKiiyWCIpHmbmwGQLKAAWYl1jm3JoUBa
+	 nXe8IM17+RqAAqzF1yq4xJqJQ50X5bQ0I++iCmEHYzGy/Aam4Y0eTOlTvrieFByxdq
+	 9U7uHrJz/gJhTYNvaHnURZucGdqFubpRmUBFlQeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437026AbgAPSs6 (ORCPT
+        id S2389870AbgAPStI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:58 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38374 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390036AbgAPSsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:48:51 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so4920338wmc.3;
-        Thu, 16 Jan 2020 10:48:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=W6L5M8NGDU85SsLDQmYbLaPSihnBnJlX3fanr790LTQ=;
-        b=M2ncpFHVDkDQJXFmSFyILtg5dfcgBMwp+/GDwfV0ypOJ3vRQp74CewosmQhXTj7EdA
-         TK1BjIlnP/mh+uYnRk77S/ysqHcbubzppvOap7bkqwZ09LK+pMxYdyA75Yx/NorPI4rj
-         XCP+iEcl2TmRooOl3ZAGi1kJcq4tU/dX8636my5k00oyhmBwN5ezSxXkEJjNJjy1u+tY
-         wIT+JqJw1sCuCCFy8N2CoaCSW2NM8iJbG4eaWe6UkXTXUn6ydkC3ws3cDEjfilCtqemD
-         /1FYY92btOopD1j1Jnv2q90KRWgiddRpdZhIBhXLxm5XGNLmUxJMdlEI51Ecvjls/uwB
-         yZHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=W6L5M8NGDU85SsLDQmYbLaPSihnBnJlX3fanr790LTQ=;
-        b=V0owF16lujqJ0riKGVAj19c4pKakKzkjN5PrRwNlV7MWdp/QNbit4j72+KqYi/9PLM
-         ksr7imVAFsQ5hj2FE2iBjmimZNFRRVBQ2aaXFY7oTgZrIkSWvjG6OV3e7jEKiTSkt/AQ
-         YvootNORMago/yoOBfjJO6ZFqmGd+C1hO+6fWbNmSuVqf8Ek5PX6MI7RryD3xr1Bh7oL
-         DYcpRM83rplELk65bSqp35WblYmOErIbwmoSDW56/XPRzfSXdjIu9qCfeV+xvX9iHCW0
-         A0o+U7EFH/DVvkTUUbZiezecmB6PLzI2DuLWPakFt9c095SV52KqcyYrs9HJhS+UhhyH
-         UMPQ==
-X-Gm-Message-State: APjAAAWikHLx8fKDsw2k8+XX8ar+24WljUcISIx8QGkQBqKxQEwUVTnO
-        VusnYsA9X1dp6c3JLmqteWI=
-X-Google-Smtp-Source: APXvYqxhkMJzX4Sq/b4oFH8dHiEfu0uRVsCPQXLvta8K0yXhLaMLfpTTKQzh6yknwnzeizGJswmEAQ==
-X-Received: by 2002:a1c:628b:: with SMTP id w133mr438122wmb.25.1579200529189;
-        Thu, 16 Jan 2020 10:48:49 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2dbe:4a00:e092:254d:41ed:2e49])
-        by smtp.gmail.com with ESMTPSA id n67sm6090068wmf.46.2020.01.16.10.48.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:48:48 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Joe Perches <joe@perches.com>, kernel@pengutronix.de,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] MAINTAINERS: fix style in RESET CONTROLLER FRAMEWORK
-Date:   Thu, 16 Jan 2020 19:48:36 +0100
-Message-Id: <20200116184836.10256-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 13:49:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389331AbgAPRJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:34 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4DE206D9;
+        Thu, 16 Jan 2020 17:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194573;
+        bh=zWIVbCJUd3+CRNeZR8VkGLIJl7ILEecnGPvy7R0d51g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yQbds6uaF9LPjYBLz8WuDA5LiSzNrWDUx0Sc+8ujOQywQdaV/m04ahnApwfxTEoIi
+         bH6ekjgRXVGgebTf/XlQlkPkdjG9dlfUEOARZ9YJ6iT+8t9wSkp4zuLtfKy450vNn6
+         8SBgu8ufb/J93tkBNtWoPT1fFOKz0iYcEcFDjeac=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 449/671] ACPI: PM: Introduce "poweroff" callbacks for ACPI PM domain and LPSS
+Date:   Thu, 16 Jan 2020 12:01:27 -0500
+Message-Id: <20200116170509.12787-186-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 37859277374d ("MAINTAINERS: add reset controller framework
-keywords") slips in some formatting with spaces instead of tabs, which
-./scripts/checkpatch.pl -f MAINTAINERS complains about:
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #14047: FILE: MAINTAINERS:14047:
-  +K:      \b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
+[ Upstream commit c95b7595f85c688d5c569ddbbd6ab6a4bdae2f36 ]
 
-Fixes: 37859277374d ("MAINTAINERS: add reset controller framework keywords")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+In general, it is not correct to call pm_generic_suspend(),
+pm_generic_suspend_late() and pm_generic_suspend_noirq() during the
+hibernation's "poweroff" transition, because device drivers may
+provide special callbacks to be invoked then and the wrappers in
+question cause system suspend callbacks to be run.  Unfortunately,
+that happens in the ACPI PM domain and ACPI LPSS.
+
+To address this potential issue, introduce "poweroff" callbacks
+for the ACPI PM and LPSS that will use pm_generic_poweroff(),
+pm_generic_poweroff_late() and pm_generic_poweroff_noirq() as
+appropriate.
+
+Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-applies cleanly on v5.5-rc6 and next-20200116
-Philipp, please pick this patch.
+ drivers/acpi/acpi_lpss.c | 50 +++++++++++++++++++++++++++++++---
+ drivers/acpi/device_pm.c | 58 +++++++++++++++++++++++++++++++++++++---
+ include/linux/acpi.h     |  2 ++
+ 3 files changed, 104 insertions(+), 6 deletions(-)
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d2aa9db61ab6..83eae48ad4f2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14067,7 +14067,7 @@ F:	include/dt-bindings/reset/
- F:	include/linux/reset.h
- F:	include/linux/reset/
- F:	include/linux/reset-controller.h
--K:      \b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
-+K:	\b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index 11c460ab9de9..ded6c5c17fd7 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -1056,6 +1056,13 @@ static int acpi_lpss_suspend_noirq(struct device *dev)
+ 	int ret;
  
- RESTARTABLE SEQUENCES SUPPORT
- M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+ 	if (pdata->dev_desc->resume_from_noirq) {
++		/*
++		 * The driver's ->suspend_late callback will be invoked by
++		 * acpi_lpss_do_suspend_late(), with the assumption that the
++		 * driver really wanted to run that code in ->suspend_noirq, but
++		 * it could not run after acpi_dev_suspend() and the driver
++		 * expected the latter to be called in the "late" phase.
++		 */
+ 		ret = acpi_lpss_do_suspend_late(dev);
+ 		if (ret)
+ 			return ret;
+@@ -1142,6 +1149,43 @@ static int acpi_lpss_restore_noirq(struct device *dev)
+ 	/* This is analogous to what happens in acpi_lpss_resume_noirq(). */
+ 	return acpi_lpss_do_restore_early(dev);
+ }
++
++static int acpi_lpss_do_poweroff_late(struct device *dev)
++{
++	int ret = pm_generic_poweroff_late(dev);
++
++	return ret ? ret : acpi_lpss_suspend(dev, device_may_wakeup(dev));
++}
++
++static int acpi_lpss_poweroff_late(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	if (pdata->dev_desc->resume_from_noirq)
++		return 0;
++
++	return acpi_lpss_do_poweroff_late(dev);
++}
++
++static int acpi_lpss_poweroff_noirq(struct device *dev)
++{
++	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	if (pdata->dev_desc->resume_from_noirq) {
++		/* This is analogous to the acpi_lpss_suspend_noirq() case. */
++		int ret = acpi_lpss_do_poweroff_late(dev);
++		if (ret)
++			return ret;
++	}
++
++	return pm_generic_poweroff_noirq(dev);
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static int acpi_lpss_runtime_suspend(struct device *dev)
+@@ -1175,9 +1219,9 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
+ 		.resume_noirq = acpi_lpss_resume_noirq,
+ 		.resume_early = acpi_lpss_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.poweroff = acpi_subsys_suspend,
+-		.poweroff_late = acpi_lpss_suspend_late,
+-		.poweroff_noirq = acpi_lpss_suspend_noirq,
++		.poweroff = acpi_subsys_poweroff,
++		.poweroff_late = acpi_lpss_poweroff_late,
++		.poweroff_noirq = acpi_lpss_poweroff_noirq,
+ 		.restore_noirq = acpi_lpss_restore_noirq,
+ 		.restore_early = acpi_lpss_restore_early,
+ #endif
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 5a88a63e902d..54b6547d32b2 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1137,6 +1137,58 @@ int acpi_subsys_restore_early(struct device *dev)
+ 	return ret ? ret : pm_generic_restore_early(dev);
+ }
+ EXPORT_SYMBOL_GPL(acpi_subsys_restore_early);
++
++/**
++ * acpi_subsys_poweroff - Run the device driver's poweroff callback.
++ * @dev: Device to handle.
++ *
++ * Follow PCI and resume devices from runtime suspend before running their
++ * system poweroff callbacks, unless the driver can cope with runtime-suspended
++ * devices during system suspend and there are no ACPI-specific reasons for
++ * resuming them.
++ */
++int acpi_subsys_poweroff(struct device *dev)
++{
++	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
++	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
++		pm_runtime_resume(dev);
++
++	return pm_generic_poweroff(dev);
++}
++EXPORT_SYMBOL_GPL(acpi_subsys_poweroff);
++
++/**
++ * acpi_subsys_poweroff_late - Run the device driver's poweroff callback.
++ * @dev: Device to handle.
++ *
++ * Carry out the generic late poweroff procedure for @dev and use ACPI to put
++ * it into a low-power state during system transition into a sleep state.
++ */
++static int acpi_subsys_poweroff_late(struct device *dev)
++{
++	int ret;
++
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	ret = pm_generic_poweroff_late(dev);
++	if (ret)
++		return ret;
++
++	return acpi_dev_suspend(dev, device_may_wakeup(dev));
++}
++
++/**
++ * acpi_subsys_poweroff_noirq - Run the driver's "noirq" poweroff callback.
++ * @dev: Device to suspend.
++ */
++static int acpi_subsys_poweroff_noirq(struct device *dev)
++{
++	if (dev_pm_smart_suspend_and_suspended(dev))
++		return 0;
++
++	return pm_generic_poweroff_noirq(dev);
++}
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static struct dev_pm_domain acpi_general_pm_domain = {
+@@ -1152,9 +1204,9 @@ static struct dev_pm_domain acpi_general_pm_domain = {
+ 		.resume_noirq = acpi_subsys_resume_noirq,
+ 		.resume_early = acpi_subsys_resume_early,
+ 		.freeze = acpi_subsys_freeze,
+-		.poweroff = acpi_subsys_suspend,
+-		.poweroff_late = acpi_subsys_suspend_late,
+-		.poweroff_noirq = acpi_subsys_suspend_noirq,
++		.poweroff = acpi_subsys_poweroff,
++		.poweroff_late = acpi_subsys_poweroff_late,
++		.poweroff_noirq = acpi_subsys_poweroff_noirq,
+ 		.restore_early = acpi_subsys_restore_early,
+ #endif
+ 	},
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 32fabeeda5e3..cd412817654f 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -919,6 +919,7 @@ int acpi_subsys_suspend_late(struct device *dev);
+ int acpi_subsys_suspend_noirq(struct device *dev);
+ int acpi_subsys_suspend(struct device *dev);
+ int acpi_subsys_freeze(struct device *dev);
++int acpi_subsys_poweroff(struct device *dev);
+ #else
+ static inline int acpi_dev_resume_early(struct device *dev) { return 0; }
+ static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
+@@ -927,6 +928,7 @@ static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend_noirq(struct device *dev) { return 0; }
+ static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
+ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
++static inline int acpi_subsys_poweroff(struct device *dev) { return 0; }
+ #endif
+ 
+ #ifdef CONFIG_ACPI
 -- 
-2.17.1
+2.20.1
 
