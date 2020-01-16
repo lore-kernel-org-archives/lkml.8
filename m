@@ -1,145 +1,150 @@
-Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10493C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0ADC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BEA20729
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnws+Sn0"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD15206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579219200;
+	bh=X1t1i9pWiEAGTvvWuqIa7xGvEJ7mFhRTCvmQsQZet8c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=g8AVuQLRV+98ayOu/PFEEMcKALdSHNnEocwb5et54gLi4u8hUpFDoktf/RlLqBiVD
+	 Y2RWd04/5R/prGTCfwSn5bVELB96/fYGugPLYN691HV+e08kaEjqH8O3i3NMqxtAvF
+	 7/6ZhAGcLHKIwkr8QX7x4gY0WNgl0CH+VfP0RkbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgAPX5i (ORCPT
+        id S1729125AbgAPX77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:57:38 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33297 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAPX5h (ORCPT
+        Thu, 16 Jan 2020 18:59:59 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53260 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgAPX77 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:57:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so10742052pgk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 15:57:37 -0800 (PST)
+        Thu, 16 Jan 2020 18:59:59 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so2327350pjc.3;
+        Thu, 16 Jan 2020 15:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zIS6PSbeU0Wk5Q/And2tq+93kIpjsUkkTCKLRvCiki4=;
-        b=Fnws+Sn0kkXZ4n9FciZTKf3Yu5z3m9VwlmkPyxOe1BU9rO07SDB+XzIMcctAjdU+HL
-         NVzmD23WbCDhQvjuhMuVzZt9KoSjL9B800UQ+9Ihu0XpSxR/fwSqMFQUGTGHxbwjHVbG
-         24MZ0NJVwGIBIpFxYAb/sVJ2sU/C03FWbqSzCM2fRr1NsSFxXKhz4t18Y0ua1zZA4xHL
-         SDZ92fNsjrssP/WgQ0wHux8MMRJLx+4uA7mpoWR8mF6cavbTf6X7pTWRQIyTFyGCeT/G
-         vWydtMY8Er0smbLPQZw4ZOu29ffVqKQAaTBok/eNvbAwI8Ie2eqHSMTPhvDiG/HGbqhq
-         1/2g==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CzG/+enlCQzh2PEldVrxjNnE7U+SNtVgOSzvdsBcADU=;
+        b=F2v3toNYnfFqQUyw6x3N7//SMHYRN13v+ZPOldYSLqV8UY6+AqK4DbYydfN+CoN8IG
+         qLLk8Hvd5Bc1SJRAPeCEUhrx7S4kBmD07wkCZmf823GUc29l2mclHI74aRm3A9goTScp
+         cAM6sOkPe0No97IBxVY5eQRXuIBBS9DJs9Jy7+DwILntGzBKiXorrJ//oXbz1EdESaEZ
+         Zte5orRtIvXG0nF64FI9Zbbg9ue+7spGSQBOl10VarQFuM6pIV5YUpZQ/0n5xW15GUCS
+         SO96RLVB1fQuVVVnnmIzaubOo/K1TS65Yn/qYqx6qmGzqD1swf8G/MQNGlbaXJV5Jaoi
+         Ajuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zIS6PSbeU0Wk5Q/And2tq+93kIpjsUkkTCKLRvCiki4=;
-        b=He2oD0eEg3teBuej270VM8d9e+aIVoGGrb6oqWzy644UDse97WctuddCBl+PA4oWFw
-         CrfRrMaCg7HRHD+Q0KK4krDEGZWzMkwZ1O7TUROdRk7rTXsmAWuMXWpuZlI3Sscj9J5L
-         D5zuNChczeyDg9XC0QwV7dXV/lIsDKL5jEl1/wr4sBHb5DfBt9hIrrHpV6hUXb2I0Jpl
-         E2Ck5bitEmqqOdI0rhGaZWwH55IeJbjjqPMCIrwhBOLPeVxBKFa7q46j6TcdXg/Py7Vy
-         7FE+zHDcxLSu5XU31wFoHy6LO7j8ytj9X8hwjk+Ljw0q58pHnvE7HYBKSZ2HQkUYONS/
-         M0KA==
-X-Gm-Message-State: APjAAAWwjSQVy5xTILeEp3cbVxdW5FkTUASJ8g3Ne1W/pVbtFQjaY2X3
-        D3W9wSERPx5+RGpd8GdnFSk=
-X-Google-Smtp-Source: APXvYqx79kLh+JxQCON/MUilEwjbnvyw8aTXnF7x7+R8Ar8YnsYuAHnKFEKROTLAwKrGPvKGI0LRTg==
-X-Received: by 2002:a62:1b4d:: with SMTP id b74mr73763pfb.59.1579219056792;
-        Thu, 16 Jan 2020 15:57:36 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t137sm24915148pgb.40.2020.01.16.15.57.35
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=CzG/+enlCQzh2PEldVrxjNnE7U+SNtVgOSzvdsBcADU=;
+        b=P+0tdjpET+/I7oEBWFO8AkUJK2AUToxKZjrWGCTB3satD1xdC2HcJqdba7acmnxxEQ
+         /MH73L2N2IOpwAy84TpIIPTHhiLxynUHZ8bShnvYxht22JF/SBVUzq3n4teJudzPFleg
+         OHtpADXHc3hFEnXe5WgYpxPfC5JnJW8/7Vpsm1t7k8QomQhkpn9BnQwcqTbT7nBNfmr/
+         LklafIjcDN+ZRM3cSPUSTFnWGZOlvP5391YY2u66zeJBlXlm3kfjPumdEFB/ZZ9i7OHs
+         lCd5CYQSuSLfgNjkntVl2ehdJYUovjjHioisyZV8cdwG2Q94CnGRCMZr52Xf4IMSsUPx
+         R40g==
+X-Gm-Message-State: APjAAAWLXPOx8RV7xc50pVDM2ht+Xb1kMFlj66K4NfOgqLkS9aRW7vOq
+        ae4r5TMUPAGUQdaD/siaeZk=
+X-Google-Smtp-Source: APXvYqwlhvXUMP4R0TTP6WlHVKFM1ZuAfuosRyTmmZybSE+cUdmVz7aTgL+1O3XlksiaTb8C3G0UWA==
+X-Received: by 2002:a17:90a:db0b:: with SMTP id g11mr2231520pjv.140.1579219198676;
+        Thu, 16 Jan 2020 15:59:58 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id z4sm26584885pfn.42.2020.01.16.15.59.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 15:57:36 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     opendmb@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Nathan Lynch <nathan_lynch@mentor.com>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: VDSO: Match ARMv8 timer in cntvct_functional()
-Date:   Thu, 16 Jan 2020 15:57:28 -0800
-Message-Id: <20200116235731.22395-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 15:59:57 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v2 0/5] introduce memory hinting API for external process
+Date:   Thu, 16 Jan 2020 15:59:48 -0800
+Message-Id: <20200116235953.163318-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible for a system with an ARMv8 timer to run a 32-bit kernel.
-When this happens we will unconditionally have the vDSO code remove the
-__vdso_gettimeofday and __vdso_clock_gettime symbols because
-cntvct_functional() returns false since it does not match that
-compatibility string.
+Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+application could give hints to kernel what memory range are preferred to be
+reclaimed. However, in some platform(e.g., Android), the information
+required to make the hinting decision is not known to the app.
+Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+and that daemon must be able to initiate reclaim on its own without any app
+involvement.
 
-Fixes: ecf99a439105 ("ARM: 8331/1: VDSO initialization, mapping, and synchronization")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Hi all,
+To solve the concern, this patch introduces new syscall - process_madvise(2).
+Bascially, it's same with madvise(2) syscall but it has some differences.
 
-This was found by one of our customers and the following test program
-below can be used to find whether the "bug" is fixed or not.
+1. It needs pidfd of target process to provide the hint
+2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
+   Other hints in madvise will be opened when there are explicit requests from
+   community to prevent unexpected bugs we couldn't support.
+3. Only privileged processes can do something for other process's address
+   space.
 
-The Fixes tag is much after the arm_arch_timer.c gained support for the
-ARMv8 timers, which is why it is being referenced.
+Minchan Kim (3):
+  mm: factor out madvise's core functionality
+  mm: introduce external memory hinting API
+  mm: support both pid and pidfd for process_madvise
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <dlfcn.h>
+Oleksandr Natalenko (2):
+  mm/madvise: employ mmget_still_valid for write lock
+  mm/madvise: allow KSM hints for remote API
 
-#define ARM_LDSO_NAME   "linux-vdso.so.1"
+* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+  * fix syscall number - SeongJae
+  * use get_pid_task - Kirill
+  * extend API to support pid as well as pidfd - Kirill
 
-int main(int argc, char **argv)
-{
-        void *h, *sym[2];
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ include/linux/pid.h                         |   1 +
+ include/linux/syscalls.h                    |   3 +
+ include/uapi/asm-generic/unistd.h           |   5 +-
+ kernel/exit.c                               |  17 --
+ kernel/pid.c                                |  17 ++
+ kernel/sys_ni.c                             |   1 +
+ mm/madvise.c                                | 272 ++++++++++++++------
+ 24 files changed, 233 insertions(+), 102 deletions(-)
 
-        h = dlopen(ARM_LDSO_NAME, RTLD_NOW);
-        if (!h) {
-                fprintf(stderr, "failed top dlopen\n");
-                return 1;
-        }
-
-        sym[0] = dlsym(h, "__vdso_gettimeofday");
-        sym[1] = dlsym(h, "__vdso_clock_gettime");
-        if (!sym[0] && !sym[1]) {
-                fprintf(stderr, "Kernel does not provide symbols, check DT!\n");
-        } else {
-                fprintf(stdout, "Kernel provides vDSO symbols!\n");
-        }
-
-out:
-        return dlclose(h);
-}
-
-
- arch/arm/kernel/vdso.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
-index c89ac1b9d28b..e0330a25e1c6 100644
---- a/arch/arm/kernel/vdso.c
-+++ b/arch/arm/kernel/vdso.c
-@@ -94,6 +94,8 @@ static bool __init cntvct_functional(void)
- 	 * this.
- 	 */
- 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
-+	if (!np)
-+		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
- 	if (!np)
- 		goto out_put;
- 
 -- 
-2.17.1
+2.25.0.rc1.283.g88dfdc4193-goog
 
