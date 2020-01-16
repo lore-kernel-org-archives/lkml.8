@@ -7,125 +7,127 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3E9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18845C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E0720748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06BC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z/Ki2IUP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aG8sSY4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgAPOyC (ORCPT
+        id S1728901AbgAPOyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:54:02 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:34651 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgAPOyB (ORCPT
+        Thu, 16 Jan 2020 09:54:08 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39993 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726406AbgAPOyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:54:01 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200116145400euoutp02a9438f6f7520365ecb6224b9d6a78b1e~qZbNPLkJe0280302803euoutp02x
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:54:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200116145400euoutp02a9438f6f7520365ecb6224b9d6a78b1e~qZbNPLkJe0280302803euoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579186440;
-        bh=XdrI+OO75vRLBbhW+mHu3KAZTISM1ytL0ytmqWyeHDA=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=Z/Ki2IUPZZTozg/spYOCqkvBC8CJ9jM8Drl2s7AsjJN6ydBy4jTLrMmt0k53Tlwrc
-         +dpfW/zHkbOg/ukBoz5cjxAKriDWa4UqhGLgXZo6K2LzhOFsu+DkjKs0DFUthTOzZk
-         fbJIPeK1HBhkaN7ncYEv2V0vnSF7Jmt3JSK3Lfwg=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200116145359eucas1p106c0d8b189de26020a2abc90a011abc5~qZbNCHrD41475814758eucas1p1u;
-        Thu, 16 Jan 2020 14:53:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id DA.64.60679.709702E5; Thu, 16
-        Jan 2020 14:53:59 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad~qZbMmHjku1474814748eucas1p1k;
-        Thu, 16 Jan 2020 14:53:59 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200116145359eusmtrp193f3b8df6875d5ca4056f18d484c2f01~qZbMlkW9b1290712907eusmtrp1b;
-        Thu, 16 Jan 2020 14:53:59 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-47-5e2079070f59
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5E.C5.08375.709702E5; Thu, 16
-        Jan 2020 14:53:59 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116145359eusmtip22712bacbda3ce93bb3ce246f702f9176~qZbMTpyNy0040600406eusmtip2T;
-        Thu, 16 Jan 2020 14:53:59 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 2/2] video: fbdev: w100fb: add COMPILE_TEST support
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <a929db5e-d373-7b09-ae2b-efec227f7e85@samsung.com>
-Date:   Thu, 16 Jan 2020 15:53:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 16 Jan 2020 09:54:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579186447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GewXvgai6oYcv5uu5jT3XLWaUiemLMNm2W6ZLR1T1ko=;
+        b=aG8sSY4+zI3lQCmsdSONFAHt8OAveSex062ihLxh7nqGrJz+W9mQThVs3hAk8IPNgVjUiv
+        AO7sw2WQgebn0X2aSx+fk99TG8wxmp0VN5wy4ZoXtBdS7lJPAEusbfIjdUCQDYjQfAzSxN
+        G42nDomSqXYsFx9LbWlLHdbD+Lz1sFg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-KoBNpf3IMQSxaLPYFvWuOw-1; Thu, 16 Jan 2020 09:54:05 -0500
+X-MC-Unique: KoBNpf3IMQSxaLPYFvWuOw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5406CA0CC2;
+        Thu, 16 Jan 2020 14:54:04 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F8455DA60;
+        Thu, 16 Jan 2020 14:54:04 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id ABB94220A24; Thu, 16 Jan 2020 09:54:03 -0500 (EST)
+Date:   Thu, 16 Jan 2020 09:54:03 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     dan.j.williams@intel.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Subject: Re: dax: Get rid of fs_dax_get_by_host() helper
+Message-ID: <20200116145403.GB25291@redhat.com>
+References: <20200106181117.GA16248@redhat.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djPc7rslQpxBleeGlvcWneO1WLjjPWs
-        Fle+vmezONH3gdXi8q45bA6sHve7jzN59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8bqVbfY
-        C7ayVqxesIypgfEkSxcjB4eEgInE6w6FLkYuDiGBFYwSq3a+ZoVwvjBKzO57wALhfGaUmNr9
-        g7mLkROs4+ibdUwQieWMEt8vrmCGcN4ySjzfv5cRpIpNwEpiYvsqMFtYwFli1q3/YN0iAgkS
-        K6bPAIszC8RLbGs+CmbzCthJbD26ng3EZhFQlfh44TdYXFQgQuLTg8OsEDWCEidnPmGB6BWX
-        uPVkPhOELS+x/e0csCMkBH6zSUxc+J4N4lQXibkP1rFD2MISr45vgbJlJE5P7mGBaFjHKPG3
-        4wVU93ZGieWT/0F1W0vcOfeLDRRMzAKaEut36UOEHSV2bd3LDgk9PokbbwUhjuCTmLRtOjNE
-        mFeio00IolpNYsOyDWwwa7t2roSGoofElPmvmSYwKs5C8tosJK/NQvLaLIQbFjCyrGIUTy0t
-        zk1PLTbKSy3XK07MLS7NS9dLzs/dxAhMLqf/Hf+yg3HXn6RDjAIcjEo8vDOCFOKEWBPLiitz
-        DzFKcDArifCenCEbJ8SbklhZlVqUH19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgs
-        EwenVANj+oPrATP73ht91zi+vTVtmchf0yn3Cn+aP703YduefyVhj1wNmbgf9bztlTkQ+V/f
-        dN1k4fY77klX50zhqo/1umPXuuoHd0gyc6tFb/6ul5qab/7YR0sW+5re328UxhC3luP5yaz3
-        NpUdH2O2nlsUoSj18/MxlsVL/WY8zjWM/PdoVvOSxCRrJZbijERDLeai4kQAHTrjICoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsVy+t/xe7rslQpxBru+SVncWneO1WLjjPWs
-        Fle+vmezONH3gdXi8q45bA6sHve7jzN59G1ZxejxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
-        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsbqVbfYC7ayVqxesIypgfEkSxcjJ4eE
-        gInE0TfrmLoYuTiEBJYySsxv28bWxcgBlJCROL6+DKJGWOLPtS42iJrXjBIPd69lBEmwCVhJ
-        TGxfBWYLCzhLzLr1nxnEFhFIkHj6ej4biM0sEC/Rua0BrIZXwE5i69H1YHEWAVWJjxd+g8VF
-        BSIkDu+YBVUjKHFy5hMWiF51iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFRYBaSlllIWmYhaZmF
-        pGUBI8sqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwNjYduzn5h2MlzYGH2IU4GBU4uGdEaQQ
-        J8SaWFZcmXuIUYKDWUmE9+QM2Tgh3pTEyqrUovz4otKc1OJDjKZAD01klhJNzgfGbV5JvKGp
-        obmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsYik8aeo8ujNlRsymhb9urS
-        V5/X8pPPtd0U2n98/UkTYzvJWHGuy727ek8oJlRM2xV3ojZ1opbUU3vHv1H/7b8V5bC9KBS+
-        nysfvvrtjWd8r06aeD01LFk4//GMNd84M4QOvDf6ufzJtRuL7zz7baasxTkrSNx89/6Mo8b8
-        sbEf+X3/KjApLxRTYinOSDTUYi4qTgQAUuJ4PqMCAAA=
-X-CMS-MailID: 20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad
-References: <CGME20200116145359eucas1p1350bf2b827aa7ffa3e6767739e9ba7ad@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106181117.GA16248@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to w100fb driver for better compile
-testing coverage.
+On Mon, Jan 06, 2020 at 01:11:17PM -0500, Vivek Goyal wrote:
+> Looks like nobody is using fs_dax_get_by_host() except fs_dax_get_by_bdev()
+> and it can easily use dax_get_by_host() instead.
+> 
+> IIUC, fs_dax_get_by_host() was only introduced so that one could compile
+> with CONFIG_FS_DAX=n and CONFIG_DAX=m. fs_dax_get_by_bdev() achieves
+> the same purpose and hence it looks like fs_dax_get_by_host() is not
+> needed anymore.
+>  
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Dan,
 
-Index: b/drivers/video/fbdev/Kconfig
-===================================================================
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -1827,7 +1827,7 @@ config FB_FSL_DIU
- 
- config FB_W100
- 	tristate "W100 frame buffer support"
--	depends on FB && ARCH_PXA
-+	depends on FB && HAS_IOMEM && (ARCH_PXA || COMPILE_TEST)
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
+Ping for this patch. How does it look to you. If you don't have concerns,
+can you please take it in your tree.
+
+Thanks
+Vivek
+
+> ---
+>  drivers/dax/super.c |    2 +-
+>  include/linux/dax.h |   10 ----------
+>  2 files changed, 1 insertion(+), 11 deletions(-)
+> 
+> Index: rhvgoyal-linux-fuse/drivers/dax/super.c
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/drivers/dax/super.c	2020-01-03 11:19:57.616186062 -0500
+> +++ rhvgoyal-linux-fuse/drivers/dax/super.c	2020-01-03 11:20:08.941186062 -0500
+> @@ -61,7 +61,7 @@ struct dax_device *fs_dax_get_by_bdev(st
+>  {
+>  	if (!blk_queue_dax(bdev->bd_queue))
+>  		return NULL;
+> -	return fs_dax_get_by_host(bdev->bd_disk->disk_name);
+> +	return dax_get_by_host(bdev->bd_disk->disk_name);
+>  }
+>  EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+>  #endif
+> Index: rhvgoyal-linux-fuse/include/linux/dax.h
+> ===================================================================
+> --- rhvgoyal-linux-fuse.orig/include/linux/dax.h	2020-01-03 11:20:05.603186062 -0500
+> +++ rhvgoyal-linux-fuse/include/linux/dax.h	2020-01-03 11:20:08.942186062 -0500
+> @@ -129,11 +129,6 @@ static inline bool generic_fsdax_support
+>  			sectors);
+>  }
+>  
+> -static inline struct dax_device *fs_dax_get_by_host(const char *host)
+> -{
+> -	return dax_get_by_host(host);
+> -}
+> -
+>  static inline void fs_put_dax(struct dax_device *dax_dev)
+>  {
+>  	put_dax(dax_dev);
+> @@ -160,11 +155,6 @@ static inline bool generic_fsdax_support
+>  	return false;
+>  }
+>  
+> -static inline struct dax_device *fs_dax_get_by_host(const char *host)
+> -{
+> -	return NULL;
+> -}
+> -
+>  static inline void fs_put_dax(struct dax_device *dax_dev)
+>  {
+>  }
+
