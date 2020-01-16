@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5851DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A76DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0942176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3D82176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198018;
-	bh=KNai5DMJR7gQmw1m1RlF7P+NuWv5Trs5E+f9qHIlmMM=;
+	s=default; t=1579198022;
+	bh=NAW0lDxZxbdXmUcJNQfaYox57i6EhRso58SUUQPAoK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyKwz72TwP6rlSKHKtVtEEutJ7qF39OwwA7UCG3vTTEWNWsD8GnLN3EyiVoutW28o
-	 HZSKqupAGucaxK9NHUlayR6uV4EQqCAfu50+UUaVCdB+kn0JhAqJcjABOtAvdamRX9
-	 7lLJRo4SVZdQ0jkVhDIomJYM1te+cPGRC93CwlGg=
+	b=r+LbqXvb9lvYCAVG0cyuvRtFUbsr03O6lSsorImP2Kt/tckWHI150fheTWxFAPi4H
+	 NxvQllmXvKHcVtw0o6ENQMf69lvYAk/Mbjg5si7mCc7RLivsbv7ZO+IEgSzBW6H6q/
+	 4gSwsvGA8rpxQSkiB4a32ha4bTyvhUFiF/H4z3V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394975AbgAPSG4 (ORCPT
+        id S2407119AbgAPSHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:07:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393134AbgAPRjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:24 -0500
+        id S2393458AbgAPRjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A84C7246EC;
-        Thu, 16 Jan 2020 17:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE80924711;
+        Thu, 16 Jan 2020 17:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196363;
-        bh=KNai5DMJR7gQmw1m1RlF7P+NuWv5Trs5E+f9qHIlmMM=;
+        s=default; t=1579196360;
+        bh=NAW0lDxZxbdXmUcJNQfaYox57i6EhRso58SUUQPAoK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eg2Qe8oU8bIhqYQ7NJ8m2dGlkSJPsTdfLFo3X1IbQcRkFuGpem0EmNefHQEOudXn8
-         2tBg7yBBE9Lj/eyENBTTPfYkwe4ynChrFp7rP3VzFv5VyLvknXcHXW2aa5wkTFYYIl
-         Mb1zfDdIm+UwYVuEwU2tErErN5jGygNXWbWhkslg=
+        b=U/+cdnpnan79lHdDLeMR+EbqWx4KG3ye9HXt968WxyGWpEoo5IyGDyi+5RRLrM8tg
+         a/XutI+ZS52Gm9DVMjBQAPSV1GFBvjaTmFwjyhEP5HPlOwIlLQ7ozmqjd87KF9ZmqS
+         JVIp179J34ayZ3ylnQ8GuJNTkYgeHZ09lUqhqBbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 153/251] drm/msm/mdp5: Fix mdp5_cfg_init error return
-Date:   Thu, 16 Jan 2020 12:35:02 -0500
-Message-Id: <20200116173641.22137-113-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 151/251] media: vivid: fix incorrect assignment operation when setting video mode
+Date:   Thu, 16 Jan 2020 12:35:00 -0500
+Message-Id: <20200116173641.22137-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
+[ Upstream commit d4ec9550e4b2d2e357a46fdc65d8ef3d4d15984c ]
 
-If mdp5_cfg_init fails because of an unknown major version, a null pointer
-dereference occurs.  This is because the caller of init expects error
-pointers, but init returns NULL on error.  Fix this by returning the
-expected values on error.
+The assigment of FB_VMODE_NONINTERLACE to var->vmode should be a
+bit-wise or of FB_VMODE_NONINTERLACE instead of an assignment,
+otherwise the previous clearing of the FB_VMODE_MASK bits of
+var->vmode makes no sense and is redundant.
 
-Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Addresses-Coverity: ("Unused value")
+Fixes: ad4e02d5081d ("[media] vivid: add a simple framebuffer device for overlay testing")
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
+ drivers/media/platform/vivid/vivid-osd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-index 8b4e3004f451..86b0448d2ce5 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
-@@ -542,7 +542,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
- 	if (cfg_handler)
- 		mdp5_cfg_destroy(cfg_handler);
+diff --git a/drivers/media/platform/vivid/vivid-osd.c b/drivers/media/platform/vivid/vivid-osd.c
+index bdc380b14e0c..a95b7c56569e 100644
+--- a/drivers/media/platform/vivid/vivid-osd.c
++++ b/drivers/media/platform/vivid/vivid-osd.c
+@@ -167,7 +167,7 @@ static int _vivid_fb_check_var(struct fb_var_screeninfo *var, struct vivid_dev *
+ 	var->nonstd = 0;
  
--	return NULL;
-+	return ERR_PTR(ret);
- }
+ 	var->vmode &= ~FB_VMODE_MASK;
+-	var->vmode = FB_VMODE_NONINTERLACED;
++	var->vmode |= FB_VMODE_NONINTERLACED;
  
- static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+ 	/* Dummy values */
+ 	var->hsync_len = 24;
 -- 
 2.20.1
 
