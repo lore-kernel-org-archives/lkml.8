@@ -2,94 +2,136 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7354C47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A69C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B772077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsUZtlDy"
+	by mail.kernel.org (Postfix) with ESMTP id 0A4762077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395281AbgAPSdE (ORCPT
+        id S2436754AbgAPSdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:33:04 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32952 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390720AbgAPRYy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:54 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y6so23613986lji.0;
-        Thu, 16 Jan 2020 09:24:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qBjobR/3CL6r8XuRji53OarjX1+elaLjxcdkqSb5aBQ=;
-        b=tsUZtlDy8N8TE+XBhcYSrIrlCA6GjHuqpW8cKg4khiKwHyVfzYessSiDHwsv3Jwh2q
-         D0J3pw6Q6KFMp8kdZrpUW1oGekA2d4x+/uiXwKkdPNNsu8twVC0se3/VLwBP9bSDH1a7
-         yuE3qL11sfjxBlDHvA+SRGrS/XeuknjfxdeD7B62lcRwKEcNWj1SdRvftz6vOjm3RyeB
-         FGNGvjM5DTSU0+ybwvmdt7Qw/QRnQbxAXECpkF3WhS5UIp+Di/9qh8Yk9gTn9SWjJxxG
-         kGy0Xn19B64j8OdXiqM5Fp42QEU/VRlEUKgxp1VCpcEbsvM8uRGV7S/H32VYbDWUgdXH
-         +IoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qBjobR/3CL6r8XuRji53OarjX1+elaLjxcdkqSb5aBQ=;
-        b=nOb/cJV7rGPVqcaW37dLvBAyEPG1PnbWPrCWCVobfmEjndYqAdmakscBEc3le0Y1UQ
-         gyI+WyOLT87mte7H6QGUFYryuVV2tFnLzDsZCjwnd8NV0LjjyfnRnY6D6BqGCzEAfapf
-         YG+eY7cpNytqvVHaQknSygEFmKKyyqD5EwVam6oQ6FSylp3Hd5s0rbOD0vliKuh1Ouyo
-         MKQa4ynvKbC4GGgDUW0QKA+71OJwJ7vsFmpape8jhss5UzeGdWaOFF7zpr9XVbTG4J8R
-         HBL+SIXrg914SI3/E7XyJY+XAaP6wpUGldu1e5tHNhGjOSe5m5KWqpF/bSzDACXBfWDj
-         YDqw==
-X-Gm-Message-State: APjAAAXQJH8fVJqKVbKJ+/g51/+Pfr/jdDHejtysic1btVtRlB1BMnIA
-        KQuK9nlcNb+Khn20Cp8BBmw=
-X-Google-Smtp-Source: APXvYqx5BbRkPGf0Rmmj3K22tePVgNk2FDz+rHvztncxEyPe5Ag0gETeyhiYa9uA+YtEQr+BQVjlXA==
-X-Received: by 2002:a2e:7c08:: with SMTP id x8mr3088472ljc.185.1579195492554;
-        Thu, 16 Jan 2020 09:24:52 -0800 (PST)
-Received: from pc636 ([37.139.158.167])
-        by smtp.gmail.com with ESMTPSA id s1sm11154402ljc.3.2020.01.16.09.24.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 09:24:51 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 16 Jan 2020 18:24:44 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200116172444.GA23524@pc636>
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200116011410.GC246464@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116011410.GC246464@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Jan 2020 13:33:09 -0500
+Received: from mga12.intel.com ([192.55.52.136]:11853 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403901AbgAPSdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:33:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 10:33:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="259529109"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Jan 2020 10:33:04 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [RESEND PATCH] perf/x86/intel: Fix inaccurate period in context switch for auto-reload
+Date:   Thu, 16 Jan 2020 10:31:54 -0800
+Message-Id: <20200116183154.20880-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> Tested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> 
-Thank you and appreciate your help, Joel.
+From: Kan Liang <kan.liang@linux.intel.com>
 
->
-> (Vlad is going to post a v2 which fixes a debugobjects bug but that should
-> not have any impact on testing).
-> 
-I will do that :)
+Perf doesn't take the left period into account when auto-reload is
+enabled with fixed period sampling mode in context switch.
+Here is the ftrace when recording PEBS event with fixed period.
 
---
-Vlad Rezki
+    #perf record -e cycles:p -c 2000000 -- ./triad_loop
+
+      //Task is scheduled out
+      triad_loop-17222 [000] d... 861765.878032: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0  //Disable global counter
+      triad_loop-17222 [000] d... 861765.878033: write_msr:
+MSR_IA32_PEBS_ENABLE(3f1), value 0       //Disable PEBS
+      triad_loop-17222 [000] d... 861765.878033: write_msr:
+MSR_P6_EVNTSEL0(186), value 40003003c    //Disable the counter
+      triad_loop-17222 [000] d... 861765.878033: rdpmc: 0, value
+fffffff82840                             //Read value of the counter
+      triad_loop-17222 [000] d... 861765.878034: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 1000f000000ff  //Re-enable global
+counter
+
+      //Task is scheduled in again
+      triad_loop-17222 [000] d... 861765.878221: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0  //Disable global counter
+      triad_loop-17222 [000] d... 861765.878222: write_msr:
+MSR_IA32_PMC0(4c1), value ffffffe17b80   //write the value to the
+counter; The value is wrong. When the task switch in again, the counter
+should starts from previous left. However, it starts from the fixed
+period -2000000 again.
+      triad_loop-17222 [000] d... 861765.878223: write_msr:
+MSR_P6_EVNTSEL0(186), value 40043003c    //enable the counter
+      triad_loop-17222 [000] d... 861765.878223: write_msr:
+MSR_IA32_PEBS_ENABLE(3f1), value 1       //enable PEBS
+      triad_loop-17222 [000] d... 861765.878223: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 1000f000000ff  //Re-enable global
+counter
+
+A special variant of intel_pmu_save_and_restart() is used for
+auto-reload, which doesn't update the hwc->period_left.
+When the monitored task scheduled in again, perf doesn't know the left
+period. The user defined fixed period is used, which is inaccurate.
+
+With auto-reload, the counter always has a negative counter value. So
+the left period is -value. Update the period_left in
+intel_pmu_save_and_restart_reload().
+
+With the patch,
+      //Task is scheduled out
+      triad_loop-3068  [000] d...   153.680459: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      triad_loop-3068  [000] d...   153.680459: write_msr:
+MSR_IA32_PEBS_ENABLE(3f1), value 0
+      triad_loop-3068  [000] d...   153.680459: write_msr:
+MSR_P6_EVNTSEL0(186), value 40003003c
+      triad_loop-3068  [000] d...   153.680459: rdpmc: 0, value
+ffffffe25cbc
+      triad_loop-3068  [000] d...   153.680460: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+      //Task is scheduled in again
+      triad_loop-3068  [000] d...   153.680644: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value 0
+      triad_loop-3068  [000] d...   153.680646: write_msr:
+MSR_IA32_PMC0(4c1), value ffffffe25cbc     //The left value is written
+into the counter.
+      triad_loop-3068  [000] d...   153.680646: write_msr:
+MSR_P6_EVNTSEL0(186), value 40043003c
+      triad_loop-3068  [000] d...   153.680646: write_msr:
+MSR_IA32_PEBS_ENABLE(3f1), value 1
+      triad_loop-3068  [000] d...   153.680647: write_msr:
+MSR_CORE_PERF_GLOBAL_CTRL(38f), value f000000ff
+
+Fixes: d31fc13fdcb2 ("perf/x86/intel: Fix event update for auto-reload")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/events/intel/ds.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index ce83950036c5..e5ad97a82342 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1713,6 +1713,8 @@ intel_pmu_save_and_restart_reload(struct perf_event *event, int count)
+ 	old = ((s64)(prev_raw_count << shift) >> shift);
+ 	local64_add(new - old + count * period, &event->count);
+ 
++	local64_set(&hwc->period_left, -new);
++
+ 	perf_event_update_userpage(event);
+ 
+ 	return 0;
+-- 
+2.17.1
+
