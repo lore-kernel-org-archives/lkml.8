@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EF3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220A6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476F12053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20DC2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200835;
-	bh=hUmSvj1tlpVwnOr8GPYpzmQc/thJ3c9zDt0LIGocVDw=;
+	s=default; t=1579200841;
+	bh=6DykuS+E/gsEt17/JpJdhwrQdx1rMNpo7tD7t0Zm/vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TEvjMX2ABFnjYy5w+WDlFLg3YSVC0GZ4PL75Ll9P4HZF+Ijlg29twnoVXMCn6fxH8
-	 IQ1hpx2TnCcCVz7ImUneZmhN2HcueoDmQYcHJIEB3kHhBmlqZRPHYVFRKu8uQzy5U1
-	 cf/yp9ZnyhDRh9fFYnPJ7mKkRbvdxBp8HJwh2EuA=
+	b=T/FxE1/XZcaE7z74mNfSu4/N/18C8ilxmWzmWWiyUcW0i8KbclBFS4JsWW3BnM4/O
+	 4j7kxd3usjC34wQycfdQtyAvTX/+Z/C79MyEdYZ/zn2weWpnnUUF9yb+konS5ZtK5e
+	 XZBvZazQtP5Ajr+C9F2fMps/uHsbocz/F/4pEBy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389300AbgAPRIJ (ORCPT
+        id S2389286AbgAPRIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40812 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbgAPRH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:58 -0500
+        id S2389241AbgAPRHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02616205F4;
-        Thu, 16 Jan 2020 17:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D4902192A;
+        Thu, 16 Jan 2020 17:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194477;
-        bh=hUmSvj1tlpVwnOr8GPYpzmQc/thJ3c9zDt0LIGocVDw=;
+        s=default; t=1579194474;
+        bh=6DykuS+E/gsEt17/JpJdhwrQdx1rMNpo7tD7t0Zm/vM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1xn0rdQbw953SQ1RCbBeHupI7PgdzGaVYIOe4R9Q++KNASEDSVUB9VnUiEIxNyst
-         FfNaMnTsuHFfR7/KzkyO7fOlzQDXVhJNSXpDyfNFo7ENTVS61QLOYtx6H3MhuSdikK
-         kFHFj5zS1Si4SVMXiakQU0Wsr/X99Uj0XOBO3CF4=
+        b=LICc59bFl+fZKWyh4FsirGzsaPu3GcJdYA6ofQac/sORP6j26HMSn1bARToe2lC/S
+         ij0qyuCwoLMZ0RGVGily/3Ihy9YB0OHIdoz84ERoYTUVjUtfMbN74B7PF1Uey7mFdq
+         vJ8j/g5LcEWxYMo4yN3mBWL+sxrs1ERyqCI3G/sI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 380/671] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Thu, 16 Jan 2020 12:00:18 -0500
-Message-Id: <20200116170509.12787-117-sashal@kernel.org>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 378/671] serial: stm32: fix wakeup source initialization
+Date:   Thu, 16 Jan 2020 12:00:16 -0500
+Message-Id: <20200116170509.12787-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,87 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
+[ Upstream commit 5297f274e8b61ceb9676cba6649d3de9d03387ad ]
 
-If a PCI driver leaves the device handled by it in D0 and calls
-pci_save_state() on the device in its ->suspend() or ->suspend_late()
-callback, it can expect the device to stay in D0 over the whole
-s2idle cycle.  However, that may not be the case if there is a
-spurious wakeup while the system is suspended, because in that case
-pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-which calls pci_restore_state(), via pci_pm_default_resume_early(),
-so state_saved is cleared and the second iteration of
-pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-may change the power state of the device.
+Fixes dedicated_irq_wakeup issue and deactivated uart as wakeup source by
+default.
 
-To avoid that, add a new internal flag, skip_bus_pm, that will be set
-by pci_pm_suspend_noirq() when it runs for the first time during the
-given system suspend-resume cycle if the state of the device has
-been saved already and the device is still in D0.  Setting that flag
-will cause the next iterations of pci_pm_suspend_noirq() to set
-state_saved for pci_pm_resume_noirq(), so that it always restores the
-device state from the originally saved data, and avoid calling
-pci_prepare_to_sleep() for the device.
-
-Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-driver.c | 17 ++++++++++++++++-
- include/linux/pci.h      |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/tty/serial/stm32-usart.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index bc1ff41ce3d3..5c9873fcbd08 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -736,6 +736,8 @@ static int pci_pm_suspend(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index d603be9669a9..1334e4293977 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -557,7 +557,6 @@ static int stm32_startup(struct uart_port *port)
+ {
+ 	struct stm32_port *stm32_port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+-	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
+ 	const char *name = to_platform_device(port->dev)->name;
+ 	u32 val;
+ 	int ret;
+@@ -568,15 +567,6 @@ static int stm32_startup(struct uart_port *port)
+ 	if (ret)
+ 		return ret;
  
-+	pci_dev->skip_bus_pm = false;
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
+-		ret = dev_pm_set_dedicated_wake_irq(port->dev,
+-						    stm32_port->wakeirq);
+-		if (ret) {
+-			free_irq(port->irq, port);
+-			return ret;
+-		}
+-	}
+-
+ 	val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
+ 	if (stm32_port->fifoen)
+ 		val |= USART_CR1_FIFOEN;
+@@ -607,7 +597,6 @@ static void stm32_shutdown(struct uart_port *port)
+ 
+ 	stm32_clr_bits(port, ofs->cr1, val);
+ 
+-	dev_pm_clear_wake_irq(port->dev);
+ 	free_irq(port->irq, port);
+ }
+ 
+@@ -1079,11 +1068,18 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 		ret = device_init_wakeup(&pdev->dev, true);
+ 		if (ret)
+ 			goto err_uninit;
 +
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
- 
-@@ -829,7 +831,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
- 		}
++		ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
++						    stm32port->wakeirq);
++		if (ret)
++			goto err_nowup;
++
++		device_set_wakeup_enable(&pdev->dev, false);
  	}
  
--	if (!pci_dev->state_saved) {
-+	if (pci_dev->skip_bus_pm) {
-+		/*
-+		 * The function is running for the second time in a row without
-+		 * going through full resume, which is possible only during
-+		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-+		 * device was originally left in D0, so its power state should
-+		 * not be changed here and the device register values saved
-+		 * originally should be restored on resume again.
-+		 */
-+		pci_dev->state_saved = true;
-+	} else if (pci_dev->state_saved) {
-+		if (pci_dev->current_state == PCI_D0)
-+			pci_dev->skip_bus_pm = true;
-+	} else {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index b1f297f4b7b0..94853094b6ef 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -342,6 +342,7 @@ struct pci_dev {
- 						   D3cold, not set for devices
- 						   powered on/off by the
- 						   corresponding bridge */
-+	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
- 	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
- 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
- 						      controlled exclusively by
+ 	ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
+ 	if (ret)
+-		goto err_nowup;
++		goto err_wirq;
+ 
+ 	ret = stm32_of_dma_rx_probe(stm32port, pdev);
+ 	if (ret)
+@@ -1097,6 +1093,10 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_wirq:
++	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
++		dev_pm_clear_wake_irq(&pdev->dev);
++
+ err_nowup:
+ 	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
+ 		device_init_wakeup(&pdev->dev, false);
+@@ -1134,8 +1134,10 @@ static int stm32_serial_remove(struct platform_device *pdev)
+ 				  TX_BUF_L, stm32_port->tx_buf,
+ 				  stm32_port->tx_dma_buf);
+ 
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0)
++	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
++		dev_pm_clear_wake_irq(&pdev->dev);
+ 		device_init_wakeup(&pdev->dev, false);
++	}
+ 
+ 	clk_disable_unprepare(stm32_port->clk);
+ 
 -- 
 2.20.1
 
