@@ -2,51 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846DBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572792072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55944206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217286;
-	bh=k1xW4E0PnhvTwxAb+0h6nrBd+l2dC40n2yHqfbRZWxQ=;
+	s=default; t=1579217289;
+	bh=101cqP0KzlxnkRcjGmNRCeYL9xUc37fL65nI2lSgZso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1KMGtt3nSv5SjQcH9tGcQOTMXHt91G0mm9E9X+g8lyZQnZtodORJQ9JDB28ICAX3v
-	 BR6C4mzbu3/msBjpTz43Ii8inKDnwlaV3liTP3DdGsT5FmVsY0I1i2m4tWkwo3IZef
-	 cKXVUqzESK7Li7lI/r/gNxAqeexD0jdk7JES/cBk=
+	b=ci350/W/ylJFFFOcziyPrrDikMVflLQMZgT4EyeelZjUAjEcv6X0zYrhg0YCwpy++
+	 X/j8FBfxHn/wOovw6wr2wAZXwf0+RDzl61W99zRxYymIk1ZAiL7L2VFGP2/BtNH1c3
+	 ZoxZTm8awZoaa6lFzidvZ4hUVqkAYM1BNPbUPs0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgAPX2F (ORCPT
+        id S2391051AbgAPX2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390442AbgAPX2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:02 -0500
+        id S2389219AbgAPX2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EDBD206D9;
-        Thu, 16 Jan 2020 23:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B840A20684;
+        Thu, 16 Jan 2020 23:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217281;
-        bh=k1xW4E0PnhvTwxAb+0h6nrBd+l2dC40n2yHqfbRZWxQ=;
+        s=default; t=1579217284;
+        bh=101cqP0KzlxnkRcjGmNRCeYL9xUc37fL65nI2lSgZso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hu++GIFJpeqw7/ROD8e+b3aFVj1zdW0okcFd002EvL+GwXXgZIm/H4jrtnEgI9Zsv
-         Mb/C963L56DxiYDWatOWFteNFyZmijwd2SZuLPz2xqlCIeN+X4qyKMIGsBWx4hPhI8
-         pVQ3U2UTV/0Lsk5K2g19dygawtz3SfnRz2OD2p24=
+        b=QkVqJtX/EYze+ZxLdWT0439N7NlwU/1PX4LtHMhhD5867fBdMRk/u4KSBZFxg0OBK
+         4NcsxW341lC+G/nvxCB0LMNIlOmogZKM/BVgAmYee4zq6wyC2wg8KEMjLWa66IFXJ6
+         V1uzimty5Dmiyd9ofgk7eviyJOQoOmF6k7MMJIxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 19/84] RDMA/bnxt_re: Fix Send Work Entry state check while polling completions
-Date:   Fri, 17 Jan 2020 00:17:53 +0100
-Message-Id: <20200116231715.935439547@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/84] HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
+Date:   Fri, 17 Jan 2020 00:17:36 +0100
+Message-Id: <20200116231713.508100390@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,50 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit c5275723580922e5f3264f96751337661a153c7d upstream.
+[ Upstream commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a ]
 
-Some adapters need a fence Work Entry to handle retransmission.  Currently
-the driver checks for this condition, only if the Send queue entry is
-signalled. Implement the condition check, irrespective of the signalled
-state of the Work queue entries
+When polling a connected /dev/hidrawX device, it is useful to get the
+EPOLLOUT when writing is possible. Since writing is possible as soon as
+the device is connected, always return it.
 
-Failure to add the fence can result in access to memory that is already
-marked as completed, triggering data corruption, transmission failure,
-IOMMU failures, etc.
+Right now EPOLLOUT is only returned when there are also input reports
+are available. This works if devices start sending reports when
+connected, but some HID devices might need an output report first before
+sending any input reports. This change will allow using EPOLLOUT here as
+well.
 
-Fixes: 9152e0b722b2 ("RDMA/bnxt_re: HW workarounds for handling specific conditions")
-Link: https://lore.kernel.org/r/1574671174-5064-3-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/qplib_fp.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/hid/hidraw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -2273,13 +2273,13 @@ static int bnxt_qplib_cq_process_req(str
- 			/* Add qp to flush list of the CQ */
- 			bnxt_qplib_add_flush_qp(qp);
- 		} else {
-+			/* Before we complete, do WA 9060 */
-+			if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
-+				      cqe_sq_cons)) {
-+				*lib_qp = qp;
-+				goto out;
-+			}
- 			if (swq->flags & SQ_SEND_FLAGS_SIGNAL_COMP) {
--				/* Before we complete, do WA 9060 */
--				if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
--					      cqe_sq_cons)) {
--					*lib_qp = qp;
--					goto out;
--				}
- 				cqe->status = CQ_REQ_STATUS_OK;
- 				cqe++;
- 				(*budget)--;
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index c75b66d58636..a025b6961896 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -260,10 +260,10 @@ static __poll_t hidraw_poll(struct file *file, poll_table *wait)
+ 
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return EPOLLIN | EPOLLRDNORM | EPOLLOUT;
++		return EPOLLIN | EPOLLRDNORM;
+ 	if (!list->hidraw->exist)
+ 		return EPOLLERR | EPOLLHUP;
+-	return 0;
++	return EPOLLOUT | EPOLLWRNORM;
+ }
+ 
+ static int hidraw_open(struct inode *inode, struct file *file)
+-- 
+2.20.1
+
 
 
