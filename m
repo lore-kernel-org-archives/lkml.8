@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992C5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D391C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603FA2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465682072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217181;
-	bh=mAeyCEBh9vgKs3MQPtBIK04WIfJU/5gVTaleQ8b0eJM=;
+	s=default; t=1579217187;
+	bh=B7EWYdzw+f0RsTvHeXczbavP40vVNGvfLWkYXmipdd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekTqBtQ2zImNW91QnJnhUiMv373SotPJXvcEmY6xr+StZYoQzpoGkL0aMlGFlnp/Y
-	 HEYEgbqYzdy8JMb3czDZQEw6MgCETPb5sdkXkORkVftAy+Qvzo10tX0eChOPFqW7pv
-	 WeD9jCQLfqXvRsijSgyVN1Bbz8nww9xoZvjhQ8zE=
+	b=PFWIRGuB6pBoFUmnk9kqG1Aim2ZvJvlnduv4QiYImW3YB14dwf3Z+FeRv4ToMAsS+
+	 LZV/NgyDDkY+Krg6HEmyRwWbihCeJMtAnmKEnJf8RfDeMaKWvioGDOD7CplavI9hrU
+	 8RNVksUfsskQ6I8bdKM7NtUUQOOYARBiHaY+D908=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgAPX0U (ORCPT
+        id S1730623AbgAPX00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55984 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388332AbgAPXZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:56 -0500
+        id S1732438AbgAPX0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C66F2072B;
-        Thu, 16 Jan 2020 23:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE5A20684;
+        Thu, 16 Jan 2020 23:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217156;
-        bh=mAeyCEBh9vgKs3MQPtBIK04WIfJU/5gVTaleQ8b0eJM=;
+        s=default; t=1579217163;
+        bh=B7EWYdzw+f0RsTvHeXczbavP40vVNGvfLWkYXmipdd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq2r6s6Xi3iDWdw6wSK2v/P09JDys78ppLpGGOQVRe7G29gEs9X5nTVQRBWX23u/A
-         XRgojo614iXpW8scGU08j5mghrvPpbZ5j4Hgq8fAJRJAcOG+ov4I6nuVHs/2SQpLbM
-         EDhgIehzZPuN1Fg9ZuESJDHTgT62NfmfuNwXrreg=
+        b=Sjp8yqRGtM3lcfmcFD2zrMkUd9vB6DcwgumPpaznNOMee5Uc1CqJzPbVb37bHIMuR
+         pfLlV2RXwb+JZCmdpYn3+NHsKxwWvYjn2YvHEZ3nCCtIBX8S6mZTaPJgLiL9Eh6FDl
+         7fvdCFLgbmz9WY6I79ssnOQzSPerfXqnVNyzqkmE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 171/203] spi: lpspi: fix memory leak in fsl_lpspi_probe
-Date:   Fri, 17 Jan 2020 00:18:08 +0100
-Message-Id: <20200116231759.502270087@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 174/203] iwlwifi: mvm: fix support for single antenna diversity
+Date:   Fri, 17 Jan 2020 00:18:11 +0100
+Message-Id: <20200116231759.707341460@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,36 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-commit 057b8945f78f76d0b04eeb5c27cd9225e5e7ad86 upstream.
+commit bb99ff9baa02beb9216c86678999342197c849cc upstream.
 
-In fsl_lpspi_probe an SPI controller is allocated either via
-spi_alloc_slave or spi_alloc_master. In all but one error cases this
-controller is put by going to error handling code. This commit fixes the
-case when pm_runtime_get_sync fails and it should go to the error
-handling path.
+When the single antenna diversity support was sent upstream, only some
+definitions were sent, due to a bad revert.
 
-Fixes: 944c01a889d9 ("spi: lpspi: enable runtime pm for lpspi")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20190930034602.1467-1-navid.emamdoost@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by adding the actual code.
+
+Fixes: 5952e0ec3f05 ("iwlwifi: mvm: add support for single antenna diversity")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-fsl-lpspi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c |   20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -938,7 +938,7 @@ static int fsl_lpspi_probe(struct platfo
- 	ret = pm_runtime_get_sync(fsl_lpspi->dev);
- 	if (ret < 0) {
- 		dev_err(fsl_lpspi->dev, "failed to enable clock\n");
--		return ret;
-+		goto out_controller_put;
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -514,6 +514,18 @@ static int iwl_send_phy_cfg_cmd(struct i
+ 	struct iwl_phy_cfg_cmd phy_cfg_cmd;
+ 	enum iwl_ucode_type ucode_type = mvm->fwrt.cur_fw_img;
+ 
++	if (iwl_mvm_has_unified_ucode(mvm) &&
++	    !mvm->trans->cfg->tx_with_siso_diversity) {
++		return 0;
++	} else if (mvm->trans->cfg->tx_with_siso_diversity) {
++		/*
++		 * TODO: currently we don't set the antenna but letting the NIC
++		 * to decide which antenna to use. This should come from BIOS.
++		 */
++		phy_cfg_cmd.phy_cfg =
++			cpu_to_le32(FW_PHY_CFG_CHAIN_SAD_ENABLED);
++	}
++
+ 	/* Set parameters */
+ 	phy_cfg_cmd.phy_cfg = cpu_to_le32(iwl_mvm_get_phy_config(mvm));
+ 
+@@ -1344,12 +1356,12 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
+ 		ret = iwl_send_phy_db_data(mvm->phy_db);
+ 		if (ret)
+ 			goto error;
+-
+-		ret = iwl_send_phy_cfg_cmd(mvm);
+-		if (ret)
+-			goto error;
  	}
  
- 	temp = readl(fsl_lpspi->base + IMX7ULP_PARAM);
++	ret = iwl_send_phy_cfg_cmd(mvm);
++	if (ret)
++		goto error;
++
+ 	ret = iwl_mvm_send_bt_init_conf(mvm);
+ 	if (ret)
+ 		goto error;
 
 
