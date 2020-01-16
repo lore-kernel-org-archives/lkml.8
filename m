@@ -2,175 +2,118 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CCC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA046C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C720220723
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kookV47t"
+	by mail.kernel.org (Postfix) with ESMTP id 8E317222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgAPBi2 (ORCPT
+        id S1730154AbgAPBjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:38:28 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39654 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgAPBi1 (ORCPT
+        Wed, 15 Jan 2020 20:39:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49795 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgAPBjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:38:27 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G1Tjmn050537;
-        Thu, 16 Jan 2020 01:37:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=GWh1sgtya/qcBgnEbum74PRtCB072WON8vFm/24xoNA=;
- b=kookV47tfUn5jNN7eEWFXSoU8Z+PDWaJDgoDhv5GZY+bSTeS3BPrwuwgeuW5xCBtNrgI
- jBEXHzmomWZl46Ay2GT42NyW2VKCZISvXOZsxPumQBnRuCAc1xwqxbVpYQtERuvEDvYP
- gHM+ZZJo0BqpNm6SynXi/25c/3hwECSDygpIbQYpnneEtqJUiPYKBoNF0iTaGrwrPfAj
- wtGKJIQUM0wBTbcAFrXiWMl2E6rYoYUR5Ic+vjgNBhgsgTv00xswyHnEPBJ89e88dyNa
- 3Xpcz+Iaw3oDAM4aX379vIk8g770OreWIXLxui5OOJa6m9EmluzdEwgx+Oqy9vpxAEiC dw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xf74sfp3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 01:37:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G1Uh6G131571;
-        Thu, 16 Jan 2020 01:37:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xj61kq616-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 01:37:21 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G1bIbm030780;
-        Thu, 16 Jan 2020 01:37:18 GMT
-Received: from dhcp-10-132-95-72.usdhcp.oraclecorp.com (/10.132.95.72)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 17:37:18 -0800
-Subject: Re: [PATCH] KVM: x86: Perform non-canonical checks in 32-bit KVM
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200115183605.15413-1-sean.j.christopherson@intel.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <cf9a9746-e0b8-8303-afd5-b1c3a2a9ac83@oracle.com>
-Date:   Wed, 15 Jan 2020 17:37:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Wed, 15 Jan 2020 20:39:52 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iru8P-0004zY-Tg; Thu, 16 Jan 2020 02:39:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3CF6710121C; Thu, 16 Jan 2020 02:39:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ramon Fried <rfried.dev@gmail.com>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maz@kernel.org
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+In-Reply-To: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+Date:   Thu, 16 Jan 2020 02:39:45 +0100
+Message-ID: <87v9pcw55q.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200115183605.15413-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160010
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=554 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160010
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ramon,
 
+Ramon Fried <rfried.dev@gmail.com> writes:
+> On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Ramon Fried <rfried.dev@gmail.com> writes:
+>> Due to the semantics of MSI this is perfectly fine and aside of your
+>> problem this has worked perfectly fine so far and it's an actual
+>> performance win because it avoid fiddling with the MSI mask which is
+>> slow.
+>>
+> fiddling with MSI masks is a configuration space write, which is
+> non-posted, so it does come with a price.
+> The question is if a test was ever conducted to see the it's better
+> than spurious IRQ's.
 
-On 01/15/2020 10:36 AM, Sean Christopherson wrote:
-> Remove the CONFIG_X86_64 condition from the low level non-canonical
-> helpers to effectively enable non-canonical checks on 32-bit KVM.
-> Non-canonical checks are performed by hardware if the CPU *supports*
-> 64-bit mode, whether or not the CPU is actually in 64-bit mode is
-> irrelevant.
->
-> For the most part, skipping non-canonical checks on 32-bit KVM is ok-ish
-> because 32-bit KVM always (hopefully) drops bits 63:32 of whatever value
-> it's checking before propagating it to hardware, and architecturally,
-> the expected behavior for the guest is a bit of a grey area since the
-> vCPU itself doesn't support 64-bit mode.  I.e. a 32-bit KVM guest can
-> observe the missed checks in several paths, e.g. INVVPID and VM-Enter,
-> but it's debatable whether or not the missed checks constitute a bug
-> because technically the vCPU doesn't support 64-bit mode.
->
-> The primary motivation for enabling the non-canonical checks is defense
-> in depth.  As mentioned above, a guest can trigger a missed check via
-> INVVPID or VM-Enter.  INVVPID is straightforward as it takes a 64-bit
-> virtual address as part of its 128-bit INVVPID descriptor and fails if
-> the address is non-canonical, even if INVVPID is executed in 32-bit PM.
-> Nested VM-Enter is a bit more convoluted as it requires the guest to
-> write natural width VMCS fields via memory accesses and then VMPTRLD the
-> VMCS, but it's still possible.  In both cases, KVM is saved from a true
-> bug only because its flows that propagate values to hardware (correctly)
-> take "unsigned long" parameters and so drop bits 63:32 of the bad value.
->
-> Explicitly performing the non-canonical checks makes it less likely that
-> a bad value will be propagated to hardware, e.g. in the INVVPID case,
-> if __invvpid() didn't implicitly drop bits 63:32 then KVM would BUG() on
-> the resulting unexpected INVVPID failure due to hardware rejecting the
-> non-canonical address.
->
-> The only downside to enabling the non-canonical checks is that it adds a
-> relatively small amount of overhead, but the affected flows are not hot
-> paths, i.e. the overhead is negligible.
->
-> Note, KVM technically could gate the non-canonical checks on 32-bit KVM
-> with static_cpu_has(X86_FEATURE_LM), but on bare metal that's an even
-> bigger waste of code for everyone except the 0.00000000000001% of the
-> population running on Yonah, and nested 32-bit on 64-bit already fudges
-> things with respect to 64-bit CPU behavior.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   arch/x86/kvm/x86.h | 8 --------
->   1 file changed, 8 deletions(-)
->
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index cab5e71f0f0f..3ff590ec0238 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -166,21 +166,13 @@ static inline u64 get_canonical(u64 la, u8 vaddr_bits)
->   
->   static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
->   {
-> -#ifdef CONFIG_X86_64
->   	return get_canonical(la, vcpu_virt_addr_bits(vcpu)) != la;
-> -#else
-> -	return false;
-> -#endif
->   }
->   
->   static inline bool emul_is_noncanonical_address(u64 la,
->   						struct x86_emulate_ctxt *ctxt)
->   {
-> -#ifdef CONFIG_X86_64
->   	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
-> -#else
-> -	return false;
-> -#endif
->   }
->   
->   static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
+The point is that there are no spurious interrupts in the sane cases and
+the tests we did showed a real performance improvements in high
+frequency interrupt situations due to avoiding the config space access.
 
-nested_vmx_check_host_state() still won't call it on 32-bit because it 
-has the CONFIG_X86_64 guard around the callee:
+Please stop claiming that this spurious interrupt problem is there by
+design. It's not. Read the MSI spec.
 
-  #ifdef CONFIG_X86_64
-         if (CC(is_noncanonical_address(vmcs12->host_fs_base, vcpu)) ||
-             CC(is_noncanonical_address(vmcs12->host_gs_base, vcpu)) ||
-  ...
+Also boot your laptop/workstation with 'threadirqs' on the kernel
+command line and check how many spurious interrupts come in. On a test
+machine which has that command line parameter set I see exactly ONE with
+an uptime of several days and heavy MSI interrupt activity. The ONE is
+even there without 'threadirqs' on the command line, so I really can't
+be bothered to analyze that.
 
+>> You still have not told which driver/hardware is affected by this. Can
+>> you please provide that information so we can finally look at the actual
+>> hardware/driver combo?
+>>
+> Sure,
+> I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
+> line which several MSI are multiplexed on it.
 
-Don't we need to remove these guards in the callers as well ?
+I assume you write the driver, not the VHDL for the actual hardware,
+right? If so, you still did not tell which hardware that is and where we
+can find information about it.
+
+I further assume that 'multiplexed' means that the hardware is something
+like an MSI receiver on the CPU/chipset which handles multiple MSI
+messages and forwards them to a single shared interrupt line on the MIPS
+GIC. Right?
+
+Can you please provide a pointer to the hardware documentation?
+
+> It's configured with handle_level_irq() as the GIC is level IRQ.
+
+Which is completely bonkers. MSI has edge semantics and sharing an
+interrupt line for edge type interrupts is broken by design, unless the
+hardware which handles the incoming MSIs and forwards them to the level
+type interrupt line is designed properly and the driver does the right
+thing.
+
+> The ack callback acks the GIC irq.  the mask/unmask calls
+> pci_msi_mask_irq() / pci_msi_unmask_irq()
+
+What? How is that supposed to work with multiple MSIs?
+
+Either the hardware is a trainwreck or the driver or both.
+
+I can't tell as I can't find my crystal ball. Maybe I should replace it
+with an Mobileye :)
+
+Thanks,
+
+        tglx
