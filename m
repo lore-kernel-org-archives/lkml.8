@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549B9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE2120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B058220684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195308;
-	bh=N6Y8PkCQnIedDcnf0oyyx/ToavtI/AovlyPF64X9BKo=;
+	s=default; t=1579195318;
+	bh=sUEmpbvttt0S4MWyiKJbNj8b+VkU2b5Kh+cieFdT378=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HM3CUMTU00SQg12e8pdNaMF93ugQyQZiwOKSA7JWZGqMjmIuksI/lcu/LpRjjzM0p
-	 Mm66weWdPgGhe527QkUT3NZMMj2ie7FqY/gOTZzXZOL+uvi1ZzjaZzLyt15dy5QnIf
-	 hYfBosersMyNo1qxiMTBrq3ir7mxvLEDOe9GZanE=
+	b=05IKA2uoa0m3S4Z1uqIRShF1iCn7vw9gqGkLnXPa2RdaNcp4gZX308GHmMFbvqqhC
+	 UIAdTvPDdHDyqgwE9ElvaBbvJRFa6hiIc9p16fajLA4s93y84hQuB2ORiw9d/Zzv/c
+	 j91Ck/yedZ4YoBNh5xjx+SD4CZxOxkfdV5hl/NcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391229AbgAPRRd (ORCPT
+        id S2391647AbgAPRV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:17:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42770 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:21:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391134AbgAPRR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:29 -0500
+        id S2391200AbgAPRR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842472081E;
-        Thu, 16 Jan 2020 17:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C71E21582;
+        Thu, 16 Jan 2020 17:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195049;
-        bh=N6Y8PkCQnIedDcnf0oyyx/ToavtI/AovlyPF64X9BKo=;
+        s=default; t=1579195045;
+        bh=sUEmpbvttt0S4MWyiKJbNj8b+VkU2b5Kh+cieFdT378=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlSv6jhYmhw/enHhdU5eawmTD3QAoqx8k9uASJHKN5JgeAqR0UmrR4sp5X1l8Xlgv
-         iVkPVyDk2fhyrbpEf+vlwq0KOSpKqKwlxOVNaR1YAg2IDSxc7Rlp2b+DPIhI/84oQa
-         bTG2OomkqhI2ND2bWW3YnrpPAs925m6HRIXqNSQE=
+        b=z30zkRLj1VVOTkOOT8Lko9JuuA+kD9FEAMZlLISnv6iGM+jd5OXVqvLPHe8+dbjRA
+         iqINVjF/+xa9AUkJwlu7zlipNfXuYnhi5DfRF2Xh68hjopnzTU1J7NJ/nnI1LS5eAs
+         DYRs8pq67j7olWgtMthvvD7HTHf4x0u/aTKBdJq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 007/371] IB/rxe: replace kvfree with vfree
-Date:   Thu, 16 Jan 2020 12:11:15 -0500
-Message-Id: <20200116171719.16965-7-sashal@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 004/371] apparmor: don't try to replace stale label in ptrace access check
+Date:   Thu, 16 Jan 2020 12:11:12 -0500
+Message-Id: <20200116171719.16965-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -60,75 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 721ad7e643f7002efa398838693f90284ea216d1 ]
+[ Upstream commit 1f8266ff58840d698a1e96d2274189de1bdf7969 ]
 
-The buf is allocated by vmalloc_user in the function rxe_queue_init.
-So it is better to free it by vfree.
+As a comment above begin_current_label_crit_section() explains,
+begin_current_label_crit_section() must run in sleepable context because
+when label_is_stale() is true, aa_replace_current_label() runs, which uses
+prepare_creds(), which can sleep.
+Until now, the ptrace access check (which runs with a task lock held)
+violated this rule.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Also add a might_sleep() assertion to begin_current_label_crit_section(),
+because asserts are less likely to be ignored than comments.
+
+Fixes: b2d09ae449ced ("apparmor: move ptrace checks to using labels")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_cq.c | 4 ++--
- drivers/infiniband/sw/rxe/rxe_qp.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ security/apparmor/include/context.h | 2 ++
+ security/apparmor/lsm.c             | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
-index c4aabf78dc90..f6e036ded046 100644
---- a/drivers/infiniband/sw/rxe/rxe_cq.c
-+++ b/drivers/infiniband/sw/rxe/rxe_cq.c
-@@ -30,7 +30,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
--
-+#include <linux/vmalloc.h>
- #include "rxe.h"
- #include "rxe_loc.h"
- #include "rxe_queue.h"
-@@ -97,7 +97,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
- 	err = do_mmap_info(rxe, udata, false, context, cq->queue->buf,
- 			   cq->queue->buf_size, &cq->queue->ip);
- 	if (err) {
--		kvfree(cq->queue->buf);
-+		vfree(cq->queue->buf);
- 		kfree(cq->queue);
- 		return err;
- 	}
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index aeea994b04c4..25055a68a2c0 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -34,6 +34,7 @@
- #include <linux/skbuff.h>
- #include <linux/delay.h>
- #include <linux/sched.h>
-+#include <linux/vmalloc.h>
+diff --git a/security/apparmor/include/context.h b/security/apparmor/include/context.h
+index 6ae07e9aaa17..812cdec9dd3b 100644
+--- a/security/apparmor/include/context.h
++++ b/security/apparmor/include/context.h
+@@ -191,6 +191,8 @@ static inline struct aa_label *begin_current_label_crit_section(void)
+ {
+ 	struct aa_label *label = aa_current_raw_label();
  
- #include "rxe.h"
- #include "rxe_loc.h"
-@@ -255,7 +256,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- 			   qp->sq.queue->buf_size, &qp->sq.queue->ip);
++	might_sleep();
++
+ 	if (label_is_stale(label)) {
+ 		label = aa_get_newest_label(label);
+ 		if (aa_replace_current_label(label) == 0)
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index 1346ee5be04f..4f08023101f3 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -108,12 +108,12 @@ static int apparmor_ptrace_access_check(struct task_struct *child,
+ 	struct aa_label *tracer, *tracee;
+ 	int error;
  
- 	if (err) {
--		kvfree(qp->sq.queue->buf);
-+		vfree(qp->sq.queue->buf);
- 		kfree(qp->sq.queue);
- 		return err;
- 	}
-@@ -308,7 +309,7 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
- 				   qp->rq.queue->buf_size,
- 				   &qp->rq.queue->ip);
- 		if (err) {
--			kvfree(qp->rq.queue->buf);
-+			vfree(qp->rq.queue->buf);
- 			kfree(qp->rq.queue);
- 			return err;
- 		}
+-	tracer = begin_current_label_crit_section();
++	tracer = __begin_current_label_crit_section();
+ 	tracee = aa_get_task_label(child);
+ 	error = aa_may_ptrace(tracer, tracee,
+ 		  mode == PTRACE_MODE_READ ? AA_PTRACE_READ : AA_PTRACE_TRACE);
+ 	aa_put_label(tracee);
+-	end_current_label_crit_section(tracer);
++	__end_current_label_crit_section(tracer);
+ 
+ 	return error;
+ }
 -- 
 2.20.1
 
