@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2059EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62099C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CE2206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320CB206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199527;
-	bh=EAJbWnwBlpDDCXgh5JtZ8Bw4nWOjmpO5KaecW+klynY=;
+	s=default; t=1579199535;
+	bh=QWQJxnLDkNt1oRoE6sADWy1w2Gz/H+uoEqJBl4/Yang=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j9PK6Nez97c+rO4PuLYdfw1gsgj83q8Mrdt4JRkE+9rBOCgGD3ypf8+qNjcE39Wsz
-	 gAE9FRzfxMO2GHiRxXUlUx0f+ZHpdIJTsOMjHs6UFSS8+V/oY4xKfiKuVpTe3J6H7d
-	 6j0fPMaHhPs/I+9/rJ4BiGVu5n97vN3sW5Ikcdg8=
+	b=XX3ECzjvU4mArSV3urIAFs9TIHHdJ2xnmgj3enWUelkhzKNipthfo6T1hawhx6AaK
+	 RTEiZ8M44qtFHGKc9lIR6/NWOISc9iPtPDn7yQEBJ4dnFXpZ/JYuH+4GYR9vntI5j5
+	 pfvofdiEbQthQzhFQRKmA123nDaHBKdRRHQRX3m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391870AbgAPRZF (ORCPT
+        id S2392014AbgAPScN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:32:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391808AbgAPRYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:50 -0500
+        id S2391869AbgAPRZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1331E246B2;
-        Thu, 16 Jan 2020 17:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7CB246CA;
+        Thu, 16 Jan 2020 17:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195489;
-        bh=EAJbWnwBlpDDCXgh5JtZ8Bw4nWOjmpO5KaecW+klynY=;
+        s=default; t=1579195504;
+        bh=QWQJxnLDkNt1oRoE6sADWy1w2Gz/H+uoEqJBl4/Yang=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZuWLbuA7Z63ZCvO0KxO97j3xYvWT/ERgtrbPiDJ4GHfryzhuQVOuZzBnJi/EII5G
-         MIFGk96gxKmthAu5AfZqv7AzpGxXoifsb/oOw4+b4Jl6tvy3Gwzy1ID1NG6u+UegvR
-         fpz2/wnidwJM9hby81rIK379gFayrdwFm5D9TjUw=
+        b=hcKoPn013Gw9RDQr0H//zSXHOOVShK9gBsshpMPBMubyxoACCI7bLg81wMDQNFW5K
+         0AVDGeavDBpsheu+hyEwQCCeht9tRH/HEiz/FmhXVpNXNgM+YyNHJgKrcOivETpob5
+         3OU3ap6wJTE0/Ceyh7vxtsa6MwY5jUTe750k/X2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 4.14 092/371] drm/etnaviv: potential NULL dereference
-Date:   Thu, 16 Jan 2020 12:19:24 -0500
-Message-Id: <20200116172403.18149-35-sashal@kernel.org>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 104/371] staging: r8822be: check kzalloc return or bail
+Date:   Thu, 16 Jan 2020 12:19:36 -0500
+Message-Id: <20200116172403.18149-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,36 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit 9e05352340d3a3e68c144136db9810b26ebb88c3 ]
+[ Upstream commit e4b08e16b7d9d030b6475ef48f94d734a39f3c81 ]
 
-The etnaviv_gem_prime_get_sg_table() is supposed to return error
-pointers.  Otherwise it can lead to a NULL dereference when it's called
-from drm_gem_map_dma_buf().
+The kzalloc() in halmac_parse_psd_data_88xx() can fail and return NULL
+so check the psd_set->data after allocation and if allocation failed
+return HALMAC_CMD_PROCESS_ERROR.
 
-Fixes: 5f4a4a73f437 ("drm/etnaviv: fix gem_prime_get_sg_table to return new SG table")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Fixes: 938a0447f094 ("staging: r8822be: Add code for halmac sub-drive")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c    | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index ae884723e9b1..880b95511b98 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -26,7 +26,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	int npages = obj->size >> PAGE_SHIFT;
+diff --git a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+index 544f638ed3ef..15091ee587db 100644
+--- a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
++++ b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+@@ -2492,8 +2492,11 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
+ 	segment_size = (u8)PSD_DATA_GET_SEGMENT_SIZE(c2h_buf);
+ 	psd_set->data_size = total_size;
  
- 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
--		return NULL;
-+		return ERR_PTR(-EINVAL);
+-	if (!psd_set->data)
++	if (!psd_set->data) {
+ 		psd_set->data = kzalloc(psd_set->data_size, GFP_KERNEL);
++		if (!psd_set->data)
++			return HALMAC_CMD_PROCESS_ERROR;
++	}
  
- 	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
- }
+ 	if (segment_id == 0)
+ 		psd_set->segment_size = segment_size;
 -- 
 2.20.1
 
