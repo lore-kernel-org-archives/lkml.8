@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52493C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2B32073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEA32073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200048;
-	bh=kRTVsw68jnqHvMwBxkC/iTUe78Oj8a1aOpB3PMFyRdo=;
+	s=default; t=1579200054;
+	bh=Ykv5Omqbya/PBFt5kO//PlxFzjN08HDOhhu4rRk4zpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8Ca/WIHBGrScP+sXxBGBiUHyzi2Qs1L3j4t4mrcIcopG07o2wza3z1DzTMyW5C0y
-	 94uA425RrSXTx2Flzukb4FEriZkqmMzy/LrSsEIEMwK6b9b2Td9xCWs/bm3qbHf3kc
-	 sgnzrvuVj4xY84y+/MbFU31CRy6sXmZ1uydWJuG4=
+	b=p6cXMQkwF6JdyEWzuvi+Dfp2U8jZxEbBc1hxDr5NqX+ZzHfx4bzNrqCkwGMFhuA0W
+	 0dUNllcUO2AJeBSGdxELp7HYPuXTjSgiOQdvs1DnYG74VPp71hLNlr4Jvi7ERMK5+V
+	 x7fNlERZeWUO+QKTHEg1jw5zFrzaX78vqy6aENtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390354AbgAPRL5 (ORCPT
+        id S2407216AbgAPSkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:40:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390016AbgAPRLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:47 -0500
+        id S2390348AbgAPRL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE65F24692;
-        Thu, 16 Jan 2020 17:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1631724697;
+        Thu, 16 Jan 2020 17:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194706;
-        bh=kRTVsw68jnqHvMwBxkC/iTUe78Oj8a1aOpB3PMFyRdo=;
+        s=default; t=1579194716;
+        bh=Ykv5Omqbya/PBFt5kO//PlxFzjN08HDOhhu4rRk4zpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZmdblatR1M9WM/Gq/iVU/EI2uG7kCNTw0pP+ySk8RB2F+g246P1i7C4VJaY7zFrg
-         iEyccrHy09HXQ8l6bDynx1+70VG4yg2kwmlX9NkiV7rcTpovis2h0dKZIJeR/VUXk6
-         JE2A8vunvlMhGwUrvHf6wFu+K4Vz3Gm4nrHGC1YM=
+        b=F706h52fC+umY0NE8SqrkycS9SYG2hF17lHoQovdHInH0jkvJqfWBeaVEa5LP3eS0
+         29Qy020E8xJqTyffpC66RXJ8PmMM002HElDJKIVe7yzKbKxSFARJtOvNYqquAPa27a
+         VYm25FRB3pRFSOxN9bzyIM+dsID2Y4Td9mJ0Ww6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 545/671] net: sonic: replace dev_kfree_skb in sonic_send_packet
-Date:   Thu, 16 Jan 2020 12:03:03 -0500
-Message-Id: <20200116170509.12787-282-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 553/671] bnxt_en: Increase timeout for HWRM_DBG_COREDUMP_XX commands
+Date:   Thu, 16 Jan 2020 12:03:11 -0500
+Message-Id: <20200116170509.12787-290-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,35 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
+[ Upstream commit 57a8730b1f7a0be7bf8a0a0bb665329074ba764f ]
 
-sonic_send_packet will be processed in irq or non-irq
-context, so it would better use dev_kfree_skb_any
-instead of dev_kfree_skb.
+Firmware coredump messages take much longer than standard messages,
+so increase the timeout accordingly.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fixes: 6c5657d085ae ("bnxt_en: Add support for ethtool get dump.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h         | 1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index be36f7117d48..5f1875fe47cd 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -232,7 +232,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
- 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
--		dev_kfree_skb(skb);
-+		dev_kfree_skb_any(skb);
- 		return NETDEV_TX_OK;
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index f9e253b705ec..585f5aef0a45 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -527,6 +527,7 @@ struct rx_tpa_end_cmp_ext {
+ #define DFLT_HWRM_CMD_TIMEOUT		500
+ #define HWRM_CMD_TIMEOUT		(bp->hwrm_cmd_timeout)
+ #define HWRM_RESET_TIMEOUT		((HWRM_CMD_TIMEOUT) * 4)
++#define HWRM_COREDUMP_TIMEOUT		((HWRM_CMD_TIMEOUT) * 12)
+ #define HWRM_RESP_ERR_CODE_MASK		0xffff
+ #define HWRM_RESP_LEN_OFFSET		4
+ #define HWRM_RESP_LEN_MASK		0xffff0000
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index cdbb8940a4ae..047024717d65 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -2833,7 +2833,7 @@ static int bnxt_hwrm_dbg_coredump_initiate(struct bnxt *bp, u16 component_id,
+ 	req.component_id = cpu_to_le16(component_id);
+ 	req.segment_id = cpu_to_le16(segment_id);
  
+-	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
++	return hwrm_send_message(bp, &req, sizeof(req), HWRM_COREDUMP_TIMEOUT);
+ }
+ 
+ static int bnxt_hwrm_dbg_coredump_retrieve(struct bnxt *bp, u16 component_id,
 -- 
 2.20.1
 
