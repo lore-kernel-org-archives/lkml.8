@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D26C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50854C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10672073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F636207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199299;
-	bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
+	s=default; t=1579199303;
+	bh=7+YWIhcNEOIuEvafzelpdtdaQmB3T7mH9FS6SgZ5Xwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgNtmK7XJ9yR5MwmG8+U9A0UwE5MKWz4d9rWu04sigTWsgeCS1R47NNGVIsd+zfCB
-	 aoFEZy5T1T3WYTi+Mnp6uILVlPj9kCcyKY3mo0SVVtLdEB+zhQVjdxO/WNv2oKuLjR
-	 KKy6dzIqwdSwy8aUpzR58SbqHp/5anvFYc3iUlaE=
+	b=jGBgnDm4i1SyQLYAtJRTiiV/X7cv9SuSIgrZWPOXs3IZv3fohSytRsb4eURcvX2Dd
+	 +rUYyhy8NFRPIQsXh6Q7EzKJqqfP6zHhsrNAElTjRvTm7jInrQ3sJzbFUj91lkQw+B
+	 bmEFXCLoyVyIhm/WFh+R36DjoZOI3ZGl+zwkC2FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392400AbgAPS2Q (ORCPT
+        id S2403861AbgAPR0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:28:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403871AbgAPR0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:13 -0500
+        id S2392164AbgAPRZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C5D246BE;
-        Thu, 16 Jan 2020 17:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFAE24687;
+        Thu, 16 Jan 2020 17:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195572;
-        bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
+        s=default; t=1579195551;
+        bh=7+YWIhcNEOIuEvafzelpdtdaQmB3T7mH9FS6SgZ5Xwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lpyFtSw6I/tSuwwUWE2P9rQK8efHacBSlO7zzD7am7G5SULXzLuIpc3ISzMa0Dbqn
-         tGMpvgSyOgQGBBsF6dUxKXAYBSQtg5wo/g5SR7w9EDuZq0cmIkoB45ay4EMRBL5m++
-         1JL7Njvps0ROzM6QwCBcEVEIKcPRD6rLmVwGYryE=
+        b=YerZrn/Fq5c3es/V88NCQeArz10xAebpFvQAtIfpP4DgSq0hVDMWMUtqOOlJ3cAMO
+         9HKoubdGp2E2HrPkrx7iWYRaq9YAQblqiDwuxLtrAmwptVqGBXBJERm6paRW4gEXC0
+         BHCLbhmEz/VC6Yps2pFxzAH0+rtCUOPaHEj5nNec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 156/371] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
-Date:   Thu, 16 Jan 2020 12:20:28 -0500
-Message-Id: <20200116172403.18149-99-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 142/371] jfs: fix bogus variable self-initialization
+Date:   Thu, 16 Jan 2020 12:20:14 -0500
+Message-Id: <20200116172403.18149-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -63,59 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
+[ Upstream commit a5fdd713d256887b5f012608701149fa939e5645 ]
 
-The original driver by default defines num_chipselects as -1.
-This actually allicates an array of 65535 entries in
-of_spi_register_master.
+A statement was originally added in 2006 to shut up a gcc warning,
+now but now clang warns about it:
 
-There is a side-effect for buggy device trees that (contrary to
-dt-binding documentation) have no cs-gpio defined.
+fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
+      [-Werror,-Wuninitialized]
+                pxd_t pxd = pxd;        /* truncated extent of xad */
+                      ~~~   ^~~
 
-This mode was never supported by the driver due to limitations
-of native cs and additional code complexity and is explicitly
-not stated to be implemented.
+Modern versions of gcc are fine without the silly assignment, so just
+drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
 
-To keep backwards compatibility with such buggy DTs we limit
-the number of chip_selects to 1, as for all practical purposes
-it is only ever realistic to use a single chip select in
-native cs mode without negative side-effects.
-
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ fs/jfs/jfs_txnmgr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index 5c89bbb05441..e075712c501e 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -416,7 +416,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, master);
- 	master->mode_bits = (SPI_CPOL | SPI_CS_HIGH | SPI_NO_CS);
- 	master->bits_per_word_mask = SPI_BPW_MASK(8);
--	master->num_chipselect = -1;
-+	/* even though the driver never officially supported native CS
-+	 * allow a single native CS for legacy DT support purposes when
-+	 * no cs-gpio is configured.
-+	 * Known limitations for native cs are:
-+	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
-+	 *     whenever there is a transfer -  this even includes SPI_NO_CS
-+	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
-+	 * * cs_change: cs is deasserted after each spi_transfer
-+	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
-+	 *     a spi_transfer
-+	 */
-+	master->num_chipselect = 1;
- 	master->transfer_one = bcm2835aux_spi_transfer_one;
- 	master->handle_err = bcm2835aux_spi_handle_err;
- 	master->prepare_message = bcm2835aux_spi_prepare_message;
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index 4d973524c887..224ef034004b 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+ 	 * header ?
+ 	 */
+ 	if (tlck->type & tlckTRUNCATE) {
+-		/* This odd declaration suppresses a bogus gcc warning */
+-		pxd_t pxd = pxd;	/* truncated extent of xad */
++		pxd_t pxd;	/* truncated extent of xad */
+ 		int twm;
+ 
+ 		/*
 -- 
 2.20.1
 
