@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D24C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583F9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C57F22525
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DAB20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193960;
-	bh=LWfOhuUCSRHlkBTUYtRzpo2sbP9fou7RPxTKLQqvUxs=;
+	s=default; t=1579193964;
+	bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9dTPm+IqNLKRi5RM732Q5LOqyt9FObUTZpvguT+oReFr21J63djAsir9NJSvwNG5
-	 sG1ggUQKfRVGXq37S63t8nDEH58JLxBFGa06nz7B0YtZwvGjl3GZQGI3s1WyJBV4ED
-	 G4jrr98Df3qIkKmQntzX6xixc7TGVvmIjkKE2cvg=
+	b=2D9yLYOXTfVxawrzz0Hzi5LsDPluq7m3/hfmLwnPutkZleHDDn5WZ2BLnj+OwuqYv
+	 nLkREzHTP7pPGnQ2TTr0D8JTwqarttXVv0CrYlKsK15RgPQMJV3Yt5ztOH7c+ztz7P
+	 opr3MZGQVMrMaYIVPtRGXZ/TmEvU0ZMyU8H3R64o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733307AbgAPQ7Q (ORCPT
+        id S2387516AbgAPQ7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:59:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:59:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387494AbgAPQ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:26 -0500
+        id S2387485AbgAPQ5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983BF2467E;
-        Thu, 16 Jan 2020 16:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBE12192A;
+        Thu, 16 Jan 2020 16:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193846;
-        bh=LWfOhuUCSRHlkBTUYtRzpo2sbP9fou7RPxTKLQqvUxs=;
+        s=default; t=1579193843;
+        bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTfODH++/Jf/b3aFCy3tDQ7/ffBVSnPUTI6ndtZLk1lCcjpKJa4xq93+Uzr5uKu2u
-         qQY4bkGfGoYwp7MTd6TVlYN+MOS4x4e/hbDC/1W/z+EPtWM2/KiFWs0HonBJ3x5kKa
-         Dru8a8DQRFAM59cscwcA4dzQsfnG+feobVPSHj8A=
+        b=WhPnKMYCvJYHQ93Jb3fCRZ1tsh7Mru960wyY+RfC5Oqe6skGM6im1WhnMC8ctgmNo
+         bmU+9OP1tc03tQSSnbWl/xe27l3C2tl0EEaFyYXKVJrbJdt/vUJ1YDoZMtiRnDYHNT
+         gQHS9K+QaNuN2ON9AdGRj8ppvBUYwtxFJ5bdam8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 099/671] arm64: defconfig: Re-enable bcm2835-thermal driver
-Date:   Thu, 16 Jan 2020 11:45:30 -0500
-Message-Id: <20200116165502.8838-99-sashal@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 097/671] clk: dove: fix refcount leak in dove_clk_init()
+Date:   Thu, 16 Jan 2020 11:45:28 -0500
+Message-Id: <20200116165502.8838-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,35 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 4d9226fd9a0d747030575d7cb184b30c6e64f155 ]
+[ Upstream commit 8d726c5128298386b907963033be93407b0c4275 ]
 
-The bcm2835-thermal driver was added with commit ac178e4280e6
-("ARM64: bcm2835: add thermal driver to default config"). Unfortunately
-this was accidentally dropped by commit eb1e6716cc9c
-("arm64: defconfig: sync with savedefconfig"). So enable the driver again.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fixes: eb1e6716cc9c ("arm64: defconfig: sync with savedefconfig")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
+Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/mvebu/dove.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index db8d364f8476..1a4f8b67bbe8 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -365,6 +365,7 @@ CONFIG_THERMAL_EMULATION=y
- CONFIG_ROCKCHIP_THERMAL=m
- CONFIG_RCAR_GEN3_THERMAL=y
- CONFIG_ARMADA_THERMAL=y
-+CONFIG_BCM2835_THERMAL=m
- CONFIG_BRCMSTB_THERMAL=m
- CONFIG_EXYNOS_THERMAL=y
- CONFIG_TEGRA_BPMP_THERMAL=m
+diff --git a/drivers/clk/mvebu/dove.c b/drivers/clk/mvebu/dove.c
+index 59fad9546c84..5f258c9bb68b 100644
+--- a/drivers/clk/mvebu/dove.c
++++ b/drivers/clk/mvebu/dove.c
+@@ -190,10 +190,14 @@ static void __init dove_clk_init(struct device_node *np)
+ 
+ 	mvebu_coreclk_setup(np, &dove_coreclks);
+ 
+-	if (ddnp)
++	if (ddnp) {
+ 		dove_divider_clk_init(ddnp);
++		of_node_put(ddnp);
++	}
+ 
+-	if (cgnp)
++	if (cgnp) {
+ 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
++		of_node_put(cgnp);
++	}
+ }
+ CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
 -- 
 2.20.1
 
