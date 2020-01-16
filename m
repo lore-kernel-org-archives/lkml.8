@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAFFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A8AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC953206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09FC206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201987;
-	bh=avXqc5KA2Ev0UHhePAXgSI1BiUN8Gtq0LGx8b4d8lvQ=;
+	s=default; t=1579201993;
+	bh=o9D02xT1OERTo13eksDUa5Rx6rszZDH9yPUsA+RIBYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXn5kGScIBZyywOyY+PUIEtBR7+uZm8Tifi4197NbN80nOtk0z8LQwaRxyuFI32vU
-	 uKU5uHazMidxsf41VEJNK4BYsqN8Yn9dVz5u6lkbDHGbXh56M+eKgEihLTSHjFG9KZ
-	 wFCxLU+VXIX9w8MTam9yvfPDup6AIomAamUXFP5Q=
+	b=kp/9nF2e/Fm+nLXY2p//XM6Uk6WdqvpK+gxDl27tX8wQ45rGISWzKkpZ2XYyeIr4j
+	 ntcbW+cgRLa478zHREXPlPZI7BcMLd07xhWlvRUW1fdoux5Jmx6AqjyzdM1tIO1T/m
+	 p1SAZYq7Y55nos7NRIGg7UdD+nu+fJYjxykQec5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436994AbgAPTNE (ORCPT
+        id S2387411AbgAPQ5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387435AbgAPQ5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:08 -0500
+        id S1733307AbgAPQ45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4758921D56;
-        Thu, 16 Jan 2020 16:57:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29AF52467E;
+        Thu, 16 Jan 2020 16:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193828;
-        bh=avXqc5KA2Ev0UHhePAXgSI1BiUN8Gtq0LGx8b4d8lvQ=;
+        s=default; t=1579193817;
+        bh=o9D02xT1OERTo13eksDUa5Rx6rszZDH9yPUsA+RIBYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQuu39//UnvNtYgGNrcYIKUJdRjZ2X46YRQRbeGxzotjB63gURHJ4eFvXCqSAj3is
-         zIpyiWZLpSqdzoI150rSsSBaqP2rJZMiDXVGmuYyor9WzWituPdRCq0JS3oTrcp0+a
-         JNh18Gru/vH3Xcpc4R1zEwiMU0fnzv5MaaaVuOx4=
+        b=pQwnD516Ug8e6PtVP1gsQnBta7eDMZKBWY3j4ar0jQADGCMZkn/1e0lXc68PZeEdX
+         8SEOfZPwUYMnan4AIPHC7VPbmR7ssbtCNyM8pgoJkKh/8hXIzlbY7W8Ht9s2uM6XGP
+         LSgdGRDP2W0ZLrq4gNtjH36qv+IemmwVPnR2xWSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/671] clk: qoriq: fix refcount leak in clockgen_init()
-Date:   Thu, 16 Jan 2020 11:45:16 -0500
-Message-Id: <20200116165502.8838-85-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 077/671] pinctrl: sh-pfc: r8a77995: Remove bogus SEL_PWM[0-3]_3 configurations
+Date:   Thu, 16 Jan 2020 11:45:08 -0500
+Message-Id: <20200116165502.8838-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,34 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
+[ Upstream commit e28dc3f09c9d2555a9bd982f0847988591052226 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+While the SEL_PWM[0-3] fields in the Module Select Register 0 support 4
+possible configurations per PWM pin, only the first 3 are valid.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Replace the invalid and unused configurations for SEL_PWM[0-3]_3 by
+dummies.
+
+Fixes: 794a6711764658a1 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 8abc5c8cb8b8..a0713b2a12f3 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -1389,6 +1389,7 @@ static void __init clockgen_init(struct device_node *np)
- 				pr_err("%s: Couldn't map %pOF regs\n", __func__,
- 				       guts);
- 			}
-+			of_node_put(guts);
- 		}
- 
- 	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+index adade5b7ffbc..337c80bde8f9 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+@@ -391,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
+ #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
+ #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
+ #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
+-#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		FM(SEL_PWM0_3)
+-#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		FM(SEL_PWM1_3)
+-#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		FM(SEL_PWM2_3)
+-#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		FM(SEL_PWM3_3)
++#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
++#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
++#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
++#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
+ #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
+ #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
+ #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
 -- 
 2.20.1
 
