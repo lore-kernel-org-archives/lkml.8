@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CE8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD30C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE84B20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAA320748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217594;
-	bh=az2890KtbyrSb9tOHkx/aXxpV+On7IOFyMfHxl+d5eg=;
+	s=default; t=1579217598;
+	bh=qU0crJkjUsiWg2s1LzViuusnKuh8XR8514gpeOXXGK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mlkjyUfEwAfskLGfbb/bRKb0EDw52r8bi3dRgcJ+qIFHvu8wbme0jeX6neJSElyaC
-	 9Tckdqi/VXnb9xWLwbHgBXrGuBMszFGaczgXd+I1jHmW9rzN5pR8A04ylllpWZmyYJ
-	 qWEMwERZz6e1tORmdbCjF+HWoJcg0lGoZ8LHxSmQ=
+	b=ZUBNX4uDW5ZilOnaqkMYJf4dE6AwaRsdwuPdvJ9HmY6E8ZjGHTJtv5C10qWSwTFYb
+	 hm1xAyyrfnpz51NJY8xBDA9N7P3Bzh5kXQospZNUCQWpfjrTjyvpnVmMxuxImqG1w7
+	 Q8LtHnNbH8qu7fbCaSVIim6LM9qHR0gXDoorL42w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404301AbgAPXdM (ORCPT
+        id S2404322AbgAPXdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:33:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:33:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404273AbgAPXdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:33:06 -0500
+        id S2391410AbgAPXdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:33:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84D8D2073A;
-        Thu, 16 Jan 2020 23:33:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A6F20661;
+        Thu, 16 Jan 2020 23:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217586;
-        bh=az2890KtbyrSb9tOHkx/aXxpV+On7IOFyMfHxl+d5eg=;
+        s=default; t=1579217593;
+        bh=qU0crJkjUsiWg2s1LzViuusnKuh8XR8514gpeOXXGK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wu37+i8BUcjryDR6Cuyvr+HuTecp9n4ycUODA3v2ZmEZYgqXm9skJf01k0lM8b/sF
-         MDh3rlevxefRQ+9vPaWMO7pEFVRNB1Dzp7so9ITOt4zLRcUeAhFtmE4B9+MFgtcknM
-         6jEMQJietnHOs/LP1f4QY2GkeIO50wD7MDq45eSQ=
+        b=o3WBNkBVjp6mX7RWemrFmRH35dUs0oZBbo7jbbVkdk4V0dnZa1lqGEuy8c46T7Xv0
+         hujDw4sedukZkdhXPDudgY81Z//v1vEs94+AbdFGCO+rrq+suwK9XBvOpP3C1glfeM
+         lKhM6xdr8nFVuIn6eWpeZpxPHmh58uzgIed5SilY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Juerg Haefliger <juergh@canonical.com>
-Subject: [PATCH 4.14 32/71] arm64: add sentinel to kpti_safe_list
-Date:   Fri, 17 Jan 2020 00:18:30 +0100
-Message-Id: <20200116231714.206616625@linuxfoundation.org>
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 54/71] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
+Date:   Fri, 17 Jan 2020 00:18:52 +0100
+Message-Id: <20200116231717.044191050@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -63,42 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-commit 71c751f2a43fa03fae3cf5f0067ed3001a397013 upstream.
+commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f upstream.
 
-We're missing a sentinel entry in kpti_safe_list. Thus is_midr_in_range_list()
-can walk past the end of kpti_safe_list. Depending on the contents of memory,
-this could erroneously match a CPU's MIDR, cause a data abort, or other bad
-outcomes.
+Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
+op get_fmt") converted a former ov6650_g_fmt() video operation callback
+to an ov6650_get_fmt() pad operation callback.  However, the converted
+function disregards a format->which flag that pad operations should
+obey and always returns active frame format settings.
 
-Add the sentinel entry to avoid this.
+That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
+-EINVAL, or providing the response from a pad config argument, likely
+updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
+Since implementation of the latter is trivial, go for it.
 
-Fixes: be5b299830c63ed7 ("arm64: capabilities: Add support for checks based on a list of MIDRs")
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-Tested-by: Jan Kiszka <jan.kiszka@siemens.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Juerg Haefliger <juergh@canonical.com>
+Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/cpufeature.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/ov6650.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -836,6 +836,7 @@ static bool unmap_kernel_at_el0(const st
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
- 		MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
-+		{ /* sentinel */ }
- 	};
- 	char const *str = "kpti command line option";
- 	bool meltdown_safe;
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -531,10 +531,16 @@ static int ov6650_get_fmt(struct v4l2_su
+ 	*mf = ov6650_def_fmt;
+ 
+ 	/* update media bus format code and frame size */
+-	mf->width	= priv->rect.width >> priv->half_scale;
+-	mf->height	= priv->rect.height >> priv->half_scale;
+-	mf->code	= priv->code;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
+ 
++	} else {
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 
 
