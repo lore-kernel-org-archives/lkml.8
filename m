@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF25C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090DD24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74C2217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197678;
-	bh=15bRm9h+cQCiaAoP9jzfaeQXnYCPxbpP/sKtl0VsEss=;
+	s=default; t=1579197681;
+	bh=PSIyekv9flrRqMwXHw8WZ9qzzBUJ70eDK3NmgkqJndE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxeHhLqD81QKJwiT0meIjy3Vo09Nr5uPSt6mjUdpVZDhqhemfLH/eWyuOK7UWdz4x
-	 Z3EdzcdX6cauEX4x9c8NoG3RHgkw4ZPfs89NisOhN+S7z9prmEKpKV8Tfo+GgzHZVT
-	 fxR0qaDxLJ9kcAKGtVTWf0ivXXDKt+AGcqcDisc0=
+	b=kzGzI2gLv2FRavcVVu0wldjqJ49Ot/BizYdOAxJ1w/yfL6jReSp+FmqaUDhuKgApp
+	 x6Dgl5LZjLaStyv+0I5974yBJYEF+g4bCyJH/PEUj5rOTi4kMFFXD8cN0Eyflt0geg
+	 LQMNE8JtE0Fih4DWoFTM385eOO/LC524CT1oBKRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405717AbgAPRld (ORCPT
+        id S2394946AbgAPSBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58010 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:01:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393666AbgAPRko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:44 -0500
+        id S2405706AbgAPRlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F67D2471D;
-        Thu, 16 Jan 2020 17:40:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCF72470B;
+        Thu, 16 Jan 2020 17:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196443;
-        bh=15bRm9h+cQCiaAoP9jzfaeQXnYCPxbpP/sKtl0VsEss=;
+        s=default; t=1579196492;
+        bh=PSIyekv9flrRqMwXHw8WZ9qzzBUJ70eDK3NmgkqJndE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwhUqHWQaIhh2b/O/bYV/DecZ6i4LuVeBMyknvhquUnVSlRIu7ignUv2FIdVhmPEE
-         YJ+jnZLK3bBiHuTqr1jPm6WwtUi0qsunP2A4yTIBK2IIxkf1QkcVXMQvNL2I080ClV
-         0NY75ZvBdvskO9lNdrkJ33F4K+5N9JC+s1j8JWJQ=
+        b=T2IaP5/qRc+7rirxqiIvrax1yZ0HHmGxgJnc/BAHl5O4LGqzjGgkrYn6uo/V1zvez
+         egX6VsI1oaERuotuAcS1P/aTjXl2WbwczpXZ5Hdbbiw18Dzf6SyJe4avQp/K4Qn8dP
+         y68kKa2RIJD4vH/f4xN7pblH58TEzB9+W4PT5FjI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 206/251] of: mdio: Fix a signedness bug in of_phy_get_and_connect()
-Date:   Thu, 16 Jan 2020 12:35:55 -0500
-Message-Id: <20200116173641.22137-166-sashal@kernel.org>
+Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 235/251] media: exynos4-is: Fix recursive locking in isp_video_release()
+Date:   Thu, 16 Jan 2020 12:36:24 -0500
+Message-Id: <20200116173641.22137-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,34 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-[ Upstream commit d7eb651212fdbafa82d485d8e76095ac3b14c193 ]
+[ Upstream commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd ]
 
-The "iface" variable is an enum and in this context GCC treats it as
-an unsigned int so the error handling is never triggered.
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
-Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_mdio.c | 2 +-
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 262281bd68fa..1e70851b1530 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -353,7 +353,7 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
- 	struct phy_device *phy;
+diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+index e00fa03ddc3e..0c0eec671d49 100644
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -316,7 +316,7 @@ static int isp_video_release(struct file *file)
+ 		ivc->streaming = 0;
+ 	}
  
- 	iface = of_get_phy_mode(np);
--	if (iface < 0)
-+	if ((int)iface < 0)
- 		return NULL;
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
  
- 	phy_np = of_parse_phandle(np, "phy-handle", 0);
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 -- 
 2.20.1
 
