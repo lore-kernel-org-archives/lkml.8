@@ -2,136 +2,110 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E46CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B598C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360652467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECCA24671
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiyKo5kq"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Odv047Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbgAPATz (ORCPT
+        id S1731519AbgAPAV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:19:55 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35042 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgAPATz (ORCPT
+        Wed, 15 Jan 2020 19:21:28 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:58916 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729025AbgAPAV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:19:55 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i15so17816703oto.2;
-        Wed, 15 Jan 2020 16:19:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
-        b=TiyKo5kq22lrMJu+TfM0cyJlBOcyXACcTmJNkYuhgZ6+Ej74UPkEnUpcj1QtU+iMFE
-         VlOLQhgiB+TqW56ap5Fng7PYwiawZMMrV/Kkgr7T82kfs77IQq6UTORND7mzW52UTH33
-         G58aS2m4xyePIcAasMj7yNJopsaKoonFKtJvjYlLCjuU4PMhE90P3CDlGiCWfzfnOc+k
-         xgqAINXlRj/6yCySZCHefcEy31T32+QYxDjKCNckgyq+Dv712FD9vHVXkYJIOXwF4MG/
-         ZVqD63CBkiwbKDW0Qr+HzJiDsj0RUD4PGrHQY/b9t+HWteju8J7/tDsIgVAGyDw6Y0Pz
-         ip6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
-        b=dSuGSNwbdTAQaT82t/W7v2yYnFPPDwvwIWAUqToqd1eEIQgDwnKkzI3zTw/JODKwj6
-         qfIQRnpWHJIW4k0ti7Dd4+MGbtTM4ujSOa7YGpd8PaqBhjGQkNzTcqCN1V+LbE5bmLld
-         wTQWX8bKlVBCf+XGY6nj6ToG3RpQKcs+v4L98xAWqKHnwM2+frbZBWrx8ChBrTY6Lakd
-         J4EPrpjRgPtJWyeNLp69Auuu+wMmiZ7j1AqX7H5gQ1H6kCwD7xjmkZakBkOgKmOiXFJU
-         vWwR4xlamH14+ZORFVbAxbYEbwtzSsTArTjEgbV5q05/9Et/KWccows/mmXZI9jFHhK1
-         O+oQ==
-X-Gm-Message-State: APjAAAUXpFjlWkoaFTPO7u6fAcah08KWjBfsnrPZrtDpwm2Vms7vuv06
-        B2Q3xzS2RhEOK1PGnbYaMw3plyxv7CyObBP8COc=
-X-Google-Smtp-Source: APXvYqwEp+kpYgUagYAHFYU2YX8f9iDBexiTW7nUmnFZ6PPZk5G/o3uJkrK9AOZImf30kqPO5pYY4z5BycnOYnfOpaI=
-X-Received: by 2002:a9d:7090:: with SMTP id l16mr4854274otj.187.1579133994535;
- Wed, 15 Jan 2020 16:19:54 -0800 (PST)
+        Wed, 15 Jan 2020 19:21:28 -0500
+Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3F5564070F;
+        Thu, 16 Jan 2020 00:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579134087; bh=2QRPZlUmPMVnUxkrOMmW/dmjBL5xHEJTZroz7aCHYDg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Odv047ZpM5euFeHCEiCsWsNDvJZiylISOtDuFISKUcwjrnwcf/LAwpqVPDhcKbhot
+         OETgHA3iK15nzCOHthNKRS/pH/LW12mwbL4CiE7XfdgtBcIwBDZoqNl2ABVH9ei71k
+         AKNyzazvUrwk3Votu625wgKWczHGyH3DMAQDC73+vZw7BGiqAY0ThCHk1snRB4ogMh
+         Sh+25mtnYtW03Ugl8BoXTG3rx4zq9ivsTxCzc9WjD25o1I2Oh2iy27vGbAHKBmxcBr
+         JkRIw0cqViHXe/kQAGdqaUH9BgxFh3tJhOJLTIPuf+23YoyhkIBgB128vxE+6dMs0/
+         sYTDwelsA/B5Q==
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.20])
+        by mailhost.synopsys.com (Postfix) with ESMTP id A6F56A0061;
+        Thu, 16 Jan 2020 00:21:26 +0000 (UTC)
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH v2 1/2] asm-generic/uaccess: don't define inline functions if noinline lib/* in use
+Date:   Wed, 15 Jan 2020 16:21:23 -0800
+Message-Id: <20200116002124.17988-2-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116002124.17988-1-vgupta@synopsys.com>
+References: <20200116002124.17988-1-vgupta@synopsys.com>
 MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
- <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
- <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87imldbqe3.fsf@nanos.tec.linutronix.de>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Thu, 16 Jan 2020 02:19:43 +0200
-Message-ID: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Ramon Fried <rfried.dev@gmail.com> writes:
-> > On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
-> >> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > Ramon Fried <rfried.dev@gmail.com> writes:
-> >> > > Besides the side effect of that, I don't really understand the logic
-> >> > > of not masking the MSI until the threaded handler is complete,
-> >> > > especially when there's no HW handler and only threaded handler.
-> >> >
-> >> > What's wrong with having another interrupt firing while the threaded
-> >> > handler is running? Nothing, really. It actually can be desired because
-> >> > the threaded handler is allowed to sleep.
-> >> >
-> >> What do you mean, isn't it the purpose IRQ masking ?  Interrupt
-> >> coalescing is done to mitigate these IRQ's, these HW interrupts just
-> >> consume CPU cycles and don't do anything useful (scheduling an
-> >> already scheduled thread).
->
-> Again, that depends on your POV. It's a perfectly valid scenario to have
-> another HW irq coming in preventing the thread to go to sleep and just
-> run for another cycle. So no, masking is not necessarily required and
-> the semantics of MSI is edge type, so the hardware should not fire
-> another interrupt _before_ the threaded handler actually took care of
-> the initial one.
->
-> > Additionally, in this case there isn't even an HW IRQ handler, it's
-> > passed as NULL in the request IRQ function in this scenario.
->
-> This is completely irrelevant. The primary hardware IRQ handler is
-> provided by the core code in this case.
->
-You're right.
+There are 2 generic varaints of strncpy_from_user() / strnlen_user()
+ (1). inline version in asm-generic/uaccess.h
+ (2). optimized word-at-a-time version in lib/*
 
-> Due to the semantics of MSI this is perfectly fine and aside of your
-> problem this has worked perfectly fine so far and it's an actual
-> performance win because it avoid fiddling with the MSI mask which is
-> slow.
->
-fiddling with MSI masks is a configuration space write, which is
-non-posted, so it does come with a price.
-The question is if a test was ever conducted to see the it's better
-than spurious IRQ's.
+This patch disables #1 if #2 selected. This allows arches to continue
+reusing asm-generic/uaccess.h for rest of code
 
-> You still have not told which driver/hardware is affected by this. Can
-> you please provide that information so we can finally look at the actual
-> hardware/driver combo?
->
-Sure,
-I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
-line which several MSI are multiplexed on it.
-It's configured with handle_level_irq() as the GIC is level IRQ.
+This came up when switching ARC to generic word-at-a-time interface
 
-The ack callback acks the GIC irq.
-the mask/unmask calls pci_msi_mask_irq() / pci_msi_unmask_irq()
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+ include/asm-generic/uaccess.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thanks,
-Ramon.
-> Either the driver is broken or the hardware does not comply with the MSI
-> spec.
->
-> Thanks,
->
->         tglx
+diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
+index e935318804f8..2ea7f4e0e60e 100644
+--- a/include/asm-generic/uaccess.h
++++ b/include/asm-generic/uaccess.h
+@@ -212,6 +212,7 @@ static inline int __get_user_fn(size_t size, const void __user *ptr, void *x)
+ 
+ extern int __get_user_bad(void) __attribute__((noreturn));
+ 
++#ifndef CONFIG_GENERIC_STRNCPY_FROM_USER
+ /*
+  * Copy a null terminated string from userspace.
+  */
+@@ -234,7 +235,11 @@ strncpy_from_user(char *dst, const char __user *src, long count)
+ 		return -EFAULT;
+ 	return __strncpy_from_user(dst, src, count);
+ }
++#else
++extern long strncpy_from_user(char *dest, const char __user *src, long count);
++#endif
+ 
++#ifndef CONFIG_GENERIC_STRNLEN_USER
+ /*
+  * Return the size of a string (including the ending 0)
+  *
+@@ -255,6 +260,9 @@ static inline long strnlen_user(const char __user *src, long n)
+ 		return 0;
+ 	return __strnlen_user(src, n);
+ }
++#else
++extern __must_check long strnlen_user(const char __user *str, long n);
++#endif
+ 
+ /*
+  * Zero Userspace
+-- 
+2.20.1
+
