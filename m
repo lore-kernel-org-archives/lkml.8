@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE564C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F5D20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F1920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217757;
-	bh=9oyDVyz5kZlihQWZopAadL/nsuCWZWVO7piyVSELQco=;
+	s=default; t=1579217764;
+	bh=FFqAA6SNsYplqYslGXzhazbin7/n7h1wWcwSQB08lDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWuNA1u3Ge6OwJKqAWF6ph4TGV8VMBSNkypGg9z1pzPe2xlq260DmhOOZhwLwFQhk
-	 tu7TqTJiZwIsj5DWwV+DJ7ARmMo8qeS7PZB24jw0rBZbfRkgcBwLpEuEdzkdXqBhun
-	 U2yur3K5OjJskNkabVcuiGZB8QDWNH0lA1HVpZyM=
+	b=T1EkGy5RWNDGM7THL6GyRtUkGs5iIGCAK+vbDSzzCC+8X1cBvDco3zE30GJW6XHcs
+	 KSSslzFG2i11LT/Dt1sKM4To+yrzST9rb+/g73+GevY5L6EKq13vxep8xTU9N6e4Yw
+	 B5lKozCJB6D/Ct4JGf6ZVUV71W9b9OCmxZJxv2Xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404134AbgAPXb7 (ORCPT
+        id S2404223AbgAPXgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40046 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:36:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404037AbgAPXbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:35 -0500
+        id S2404084AbgAPXb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D035A20684;
-        Thu, 16 Jan 2020 23:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828DC214AF;
+        Thu, 16 Jan 2020 23:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217495;
-        bh=9oyDVyz5kZlihQWZopAadL/nsuCWZWVO7piyVSELQco=;
+        s=default; t=1579217517;
+        bh=FFqAA6SNsYplqYslGXzhazbin7/n7h1wWcwSQB08lDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMvkHtsJM085c1pffypZKaJoS7fSX/Iih6QfvPw1ia6BFF6kQQiBE82OGEybKOrN/
-         c8qR2Eeho23Q0M5OoSe3mcG4sns0qD2e5LuwijRGhkpEx+0nQ2wd5GEeJaNkBy8Q00
-         rQAWjFhzU7XW3WiKLbLFvDvYqqdYMekHyeBlCVpU=
+        b=kT6ZzoFOYnRPq/FdxN3ljVh1nCOo5KPB4FNshO/5o2j6bdvvT/OcnC0rC53iWOKUY
+         xxqh2kyYg9etbsZ59nGQw/aPnBoG2p9+OC9NezWkQuUKstFoMKRQNIoM1QKZKx6tGS
+         o5AF/7I3qRpxLlEffzg5+FxvRdX/TDJ5nJin/JG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 21/71] RDMA/bnxt_re: Fix Send Work Entry state check while polling completions
-Date:   Fri, 17 Jan 2020 00:18:19 +0100
-Message-Id: <20200116231712.467213451@linuxfoundation.org>
+        stable@vger.kernel.org, Hanjun Guo <hanjun.guo@linaro.org>,
+        Lei Li <lious.lilei@hisilicon.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 09/71] arm64: Enforce BBM for huge IO/VMAP mappings
+Date:   Fri, 17 Jan 2020 00:18:07 +0100
+Message-Id: <20200116231710.759661967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -59,50 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit c5275723580922e5f3264f96751337661a153c7d upstream.
+commit 15122ee2c515a253b0c66a3e618bc7ebe35105eb upstream.
 
-Some adapters need a fence Work Entry to handle retransmission.  Currently
-the driver checks for this condition, only if the Send queue entry is
-signalled. Implement the condition check, irrespective of the signalled
-state of the Work queue entries
+ioremap_page_range doesn't honour break-before-make and attempts to put
+down huge mappings (using p*d_set_huge) over the top of pre-existing
+table entries. This leads to us leaking page table memory and also gives
+rise to TLB conflicts and spurious aborts, which have been seen in
+practice on Cortex-A75.
 
-Failure to add the fence can result in access to memory that is already
-marked as completed, triggering data corruption, transmission failure,
-IOMMU failures, etc.
+Until this has been resolved, refuse to put block mappings when the
+existing entry is found to be present.
 
-Fixes: 9152e0b722b2 ("RDMA/bnxt_re: HW workarounds for handling specific conditions")
-Link: https://lore.kernel.org/r/1574671174-5064-3-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 324420bf91f60 ("arm64: add support for ioremap() block mappings")
+Reported-by: Hanjun Guo <hanjun.guo@linaro.org>
+Reported-by: Lei Li <lious.lilei@hisilicon.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/hw/bnxt_re/qplib_fp.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm64/mm/mmu.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -2024,13 +2024,13 @@ static int bnxt_qplib_cq_process_req(str
- 			bnxt_qplib_mark_qp_error(qp);
- 			bnxt_qplib_unlock_buddy_cq(qp, cq);
- 		} else {
-+			/* Before we complete, do WA 9060 */
-+			if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
-+				      cqe_sq_cons)) {
-+				*lib_qp = qp;
-+				goto out;
-+			}
- 			if (swq->flags & SQ_SEND_FLAGS_SIGNAL_COMP) {
--				/* Before we complete, do WA 9060 */
--				if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
--					      cqe_sq_cons)) {
--					*lib_qp = qp;
--					goto out;
--				}
- 				cqe->status = CQ_REQ_STATUS_OK;
- 				cqe++;
- 				(*budget)--;
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -917,6 +917,11 @@ int pud_set_huge(pud_t *pudp, phys_addr_
+ {
+ 	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
+ 					pgprot_val(mk_sect_prot(prot)));
++
++	/* ioremap_page_range doesn't honour BBM */
++	if (pud_present(READ_ONCE(*pudp)))
++		return 0;
++
+ 	BUG_ON(phys & ~PUD_MASK);
+ 	set_pud(pudp, pfn_pud(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
+@@ -926,6 +931,11 @@ int pmd_set_huge(pmd_t *pmdp, phys_addr_
+ {
+ 	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
+ 					pgprot_val(mk_sect_prot(prot)));
++
++	/* ioremap_page_range doesn't honour BBM */
++	if (pmd_present(READ_ONCE(*pmdp)))
++		return 0;
++
+ 	BUG_ON(phys & ~PMD_MASK);
+ 	set_pmd(pmdp, pfn_pmd(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
 
 
