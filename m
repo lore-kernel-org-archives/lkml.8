@@ -2,151 +2,193 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C06C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1DAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F30324695
+	by mail.kernel.org (Postfix) with ESMTP id DCF2C24695
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VXgDEvMT";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UYyOd+tA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579196536;
+	bh=0NI5eg90uq0zouBTqhJBrfGAOMmaxF1zTGm0KwDIzGE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=17mKnMTdYOstMRrCQFvxPevZp4Xt+PsJjALZ+T0a3ALPdkfkL5W0xCfBVH3g9pSOV
+	 IOQYdTJt0wScx7uIS2JpPHGyLRHfXmffTJ3kG8c0N95IE5J5Pc2kNXkUWSTQk/Ld+5
+	 auJ4EJDvlMfe7Ba9VsRZ9HxkbK7JlIuWcM3CT2TU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405485AbgAPRmK (ORCPT
+        id S2405494AbgAPRmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:10 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:2830 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393635AbgAPRk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:27 -0500
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GHY9YT011392;
-        Thu, 16 Jan 2020 09:40:19 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=6s+YYiYy0h9ardOuLOrcnfHZHEWKGxHwuAlAHUJEO4I=;
- b=VXgDEvMT3JE0ck/Q6eRctzdVMAIXIMjtgJ74w1LGRuhuHkNOJyGxbSNs3/HXLqtS+7Uc
- z71WG7DfWr2CgezXTX2daDLHj/djGoUcrNYSFzQytkIiOEH+t6Kw3/Va3TOt4Y0JH7ds
- k25Er4OKua69KDHQsMwdju6qRBpw1jY6QMU= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xjj1uak15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 16 Jan 2020 09:40:19 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jan 2020 09:40:19 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ArWcUJrTx4e/BImoZJEg9NZKCS5xw4ubAn/U/kxH6yl+WX4QtTfrcBTDqN2HHYcYHOvbhmU+egXCyam640zLGB+Co2FvVSc9357j2x5Z4/kcmNHoaZd+2NSXeEX2AbtDkeZGeZCXEItUkWsRSQQuRl7/u7C0aPXz5RPSajqA7J7cgp0Rx1s8bagGebXaGIqt8Sewk4pjjlUlJ9JQXBDSJ0vVw9jlCKj5wiYXID6JL3a/VAvxr1H6CJyxQm3l3k9qHOgNIOzIiPmFltJ7PoVPxOjJ2yHQwMIMs9M/UcsqhqcGEvPRlo7ZZ9dJo+OkTfTykqOzhUTbZk4qpfJzR2gL5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6s+YYiYy0h9ardOuLOrcnfHZHEWKGxHwuAlAHUJEO4I=;
- b=CxrpK2zW99PzCUfc8gNgDVBXRvWj8ut1imzvbXbSvydmkJ/zDxcOe4FCbVnyz1tDouAffgxE0cCC6z21O8riNtFcN5tY/9sMuHt72DPa/dCdz5bC/BV7woSSJr/St4Sg7I/trXav5Qfa5Q+UiYvvE71uh6wUTfOggihAkAXlPevz7Rxy8SXCskfjk8UWk4qlqag9IgZ877Tnmd7nDk+xtsspNyX+0KPExtLqLKWiQyxfk2rbmzTtL7devSH0NuPvLIdYGMS06ZvpsyT1QGVoPHqcOR9IKFNxmrFfJ3xlZ1n6EFoi7EjF8vny1JA3HfTSxV2FDokmyxaXD4VPkNUBSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6s+YYiYy0h9ardOuLOrcnfHZHEWKGxHwuAlAHUJEO4I=;
- b=UYyOd+tAfxhyMOhRBfmbQSZAaXH2OG33WRae0sNR3jio3K7O6fNwSe3AbpV3xOAWZR7w02Rvpb8B43jtFoFuNZyYAWzPSmpQJ/mp3/dhHStTHE498XCg0H7F1UeMvjIVnAcKhscQVSQyQ4b0TOTgctNzqrDKFtanffIttYbyJk4=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
- BYAPR15MB3254.namprd15.prod.outlook.com (20.179.59.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.11; Thu, 16 Jan 2020 17:40:15 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
- 17:40:14 +0000
-Received: from tower.DHCP.thefacebook.com (2620:10d:c090:200::2:492d) by MWHPR10CA0004.namprd10.prod.outlook.com (2603:10b6:301::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Thu, 16 Jan 2020 17:40:13 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH v2 6/6] mm: kmem: rename (__)memcg_kmem_(un)charge_memcg()
- to __memcg_kmem_(un)charge()
-Thread-Topic: [PATCH v2 6/6] mm: kmem: rename
- (__)memcg_kmem_(un)charge_memcg() to __memcg_kmem_(un)charge()
-Thread-Index: AQHVzJKbgVUSlNYKkESLg4k9oItO2aftjtoA
-Date:   Thu, 16 Jan 2020 17:40:14 +0000
-Message-ID: <20200116174010.GA15833@tower.DHCP.thefacebook.com>
-References: <20200109202659.752357-1-guro@fb.com>
- <20200109202659.752357-7-guro@fb.com> <20200116173002.GF57074@cmpxchg.org>
-In-Reply-To: <20200116173002.GF57074@cmpxchg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR10CA0004.namprd10.prod.outlook.com (2603:10b6:301::14)
- To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:150::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:492d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 23ebee7f-c5e9-4568-abdc-08d79aab24d0
-x-ms-traffictypediagnostic: BYAPR15MB3254:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB325449ECDB439DC1855A336DBE360@BYAPR15MB3254.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(4744005)(52116002)(1076003)(8936002)(8676002)(66946007)(66556008)(86362001)(71200400001)(6506007)(66446008)(64756008)(16526019)(66476007)(54906003)(81156014)(7696005)(5660300002)(2906002)(6916009)(316002)(81166006)(478600001)(9686003)(33656002)(4326008)(186003)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3254;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /88UTiiESvFryIYrPVbpJcQDj4PrgLQAEWEGoL04DQ4PHDlLQCl7/b+xJ2KB29qNd8KlLCjGtGRRA2op7hcI3Zic/no7+E3gFWNzrZ/k4reS/IchW9zokabaxuEYGJSovGtme8PexGtFjrSQbDz0fdDEk4id7FgI6DiQDnJpzRTwxELKgT8MzZqgYlfqsGcicoggdmE6LuQdCJ5MRd1UhfKOdkHgOhtGDSP4jHPeSyv8XXW4m6p2nqHsugawIDPZzJsJr2/61+IGrQn03ErEUW9+IrOTm/3HLL9M2M+sqNrwvV+c69sGfJqS74cTjjDVHjKXJZIBRP9iMWpXAN9rvJrZyBR8jENyS+GgPl9CCn2xRZammXr6B8B0m7NZM62cByaB0JS2RE86u/xch34FOIxxlmiuuxZ5VNader05ldffjbH6NOHW5izU2zJ0hjKG
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <795EB003EDC6FB458C73B493DF0DD550@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 Jan 2020 12:42:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405475AbgAPRka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:30 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F40F24706;
+        Thu, 16 Jan 2020 17:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196429;
+        bh=0NI5eg90uq0zouBTqhJBrfGAOMmaxF1zTGm0KwDIzGE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CzHMqM7rrsf9504ClzzZdjmXLampR6Z8EU8s7Kz/uTd823Cp5lNpkMJDjXeRRR6bq
+         BOr06q4K6eUKGZCbwVlMyo4RFOpPw4YS+Jhp7lXXsvvfGyrhVYnmIOVlKcU04OEQ2l
+         imcbXszFnLkokMdIppsiD1p91GnGeuVs9g6icl+0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Koen Vandeputte <koen.vandeputte@ncentric.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 196/251] ath9k: dynack: fix possible deadlock in ath_dynack_node_{de}init
+Date:   Thu, 16 Jan 2020 12:35:45 -0500
+Message-Id: <20200116173641.22137-156-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23ebee7f-c5e9-4568-abdc-08d79aab24d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 17:40:14.6043
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: l299UcLCFgOufrgjtu09PrCq5MfI6152S+8zc4GX+UWKf15iHRRPCvg8i6IczClf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3254
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_05:2020-01-16,2020-01-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- spamscore=0 malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
- adultscore=0 mlxlogscore=393 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001160142
-X-FB-Internal: deliver
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 12:30:02PM -0500, Johannes Weiner wrote:
-> On Thu, Jan 09, 2020 at 12:26:59PM -0800, Roman Gushchin wrote:
-> > Drop the _memcg suffix from (__)memcg_kmem_(un)charge functions.
-> > It's shorter and more obvious.
-> >=20
-> > These are the most basic functions which are just (un)charging the
-> > given cgroup with the given amount of pages.
-> >=20
-> > Also fix up the corresponding comments.
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
->=20
-> This looks good to me. I also appreciate the grouping of the functions
-> by layer (first charge/uncharge, then charge_page/uncharge_page).
->=20
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Thank you for the review!
+[ Upstream commit e1aa1a1db3b01c9890e82cf065cee99962ba1ed9 ]
+
+Fix following lockdep warning disabling bh in
+ath_dynack_node_init/ath_dynack_node_deinit
+
+[   75.955878] --------------------------------
+[   75.955880] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+[   75.955884] swapper/0/0 [HC0[0]:SC1[3]:HE1:SE0] takes:
+[   75.955888] 00000000792a7ee0 (&(&da->qlock)->rlock){+.?.}, at: ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.955905] {SOFTIRQ-ON-W} state was registered at:
+[   75.955912]   lock_acquire+0x9a/0x160
+[   75.955917]   _raw_spin_lock+0x2c/0x70
+[   75.955927]   ath_dynack_node_init+0x2a/0x60 [ath9k_hw]
+[   75.955934]   ath9k_sta_state+0xec/0x160 [ath9k]
+[   75.955976]   drv_sta_state+0xb2/0x740 [mac80211]
+[   75.956008]   sta_info_insert_finish+0x21a/0x420 [mac80211]
+[   75.956039]   sta_info_insert_rcu+0x12b/0x2c0 [mac80211]
+[   75.956069]   sta_info_insert+0x7/0x70 [mac80211]
+[   75.956093]   ieee80211_prep_connection+0x42e/0x730 [mac80211]
+[   75.956120]   ieee80211_mgd_auth.cold+0xb9/0x15c [mac80211]
+[   75.956152]   cfg80211_mlme_auth+0x143/0x350 [cfg80211]
+[   75.956169]   nl80211_authenticate+0x25e/0x2b0 [cfg80211]
+[   75.956172]   genl_family_rcv_msg+0x198/0x400
+[   75.956174]   genl_rcv_msg+0x42/0x90
+[   75.956176]   netlink_rcv_skb+0x35/0xf0
+[   75.956178]   genl_rcv+0x1f/0x30
+[   75.956180]   netlink_unicast+0x154/0x200
+[   75.956182]   netlink_sendmsg+0x1bf/0x3d0
+[   75.956186]   ___sys_sendmsg+0x2c2/0x2f0
+[   75.956187]   __sys_sendmsg+0x44/0x80
+[   75.956190]   do_syscall_64+0x55/0x1a0
+[   75.956192]   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   75.956194] irq event stamp: 2357092
+[   75.956196] hardirqs last  enabled at (2357092): [<ffffffff818c62de>] _raw_spin_unlock_irqrestore+0x3e/0x50
+[   75.956199] hardirqs last disabled at (2357091): [<ffffffff818c60b1>] _raw_spin_lock_irqsave+0x11/0x80
+[   75.956202] softirqs last  enabled at (2357072): [<ffffffff8106dc09>] irq_enter+0x59/0x60
+[   75.956204] softirqs last disabled at (2357073): [<ffffffff8106dcbe>] irq_exit+0xae/0xc0
+[   75.956206]
+               other info that might help us debug this:
+[   75.956207]  Possible unsafe locking scenario:
+
+[   75.956208]        CPU0
+[   75.956209]        ----
+[   75.956210]   lock(&(&da->qlock)->rlock);
+[   75.956213]   <Interrupt>
+[   75.956214]     lock(&(&da->qlock)->rlock);
+[   75.956216]
+                *** DEADLOCK ***
+
+[   75.956217] 1 lock held by swapper/0/0:
+[   75.956219]  #0: 000000003bb5675c (&(&sc->sc_pcu_lock)->rlock){+.-.}, at: ath9k_tasklet+0x55/0x240 [ath9k]
+[   75.956225]
+               stack backtrace:
+[   75.956228] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.3.0-rc1-wdn+ #13
+[   75.956229] Hardware name: Dell Inc. Studio XPS 1340/0K183D, BIOS A11 09/08/2009
+[   75.956231] Call Trace:
+[   75.956233]  <IRQ>
+[   75.956236]  dump_stack+0x67/0x90
+[   75.956239]  mark_lock+0x4c1/0x640
+[   75.956242]  ? check_usage_backwards+0x130/0x130
+[   75.956245]  ? sched_clock_local+0x12/0x80
+[   75.956247]  __lock_acquire+0x484/0x7a0
+[   75.956250]  ? __lock_acquire+0x3b9/0x7a0
+[   75.956252]  lock_acquire+0x9a/0x160
+[   75.956259]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956262]  _raw_spin_lock_bh+0x34/0x80
+[   75.956268]  ? ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956275]  ath_dynack_sample_ack_ts+0x4d/0xa0 [ath9k_hw]
+[   75.956280]  ath_rx_tasklet+0xd09/0xe90 [ath9k]
+[   75.956286]  ath9k_tasklet+0x102/0x240 [ath9k]
+[   75.956288]  tasklet_action_common.isra.0+0x6d/0x170
+[   75.956291]  __do_softirq+0xcc/0x425
+[   75.956294]  irq_exit+0xae/0xc0
+[   75.956296]  do_IRQ+0x8a/0x110
+[   75.956298]  common_interrupt+0xf/0xf
+[   75.956300]  </IRQ>
+[   75.956303] RIP: 0010:cpuidle_enter_state+0xb2/0x400
+[   75.956308] RSP: 0018:ffffffff82203e70 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd7
+[   75.956310] RAX: ffffffff82219800 RBX: ffffffff822bd0a0 RCX: 0000000000000000
+[   75.956312] RDX: 0000000000000046 RSI: 0000000000000006 RDI: ffffffff82219800
+[   75.956314] RBP: ffff888155a01c00 R08: 00000011af51aabe R09: 0000000000000000
+[   75.956315] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+[   75.956317] R13: 00000011af51aabe R14: 0000000000000003 R15: ffffffff82219800
+[   75.956321]  cpuidle_enter+0x24/0x40
+[   75.956323]  do_idle+0x1ac/0x220
+[   75.956326]  cpu_startup_entry+0x14/0x20
+[   75.956329]  start_kernel+0x482/0x489
+[   75.956332]  secondary_startup_64+0xa4/0xb0
+
+Fixes: c774d57fd47c ("ath9k: add dynamic ACK timeout estimation")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Tested-by: Koen Vandeputte <koen.vandeputte@ncentric.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/dynack.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/dynack.c b/drivers/net/wireless/ath/ath9k/dynack.c
+index 6e236a485431..71b4888b30e7 100644
+--- a/drivers/net/wireless/ath/ath9k/dynack.c
++++ b/drivers/net/wireless/ath/ath9k/dynack.c
+@@ -300,9 +300,9 @@ void ath_dynack_node_init(struct ath_hw *ah, struct ath_node *an)
+ 
+ 	an->ackto = ackto;
+ 
+-	spin_lock(&da->qlock);
++	spin_lock_bh(&da->qlock);
+ 	list_add_tail(&an->list, &da->nodes);
+-	spin_unlock(&da->qlock);
++	spin_unlock_bh(&da->qlock);
+ }
+ EXPORT_SYMBOL(ath_dynack_node_init);
+ 
+@@ -316,9 +316,9 @@ void ath_dynack_node_deinit(struct ath_hw *ah, struct ath_node *an)
+ {
+ 	struct ath_dynack *da = &ah->dynack;
+ 
+-	spin_lock(&da->qlock);
++	spin_lock_bh(&da->qlock);
+ 	list_del(&an->list);
+-	spin_unlock(&da->qlock);
++	spin_unlock_bh(&da->qlock);
+ }
+ EXPORT_SYMBOL(ath_dynack_node_deinit);
+ 
+-- 
+2.20.1
+
