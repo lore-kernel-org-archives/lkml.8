@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3AFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5490DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3967206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2475B206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201368;
-	bh=oGGrABFoCE66QEGKz/t3ZELCjP6BGSRD8f8dFyHbJzA=;
+	s=default; t=1579201375;
+	bh=nehLpuv8ecbZ2QZTvLTSRS74dVLre05bitNHwwtOKKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQTn+WNPU+xWTtpQ772HEl/NIto4ygsAI7KCjhhwbWXuyvjcp8GIlsXssKmKi8yu+
-	 ilfb4qOnT5/di5lZDnuqjKWhMvi2Ljm9ZCxMtYKU2W8YAefxbd87/bUO7CegVxtNyg
-	 tHjEArVabH06ohgfoRI3s8Z2ofoY75/klhg1UP3I=
+	b=zCJ4Zyvu7+hWQCjh6vlkkN/DJwJrLT5VK8rubASVTmQ3vzow7haGlTxwXUtkhwraP
+	 7Xu+MlBEq+NZJ+o1TTuN4ot0Yy4AtHx99HFaBWMgDqklKxo3LWzWAGmVrqgki9cPvv
+	 Jc1eLd8VvCdyVMQtQGO3FOxZOZTbZyj6/rSxMGaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407275AbgAPTCp (ORCPT
+        id S2388750AbgAPRFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388757AbgAPRFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:35 -0500
+        id S2388650AbgAPRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE39207FF;
-        Thu, 16 Jan 2020 17:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57FD520730;
+        Thu, 16 Jan 2020 17:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194335;
-        bh=oGGrABFoCE66QEGKz/t3ZELCjP6BGSRD8f8dFyHbJzA=;
+        s=default; t=1579194322;
+        bh=nehLpuv8ecbZ2QZTvLTSRS74dVLre05bitNHwwtOKKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FtV9ru17zvXYaT2+yBSPgA9J6FVZubqqhapcYJQ/u+2gYC6NFg5VXsDNfWqM8cg8a
-         SMVKc6xgPi+PDP5Uj6IZFQFI8UmUzJ8kKrG+HuVoaAe1CdnG4ZprbfXVtDKXIKaAuN
-         u+AEt5v8d0jYE5tMU3QB7cwk+PP5LtvdKiQXMPX4=
+        b=z8AMhHeGETH2vAcM6qFmi5yYE6CXnkvYIN+OApnaKhG2Xe2B+rBVIKftzMWvo45YG
+         +Ax4JTRQyeDmbYx9GDEa8+6CnXgt1rqkhN4XQVB+o34BLpdp9dyWhGKPjaKQxCtQTv
+         eFumPW+g5aoCrHWa3frlff+fWXW6GsUpHJUMVywA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Ignatov <rdna@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 280/671] bpf: Add missed newline in verifier verbose log
-Date:   Thu, 16 Jan 2020 11:58:38 -0500
-Message-Id: <20200116170509.12787-17-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 271/671] bus: ti-sysc: Fix sysc_unprepare() when no clocks have been allocated
+Date:   Thu, 16 Jan 2020 11:58:29 -0500
+Message-Id: <20200116170509.12787-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,43 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ignatov <rdna@fb.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 1fbd20f8b77b366ea4aeb92ade72daa7f36a7e3b ]
+[ Upstream commit aaa29bb01cc4bf5a87dbdb219efba3b09f259d8e ]
 
-check_stack_access() that prints verbose log is used in
-adjust_ptr_min_max_vals() that prints its own verbose log and now they
-stick together, e.g.:
+If we return early before ddata->clocks have been allocated we will get a
+NULL pointer dereference in sysc_unprepare(). Let's fix this by returning
+early when no clocks are allocated.
 
-  variable stack access var_off=(0xfffffffffffffff0; 0x4) off=-16
-  size=1R2 stack pointer arithmetic goes out of range, prohibited for
-  !root
-
-Add missing newline so that log is more readable:
-  variable stack access var_off=(0xfffffffffffffff0; 0x4) off=-16 size=1
-  R2 stack pointer arithmetic goes out of range, prohibited for !root
-
-Fixes: f1174f77b50c ("bpf/verifier: rework value tracking")
-Signed-off-by: Andrey Ignatov <rdna@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 0eecc636e5a2 ("bus: ti-sysc: Add minimal TI sysc interconnect target driver")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bus/ti-sysc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 9e72b2f8c3dd..0952049b5ff1 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1253,7 +1253,7 @@ static int check_stack_access(struct bpf_verifier_env *env,
- 		char tn_buf[48];
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 2813f9ed57c0..54c8c8644df2 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1400,6 +1400,9 @@ static void sysc_unprepare(struct sysc *ddata)
+ {
+ 	int i;
  
- 		tnum_strn(tn_buf, sizeof(tn_buf), reg->var_off);
--		verbose(env, "variable stack access var_off=%s off=%d size=%d",
-+		verbose(env, "variable stack access var_off=%s off=%d size=%d\n",
- 			tn_buf, off, size);
- 		return -EACCES;
- 	}
++	if (!ddata->clocks)
++		return;
++
+ 	for (i = 0; i < SYSC_MAX_CLOCKS; i++) {
+ 		if (!IS_ERR_OR_NULL(ddata->clocks[i]))
+ 			clk_unprepare(ddata->clocks[i]);
 -- 
 2.20.1
 
