@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461ABC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2833C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABA520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C92D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198632;
-	bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
+	s=default; t=1579198638;
+	bh=bdYDF/iChZtMetzI45f9XkEHVFoP6QF7TX2gToOJzk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTXbnIyByUVx0Y+DwM4KtL27HaxQ0U9ceI1tlOSUUp/xhl7W8n652XWvP2m2g912w
-	 kq3kxmY7wn5C63GLASfTTCSVOGQkAkpncfXpBEOxLSYDIndnPWIAOLzWwcitKOd3am
-	 VGmquKLWrO7ofdQHr1b1bu4c8z7aVH9yyBaX1I4A=
+	b=blk0aV0zZJIxyoyv7ykdZZJH81rWWEomptu84qSmyB4GWbkLpaodwXa2oIElsoRTC
+	 3KqZprQA4VKxPipVbBWfHTsHf3Mx8mDTJvJPYR6bPe73oj9/DfEja+21Pz4R5TXvBz
+	 L9CqJq1LJliGgGBIS9NZ8ZArV0K97xNoqREw55Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407033AbgAPSRL (ORCPT
+        id S2436479AbgAPSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:17:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:17:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404310AbgAPR3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:15 -0500
+        id S2404303AbgAPR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 815AE246F4;
-        Thu, 16 Jan 2020 17:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AE9246F4;
+        Thu, 16 Jan 2020 17:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195755;
-        bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
+        s=default; t=1579195752;
+        bh=bdYDF/iChZtMetzI45f9XkEHVFoP6QF7TX2gToOJzk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKWPGRdO4AoaH5tyfjG9FMGC2LMR3zFkiT4iaP8/5yKi/uxURBOjgHyO0CIU8lBdu
-         AAqTfbTIYHikHDnscNEUOsL0u0UHqZg4pMBWw37n7cWOlTJ8PfDS1d1TosacQ4bFHv
-         il3NjhKnDrfT272fJzD5F9WMZ1MAz8nW9HfN8JBA=
+        b=aey+I1fzytBqb2FUB7cZLjo9QqKpydukSkSjczBgCK0ZFPMFQ0rZPwwH/pR3fz7DU
+         lN1dkzl1rLrxps6Z5DThQCu18J0ul+s7qdheLHO3VWb9gU32Jg4C2Ux8GqMjqnaND4
+         geko0dLxdSjzcKjaHI2s9cgWmbGjFdKEcGCfrj7M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 286/371] iio: dac: ad5380: fix incorrect assignment to val
-Date:   Thu, 16 Jan 2020 12:22:38 -0500
-Message-Id: <20200116172403.18149-229-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>, Lili Deng <v-lide@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 284/371] irqdomain: Add the missing assignment of domain->fwnode for named fwnode
+Date:   Thu, 16 Jan 2020 12:22:36 -0500
+Message-Id: <20200116172403.18149-227-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,37 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit b1e18768ef1214c0a8048327918a182cabe09f9d ]
+[ Upstream commit 711419e504ebd68c8f03656616829c8ad7829389 ]
 
-Currently the pointer val is being incorrectly incremented
-instead of the value pointed to by val. Fix this by adding
-in the missing * indirection operator.
+Recently device pass-through stops working for Linux VM running on Hyper-V.
 
-Addresses-Coverity: ("Unused value")
-Fixes: c03f2c536818 ("staging:iio:dac: Add AD5380 driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+git-bisect shows the regression is caused by the recent commit
+467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
+is that the commit d59f6617eef0 forgets to set the domain->fwnode for
+IRQCHIP_FWNODE_NAMED*, and as a result:
+
+1. The domain->fwnode remains to be NULL.
+
+2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
+false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
+msi_domain to NULL.
+
+3. When the device is added onto the root bus, the device's dev->msi_domain
+is set to NULL in pci_set_msi_domain().
+
+4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
+calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
+arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
+actually pci_msi_setup_msi_irqs() is supposed to call
+msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
+hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
+hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
+the device driver can not receive any interrupt.
+
+Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
+Reported-by: Lili Deng <v-lide@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/ad5380.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
-index 97d2c5111f43..8bf7fc626a9d 100644
---- a/drivers/iio/dac/ad5380.c
-+++ b/drivers/iio/dac/ad5380.c
-@@ -221,7 +221,7 @@ static int ad5380_read_raw(struct iio_dev *indio_dev,
- 		if (ret)
- 			return ret;
- 		*val >>= chan->scan_type.shift;
--		val -= (1 << chan->scan_type.realbits) / 2;
-+		*val -= (1 << chan->scan_type.realbits) / 2;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = 2 * st->vref;
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index ac4644e92b49..0f0e7975a309 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -147,6 +147,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 		switch (fwid->type) {
+ 		case IRQCHIP_FWNODE_NAMED:
+ 		case IRQCHIP_FWNODE_NAMED_ID:
++			domain->fwnode = fwnode;
+ 			domain->name = kstrdup(fwid->name, GFP_KERNEL);
+ 			if (!domain->name) {
+ 				kfree(domain);
 -- 
 2.20.1
 
