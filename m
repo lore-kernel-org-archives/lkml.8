@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658A5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E5DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E55205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5B62464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193679;
-	bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
+	s=default; t=1579193682;
+	bh=SyAiXWfVg46pD08w1xZSzZgC3r0KM/T5sI+w/77cPaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzeysYvHimkLXXKwX+Ou9iCDUYEb6ynoQOgu7Ysm1bczdpnPhD/nC8cjIUG81XHxM
-	 x8y/kpJHXwngVBeGwhOryj/95+iZUy51n1nlr7JnIlkG+9MuUi5mDCfm8wIX8IHREI
-	 fMTOwt8Yba9cpoeV5EcbKa5zIT5EZmOrzRpKGyRc=
+	b=bZNjIQdoHuGDUXE+RHKUYA3mV5vbFGRvNkg+ICtoqyYEN8Pouw/1VJ5rsM75sq1Fj
+	 bSVpt76tVZeWUSriQKuIjx2MvXxdRIRiYby6bgSRzFA2pJ5JkmswJiD5/jLMUhfw83
+	 KTypiTpXpn3QS/AZeNXEdFNLphUM4iAatxoF4L5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732381AbgAPQyi (ORCPT
+        id S1732417AbgAPQyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38936 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729903AbgAPQyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:23 -0500
+        id S1731921AbgAPQya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781182464B;
-        Thu, 16 Jan 2020 16:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDFCF20730;
+        Thu, 16 Jan 2020 16:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193663;
-        bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
+        s=default; t=1579193669;
+        bh=SyAiXWfVg46pD08w1xZSzZgC3r0KM/T5sI+w/77cPaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+SHBsBQ8ayS7r99yqTYX+tEqoo1o7Az/PZJ+fRM5r2s/OXCG9kLvlEvUxWhoJh0C
-         8ESJxUj5bikoaJxH9pURFBR5ZxGtN5GMcxavONGGJy2bKDUX4XNMhuEMZROT8YgSea
-         KgV4/Icsq801ZA49cr1EvPL5uDsph8wk02EG0zAc=
+        b=zqbn4MGnB+/ceJc7SACNTa2lgIP48E9HxKnFn9SeVmRnRT+4WuyyV1HdVo3ptJRK6
+         uDhfoXeLvR47HK1PjyXiAHdDcy4E8nwIgc1FIpJPh6qwMZ8FsMWt6xZ+dryaSWF4ku
+         c1rh87O2vtSbRWwrgjLsATQaG9MijQWSx8Rj3GaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 190/205] powerpc/archrandom: fix arch_get_random_seed_int()
-Date:   Thu, 16 Jan 2020 11:42:45 -0500
-Message-Id: <20200116164300.6705-190-sashal@kernel.org>
+Cc:     Roi Dayan <roid@mellanox.com>, Eli Britstein <elibr@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 195/205] net/mlx5e: Fix free peer_flow when refcount is 0
+Date:   Thu, 16 Jan 2020 11:42:50 -0500
+Message-Id: <20200116164300.6705-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,44 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit b6afd1234cf93aa0d71b4be4788c47534905f0be ]
+[ Upstream commit eb252c3a24fc5856fa62140c2f8269ddce6ce4e5 ]
 
-Commit 01c9348c7620ec65
+It could be neigh update flow took a refcount on peer flow so
+sometimes we cannot release peer flow even if parent flow is
+being freed now.
 
-  powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*
-
-updated arch_get_random_[int|long]() to be NOPs, and moved the hardware
-RNG backing to arch_get_random_seed_[int|long]() instead. However, it
-failed to take into account that arch_get_random_int() was implemented
-in terms of arch_get_random_long(), and so we ended up with a version
-of the former that is essentially a NOP as well.
-
-Fix this by calling arch_get_random_seed_long() from
-arch_get_random_seed_int() instead.
-
-Fixes: 01c9348c7620ec65 ("powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191204115015.18015-1-ardb@kernel.org
+Fixes: 5a7e5bcb663d ("net/mlx5e: Extend tc flow struct with reference counter")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Eli Britstein <elibr@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/archrandom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/archrandom.h b/arch/powerpc/include/asm/archrandom.h
-index 9c63b596e6ce..a09595f00cab 100644
---- a/arch/powerpc/include/asm/archrandom.h
-+++ b/arch/powerpc/include/asm/archrandom.h
-@@ -28,7 +28,7 @@ static inline int arch_get_random_seed_int(unsigned int *v)
- 	unsigned long val;
- 	int rc;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index 947122c68493..96711e34d248 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1615,8 +1615,11 @@ static void __mlx5e_tc_del_fdb_peer_flow(struct mlx5e_tc_flow *flow)
  
--	rc = arch_get_random_long(&val);
-+	rc = arch_get_random_seed_long(&val);
- 	if (rc)
- 		*v = val;
+ 	flow_flag_clear(flow, DUP);
+ 
+-	mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
+-	kfree(flow->peer_flow);
++	if (refcount_dec_and_test(&flow->peer_flow->refcnt)) {
++		mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
++		kfree(flow->peer_flow);
++	}
++
+ 	flow->peer_flow = NULL;
+ }
  
 -- 
 2.20.1
