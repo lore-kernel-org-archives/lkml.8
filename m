@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D80C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C28C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADC2206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DAB206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202116;
-	bh=hr+B5uQ0PdzcKcQdS7HasGDltOnY59pKbIhtGDmGYoE=;
+	s=default; t=1579202122;
+	bh=6Fd7Q3BMWeJNBGk0kKO5Sfece9B848AW7wMsA8jHAYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fANczndBM2GQbGHJmZPkiBOOfkUiGlnkZNdh2POgPVOH/1E35npB7Jmr0cb2/qEoI
-	 PSZhziMM7E4y1hgYucvLiL2hZlFUxctKCUeseFRHE4D+si2CW5LJBa9G7Q1/JhwABF
-	 +OkRD3y3xf8X72ZYCtO4BRPTYmZ34CUrIte7XkDE=
+	b=S3BT8vp+Ts3sWU428Nw0Phv1u8picLqQECcw29iSVPa88C7OV2D/mn9MvbZ3brsZM
+	 2LLcIcdbp2QAdLEOBgwWMhghzNQr/0tibejAZf4dDdu7yQZGfxNAUoC7zIrxy7xs1Z
+	 XDdPob0Egpkv+kZ8Emta91VUNJgfZNq2jXMHNB+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbgAPQ4E (ORCPT
+        id S2390033AbgAPTPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:15:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732543AbgAPQzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:54 -0500
+        id S1733145AbgAPQ4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E9722464;
-        Thu, 16 Jan 2020 16:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D316A2467C;
+        Thu, 16 Jan 2020 16:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193753;
-        bh=hr+B5uQ0PdzcKcQdS7HasGDltOnY59pKbIhtGDmGYoE=;
+        s=default; t=1579193761;
+        bh=6Fd7Q3BMWeJNBGk0kKO5Sfece9B848AW7wMsA8jHAYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T+IN2WLbDfh4y/fPykt4Q3Xn2OeWSE7ZbLu17brSEZjDTxPkvu9xEVqryu/9hATAo
-         N9+do2MqzVumVTkV4ACUB0TBTYileXXtgkoeG60Rm4wPECD8Go0/AC5LiNkvOvuqhI
-         ojbC9muqpnNFgpdfF3MHJuW09R5aDI+cW+mYaT74=
+        b=ihPQzphy+LG9NPkWQ6WakpMAiLQ4YWtWnkG5dA3C/uTq3UYfqpRkhjADuJ3CTXKAX
+         KFEuLIerUtsaie66toY/XjQW5CNoMiC+iuOEG9o/e7R8fZ8jfR9hhtBZ7TGe+Gi6If
+         LMIBKmZ6GCjxN9DKDXuDexGVUIU6JSwsazsPIMGI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/671] net: hns3: add error handler for hns3_nic_init_vector_data()
-Date:   Thu, 16 Jan 2020 11:44:33 -0500
-Message-Id: <20200116165502.8838-42-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 048/671] pcrypt: use format specifier in kobject_add
+Date:   Thu, 16 Jan 2020 11:44:39 -0500
+Message-Id: <20200116165502.8838-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,56 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ece4bf46e98c9f3775a488f3932a531508d3b1a2 ]
+[ Upstream commit b1e3874c75ab15288f573b3532e507c37e8e7656 ]
 
-When hns3_nic_init_vector_data() fails to map ring to vector,
-it should cancel the netif_napi_add() that has been successfully
-done and then exits.
+Passing string 'name' as the format specifier is potentially hazardous
+because name could (although very unlikely to) have a format specifier
+embedded in it causing issues when parsing the non-existent arguments
+to these.  Follow best practice by using the "%s" format string for
+the string 'name'.
 
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cleans up clang warning:
+crypto/pcrypt.c:397:40: warning: format string is not a string literal
+(potentially insecure) [-Wformat-security]
+
+Fixes: a3fb1e330dd2 ("pcrypt: Added sysfs interface to pcrypt")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ crypto/pcrypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 1aaf6e2a3b39..9df807ec8c84 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2642,7 +2642,7 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
- 	struct hnae3_handle *h = priv->ae_handle;
- 	struct hns3_enet_tqp_vector *tqp_vector;
- 	int ret = 0;
--	u16 i;
-+	int i;
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index f8ec3d4ba4a8..a5718c0a3dc4 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -394,7 +394,7 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
+ 	int ret;
  
- 	for (i = 0; i < priv->vector_num; i++) {
- 		tqp_vector = &priv->tqp_vector[i];
-@@ -2687,13 +2687,19 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
- 		hns3_free_vector_ring_chain(tqp_vector, &vector_ring_chain);
+ 	pinst->kobj.kset = pcrypt_kset;
+-	ret = kobject_add(&pinst->kobj, NULL, name);
++	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
+ 	if (!ret)
+ 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
  
- 		if (ret)
--			return ret;
-+			goto map_ring_fail;
- 
- 		netif_napi_add(priv->netdev, &tqp_vector->napi,
- 			       hns3_nic_common_poll, NAPI_POLL_WEIGHT);
- 	}
- 
- 	return 0;
-+
-+map_ring_fail:
-+	while (i--)
-+		netif_napi_del(&priv->tqp_vector[i].napi);
-+
-+	return ret;
- }
- 
- static int hns3_nic_alloc_vector_data(struct hns3_nic_priv *priv)
 -- 
 2.20.1
 
