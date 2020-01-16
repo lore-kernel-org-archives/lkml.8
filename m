@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892F5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133D1C47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5985420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA60206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199457;
-	bh=0JFl9aWLKC71Gk5dPOObiZY7H/47oVRdIQLA7yf0cs4=;
+	s=default; t=1579199460;
+	bh=10IWbZKtLiSfkMg+zSvCP4zf9XlLcu8JzOFTXwphxRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XUmtFODs439I31cKd3asvcGStk+gjzC7Jct++tIHoNrxFTIy4WbiNN8L5OxlbO/4p
-	 buextE37yG+iJznOyBcR22KsM8B+uvUJc5Kf84Rpe/6UV1TCvkpfC8qBS6s595+rTK
-	 ucs44Z1BEspRUbBTLIMBdm8NA3eqpLgg4NPX/knU=
+	b=Sja09NNzaPMA2OOkxm6pha8FnRfIgK1WdkGcu7uSHEZFR3CfS0b3LQPVL9MPX3Zy2
+	 esYtaLKmqrKDL+BCyldkKGQJ8TjSmiMd+NH0QIxarUnrBgOBD3GSw8vHRphO093mbW
+	 oUx4N0Yh5tIQLpCW5A4o5uqjXD482eWLf87KDQ2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407141AbgAPSa4 (ORCPT
+        id S2391959AbgAPRZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391963AbgAPRZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:30 -0500
+        id S2391897AbgAPRZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E93BB246CE;
-        Thu, 16 Jan 2020 17:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC949246A5;
+        Thu, 16 Jan 2020 17:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195529;
-        bh=0JFl9aWLKC71Gk5dPOObiZY7H/47oVRdIQLA7yf0cs4=;
+        s=default; t=1579195509;
+        bh=10IWbZKtLiSfkMg+zSvCP4zf9XlLcu8JzOFTXwphxRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FviwH3H3OFQ06PSTaJucZHh0sP2n1fl75sdNfZOoygxhIe/UNXHJ1BNOEjihqk3G7
-         IS+1YDFQaSvpVPhcM5H0AYR89Xp1ecQ6sRsKWgEsqm9wHyKufzGZqSfpIogjVZM1FG
-         nLxQX8l6+Q3uRRdFvF6TdFz4YqJNS2os/nwYCuSg=
+        b=aiLY2PX+oI0JI9kT8nIYBdeaSCF0wLOWxjtUWicri4GEZcKltI+px6HiEN9+RY1A1
+         9H8dO1Y8g6skEf9HsXx1u7j9/k+QHOXFbf/vLjiKu3oME80ROjVHewDdB33UiQfDmt
+         QQYztRNDDUaI8O9r+Kw13PP0rjf8OiTkH8VsKuDU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.14 125/371] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
-Date:   Thu, 16 Jan 2020 12:19:57 -0500
-Message-Id: <20200116172403.18149-68-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 109/371] regulator: pv88090: Fix array out-of-bounds access
+Date:   Thu, 16 Jan 2020 12:19:41 -0500
+Message-Id: <20200116172403.18149-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,36 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
+[ Upstream commit a5455c9159414748bed4678184bf69989a4f7ba3 ]
 
-The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
-with min_uA and max_uA.
-While at it also make the array const and change to use unsigned int.
+Fix off-by-one while iterating current_limits array.
+The valid index should be 0 ~ n_current_limits -1.
 
-Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Fixes: c90456e36d9c ("regulator: pv88090: new regulator driver")
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/wm831x-dcdc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/pv88090-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
-index 5a5bc4bb08d2..df591435d12a 100644
---- a/drivers/regulator/wm831x-dcdc.c
-+++ b/drivers/regulator/wm831x-dcdc.c
-@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
- }
+diff --git a/drivers/regulator/pv88090-regulator.c b/drivers/regulator/pv88090-regulator.c
+index 7a0c15957bd0..2302b0df7630 100644
+--- a/drivers/regulator/pv88090-regulator.c
++++ b/drivers/regulator/pv88090-regulator.c
+@@ -157,7 +157,7 @@ static int pv88090_set_current_limit(struct regulator_dev *rdev, int min,
+ 	int i;
  
- /* Current limit options */
--static u16 wm831x_dcdc_ilim[] = {
--	125, 250, 375, 500, 625, 750, 875, 1000
-+static const unsigned int wm831x_dcdc_ilim[] = {
-+	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
- };
- 
- static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
+ 	/* search for closest to maximum */
+-	for (i = info->n_current_limits; i >= 0; i--) {
++	for (i = info->n_current_limits - 1; i >= 0; i--) {
+ 		if (min <= info->current_limits[i]
+ 			&& max >= info->current_limits[i]) {
+ 			return regmap_update_bits(rdev->regmap,
 -- 
 2.20.1
 
