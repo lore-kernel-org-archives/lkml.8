@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C54C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F986C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56990246F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA83246E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196344;
-	bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
+	s=default; t=1579196347;
+	bh=Ql2WNdd4sxMDmkZDEeT0eV8i9qJNfsKdRKQKMTB1Hx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=opCUGOKxI/OYjo5jpyQqeKqjvzfKr67CBO4zcFAM7IYuKLUPDRGu9SAeL8yuuzDL3
-	 7AZ9DbyJHivvJ6CqsHaGGtdZ8rjiqcFXEyukLca2ct7HAloF6Y4Nm4tXyjqYoOzWaV
-	 SLTwOi1kGNqTZzi9eV9qa1fYG89sPtTwKslXNRhM=
+	b=wNQeQ6xwS/GMiddG+tf6Io75qvYi1dBVEktmlbBu7hLRufn1QJPLD5+5q8ogv35sj
+	 JjMRfwszCMZtSjrfHwxNWCTfZCjLrn0S3icMCcNtz+tnnqN5TkYiW604Wf0SNUAMQC
+	 Zmoxo0V4Y4myPNcS0nwnSysSc8DbVlgZcvCofb7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393416AbgAPRjD (ORCPT
+        id S2389942AbgAPRjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54166 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:39:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404926AbgAPRiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:21 -0500
+        id S2393331AbgAPRiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C175246C3;
-        Thu, 16 Jan 2020 17:38:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3887246D6;
+        Thu, 16 Jan 2020 17:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196300;
-        bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
+        s=default; t=1579196301;
+        bh=Ql2WNdd4sxMDmkZDEeT0eV8i9qJNfsKdRKQKMTB1Hx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPvTlbZZ/syx30DLB0QTbO024K8h+0dPPeTi/TcOryEqfXkSJeX3R5QB/tGqOqu7D
-         wZ6wCXSCoh2T3VD52KPBblfB1756sqyabhdEyeBCfVKtL6L3sd+LeWm8w0YqzhY+fU
-         KiANTn5rviG/xFiHVTj9b5oRjgBWPusLz1tnEkwg=
+        b=gwkcjPI/H5cwsfo0+Wg2cf0sY0xrTkAaONQnYEFP7SEuCa6jI4c3CuJnkqOac+qIv
+         2TEaqP4YFXv/Abwdnqmbjg3L9V2Tt88LgcTqAADrWAGzA4nY9V84bSNB8bEvACgZ6P
+         vgsvwTiE9tP3kH4JMdmRQNTPJeiDWdsOy9rmvYuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Sperl <kernel@martin.sperl.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 111/251] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
-Date:   Thu, 16 Jan 2020 12:34:20 -0500
-Message-Id: <20200116173641.22137-71-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 112/251] ehea: Fix a copy-paste err in ehea_init_port_res
+Date:   Thu, 16 Jan 2020 12:34:21 -0500
+Message-Id: <20200116173641.22137-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
+[ Upstream commit c8f191282f819ab4e9b47b22a65c6c29734cefce ]
 
-The original driver by default defines num_chipselects as -1.
-This actually allicates an array of 65535 entries in
-of_spi_register_master.
+pr->tx_bytes should be assigned to tx_bytes other than
+rx_bytes.
 
-There is a side-effect for buggy device trees that (contrary to
-dt-binding documentation) have no cs-gpio defined.
-
-This mode was never supported by the driver due to limitations
-of native cs and additional code complexity and is explicitly
-not stated to be implemented.
-
-To keep backwards compatibility with such buggy DTs we limit
-the number of chip_selects to 1, as for all practical purposes
-it is only ever realistic to use a single chip select in
-native cs mode without negative side-effects.
-
-Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ce45b873028f ("ehea: Fixing statistics")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index 5c89bbb05441..e075712c501e 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -416,7 +416,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, master);
- 	master->mode_bits = (SPI_CPOL | SPI_CS_HIGH | SPI_NO_CS);
- 	master->bits_per_word_mask = SPI_BPW_MASK(8);
--	master->num_chipselect = -1;
-+	/* even though the driver never officially supported native CS
-+	 * allow a single native CS for legacy DT support purposes when
-+	 * no cs-gpio is configured.
-+	 * Known limitations for native cs are:
-+	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
-+	 *     whenever there is a transfer -  this even includes SPI_NO_CS
-+	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
-+	 * * cs_change: cs is deasserted after each spi_transfer
-+	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
-+	 *     a spi_transfer
-+	 */
-+	master->num_chipselect = 1;
- 	master->transfer_one = bcm2835aux_spi_transfer_one;
- 	master->handle_err = bcm2835aux_spi_handle_err;
- 	master->prepare_message = bcm2835aux_spi_prepare_message;
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 2dd17e01e3a7..3692adb8902d 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -1476,7 +1476,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
+ 
+ 	memset(pr, 0, sizeof(struct ehea_port_res));
+ 
+-	pr->tx_bytes = rx_bytes;
++	pr->tx_bytes = tx_bytes;
+ 	pr->tx_packets = tx_packets;
+ 	pr->rx_bytes = rx_bytes;
+ 	pr->rx_packets = rx_packets;
 -- 
 2.20.1
 
