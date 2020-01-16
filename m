@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06886C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9660C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D145B2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940032073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202104;
-	bh=/LFljjM9wXtT7AF1NZ86AQkwrJppmbCRjR8pgtvV8dQ=;
+	s=default; t=1579202109;
+	bh=XoiEwqxvpeLhk9E4C1EKhmXW0UDLXNfpdqqjLrAjmdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iz/7/jHbkuKRowj/cs8at8ZbdRyGAuyLelzVzx8o+JidtWI83dPyxg9jS73X/zKO
-	 082viwVnOavgbp1wRqsXoHRVPpdZqUIiWh8n1dq1dT8jWAdR2fUJKAmhjyP/Idhx/p
-	 /rieULKHgaZNTiFLV0UX7groLZEQMz/OnXI/oz+w=
+	b=aFhj/2FgbaGQuHiD6ca90MSfoY9rwB5vUBYlcsTjE8+6PoPTCzvC+YAYlJa8SOh2U
+	 G6T+UccIDopQfkdq4Mc9UIZTihV4rE9rCnmi0xmJeb37Yv6a7UaYck5rVauF3iAlfD
+	 bK2OLQMHxHh1YjgFE3uYu/OqVHnyCDEYmUE7r7JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733196AbgAPQ4N (ORCPT
+        id S1732554AbgAPQ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732570AbgAPQ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:04 -0500
+        id S1730591AbgAPQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E5F524680;
-        Thu, 16 Jan 2020 16:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E47024686;
+        Thu, 16 Jan 2020 16:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193763;
-        bh=/LFljjM9wXtT7AF1NZ86AQkwrJppmbCRjR8pgtvV8dQ=;
+        s=default; t=1579193760;
+        bh=XoiEwqxvpeLhk9E4C1EKhmXW0UDLXNfpdqqjLrAjmdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlOjce5YaXePq/0zafStpmO7pqnn1E7wWIejS4TeHwUsSj/rBw1y3OWYgdNKEp7/w
-         wEmuKEsQYdWvnIQ0zS3Df5zXR9mNcdIRUzI94e43ihN5aLMMqrQS4CS08aHT1B/ss2
-         gdfVI66jGK/+3RePGintiwcKFs7nx+GZuPuBlixs=
+        b=ejLHpXwp46YTrKpYv/kYM6YxKZ2l725kFcD6gJMLEba3p2P4FK7dJBZzpCCr0gVN9
+         pf4o+uv6MnCERgAEeJqPBuqGzy6tRAkE/K/mPvw3y71LjgHElAKgROMwEs4RP5m8Ln
+         ObGPGHVwXWrjK+djzAHqjK7531B9rQRSixPw+XEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+Cc:     Phil Elwell <phil@raspberrypi.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 049/671] ASoC: sun8i-codec: add missing route for ADC
-Date:   Thu, 16 Jan 2020 11:44:40 -0500
-Message-Id: <20200116165502.8838-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 047/671] ARM: dts: bcm283x: Correct mailbox register sizes
+Date:   Thu, 16 Jan 2020 11:44:38 -0500
+Message-Id: <20200116165502.8838-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,38 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+From: Phil Elwell <phil@raspberrypi.org>
 
-[ Upstream commit 9ee325d029c4abb75716851ce38863845911d605 ]
+[ Upstream commit 227fa865061470a568858baa404a508f6c030fe4 ]
 
-sun8i-codec misses a route from ADC to AIF1 Slot 0 ADC. Add it
-to the driver to avoid adding it to every dts.
+The size field in a Device Tree "reg" property is encoded in bytes, not
+words.
 
-Fixes: eda85d1fee05d ("ASoC: sun8i-codec: Add ADC support for a33")
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 614fa22119d6 ("ARM: dts: bcm2835: Add VCHIQ node to the Raspberry Pi boards. (v3)")
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index bf615fa16dc8..a3db6a68dfe6 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -465,7 +465,11 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch",
- 	  "AIF1 Slot 0 Right"},
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index cb2d6d78a7fb..c481eab1bd7c 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -32,7 +32,7 @@
  
--	/* ADC routes */
-+	/* ADC Routes */
-+	{ "AIF1 Slot 0 Right ADC", NULL, "ADC" },
-+	{ "AIF1 Slot 0 Left ADC", NULL, "ADC" },
-+
-+	/* ADC Mixer Routes */
- 	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
- 	  "AIF1 Slot 0 Left ADC" },
- 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch",
+ 		mailbox@7e00b840 {
+ 			compatible = "brcm,bcm2835-vchiq";
+-			reg = <0x7e00b840 0xf>;
++			reg = <0x7e00b840 0x3c>;
+ 			interrupts = <0 2>;
+ 		};
+ 	};
 -- 
 2.20.1
 
