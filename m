@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DC1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15892C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89639206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47C7206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202012;
-	bh=3asVv0LkAlodZ0h3jq+2rgSq3Ucakva943Q5z9tTdW8=;
+	s=default; t=1579202017;
+	bh=qIXAw2cNPr7pkprBJU0SydJA7Jyzr6bokndcO76SNco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CA5wfHIQlMkX4D3/rZerbrIPnVbU4tcFrv39r/uUgGpQujoYhwONuD1Lj4jVlT1mK
-	 N0EfTDz+65ALPTb8X1JOwdFWR6OiYeIcNGlbWTUZBrfcUD5t5AT1yqc7BAcsZ+6tLb
-	 7PQKt+7Zue0BbFjDTF+KOJyS7v9NmUPjOIu6qFSk=
+	b=qgvIhW6m7b6uQ0dIQ26WpzVmkYtbdJ+8tc4QOHrWSkqjR75NTm38mU3IoSTSLaSLq
+	 bBTaT6xr1qhugYRZ9noO39LGDIHZ9yx0uoo6XEWnI0MqsxWiqaOtiSX+J51C4w6bsN
+	 /9isfxKUXM5VOht3foQ+v01THKvL+QeyUuwqQpZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437456AbgAPTNb (ORCPT
+        id S1732419AbgAPQ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:13:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbgAPQ47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:59 -0500
+        id S1733276AbgAPQ4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A202051A;
-        Thu, 16 Jan 2020 16:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F1020730;
+        Thu, 16 Jan 2020 16:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193818;
-        bh=3asVv0LkAlodZ0h3jq+2rgSq3Ucakva943Q5z9tTdW8=;
+        s=default; t=1579193808;
+        bh=qIXAw2cNPr7pkprBJU0SydJA7Jyzr6bokndcO76SNco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1U6RphJfZo7nzumOEc0CTRQJFe5C5AWQCsWhnptryblc/3oBaNUBQ5wgxglDsKyIh
-         wvbU8T0C7DNlkaRT8iqnOdTggNY81HCqhEjwU5VCD+Ppl4rb0D+6ZMuYclECuXKY8g
-         pXOh6DkZrNhCeYkT3eG+S36W6STQB/DNpKu+4Bcw=
+        b=MvBvDNysyBahC9Xhv5syYMK3KRrccBtmM1vXI1p4ppiilFBzP+LWSWYpBSAAjXjLH
+         hTktepR0K0nR96pgIEpCiyg6t/Eo7MOQ+02OVDhPa2BU/T4UaiElU+UaxYFZv8ylrj
+         LBem+4etubBUh2lKfTM9Hi6mG6h6OAk3t1xzrvqo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 078/671] pinctrl: sh-pfc: sh7269: Add missing PCIOR0 field
-Date:   Thu, 16 Jan 2020 11:45:09 -0500
-Message-Id: <20200116165502.8838-78-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 071/671] pinctrl: sh-pfc: r8a7791: Remove bogus marks from vin1_b_data18 group
+Date:   Thu, 16 Jan 2020 11:45:02 -0500
+Message-Id: <20200116165502.8838-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,35 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 9540cbdfcd861caf67a6f0e4bb7f46d41c4aad86 ]
+[ Upstream commit 0d6256cb880166a4111bebce35790019e56b6e1b ]
 
-The Port C I/O Register 0 contains 7 reserved bits, but the descriptor
-contains only dummy configuration values for 6 reserved bits, thus
-breaking the configuration of all subsequent fields in the register.
+The vin1_b_data18_mux[] arrays contains pin marks for the 2 LSB bits of
+the color components.  The vin1_b_data18_pins[] array rightfully does
+not include the corresponding pin numbers, as RGB18 is subset of RGB24,
+containing only the 6 MSB bits of each component.
 
-Fix this by adding the two missing configuration values.
-
-Fixes: f5e811f2a43117b2 ("sh-pfc: Add sh7269 pinmux support")
+Fixes: 8e32c9671f84acd8 ("pinctrl: sh-pfc: r8a7791: Add VIN pins")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7269.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-index a50d22bef1f4..cfdb4fc177c3 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -2119,7 +2119,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	},
- 
- 	{ PINMUX_CFG_REG("PCIOR0", 0xfffe3852, 16, 1) {
--		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PC8_IN, PC8_OUT,
- 		PC7_IN, PC7_OUT,
- 		PC6_IN, PC6_OUT,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+index f5b4255570b2..6236ac55c65d 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -4374,17 +4374,14 @@ static const unsigned int vin1_b_data18_pins[] = {
+ };
+ static const unsigned int vin1_b_data18_mux[] = {
+ 	/* B */
+-	VI1_DATA0_B_MARK, VI1_DATA1_B_MARK,
+ 	VI1_DATA2_B_MARK, VI1_DATA3_B_MARK,
+ 	VI1_DATA4_B_MARK, VI1_DATA5_B_MARK,
+ 	VI1_DATA6_B_MARK, VI1_DATA7_B_MARK,
+ 	/* G */
+-	VI1_G0_B_MARK, VI1_G1_B_MARK,
+ 	VI1_G2_B_MARK, VI1_G3_B_MARK,
+ 	VI1_G4_B_MARK, VI1_G5_B_MARK,
+ 	VI1_G6_B_MARK, VI1_G7_B_MARK,
+ 	/* R */
+-	VI1_R0_B_MARK, VI1_R1_B_MARK,
+ 	VI1_R2_B_MARK, VI1_R3_B_MARK,
+ 	VI1_R4_B_MARK, VI1_R5_B_MARK,
+ 	VI1_R6_B_MARK, VI1_R7_B_MARK,
 -- 
 2.20.1
 
