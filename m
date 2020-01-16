@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146AEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561C7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34D120661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D9B2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217814;
-	bh=vmd6T283d0St1wkv0ZTvh3ykXZkVIdWelEOItDPOBG8=;
+	s=default; t=1579217816;
+	bh=J2Uu6xeW8tRMtlFYFag5dwkPExafMGRmGM8omqTSyzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a9a/b5ZsSnOQ8nyLVXtZXd647YPCHFltfyLykr5KICnbAj+On0ZTa3dIeTvIPClTv
-	 LqUrF0aF4REOEgvETBGgHug6twGvPqqYpQIdFhH5cvrk9pLwsgbBVNVknr2wervJI4
-	 eKLi1MVAT+7NYMQDry1IrjYOFHrNqNxBKFk2+2Ig=
+	b=Xh05ka85PIbbZMYim39ZE4u8zmmp2WlU2KLEMUXfVsEc2GntjPWVi+N73xuThsu4D
+	 dYG7gXOrcvaf0kYT2Nsj8gUK64nDdNWsck+dO4me118qw9snu8mGCRQN0k5pUPLeuJ
+	 hXM6qhAYl2gLFilKwGqsO5SHdItJntOcvYYWFdEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404368AbgAPXgx (ORCPT
+        id S2403919AbgAPXb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:36:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403918AbgAPXb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:29 -0500
+        id S2391429AbgAPXay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:30:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89B9320661;
-        Thu, 16 Jan 2020 23:31:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9221A20661;
+        Thu, 16 Jan 2020 23:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217488;
-        bh=vmd6T283d0St1wkv0ZTvh3ykXZkVIdWelEOItDPOBG8=;
+        s=default; t=1579217454;
+        bh=J2Uu6xeW8tRMtlFYFag5dwkPExafMGRmGM8omqTSyzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KeixBPcRoxPnY40Mrt8o3AI/S3pssbOjnHbxNgPKBbd/ndS2ems6Y4aFTfw8rC2wP
-         NoKKAG4ab/MlzbgmSZmUapyex85FQTNRUAclvv4fNtYYq2gWUm3uxymvZoEe4d1hGC
-         xfTSiEcsvFKW+bkBAQpsnf2MWJyQnQcCFZysH59I=
+        b=LfZ0d9nkjxcW9ehfOB9vN+xsESxoO59ZMaY0weISPar25xQBPD3jTfVO91Mu0yi1x
+         HN+WWWWFjWfRS/DEY3BmDxI2NGG8nlyG1ZEvtOxRLvRKa70MW0K+YucwSPHw94ayra
+         Ax7a1uxaK5jwqi5NNsPG4OSi/1qUiGxAPw4dKBik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?=E7=BD=97=E6=9D=83?= <luoquan@qianxin.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: [PATCH 4.14 19/71] drm/i915: Fix use-after-free when destroying GEM context
-Date:   Fri, 17 Jan 2020 00:18:17 +0100
-Message-Id: <20200116231712.208005458@linuxfoundation.org>
+        stable@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.19 64/84] media: exynos4-is: Fix recursive locking in isp_video_release()
+Date:   Fri, 17 Jan 2020 00:18:38 +0100
+Message-Id: <20200116231721.169640544@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
-References: <20200116231709.377772748@linuxfoundation.org>
+In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
+References: <20200116231713.087649517@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,177 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@canonical.com>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-This patch is a simplified fix to address a use-after-free in 4.14.x and
-4.19.x stable kernels. The flaw is already fixed upstream, starting in
-5.2, by commit 7dc40713618c ("drm/i915: Introduce a mutex for
-file_priv->context_idr") as part of a more complex patch series that
-isn't appropriate for backporting to stable kernels.
+commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd upstream.
 
-Expand mutex coverage, while destroying the GEM context, to include the
-GEM context lookup step. This fixes a use-after-free detected by KASAN:
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
- ==================================================================
- BUG: KASAN: use-after-free in i915_ppgtt_close+0x2ca/0x2f0
- Write of size 1 at addr ffff8881368a8368 by task i915-poc/3124
-
- CPU: 0 PID: 3124 Comm: i915-poc Not tainted 4.14.164 #1
- Hardware name: HP HP Elite x2 1012 G1 /80FC, BIOS N85 Ver. 01.20 04/05/2017
- Call Trace:
-  dump_stack+0xcd/0x12e
-  ? _atomic_dec_and_lock+0x1b2/0x1b2
-  ? i915_ppgtt_close+0x2ca/0x2f0
-  ? printk+0x8f/0xab
-  ? show_regs_print_info+0x53/0x53
-  ? i915_ppgtt_close+0x2ca/0x2f0
-  print_address_description+0x65/0x270
-  ? i915_ppgtt_close+0x2ca/0x2f0
-  kasan_report+0x251/0x340
-  i915_ppgtt_close+0x2ca/0x2f0
-  ? __radix_tree_insert+0x3f0/0x3f0
-  ? i915_ppgtt_init_hw+0x7c0/0x7c0
-  context_close+0x42e/0x680
-  ? i915_gem_context_release+0x230/0x230
-  ? kasan_kmalloc+0xa0/0xd0
-  ? radix_tree_delete_item+0x1d4/0x250
-  ? radix_tree_lookup+0x10/0x10
-  ? inet_recvmsg+0x4b0/0x4b0
-  ? kasan_slab_free+0x88/0xc0
-  i915_gem_context_destroy_ioctl+0x236/0x300
-  ? i915_gem_context_create_ioctl+0x360/0x360
-  ? drm_dev_printk+0x1d0/0x1d0
-  ? memcpy+0x34/0x50
-  ? i915_gem_context_create_ioctl+0x360/0x360
-  drm_ioctl_kernel+0x1b0/0x2b0
-  ? drm_ioctl_permit+0x2a0/0x2a0
-  ? avc_ss_reset+0xd0/0xd0
-  drm_ioctl+0x6fe/0xa20
-  ? i915_gem_context_create_ioctl+0x360/0x360
-  ? drm_getstats+0x20/0x20
-  ? put_unused_fd+0x260/0x260
-  do_vfs_ioctl+0x189/0x12d0
-  ? ioctl_preallocate+0x280/0x280
-  ? selinux_file_ioctl+0x3a7/0x680
-  ? selinux_bprm_set_creds+0xe30/0xe30
-  ? security_file_ioctl+0x69/0xa0
-  ? selinux_bprm_set_creds+0xe30/0xe30
-  SyS_ioctl+0x6f/0x80
-  ? __sys_sendmmsg+0x4a0/0x4a0
-  ? do_vfs_ioctl+0x12d0/0x12d0
-  do_syscall_64+0x214/0x5f0
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x25/0x60
-  ? __switch_to_asm+0x31/0x60
-  ? syscall_return_slowpath+0x2c0/0x2c0
-  ? copy_overflow+0x20/0x20
-  ? __switch_to_asm+0x25/0x60
-  ? syscall_return_via_sysret+0x2a/0x7a
-  ? prepare_exit_to_usermode+0x200/0x200
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x25/0x60
-  ? __switch_to_asm+0x25/0x60
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x25/0x60
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x31/0x60
-  ? __switch_to_asm+0x25/0x60
-  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
- RIP: 0033:0x7f7fda5115d7
- RSP: 002b:00007f7eec317ec8 EFLAGS: 00000286 ORIG_RAX: 0000000000000010
- RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7fda5115d7
- RDX: 000055b306db9188 RSI: 000000004008646e RDI: 0000000000000003
- RBP: 00007f7eec317ef0 R08: 00007f7eec318700 R09: 0000000000000000
- R10: 0000000000000000 R11: 0000000000000286 R12: 00007f7eec317fc0
- R13: 0000000000000000 R14: 0000000000000000 R15: 00007ffd8007ade0
-
- Allocated by task 2898:
-  save_stack+0x32/0xb0
-  kasan_kmalloc+0xa0/0xd0
-  kmem_cache_alloc_trace+0x5e/0x180
-  i915_ppgtt_create+0xab/0x2510
-  i915_gem_create_context+0x981/0xf90
-  i915_gem_context_create_ioctl+0x1d7/0x360
-  drm_ioctl_kernel+0x1b0/0x2b0
-  drm_ioctl+0x6fe/0xa20
-  do_vfs_ioctl+0x189/0x12d0
-  SyS_ioctl+0x6f/0x80
-  do_syscall_64+0x214/0x5f0
-  entry_SYSCALL_64_after_hwframe+0x3d/0xa2
-
- Freed by task 104:
-  save_stack+0x32/0xb0
-  kasan_slab_free+0x72/0xc0
-  kfree+0x88/0x190
-  i915_ppgtt_release+0x24e/0x460
-  i915_gem_context_free+0x90/0x480
-  contexts_free_worker+0x54/0x80
-  process_one_work+0x876/0x14e0
-  worker_thread+0x1b8/0xfd0
-  kthread+0x2f8/0x3c0
-  ret_from_fork+0x35/0x40
-
- The buggy address belongs to the object at ffff8881368a8000
-  which belongs to the cache kmalloc-8192 of size 8192
- The buggy address is located 872 bytes inside of
-  8192-byte region [ffff8881368a8000, ffff8881368aa000)
- The buggy address belongs to the page:
- page:ffffea0004da2a00 count:1 mapcount:0 mapping:          (null) index:0x0 compound_mapcount: 0
- flags: 0x200000000008100(slab|head)
- raw: 0200000000008100 0000000000000000 0000000000000000 0000000100030003
- raw: dead000000000100 dead000000000200 ffff88822a002280 0000000000000000
- page dumped because: kasan: bad access detected
-
- Memory state around the buggy address:
-  ffff8881368a8200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881368a8280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- >ffff8881368a8300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                           ^
-  ffff8881368a8380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881368a8400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ==================================================================
-
-Fixes: 1acfc104cdf8 ("drm/i915: Enable rcu-only context lookups")
-Reported-by: 罗权 <luoquan@qianxin.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Jon Bloomfield <jon.bloomfield@intel.com>
-Cc: stable@vger.kernel.org # 4.14.x
-Cc: stable@vger.kernel.org # 4.19.x
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_gem_context.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/platform/exynos4-is/fimc-isp-video.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/i915_gem_context.c
-+++ b/drivers/gpu/drm/i915/i915_gem_context.c
-@@ -993,18 +993,19 @@ int i915_gem_context_destroy_ioctl(struc
- 	if (args->ctx_id == DEFAULT_CONTEXT_HANDLE)
- 		return -ENOENT;
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -316,7 +316,7 @@ static int isp_video_release(struct file
+ 		ivc->streaming = 0;
+ 	}
  
-+	ret = i915_mutex_lock_interruptible(dev);
-+	if (ret)
-+		return ret;
-+
- 	ctx = i915_gem_context_lookup(file_priv, args->ctx_id);
--	if (!ctx)
-+	if (!ctx) {
-+		mutex_unlock(&dev->struct_mutex);
- 		return -ENOENT;
--
--	ret = mutex_lock_interruptible(&dev->struct_mutex);
--	if (ret)
--		goto out;
-+	}
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
  
- 	__destroy_hw_context(ctx, file_priv);
- 	mutex_unlock(&dev->struct_mutex);
- 
--out:
- 	i915_gem_context_put(ctx);
- 	return 0;
- }
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 
 
