@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A860FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFD5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A967206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E3D2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200613;
-	bh=Ohe283Voqpzg5Cv1z/zQlCanRENtJcAkqcgCz5p5Q0A=;
+	s=default; t=1579200622;
+	bh=+FFA+G3tdJcrZvilavAYlGhlcqAn30vwrIjSwb1Q3/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMiZhnOhHuwqDChiOxYEHrwFfTNKDDYduyt589J/iN22BLWvIaxI1P+oMMom8lWB3
-	 eOWsNl4kMbcLzZRaMgZDBioJ/XxhHhd3sg6D2Enfk4ziPo6/DHmqF28oqeKuEyCSnd
-	 Cxd+9JkKQtgXGKmBYhnNB7ZI6NLo3JhgjTNRok6o=
+	b=m5FTvRk63cYncV9YFqhjFYTFFRxU2nMVZak6WqrxpvBBWqd0xIaB7r74az3btxYPP
+	 KnXegTbw1+4e0INunOYDGa5hK1pUVX2N7x/yo5LfZVzwAm20oV8psRg7/GxcJvkt+t
+	 VVSIXqdraHy+3VZdaSSH5TdLvBsd88b8//emY+bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbgAPSuM (ORCPT
+        id S2437058AbgAPSuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44616 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389629AbgAPRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:13 -0500
+        id S2389259AbgAPRJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33A1D2467A;
-        Thu, 16 Jan 2020 17:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3C5217F4;
+        Thu, 16 Jan 2020 17:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194553;
-        bh=Ohe283Voqpzg5Cv1z/zQlCanRENtJcAkqcgCz5p5Q0A=;
+        s=default; t=1579194547;
+        bh=+FFA+G3tdJcrZvilavAYlGhlcqAn30vwrIjSwb1Q3/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LHM6rAyorKpVzQQxjrurv4Ks0hO9IEBx6/0meZgyUgf0vfzvTuo0ZpHKsSJm4X541
-         ZGNlySHb4+4SOmTxgDPhubTH34dKGys8uzly/4JgVtifERLjD5ViPmlNATBcAp404w
-         37/6HgXMUG3StWKBKtsQvdmPpX560RYKKs8K2mYo=
+        b=LlrqPvhuYB7w8CKqmliz5ujcV3kVFN601TdQxJDYDvxlf1GviztcrNxnJeaeV993J
+         zj7Twia11u0HWH1fxG7rQ6o2II2sHkxBmuDANh8JG2eLYLFci8lLhM8PKmeaPtlFlw
+         vNFfx4Sc2GLQ4r1vzpXZNWxiIUjrkJKlSpmjXGN4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 435/671] nvmem: imx-ocotp: Ensure WAIT bits are preserved when setting timing
-Date:   Thu, 16 Jan 2020 12:01:13 -0500
-Message-Id: <20200116170509.12787-172-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 431/671] ip6_fib: Don't discard nodes with valid routing information in fib6_locate_1()
+Date:   Thu, 16 Jan 2020 12:01:09 -0500
+Message-Id: <20200116170509.12787-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,45 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 0493c4792b4eb260441e57f52cc11a9ded48b5a7 ]
+[ Upstream commit 40cb35d5dc04e7f89cbc7b1fc9b4b48d9f1e5343 ]
 
-The i.MX6 and i.MX8 both have a bit-field spanning bits 27:22 called the
-WAIT field.
+When we perform an inexact match on FIB nodes via fib6_locate_1(), longer
+prefixes will be preferred to shorter ones. However, it might happen that
+a node, with higher fn_bit value than some other, has no valid routing
+information.
 
-The WAIT field according to the documentation for both parts "specifies
-time interval between auto read and write access in one time program. It is
-given in number of ipg_clk periods."
+In this case, we'll pick that node, but it will be discarded by the check
+on RTN_RTINFO in fib6_locate(), and we might miss nodes with valid routing
+information but with lower fn_bit value.
 
-This patch ensures that the relevant field is read and written back to the
-timing register.
+This is apparent when a routing exception is created for a default route:
+ # ip -6 route list
+ fc00:1::/64 dev veth_A-R1 proto kernel metric 256 pref medium
+ fc00:2::/64 dev veth_A-R2 proto kernel metric 256 pref medium
+ fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 pref medium
+ fe80::/64 dev veth_A-R1 proto kernel metric 256 pref medium
+ fe80::/64 dev veth_A-R2 proto kernel metric 256 pref medium
+ default via fc00:1::2 dev veth_A-R1 metric 1024 pref medium
+ # ip -6 route list cache
+ fc00:4::1 via fc00:2::2 dev veth_A-R2 metric 1024 expires 593sec mtu 1500 pref medium
+ fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 593sec mtu 1500 pref medium
+ # ip -6 route flush cache    # node for default route is discarded
+ Failed to send flush request: No such process
+ # ip -6 route list cache
+ fc00:3::1 via fc00:1::2 dev veth_A-R1 metric 1024 expires 586sec mtu 1500 pref medium
 
-Fixes: 0642bac7da42 ("nvmem: imx-ocotp: add write support")
+Check right away if the node has a RTN_RTINFO flag, before replacing the
+'prev' pointer, that indicates the longest matching prefix found so far.
 
-Signed-off-by: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 38fbeeeeccdb ("ipv6: prepare fib6_locate() for exception table")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/imx-ocotp.c | 3 ++-
+ net/ipv6/ip6_fib.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index 926d9cc080cf..04421a73f74a 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -189,7 +189,8 @@ static void imx_ocotp_set_imx6_timing(struct ocotp_priv *priv)
- 	strobe_prog = clk_rate / (1000000000 / 10000) + 2 * (DEF_RELAX + 1) - 1;
- 	strobe_read = clk_rate / (1000000000 / 40) + 2 * (DEF_RELAX + 1) - 1;
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index bbb5ffb3397d..7091568b9f63 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1529,7 +1529,8 @@ static struct fib6_node *fib6_locate_1(struct fib6_node *root,
+ 		if (plen == fn->fn_bit)
+ 			return fn;
  
--	timing = strobe_prog & 0x00000FFF;
-+	timing = readl(priv->base + IMX_OCOTP_ADDR_TIMING) & 0x0FC00000;
-+	timing |= strobe_prog & 0x00000FFF;
- 	timing |= (relax       << 12) & 0x0000F000;
- 	timing |= (strobe_read << 16) & 0x003F0000;
+-		prev = fn;
++		if (fn->fn_flags & RTN_RTINFO)
++			prev = fn;
  
+ next:
+ 		/*
 -- 
 2.20.1
 
