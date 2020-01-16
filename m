@@ -2,117 +2,291 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429A4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F92FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E16E20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202705;
-	bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vhihfktWy4PkWSqOj5yqhBGSazh9dI9dgjpsn2IdH+XAjletu5LthxfD6Bqr8TeeD
-	 7YorfjzMwxBN18G9FfKo/CECQ138YJVCgUdw4r9dCUqtqkM9MaoD+bfS0U6IklREse
-	 orWuTw4qkzAQ5b6G9+skE+qShU9gRL55pdAqSwag=
+	by mail.kernel.org (Postfix) with ESMTP id 009CA206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OtMlLwEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437701AbgAPTZE (ORCPT
+        id S1730843AbgAPTZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:25:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbgAPQwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:38 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20D7E2073A;
-        Thu, 16 Jan 2020 16:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193557;
-        bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nB22gdPyqHxHYRqkwwRIuOmfi9ATMWO0XJZ4d2KcQI+tDdXkO2CmRGlO46ZllRY0W
-         bsUPGuFc16YKEBUIXxMiaKf0sLiQpvAjh9GhBVRIhkR9Ig5Irhi1EDE+lx/eibMmZg
-         eGuYVCt52363fRo9bkJ95xPzkVUIjOhANCvLuFaw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 103/205] arm64: dts: allwinner: a64: Re-add PMU node
-Date:   Thu, 16 Jan 2020 11:41:18 -0500
-Message-Id: <20200116164300.6705-103-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:25:56 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44831 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbgAPTZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:25:55 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 62so4059341pfu.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:25:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UoXmscIHF47pWtJ9KUeHYTru5gMXzffDC9Q60+M0m2Y=;
+        b=OtMlLwEYchm4DsDaowqkEg2KpPgr///vim8wAsAQtKLZUHYmg3/WZbhtLXWrTCRHNc
+         oV6d67f/g2WNja98sELhneBRWYkY87SvgdAoz7dVKasTKcxTSIbJPa2TeCUegYv6xP/h
+         gbciql2ySsJYr6qXrn5rgklIFACmuW4YcQ2F4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UoXmscIHF47pWtJ9KUeHYTru5gMXzffDC9Q60+M0m2Y=;
+        b=T0eBivOl6h26q0ewongrdBeqU1/r2Xd8rqbOkehCAeRV8rpH/eFywz4qP811gvJo5i
+         smC2aeJvzc7L+BnGptnay894vpjmxdqsIv4ZLUm9BOQDCsuDAHxV8W5eeu97mVT27j4P
+         MX9V3vI7SDA3Zwlehq3o1GnyeGDMpr6srS7GDKjfGy6wzqwcwXjgaYgJls3kyC31FCO0
+         AzAoSvhI45uHeDDvXMZRb+G75kY5PooLJrCdx96Za6WMt2ebTM0xFuh1dj6MPJgsPkyP
+         mtlLpGmiqzVKeNl/IPVZsgn3t9xq1RBlcCyPhVisO4Trg/Q7FPY/LH5QBOYWkyYy0Mq1
+         XaWg==
+X-Gm-Message-State: APjAAAUZQAs2fxT3FOIvCMzK/StfSBAfiM7bcCMczr/Z8h4GkUUjzyEW
+        dP2B6gdPwzKxq8iYFRDTe2hU0Q==
+X-Google-Smtp-Source: APXvYqxgiyPG9gPfp4SRfJKGLTVLondeWrkSrTpE7KWY0xNsjHCtBzjBo8zsbFkHBCcT6fsWiTuisg==
+X-Received: by 2002:a65:68c8:: with SMTP id k8mr41247676pgt.216.1579202754122;
+        Thu, 16 Jan 2020 11:25:54 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o134sm27433549pfg.137.2020.01.16.11.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 11:25:53 -0800 (PST)
+Date:   Thu, 16 Jan 2020 14:25:52 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, bristot@redhat.com,
+        frextrite@gmail.com, madhuparnabhowmik04@gmail.com,
+        urezki@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 rcu-dev] rcuperf: Measure memory footprint during
+ kfree_rcu() test
+Message-ID: <20200116192552.GE246464@google.com>
+References: <20191219211349.235877-1-joel@joelfernandes.org>
+ <20191221000729.GH2889@paulmck-ThinkPad-P72>
+ <20191221033714.GB156579@google.com>
+ <20200106195200.GS13449@paulmck-ThinkPad-P72>
+ <20200115220300.GA94036@google.com>
+ <20200115224251.GK2935@paulmck-ThinkPad-P72>
+ <20200115224542.GB94036@google.com>
+ <20200116000104.GO2935@paulmck-ThinkPad-P72>
+ <20200116040558.GD246464@google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116040558.GD246464@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+On Wed, Jan 15, 2020 at 11:05:58PM -0500, Joel Fernandes wrote:
+> On Wed, Jan 15, 2020 at 04:01:04PM -0800, Paul E. McKenney wrote:
+> > On Wed, Jan 15, 2020 at 05:45:42PM -0500, Joel Fernandes wrote:
+> > > On Wed, Jan 15, 2020 at 02:42:51PM -0800, Paul E. McKenney wrote:
+> > > > > [snip]
+> > > > > > > We can certainly refine it further but at this time I am thinking of spending
+> > > > > > > my time reviewing Lai's patches and learning some other RCU things I need to
+> > > > > > > catch up on. If you hate this patch too much, we can also defer this patch
+> > > > > > > review for a bit and I can carry it in my tree for now as it is only a patch
+> > > > > > > to test code. But honestly, in its current form I am sort of happy with it.
+> > > > > > 
+> > > > > > OK, I will keep it as is for now and let's look again later on.  It is not
+> > > > > > in the bucket for the upcoming merge window in any case, so we do have
+> > > > > > quite a bit of time.
+> > > > > > 
+> > > > > > It is not that I hate it, but rather that I want to be able to give
+> > > > > > good answers to questions that might come up.  And given that I have
+> > > > > > occasionally given certain people a hard time about their statistics,
+> > > > > > it is only reasonable to expect them to return the favor.  I wouldn't
+> > > > > > want you to be caught in the crossfire.  ;-)
+> > > > > 
+> > > > > Since the weights were concerning, I was thinking of just using a weight of
+> > > > > (1 / N) where N is the number of samples. Essentially taking the average.
+> > > > > That could be simple enough and does not cause your concerns with weight
+> > > > > tuning. I tested it and looks good, I'll post it shortly.
+> > > > 
+> > > > YES!!!  ;-)
+> > > > 
+> > > > Snapshot mem_begin before entering the loop.  For the mean value to
+> > > > be solid, you need at least 20-30 samples, which might mean upping the
+> > > > default for kfree_loops.  Have an "unsigned long long" to accumulate the
+> > > > sum, which should avoid any possibility of overflow for current systems
+> > > > and for all systems for kfree_loops less than PAGE_SIZE.  At which point,
+> > > > forget the "%" stuff and just sum up the si_mem_available() on each pass
+> > > > through the loop.
+> > > > 
+> > > > Do the division on exit from the loop, preferably checking for divide
+> > > > by zero.
+> > > > 
+> > > > Straightforward, fast, reasonably reliable, and easy to defend.
+> > > 
+> > > I mostly did it along these lines. Hopefully the latest posting is reasonable
+> > > enough ;-) I sent it twice because I messed up the authorship (sorry).
+> > 
+> > No problem with the authorship-fix resend!
+> > 
+> > But let's get this patch consistent with basic statistics!
+> > 
+> > You really do need 20-30 samples for an average to mean much.
+> > 
+> > Of course, right now you default kfree_loops to 10.  You are doing
+> > 8000 kmalloc()/kfree_rcu() loops on each pass.  This is large enough
+> > that just dropping the "% 4" should be just fine from the viewpoint of
+> > si_mem_available() overhead.  But 8000 allocations and frees should get
+> > done in way less than one second, so kicking the default kfree_loops up
+> > to 30 should be a non-problem.
+> > 
+> > Then the patch would be both simpler and statistically valid.
+> > 
+> > So could you please stop using me as the middleman in your fight with
+> > the laws of mathematics and get this patch to a defensible state?  ;-)
+> 
+> The thing is the signal doesn't vary much. I could very well just take one
+> out of the 4 samples and report that. But I still took the average since
+> there are 4 samples. I don't see much point in taking more samples here since
+> I am not concerned that the signal will fluctuate much (and if it really
+> does, then I can easily catch that kind of variation with multiple rcuperf
+> runs).
+> 
+> But if you really want though, I can increase the sampling to 20 samples or a
+> number like that and resend it.
 
-[ Upstream commit 6b832a148717f1718f57805a9a4aa7f092582d15 ]
+Changed it to around 20 samples and the tests look fine. Updated patch below (v5) :
 
-As it was found recently, the Performance Monitoring Unit (PMU) on the
-Allwinner A64 SoC was not generating (the right) interrupts. With the
-SPI numbers from the manual the kernel did not receive any overflow
-interrupts, so perf was not happy at all.
-It turns out that the numbers were just off by 4, so the PMU interrupts
-are from 148 to 151, not from 152 to 155 as the manual describes.
+---8<-----------------------
 
-This was found by playing around with U-Boot, which typically does not
-use interrupts, so the GIC is fully available for experimentation:
-With *every* PPI and SPI enabled, an overflowing PMU cycle counter was
-found to set a bit in one of the GICD_ISPENDR registers, with careful
-counting this was determined to be number 148.
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH] rcuperf: Measure memory footprint during kfree_rcu() test (v5)
 
-Tested with perf record and perf top on a Pine64-LTS. Also tested with
-tasksetting to every core to confirm the assignment between IRQs and
-cores.
+During changes to kfree_rcu() code, we often check the amount of free
+memory.  As an alternative to checking this manually, this commit adds a
+measurement in the test itself.  It measures four times during the test
+for available memory, digitally filters these measurements to produce a
+running average with a weight of 0.5, and compares this digitally
+filtered value with the amount of available memory at the beginning of
+the test.
 
-This somewhat "revert-fixes" commit ed3e9406bcbc ("arm64: dts: allwinner:
-a64: Drop PMU node").
+We apply the digital filter only once we are more than 25% into the
+test. At the 25% mark, we just read available memory and don't apply any
+filtering. This prevents the first sample from skewing the results
+as we would not consider memory readings that were before memory was
+allocated.
 
-Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
-Fixes: ed3e9406bcbc ("arm64: dts: allwinner: a64: Drop PMU node")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A sample run shows something like:
+
+Total time taken by all kfree'ers: 6369738407 ns, loops: 10000, batches: 764, memory footprint: 216MB
+
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+v1->v2: Minor corrections
+v1->v3: Use long long to prevent 32-bit system's overflow
+	Handle case where some threads start later than others.
+	Start measuring only once 25% into the test. Slightly more accurate.
+v3->v4: Simplified test more. Using simple average.
+v4->v5: Collect more memory samples than previous revision (4 to 5, vs, 20 to 21).
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 70f4cce6be43..ba41c1b85887 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -142,6 +142,15 @@
- 		clock-output-names = "ext-osc32k";
- 	};
+ kernel/rcu/rcuperf.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 1fd0cc72022e..284625af4c79 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -12,6 +12,7 @@
+ #include <linux/types.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/kthread.h>
+ #include <linux/err.h>
+@@ -593,7 +594,7 @@ rcu_perf_shutdown(void *arg)
  
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
+ torture_param(int, kfree_nthreads, -1, "Number of threads running loops of kfree_rcu().");
+ torture_param(int, kfree_alloc_num, 8000, "Number of allocations and frees done in an iteration.");
+-torture_param(int, kfree_loops, 10, "Number of loops doing kfree_alloc_num allocations and frees.");
++torture_param(int, kfree_loops, 20, "Number of loops doing kfree_alloc_num allocations and frees.");
+ 
+ static struct task_struct **kfree_reader_tasks;
+ static int kfree_nrealthreads;
+@@ -616,14 +617,17 @@ DEFINE_KFREE_OBJ(32); // goes on kmalloc-64 slab
+ DEFINE_KFREE_OBJ(64); // goes on kmalloc-96 slab
+ DEFINE_KFREE_OBJ(96); // goes on kmalloc-128 slab
+ 
++long long mem_begin;
 +
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+ static int
+ kfree_perf_thread(void *arg)
+ {
+ 	int i, loop = 0;
+ 	long me = (long)arg;
+ 	void *alloc_ptr;
+-
+ 	u64 start_time, end_time;
++	long mem_samples = 0;
++	long long mem_during = 0;
+ 
+ 	VERBOSE_PERFOUT_STRING("kfree_perf_thread task started");
+ 	set_cpus_allowed_ptr(current, cpumask_of(me % nr_cpu_ids));
+@@ -638,7 +642,17 @@ kfree_perf_thread(void *arg)
+ 			b_rcu_gp_test_started = cur_ops->get_gp_seq();
+ 	}
+ 
++	// Prevent "% 0" error below.
++	if (kfree_loops < 20)
++		kfree_loops = 20;
++
+ 	do {
++		// Start measuring only from when we are a little into the test.
++		if ((loop != 0) && (loop % (kfree_loops / 20) == 0)) {
++			mem_during = mem_during + si_mem_available();
++			mem_samples++;
++		}
++
+ 		for (i = 0; i < kfree_alloc_num; i++) {
+ 			int kfree_type = i % 4;
+ 
+@@ -671,6 +685,8 @@ kfree_perf_thread(void *arg)
+ 		cond_resched();
+ 	} while (!torture_must_stop() && ++loop < kfree_loops);
+ 
++	mem_during = (mem_during / mem_samples);
++
+ 	if (atomic_inc_return(&n_kfree_perf_thread_ended) >= kfree_nrealthreads) {
+ 		end_time = ktime_get_mono_fast_ns();
+ 
+@@ -679,9 +695,13 @@ kfree_perf_thread(void *arg)
+ 		else
+ 			b_rcu_gp_test_finished = cur_ops->get_gp_seq();
+ 
+-		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld\n",
++		// The "memory footprint" field represents how much in-flight
++		// memory is allocated during the test and waiting to be freed.
++		pr_alert("Total time taken by all kfree'ers: %llu ns, loops: %d, batches: %ld, memory footprint: %lldMB\n",
+ 		       (unsigned long long)(end_time - start_time), kfree_loops,
+-		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started));
++		       rcuperf_seq_diff(b_rcu_gp_test_finished, b_rcu_gp_test_started),
++		       (mem_begin - mem_during) >> (20 - PAGE_SHIFT));
++
+ 		if (shutdown) {
+ 			smp_mb(); /* Assign before wake. */
+ 			wake_up(&shutdown_wq);
+@@ -753,6 +773,8 @@ kfree_perf_init(void)
+ 		goto unwind;
+ 	}
+ 
++	mem_begin = si_mem_available();
++
+ 	for (i = 0; i < kfree_nrealthreads; i++) {
+ 		firsterr = torture_create_kthread(kfree_perf_thread, (void *)i,
+ 						  kfree_reader_tasks[i]);
 -- 
-2.20.1
+2.25.0.rc1.283.g88dfdc4193-goog
 
