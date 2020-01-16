@@ -2,94 +2,93 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3FAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5638C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E3C2465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N/4vDNxg"
+	by mail.kernel.org (Postfix) with ESMTP id 86C7D2465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbgAPAye (ORCPT
+        id S1729850AbgAPAzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:54:34 -0500
-Received: from ozlabs.org ([203.11.71.1]:59709 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgAPAye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:54:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ym1N2qQfz9s29;
-        Thu, 16 Jan 2020 11:54:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579136072;
-        bh=o2AsgKsbZJaumBr/M9SV/d5bV1cMc5R+N6/UvFqL6Uk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=N/4vDNxgYK5Bt7UjF9LobfB4RJPnmb9IMM5Egr0Wnkwr+QjuA8jX2eHOSQWLNNsJW
-         aoqCl+gnYt3xlrf9RzBwaFfzl+64RBOChvy3JjL08a7xdxpMuw3pGM2tbGUZMB2AnH
-         hewdZGIbT2zx1UtdxD2FRZqTVdB5M4s1/I5CbiAmViLi4egeAyEYnsJ9w2QY5EM305
-         oXypxBAjIil+SwZ8mGdvCaH0WqNGRlysEvV12pvKPgMaKb1gYvCihGoZrfTLfsI3Wf
-         cPBb0SRvYoptmM8Qwk6emOfGwHOgqhfeCfVE6pZVAUs6T4eUmO6Q+CU9/an8pL+KJa
-         BNwKqJWL1xVTw==
-Date:   Thu, 16 Jan 2020 11:54:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20200116115430.74ba615a@canb.auug.org.au>
+        Wed, 15 Jan 2020 19:55:05 -0500
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:55969 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726513AbgAPAzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:55:05 -0500
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Jan 2020 16:55:04 -0800
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 15 Jan 2020 16:55:04 -0800
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id E2573499B; Wed, 15 Jan 2020 16:55:03 -0800 (PST)
+Date:   Wed, 15 Jan 2020 16:55:03 -0800
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] pwm: Convert period and duty cycle to u64
+Message-ID: <20200116005503.GA8559@codeaurora.org>
+References: <cover.1578959442.git.gurus@codeaurora.org>
+ <21a1431edfa86e061528b80021351c25c76976a9.1578959442.git.gurus@codeaurora.org>
+ <20200114074710.kxkz4664oap3r752@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6E78p7S6u6UVwL4eG94toUk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200114074710.kxkz4664oap3r752@pengutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6E78p7S6u6UVwL4eG94toUk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Uwe,
 
-Hi all,
+On Tue, Jan 14, 2020 at 08:47:10AM +0100, Uwe Kleine-König wrote:
+> I didn't thought about that much, but it would be great if we could
+> prepare the affected drivers to work with both, int and u64 and switch
+> in a separate commit. Reverting would then become cheaper.
+> The conversion to 64-bit division macros could be done even without
+> actually converting period and duty cycle, couldn't it?
 
-After merging the block tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+I do agree that with such a two-step process the reverting (should the
+need arise) would be much cheaper. I tried out your suggestion and saw
+that this is not possible as the patch stands currently due to
+compilation warning and errors that arise for various architectures:
 
-fs/io_uring.c: In function '__io_sqe_files_update':
-fs/io_uring.c:5567:8: warning: cast to pointer from integer of different si=
-ze [-Wint-to-pointer-cast]
- 5567 |  fds =3D (__s32 __user *) up->fds;
-      |        ^
+warning: comparison of distinct pointer types lacks a cast
+warning: right shift count >= width of type [-Wshift-count-overflow]
+error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
+note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'unsigned int *'
+warning: format '%llu' expects argument of type 'long long unsigned int', but argument 4 has type 'unsigned int' [-Wformat=]
 
-Introduced by commit
+Could you please indicate how we should proceed further?
 
-  813668c6099b ("io_uring: avoid ring quiesce for fixed file set unregister=
- and update")
+> This Reported-by: looks wrong. It gave some hints about what had to be
+> improved in an earlier revision of this patch, but usually this means
+> that the patch is a fix for an earlier commit. So I would put this in
+> the text, something like:
+> 
+> 	The kbuild test robot helped to improve this patch series to
+> 	(hopefully) catch all code sites having to be adapted.
 
---=20
-Cheers,
-Stephen Rothwell
+Noted, will make this change.
 
---Sig_/6E78p7S6u6UVwL4eG94toUk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> In ir-rx51.c you used DIV_ROUND_CLOSEST_ULL to replace
+> DIV_ROUND_CLOSEST, here it is DIV64_U64_ROUND_CLOSEST. Maybe it is worth
+> to describe the relevant difference shortly in the commit log.
 
------BEGIN PGP SIGNATURE-----
+Sure, will make a note of this in the commit log. In short, one is used
+when only the numerator is 64-bit while the other is meant for the case
+when both numerator and denominator are 64-bit.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4ftEYACgkQAVBC80lX
-0GwuTAf/b0DOmOHdXaVbP3DANeiXozWvUht5f/fPmH+Vy31pbIoowrxSWPvaF3zh
-DO/HJVMlQk0mCE6VpO5zkKnaE4Gp4CHVcAb2g7SiCZrP2aAIu3/Eenx5b8oSiV7D
-tQNv32kkqxOyef4CCQ7UmAZE6Rvrt0vPQVrDsda6va/cHAgBma+i1wiL7Cj9DBPV
-whT5RkkCNtv/GPRRy0vA/UNz0zKD+vuUURIvM8SuNVI6qB3TcXtsDPTs/KCfke7n
-0yEe+OHN8Jnuhjmya2CM6z2h3hPeOxPHoAvfF+5Am8ciE3w7CZ9uucQj97C4gsIb
-akEO0z8xehhEeqpl6LoKt69uac8w2Q==
-=lLR6
------END PGP SIGNATURE-----
+Thank you.
 
---Sig_/6E78p7S6u6UVwL4eG94toUk--
+Guru Das.
