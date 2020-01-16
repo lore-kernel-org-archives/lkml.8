@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A69BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12EEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1B2206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE5920684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199462;
-	bh=KT9eY9teyu9DbO7QxqE4c0V0TOwHiCWLRLe30T59hJU=;
+	s=default; t=1579199468;
+	bh=mLDp92O2C3qsOQkY4HX4KZejpeluTzoGMiIMT5MAAvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGH4Sh388hc508LPQEZ6zWSUDI4xQZKPwUkMnBJQfS3Uf8gKJQpACBTpQDBJnTlC+
-	 eRZ8cc5gGEEnAXegwubDSguqcjbAv+8P8ijVwLgNtfIY3FNFubcRsTznin5E45mcQJ
-	 s2yGVbxGnYfkFmG44QkvwM+361qYroxGxfD123fA=
+	b=GrkYDaCJcoaiPYqCTsfvU8PZyORNib8oDdTXYmV6crxHJksfpTQTL7lKtEPCq3+2G
+	 WDrugtxyBX7tug4N9i0Fn6ccYqN3sTYXDQkIs0YfnX2yzUHqzIcR+ec7nzRqTmTC1u
+	 C0VOA36+pGapkrOo7YT+v6W4NBNicKVWMrPgePmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391066AbgAPRZ0 (ORCPT
+        id S2392912AbgAPSbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:31:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391888AbgAPRZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:08 -0500
+        id S2391940AbgAPRZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8230246A5;
-        Thu, 16 Jan 2020 17:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88BBB246CE;
+        Thu, 16 Jan 2020 17:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195507;
-        bh=KT9eY9teyu9DbO7QxqE4c0V0TOwHiCWLRLe30T59hJU=;
+        s=default; t=1579195524;
+        bh=mLDp92O2C3qsOQkY4HX4KZejpeluTzoGMiIMT5MAAvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=An2pNbbAGZWbBKKWs5XrjgXKwDZYu6MdZxHa8OTAU0CvRs+pHuqYVkSoDTdhVv3CE
-         R3V9ydJBYq/gcfuu6LamFkYSQDABgX7pT0AxlBu6D3942VKJQQyU44zIFK6vSai5Yj
-         RS85KvhX7cQ5WCvLNqNb0WlGJ6Fq4a4VoUscQAtk=
+        b=bDNn2xxOTvSDUXpng/IxLk7xA98FZmuR1/poBbvF5ONqMwIZS/I4PEtGCOlnFIBvj
+         4TOJen7BIWU4O4FY7kNY9JF3cji8xlNVj5e+6HSvgqmQ7tRP/9alinnm104Z28Dbzl
+         LzRFmlifFPv3sPnFmEhqDrBRjzKYw25uFBRewGRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 107/371] regulator: pv88060: Fix array out-of-bounds access
-Date:   Thu, 16 Jan 2020 12:19:39 -0500
-Message-Id: <20200116172403.18149-50-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 121/371] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
+Date:   Thu, 16 Jan 2020 12:19:53 -0500
+Message-Id: <20200116172403.18149-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -58,34 +58,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 7cd415f875591bc66c5ecb49bf84ef97e80d7b0e ]
+[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
 
-Fix off-by-one while iterating current_limits array.
-The valid index should be 0 ~ n_current_limits -1.
+If a bulk layout recall or a metadata server reboot coincides with a
+umount, then holding a reference to an inode is unsafe unless we
+also hold a reference to the super block.
 
-Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88060-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
+ fs/nfs/pnfs.h |  1 +
+ 2 files changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
-index a9446056435f..1f2d8180506b 100644
---- a/drivers/regulator/pv88060-regulator.c
-+++ b/drivers/regulator/pv88060-regulator.c
-@@ -135,7 +135,7 @@ static int pv88060_set_current_limit(struct regulator_dev *rdev, int min,
- 	int i;
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index ec04cce31814..83abf3dd7351 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -725,22 +725,35 @@ static int
+ pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
+ 		struct nfs_server *server,
+ 		struct list_head *layout_list)
++	__must_hold(&clp->cl_lock)
++	__must_hold(RCU)
+ {
+ 	struct pnfs_layout_hdr *lo, *next;
+ 	struct inode *inode;
  
- 	/* search for closest to maximum */
--	for (i = info->n_current_limits; i >= 0; i--) {
-+	for (i = info->n_current_limits - 1; i >= 0; i--) {
- 		if (min <= info->current_limits[i]
- 			&& max >= info->current_limits[i]) {
- 			return regmap_update_bits(rdev->regmap,
+ 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
+-		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
++		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
++		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
++		    !list_empty(&lo->plh_bulk_destroy))
+ 			continue;
++		/* If the sb is being destroyed, just bail */
++		if (!nfs_sb_active(server->super))
++			break;
+ 		inode = igrab(lo->plh_inode);
+-		if (inode == NULL)
+-			continue;
+-		list_del_init(&lo->plh_layouts);
+-		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
+-			continue;
+-		rcu_read_unlock();
+-		spin_unlock(&clp->cl_lock);
+-		iput(inode);
++		if (inode != NULL) {
++			list_del_init(&lo->plh_layouts);
++			if (pnfs_layout_add_bulk_destroy_list(inode,
++						layout_list))
++				continue;
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			iput(inode);
++		} else {
++			rcu_read_unlock();
++			spin_unlock(&clp->cl_lock);
++			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
++		}
++		nfs_sb_deactive(server->super);
+ 		spin_lock(&clp->cl_lock);
+ 		rcu_read_lock();
+ 		return -EAGAIN;
+@@ -778,7 +791,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
+ 		/* Free all lsegs that are attached to commit buckets */
+ 		nfs_commit_inode(inode, 0);
+ 		pnfs_put_layout_hdr(lo);
+-		iput(inode);
++		nfs_iput_and_deactive(inode);
+ 	}
+ 	return ret;
+ }
+diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
+index 87f144f14d1e..965d657086c8 100644
+--- a/fs/nfs/pnfs.h
++++ b/fs/nfs/pnfs.h
+@@ -99,6 +99,7 @@ enum {
+ 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
+ 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
+ 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
++	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
+ };
+ 
+ enum layoutdriver_policy_flags {
 -- 
 2.20.1
 
