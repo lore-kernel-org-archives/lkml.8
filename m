@@ -2,146 +2,86 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA49C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F950C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE5C20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E4C20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdnC5X2e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0qaYNvZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgAPPTI (ORCPT
+        id S1726944AbgAPPTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:19:08 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52032 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAPPTH (ORCPT
+        Thu, 16 Jan 2020 10:19:49 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:34730 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgAPPTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:19:07 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so1665680pjw.1;
-        Thu, 16 Jan 2020 07:19:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gv/c4WmqGfA4FwM+VUnPA6bgCeuDGypbQgWIA5eSdW4=;
-        b=BdnC5X2ejkNu6VgzVywx16V1MICoF+R7x5yXvrxhs7+K4demvgdXAocEzXP9dNN6tf
-         ALngM0W3ucKlEPjA7RGYNqdUiwrkXVa8/9WO7kukDQicGPWFqPI4lc4hhwQ8kxPWkeTA
-         uii4HQEyjtbDY0ca0MsBV6F/H3eQUS8xY0jLnQxn4U6MKtOlbY+mE+P67VziGut5c2bW
-         oDzRiZtHaYAPl8KfLtuTHnD5LGAm6bDc9wP1G6Innf7Q0kgyz7SIKOS/mB/xX6glorIE
-         zuPxvXwvYL7okIrTR2KM8zVHY+bOlVyU7FMYJGdqS/BAdbdJXAv2yORk2D3QZkTtFC5t
-         D9mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gv/c4WmqGfA4FwM+VUnPA6bgCeuDGypbQgWIA5eSdW4=;
-        b=Sxx8EgpQvmtNOnBdh9QmtwyFGhs7pmR9v+EbI+sZ8mBovwZkoSjyf/hLVT+UMvxZT3
-         AGtgNYdu15X1trB0Ega3uSs5ZgMp00XYZ83G+iiO0bT/5cQ4axCDseK4esajY93Xybpy
-         WyZY+R+UGyUwt6ScX+Bb2SHnKtiKEWhosQcesvWL9wonFgP24zEDRwcMv2QbRrN4oHtx
-         jDxTQQUoGIxr7sul2DnPLsbfQQJlgBOy+BGossV2c7G9CsD9vxngEmmTpYopUzGiU4Br
-         0FH5Aozw8Re4iRIOEJR/YvhRMoz3a/g8YuyD+6847Li4YpniV5LZO8TWRW5Wk6xUm0Km
-         zv8Q==
-X-Gm-Message-State: APjAAAUJE8lZOfFS6f8crA6eTM4ibqRjjGpd/VO+lZtzCcEgh4kfceGf
-        RcrJXf1dy52dfACnW24mCBM=
-X-Google-Smtp-Source: APXvYqzx+iJdx41eEtxov+lseJBDVi5+Bd+co9P8ndxjrrqLZ4Ks8iLi3tuljWT/UHOJJUjbUZVoTA==
-X-Received: by 2002:a17:90a:9416:: with SMTP id r22mr7531065pjo.2.1579187947145;
-        Thu, 16 Jan 2020 07:19:07 -0800 (PST)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id k9sm4007510pjo.19.2020.01.16.07.19.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 07:19:06 -0800 (PST)
-Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-To:     David Miller <davem@davemloft.net>, zhangshaokun@hisilicon.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jinyuqi@huawei.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        edumazet@google.com, guoyang2@huawei.com
-References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200116.042722.153124126288244814.davem@davemloft.net>
- <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
-Message-ID: <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
-Date:   Thu, 16 Jan 2020 07:19:05 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 10:19:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=svMQJiwp5Oy+aNLrAs8hBdA9OsRR5/uwv6LYplokKl4=; b=0qaYNvZzKX6o8a8LgxCFk4HvX
+        T9snhLthtVgpMr+i5rgvSc5T920218F6utSra7AWWBW0nFSlFLgIbsZ0n4HPNxhQO/QZcRTVTNP2F
+        O7IM5Z8cQ8YV0WyC1eKRtBdGI7/VFRFD3gdVcX7Aav0eMV6YGs85Z6dmc/j3ZdkbY+bw/7rJncVUG
+        DEmPlBC+4MT6Vb8uTOd6I+UgUQeVV+UQdN2Zkrp6d5FkfMkH6jR1JU1zwoywZZi0DEZnJSf16bYff
+        6oaIG5z9uF066bicjvPmH/jPAG89wox6wqLXLNdiNhINUE7lYECNOsMSOaSQ2qndy3gQ3o+Cd9pUq
+        peDXQ+sZQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1is6vv-0003hI-VB; Thu, 16 Jan 2020 15:19:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 50CD8302524;
+        Thu, 16 Jan 2020 16:18:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 210642B6D1E1B; Thu, 16 Jan 2020 16:19:42 +0100 (CET)
+Date:   Thu, 16 Jan 2020 16:19:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
+        prime.zeng@hisilicon.com, dietmar.eggemann@arm.com,
+        morten.rasmussen@arm.com, mingo@kernel.org
+Subject: Re: [PATCH] sched/topology: Assert non-NUMA topology masks don't
+ (partially) overlap
+Message-ID: <20200116151942.GW2871@hirez.programming.kicks-ass.net>
+References: <20200115160915.22575-1-valentin.schneider@arm.com>
+ <20200116104428.GP2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116104428.GP2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 16, 2020 at 11:44:28AM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 15, 2020 at 04:09:15PM +0000, Valentin Schneider wrote:
+> > @@ -1975,6 +2011,9 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+> >  				has_asym = true;
+> >  			}
+> >  
+> > +			if (WARN_ON(!topology_span_sane(tl, cpu_map, i)))
+> > +				goto error;
+> > +
+> >  			sd = build_sched_domain(tl, cpu_map, attr, sd, dflags, i);
+> >  
+> >  			if (tl == sched_domain_topology)
+> 
+> This is O(nr_cpus), but then, that function already is, so I don't see a
+> problem with this.
 
+Clearly I meant to write O(nr_cpus^2), there's a bunch of nested
+for_each_cpu() in there.
 
-On 1/16/20 7:12 AM, Eric Dumazet wrote:
-> 
-> 
-> On 1/16/20 4:27 AM, David Miller wrote:
->> From: Shaokun Zhang <zhangshaokun@hisilicon.com>
->> Date: Wed, 15 Jan 2020 11:23:40 +0800
->>
->>> From: Yuqi Jin <jinyuqi@huawei.com>
->>>
->>> atomic_try_cmpxchg is called instead of atomic_cmpxchg that can reduce
->>> the access number of the global variable @p_id in the loop. Let's
->>> optimize it for performance.
->>>
->>> Cc: "David S. Miller" <davem@davemloft.net>
->>> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
->>> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
->>> Cc: Eric Dumazet <edumazet@google.com>
->>> Cc: Yang Guo <guoyang2@huawei.com>
->>> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
->>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->>
->> I doubt this makes any measurable improvement in performance.
->>
->> If you can document a specific measurable improvement under
->> a useful set of circumstances for real usage, then put those
->> details into the commit message and resubmit.
->>
->> Otherwise, I'm not applying this, sorry.
->>
-> 
-> 
-> Real difference that could be made here is to 
-> only use this cmpxchg() dance for CONFIG_UBSAN
-> 
-> When CONFIG_UBSAN is not set, atomic_add_return() is just fine.
-> 
-> (Supposedly UBSAN should not warn about that either, but this depends on compiler version)
-
-I will test something like :
-
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index 2010888e68ca96ae880481973a6d808d6c5612c5..e2fa972f5c78f2aefc801db6a45b2a81141c3028 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -495,11 +495,15 @@ u32 ip_idents_reserve(u32 hash, int segs)
-        if (old != now && cmpxchg(p_tstamp, old, now) == old)
-                delta = prandom_u32_max(now - old);
- 
--       /* Do not use atomic_add_return() as it makes UBSAN unhappy */
-+#ifdef CONFIG_UBSAN
-+       /* Do not use atomic_add_return() as it makes old UBSAN versions unhappy */
-        do {
-                old = (u32)atomic_read(p_id);
-                new = old + delta + segs;
-        } while (atomic_cmpxchg(p_id, old, new) != old);
-+#else
-+       new = atomic_add_return(segs + delta, p_id);
-+#endif
- 
-        return new - segs;
- }
-
+> I'll take it, thanks!
