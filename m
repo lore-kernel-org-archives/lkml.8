@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B994C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9EDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4249D20728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCAA220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194963;
-	bh=DQki7PZzjNa4opcLggjE1aYk8b+80ED2ncPPxwBq4zs=;
+	s=default; t=1579194968;
+	bh=Pt1wIy+Ga/MODLru/Fw2LqJ2BaxDv6nVC/Ngcmk9cFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TsRR7B59vaInlJC5iGq69/fmmFhbpgLr8wNcU+KCNK4wJPs+6YayzNoZqJlJxZOhY
-	 xdiHdjQdBif+OzYEmGd/GVKjjowbaQBdA3CbtJM4fyv4VytKvWZCMZP1d9VSEjuB91
-	 aKFLSF0ygnRtroK/5J6yQIQQbEfaI6wy31BIDD5E=
+	b=GW73BsN9Ya3SRysWGyhqF3D0AqR7KAW+5Snyee4JiwqkbIk3fY5NtCBB2cjdAilh6
+	 Tyg26cJKLmjj047Ae6P+KkEvCK7IAdsdV6QXvWdaBikB/RMBp8Lh96y2OpVQJDZ/vF
+	 F32G5Jh+N/E97us8oWxqaR/XNn6s53Gv+F3+O4zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgAPROW (ORCPT
+        id S2390824AbgAPRQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:16:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390934AbgAPROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:10 -0500
+        id S2390971AbgAPROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB89246B0;
-        Thu, 16 Jan 2020 17:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7EC6246B8;
+        Thu, 16 Jan 2020 17:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194850;
-        bh=DQki7PZzjNa4opcLggjE1aYk8b+80ED2ncPPxwBq4zs=;
+        s=default; t=1579194860;
+        bh=Pt1wIy+Ga/MODLru/Fw2LqJ2BaxDv6nVC/Ngcmk9cFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/PVO3XykfUaSCP/m/jJC0wO4F+52DSBhkJxtQgUTtbFhOyksQcJW6Kz9UERP4Bgj
-         xazc9D7V65Yb5hTsZll84O21Mv6yK9SyS+GxOuZuzJ6ruzAksObYgOXce7jgxIJVxm
-         QunwNB/0ouxsfVloD1gikSq/DKYgqL4sHx4+ThiM=
+        b=RtoqgRwkivpcJC2Asl5zeaJ2O+0wGaQxfTPwDYu0Ybm/BIQ4Fi6A3E9TdpBievH5h
+         rXshNCoMC3J9SV7GwYXVXIHk2zEAUX9rGVZ2iFv29d5OYwikWXcfxsFPJ6BoJacFjs
+         56W9e+JlD11DqFijKxeqIKrwNjdU8KrzWH7nWGhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 646/671] tty: serial: pch_uart: correct usage of dma_unmap_sg
-Date:   Thu, 16 Jan 2020 12:04:44 -0500
-Message-Id: <20200116170509.12787-383-sashal@kernel.org>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 655/671] powerpc/powernv: Disable native PCIe port management
+Date:   Thu, 16 Jan 2020 12:04:53 -0500
+Message-Id: <20200116170509.12787-392-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,68 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-[ Upstream commit 74887542fdcc92ad06a48c0cca17cdf09fc8aa00 ]
+[ Upstream commit 9d72dcef891030545f39ad386a30cf91df517fb2 ]
 
-Per Documentation/DMA-API-HOWTO.txt,
-To unmap a scatterlist, just call:
-	dma_unmap_sg(dev, sglist, nents, direction);
+On PowerNV the PCIe topology is (currently) managed by the powernv platform
+code in Linux in cooperation with the platform firmware. Linux's native
+PCIe port service drivers operate independently of both and this can cause
+problems.
 
-.. note::
+The main issue is that the portbus driver will conflict with the platform
+specific hotplug driver (pnv_php) over ownership of the MSI used to notify
+the host when a hotplug event occurs. The portbus driver claims this MSI on
+behalf of the individual port services because the same interrupt is used
+for hotplug events, PMEs (on root ports), and link bandwidth change
+notifications. The portbus driver will always claim the interrupt even if
+the individual port service drivers, such as pciehp, are compiled out.
 
-	The 'nents' argument to the dma_unmap_sg call must be
-	the _same_ one you passed into the dma_map_sg call,
-	it should _NOT_ be the 'count' value _returned_ from the
-	dma_map_sg call.
+The second, bigger, problem is that the hotplug port service driver
+fundamentally does not work on PowerNV. The platform assumes that all
+PCI devices have a corresponding arch-specific handle derived from the DT
+node for the device (pci_dn) and without one the platform will not allow
+a PCI device to be enabled. This problem is largely due to historical
+baggage, but it can't be resolved without significant re-factoring of the
+platform PCI support.
 
-However in the driver, priv->nent is directly assigned with value
-returned from dma_map_sg, and dma_unmap_sg use priv->nent for unmap,
-this breaks the API usage.
+We can fix these problems in the interim by setting the
+"pcie_ports_disabled" flag during platform initialisation. The flag
+indicates the platform owns the PCIe ports which stops the portbus driver
+from being registered.
 
-So introduce a new entry orig_nent to remember 'nents'.
+This does have the side effect of disabling all port services drivers
+that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
+not a huge disadvantage on PowerNV since these services are either unused
+or handled through other means.
 
-Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1573623259-6339-1-git-send-email-peng.fan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191118065553.30362-1-oohall@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/pch_uart.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/pci.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
-index cb85002a10d8..3245cdbf9116 100644
---- a/drivers/tty/serial/pch_uart.c
-+++ b/drivers/tty/serial/pch_uart.c
-@@ -235,6 +235,7 @@ struct eg20t_port {
- 	struct dma_chan			*chan_rx;
- 	struct scatterlist		*sg_tx_p;
- 	int				nent;
-+	int				orig_nent;
- 	struct scatterlist		sg_rx;
- 	int				tx_dma_use;
- 	void				*rx_buf_virt;
-@@ -789,9 +790,10 @@ static void pch_dma_tx_complete(void *arg)
- 	}
- 	xmit->tail &= UART_XMIT_SIZE - 1;
- 	async_tx_ack(priv->desc_tx);
--	dma_unmap_sg(port->dev, sg, priv->nent, DMA_TO_DEVICE);
-+	dma_unmap_sg(port->dev, sg, priv->orig_nent, DMA_TO_DEVICE);
- 	priv->tx_dma_use = 0;
- 	priv->nent = 0;
-+	priv->orig_nent = 0;
- 	kfree(priv->sg_tx_p);
- 	pch_uart_hal_enable_interrupt(priv, PCH_UART_HAL_TX_INT);
- }
-@@ -1015,6 +1017,7 @@ static unsigned int dma_handle_tx(struct eg20t_port *priv)
- 		dev_err(priv->port.dev, "%s:dma_map_sg Failed\n", __func__);
- 		return 0;
- 	}
-+	priv->orig_nent = num;
- 	priv->nent = nent;
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index db230a35609b..c846300b7836 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -1095,6 +1095,23 @@ void __init pnv_pci_init(void)
+ 	if (!firmware_has_feature(FW_FEATURE_OPAL))
+ 		return;
  
- 	for (i = 0; i < nent; i++, sg++) {
++#ifdef CONFIG_PCIEPORTBUS
++	/*
++	 * On PowerNV PCIe devices are (currently) managed in cooperation
++	 * with firmware. This isn't *strictly* required, but there's enough
++	 * assumptions baked into both firmware and the platform code that
++	 * it's unwise to allow the portbus services to be used.
++	 *
++	 * We need to fix this eventually, but for now set this flag to disable
++	 * the portbus driver. The AER service isn't required since that AER
++	 * events are handled via EEH. The pciehp hotplug driver can't work
++	 * without kernel changes (and portbus binding breaks pnv_php). The
++	 * other services also require some thinking about how we're going
++	 * to integrate them.
++	 */
++	pcie_ports_disabled = true;
++#endif
++
+ 	/* Look for IODA IO-Hubs. */
+ 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
+ 		pnv_pci_init_ioda_hub(np);
 -- 
 2.20.1
 
