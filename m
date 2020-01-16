@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C866EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE1CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9848E2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CDE2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217014;
-	bh=Hx96LwSpJ0kZdmM/bnhqVzAezg/2L1hS4DvMKc21bpo=;
+	s=default; t=1579217017;
+	bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GpQbl6WiM4pUi+7NQbxbt/BxC1mUR5KrHmWxvzop9gC4exw8E8BXQEQYxCAsonwmy
-	 FkY9Yvszs76vIrRMSO4M6Z5XlfBtuNyKKCTjmZMqMeKFtOaCRzsHYz0/T2/hhLZBzZ
-	 BveOnNOeLQAalcbI2OwwrWUmvCpyVj/BMLWLp2aU=
+	b=eflEGAJsL/s/nFufQjT3ODA4E3l33MH9pxIE7uwGQ9RmzysVlvTY2wOx3pWzo2Apz
+	 Gt4XW+wAi/WCuHChzQafSHpqCDXXkKLvSKt0lQzY2tav98GXeVyFP3cnpdcBKz5oE+
+	 279HBVEgXwYGoR7tg5Om5Q7G6xrA6ya1Nbp8h5tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgAPXXd (ORCPT
+        id S1729475AbgAPXXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:23:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:23:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390998AbgAPXX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:28 -0500
+        id S1730258AbgAPXXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F0F2082F;
-        Thu, 16 Jan 2020 23:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205502077C;
+        Thu, 16 Jan 2020 23:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217008;
-        bh=Hx96LwSpJ0kZdmM/bnhqVzAezg/2L1hS4DvMKc21bpo=;
+        s=default; t=1579217010;
+        bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1WpCDe7vusnK8EFXSlbG73nIOyOHRSHPLniwu4rR4iofI7PwPkczEshZXlzq5KrX
-         1omBVTAkVq+4SGPnLTjt/7NxvfAM7aCBYQOnu13+vm7KxYNBXrjFi6jqnoZ1pJpBF5
-         Xkv5HoojhIz7mPJSh9Pgo1SozzVxT3EXSnpFx8e0=
+        b=lmXa+j9WwSK3lthvk84nX+swdJdwR494eBOpEqfz6aKpM2zCNwukHLtDYRvhygsK0
+         mfFgHbWB1gsx4AfZ9dKu99YZqcn6lSM3+PgS1CU3nWhq1PYZ3d9ygq+rUK8Ou8FIAA
+         ZF1JfLqH19cS1mPSR4zgdXECDeRIM8y+63U3UsHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 5.4 102/203] crypto: algif_skcipher - Use chunksize instead of blocksize
-Date:   Fri, 17 Jan 2020 00:16:59 +0100
-Message-Id: <20200116231754.501628362@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.4 111/203] mei: fix modalias documentation
+Date:   Fri, 17 Jan 2020 00:17:08 +0100
+Message-Id: <20200116231755.180550968@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,126 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 5b0fe9552336338acb52756daf65dd7a4eeca73f upstream.
+commit 73668309215285366c433489de70d31362987be9 upstream.
 
-When algif_skcipher does a partial operation it always process data
-that is a multiple of blocksize.  However, for algorithms such as
-CTR this is wrong because even though it can process any number of
-bytes overall, the partial block must come at the very end and not
-in the middle.
+mei client bus added the client protocol version to the device alias,
+but ABI documentation was not updated.
 
-This is exactly what chunksize is meant to describe so this patch
-changes blocksize to chunksize.
-
-Fixes: 8ff590903d5f ("crypto: algif_skcipher - User-space...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: b26864cad1c9 (mei: bus: add client protocol version to the device alias)
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191008005735.12707-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algif_skcipher.c            |    2 +-
- include/crypto/internal/skcipher.h |   30 ------------------------------
- include/crypto/skcipher.h          |   30 ++++++++++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 31 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-mei |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -56,7 +56,7 @@ static int _skcipher_recvmsg(struct sock
- 	struct alg_sock *pask = alg_sk(psk);
- 	struct af_alg_ctx *ctx = ask->private;
- 	struct crypto_skcipher *tfm = pask->private;
--	unsigned int bs = crypto_skcipher_blocksize(tfm);
-+	unsigned int bs = crypto_skcipher_chunksize(tfm);
- 	struct af_alg_async_req *areq;
- 	int err = 0;
- 	size_t len = 0;
---- a/include/crypto/internal/skcipher.h
-+++ b/include/crypto/internal/skcipher.h
-@@ -205,19 +205,6 @@ static inline unsigned int crypto_skciph
- 	return alg->max_keysize;
- }
+--- a/Documentation/ABI/testing/sysfs-bus-mei
++++ b/Documentation/ABI/testing/sysfs-bus-mei
+@@ -4,7 +4,7 @@ KernelVersion:	3.10
+ Contact:	Samuel Ortiz <sameo@linux.intel.com>
+ 		linux-mei@linux.intel.com
+ Description:	Stores the same MODALIAS value emitted by uevent
+-		Format: mei:<mei device name>:<device uuid>:
++		Format: mei:<mei device name>:<device uuid>:<protocol version>
  
--static inline unsigned int crypto_skcipher_alg_chunksize(
--	struct skcipher_alg *alg)
--{
--	if ((alg->base.cra_flags & CRYPTO_ALG_TYPE_MASK) ==
--	    CRYPTO_ALG_TYPE_BLKCIPHER)
--		return alg->base.cra_blocksize;
--
--	if (alg->base.cra_ablkcipher.encrypt)
--		return alg->base.cra_blocksize;
--
--	return alg->chunksize;
--}
--
- static inline unsigned int crypto_skcipher_alg_walksize(
- 	struct skcipher_alg *alg)
- {
-@@ -232,23 +219,6 @@ static inline unsigned int crypto_skciph
- }
- 
- /**
-- * crypto_skcipher_chunksize() - obtain chunk size
-- * @tfm: cipher handle
-- *
-- * The block size is set to one for ciphers such as CTR.  However,
-- * you still need to provide incremental updates in multiples of
-- * the underlying block size as the IV does not have sub-block
-- * granularity.  This is known in this API as the chunk size.
-- *
-- * Return: chunk size in bytes
-- */
--static inline unsigned int crypto_skcipher_chunksize(
--	struct crypto_skcipher *tfm)
--{
--	return crypto_skcipher_alg_chunksize(crypto_skcipher_alg(tfm));
--}
--
--/**
-  * crypto_skcipher_walksize() - obtain walk size
-  * @tfm: cipher handle
-  *
---- a/include/crypto/skcipher.h
-+++ b/include/crypto/skcipher.h
-@@ -304,6 +304,36 @@ static inline unsigned int crypto_skciph
- 	return crypto_tfm_alg_blocksize(crypto_skcipher_tfm(tfm));
- }
- 
-+static inline unsigned int crypto_skcipher_alg_chunksize(
-+	struct skcipher_alg *alg)
-+{
-+	if ((alg->base.cra_flags & CRYPTO_ALG_TYPE_MASK) ==
-+	    CRYPTO_ALG_TYPE_BLKCIPHER)
-+		return alg->base.cra_blocksize;
-+
-+	if (alg->base.cra_ablkcipher.encrypt)
-+		return alg->base.cra_blocksize;
-+
-+	return alg->chunksize;
-+}
-+
-+/**
-+ * crypto_skcipher_chunksize() - obtain chunk size
-+ * @tfm: cipher handle
-+ *
-+ * The block size is set to one for ciphers such as CTR.  However,
-+ * you still need to provide incremental updates in multiples of
-+ * the underlying block size as the IV does not have sub-block
-+ * granularity.  This is known in this API as the chunk size.
-+ *
-+ * Return: chunk size in bytes
-+ */
-+static inline unsigned int crypto_skcipher_chunksize(
-+	struct crypto_skcipher *tfm)
-+{
-+	return crypto_skcipher_alg_chunksize(crypto_skcipher_alg(tfm));
-+}
-+
- static inline unsigned int crypto_sync_skcipher_blocksize(
- 	struct crypto_sync_skcipher *tfm)
- {
+ What:		/sys/bus/mei/devices/.../name
+ Date:		May 2015
 
 
