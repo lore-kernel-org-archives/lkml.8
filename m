@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB570C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBDF206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E144A20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217466;
-	bh=7SrXtY3zhTAIs5OpgjwMMDDZzdGmV1xifK4ax0OnMDI=;
+	s=default; t=1579217474;
+	bh=ok15enOupA5W/wMO7U7KSrXVmeBc2HMpZ4pSkfou/bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2u0ZqmYY5lAUVltjtTEC0RT/dZwyVxybCX+boaDlnuwNYaLsIZe6IWh6GAB2Tl5P3
-	 1u0IcLiL+T4dm4ptmGPUTpwALiIhHujhEfastRf0Cp2u7Mtayi05N6rECVbjGW+lfx
-	 eh1HrTuFlc2FcOEchGjpDpUGMwupi1ApZMkCXFjY=
+	b=VZuTy/9aKEUSWa+YSSMRKoNyy/3pK7uJB25tZhe8cvojgkTIGrfAY/DhgwgSO4VHl
+	 WpFvZL4KFVL9W4MGUv43sp7ET0eTjZlq5c6sshRS5fc/xzK9CqOdUOQkuJGdS9SEYm
+	 rhwqf3Vr/TjD0x7iXQ00Y+xaCMNreV5AZhY9r2FU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391459AbgAPXbD (ORCPT
+        id S2390142AbgAPXbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403924AbgAPXa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:27 -0500
+        id S2404043AbgAPXad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:30:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1F372072B;
-        Thu, 16 Jan 2020 23:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7673206D9;
+        Thu, 16 Jan 2020 23:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217427;
-        bh=7SrXtY3zhTAIs5OpgjwMMDDZzdGmV1xifK4ax0OnMDI=;
+        s=default; t=1579217432;
+        bh=ok15enOupA5W/wMO7U7KSrXVmeBc2HMpZ4pSkfou/bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DQoCpW/x9fREcrz7GcKC33WwKl/plsl5S123mapuGSVtJFTe4SalJt9jkFTumy3De
-         29TRAloAvrcW5hMvownm8zaX/q0tAaRBjWrLsh5zKr1SeabZ8mfIB7kXF/7YLMPgLT
-         oyqTTEVAZH1AulSNMzzUGekMYs9zY3jZxdG4Gpe4=
+        b=xDimKJ8+cXQTsC/HfZImhvelEnhj6Sv+44RSGlvwyNm52riX7Q3Lwj5Ve4kgBV0P8
+         Mn3Zlcr3cZI992oJELns7sImmqwJyqfKJjw8LdUfwMyG9+RYNYH9wH1e8xORE6H4y+
+         fq39SxpTVBA4enV1DYDP+Aqk0WU+iMEbnVkYTssM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Hogander <jouni.hogander@unikie.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 78/84] MIPS: Prevent link failure with kcov instrumentation
-Date:   Fri, 17 Jan 2020 00:18:52 +0100
-Message-Id: <20200116231722.693197398@linuxfoundation.org>
+        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 80/84] dmaengine: k3dma: Avoid null pointer traversal
+Date:   Fri, 17 Jan 2020 00:18:54 +0100
+Message-Id: <20200116231722.885728900@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -61,37 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Hogander <jouni.hogander@unikie.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit a4a3893114a41e365274d5fab5d9ff5acc235ff0 ]
+[ Upstream commit 2f42e05b942fe2fbfb9bbc6e34e1dd8c3ce4f3a4 ]
 
-__sanitizer_cov_trace_pc() is not linked in and causing link
-failure if KCOV_INSTRUMENT is enabled. Fix this by disabling
-instrumentation for compressed image.
+In some cases we seem to submit two transactions in a row, which
+causes us to lose track of the first. If we then cancel the
+request, we may still get an interrupt, which traverses a null
+ds_run value.
 
-Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: linux-mips@vger.kernel.org
+So try to avoid starting a new transaction if the ds_run value
+is set.
+
+While this patch avoids the null pointer crash, I've had some
+reports of the k3dma driver still getting confused, which
+suggests the ds_run/ds_done value handling still isn't quite
+right. However, I've not run into an issue recently with it
+so I think this patch is worth pushing upstream to avoid the
+crash.
+
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+[add ss tag]
+Link: https://lore.kernel.org/r/20191218190906.6641-1-john.stultz@linaro.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/compressed/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/k3dma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 172801ed35b8..d859f079b771 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -29,6 +29,9 @@ KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
- 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) \
- 	-DKERNEL_ENTRY=$(VMLINUX_ENTRY_ADDRESS)
+diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
+index 6bfa217ed6d0..ba3c3791f9dc 100644
+--- a/drivers/dma/k3dma.c
++++ b/drivers/dma/k3dma.c
+@@ -222,9 +222,11 @@ static irqreturn_t k3_dma_int_handler(int irq, void *dev_id)
+ 			c = p->vchan;
+ 			if (c && (tc1 & BIT(i))) {
+ 				spin_lock_irqsave(&c->vc.lock, flags);
+-				vchan_cookie_complete(&p->ds_run->vd);
+-				p->ds_done = p->ds_run;
+-				p->ds_run = NULL;
++				if (p->ds_run != NULL) {
++					vchan_cookie_complete(&p->ds_run->vd);
++					p->ds_done = p->ds_run;
++					p->ds_run = NULL;
++				}
+ 				spin_unlock_irqrestore(&c->vc.lock, flags);
+ 			}
+ 			if (c && (tc2 & BIT(i))) {
+@@ -264,6 +266,10 @@ static int k3_dma_start_txd(struct k3_dma_chan *c)
+ 	if (BIT(c->phy->idx) & k3_dma_get_chan_stat(d))
+ 		return -EAGAIN;
  
-+# Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-+KCOV_INSTRUMENT		:= n
++	/* Avoid losing track of  ds_run if a transaction is in flight */
++	if (c->phy->ds_run)
++		return -EAGAIN;
 +
- # decompressor objects (linked with vmlinuz)
- vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
- 
+ 	if (vd) {
+ 		struct k3_dma_desc_sw *ds =
+ 			container_of(vd, struct k3_dma_desc_sw, vd);
 -- 
 2.20.1
 
