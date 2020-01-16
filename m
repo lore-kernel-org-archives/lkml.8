@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220A6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20DC2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7FF2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200841;
-	bh=6DykuS+E/gsEt17/JpJdhwrQdx1rMNpo7tD7t0Zm/vM=;
+	s=default; t=1579200847;
+	bh=oLW8bhEuqWvslr3yGFZ5KkqJyKsLCXsxNqmIHwnuDoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/FxE1/XZcaE7z74mNfSu4/N/18C8ilxmWzmWWiyUcW0i8KbclBFS4JsWW3BnM4/O
-	 4j7kxd3usjC34wQycfdQtyAvTX/+Z/C79MyEdYZ/zn2weWpnnUUF9yb+konS5ZtK5e
-	 XZBvZazQtP5Ajr+C9F2fMps/uHsbocz/F/4pEBy8=
+	b=0rgIeK0FlYIy7UaZ/b1uj1shDAj2NTu/hsvAzydQG67iyTk/YlKLLix2aupcv6cB0
+	 wx4Nuo4yqryVnBhM+JtBHx4v1QcglnVT7f0IV5JEozdi6HNvJ8U9LKpKsKfTtgd8s3
+	 n1jjpWzvgJKGwyMhWTkIo/DoXfpQqaF6+3ZcVwNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389286AbgAPRIG (ORCPT
+        id S2389452AbgAPSyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40604 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:54:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389241AbgAPRHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:55 -0500
+        id S2389278AbgAPRIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4902192A;
-        Thu, 16 Jan 2020 17:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB592192A;
+        Thu, 16 Jan 2020 17:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194474;
-        bh=6DykuS+E/gsEt17/JpJdhwrQdx1rMNpo7tD7t0Zm/vM=;
+        s=default; t=1579194484;
+        bh=oLW8bhEuqWvslr3yGFZ5KkqJyKsLCXsxNqmIHwnuDoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LICc59bFl+fZKWyh4FsirGzsaPu3GcJdYA6ofQac/sORP6j26HMSn1bARToe2lC/S
-         ij0qyuCwoLMZ0RGVGily/3Ihy9YB0OHIdoz84ERoYTUVjUtfMbN74B7PF1Uey7mFdq
-         vJ8j/g5LcEWxYMo4yN3mBWL+sxrs1ERyqCI3G/sI=
+        b=RxTH9/OEO6pTnNDPpRW5Ljx++8CFOvHD8pyatmLxZYVowwxb65MY/4cbKYIaF/PFw
+         JeC0/hnN584QHAX3QleO/xI5cBChVotPlj+67f40LURI2w/fVfU5Z5/D1wqZEvQttt
+         wypq/Qepnai5xOp4aSfAbrvrLbUcI9pkVWu6wEXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 378/671] serial: stm32: fix wakeup source initialization
-Date:   Thu, 16 Jan 2020 12:00:16 -0500
-Message-Id: <20200116170509.12787-115-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 385/671] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
+Date:   Thu, 16 Jan 2020 12:00:23 -0500
+Message-Id: <20200116170509.12787-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,100 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 5297f274e8b61ceb9676cba6649d3de9d03387ad ]
+[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
 
-Fixes dedicated_irq_wakeup issue and deactivated uart as wakeup source by
-default.
+Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
 
-Fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+inet_frags_fini() is dismantling a kmem_cache, that might be needed
+later when unregister_pernet_subsys() eventually has to remove
+frags queues from hash tables and free them.
+
+This fixes potential use-after-free, and is a prereq for the following patch.
+
+Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ net/ieee802154/6lowpan/reassembly.c | 2 +-
+ net/ipv6/reassembly.c               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index d603be9669a9..1334e4293977 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -557,7 +557,6 @@ static int stm32_startup(struct uart_port *port)
+diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
+index e7857a8ac86d..f3074249c6fc 100644
+--- a/net/ieee802154/6lowpan/reassembly.c
++++ b/net/ieee802154/6lowpan/reassembly.c
+@@ -629,7 +629,7 @@ int __init lowpan_net_frag_init(void)
+ 
+ void lowpan_net_frag_exit(void)
  {
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
--	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
- 	const char *name = to_platform_device(port->dev)->name;
- 	u32 val;
- 	int ret;
-@@ -568,15 +567,6 @@ static int stm32_startup(struct uart_port *port)
- 	if (ret)
- 		return ret;
- 
--	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
--		ret = dev_pm_set_dedicated_wake_irq(port->dev,
--						    stm32_port->wakeirq);
--		if (ret) {
--			free_irq(port->irq, port);
--			return ret;
--		}
--	}
--
- 	val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
- 	if (stm32_port->fifoen)
- 		val |= USART_CR1_FIFOEN;
-@@ -607,7 +597,6 @@ static void stm32_shutdown(struct uart_port *port)
- 
- 	stm32_clr_bits(port, ofs->cr1, val);
- 
--	dev_pm_clear_wake_irq(port->dev);
- 	free_irq(port->irq, port);
+-	inet_frags_fini(&lowpan_frags);
+ 	lowpan_frags_sysctl_unregister();
+ 	unregister_pernet_subsys(&lowpan_frags_ops);
++	inet_frags_fini(&lowpan_frags);
  }
+diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
+index 095825f964e2..c6132e39ab16 100644
+--- a/net/ipv6/reassembly.c
++++ b/net/ipv6/reassembly.c
+@@ -593,8 +593,8 @@ int __init ipv6_frag_init(void)
  
-@@ -1079,11 +1068,18 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 		ret = device_init_wakeup(&pdev->dev, true);
- 		if (ret)
- 			goto err_uninit;
-+
-+		ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
-+						    stm32port->wakeirq);
-+		if (ret)
-+			goto err_nowup;
-+
-+		device_set_wakeup_enable(&pdev->dev, false);
- 	}
- 
- 	ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
- 	if (ret)
--		goto err_nowup;
-+		goto err_wirq;
- 
- 	ret = stm32_of_dma_rx_probe(stm32port, pdev);
- 	if (ret)
-@@ -1097,6 +1093,10 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_wirq:
-+	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
-+		dev_pm_clear_wake_irq(&pdev->dev);
-+
- err_nowup:
- 	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
- 		device_init_wakeup(&pdev->dev, false);
-@@ -1134,8 +1134,10 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 				  TX_BUF_L, stm32_port->tx_buf,
- 				  stm32_port->tx_dma_buf);
- 
--	if (cfg->has_wakeup && stm32_port->wakeirq >= 0)
-+	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
-+		dev_pm_clear_wake_irq(&pdev->dev);
- 		device_init_wakeup(&pdev->dev, false);
-+	}
- 
- 	clk_disable_unprepare(stm32_port->clk);
- 
+ void ipv6_frag_exit(void)
+ {
+-	inet_frags_fini(&ip6_frags);
+ 	ip6_frags_sysctl_unregister();
+ 	unregister_pernet_subsys(&ip6_frags_ops);
+ 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
++	inet_frags_fini(&ip6_frags);
+ }
 -- 
 2.20.1
 
