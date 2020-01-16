@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE98C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F36C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928D42072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D1E2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217313;
-	bh=K7nuYz1eNgGESYAGCl+dzAzfUti/VATJU0c//XrLoB4=;
+	s=default; t=1579217319;
+	bh=LenzYYsMhXncUvj7yaKLXdDbiY3QfJO7IDDKqFn1gek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dfMnQ6OifrfUjcL0snNxpA+X5VJgyHtNgySEu4uN/dbeXr/fvxleNmtKhKsIntMY
-	 tuWm8E/nCYzSw4ZVyrWNZmNO2Zfyw0F77HRJYlXlJWnuhkUSPitWt1yXuQxy3fb1Or
-	 d2QS6EIXL38ke9G/nAg0tdfXZGbV2pfxLKZAjtGg=
+	b=OmDu1nG7K8FHxjCJPLy1UvLU1BFOisD+2alCKL/mG+FlVgktKgYiud7IZqlRSGTRC
+	 8GY0PPs3UQMFHEwBf8GieC1yXPlrnXvpHP2iKGyeTvYcAt1PBSTu83zNceBDxJ2DBP
+	 wNvwpqsxq7SPq+HL2xTSyzO8Y7Hr7mO7MHtFfWzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391121AbgAPX2c (ORCPT
+        id S2391137AbgAPX2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389402AbgAPX2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:30 -0500
+        id S2390228AbgAPX2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154D820684;
-        Thu, 16 Jan 2020 23:28:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D516206D9;
+        Thu, 16 Jan 2020 23:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217308;
-        bh=K7nuYz1eNgGESYAGCl+dzAzfUti/VATJU0c//XrLoB4=;
+        s=default; t=1579217315;
+        bh=LenzYYsMhXncUvj7yaKLXdDbiY3QfJO7IDDKqFn1gek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzUK44a679LmB6FQku9xY9/cArJRLW97tlvvwqSR8JgycF2FZ87dgJyMeHZcQQNvp
-         nzdMbz2kNxijDz2LbCGM0kDog0vV2Cf9Wyp3k6PZ/TCoMTtTVslIWbjidy3PyNnwyl
-         LqOVgx8Cl4X1seFv7lClHfYzRI29btGrejUM7Rcc=
+        b=GYeqZ//6B5LKtYnfLfk8QgVNCcAJN31ZTF1LpMnGKOJFPm2mtXkfUZoQ66xZldUAF
+         OyNMVkVQjlh2sXEMOb2xwowIE6+6I9BYELyorTxG1PhnyP4o4g8+wfsDZVZ/Zsr+zT
+         iUrg7lK41WQRMV6zhwtIIAiFOXro8IoFUrPpuAlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Michal Kubecek <mkubecek@suse.cz>,
+        stable@vger.kernel.org, Jouni Malinen <jouni@codeaurora.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH 4.19 04/84] ethtool: reduce stack usage with clang
-Date:   Fri, 17 Jan 2020 00:17:38 +0100
-Message-Id: <20200116231713.857936861@linuxfoundation.org>
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 07/84] mac80211: Do not send Layer 2 Update frame before authorization
+Date:   Fri, 17 Jan 2020 00:17:41 +0100
+Message-Id: <20200116231714.356117806@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -61,66 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jouni Malinen <jouni@codeaurora.org>
 
-commit 3499e87ea0413ee5b2cc028f4c8ed4d424bc7f98 upstream.
+commit 3e493173b7841259a08c5c8e5cbe90adb349da7e upstream.
 
-clang inlines the dev_ethtool() more aggressively than gcc does, leading
-to a larger amount of used stack space:
+The Layer 2 Update frame is used to update bridges when a station roams
+to another AP even if that STA does not transmit any frames after the
+reassociation. This behavior was described in IEEE Std 802.11F-2003 as
+something that would happen based on MLME-ASSOCIATE.indication, i.e.,
+before completing 4-way handshake. However, this IEEE trial-use
+recommended practice document was published before RSN (IEEE Std
+802.11i-2004) and as such, did not consider RSN use cases. Furthermore,
+IEEE Std 802.11F-2003 was withdrawn in 2006 and as such, has not been
+maintained amd should not be used anymore.
 
-net/core/ethtool.c:2536:24: error: stack frame size of 1216 bytes in function 'dev_ethtool' [-Werror,-Wframe-larger-than=]
+Sending out the Layer 2 Update frame immediately after association is
+fine for open networks (and also when using SAE, FT protocol, or FILS
+authentication when the station is actually authenticated by the time
+association completes). However, it is not appropriate for cases where
+RSN is used with PSK or EAP authentication since the station is actually
+fully authenticated only once the 4-way handshake completes after
+authentication and attackers might be able to use the unauthenticated
+triggering of Layer 2 Update frame transmission to disrupt bridge
+behavior.
 
-Marking the sub-functions that require the most stack space as
-noinline_for_stack gives us reasonable behavior on all compilers.
+Fix this by postponing transmission of the Layer 2 Update frame from
+station entry addition to the point when the station entry is marked
+authorized. Similarly, send out the VLAN binding update only if the STA
+entry has already been authorized.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: Jouni Malinen <jouni@codeaurora.org>
+Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/core/ethtool.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ net/mac80211/cfg.c      |   14 ++++----------
+ net/mac80211/sta_info.c |    4 ++++
+ 2 files changed, 8 insertions(+), 10 deletions(-)
 
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -2413,9 +2413,10 @@ static int ethtool_set_tunable(struct ne
- 	return ret;
- }
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1410,7 +1410,6 @@ static int ieee80211_add_station(struct
+ 	struct sta_info *sta;
+ 	struct ieee80211_sub_if_data *sdata;
+ 	int err;
+-	int layer2_update;
  
--static int ethtool_get_per_queue_coalesce(struct net_device *dev,
--					  void __user *useraddr,
--					  struct ethtool_per_queue_op *per_queue_opt)
-+static noinline_for_stack int
-+ethtool_get_per_queue_coalesce(struct net_device *dev,
-+			       void __user *useraddr,
-+			       struct ethtool_per_queue_op *per_queue_opt)
- {
- 	u32 bit;
- 	int ret;
-@@ -2443,9 +2444,10 @@ static int ethtool_get_per_queue_coalesc
+ 	if (params->vlan) {
+ 		sdata = IEEE80211_DEV_TO_SUB_IF(params->vlan);
+@@ -1454,18 +1453,12 @@ static int ieee80211_add_station(struct
+ 	    test_sta_flag(sta, WLAN_STA_ASSOC))
+ 		rate_control_rate_init(sta);
+ 
+-	layer2_update = sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
+-		sdata->vif.type == NL80211_IFTYPE_AP;
+-
+ 	err = sta_info_insert_rcu(sta);
+ 	if (err) {
+ 		rcu_read_unlock();
+ 		return err;
+ 	}
+ 
+-	if (layer2_update)
+-		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
+-
+ 	rcu_read_unlock();
+ 
  	return 0;
- }
+@@ -1563,10 +1556,11 @@ static int ieee80211_change_station(stru
+ 		sta->sdata = vlansdata;
+ 		ieee80211_check_fast_xmit(sta);
  
--static int ethtool_set_per_queue_coalesce(struct net_device *dev,
--					  void __user *useraddr,
--					  struct ethtool_per_queue_op *per_queue_opt)
-+static noinline_for_stack int
-+ethtool_set_per_queue_coalesce(struct net_device *dev,
-+			       void __user *useraddr,
-+			       struct ethtool_per_queue_op *per_queue_opt)
- {
- 	u32 bit;
- 	int i, ret = 0;
-@@ -2499,7 +2501,7 @@ roll_back:
- 	return ret;
- }
+-		if (test_sta_flag(sta, WLAN_STA_AUTHORIZED))
++		if (test_sta_flag(sta, WLAN_STA_AUTHORIZED)) {
+ 			ieee80211_vif_inc_num_mcast(sta->sdata);
+-
+-		cfg80211_send_layer2_update(sta->sdata->dev, sta->sta.addr);
++			cfg80211_send_layer2_update(sta->sdata->dev,
++						    sta->sta.addr);
++		}
+ 	}
  
--static int ethtool_set_per_queue(struct net_device *dev,
-+static int noinline_for_stack ethtool_set_per_queue(struct net_device *dev,
- 				 void __user *useraddr, u32 sub_cmd)
- {
- 	struct ethtool_per_queue_op per_queue_opt;
+ 	err = sta_apply_parameters(local, sta, params);
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -1906,6 +1906,10 @@ int sta_info_move_state(struct sta_info
+ 			ieee80211_check_fast_xmit(sta);
+ 			ieee80211_check_fast_rx(sta);
+ 		}
++		if (sta->sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
++		    sta->sdata->vif.type == NL80211_IFTYPE_AP)
++			cfg80211_send_layer2_update(sta->sdata->dev,
++						    sta->sta.addr);
+ 		break;
+ 	default:
+ 		break;
 
 
