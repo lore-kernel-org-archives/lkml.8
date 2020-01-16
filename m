@@ -1,112 +1,135 @@
-Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED59C32771
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA108C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AC320723
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 23:54:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g7IWQlXl"
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BA22464
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579132869;
+	bh=ciFT8G0ig7AoC90XTjW1a7CBM1WZ+CVeOWBez3oxXJs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ZjO3zTMy6Ib6BoI6oxJo9/Yel9kAFsjg31gArmd41TsKQNNIppgxAaPgURbX/O1EM
+	 Y1E99c+spbJrFpnbX9NYj6pcSUWVTQeADFNiGBGPwUMniyjVi5nUdyQk3XC7Gtla+T
+	 iPfPXzmiUlsMmRBGEuDoJAxyl2zFh/PjhFCYykdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgAOXyD (ORCPT
+        id S1731286AbgAPABG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:54:03 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:40228 "EHLO vps0.lunn.ch"
+        Wed, 15 Jan 2020 19:01:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbgAOXyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 18:54:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=vZVudi2gBuyHBZjmOkQ+epG4bVJAbZTvIrxTIDCHEJc=; b=g7IWQlXltCA0UdQn0qVVxvlIE1
-        SKL7IPC5l1obdNuFHrw0x61WK7HrHXVqVZ2YDKFP3vxUq7j67oJsR2r0G26xh2zqTM2qqHfgL342Y
-        FF9o5dRTDOmBcfgGx60WuiDJPeSdRydnKCfQGLFa7MOLQbQMJR8QC70t5uSY3bj85IcE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1irsU1-0002WZ-4N; Thu, 16 Jan 2020 00:53:57 +0100
-Date:   Thu, 16 Jan 2020 00:53:57 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
-        rmk+kernel@armlinux.org.uk, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] net: phy: Maintain MDIO device and bus
- statistics
-Message-ID: <20200115235357.GG2475@lunn.ch>
-References: <20200115204228.26094-1-f.fainelli@gmail.com>
+        id S1729842AbgAPABF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:01:05 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB1EC2084D;
+        Thu, 16 Jan 2020 00:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579132865;
+        bh=ciFT8G0ig7AoC90XTjW1a7CBM1WZ+CVeOWBez3oxXJs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=DoVqZUNAYc8CRttyVvmleFlgkFSVtlwU8hNhpNZDfpw6l2Yh51mVFu+qEOHD6uYbg
+         d2dRAKwu0Ol5I1IRO6v0WwVweZ95n4PIRbKUhkdrNopyA6AU2Uwm4k5TXubFZkC0YI
+         H3ht6KskOM/pTr1jbPSH3JQh38GIfgNwwUNLCIsg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 987B1352274D; Wed, 15 Jan 2020 16:01:04 -0800 (PST)
+Date:   Wed, 15 Jan 2020 16:01:04 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, bristot@redhat.com,
+        frextrite@gmail.com, madhuparnabhowmik04@gmail.com,
+        urezki@gmail.com, Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v3 rcu-dev] rcuperf: Measure memory footprint during
+ kfree_rcu() test
+Message-ID: <20200116000104.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191219211349.235877-1-joel@joelfernandes.org>
+ <20191221000729.GH2889@paulmck-ThinkPad-P72>
+ <20191221033714.GB156579@google.com>
+ <20200106195200.GS13449@paulmck-ThinkPad-P72>
+ <20200115220300.GA94036@google.com>
+ <20200115224251.GK2935@paulmck-ThinkPad-P72>
+ <20200115224542.GB94036@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115204228.26094-1-f.fainelli@gmail.com>
+In-Reply-To: <20200115224542.GB94036@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +#define MDIO_BUS_STATS_ADDR_ATTR(field, addr, file)			\
-> +static ssize_t mdio_bus_##field##_##addr##_show(struct device *dev,	\
-> +						struct device_attribute *attr, \
-> +						char *buf)		\
-> +{									\
-> +	struct mii_bus *bus = to_mii_bus(dev);				\
-> +	return mdio_bus_stats_##field##_show(&bus->stats[addr], buf);	\
-> +}									\
+On Wed, Jan 15, 2020 at 05:45:42PM -0500, Joel Fernandes wrote:
+> On Wed, Jan 15, 2020 at 02:42:51PM -0800, Paul E. McKenney wrote:
+> > > [snip]
+> > > > > We can certainly refine it further but at this time I am thinking of spending
+> > > > > my time reviewing Lai's patches and learning some other RCU things I need to
+> > > > > catch up on. If you hate this patch too much, we can also defer this patch
+> > > > > review for a bit and I can carry it in my tree for now as it is only a patch
+> > > > > to test code. But honestly, in its current form I am sort of happy with it.
+> > > > 
+> > > > OK, I will keep it as is for now and let's look again later on.  It is not
+> > > > in the bucket for the upcoming merge window in any case, so we do have
+> > > > quite a bit of time.
+> > > > 
+> > > > It is not that I hate it, but rather that I want to be able to give
+> > > > good answers to questions that might come up.  And given that I have
+> > > > occasionally given certain people a hard time about their statistics,
+> > > > it is only reasonable to expect them to return the favor.  I wouldn't
+> > > > want you to be caught in the crossfire.  ;-)
+> > > 
+> > > Since the weights were concerning, I was thinking of just using a weight of
+> > > (1 / N) where N is the number of samples. Essentially taking the average.
+> > > That could be simple enough and does not cause your concerns with weight
+> > > tuning. I tested it and looks good, I'll post it shortly.
+> > 
+> > YES!!!  ;-)
+> > 
+> > Snapshot mem_begin before entering the loop.  For the mean value to
+> > be solid, you need at least 20-30 samples, which might mean upping the
+> > default for kfree_loops.  Have an "unsigned long long" to accumulate the
+> > sum, which should avoid any possibility of overflow for current systems
+> > and for all systems for kfree_loops less than PAGE_SIZE.  At which point,
+> > forget the "%" stuff and just sum up the si_mem_available() on each pass
+> > through the loop.
+> > 
+> > Do the division on exit from the loop, preferably checking for divide
+> > by zero.
+> > 
+> > Straightforward, fast, reasonably reliable, and easy to defend.
+> 
+> I mostly did it along these lines. Hopefully the latest posting is reasonable
+> enough ;-) I sent it twice because I messed up the authorship (sorry).
 
-Hi Florian
+No problem with the authorship-fix resend!
 
-Lots of Macro magic here. But it is reasonably understandable.
-However, the compiler is maybe not doing the best of jobs:
+But let's get this patch consistent with basic statistics!
 
-00000064 l     F .text	00000030 mdio_bus_reads_31_show
-00000094 l     F .text	00000030 mdio_bus_reads_30_show
-000000c4 l     F .text	00000030 mdio_bus_reads_29_show
-000000f4 l     F .text	00000030 mdio_bus_reads_28_show
-00000124 l     F .text	00000030 mdio_bus_reads_27_show
-00000154 l     F .text	00000030 mdio_bus_reads_26_show
-00000184 l     F .text	00000030 mdio_bus_reads_25_show
-000001b4 l     F .text	00000034 mdio_bus_reads_24_show
-000001e8 l     F .text	00000034 mdio_bus_reads_23_show
-0000021c l     F .text	00000034 mdio_bus_reads_22_show
-00000250 l     F .text	00000034 mdio_bus_reads_21_show
-00000284 l     F .text	00000034 mdio_bus_reads_20_show
-000002b8 l     F .text	00000034 mdio_bus_reads_19_show
-000002ec l     F .text	00000034 mdio_bus_reads_18_show
-00000320 l     F .text	00000034 mdio_bus_reads_17_show
-00000354 l     F .text	00000034 mdio_bus_reads_16_show
-00000388 l     F .text	00000034 mdio_bus_reads_15_show
-000003bc l     F .text	00000034 mdio_bus_reads_14_show
-000003f0 l     F .text	00000034 mdio_bus_reads_13_show
-00000424 l     F .text	00000034 mdio_bus_reads_12_show
-00000458 l     F .text	00000034 mdio_bus_reads_11_show
-0000048c l     F .text	00000034 mdio_bus_reads_10_show
-000004c0 l     F .text	00000034 mdio_bus_reads_9_show
-000004f4 l     F .text	00000034 mdio_bus_reads_8_show
-00000528 l     F .text	00000034 mdio_bus_reads_7_show
-0000055c l     F .text	00000034 mdio_bus_reads_6_show
-00000590 l     F .text	00000034 mdio_bus_reads_5_show
-000005c4 l     F .text	00000034 mdio_bus_reads_4_show
-000005f8 l     F .text	00000034 mdio_bus_reads_3_show
-0000062c l     F .text	00000034 mdio_bus_reads_2_show
-00000660 l     F .text	00000034 mdio_bus_reads_1_show
-00000694 l     F .text	00000034 mdio_bus_reads_0_show
+You really do need 20-30 samples for an average to mean much.
 
-It appears to be inlining everything, so end up with lots of
-functions, and they are not tiny.
+Of course, right now you default kfree_loops to 10.  You are doing
+8000 kmalloc()/kfree_rcu() loops on each pass.  This is large enough
+that just dropping the "% 4" should be just fine from the viewpoint of
+si_mem_available() overhead.  But 8000 allocations and frees should get
+done in way less than one second, so kicking the default kfree_loops up
+to 30 should be a non-problem.
 
-I'm wondering if we can get ride of this per address
-reads/write/transfer function. Could you stuff the addr into var of
-struct dev_ext_attribute?
+Then the patch would be both simpler and statistically valid.
 
-https://elixir.bootlin.com/linux/latest/source/include/linux/device.h#L813
+So could you please stop using me as the middleman in your fight with
+the laws of mathematics and get this patch to a defensible state?  ;-)
 
-	Andrew
+							Thanx, Paul
