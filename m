@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20DDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F81C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27662072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB122072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216910;
-	bh=ry7wLXlt8FFAAbN9zf5JQ7fS9uA0DbcDOyh/j7HxtLw=;
+	s=default; t=1579216913;
+	bh=JSuBphsjuh0+PpEiMvHb+bCx5t9x0cjW3CLELLPZeHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulHoJ4iFsbIEmJZe8vkGm+0mqq3Sa0USmZfSEXjZ63AJp1piwt488hklCZxwavecn
-	 cJlLZ12Y2GqZWbQfcj70DuYMJsSB1474TdWiCozAERQN1PRzIrQz0s+NJXW3g4sa76
-	 Cl8N2peggoT3GrJOwa27BWhyqb+YH2nBFsBq39Sg=
+	b=BpLvm7MuDLYQKtRcvQWENB4GTEAvoVbVlvUD9WpLlGK7smEDHlTCBsJBLNpVvSgMu
+	 KirQanQjLXqGKwV8Thr3qkWdXKmBAUwUIPUrTRaXnEc4pjEqZ8za0Ayh0MdPXGK/yZ
+	 fInNqq76JBE8KGXwy6JsjUr1ZQ1X195KoFct4pi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbgAPXVt (ORCPT
+        id S2390873AbgAPXVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390861AbgAPXVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:44 -0500
+        id S2388978AbgAPXVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F380320748;
-        Thu, 16 Jan 2020 23:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6143420748;
+        Thu, 16 Jan 2020 23:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216903;
-        bh=ry7wLXlt8FFAAbN9zf5JQ7fS9uA0DbcDOyh/j7HxtLw=;
+        s=default; t=1579216905;
+        bh=JSuBphsjuh0+PpEiMvHb+bCx5t9x0cjW3CLELLPZeHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUOLSIX3G1ZCs/2BuOqJQJw2LgzD5XvsCCvNfqemc8NBnBFyYfpPBRllNr4YWpe9e
-         B65TD561hJ21SqXC3PBKrKapyz8G3uvBgUvjG2fj24rMxjFjbv+1xWokypY+RFJqR7
-         5+XfjP6qPMYqJ6yjqF/E9XNBVWxhO0EI70XODuBI=
+        b=b4kQJbPuUkGdH9MflN/Y+AaeNB6Yhw8GqhrgOhC/RsYmdabTzk+Nx6I5O/c0AxVR5
+         OGeiE5po1Ib/UF1E5/Xlr1bmGqpVtxjjndn3V6GWtC3g4zXllfFHHRrEhZWLO0KBf5
+         P+NrBl1RtT7AVWiTvj2Tngn+e8RVI1b6iRSzrc4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com,
-        Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 051/203] hsr: fix slab-out-of-bounds Read in hsr_debugfs_rename()
-Date:   Fri, 17 Jan 2020 00:16:08 +0100
-Message-Id: <20200116231748.443108537@linuxfoundation.org>
+        stable@vger.kernel.org, Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 052/203] btrfs: simplify inode locking for RWF_NOWAIT
+Date:   Fri, 17 Jan 2020 00:16:09 +0100
+Message-Id: <20200116231748.526335217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,72 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Goldwyn Rodrigues <rgoldwyn@suse.com>
 
-commit 04b69426d846cd04ca9acefff1ea39e1c64d2714 upstream.
+commit 9cf35f673583ccc9f3e2507498b3079d56614ad3 upstream.
 
-hsr slave interfaces don't have debugfs directory.
-So, hsr_debugfs_rename() shouldn't be called when hsr slave interface name
-is changed.
+This is similar to 942491c9e6d6 ("xfs: fix AIM7 regression"). Apparently
+our current rwsem code doesn't like doing the trylock, then lock for
+real scheme. This causes extra contention on the lock and can be
+measured eg. by AIM7 benchmark.  So change our read/write methods to
+just do the trylock for the RWF_NOWAIT case.
 
-Test commands:
-    ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
-    ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1
-    ip link set dummy0 name ap
-
-Splat looks like:
-[21071.899367][T22666] ap: renamed from dummy0
-[21071.914005][T22666] ==================================================================
-[21071.919008][T22666] BUG: KASAN: slab-out-of-bounds in hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.923640][T22666] Read of size 8 at addr ffff88805febcd98 by task ip/22666
-[21071.926941][T22666]
-[21071.927750][T22666] CPU: 0 PID: 22666 Comm: ip Not tainted 5.5.0-rc2+ #240
-[21071.929919][T22666] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[21071.935094][T22666] Call Trace:
-[21071.935867][T22666]  dump_stack+0x96/0xdb
-[21071.936687][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.937774][T22666]  print_address_description.constprop.5+0x1be/0x360
-[21071.939019][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.940081][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.940949][T22666]  __kasan_report+0x12a/0x16f
-[21071.941758][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.942674][T22666]  kasan_report+0xe/0x20
-[21071.943325][T22666]  hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.944187][T22666]  hsr_netdev_notify+0x1fe/0x9b0 [hsr]
-[21071.945052][T22666]  ? __module_text_address+0x13/0x140
-[21071.945897][T22666]  notifier_call_chain+0x90/0x160
-[21071.946743][T22666]  dev_change_name+0x419/0x840
-[21071.947496][T22666]  ? __read_once_size_nocheck.constprop.6+0x10/0x10
-[21071.948600][T22666]  ? netdev_adjacent_rename_links+0x280/0x280
-[21071.949577][T22666]  ? __read_once_size_nocheck.constprop.6+0x10/0x10
-[21071.950672][T22666]  ? lock_downgrade+0x6e0/0x6e0
-[21071.951345][T22666]  ? do_setlink+0x811/0x2ef0
-[21071.951991][T22666]  do_setlink+0x811/0x2ef0
-[21071.952613][T22666]  ? is_bpf_text_address+0x81/0xe0
-[ ... ]
-
-Reported-by: syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com
-Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: edf064e7c6fe ("btrfs: nowait aio support")
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/hsr/hsr_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/file.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/hsr/hsr_main.c
-+++ b/net/hsr/hsr_main.c
-@@ -46,7 +46,8 @@ static int hsr_netdev_notify(struct noti
- 		hsr_check_carrier_and_operstate(hsr);
- 		break;
- 	case NETDEV_CHANGENAME:
--		hsr_debugfs_rename(dev);
-+		if (is_hsr_master(dev))
-+			hsr_debugfs_rename(dev);
- 		break;
- 	case NETDEV_CHANGEADDR:
- 		if (port->type == HSR_PT_MASTER) {
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1903,9 +1903,10 @@ static ssize_t btrfs_file_write_iter(str
+ 	    (iocb->ki_flags & IOCB_NOWAIT))
+ 		return -EOPNOTSUPP;
+ 
+-	if (!inode_trylock(inode)) {
+-		if (iocb->ki_flags & IOCB_NOWAIT)
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock(inode))
+ 			return -EAGAIN;
++	} else {
+ 		inode_lock(inode);
+ 	}
+ 
 
 
