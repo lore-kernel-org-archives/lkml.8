@@ -2,111 +2,74 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A306C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFDEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113EE20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579167623;
-	bh=fU4iy348VebOCE+8xgICmRkD1LMLcUwcTkD3yaiLZ4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=un5mqmrLTS9ujXShdCjfP/+aaeAEsDPGEIEux9V6gs03Zp1cBc+noqSV9pXhI3dTr
-	 nC0MbKysHrpnunOStC1Sd5H5sFj+UBAF6iQuIxsMEZdkbC1QI6Kfgp2DELw8qDrOXA
-	 ru5JdS3aAQvaFY+XQdOH8AqROTMQL/anK1Kv5PFg=
+	by mail.kernel.org (Postfix) with ESMTP id 18E802075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:40:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgAPJkW (ORCPT
+        id S1731109AbgAPJkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:40:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43259 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgAPJkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:40:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so18317182oif.10;
-        Thu, 16 Jan 2020 01:40:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ehZVRRgGA6K7LYKERYT9m9Kqby1XUIRO5leJf884LQg=;
-        b=tbNAoalcCFQwchIcvadfmk38UTHM9PFnmL7tSpYsOE3/h2lG03b0xJwvX7mOr8KBIc
-         lT/6p/Z4lv02ijdfMbmAy8NZA6jNue6nDAHb7bgULvVJT4HIAUWGvHiMxQE9cDru6Pm1
-         L9usN7+QSl+6G6Em5TpjK+ZVZeqPzOAapVbNoOAt7CeVJ0RNl5X1e2ZCT8LlUAd/B/Dg
-         XwGmssoLMrppPiyFR4eOH4q+sweyJhf6GhgObkY6OFfae/GYI2thu7OgEnuJadO+SxTF
-         qngHnAuop9Rjdrt2FUd0jTd8G9i91SvKzsljYsRszHjTOc0FvDhJig8vx53Nm55CxU4v
-         mNIA==
-X-Gm-Message-State: APjAAAWmeHXe7hnEpWHG2IhbMfJqm4PLD5Xq+g7lJGLyhd6P70E4vBLL
-        MV2zBaD6jKBpUPQ76sg9B4gXROh26jA4U/ooVzg=
-X-Google-Smtp-Source: APXvYqycvvoo15q+FPGQpz1gedkk2HzrTF+WByd8rPEEEg6NgUkf5VAlB3qg+1sxI+fx5OiEllxn+V4E7zXAb2JHu2Y=
-X-Received: by 2002:aca:cd92:: with SMTP id d140mr3388803oig.68.1579167621279;
- Thu, 16 Jan 2020 01:40:21 -0800 (PST)
+        Thu, 16 Jan 2020 04:40:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35358 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbgAPJkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:40:33 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 40574B1AD;
+        Thu, 16 Jan 2020 09:40:31 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 10:40:30 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/26] docs: i2c: fix typo
+Message-ID: <20200116104030.2df59d94@endymion>
+In-Reply-To: <20200105225012.11701-5-luca@lucaceresoli.net>
+References: <20200105224006.10321-1-luca@lucaceresoli.net>
+        <20200105225012.11701-1-luca@lucaceresoli.net>
+        <20200105225012.11701-5-luca@lucaceresoli.net>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20200115232629.GA9231@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-In-Reply-To: <20200115232629.GA9231@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 16 Jan 2020 10:40:08 +0100
-Message-ID: <CAJZ5v0iHVzDzS5zZSTWOdy2CCSkyW74+p2-Et0+EcysOvL2CDg@mail.gmail.com>
-Subject: Re: [RESEND PATCH] ACPICA: Enable sleep button on ACPI legacy wake
-To:     Anchal Agarwal <anchalag@amazon.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Robert Moore <robert.moore@intel.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Singh, Balbir" <sblbir@amazon.com>, fllinden@amazon.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 12:26 AM Anchal Agarwal <anchalag@amazon.com> wrote:
->
-> Currently we do not see sleep_enable bit set after guest resumes
-> from hibernation. Hibernation is triggered in guest on receiving
-> a sleep trigger from the hypervisor(S4 state). We see that power
-> button is enabled on wake up from S4 state however sleep button
-> isn't. This causes subsequent invocation of sleep state to fail
-> in the guest. Any environment  going through acpi_hw_legacy_wake()
-> won't have sleep button enabled.
->
-> Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
-> Reviewed-by: Balbir Singh <sblbir@amazon.com>
-> Reviewed-by: Frank van der Linden <fllinden@amazon.com>
+On Sun,  5 Jan 2020 23:49:51 +0100, Luca Ceresoli wrote:
+> Fix "issus" -> "issues".
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Acked-by: Peter Rosin <peda@axentia.se>
 > ---
->  drivers/acpi/acpica/hwsleep.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/acpi/acpica/hwsleep.c b/drivers/acpi/acpica/hwsleep.c
-> index b62db8ec446f..a176c7802760 100644
-> --- a/drivers/acpi/acpica/hwsleep.c
-> +++ b/drivers/acpi/acpica/hwsleep.c
-> @@ -300,6 +300,17 @@ acpi_status acpi_hw_legacy_wake(u8 sleep_state)
->                                     [ACPI_EVENT_POWER_BUTTON].
->                                     status_register_id, ACPI_CLEAR_STATUS);
->
-> +       /* Enable sleep button */
-> +       (void)
-> +             acpi_write_bit_register(acpi_gbl_fixed_event_info
-> +                                     [ACPI_EVENT_SLEEP_BUTTON].
-> +                                     enable_register_id, ACPI_ENABLE_EVENT);
-> +
-> +       (void)
-> +             acpi_write_bit_register(acpi_gbl_fixed_event_info
-> +                                     [ACPI_EVENT_SLEEP_BUTTON].
-> +                                     status_register_id, ACPI_CLEAR_STATUS);
-> +
->         acpi_hw_execute_sleep_method(METHOD_PATHNAME__SST, ACPI_SST_WORKING);
->         return_ACPI_STATUS(status);
->  }
+>  Documentation/i2c/i2c-topology.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/i2c/i2c-topology.rst b/Documentation/i2c/i2c-topology.rst
+> index 0875090d6aeb..b413ef6a6773 100644
+> --- a/Documentation/i2c/i2c-topology.rst
+> +++ b/Documentation/i2c/i2c-topology.rst
+> @@ -169,7 +169,7 @@ PL1. If you build a topology with a parent-locked mux being the child
+>       of another mux, this might break a possible assumption from the
+>       child mux that the root adapter is unused between its select op
+>       and the actual transfer (e.g. if the child mux is auto-closing
+> -     and the parent mux issus I2C-transfers as part of its select).
+> +     and the parent mux issues I2C-transfers as part of its select).
+>       This is especially the case if the parent mux is mux-locked, but
+>       it may also happen if the parent mux is parent-locked.
+>  
 
-Erik, Bob, please pick this up if you don't have specific objections against it.
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-I'll wait for it to show up in an upstream release.
+-- 
+Jean Delvare
+SUSE L3 Support
