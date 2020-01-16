@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346B5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79BFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DF420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D1520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgAPMCp (ORCPT
+        id S1726917AbgAPMCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:02:45 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56336 "EHLO
+        Thu, 16 Jan 2020 07:02:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30474 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726160AbgAPMCo (ORCPT
+        by vger.kernel.org with ESMTP id S1726885AbgAPMCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:02:44 -0500
+        Thu, 16 Jan 2020 07:02:46 -0500
 Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GBvVMq117995
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:02:43 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhgs7uk2c-1
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GBvV6W118021
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:02:45 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhgs7uk3d-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:02:42 -0500
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:02:45 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 16 Jan 2020 12:02:41 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 16 Jan 2020 12:02:43 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Jan 2020 12:02:36 -0000
+        Thu, 16 Jan 2020 12:02:39 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GC2ZHO61407420
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GC2cSg53084192
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 12:02:35 GMT
+        Thu, 16 Jan 2020 12:02:38 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC9CAA4053;
-        Thu, 16 Jan 2020 12:02:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6079BA4057;
+        Thu, 16 Jan 2020 12:02:38 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89C0EA405D;
-        Thu, 16 Jan 2020 12:02:33 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1CFC9A4051;
+        Thu, 16 Jan 2020 12:02:36 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.120])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jan 2020 12:02:33 +0000 (GMT)
+        Thu, 16 Jan 2020 12:02:35 +0000 (GMT)
 From:   Parth Shah <parth@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
@@ -55,20 +55,20 @@ Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
         qais.yousef@arm.com, pavel@ucw.cz, dhaval.giani@oracle.com,
         qperret@qperret.net, David.Laight@ACULAB.COM, pjt@google.com,
         tj@kernel.org, dietmar.eggemann@arm.com
-Subject: [PATCH v3 1/3] sched: Introduce latency-nice as a per-task attribute
-Date:   Thu, 16 Jan 2020 17:32:28 +0530
+Subject: [PATCH v3 2/3] sched/core: Propagate parent task's latency requirements to the child task
+Date:   Thu, 16 Jan 2020 17:32:29 +0530
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200116120230.16759-1-parth@linux.ibm.com>
 References: <20200116120230.16759-1-parth@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 20011612-0008-0000-0000-00000349E23B
+x-cbid: 20011612-0012-0000-0000-0000037DDA98
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011612-0009-0000-0000-00004A6A3BCC
-Message-Id: <20200116120230.16759-2-parth@linux.ibm.com>
+x-cbparentid: 20011612-0013-0000-0000-000021BA0E59
+Message-Id: <20200116120230.16759-3-parth@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- malwarescore=0 suspectscore=1 mlxlogscore=999 impostorscore=0 spamscore=0
+ malwarescore=0 suspectscore=1 mlxlogscore=926 impostorscore=0 spamscore=0
  bulkscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-2001160103
@@ -77,65 +77,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Latency-nice indicates the latency requirements of a task with respect
-to the other tasks in the system. The value of the attribute can be within
-the range of [-20, 19] both inclusive to be in-line with the values just
-like task nice values.
+Clone parent task's latency_nice attribute to the forked child task.
 
-latency_nice = -20 indicates the task to have the least latency as
-compared to the tasks having latency_nice = +19.
-
-The latency_nice may affect only the CFS SCHED_CLASS by getting
-latency requirements from the userspace.
+Reset the latency_nice value to default value when the child task is
+set to sched_reset_on_fork.
 
 Signed-off-by: Parth Shah <parth@linux.ibm.com>
 Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 ---
- include/linux/sched.h |  1 +
- kernel/sched/sched.h  | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
+ kernel/sched/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 467d26046416..0668948fddcd 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -676,6 +676,7 @@ struct task_struct {
- 	int				static_prio;
- 	int				normal_prio;
- 	unsigned int			rt_priority;
-+	int				latency_nice;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e7b08d52db93..a7359836bf17 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2854,6 +2854,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 	 */
+ 	p->prio = current->normal_prio;
  
- 	const struct sched_class	*sched_class;
- 	struct sched_entity		se;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 1a88dc8ad11b..edae9277e48d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -101,6 +101,24 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
-  */
- #define NS_TO_JIFFIES(TIME)	((unsigned long)(TIME) / (NSEC_PER_SEC / HZ))
++	/* Propagate the parent's latency requirements to the child as well */
++	p->latency_nice = current->latency_nice;
++
+ 	uclamp_fork(p);
  
-+/*
-+ * Latency nice is meant to provide scheduler hints about the relative
-+ * latency requirements of a task with respect to other tasks.
-+ * Thus a task with latency_nice == 19 can be hinted as the task with no
-+ * latency requirements, in contrast to the task with latency_nice == -20
-+ * which should be given priority in terms of lower latency.
-+ */
-+#define MAX_LATENCY_NICE	19
-+#define MIN_LATENCY_NICE	-20
-+
-+#define LATENCY_NICE_WIDTH	\
-+	(MAX_LATENCY_NICE - MIN_LATENCY_NICE + 1)
-+
-+/*
-+ * Default tasks should be treated as a task with latency_nice = 0.
-+ */
-+#define DEFAULT_LATENCY_NICE	0
-+
- /*
-  * Increase resolution of nice-level calculations for 64-bit architectures.
-  * The extra resolution improves shares distribution and load balancing of
+ 	/*
+@@ -2870,6 +2873,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 		p->prio = p->normal_prio = __normal_prio(p);
+ 		set_load_weight(p, false);
+ 
++		p->latency_nice = DEFAULT_LATENCY_NICE;
+ 		/*
+ 		 * We don't need the reset flag anymore after the fork. It has
+ 		 * fulfilled its duty:
 -- 
 2.17.2
 
