@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC7EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F11C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12A52073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35E52073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217902;
-	bh=CS1XRDACWBXXeycLKvho87XDFgutnA8XGJnE6lEdYBg=;
+	s=default; t=1579217907;
+	bh=zFbc9+S/ZEZazNWuHLHoKbSGQPRWWFbewUS9MAVVDD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8HgcplJki6V5JOGcktiXgpXx75eqf/1zyHI/5hgza6aNBodH8q5p9ovQ2PNh/vLF
-	 7nnpcJH/Lcc7klS50VPY/llwNa4ZaLiFksPJHS+pGr5Brb4el9Wu1hl5LeRCZssIco
-	 3oX4Pj6bM1MQIlfmzb/bdsjqCeTn0wMya35poLDw=
+	b=lb4SdggCybJS/DeTih+Nb6Jh4/xGpqdarETVtORN+Y0BKequiG/4uG2Mqc+/8SmB7
+	 rS/d34+tjGS0qcS1PqT7STKGIcbUlqJaKfYHlKDUr0wPxNXu7wEYXZKHq1Ut2Usp8t
+	 b6ol1WD2b4z5+/eaKxWkw1Tc2RkSUUWBjh7SUMt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404041AbgAPXiV (ORCPT
+        id S2404321AbgAPXi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:38:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35198 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:38:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391272AbgAPX33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:29 -0500
+        id S1730156AbgAPX3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA60F2082F;
-        Thu, 16 Jan 2020 23:29:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9482072E;
+        Thu, 16 Jan 2020 23:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217369;
-        bh=CS1XRDACWBXXeycLKvho87XDFgutnA8XGJnE6lEdYBg=;
+        s=default; t=1579217364;
+        bh=zFbc9+S/ZEZazNWuHLHoKbSGQPRWWFbewUS9MAVVDD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhyNopf76GBSL2K6yTZbdxGtQTFKI/5gA61g81YuIysvqLOy8yOcUJFBkG0/Jhske
-         INuFNZoa7AK4fdAMk37LKShvzQ1iLv2WcZqM6ICrGtM/OTHXw1sgjGeMmBy/kzQDVd
-         aSila0Byoe9YZKxQiTmcL5SNWO5ENJz+y+0Wnfnc=
+        b=2t2Dqs5p63unbBg93dscNo+lfWuWXPCaWAfje7i/Yr8wV3EyhC5jQvTwi7DOqiOLS
+         a1l7TxOWW5Ogb7YJrIxanoBdKrPAsIxYfn0N242g1ryOZIfmhpDuzRxPD1VcW/yj5z
+         5EWcEeVcyCYdwel+zFd4yqI9/BcYOoH6sVkZHUjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: [PATCH 4.19 54/84] PCI: dwc: Fix find_next_bit() usage
-Date:   Fri, 17 Jan 2020 00:18:28 +0100
-Message-Id: <20200116231720.175036407@linuxfoundation.org>
+        stable@vger.kernel.org, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.19 52/84] af_unix: add compat_ioctl support
+Date:   Fri, 17 Jan 2020 00:18:26 +0100
+Message-Id: <20200116231719.946578178@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -63,59 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 1137e61dcb99f7f8b54e77ed83f68b5b485a3e34 upstream.
+commit 5f6beb9e0f633f3cc845cdd67973c506372931b4 upstream.
 
-find_next_bit() takes a parameter of size long, and performs arithmetic
-that assumes that the argument is of size long.
+The af_unix protocol family has a custom ioctl command (inexplicibly
+based on SIOCPROTOPRIVATE), but never had a compat_ioctl handler for
+32-bit applications.
 
-Therefore we cannot pass a u32, since this will cause find_next_bit()
-to read outside the stack buffer and will produce the following print:
-BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
+Since all commands are compatible here, add a trivial wrapper that
+performs the compat_ptr() conversion for SIOCOUTQ/SIOCINQ.  SIOCUNIXFILE
+does not use the argument, but it doesn't hurt to also use compat_ptr()
+here.
 
-Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Fixes: ba94f3088b79 ("unix: add ioctl to open a unix socket file with O_PATH")
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/unix/af_unix.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_ms
- irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -649,6 +649,9 @@ static __poll_t unix_poll(struct file *,
+ static __poll_t unix_dgram_poll(struct file *, struct socket *,
+ 				    poll_table *);
+ static int unix_ioctl(struct socket *, unsigned int, unsigned long);
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++#endif
+ static int unix_shutdown(struct socket *, int);
+ static int unix_stream_sendmsg(struct socket *, struct msghdr *, size_t);
+ static int unix_stream_recvmsg(struct socket *, struct msghdr *, size_t, int);
+@@ -690,6 +693,9 @@ static const struct proto_ops unix_strea
+ 	.getname =	unix_getname,
+ 	.poll =		unix_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -713,6 +719,9 @@ static const struct proto_ops unix_dgram
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	sock_no_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -735,6 +744,9 @@ static const struct proto_ops unix_seqpa
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -2646,6 +2658,13 @@ static int unix_ioctl(struct socket *soc
+ 	return err;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	return unix_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static __poll_t unix_poll(struct file *file, struct socket *sock, poll_table *wait)
  {
- 	int i, pos, irq;
--	u32 val, num_ctrls;
-+	unsigned long val;
-+	u32 status, num_ctrls;
- 	irqreturn_t ret = IRQ_NONE;
- 
- 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-@@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pci
- 	for (i = 0; i < num_ctrls; i++) {
- 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
- 					(i * MSI_REG_CTRL_BLOCK_SIZE),
--				    4, &val);
--		if (!val)
-+				    4, &status);
-+		if (!status)
- 			continue;
- 
- 		ret = IRQ_HANDLED;
-+		val = status;
- 		pos = 0;
--		while ((pos = find_next_bit((unsigned long *) &val,
--					    MAX_MSI_IRQS_PER_CTRL,
-+		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
- 					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
- 			irq = irq_find_mapping(pp->irq_domain,
- 					       (i * MAX_MSI_IRQS_PER_CTRL) +
+ 	struct sock *sk = sock->sk;
 
 
